@@ -27,6 +27,7 @@ export class ProductComparisonComponent {
   comparisonItem3 : any = {};
   productComparison : Boolean = false;
   selectedProduct : any ='';
+  proposalNum : any = '';
 
   constructor(private router: Router,private productService: ProductsService,
     private common: CommonService,private encryptionService: EncryptionService, 
@@ -49,7 +50,20 @@ export class ProductComparisonComponent {
    }
 
 
-  redirectProducts(comparisonItem: any) {   
+   async getProposalNum() {
+    try {
+      const res = await firstValueFrom(this.common.getProposalNumber());
+      console.log(res);
+      this.proposalNum = res.data.proposalNumber;
+      console.log(this.proposalNum);
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+ async redirectProducts(comparisonItem: any) {  
+  await this.getProposalNum(); 
       const reqData = {
         "agentCode": this.agentCode
       }
@@ -76,7 +90,8 @@ export class ProductComparisonComponent {
           const productData = {
             partnerId: comparisonItem.partnerId,
             productId: comparisonItem.productId,
-            productComparison:true
+            productComparison:true,
+            proposalNum : this.proposalNum
 
           }
             this.router.navigate(['yatra'], {
@@ -154,7 +169,7 @@ export class ProductComparisonComponent {
   }
 
   backToProducts(){
-    this.router.navigate(['/products'], {
+    this.router.navigate(['/quote/quoteProducts'], {
     });
   }
 

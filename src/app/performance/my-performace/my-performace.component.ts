@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { PerformanceService } from '../performance.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-performace',
@@ -20,10 +22,18 @@ export class MyPerformaceComponent {
   rows: number = 10;
   agentCode :any = '';
   constructor(
-    private performanceService: PerformanceService,
+    private performanceService: PerformanceService, private languageService: LanguageService,
+    private translateService: TranslateService
 
   ) { }
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
       this.agentCode = storedAgentCode;

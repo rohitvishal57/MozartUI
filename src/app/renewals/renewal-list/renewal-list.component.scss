@@ -91,6 +91,10 @@ h6 {
 		background: var(--Neutral-Additional-White100, #FFFFFF) !important;
 		padding: 8px 12px;
 		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
 	}
 
 	::ng-deep .p-paginator .p-paginator-first,
@@ -108,6 +112,10 @@ h6 {
 		background-color: white;
 		padding: 8px 12px;
 		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
 	}
 
 	::ng-deep .p-paginator .p-paginator-page:hover,
@@ -312,6 +320,7 @@ h6 {
 	.quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
         min-width: 520px;
+		margin-bottom: 1rem;
     }
 	.filterWraperForm {
 		padding: 0;

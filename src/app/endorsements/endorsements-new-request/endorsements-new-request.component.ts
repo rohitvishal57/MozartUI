@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { interval, map, Observable, startWith, take } from 'rxjs';
+import { debounceTime, interval, map, Observable, startWith, Subject, take } from 'rxjs';
 import { Helper } from 'src/app/utilities/helper/helper';
 import { MatDialog } from '@angular/material/dialog';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
@@ -10,6 +10,7 @@ import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -19,7 +20,6 @@ import { LanguageService } from 'src/app/services/language.service';
 export class EndorsementsNewRequestComponent implements OnInit {
   otpModal: any;
   caseCreationForm: FormGroup | any;
-  userData: any;
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
   timeLeft: number = 30;
   isTimerRunning: boolean = false;
@@ -35,8 +35,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isFilenotSelected: boolean | any;
   selectedFile: any;
   showNote: boolean = false;
-  formCntrlVal: any;
-  policies: any;
   namesVariable: any;
   documentType: any;
   showDocInfo: boolean = false;
@@ -44,56 +42,72 @@ export class EndorsementsNewRequestComponent implements OnInit {
   endorsementTypes = [
     {
       name: "Aadhar Card Update",
-      value: "aadharNumber"
+      value: "aadharNumber",
+      CtstID:"ABHI_Endorsement_Request5"
     },
     {
       name: "Pancard Update",
-      value: "panNumber"
+      value: "panNumber",
+      CtstID:"ABHI_Endorsement_Request4"
     },
     {
       name: "Change my Primary Registered Number",
-      value: "primaryContactNumber"
+      value: "primaryContactNumber",
+      CtstID:"ABHI_Endorsement_Request15"
     },
     {
       name: "Change my Alternate number",
-      value: "alternateContactNumber"
+      value: "alternateContactNumber",
+      CtstID:"ABHI_Endorsement_Request8"
     },
     {
       name: "Change in my Email ID",
-      value: "email"
+      value: "email",
+      CtstID:"ABHI_Endorsement_Request10"
     },
     {
       name: "Change my Alternate Email ID",
-      value: "alternateEmail"
+      value: "alternateEmail",
+      CtstID:"ABHI_Endorsement_Request6"
     },
-    {
+    /* {
       name: "Change my Primary Registered Number- Member",
-      value: "memberPrimaryContactNumber"
+      value: "memberPrimaryContactNumber",
+      CtstID:"ABHI_Endorsement_Request16"
     },
     {
       name: "Change my Alternate number- member",
-      value: "memberAlternateContactNumber"
+      value: "memberAlternateContactNumber",
+      CtstID:"ABHI_Endorsement_Request9"
     },
     {
       name: "Change in my Email ID- member",
-      value: "memberEmail"
+      value: "memberEmail",
+      CtstID:"ABHI_Endorsement_Request11"
     },
     {
       name: "Change my Alternate Email ID - member",
-      value: "memberAlternateEmail"
-    },
+      value: "memberAlternateEmail",
+      CtstID:"ABHI_Endorsement_Request7"
+    }, */
     {
       name: "Change of Nominee",
-      value: "nomineeContact"
+      value: "nomineeContact",
+      CtstID:"ABHI_Endorsement_Request2"
     },
     {
+      name: "Change in Address",
+      value: "ChangeinAddress",
+      CtstID:"ABHI_Endorsement_Request21"
+    },
+    /* {
       name: "Change in International Contact Number",
       value: "internationalContactNumber"
     },
     {
       name: "Change in International Address",
       value: "ChangeinInternationalAddress"
-    },
+    }, */
   ];
   relationships = [
     "Brother",
@@ -115,21 +129,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
     "Son in-law"
   ];
   filteredActivity: Observable<any[]> | any;
-  MemberfilteredActivity: Observable<any[]> | undefined;
   selectedPolicyNumber: any;
   MemberIdList: any;
   activityList: any = [];
-  memberActivityList: any = [];
   submitted = false;
   validatedMobileNumber: any;
   CaseSubSubTypeValue: any;
   agentCode: any = '';
   // otpValue = new FormControl;
   showOtpSection: boolean = false;
-  enteredOtp: any
   requestId: any;
   otpObj: any;
-  controlOfInput: any;
   selectedMember: any;
   policyInfoDetails: any;
   externalPolicyData: any;
@@ -138,21 +148,28 @@ export class EndorsementsNewRequestComponent implements OnInit {
   sendOtptDisabled: boolean = true;
   otpInfoObject: any = null;
   timerCounter: { min: number; sec: number; } | any;
-  selectedFormControlVal: any;
   screenSize: number | any;
   isDesktop: boolean = false;
   documentSize: any;
   uploadDoc: boolean = true;
   otpErrorMsge: boolean = false;
   errorMessage: string | undefined;
+  policyMembersList: [] = [];
+  policyNoChangeSubject = new Subject<string>();
 
   constructor(private formBuilder: FormBuilder,
     private endorsement_service: EndorsementsRequestsService,
     private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
-    private dialog: MatDialog, private languageService: LanguageService,
+    private dialog: MatDialog,
+    private languageService: LanguageService,
     private translateService: TranslateService) {
+      this.policyNoChangeSubject.pipe(
+        debounceTime(300), // wait for 300ms after the last keyup event
+      ).subscribe(value => {
+        this.onChange(value);
+      });
   }
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -183,7 +200,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
         aadharNumber: [''],
         alternateContactNumber: [''],
         email: [''],
-        internationalAddress: [''],
         internationalContactNumber: [''],
         nomineeName: [''],
         nomineeRelationship: [''],
@@ -215,11 +231,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policies = resp.data.getPolicyDetails;
-          console.log(this.policies);
-          this.policiesListData = this.removeDuplicates(this.policies, "policynumber");
+          this.policiesListData = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.getActivityType();
-          // this.getMemberActivityType();
         }
       },
       (err) => {
@@ -227,24 +240,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
 
-  onKeyDown(event: KeyboardEvent) {
-    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const regex = /^[0-9-]$/; // Allow only numbers and hyphens
-
-    const inputValue = (event.target as HTMLInputElement).value;
-
-    if (inputValue === '') {
-      this.caseCreationForm.get('member').setValue('');
-      this.MemberIdList = [];
-    }
-
-    // Allow backspace and other special keys
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-    // Prevent default if the key is not allowed
-    if (!regex.test(event.key)) {
-      event.preventDefault();
+  onPolicyNoChange(event: any) {
+    const inputValue = (event.target as HTMLInputElement).value.trim();
+    this.caseCreationForm.get('member').setValue('');
+    this.MemberIdList = [];
+    if (inputValue.length >= 16) {
+      this.policyNoChangeSubject.next(inputValue);
     }
   }
 
@@ -264,7 +265,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
 
   onChange(value: string) {
-    // this.caseCreationForm.get('endorsementType').reset();
+    this.selectedPolicyNumber = value;
     this.caseCreationForm.get('asignedTeam').reset();
     this.caseCreationForm.get('member').reset();
     this.caseCreationForm.get('member').setValue('');
@@ -278,6 +279,28 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == "") {
       this.caseCreationForm.get('policyNumber').reset();
     }
+    this.getPolicyMembers(value);
+  }
+
+  getPolicyMembers(value: string) {
+    const policyMembersReq = {
+      "policyNumber": value
+    }
+
+    this.endorsement_service.getPolicyMembersApi(policyMembersReq).subscribe(
+      (resp: any) => {
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
+          this.policyMembersList = resp?.data?.policyMembersList
+          this.getMemberIdList(this.policyMembersList)
+        }
+      },
+      (err) => {
+        console.log(err);
+    });
+  }
+
+  getMemberIdList(membersList: Array<any>) {
+    this.MemberIdList = membersList;
   }
 
   getActivityType(content = null) {
@@ -285,38 +308,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
       startWith(''),
       map((value: any) => value ? this._filter(value) : this.activityList?.slice()));
-    console.log(this.filteredActivity);
   }
   _filter(value: string) {
     console.log(value);
     const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x: any) => this._normalizeValue(x.policynumber).includes(filterValue));
-    this.selectedPolicyNumber = filteredValue;
-    if (this.selectedPolicyNumber.length > 0) {
-      this.getMemberIdList(this.selectedPolicyNumber);
-    } else {
-      this.MemberIdList = [];
-    }
-    return filteredValue;
-  }
-  getMemberIdList(policyNumber: any) {
-    let selectedValue = policyNumber[0].policynumber;
-    const result = this.policies.filter((x: any) => selectedValue === x.policynumber);
-    this.MemberIdList = result;
-  }
-  getMemberActivityType(content = null) {
-    this.memberActivityList = this.policiesListData.filter(value => value.memberid != null);
-    this.MemberfilteredActivity = this.caseCreationForm.controls['member'].valueChanges.pipe(
-      startWith(''),
-      map((value: any) => value ? this._memberfilter(value) : this.memberActivityList.slice()));
-  }
-  _memberfilter(value: string) {
-    const filterValue = this._normalizeValue(value);
-    const filteredValue = this.memberActivityList.filter((x: any) => this._normalizeValue(x.memberid).includes(filterValue));
+    const filteredValue = this.activityList?.filter((x: any) => {
+      const normalizedValue = this._normalizeValue(x.policyNumber);
+      return normalizedValue ? normalizedValue.includes(filterValue) : false;
+    });  
     return filteredValue;
   }
   _normalizeValue(value: string): string {
-    return value.toLowerCase().replace(/\s/g, '');
+    return value?.toLowerCase().replace(/\s/g, '');
   }
   _removealphabets(value: any) {
     return value.replace(/[^\d.-]/g, '');
@@ -332,9 +335,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'aadharNumber') {
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').setValidators([Validators.required, Validators.pattern('^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo || "No policy data available");
     }
-    if (value == 'ChangeinInternationalAddress') {
+    if (value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address1').updateValueAndValidity();
       this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
@@ -345,16 +348,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'alternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number);
-
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number || "No policy data available");
     }
     if (value == 'internationalContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('internationalContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('internationalContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'nomineeContact') {
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -363,45 +361,38 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      if (this.externalPolicyData?.policyData?.length > 0) {
-        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No);
+      if (this.externalPolicyData?.policyData?.[0]) {
+        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No || "No policy data available");
       }
     }
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryMobile);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryMobile || "No policy data available");
     }
     if (value == 'memberPrimaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();memberMobileNo
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo|| "No policy data available" );
     }
     if (value == 'memberAlternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'email') {
       this.caseCreationForm.get("endorsementDetails").get('email').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('email').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryEmailId);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryEmailId || "No policy data available");
     }
     if (value == 'alternateEmail') {
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Email_Id);
-
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Email_Id || "No policy data available");
     }
     if (value == 'memberEmail') {
       this.caseCreationForm.get("endorsementDetails").get('memberEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('memberEmail').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberEmailID);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberEmailID || "No policy data available");
     }
     if (value == 'memberAlternateEmail') {
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
@@ -410,7 +401,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'panNumber') {
       this.caseCreationForm.get("endorsementDetails").get('panNumber').setValidators([Validators.required, Validators.pattern('^([A-Z]){5}([0-9]){4}([A-Z]){1}$')]);
       this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo || "No policy data available");
     }
 
     if (value === 'panNumber' || value === 'aadharNumber') {
@@ -423,7 +414,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.isDisabled = true;
     }
 
-    if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress') {
+    if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.showOtpSection = false;
       this.isDisabled = false;
     }
@@ -484,9 +475,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.caseCreationForm.get("endorsementDetails").get('memberAlternateEmail').updateValueAndValidity();
     this.caseCreationForm.get("endorsementDetails").get('panNumber').clearValidators();
     this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
-    // this.caseCreationForm.get("endorsementDetails").get('otpValue').clearValidators();
-    // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
   }
+  getAddress() {
+    let addressParts: string[] = [];
+    if (this.caseCreationForm.get("address1")?.value) {
+        addressParts.push(this.caseCreationForm.get("address1")?.value);
+    }
+    if (this.caseCreationForm.get("address2")?.value) {
+        addressParts.push(this.caseCreationForm.get("address2")?.value);
+    }
+    if (this.caseCreationForm.get("pincode")?.value) {
+        addressParts.push(this.caseCreationForm.get("pincode")?.value);
+    }
+    const address = addressParts.join(', ');
+    const finalAddress = address.trim().length > 0 ? address : null;
+    return finalAddress;
+  }
+
   onSubmit() {
     this.submitted = true;
     if (!this.caseCreationForm.valid) {
@@ -496,13 +501,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (selectedType == 'alternateContactNumber' || selectedType == 'internationalContactNumber' || selectedType == 'primaryContactNumber' || selectedType == 'memberPrimaryContactNumber' || selectedType == 'memberAlternateContactNumber') {
       this.validatedMobileNumber = this.caseCreationForm.get("endorsementDetails").get(selectedType).value;
       if (this.validatedMobileNumber != this.otpObj.MobileNumber) {
-        //this.confirmationDialogService.confirm("Confirm Text", "Mobile number is not validated please do otp validation");
         return;
       }
     }
     if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
       if (this.selctedFileName === "") {
-        // this.showNote = true;
         this.isFilenotSelected = true;
         return;
       }
@@ -516,11 +519,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
       console.log("Case Sub sub type:", this.CaseSubSubTypeValue)
     }
+
     let payloadObj: any = {
       AgentCode: this.agentCode,
-      MemberName: this.selectedMember.membername,
+      MemberName: this.selectedMember.memberName,
       MobileNumber: this.policyInfoDetails.policyDetails.primaryMobile,
-      MemberRelation: this.selectedMember.relationwithproposer,
+      MemberRelation: this.selectedMember.relationWithProposer,
       EndorsementRequest: {
         ActivityDescription: null,
         ActivitySubject: null,
@@ -530,6 +534,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
         AttachmentName: null,
         AttachmentType: null,
         CaseSubSubType: this.CaseSubSubTypeValue.name,
+        CtstID: this.CaseSubSubTypeValue.CtstID,
+        Source:'Customer Portal',
         CaseSubType: "Endorsement",
         CaseTitle: null,
         CaseType: "Endorsement",
@@ -541,7 +547,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         CustomerType: "Retail Customer",
         IsClosed: "Yes",
         ModifiedOn: null,
-        NotesDescription: null,
+        NotesDescription: this.caseCreationForm.get("addNotes").value,
         NotesTitle: null,
         Origin: "USP-ABHICONNECT",
         Policy: this.caseCreationForm.get("policyNumber").value,
@@ -552,21 +558,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
         CreateAttachment: null,
         EndorsementDetails: {
           AadharCardNo: this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value,
+          PanCardNo: this.caseCreationForm.get("endorsementDetails").get("panNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("panNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("panNumber").value,
           PrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value,
           AlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value,
-          MemberPrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value,
-          MemberAlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value,
-          InternationalContactNumber: this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value,
           Email: this.caseCreationForm.get("endorsementDetails").get("email").value,
           AlternateEmail: this.caseCreationForm.get("endorsementDetails").get("alternateEmail").value,
-          MemberEmail: this.caseCreationForm.get('endorsementDetails').get('memberEmail').value,
-          MemberAlternateEmail: this.caseCreationForm.get('endorsementDetails').get('memberAlternateEmail').value,
-          InternationalAddress: this.caseCreationForm.get("endorsementDetails").get("internationalAddress").value,
           NomineeName: this.caseCreationForm.get("endorsementDetails").get("nomineeName").value,
           NomineeRelationship: this.caseCreationForm.get("endorsementDetails").get("nomineeRelationship").value,
           NomineeContact: this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value != null ? this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value.toString() : this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value,
+          Address: this.getAddress(),
+
+          MemberPrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value,
+          MemberAlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value,
+          InternationalContactNumber: this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value,
+          MemberEmail: this.caseCreationForm.get('endorsementDetails').get('memberEmail').value,
+          MemberAlternateEmail: this.caseCreationForm.get('endorsementDetails').get('memberAlternateEmail').value,
           Country: null,
-          PanCardNo: this.caseCreationForm.get("endorsementDetails").get("panNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("panNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("panNumber").value,
         }
       }
     }
@@ -594,11 +601,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .subscribe((Respevent: any) => {
                     let event: any = Respevent;
                     if (Respevent?.data && Respevent?.statusCode == "200" && Respevent?.isSuccess) {
-                      this.toast.success({
-                        detail: 'SUCCESS',
-                        summary: `Your request ${resp.data.response.caseId} has been registered`,
-                        duration: 5000,
-                      });
+                      this.openModal(resp);
                     }
                     else if (Respevent?.message) {
                       this.toast.error({
@@ -606,14 +609,15 @@ export class EndorsementsNewRequestComponent implements OnInit {
                         summary: Respevent.message,
                         duration: 5000,
                       });
+                      this.backToEndorsment();
                     }  else if (Respevent == null || Respevent?.message == undefined) {
                       this.toast.error({
                         detail: 'ERROR',
                         summary: "File upload was not successfull. Try again later!",
                         duration: 5000,
                       });
+                      this.backToEndorsment();
                     }
-                    this.backToEndorsment();
                   }, (error: any) => {
                     console.log(error);
                     this.toast.error({
@@ -625,12 +629,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
               }
             }
             else {
-              this.toast.success({
-                detail: 'SUCCESS',
-                summary: `Your request ${resp.data.response.caseId} has been registered`,
-                duration: 5000,
-              });
-              this.backToEndorsment();
+              this.openModal(resp);
             }
           }
           else {
@@ -650,12 +649,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
   backToEndorsment() {
     this._router.navigate(["endorsements"]);
   }
-  initiateKyc() {
-    console.log(this.caseCreationForm.value);
+  
+  openModal(resp: any) {
+    const dialogRef = this.dialog.open(SuccessModalComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { 
+        title: 'Endorsement',
+        id: `Endorsement Id: ${resp.data.response.caseId}`
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+        this.backToEndorsment();
+    });
   }
-  shareKycLink() {
-    console.log(this.caseCreationForm.value);
-  }
+
   newfile(e: any) {
     let files;
     let file;
@@ -752,7 +761,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         emailId: this.otpObj.EmailId,
         Mobile: this.otpObj.MobileNumber,
       };
-      this.loginservice.validateOtpRequestApi(modal).subscribe(
+      this.endorsement_service.endorsementValidateOtpApi(modal).subscribe(
         (resp: any) => {
           if (resp && resp?.statusCode == "200" && resp?.isSuccess) {
             if (resp.message) {
@@ -769,17 +778,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
               this.errorMessage = "Something went wrong, please try again";
               this.isDisabled = false;
               this.sendOtptDisabled = false;
-              // this.toast.error({detail: "Something went wrong, please try again"})
             }
           }
           else {
             if (resp && resp.message) {
               this.otpErrorMsge = true;
               this.errorMessage = resp.message;
-              // this.toast.error({ detail: resp.errorMessage});
             } else {
               this.errorMessage = "Something went wrong, please try again";
-              // this.toast.error({detail: "Something went wrong, please try again"})
             }
             this.sendOtptDisabled = false;
           }
@@ -789,8 +795,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.sendOtptDisabled = false;
           this.otpErrorMsge = true;
           this.errorMessage = err;
-          // this.closeOtpPopup();
-          // this.toast.error({detail: "Something went wrong, please try again"});
         }
       );
       this.otpErrorMsge = false;
@@ -803,13 +807,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   memberIdChange(event: any) {
     const member = event.target.value;
-    this.selectedMember = this.policies.find((obj: any) => {
-      return obj.memberid === member;
+    this.selectedMember = this.policyMembersList.find((obj: any) => {
+      return obj.memberId === member;
     });
     if (this.selectedMember != "") {
       let policyObj = {
-        policyNumber: this.selectedMember.policynumber,
-        MemberId: this.selectedMember.memberid
+        policyNumber: this.selectedPolicyNumber,
+        MemberId: this.selectedMember.memberId
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp: any) => {
@@ -859,25 +863,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
     this.isTimerRunning = true;
 
-    // RxJS interval emits every second (1000ms)
     const timer$ = interval(1000).pipe(
       take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
     );
 
-    // Subscribe to the interval only once
     timer$.subscribe({
       next: () => {
-        this.timeLeft--; // Decrease the time left by 1 every second
+        this.timeLeft--;
       },
       complete: () => {
-        this.isTimerRunning = false; // Reset the flag once the timer completes
+        this.isTimerRunning = false;
       }
     });
   }
 
   omit_special_char(event: any) {
     var k;
-    k = event.charCode;  //         k = event.keyCode;  (Both can be used)
+    k = event.charCode;
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
   }
 
@@ -887,26 +889,43 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.showDocInfo = false;
   }
 
-  // Handle key events for OTP input
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
     const target = event.target as HTMLInputElement;
 
-    // Move to the next box when a number is entered
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;  // Store digit
       if (index < 5) {
         const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
         nextInput.focus();
+      } else {
+        const btnElement = document.getElementById('verify') as HTMLButtonElement;
+        btnElement.focus();
       }
     }
 
-    // Handle backspace
     else if (event.key === 'Backspace') {
       this.otp[index] = '';  // Clear current box
       if (index > 0) {
         const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
         previousInput.focus();
+      }
+    }
+
+    else if (event.key === 'Tab') {
+      if (event.shiftKey) {
+        if (index > 0) {
+          const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
+          previousInput.focus();
+        }
+      } else {
+        if (index < 5) {
+          const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
+          nextInput.focus();
+        } else {
+          const btnElement = document.getElementById('verify') as HTMLButtonElement;
+          btnElement.focus();
+        }
       }
     }
   }

@@ -64,7 +64,7 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(requestBody: any) {
-    const getrenewalinfo = this.configService.config.baseUrl1 + this.configService.config.getRenewalInfo;
+    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
@@ -111,9 +111,18 @@ export class RenewalsService {
     const paymentStatus = `${this.configService.config.baseUrl}${this.configService.config.getPaymentStatus}?orderId=${orderId}`;
     return this.httpService.post(paymentStatus,reqBody)
   }
+
+  getPaymentDetails(reqBody:any){
+    const paymentDetails = this.configService.config.baseUrl + this.configService.config.getPaymentDetails;
+    return this.httpService.post(paymentDetails,reqBody);
+  }
   getFullQuoteApi(reqBody:any){
     const fullquote = this.configService.config.baseUrl1 + this.configService.config.fullQuote;
     return this.httpService.post(fullquote, reqBody);
+  }
+  cpRedirectionApi(reqBody:any){
+    const reDirectionLink = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
+    return this.httpService.post(reDirectionLink, reqBody);
   }
 
 }

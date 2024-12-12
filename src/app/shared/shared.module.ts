@@ -5,10 +5,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModalComponent } from './components/shared-modal/shared-modal.component';
 import { MyMaterialModule } from '../material.module';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { SuccessModalComponent } from './components/success-modal/success-modal.component';
+import { BankbranchModalComponent } from './components/bankbranch-modal/bankbranch-modal.component';
 
 @NgModule({
   declarations: [
-    SharedModalComponent, ConfirmModalComponent],
+    SharedModalComponent, ConfirmModalComponent, SuccessModalComponent, BankbranchModalComponent],
   imports: [
     FormsModule,
     CommonModule,

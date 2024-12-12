@@ -11,6 +11,8 @@ import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import HeaderInformation from 'src/app/layout/headerInfo';
+import { LeadsService } from 'src/app/leads/leads.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-products',
@@ -43,17 +45,102 @@ export class ProductsComponent implements OnInit {
   displayNoProductsMessage: boolean = false;
   showSpecialForm: boolean = false;
   state: any;
-
+  paramLeadId: any;
+  leadId: any;
+  quickQuoteRedirect : Boolean = false;
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute, private languageService: LanguageService,
-   private translateService: TranslateService,public headerInformation : HeaderInformation) {
-
-  }
+   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
 
   ngOnInit(): void {
+    this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
+    console.log(this.paramLeadId)
+
+    this.route.queryParams.subscribe(params => {
+      this.leadId = params['leadnumber'];
+      if(this.leadId){
+        this.quickQuoteRedirect = true;
+      }
+    });
+
+    this.route.params.subscribe(async (params) => {
+      if (Object.keys(this.route.snapshot.params).length > 0) {
+        console.log('Route has parameters:', params);
+        this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
+        console.log(this.paramLeadId)
+        this.paramLeadId = JSON.parse(this.paramLeadId)
+        this.leadId = this.paramLeadId.LeadId;
+        this.partnerId = this.paramLeadId.PartnerId;
+        this.productId = this.paramLeadId.ProductId;
+        // this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
+        console.log(this.formSequence);
+        localStorage.setItem('token', this.paramLeadId.token)
+        localStorage.setItem('agentCode', this.paramLeadId.AgentCode)
+        localStorage.setItem('leadId', this.paramLeadId.LeadId)
+        this.agentCode = this.paramLeadId.AgentCode;
+      }
+    
+      try {
+        const reqData = {
+          partnerId: this.partnerId,
+          productId: this.productId,
+        };
+        const res = await firstValueFrom(this.common.Getformsequence(reqData));
+        console.log(res);
+        this.formSequence = JSON.parse(res.data.formSequence);
+        console.log(this.formSequence);
+        // if(this.agentCode != "467898"){
+        //   this.isD2C = false;
+        // }
+        // console.log(this.formSequence[this.getFormIndexValue()].formName)
+        // console.log(this.paramLeadId.CurrentIndex)
+        // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        // if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+        //   let reqObj = {
+        //     "leadId": this.leadId
+        //   }
+        //   this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
+        //     next: (res: any) => {
+        //       console.log(res);
+        //       res = JSON.parse(res.data).data
+        //       console.log(res);
+        //       this.policyDetails = res;
+        //       console.log(this.policyDetails);
+        //       this.filteredPolicies = this.policyDetails.policyDetails.filter(
+        //         (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
+        //       );
+              
+        //       console.log(this.filteredPolicies);
+
+        //       console.log(this.dynamicFormGroup.value);
+              
+        //       this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+        //       this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
+        //       this.formData.productName = this.filteredPolicies[0]?.productName || null;
+        //       this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+        //       this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
+        //       this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+        //       // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
+        //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+              
+        //       console.log(this.dynamicFormGroup.value);
+
+        //       // Merging updated formData with dynamicFormGroup values
+        //     },
+        //     error: (err) => {
+        //       console.error(err);
+        //     }
+        //   });
+        // }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+    
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -61,8 +148,6 @@ export class ProductsComponent implements OnInit {
         }
       });
     });
-
-
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))
@@ -143,7 +228,7 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      // res.data = this.aesEncryptService.decrypt(res.data);
+      console.log(res);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum);
       
@@ -171,13 +256,20 @@ export class ProductsComponent implements OnInit {
       await this.getFormSequence(item);
       console.log(item)
       console.log(this.formData);
-      
-      const productData = {
+
+      const productData :any = {
         partnerId: item.partnerId,
         productId: item.productId,
         proposalNum: this.proposalNum,
         applicableZones:item.applicableZones
       }
+
+      if(this.quickQuoteRedirect){
+        await this.getLeadInformationByLeadNumber(item.productName)
+        productData.leadId = this.leadId;
+        productData.quickQuoteRedirect = this.quickQuoteRedirect
+      }
+
       console.log(productData)
       // if (this.formSequence != null && this.formSequence.length > 0) {
       //   this.router.navigate(['yatra'], {
@@ -186,9 +278,40 @@ export class ProductsComponent implements OnInit {
       // }
    
         if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
-          this.router.navigate(['rug'], {
-             state: { productData: productData, formSequence: this.formSequence }
-          });
+          if(this.agentCode == "467898"){
+            let reqObj = {
+              "leadId": this.leadId,
+              "agentCode": this.agentCode,
+              "partnerId": item.partnerId,
+              "productId": item.productId
+            }
+            this.common.UpdateAgentAllFormData(reqObj).subscribe({
+              next: (res: any) => {
+                res = JSON.parse(res.data)
+                console.log(res);
+                if (res.isSuccess == true && res.statusCode == 200) {
+                  this.router.navigate(['rug'], {
+                    state: { productData: productData, formSequence: this.formSequence }
+                 });
+                  // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                  //   this.incrementIndex();
+                  //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                    
+                  // }
+        
+                }
+        
+              },
+              error: (err:any) => {
+                console.error(err);
+              }
+            });
+          }else{
+            this.router.navigate(['rug'], {
+               state: { productData: productData, formSequence: this.formSequence }
+            });
+
+          }
         }else{
           this.router.navigate(['yatra'], {
             state: { productData: productData, formSequence: this.formSequence }
@@ -206,7 +329,6 @@ export class ProductsComponent implements OnInit {
       const reqData = {
         "partnerId": item.partnerId,
         "productId": item.productId
-
       }
       console.log(reqData);
       const res = await firstValueFrom(this.common.Getformsequence(reqData));
@@ -227,32 +349,31 @@ export class ProductsComponent implements OnInit {
   }
   productsDetail(item: any) {
     this.router.navigate(['quote/productDetails'], {
-      state: { item: item }
+      state: { item: item  , leadnumber:this.leadId  , quickQuoteRedirect : this.quickQuoteRedirect}
     });
   }
 
 
-  addToCompare(item: any) {
-
-    const MAX_COMPARE_ITEMS = 3; // Define a constant for the max compare limit
-    // Check if the limit has been reached
-    if (this.compareItems.length >= MAX_COMPARE_ITEMS) {
-      this.toast.error({ detail:"",summary: 'Only three products can be added to compare!' ,duration:5000});
-      return;
-    }
-    // Check if the item already exists in the array
-    const isAlreadyPresent = this.compareItems.some(existingItem => existingItem.productName === item.productName);
-    if (isAlreadyPresent) {
-      this.toast.warning({ detail: "", summary: 'This product has already been added for comparison. Please choose another product. ', duration: 5000 });
-
-      return; // Skip adding the item
-    }
-    this.getProductInformation(item.productId);
+addToCompareProducts(item: any){
+let productId = this.productService.addToCompare(item,this.compareItems);
+if(productId!=0){
+  this.getProductInformation(productId);
+}
 }
 
+removeCompareItemProduct(item: any){
+ this.compareItems = this.productService.removeCompareItem(item,this.compareItems);
+  
+}
+navigateToProductComparison(){
+  this.productService.navigateToProductComparison(this.compareItems);
+}
+
+closeProductComparison(){
+  this.productService.closeComparison(this.compareItems);
+}
 
 getProductInformation(productId: String ){
-  let features: any
   const reqData = {
     "productId": productId,
     "agentCode": localStorage.getItem('agentCode')
@@ -270,24 +391,6 @@ getProductInformation(productId: String ){
   });
 }
 
-removeCompareItem(item: any){
-  this.compareItems = this.compareItems.filter(existingItem => existingItem !== item);
-  console.log('Item removed from comparison.');
-}
-navigateToProductComparison(){
-  this.compareItems = this.compareItems.map((product:any) =>{
-    product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
-    return product;
-  });
-  sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
-  this.router.navigate(['/products/comparison'], {
-  });
-}
-
-closeComparison(){
-  this.compareItems = [];
-}
-
 donwloadBrowcher(productName : any){
   const downloadBrowcherProduct = this.headerInformation.downloadBrowcher.find((element: any) =>
     element.productName.includes(productName));
@@ -297,14 +400,37 @@ donwloadBrowcher(productName : any){
       const link = document.createElement('a');
       link.href = URL;
       link.download = URL.split('/').pop() || 'download.pdf';     
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    // First, try downloading by clicking the link
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+ 
+    window.open(URL, '_blank');  // Open in a new tab for Chrome
+      
     } else {
       console.error('Invalid or missing URL.');
     }
  
 }
 
+  async getLeadInformationByLeadNumber( productName: any) {
+    try {
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(this.leadId));
+      const leadInformation = response?.data?.leadList[0];
+      leadInformation.interestedProductName = productName;
+      leadInformation.isUpdate = 1;
+
+      this.leadsService.saveLeadData(leadInformation).subscribe(
+        (response) => {
+          console.log("Lead has been Successfully Updated", response);
+        }, (error) => {
+          console.log("Failed to update Lead Infomation", error);
+        });
+
+    }
+    catch (error) {
+      console.log("Failed to fetch lead Information!", error)
+    }
+  }
 
 }

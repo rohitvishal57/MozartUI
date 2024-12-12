@@ -17,20 +17,42 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProductCombination',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetPremium',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/BranchBanking/SaveBBCommonDraft',
-    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations'
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations',
+    'https://usp.monocept.ai/api/v1/SaveBBCommonDraft',
+    'https://upuat.adityabirlahealth.com/api/v1/GetBBOTP',
+    'https://upuat.adityabirlahealth.com/api/v1/ValidateBBOTP',
+    'https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft',
+    'https://upuat.adityabirlahealth.com/api/v1/SaveBBCommonDraft',
+    'https://upuat.adityabirlahealth.com/api/v1/HalfQuote',
+    'https://usp.monocept.ai/api/rug/GetSumInsuredList',
+    'https://usp.monocept.ai/api/rug/GetFamilyConstructByProductCode',
+    'https://usp.monocept.ai/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetProposerRelations',
+    'https://usp.monocept.ai/api/v1/GetBBPolicyInfoByLeadId',
+    'https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId',
+    'https://usp.monocept.ai/api/rug/UpdateAgentAllFormData',
+    'https://upuat.adityabirlahealth.com/api/rug/GetFamilyConstructByProductCode',
+    'https://upuat.adityabirlahealth.com/api/rug/GetSumInsuredList',
+    'https://upuat.adityabirlahealth.com/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetD2CPolicyInfoByLeadId',
+    'https://upuat.adityabirlahealth.com/api/rug/GetD2CPolicyInfoByLeadId',
+    'https://usp.monocept.ai/api/v1/RedirectAxisBranchBankingRequest',
+    'https://usp.monocept.ai/api/rug/GetProductCombination',
+    'https://usp.monocept.ai/api/v1/',
+    'https://upuat.adityabirlahealth.com/api/v1/'
   ];
 
-  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService ) { }
+  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
-    
+
     if (isExcluded) {
       return next.handle(req);
     }
+    this.loadingService.show();
 
     if (req.body && !(req.body instanceof FormData) && req?.method == 'POST') {
-      this.loadingService.show();
       const encryptedBody = this.aesEncryptService.encrypt(req.body);
       const clonedRequest = req.clone({
         body: this.isEncrypt ? encryptedBody : req.body,
@@ -41,19 +63,18 @@ export class EncryptionInterceptor implements HttpInterceptor {
           'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization'
         }
       });
-      
+
       return next.handle(clonedRequest).pipe(
         tap((res: any) => {
-          if (res.body && res?.body?.isSuccess) {
-            const url = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
-            if (url?.redirectUrl) {
-              const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
+          if (res?.body && res?.body?.data) {
+            const decryptedData = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
+            if (decryptedData.hasOwnProperty('redirectUrl')) {
+              const modifiedUrl = decryptedData?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
               window.open(modifiedUrl, "_blank");
-            } else {
-              res.body.data = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
             }
+            res.body && localStorage.setItem('token', res?.body.token);
+            res.body = decryptedData;
           }
-          res.body && localStorage.setItem('token', res?.body?.token);
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
@@ -69,8 +90,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       tap((res: any) => {
-        if (res.body && res?.body?.isSuccess) {
-          res.body.data = this.aesEncryptService.decrypt(res?.body?.data);
+        if (res.body && res?.body?.data) {
+          res.body && localStorage.setItem('token', res?.body.token);
+          res.body = this.aesEncryptService.decrypt(res?.body?.data);
         }
       }),
       finalize(() => this.loadingService.hide())

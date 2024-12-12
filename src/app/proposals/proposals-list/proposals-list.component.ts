@@ -4,11 +4,13 @@ import { DatePipe } from "@angular/common";
 import { ProposalList } from 'src/app/interface/proposals.interface';
 import { ProposalsService } from '../proposals.service';
 import { CommonService } from 'src/app/services/common.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-proposals-list',
@@ -50,7 +52,7 @@ export class ProposalsListComponent {
     "proposalNumber": "", 
     "agentCode": this.agentCode, 
     "policyType": "", 
-    "policyStatus": "", 
+    "proposalStatus": "", 
     "startDate": null as string | null,
     "endDate": null as string | null, 
     "pageNumber": this.page,
@@ -66,12 +68,75 @@ export class ProposalsListComponent {
     private datePipe: DatePipe,
     private commonService:CommonService, private router: Router,
     private toast: NgToastService,
-    private encryptionService: EncryptionService
+    private encryptionService: EncryptionService,
+    private languageService: LanguageService,
+   private translateService: TranslateService,
+   private activatedRoute: ActivatedRoute
   ) {}
   
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
+      const filter = params['filter'];
+      if(routeStatus){
+        console.log("route status",routeStatus);
+        this.selected = "proposalStatus"
+        this.searchInputControl.setValue(routeStatus); 
+        this.applySearch();
+      }
+      if (filter) {
+        console.log("route filter", filter);
+        const currentDate = new Date();
+        switch (filter) {
+          case 'Last7Days':
+            this.startDate = this.datePipe.transform(
+              new Date(currentDate.setDate(currentDate.getDate() - 7)),
+              'yyyy-MM-dd'
+            );
+            this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+            break;
+    
+          case 'LastMonth':
+            const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+            this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
+            break;
+    
+          case 'QuarterWise':
+            const currentMonth = currentDate.getMonth();
+            const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+            const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
+            const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
+            this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
+            break;
+    
+          case 'FinancialYear':
+            const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
+            const financialYearStartDate = new Date(year, 3, 1); // April 1st
+            const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
+            this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
+            break;
+    
+          default:
+            console.log("Unknown filter:", filter);
+            break;
+        }    
+        this.applyFilter();
+      }
+    });
     this.getProposalList();
     this.getProducts();
+    this.checkView(); //Screen View check
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -87,7 +152,7 @@ export class ProposalsListComponent {
         if (response.isSuccess) {
           this.proposalList = response.data.proposalList.map((item: any) => ({
             ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
-          })); 
+          }));
           console.log("proposal List",this.proposalList);
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType]; 
@@ -218,6 +283,8 @@ export class ProposalsListComponent {
       return "Enter Proposal Number";
     } else if (this.selected === "leadId") {
       return "Enter Lead ID";
+    } else if (this.selected === "proposalStatus") {
+      return "Enter Proposal Status";
     }
     else {
       return "Search...";
@@ -229,6 +296,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposer = "";
     this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber ="",
+    this.proposalListRequestBody.proposalStatus ="",
     this.searchInputControl.reset();
     this.getProposalList();
   }
@@ -240,21 +308,33 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       }else if (this.selected === "proposalNumber") {                
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalStatus="";
+      }
+      else if (this.selected === "proposalStatus") {  
+        console.log("seleted",this.selected);
+        this.proposalListRequestBody.proposalStatus = trimmedValue || "";
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalNumber =""
       }
       this.first = 0;
       this.page = 1;
@@ -280,15 +360,28 @@ export class ProposalsListComponent {
     
     try {
       const reqData = {
-        partnerId : 0,
-        agentCode : this.agentCode
+        partnerId : proposalDetails.partnerId,
+        productId : proposalDetails.productId,
+        formId : proposalDetails.formId,
+        proposalNum : proposalDetails.proposalNumber,
+        agentCode : this.agentCode,
+        currentFormSequence : proposalDetails.formSequence,
+        leadId : proposalDetails.leadId
       }
+      localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
+      const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+
+      this.router.navigate(['yatra'], {
+        queryParams: { data: encodedEncryptedData }
+      });
       // await this.getProposalNum();
       // const productData = {
-      //   partnerId : 1,
-      //   productId : 1,
-      //   proposalNum: this.proposalNum
-
+      //  "partnerId": 1,
+  // "productId": 1,
+  // "formId": 1,
+  // "proposalNum": "UPP110611475112",
+  // "agentCode": "4620973",
+  // "currentFormSequence": "0
       // }
       // await this.getFormSequence(productData);
       // if (this.formSequence != null && this.formSequence.length > 0) {
@@ -327,6 +420,20 @@ export class ProposalsListComponent {
       localStorage.setItem("formIndex", "0");
     } catch (err) {
       this.toast.warning({ detail: "", summary: "Form Configuration not found!!", duration: 2000 });
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); //Screen View check
+  }
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
     }
   }
 }

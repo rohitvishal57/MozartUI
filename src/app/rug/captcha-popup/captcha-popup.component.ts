@@ -1,6 +1,8 @@
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NgToastService } from 'ng-angular-popup';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-captcha-popup',
@@ -15,7 +17,8 @@ export class CaptchaPopupComponent {
   submitted: boolean = false;
   result: any;
   isCaptchaValidated: boolean = false;
-  constructor(private fb: FormBuilder,
+  otpResponse: any;
+  constructor(private fb: FormBuilder, private yatraService: YatraService, private toast: NgToastService,
     private dialogRef: MatDialogRef<CaptchaPopupComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) { }
@@ -84,15 +87,25 @@ export class CaptchaPopupComponent {
       console.log('CAPTCHA validated successfully');
       this.isCaptchaValidated = true;
       let reqObjBody = this.data;
-      // const res = await this.dataService.postApiCall('/BranchBanking/GetBBOTP', reqObjBody);
-      // this.otpResponse = res;
-      // if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
-      //   this.loading = false
-      //   this.toastr.success(this.otpResponse.statusMessage,'',
-      //   { timeOut: 5000 }
-      //   );
-      //   this.dialogRef.close(this.otpResponse);
-      // }
+      this.yatraService.getBbOtp(reqObjBody).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          this.otpResponse = JSON.parse(response.data);
+          console.log(this.otpResponse);
+
+          if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
+            this.toast.success({ detail: "SUCCESS", summary: this.otpResponse.message, duration: 3000 });
+            this.dialogRef.close(this.otpResponse);
+          }else{
+            this.dialogRef.close(this.otpResponse);
+          }
+
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+
     } else {
       this.result = 'Invalid CAPTCHA, please try again';
       this.reloadCaptcha();

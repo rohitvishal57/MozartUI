@@ -1,4 +1,7 @@
 /* Required Css Start */
+.heading-16-red{
+  font-size: 15px;
+}
 ::ng-deep .table>:not(caption)>*>* {
   background: hidden;
 }
@@ -27,6 +30,10 @@
   background: var(--Neutral-Additional-White100, #FFFFFF) !important;
   padding: 8px 12px; 
   margin: 0 5px; 
+  @media (max-width:767px) {
+    margin: 0 0;
+    padding: 8px 8px; 
+  }
 }
   
 ::ng-deep .p-paginator .p-paginator-first,
@@ -44,6 +51,10 @@
   background-color: white;
   padding: 8px 12px; 
   margin: 0 5px;
+  @media (max-width:767px) {
+    margin: 0 0;
+    padding: 8px 8px; 
+  }
 }
   
 ::ng-deep .p-paginator .p-paginator-page:hover,
@@ -176,6 +187,7 @@ padding:0 0 0 10px !important;
 .tableSubMain .table thead tr, .tableSubMain .table thead tr th,
 .tableSubMain .table tbody td {
   background: transparent;
+  cursor: auto;
 }
 .tableSubMain .table td.card_insureInfo{
   vertical-align: top;

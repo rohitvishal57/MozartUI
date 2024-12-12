@@ -1,0 +1,34 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+
+            </div>
+            <div>
+                <form>
+                    <a href="https://uat-healthissuance.adityabirlahealth.com/nbdesk/service/AxisPrepopulation.aspx" target="_blank" type="submit" class="m-2 btn btn-primary">Encrypt</a>
+
+                    <section class="white_container mb-3">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h6 class="heading-16-red">encrypted data</h6>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-8 col-xl-8">
+                                <div class="input-block form-floating input-block-renew">
+                                    <textarea class="form-control" rows="5" name="encryptedString"
+                                        [(ngModel)]="encryptedString"></textarea>
+                                    <!-- <label for="firstname">{{"First Name" | translate}} *</label> -->
+                                </div>
+                                <button type="submit" class="btn btn-primary m-2" (click)="postData()">Submit BB Payload</button>
+                                <button type="submit" class="btn btn-primary m-2" (click)="postD2cData()">Submit D2C Payload</button>
+                                
+                            </div>
+
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

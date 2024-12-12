@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EventsListComponent } from '../events-list/events-list.component';
 import { EventsNewComponent } from './events-new.component';
+import { BirthdayWishesComponent } from '../birthday-wishes/birthday-wishes.component';
 
 const routes: Routes = [
   { path: "eventsList", component: EventsListComponent },
   { path: "createEvents", component: EventsNewComponent },
+  { path: "birthdaysList", component:BirthdayWishesComponent}
 ];
 
 @NgModule({

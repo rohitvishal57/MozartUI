@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { LeadsList } from '../leads-list.interface';
 import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
@@ -22,8 +22,8 @@ import { TranslateService } from '@ngx-translate/core'; // Import TranslateServi
 })
 export class LeadsListComponent {
   
-
   leadsList: LeadsList[] = [];
+  filterType: string = "totalRecords";
   countsList: any = [];
   activeFilter: string = "all";
   page: number = 1;
@@ -59,8 +59,6 @@ export class LeadsListComponent {
   selectedCheckBox = false
   checkBoxSelectedLeads: any = [];
   auditTrails: any;
-  referenceStatus: any;
-  referenceSubStatus: any;
   statusUpdateLead: any;
   startDate: any;
   endDate: any;
@@ -71,13 +69,19 @@ export class LeadsListComponent {
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
-  formSequence: any[] = [];
+  leadFilterStatus  = [
+    { "name": "Open", "selected": false },
+    { "name": "In progress", "selected": false },
+    { "name": "Won", "selected": false },
+    { "name": "Lost", "selected": false },
+    { "name": "Lead Aged", "selected": false }
+  ];
   private allJsonFormData: any[] = [];
   formData: any = {};
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
-  proposalNumber : string ='';
+  leadId: any;
 
   constructor(
     private leadsService: LeadsService,
@@ -90,36 +94,48 @@ export class LeadsListComponent {
     private common: CommonService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
-    private translateService: TranslateService
-
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
-
-  leadsInfoListRequestBody = {
-    "agentcode": this.agentCode,
-    "myleads": true,
-    "assignedleads": true,
-    "unassignedleads": true,
-    "start": 1,
-    "viewBy": [
-      ""
-    ],
-    "length": 10,
-    "searchby": "",
-    "searchlist": "",
-    "fromdate": null,
-    "todate": null,
-    "policyList": "",
-    "isSellerPortal": true
+  leadsInfoListRequestBody ={
+    "productName": "",
+    "agentCode": this.agentCode,
+    "name": "",
+    "leadNumber": "",
+    "email": "",
+    "leadAssigne": "",
+    "policyType": "",
+    "startDate": null,
+    "endDate": null,
+    "pageNumber": this.page,
+    "pageSize": this.rows,
+    "mobileNumber": "",
+    "filterType": "",
+    "leadStatus": ""
   }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
           this.translateService.use('en');
         }
       });
+    });
+
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeLeadStatus  = params['status'];
+      if(routeLeadStatus){
+        this.leadFilterStatus.map((leadStatus:any)=>{
+         if(leadStatus.name == routeLeadStatus){
+          leadStatus.selected = true;
+         } 
+        });
+        this.applyFilter();
+      }
     });
 
     this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
@@ -135,7 +151,7 @@ export class LeadsListComponent {
     });
 
     this.today = new Date().toISOString().split('T')[0];
-
+    this.checkView(); //Screen View check
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
@@ -154,15 +170,15 @@ export class LeadsListComponent {
     this.getLeadsList();
   }
   getLeadsList() {
-    this.leadsInfoListRequestBody.start = this.page;
-    this.leadsInfoListRequestBody.length = this.rows;
+    this.leadsInfoListRequestBody.pageNumber = this.page;
+    this.leadsInfoListRequestBody.pageSize = this.rows;
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
-        if (response) {
+        if (response.isSuccess) {
           this.leadsList = response.data.leadList;
-          console.log("Renewal List", this.leadsList);
+          console.log("Leads List", this.leadsList);
           this.countsList = response.data;
-          this.totalRecords = this.countsList.totalCount;
+          this.totalRecords = response.data[this.filterType]; 
         }
         else { console.error("API request was not successful."); }
       },
@@ -203,27 +219,16 @@ export class LeadsListComponent {
       }
     );
   }
-  filterQuotes(filter: string) {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   // this.productsList.forEach((product) => (product.selected = false));
-   // this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   // this.startDate = "";
-   // this.endDate = "";
-    this.leadsInfoListRequestBody.myleads = true;
-    this.leadsInfoListRequestBody.assignedleads = true;
-    this.leadsInfoListRequestBody.unassignedleads = true;
-    this.filterLeads = false;
+  filterQuotes(filter: string,filterRange: string) {
+    this.leadsInfoListRequestBody.filterType = filter;
+    this.first = 0;this.page = 1;
     this.getLeadsList();
     this.activeFilter = filter;
-   // this.searchInputControl.reset();
+    this.filterType = filterRange;
   }
-
   getProducts() {
     const reqData = {
-      "agentCode": this.agentCode
+      agentCode: this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
@@ -231,7 +236,7 @@ export class LeadsListComponent {
         console.log("product list", this.productsList)
       },
       error: (err) => {
-        console.log("error coming form getproduct list API");
+        console.log("error coming form getproduct list API",err);
       }
     });
   }
@@ -241,11 +246,11 @@ export class LeadsListComponent {
     }
     this.toggeledropdown = !this.toggeledropdown;
   }
-
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter((product) => product.selected).length;
     const selectedpolicyTypeCount = this.StaticPolicyTypes.filter((policyType) => policyType.selected).length;
-    let count = selectedProductsCount + selectedpolicyTypeCount;
+    const selectedLeadStatus = this.leadFilterStatus.filter((leadStatus) => leadStatus.selected).length;
+    let count = selectedProductsCount + selectedpolicyTypeCount+selectedLeadStatus;
     if (this.startDate && this.endDate) {
       count++;
     }
@@ -253,48 +258,50 @@ export class LeadsListComponent {
   }
 
   applyFilter() {
-    this.page =1;
-    this.first = 0;
-    this.rows = 10;
-    this.filterLeads = true;
+    // this.filterLeads = true;
     this.calculateAppliedFiltersCount();
     const selectedProducts = this.productsList.filter((product) => product.selected)
       .map((product) => product.productName);
     const selectedPolicyTypes = this.StaticPolicyTypes.filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
-    this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
-    this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
-
-    this.leadsInfoListRequestBody.fromdate = this.startDate || null;
-    this.leadsInfoListRequestBody.todate = this.endDate || null;
+      const selectedLeadStatus = this.leadFilterStatus.filter((leadStatus) => leadStatus.selected)
+      .map((leadStatus) => leadStatus.name);
+    this.leadsInfoListRequestBody.productName = selectedProducts.join(",");
+    this.leadsInfoListRequestBody.policyType = selectedPolicyTypes.join(",");
+    this.leadsInfoListRequestBody.leadStatus = selectedLeadStatus.join(",");
+    this.leadsInfoListRequestBody.startDate = this.startDate ;
+    this.leadsInfoListRequestBody.endDate = this.endDate ;
+    this.first = 0;
+    this.page = 1;
     this.getLeadsList();
     this.toggeledropdown = false;
-   // this.searchInputControl.reset();
-
   }
   cancel() {
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
     this.appliedFiltersCount = 0;
     this.toggeledropdown = false;
     this.startDate = "";
     this.endDate = "";
-    this.leadsInfoListRequestBody.searchby = "";
+    
+    // this.leadsInfoListRequestBody.searchby = "";
     this.getLeadsList();
   }
   clear() {
-    this.leadsInfoListRequestBody.searchlist = "";
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.policyList = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
+    this.leadsInfoListRequestBody.startDate = null;
+    this.leadsInfoListRequestBody.endDate = null;
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
+    this.leadsInfoListRequestBody.productName = "";
+    this.leadsInfoListRequestBody.policyType = "";
+    this.leadsInfoListRequestBody.leadStatus = "";
     this.appliedFiltersCount = 0;
-    this.startDate = "";
-    this.endDate = "";
+    this.startDate = null;
+    this.endDate = null;
     this.getLeadsList();
   }
   toggleSearchDropdown() {
@@ -311,31 +318,53 @@ export class LeadsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
     if (this.selected == '') {
-        this.leadsInfoListRequestBody.searchby = '';
+        this.leadsInfoListRequestBody.name = '';
+        this.leadsInfoListRequestBody.mobileNumber = '';
+        this.leadsInfoListRequestBody.email = '';
+        this.leadsInfoListRequestBody.leadAssigne = '';
+        this.leadsInfoListRequestBody.leadNumber = '';
         this.getLeadsList();
       }
   }
 
-
   applySearch() {
-    this.page =1;
-    this.first = 0;
-    this.rows = 10;
-    if(this.activeFilter== 'assignedLead'){
-      this.leadsInfoListRequestBody.assignedleads = true;
-      this.leadsInfoListRequestBody.unassignedleads = false;
-
-    }else if(this.activeFilter == 'unAssignedLead'){
-      this.leadsInfoListRequestBody.assignedleads = false;
-      this.leadsInfoListRequestBody.unassignedleads = true;
-    }else{
-      this.leadsInfoListRequestBody.assignedleads = true;
-      this.leadsInfoListRequestBody.unassignedleads = true;
-    }
-
-    this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
+    if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim();
+      if (this.selected === "mobileNumber") {
+        this.leadsInfoListRequestBody.mobileNumber = trimmedValue || "";
+        this.leadsInfoListRequestBody.leadNumber = "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+      } else if (this.selected === "leadId") {
+        this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      } else if (this.selected === "name") {
+        this.leadsInfoListRequestBody.name = trimmedValue || "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }else if (this.selected === "emailID") {
+        this.leadsInfoListRequestBody.email = trimmedValue || "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }else if (this.selected === "AssignedTo") {
+        this.leadsInfoListRequestBody.leadAssigne = trimmedValue || "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }
+      this.first = 0;
+      this.page = 1;
     this.getLeadsList();
-
+    }
     
   }
 
@@ -390,7 +419,7 @@ export class LeadsListComponent {
           } else {
             this.toast.success({ detail: "", summary: 'Lead has been successfully assigned.', duration: 5000 });
           }
-          this.filterQuotes('all');
+          this.filterQuotes('all','totalRecords');
         }
       }, (error) => {
         console.error("Error: Unable to assign lead. Please try again later.", error);
@@ -419,42 +448,6 @@ export class LeadsListComponent {
   selectAllAssigneLeadDialog() {
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
-  getAssignedLeads() {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   // this.productsList.forEach((product) => (product.selected = false));
-   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   //  this.startDate = "";
-   // this.endDate = "";
-
-    this.filterLeads = false;
-    this.leadsInfoListRequestBody.myleads = false;
-    this.leadsInfoListRequestBody.assignedleads = true;
-    this.leadsInfoListRequestBody.unassignedleads = false;
-    this.getLeadsList();
-    this.activeFilter = "assignedLead";
-    //this.searchInputControl.reset();
-  }
-  getUnAssignedLeads() {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   //this.productsList.forEach((product) => (product.selected = false));
-   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   //this.startDate = "";
-  // this.endDate = "";
-
-    this.filterLeads = false;
-    this.leadsInfoListRequestBody.myleads = false;
-    this.leadsInfoListRequestBody.assignedleads = false;
-    this.leadsInfoListRequestBody.unassignedleads = true;
-    this.getLeadsList();
-    this.activeFilter = "unAssignedLead";
-   // this.searchInputControl.reset();
-  }
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
         return 'Enter Lead ID';
@@ -464,7 +457,9 @@ export class LeadsListComponent {
         return 'Enter Name';
     } else if (this.selected === 'emailID') {
         return 'Enter Email ID';
-    } else {
+    } else if (this.selected === 'AssignedTo') {
+      return 'Enter AgentCode';
+    }else {
         return 'Search...';
     }
   }
@@ -478,7 +473,7 @@ export class LeadsListComponent {
    
 
     if (this.startDate > new Date().toISOString().split('T')[0]) {
-      this.startDate = ''; // Clear the invalid date
+      this.startDate = ''; 
       this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
 
@@ -486,7 +481,7 @@ export class LeadsListComponent {
 
   formatCreatedOn(dateString: string | null | undefined) {
     if (!dateString) {
-      return 'N/A'; // Handle null or undefined values
+      return 'N/A'; 
     }
     const date = new Date(dateString);
     const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
@@ -494,6 +489,8 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) {
+    let formSequence :any;
+    let proposalNumber :any ='';
     if (lead.interestedProductName ) {
    
       const reqData = {
@@ -505,43 +502,62 @@ export class LeadsListComponent {
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
-           // sessionStorage.clear();
             const reqData = {
               "partnerId": interestedProductItem.partnerId,
               "productId": interestedProductItem.productId
       
             }
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
-            this.formSequence = JSON.parse(res.data.formSequence);
-            if (this.formSequence != null && this.formSequence.length > 0) {
-              this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+            formSequence = JSON.parse(res.data.formSequence);
+            if (formSequence != null && formSequence.length > 0) {
+              formSequence.forEach(() => { this.allJsonFormData.push({}) });
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-            localStorage.setItem("formIndex", "0");
+            localStorage.setItem("formIndex", lead.formSequence);
           } catch (err) {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
 
-          try{
-            const response = await firstValueFrom(this.common.getProposalNumber());
-            this.proposalNumber = response.data?.proposalNumber;
-          }catch(err){
-            this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          }
-        
-          const productData = {
-            partnerId: interestedProductItem.partnerId,
-            productId: interestedProductItem.productId,
-            quickQuoteRedirect : true,
-            leadId :  lead.leadNumber,
-            proposalNum: this.proposalNumber
-          }
+          // if (lead.leadStatus.includes('Open')) {
+          //   try {
+          //     const response = await firstValueFrom(this.common.getProposalNumber());
+          //     proposalNumber = response.data?.proposalNumber;
+          //   } catch (err) {
+          //     this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+          //   }
+          // } else {
+          //   proposalNumber = lead?.proposalNumber??'';
+          // }
+
+          // const productData = {
+          //   partnerId: interestedProductItem.partnerId,
+          //   productId: interestedProductItem.productId,
+          //   quickQuoteRedirect : true,
+          //   leadId :  lead.leadNumber,
+          //   proposalNum: lead?.proposalNumber??''
+          // }
         
 
-            this.router.navigate(['yatra'], {
-              state: { productData: productData, formSequence: this.formSequence }
-           });
+          //   this.router.navigate(['yatra'], {
+          //     state: { productData: productData, formSequence: formSequence }
+          //  });
+          const reqData = {
+            partnerId : interestedProductItem.partnerId,
+            productId : interestedProductItem.productId,
+            proposalNum : lead.proposalNumber,
+            agentCode : this.agentCode,
+            isLead : true,
+            currentFormSequence : lead.formSequence,
+            leadId : lead.leadNumber
+          }
+          console.log(reqData);
+          localStorage.setItem("formIndex", lead.formSequence.toString());
+          const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+    
+          this.router.navigate(['yatra'], {
+            queryParams: { data: encodedEncryptedData }
+          });
           
         },
         error: (err) => {
@@ -550,6 +566,7 @@ export class LeadsListComponent {
       });
     } else {
       this.router.navigate(['/products'], {
+        queryParams: { leadnumber:lead.leadNumber },
       });
     }
   }
@@ -559,5 +576,17 @@ export class LeadsListComponent {
       event.preventDefault();
     }
   }
-
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); //Screen View check
+  }
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
+    }
+  }
 }

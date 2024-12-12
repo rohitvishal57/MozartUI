@@ -89,6 +89,10 @@ h6 {
 		background: var(--Neutral-Additional-White100, #FFFFFF) !important;
 		padding: 8px 12px;
 		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
 	}
 
 	::ng-deep .p-paginator .p-paginator-first,
@@ -106,6 +110,10 @@ h6 {
 		background-color: white;
 		padding: 8px 12px;
 		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
 	}
 
 	::ng-deep .p-paginator .p-paginator-page:hover,
@@ -282,8 +290,8 @@ h6 {
 			  width: 100%;
 			  
 		  }
-		  button {
-			top: 47px;
+		  .btn_text.btn_clearSearch {
+			top: 10px !important;
 		  }
 	  }
 	}
@@ -326,3 +334,13 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
+  @media only screen and (max-width: 767px) {
+	.filterWraperForm{
+		padding: 0px;
+	}
+}
+@media only screen and (max-width: 1024) {
+	.filterWraperForm{
+		padding: 0px;
+	}
+}

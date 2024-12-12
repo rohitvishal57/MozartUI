@@ -5,7 +5,9 @@ import * as CryptoJS from 'crypto-js';
   providedIn: 'root',
 })
 export class AesEncryptionService {
-  
+  encryptionKeys = {
+    key: '5891233561234567',
+  }
   private key: string = '0123456789abcdef0123456789abcdef'; 
   private iv: string = '0123456789abcdef';    
   private axiskey: string = '5891233561234567'; 
@@ -49,6 +51,20 @@ export class AesEncryptionService {
     });
     const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
     return JSON.parse(decryptedText);
+  }
+  decryptUrlData(encryptedData: any) {
+    return this.AXdecrypt(this.encryptionKeys.key, encryptedData);
+  }
+  AXdecrypt(encryptionKeys: any, encrypted: any) {
+    let _key = CryptoJS.enc.Utf8.parse(encryptionKeys);
+    let _iv = CryptoJS.enc.Utf8.parse(encryptionKeys);
+    const decrypted = CryptoJS.AES.decrypt(encrypted, _key, {
+      keySize: 8,
+      iv: _iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }).toString(CryptoJS.enc.Utf8);
+    return decrypted;
   }
   axisDecrypt(encryptedData: string): any {
     const { key, iv } = this.getAxisKeyAndIv();

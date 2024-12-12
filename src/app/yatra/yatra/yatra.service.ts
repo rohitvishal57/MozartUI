@@ -98,7 +98,7 @@ export class YatraService {
   }
   GetKycDetails(reqData:any){
     const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
-    // const getKycDetails='https://localhost:7188/api/getkycdetails';
+    // const getKycDetails='https://localhost:7188/getkycdetails';
     return this.httpService.post<any>(getKycDetails,reqData);
   }
   GetCustomerDetailsViaPolicyNumber(reqData:any){
@@ -129,11 +129,11 @@ export class YatraService {
     return this.httpService.post(feedbackServiceURL,reqData);
   }
   getRelations(){
-    const  getRelationship = this.configService.config.axisBaseUrl + this.configService.config.getRelations;
+    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelations;
     return this.httpService.get(getRelationship);
   }
   getProductCombinations(){
-    const  getProductCombinations = this.configService.config.axisBaseUrl + this.configService.config.getProductCombination;
+    const  getProductCombinations = this.configService.config.baseUrl + this.configService.config.getProductCombination;
     return this.httpService.get(getProductCombinations);
   }
   getProposalDetails(reqData:any){
@@ -141,27 +141,61 @@ export class YatraService {
     return this.httpService.post(proposalDetails,reqData);
   }
   getSumInsuredDetails(reqData:any){
-    const suminsuredDetails = this.configService.config.axisBaseUrl + this.configService.config.getSumInsuredDetails;
+    const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getSumInsuredDetails;
+    return this.httpService.post(suminsuredDetails,reqData);
+  }
+  getBBPolicyInfoByLeadId(reqData:any){
+    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
+    return this.httpService.post(suminsuredDetails,reqData);
+  }
+  getd2cPolicyInfoByLeadId(reqData:any){
+    const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getd2cPolicyInfoByLeadId;
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getPremiumData(reqData:any){
-    const premiumData = this.configService.config.axisBaseUrl + this.configService.config.getPremiumDetaiks;
+    const premiumData = this.configService.config.baseUrl + this.configService.config.getRUGPremium;
     return this.httpService.post(premiumData,reqData);
   }
   getFamilyConstructData(reqData:any){
-    const familyConstructData = this.configService.config.axisBaseUrl + this.configService.config.getFamilyConstruct;
+    const familyConstructData = this.configService.config.baseUrl + this.configService.config.getFamilyConstruct;
     return this.httpService.post(familyConstructData,reqData);
   }
   saveBBCommonDraft(reqData:any){
-    const saveCommonDraftData = this.configService.config.axisBaseUrl + this.configService.config.saveBBCommonDraft;
+    const saveCommonDraftData = this.configService.config.baseUrl1 + this.configService.config.saveBBCommonDraft;
     return this.httpService.post(saveCommonDraftData,reqData);
   }
-  insertfullquotejson(reqData:any){
+  getBbOtp(reqData:any){
+    const getBbOtp = this.configService.config.baseUrl1 + this.configService.config.getBBOTP;
+    return this.httpService.post(getBbOtp,reqData);
+  }
+  validateBBOTP(reqData:any){
+    const validateBbOtp = this.configService.config.baseUrl1 + this.configService.config.getValidateBbOtp;
+    return this.httpService.post(validateBbOtp,reqData);
+  }
+  saveD2CCommonDraft(reqData:any){
+    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft";
+    return this.httpService.post(saveCommonDraftData,reqData);
+  }
+  bbHalfQuote(reqData:any){
+    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/v1/HalfQuote";
+    return this.httpService.post(halfQuoteData,reqData);
+  }
+  d2cJustpayRedirection(reqData:any){
+    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/yatra/JusPayPaymentRedirectRUG";
+    return this.httpService.post(saveCommonDraftData,reqData);
+  }
+  insertFullQuoteJson(reqData:any){
     const insertfullquotejson = this.configService.config.baseUrl + this.configService.config.insertfullquotejson;
     return this.httpService.post(insertfullquotejson,reqData);
   }
-  getfullquoteviaofflinepayment(reqData:any){
+  getFullQuoteViaOfflinePayment(reqData:any){
     const getfullquoteviaofflinepayment = this.configService.config.baseUrl1 + this.configService.config.getfullquoteviaofflinepayment;
+    // const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
     return this.httpService.post(getfullquoteviaofflinepayment,reqData);
+  }
+
+  getBankDetailsViaIFSC(reqData:any){
+    const getBankDetailsViaIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsViaIFSC;
+    return this.httpService.post(getBankDetailsViaIFSC,reqData);
   }
 }

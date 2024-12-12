@@ -8,6 +8,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { ExcelExportService } from 'src/app/services/excel-export.service';
 
 @Component({
   selector: 'app-endorsements-requests',
@@ -23,6 +24,9 @@ export class EndorsementsRequestsComponent implements OnInit {
   first: number = 0;
   rows: number = 10;
   totalRecords: number = 0;
+  activeCount: number = 0;
+  resolvedCount: number = 0;
+  cancelledCount: number = 0;
   selectedView: string = "list";
   isSearch: boolean = false;
   selected: string = "";
@@ -107,12 +111,13 @@ export class EndorsementsRequestsComponent implements OnInit {
     private endorsementService: EndorsementsRequestsService,
     private _router: Router,
     private datePipe: DatePipe,
-    private commonService: CommonService, private languageService: LanguageService,
-    private translateService: TranslateService
+    private commonService: CommonService, 
+    private languageService: LanguageService,
+    private translateService: TranslateService,
+    private excelExportService: ExcelExportService
   ) { }
 
   ngOnInit(): void {
-
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -123,6 +128,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
     this.getRequestList();
     this.getProducts();
+    this.checkView(); //Screen View check
   }
   getProducts() {
     this.agentCode =  localStorage.getItem("agentCode");
@@ -157,9 +163,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isDesktopView = window.innerWidth <= 1116;
-    if (this.isDesktopView) {
-    }
+    this.checkView(); //Screen View check
   }
 
   getEndorsementCaseDetails (data:any) {
@@ -198,8 +202,7 @@ export class EndorsementsRequestsComponent implements OnInit {
               ...obj, raisedOn:formattedDate
             }
           });
-          this.countsList = response.data.endorsementDetails;
-          this.totalRecords = response.data.totalRecords;
+          this.filterCounts(response);
         } else {
           console.error("API request was not successful.");
         }
@@ -208,6 +211,13 @@ export class EndorsementsRequestsComponent implements OnInit {
         console.error("Error from API:", error);
       }
     );
+  }
+
+  filterCounts(resp: any) {
+    this.totalRecords = resp.data.totalRecords;
+    this.activeCount = resp.data.activeCount;
+    this.resolvedCount = resp.data.resolvedCount;
+    this.cancelledCount = resp.data.cancelledCount;
   }
 
   statusFilter(filter: string) {
@@ -298,35 +308,42 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   getPlaceholder(): string {
     if (this.selected === "caseId") {
-      return "Enter Request ID";
+      return "Enter Endorsement Id";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    } 
+    } else if (this.selected === "mobileNumber") {
+      return "Enter Mobile Number";
+    } else if (this.selected === "emailID") {
+      return "Enter Email Id";
+    }
     else {
       return "Search...";
+    }
+  }
+
+  searchInputChange(event: any) {
+    const value = event.target.value;
+    if(value === '') {
+      this.applySearch();
     }
   }
   
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
-    if (this.searchInputControl.valid) {
-      if (this.selected === "caseId") {
-        this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "memberName") {
-        this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "policyNumber") {
-        this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-    this.isSearch = true;
-    this.first = 0;
-    this.getRequestList();
+    if(this.searchInputControl.valid) {
+      this.requestsListRequestBody.searchColumn = this.selected;
+      this.requestsListRequestBody.searchString = searchValue;
+      this.isSearch = true;
+      this.first = 0;
+      this.getRequestList();
+    } else if (searchValue === '') {
+      this.requestsListRequestBody.searchColumn = '';
+      this.requestsListRequestBody.searchString = '';
+      this.isSearch = false;
+      this.first = 0;
+      this.getRequestList();
     }
   }
 
@@ -337,4 +354,26 @@ export class EndorsementsRequestsComponent implements OnInit {
   redirect(value:any){
     this.router.navigate([value]);
   }
+
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
+    }
+  }
+
+  downloadSingleItem(item: any): void {
+    this.excelExportService.exportToExcel([item], `Endorsement_${item.caseId}`);
+  }
+
+  downloadAll(): void {
+    this.excelExportService.exportToExcel(
+      this.endorsementDetails,
+      'All_Endorsements'
+    );
+  }
+  
 }

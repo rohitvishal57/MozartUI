@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -12,13 +12,13 @@ import { QuoteModule } from 'src/app/quote/quote.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { AgChartsModule } from 'ag-charts-angular';
+import { GuageComponent } from './guage/guage.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, GuageComponent],
   imports: [
     CommonModule,
     PrimeNgModule,
@@ -34,7 +34,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    AgChartsModule
-  ]
+  ],
+  schemas :[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardModule { }

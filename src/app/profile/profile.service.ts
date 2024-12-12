@@ -15,4 +15,13 @@ export class ProfileService {
     const req = this.configService.config.baseUrl + this.configService.config.profileDetails;
     return this.httpService.post(req,reqData);
   }
+
+  getEscalationMatrixDetails(respData : any): Observable<any>{
+    const req = this.configService.config.baseUrl + this.configService.config.escalationMatrixDetails;
+    return this.httpService.post(req,respData);
+  }
+  updatePreferredLanguage(reqdata : any){
+    const  updateagentlanguagepreference = this.configService.config.baseUrl + this.configService.config.updateagentlanguagepreference;
+    return this.httpService.post(updateagentlanguagepreference,reqdata)
+  }
 }

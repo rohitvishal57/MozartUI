@@ -1,0 +1,71 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading m-0">
+                    Commission Statement
+                </h2>
+            </div>
+            <form (ngSubmit)="fetchCommissionStatement()" [formGroup]="commissionForm">
+
+            <section class="white_container">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="tipInfo_org"><img src="./assets/Img/icon_lightbulb.svg">Commission statement download is currently available from April’21 cycle. We are
+                            working on previous download statement and will be available soon.</div>
+                        
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4>My Statements</h4>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <div class="input-block form-floating input-block-renew">
+                            <select class="form-select input-selectBox" id="commissonYear" name="commissonYear"  formControlName="year" >
+                            <option value="" disabled selected>{{"Select Year" }}</option>
+                            <option *ngFor="let year of years" [value]="year">
+                                {{ year }}
+                            </option>
+                        </select>
+                            <label for="year">{{"Year"}}</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <div class="input-block form-floating input-block-renew">
+                            <select class="form-select input-selectBox" id="commissonMonth" name="commissonMonth" formControlName="month">
+                            <option value="" disabled selected>{{"Select Month" }}</option>
+                            <option *ngFor="let month of months" [value]="month">
+                                {{ month }}
+                            </option>
+                        </select>
+                            <label for="month">{{"Month"}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <div class="input-block form-floating input-block-renew">
+                            <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
+                            <option value="" disabled selected>{{"Select Cycle" }}</option>
+                            <option *ngFor="let cycle of cycles" [value]="cycle.value">
+                                {{ cycle.name }}
+                            </option>
+                        </select>
+                            <label for="cycle">{{"Cycle"}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-4" >
+                        <div class="col-12">
+                            <button type="submit" id="save" name="save" class="btn_red">{{" Download Statement"}}</button>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </form>
+
+
+            
+        </div>
+    </div>
+
+</main>

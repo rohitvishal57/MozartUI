@@ -304,6 +304,9 @@
             .feature-text{
               line-height: 16px;
             }
+            @media (max-width:767px) {
+              width: 100%;
+            }
           }
         }
       }

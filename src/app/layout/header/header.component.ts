@@ -26,6 +26,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   agentCode : any;
   @Input() isLoggedIn: any;
 
+
+  
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
     ,public headerInformation : HeaderInformation
@@ -72,7 +74,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
 
   setLanguage(event: any) {
     const selectedLanguage = event.target.value;
-    this.languageService.setLanguage(selectedLanguage); // Update language through the service
+    this.languageService.setLanguage(selectedLanguage); 
+    window.location.reload()
   }
 
   getLanguage(): string {
@@ -93,6 +96,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.isDesktopView = window.innerWidth >= 768;
     if (this.isDesktopView) {
       this.isSidenavOpen = false;
+    } else {
+      this.isSidenavOpen = true;
     }
   }
   redirect(value: any) {
@@ -119,6 +124,10 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     }
   }
 
+  onClickHamburger(ev : any){
+    this.loginService.toggleSidebar(!this.loginService.getValue());
+  }
+
  showAllNotifications(){
   this.closePopup();
   this.router.navigate(['/notifications'], {
@@ -127,7 +136,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
  }
 
  notificationInfo() {
-  this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
+  this.agentCode && this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
     (response) => {
       if (response?.isSuccess) {
         this.notifications = response?.data;
@@ -174,18 +183,15 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     window.open(event.target.value);    
   }
 
-  downloadPdfBrochure(URL: any) {
-    if (URL) {
-      const link = document.createElement('a');
-      link.href = URL;
-      link.download = URL.split('/').pop() || 'download.pdf';  // Use the filename from the URL or default to 'download.pdf'      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      console.error('Invalid or missing URL.');
-    }
+   downloadPdfBrochure(URL: any) {
+    window.open(URL, '_blank');    
+    const fileNameWithExtension : any = URL.split('/').pop(); 
+    const link = document.createElement('a');
+    link.href = URL;
+    link.download = fileNameWithExtension; 
+    link.click();
   }
+  
 
 }
 

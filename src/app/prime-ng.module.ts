@@ -87,6 +87,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
+
 @NgModule({
     exports: [
         AvatarModule,

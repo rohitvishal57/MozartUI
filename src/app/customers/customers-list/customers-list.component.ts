@@ -1,4 +1,4 @@
-import { Component, HostListener} from '@angular/core';
+import { Component, HostListener, Type} from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { CustomerList } from 'src/app/interface/customers.interface';
@@ -6,6 +6,10 @@ import { CustomersService } from '../customers.service';
 import { CommonService } from 'src/app/services/common.service';
 import { NgToastService } from 'ng-angular-popup';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-customers-list',
@@ -39,10 +43,25 @@ export class CustomersListComponent {
   moreInfoIndex: number | null = null;
   activePolicy?: number= 1;
   filteredPolicyDetails = [];
-  
+  customerInfo:boolean =false;
+  BasicDetailsInfo:any;
+  selectedFilter: string = 'basicDetails';
+  commonInfo: any[] = [];
+  documents:any[]=[];
+  selectedDocument: any = null;
+  policyNumber: string | null = null;
+  customerID: string | null = null;
+  customerBasicDetails: any;
+  customerClaimDetails: any[]=[];
+  customerEndorsementDetails: any[]=[];
+  customerInsuredDetails: any[]=[];
+
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
-    private commonService:CommonService,private toast: NgToastService
+    private commonService:CommonService,private toast: NgToastService,
+    private languageService: LanguageService,
+    private yatraService:YatraService,
+    private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) {}
 
   customerListRequestBody={
@@ -63,14 +82,26 @@ export class CustomersListComponent {
     "filterType": ""
   }
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); 
+        }
+      });
+    });
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
+    });
     this.getCustomerList();
     this.getProducts();
+    this.checkView(); 
   }
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getCustomerList();
+    this.moreInfoIndex=null
   }
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
@@ -96,7 +127,6 @@ export class CustomersListComponent {
       }
     );
   }
-
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -275,8 +305,7 @@ resetActivePolicy() {
 toggleMoreInfo(index: number): void {
   this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
 }
-
-  sendCustomerDetails(data:any,policy: any,event:number){        
+ sendCustomerDetails(data:any,policy: any,event:number){        
     const RequestBody = {
       agentcode: this.agentCode, 
       requestType: event,  
@@ -289,9 +318,9 @@ toggleMoreInfo(index: number): void {
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "", summary: "customer data shared successfully.", duration: 2000 });
+          this.toast.success({ detail: "", summary: response.data.message, duration: 2000 });
         } else {
-          this.toast.error({ detail: "", summary: "Failed to send customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: response.data.message || "Failed to send customer data.", duration: 2000 });
         }
       },
       (error: any) => {
@@ -299,58 +328,234 @@ toggleMoreInfo(index: number): void {
       }
     );
   }
-  download(item: any, event: string) {
-    const downloadRequestBody={
-      EventName:"Search policy kit request from customers",
-      AgentCode:this.agentCode,
-      ReferenceId:this.agentCode,
-      SearchOperator:"AND",
-      SearchRequest: [
+  searchDocument(policyNumber: any) {
+    const searchDocumentRequestBody = {
+      referenceId: this.agentCode,
+      searchRequest: [
         {
-          CategoryID: "",
-          DocumentID: "",
-          ReferenceID: "",
-          FileName: "",
-          Description: "",
-          DataClassParam: [
+          categoryID: "",
+          description: "",
+          dataClassParam: [
             {
-                DocSearchParamId: "2",
-                Value: "21-24-0002917-00"
+              docSearchParamId: "2",
+              value: policyNumber
             },
             {
-                DocSearchParamId: "15",
-                Value: "PS_04"
-            }
-          ]
-        }
+              docSearchParamId: "15",
+              value: "PS_04",
+            },
+          ],
+        },
       ],
-      Category: "N/A",
-      UserRole: "Guest",
-      SessionId: "0000",
-      UserLevel: "Basic",
-      BranchCode: "000",
-      Designation: "N/A",
-      IntCategory: "N/A",
-      SourceSystemName: "Portal"
-    }
-    this.customerService.downloadCustomerData(downloadRequestBody).subscribe(
+      agentCode: this.agentCode,
+      eventName: "Search policy kit request from customers",
+      sourceSystemName: "",
+      searchOperator: "AND",
+    };
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
-          this.toast.success({ detail: "", summary: "customer data downloaded successfully.", duration: 2000 });
+        if (response.isSuccess) {          
+          const searchResponse = response.data.searchResponse;
+          if (!searchResponse || searchResponse.length === 0) {
+            this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
+          }
+          else{
+            this.documents = searchResponse;
+          }
         } else {
-          this.toast.error({ detail: "", summary: "Failed to downloaded customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "", summary: "Error while downloaded customer data.", duration: 2000 });
+        console.error("Search document error", error);
+        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
       }
-    )
+    );
+  }
+  downloadPolicyKit() {
+    if (!this.selectedDocument) {
+      this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
+      return;
+    }  
+    const downloadPolicyKitRequestBody = {
+      agentCode: this.agentCode,
+      referenceId: this.agentCode,
+      eventName: "Download policy kit request from customers",
+      proposalNumber: "",
+      downloadRequest: [
+        {
+          omniDocImageIndex: this.selectedDocument.omniDocImageIndex,
+          fileName: this.selectedDocument.fileName,
+        },
+      ],
+      sourceSystemName: "",
+      identifier: "",
+    };
+    this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+          const file = response.data.downloadResponse[0];
+          if (file.byteArray && file.fileName) {
+            const byteArray = new Uint8Array(
+              atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+            );
+            const blob = new Blob([byteArray], { type: "application/pdf" });
+            const fileURL = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = fileURL;
+            link.download = file.fileName;
+            document.body.appendChild(link)
+            link.click();  
+            document.body.removeChild(link)
+            window.open(fileURL, "_blank");
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+        }
+      },
+      (error: any) => {
+        console.error("Download Policy Kit Error:", error);
+        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+      }
+    );
+  }
+  onDocumentSelectionChange(document: any, event: any) {
+    if (event.target.checked) {
+      this.selectedDocument = {
+        fileName: document.fileName,
+        omniDocImageIndex: document.omniDocImageIndex,
+      };
+    } else {
+      this.selectedDocument = null;
+    }
   }
   
-  expandedRowIndex: any | null = false;
+  getCustomerInfo(policyNumber: string, customerID: string): void {
+    this.policyNumber = policyNumber;
+    this.customerID = customerID;
+    this.customerInfo = true;
+    this.fetchDetails('basicDetails')
+  }
+  backSubquotes(){
+    this.customerInfo=false;
+    this.selectedFilter='basicDetails';
+  }
+getCustomerBasicDetails() {
+    this.commonInfo=[];
+    const customerBasicDetailsRequestBody = {
+      customerID: this.customerID,
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };
+  
+    this.customerService.getCustomerBasicDetailsApi(customerBasicDetailsRequestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess && res.data) {
+          this.customerBasicDetails = res.data; 
+          this.commonInfo=res.data;
+        } else {
+          this.toast.error({ detail: "", summary: res.message || "Failed to get customer Basic Details.", duration: 2000 });
+          this.customerBasicDetails = null;
+        }
+      },
+      (err: any) => {
+        console.error("API Error:", err);
+        this.customerBasicDetails = null;
+      }
+    );
+  }
+  getCustomerInsuredDetails() {
+    this.commonInfo=[];
+    this.customerService.getCustomerInsuredDetailsApi(this.policyNumber).subscribe(
+      (res: any) => {
+        if (res.isSuccess && res.data.length > 0) {
+          this.customerInsuredDetails = res.data;  
+          this.commonInfo=res.data;         
+        } else {
+          this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
+          this.customerInsuredDetails = []        
+        }
+      },
+      (err: any) => {
+        this.toast.error({ detail: "", summary: "Error while getting customer Insured Members Details.", duration: 3000 });
+        this.customerInsuredDetails = []      
+      }
+    );
+   }
+  getCustomerClaimDetails() {
+    this.commonInfo=[];
+    const customerClaimDetailsRequestBody = {
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };
+    this.customerService.getCustomerClaimDetailsApi(customerClaimDetailsRequestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess && res.data && res.data.claimDetails.length > 0) {
+          this.customerClaimDetails = res.data.claimDetails; 
+          this.commonInfo=res.data.claimDetails;
+          console.log("length",this.customerClaimDetails);
+          
+        } else {
+          console.log("length",this.customerClaimDetails);
 
-  toggleDetails(index: any): void {
-      // Toggle row details visibility
-      this.expandedRowIndex = !this.expandedRowIndex
+          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Claims Details.", duration: 3000 });
+          this.customerClaimDetails = []        }
+      },
+      (err: any) => {
+        this.toast.error({ detail: "", summary: "Error while getting customer Claims Details.", duration: 3000 });
+        this.customerClaimDetails = []      }
+    );
+  }
+  getCustomerEndorsementDetails() {
+    this.commonInfo=[];
+    this.customerService.getCustomerEndorsementDetailsApi(this.policyNumber).subscribe(
+      (res: any) => {
+        if (res.isSuccess && res.data.length > 0) {
+          this.customerEndorsementDetails = res.data;  
+          this.commonInfo=res.data;
+          console.log(this.customerEndorsementDetails);
+                   
+        } else {
+          console.log(this.customerEndorsementDetails);
+          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Service Details.", duration: 3000 });
+          this.customerEndorsementDetails = []        
+        }
+      },
+      (err: any) => {
+        this.toast.error({ detail: "", summary: "Error while getting customer Service Details.", duration: 3000 });
+        this.customerEndorsementDetails = []      
+      }
+    );
+  }
+  fetchDetails(type: string) {
+    if (!this.policyNumber) {
+      this.toast.warning({ detail: "", summary: "PolicyNumber is required.", duration: 2000 });
+      return;
+    }
+  this.selectedFilter=type
+  if(type=='basicDetails'){
+    this.getCustomerBasicDetails();
+  }
+  else if(type=='insuredDetails'){
+    this.getCustomerInsuredDetails();
+  }
+  else if(type=='claimDetails'){
+    this.getCustomerClaimDetails();
+  }
+  else if(type=='serviceRequests'){
+    this.getCustomerEndorsementDetails();
+  }
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); 
+  }
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; 
+    }
   }
 }

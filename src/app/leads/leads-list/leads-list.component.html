@@ -21,13 +21,13 @@
                          <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li> 
                         <li>
                             <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">{{"All Leads" | translate}}</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All Leads" | translate}} ({{countsList.totalRecords}})</button>
                         </li>
                         <li>
-                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">{{"Assigned Leads" | translate}}</button>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Assigned Leads'}"  (click)="filterQuotes('Assigned Leads','assignLeads')">{{"Assigned Leads" | translate}} ({{countsList.assignLeads}})</button>
                         </li>
                         <li>
-                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">{{"Unassigned Leads" | translate}}</button>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Unassigned Leads'}"  (click)="filterQuotes('Unassigned Leads','unassignLeads')">{{"Unassigned Leads" | translate}} ({{countsList.unassignLeads}})</button>
                         </li>
                     </ul>
                 </div>
@@ -43,15 +43,19 @@
                                 <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
                                 <option value="name">{{"Name" | translate}}</option>
                                 <option value="emailID">{{"Email ID" | translate}}</option>
+                                <option value="AssignedTo">{{"Assigned To" | translate}}</option>
+
                             </select>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)">
-                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)" (keydown.enter)="applySearch()">
+                                <button  type="submit" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'leadId'">{{"Enter a valid Lead ID." | translate}}</small>
+                                    <!-- <small *ngIf="searchInputControl.hasError('pattern') && selected === 'leadId'">{{"Enter a valid Lead ID." | translate}}</small> -->
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">{{"Name should contain only letters and spaces." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Please enter a valid email address (e.g., user@example.com)." | translate}}</small>
                                 </span>
@@ -69,14 +73,35 @@
                                     </button>-->
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="toggleSearchDropdown()"></button>
                                 </div>
+
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
-                                        <h6>{{"Products" | translate}}</h6>
+                                        <h6>{{"Lead Status" | translate}}</h6>
                                         <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                            <div class="input-checkbox-block" *ngFor="let leadFilter of leadFilterStatus; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
-                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                  <input type="checkbox" id="leadFilter{{i}}" name="leadFilter{{i}}" value="leadFilter" class="input-check" [(ngModel)]="leadFilter.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="leadFilter{{i}}">{{leadFilter.name | translate}}</label>
+                                                </div>
+                                              </div>                                              
+                                        </div>
+                                    </div>
+
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (change)="formatDate('startDate')">
+                                                    <label for="startdate">{{"Start Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <label for="enddate">{{"End Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -93,20 +118,12 @@
                                         </div>
                                     </div>
                                     <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (change)="formatDate('startDate')">
-                                                    <label for="startdate">{{"Start Date" | translate}}</label>
-                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">{{"End Date" | translate}}</label>
-                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
+                                        <h6>{{"Products" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,10 +171,11 @@
                                     <th>{{"Lead ID" | translate}}</th>
                                     <th>{{"Name" | translate}}</th>
                                     <th>{{"Product Name" | translate}}</th>
-                                    <th nowrap>{{"Mobile Number" | translate}}</th>
-                                    <th>{{"Email ID" |  translate}}</th>
+                                    <th>{{"Contact Info" | translate}}</th>
+                                    <!-- <th nowrap>{{"Mobile Number" | translate}}</th> -->
+                                    <th>{{"Assigned To" |  translate}}</th>
+                                    <th>{{"Lead Status"}}</th>
                                     <th nowrap>{{"Created Date" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
-
                                     <th class="text-center">{{"Notice" | translate}}</th>
                                 </tr>
                             </thead>
@@ -173,8 +191,9 @@
                                     <td>{{row.leadNumber}}</td>
                                     <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
                                     <td><span class="text-break-w200">{{row.interestedProductName}}</span></td> 
-                                    <td>{{ row.phoneNumber }}</td>
-                                    <td><span class="text-break-w200" title="{{row.email}}">{{row.email}}</span></td>
+                                    <td>{{row?.phoneNumber}}<br /><span class="text-break-w200" title="{{row.email}}">{{row.email}}</span></td>
+                                    <td> {{row?.leadAssignee||'-'}}</td>
+                                    <td>{{row.leadStatus ? row.leadStatus : '-'}}</td>
                                     <td>{{formatCreatedOn(row.createdon)}}</td>
                                     <td>
                                         <div class="btn_groupAction lead_btnList justify-content-center">
@@ -227,19 +246,15 @@
                         </table>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalCount > 0">
+                <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
-                                    [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
-                                    class="custom-paginator my-paginator">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > countsList.totalCount
-                                    ? countsList.totalCount : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalCount}} {{"entries" | translate}}</span>
+                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
@@ -302,12 +317,13 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
+                                <div class="item_lable">{{"Contact Info" | translate}}</div>
                                 <div class="item_value">{{ row.phoneNumber }}</div>
+                                <div class="item_value">{{ row.email }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Email ID" | translate}}</div>
-                                <div class="item_value">{{ row.email }}</div>
+                                <div class="item_lable">{{"Assigned To" | translate}}</div>
+                                <div class="item_value">{{row?.leadAssignee||'-'}}</div>
                             </div>
 
                             <div class="cv_bodyItems cv_bodyItems_45">
@@ -330,6 +346,10 @@
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Lead ID" | translate}}</div>
                                 <div class="item_value">{{ row.leadNumber }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Lead Status" | translate}}</div>
+                                <div class="item_value">{{row.leadStatus ? row.leadStatus : '-'}}</div>
                             </div>
                         </div>
                     </div>

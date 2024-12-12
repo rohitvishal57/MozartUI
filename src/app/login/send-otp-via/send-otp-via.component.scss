@@ -60,8 +60,7 @@
                 font-weight: 600;
                 line-height: 28px;
                 text-align: left;
-                margin-bottom: 0;
-               
+                margin-bottom: 0; 
                 }
             .otp-sub-wrap{
                 font-family: Anek Latin;
@@ -77,4 +76,9 @@
     }
  
 
+}
+@media only screen and (max-width: 767px) {
+.send-otp-formMain{
+    width: 100%;
+}
 }

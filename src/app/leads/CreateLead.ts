@@ -39,4 +39,8 @@ export class CreateLead {
     leadAssignee!: string;
     isUpdate!: number;
     AdditionalInformation!: string;
+    proposalNumber!:string;
+    zone!:string;
+    leadPriority!:string;
+
 }

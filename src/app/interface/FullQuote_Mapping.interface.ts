@@ -1,4 +1,4 @@
-export interface Root {
+export interface IFullQuoteMapping {
     agentCode: string
     productName: string
     productCode: string
@@ -64,6 +64,8 @@ export interface Root {
     payerName: string
     paymentBy: string
     PaymentGatewayName: string
+    tenure:string
+    bankAccountType:string
 }
 
 export interface InsuredMemberDetail {

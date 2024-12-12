@@ -1,14 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
-import { forkJoin } from 'rxjs';
 import { DashboardService } from './dashboard.service';
-import { AgGauge } from "ag-charts-angular";
-import { AgRadialGaugeOptions } from "ag-charts-enterprise";
-import "ag-charts-enterprise";
+import Chart, { ChartData } from 'chart.js/auto';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,459 +16,207 @@ export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
   profileDetails: any;
+  searchedData: any;
+  customerInfo: any;
+  showSearchedResults = false;
+  performanceCard: any = [];
+  tabsInfo: any = [];
+  renewalDetail: any = [];
+  quickActionDetails: any = [];
+  businessSummary: any;
 
-  public options: AgRadialGaugeOptions;
+  public chart: any;
+  public Leadchart: any;
+  public proposalChart: any;
+  public renewChart: any;
+  public customerchart: any;
+  public servicingchart: any;
+  public dhaChart: any;
 
-  taskDetailsList = [
-    {
-      title: 'Rohini Pandey',
-      desc: 'Your customers payment had failed! get them to retry payment.',
-      redirectLink: 'Resend payment link to rohini',
-    },
-    {
-      title: 'Alok Shah',
-      desc: 'Document requested from Mr. Alos is yet to be received. ',
-      redirectLink: 'Send a reminder to Alok',
-    },
-    {
-      title: 'Rohini Pandey',
-      desc: 'Your customers payment had failed! get them to retry payment.',
-      redirectLink: 'Resend payment link to rohini',
-    },
-    {
-      title: 'Alok Shah',
-      desc: 'Document requested from Mr. Alos is yet to be received. ',
-      redirectLink: 'Send a reminder to Alok',
-    }
-  ]
+  @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
+  @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
+  @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
+  @ViewChild('chartPersistencyCanvas') chartPersistencyCanvas: ElementRef | undefined;
+  @ViewChild('chartDHACanvas') chartDHACanvas: ElementRef | undefined;
+  @ViewChild('chartCustomerCanvas') chartCustomerCanvas: ElementRef | undefined;
+  @ViewChild('chartServicingCanvas') chartServicingCanvas: ElementRef | undefined;
+  searchedValue: any;
+  serviceInfo: any;
+  wellnessInfo: any;
+  dhaCard: any = [];
 
-  taskList = [
-    {
-      taskHeader: 'Task 1',
-      subtaskHeaderDesc: 'Sub Task 1',
-      taskStatus: 'Do this to achieve 75% of your target'
-    },
-    {
-      taskHeader: 'Task 2',
-      subtaskHeaderDesc: 'Sub Task 2',
-      taskStatus: 'Do this to achieve 75% of your target'
-    },
-    {
-      taskHeader: 'Task 3',
-      subtaskHeaderDesc: 'Sub Task 3',
-      taskStatus: 'Do this to achieve 75% of your target'
-    }
-  ]
+  chartsArray: any = [
+    'customer', 'claim', 'dha'
+  ];
 
-  performanceCard = [
+  sectionList: any = [
+    'QuickAction', 'ABHI', 'Performance', 'Business', 'Renewals', 'Customer', 'Others'
+  ];
+
+  otherSection: any = [];
+  ProductList: any;
+  isDesktopView = false;
+
+  newSectionList: any;
+  newCustomerList: any;
+  newRenewalList: any;
+  newBusinessList: any;
+  newQuickActionList: any;
+  newPerformanceList: any;
+  actualDashboardPrefereces: any;
+
+  performanceFilter = 'Quarterly';
+  performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
+  businessFilter = 'Last7Days';
+  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  widgetArr = [
     {
-      title: 'Policies Sold',
-      value: '1295',
-      description: 'You seem to be selling a majority of Activ Fit plans',
-      icon: 'assets/Img/icon_dashboard_policysold.svg',
-      subIcon: 'assets/Img/icon_price_tag.svg',
-      type: 'text',
-      class: ''
+      name: 'QuickAction', isFilter: false
     },
     {
-      title: 'Premium',
-      value: '₹ 369.96 L',
-      description: '78% of monthly goal achieved',
-      icon: 'assets/Img/icon_dashboard_premium.svg',
-      type: 'progress',
-      progress: 78,
-      class: 'premium'
-
+      name: 'Performance', isFilter: true, filterType: this.performanceFilter
     },
     {
-      title: 'Commission Earned',
-      value: '₹ 50,000',
-      description: 'You can potentially earn 10,000 more with just 2 more policies',
-      icon: 'assets/Img/icon_dashboard_healthreturn.svg',
-      type: 'action',
-      class: 'commission-earned'
-
+      name: 'Business', isFilter: true, filterType: this.businessFilter
     },
     {
-      title: 'My Goals',
-      value: '',
-      description: 'Achievement',
-      icon: 'assets/Img/icon_dashboard_myperformance.svg',
-      type: 'gauge',
-      progress: '25%',
-      class: 'my-goals'
-
+      name: 'Customer', isFilter: false
+    },
+    {
+      name: 'Servicing', isFilter: false
+    },
+    {
+      name: 'Wellness', isFilter: false
     }
   ];
 
-  baseQuotes = [
+  newOrderList: any = [
     {
-      quoteName: 'Base Quote 1',
-      subQuoteName: 'Sub Quote 1',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    },
-    {
-      quoteName: 'Base Quote 2',
-      subQuoteName: 'Sub Quote 2',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    },
-    {
-      quoteName: 'Base Quote 3',
-      subQuoteName: 'Sub Quote 3',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    }
-  ]
-
-  tabsInfo = [
-    {
-      tabName: 'Leads',
-      category: [
+      "tabName": "QuickAction",
+      "priority": 1,
+      "isFilter": false,
+      "category": [
         {
-          name: 'open',
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "birthdayDetails",
+          "subpriority": 1
         },
         {
-          name: 'Inprogress',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentredirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "eventDetails",
+          "subpriority": 2
         },
         {
-          name: 'won',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'lost',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "notifications",
+          "subpriority": 3
         }
       ]
     },
-
     {
-      tabName: 'Proposal',
-      category: [
+      "tabName": "ABHI",
+      "priority": 2,
+      "category": [
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "birthdayDetails",
+          "subpriority": 1
         },
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "eventDetails",
+          "subpriority": 2
         },
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "notifications",
+          "subpriority": 3
         }
       ]
     },
-
     {
-      tabName: 'Renewals',
-      category: [
+      "tabName": "Performance",
+      "priority": 3,
+      "isFilter": true,
+      "category": [
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "My goals",
+          "subpriority": 1
         },
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "Policies Sold",
+          "subpriority": 2
         },
         {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
+          "catName": "Premium",
+          "subpriority": 3
+        },
+        {
+          "catName": "commisions",
+          "subpriority": 4
+        }
+      ]
+    },
+    {
+      "tabName": "Business",
+      "priority": 4,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Leads",
+          "subpriority": 1
+        },
+        {
+          "catName": "Proposals",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Renewals",
+      "priority": 5,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Renewals",
+          "subpriority": 1
+        },
+        {
+          "catName": "Persistency",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Servicing",
+      "priority": 6,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Claims",
+          "subpriority": 1
+        },
+        {
+          "catName": "Customers",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Wellness",
+      "priority": 7,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Dha",
+          "subpriority": 1
+        },
+        {
+          "catName": "sellingProducts",
+          "subpriority": 2
         }
       ]
     }
-
   ];
-
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService, private dashboardService : DashboardService) {
-      this.options = {
-        type: "radial-gauge",
-        value: 80,
-        scale: {
-          min: 0,
-          max: 100,
-        },
-    };
+    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
   }
+
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -480,7 +225,6 @@ export class DashboardComponent {
         }
       });
     });
-    // this.combineCalls()
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
@@ -488,25 +232,15 @@ export class DashboardComponent {
       if (res.isSuccess) {
         this.profileDetails = res.data;
       }
-    })
-  }
-
-  combineCalls(){
-    const reqData = {
-      "agentCode": localStorage.getItem('agentCode')
-    }
-    const payload = {
-      "filterType": "Last7Days"
-    }
-    forkJoin({
-        profileDetails : this.profileService.getProfileDetails(reqData),
-        leadDetails : this.dashboardService.fetchLeadStatusCount(payload),
-        renewalDetails : this.dashboardService.fetchRenewalStatusCount(payload),
-        proposalDetails : this.dashboardService.fetchProposalStatusCount(payload),
-
-    }).subscribe((data : any) =>{
-        console.log(data)
-    })
+    });
+    // this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
+    //   if (res.isSuccess) {
+    //     this.actualDashboardPrefereces = res;
+    //   }
+    // });
+    this.fetchWidgets();
+    this.createRenewChart();
+    this.getPoductList();
   }
 
   getTimeOfDay() {
@@ -524,25 +258,86 @@ export class DashboardComponent {
     }
   }
 
-  dropTasks(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
-  }
-
   dropPerformance(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.performanceCard, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.performanceCard, 'Performance')
   }
 
-  dropTaskDetail(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
+  dropQuickAct(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.quickActionDetails, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.quickActionDetails, 'QuickAction')
   }
 
+  dropTabs(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.tabsInfo, 'Business')
+  }
 
+  dropRenewal(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.renewalDetail, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.renewalDetail, 'Renewal')
+  }
+
+  dropCharts(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.otherSection, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.otherSection, 'Customer')
+  }
+
+  dropSections(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.newOrderList, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.newOrderList, 'section')
+  }
+
+  getOrderBy(widget: any, key: any) {
+    switch (key) {
+      case 'section':
+        this.newSectionList = widget.map((item: any, index: any) => {
+          return { name: item, order: index + 1};
+        });
+        console.log(this.newSectionList)
+        break;
+      case 'Customer':
+        this.newCustomerList = widget.map((item: any, index: any) => {
+          return { main: 'Customer', name: item, order: index + 1};
+        });
+        console.log(this.newCustomerList)
+        break;
+      case 'Renewal':
+        this.newRenewalList = widget.map((item: any, index: any) => {
+          return { main: 'Renewal', name: item, order: index + 1};
+        });
+        console.log(this.newRenewalList)
+        break;
+      case 'Business':
+        this.newBusinessList = widget.map((item: any, index: any) => {
+          return { main: 'Business', name: item, order: index + 1};
+        });
+        console.log(this.newBusinessList)
+        break;
+      case 'QuickAction':
+        this.newQuickActionList = widget.map((item: any, index: any) => {
+          return { main: 'QuickAction', name: item, order: index + 1};
+        });
+        console.log(this.newQuickActionList)
+        break;
+
+      case 'Performance':
+        this.newPerformanceList = widget.map((item: any, index: any) => {
+          return { main: 'Performance', name: item, order: index + 1};
+        });
+        console.log(this.newPerformanceList)
+        break;
+
+      default:
+        break;
+    }
+
+  }
 
   getQuote() {
     this.showCard = true;
     this.showDropdownsFlag = true;
     console.log('showCard:', this.showCard);
-    // this.saveDataToStorage();
   }
 
   createLead() {
@@ -550,14 +345,876 @@ export class DashboardComponent {
     });
   }
 
-  onToggle(event: any) {
-    const button = event.target;
-    const contentBlock = button.nextElementSibling;
-    if (contentBlock.style.display === 'none') {
-      contentBlock.style.display = 'block';
-    } else {
-      contentBlock.style.display = 'none';
+  onSearch() {
+    const obj = {
+      "agentCode": localStorage.getItem('agentCode'),
+      "searchValue": this.searchedValue
+    }
+    this.dashboardService.searchByPrefix(obj).subscribe(res => {
+      this.searchedData = res?.data;
+      this.showSearchedResults = true;
+    })
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent): void {
+    if (this.el.nativeElement.contains(event.target)) {
+      this.showSearchedResults = false;
     }
   }
-}
 
+  onRedirectBasedonSource(data: any) {
+    const fullNumber = data?.searchValue;
+    const extractedValue = fullNumber.slice(8) == localStorage.getItem('agentCode') ? true : false;
+
+    if (data?.searchValue.includes('UPL')) {
+      this.route.navigate(['leads/leadsList'])
+    } else if (data?.searchValue.includes('UPP')) {
+      this.route.navigate(['proposals/proposalsList'])
+    } else if (extractedValue) {
+      this.route.navigate(['claims/claimsList'])
+    } else {
+      this.route.navigate(['customers/customersList'])
+    }
+  }
+
+
+
+  fetchWidgets() {
+    this.widgetArr.forEach(element => {
+      const obj = {
+        "WidgetName": element.name,
+        "FilterType": element.isFilter ? element.filterType : '',
+        "AgentCode": localStorage.getItem('agentCode')
+      }
+
+      switch (element.name) {
+        case 'Performance':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('performance', res.data);
+            res.data.length && Object.keys(res.data[0]).forEach(el => {
+              switch (el) {
+                case 'nops':
+                  const nops = {
+                    title: 'Policies Sold',
+                    value: res.data[0][el],
+                    description: `Policies sold as per selected range ${res.data[0][el]}`,
+                    icon: 'assets/Img/icon_dashboard_policysold.svg',
+                    subIcon: 'assets/Img/icon_price_tag.svg',
+                    type: 'text',
+                    class: ''
+                  }
+                  this.performanceCard.push(nops)
+                  break;
+
+                case 'premiumEarned':
+                  const premiumEarned = {
+                    title: 'Premium',
+                    value: res.data[0][el],
+                    description: `${res.data[0][el]} of monthly goal achieved`,
+                    icon: 'assets/Img/icon_dashboard_premium.svg',
+                    type: 'progress',
+                    progress: res.data[0][el],
+                    class: 'premium'
+                  }
+                  this.performanceCard.push(premiumEarned)
+                  break;
+
+                case 'commissionEarned':
+                  const commissionEarned = {
+                    title: 'Commission Earned',
+                    value: res.data[0][el],
+                    description: `You can potentially earned ${res.data[0][el]}`,
+                    icon: 'assets/Img/icon_dashboard_healthreturn.svg',
+                    type: 'action',
+                    class: 'commission-earned'
+                  }
+                  this.performanceCard.push(commissionEarned)
+                  break;
+
+                case 'achievementsPercentage':
+                  const achievementsPercentage = {
+                    title: 'My Goals',
+                    value: res.data[0][el],
+                    description: 'Achievement',
+                    icon: 'assets/Img/icon_dashboard_myperformance.svg',
+                    type: 'gauge',
+                    progress: res.data[0][el],
+                    class: 'my-goals'
+                  }
+                  this.performanceCard.push(achievementsPercentage)
+                  break;
+
+                default:
+                  break;
+              }
+            })
+          })
+          break;
+
+        case 'Customer':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('customer', res.data)
+            this.customerInfo = res.data;
+            this.otherSection.push({
+              tabName: 'Customer',
+              chart: 'Customer',
+              isShow: true,
+              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
+              category: Object.entries(res.data).map(([name, count]) => ({
+                name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                count: count
+              }))
+            })
+          })
+          break;
+
+        case 'Servicing':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('Servicing', res.data)
+            this.serviceInfo = res.data;
+            this.otherSection.push({
+              tabName: 'Claims',
+              chart: 'Claims',
+              isShow: true,
+              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
+              category: Object.entries(res.data).map(([name, count]) => ({
+                name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                count: count
+              }))
+            })
+          })
+          break;
+
+        case 'Wellness':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            this.dhaCard = Object.entries(res.data[0]).map(([name, count]) => ({
+              name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+              count: count,
+
+            }))
+            console.log(this.dhaCard)
+          })
+          break;
+
+        case 'Business':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
+            console.log('Business', res.data);
+            this.businessSummary = res.data;
+            this.tabsInfo = [
+              {
+                tabName: 'Leads',
+                chart: 'Leads',
+                totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
+                category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
+                  name: item.status,
+                  count: item.count
+                }))
+              },
+              {
+                tabName: 'Proposals',
+                chart: 'Proposals',
+                totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
+                category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
+                  name: item.status,
+                  count: item.count
+                }))
+              }
+            ];
+            return this.tabsInfo;
+          })
+          break;
+
+        default:
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
+            Object.keys(res.data).forEach((el: any) => {
+              this.quickActionDetails.push({
+                name: el,
+                value: res.data[el].slice(0, 4)
+              })
+            });
+
+            console.log('Quick action', this.quickActionDetails);
+
+          })
+          break;
+      }
+
+
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Ensure that the canvas is available before rendering the chart
+    setTimeout(() => {
+      this.fetchCharts();
+    }, this.calculateDelay()); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+  }
+
+  fetchCharts() {
+    this.renderChart();
+    this.renderPropChart();
+    this.renderEXPropChart();
+    // this.renderPersistencyChart();
+    this.renderCustomerChart();
+    this.renderServiceChart();
+  }
+
+  createChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.businessSummary.filter((item: any) => item.dataType === 'Lead');
+    const labels = categories.map((item: any) => item.status);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#58d68d',
+          '#5dade2',
+          '#dc7633',
+          '#48c9b0',
+          '#f5b041',
+          '#af7ac5',
+          '#ec7063'
+        ], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  createPropChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.businessSummary.filter((item: any) => item.dataType === 'Proposal');
+    const labels = categories.map((item: any) => item.status);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+        // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderChart(): void {
+    if (this.chartCanvas && this.chartCanvas.nativeElement) {
+      const canvas = this.chartCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.Leadchart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 11,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.Leadchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.Leadchart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/leads/leadsList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  renderPropChart(): void {
+    if (this.chartPropCanvas && this.chartPropCanvas.nativeElement) {
+      const canvas = this.chartPropCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.proposalChart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createPropChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 11,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.proposalChart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.proposalChart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/proposals/proposalsList/'], {
+                queryParams: { status: label, filter: this.businessFilter },
+              });
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  createEXChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Renewal')
+    const labels = categories[0].category.map((item: any) => item.name);
+    const data = categories[0].category.map((item: any) => item.count);
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c'], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderEXPropChart(): void {
+    if (this.chartRenewCanvas && this.chartRenewCanvas.nativeElement) {
+      const canvas = this.chartRenewCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.renewChart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createEXChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',  // Move legend to the side (right or left)
+              labels: {
+                font: {
+                  size: 11,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.renewChart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.renewChart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/renewal/renewalList/'], {
+                queryParams: { filter: label },
+              });
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  // createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
+  //   const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
+  //   const labels = categories[0].category.map((item: any) => item.name);
+  //   const data = categories[0].category.map((item: any) => item.count);
+  //   return {
+  //     labels: labels,
+  //     datasets: [{
+  //       data: data,
+  //       backgroundColor: ['#e74c3c',
+  //         '#9b59b6',
+  //         '#3498db',
+  //         '#f39c12',
+  //         '#1abc9c'], // Dynamic colors
+  //       //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+  //     }]
+  //   };
+  // }
+
+  // renderPersistencyChart(): void {
+  //   if (this.chartPersistencyCanvas && this.chartPersistencyCanvas.nativeElement) {
+  //     const canvas = this.chartPersistencyCanvas.nativeElement;
+  //     const ctx = canvas.getContext('2d');
+
+  //     if (!ctx) {
+  //       console.error('Failed to get context from canvas.');
+  //       return;
+  //     }
+
+  //     // Create the chart using Chart.js
+  //     this.renewChart = new Chart(ctx, {
+  //       type: 'pie', // 'pie' or 'doughnut'
+  //       data: this.createPersistencyChartData(), // Dynamic chart data
+  //       options: {
+  //         responsive: true,
+  //         plugins: {
+  //           legend: {
+  //             position: 'bottom',  // Move legend to the side (right or left)
+  //             labels: {
+  //               font: {
+  //                 size: 11,  // Reduce the font size of the legend labels
+  //                 weight: 'normal',  // Adjust the weight of the legend text
+  //                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+  //               },
+  //               boxWidth: 10,  // Set the width of the colored box (legend symbol)
+  //               boxHeight: 10,  // Set the height of the colored box (legend symbol)
+  //               padding: 5  // Adjust the padding around each legend item
+  //             }
+  //           },
+  //           tooltip: {
+  //             callbacks: {
+  //               label: (tooltipItem) => {
+  //                 return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+  //               },
+  //             },
+  //           },
+  //         },
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Chart canvas element is not found.');
+  //   }
+  // }
+
+  createRenewChart() {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+
+    this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
+      this.renewalDetail.push(
+        {
+          tabName: 'Renewal',
+          chart: 'Renewal',
+          totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
+          category: res.data.map((item: any) => ({
+            name: item.dueStatus,
+            count: item.customerCount
+          }))
+        }
+      );
+    });
+    this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(res => {
+      this.renewalDetail.push(
+        {
+          tabName: 'Persistency',
+          chart: 'Persistency',
+          totalCount: res.data[0].persistencyPercentage,
+          category: res.data.map((item: any) => ({
+            name: 'Persistency',
+            count: res.data[0].persistencyPercentage
+          }))
+        }
+      );
+    });
+  }
+
+  // createDHAChartData(): ChartData<'pie' | 'doughnut'> {
+  //   const categories = this.dhaCard;
+  //   const labels = categories.map((item: any) => item.wellnessType);
+  //   const data = categories.map((item: any) => item.count);
+
+  //   return {
+  //     labels: labels,
+  //     datasets: [{
+  //       data: data,
+  //       backgroundColor: ['#e74c3c',
+  //         '#9b59b6',
+  //         '#3498db',
+  //         '#f39c12',
+  //         '#1abc9c',
+  //         '#27ae60',
+  //         '#e67e22',
+  //         '#f1c40f',
+  //         '#95a5a6'
+  //       ],
+  //       // Dynamic colors
+  //       //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+  //     }]
+  //   };
+  // }
+
+  // renderDHAChart(): void {
+  //   if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
+  //     const canvas = this.chartDHACanvas.nativeElement;
+  //     const ctx = canvas.getContext('2d');
+
+  //     if (!ctx) {
+  //       console.error('Failed to get context from canvas.');
+  //       return;
+  //     }
+
+  //     // Create the chart using Chart.js
+  //     this.dhaChart = new Chart(ctx, {
+  //       type: 'doughnut', // 'pie' or 'doughnut'
+  //       data: this.createDHAChartData(), // Dynamic chart data
+  //       options: {
+  //         responsive: true,
+  //         plugins: {
+  //           legend: {
+  //             position: 'bottom',
+  //             labels: {
+  //               font: {
+  //                 size: 12,  // Reduce the font size of the legend labels
+  //                 weight: 'normal',  // Adjust the weight of the legend text
+  //                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+  //               },
+  //               boxWidth: 10,  // Set the width of the colored box (legend symbol)
+  //               boxHeight: 10,  // Set the height of the colored box (legend symbol)
+  //               padding: 5  // Adjust the padding around each legend item
+  //             }
+  //           },
+  //           tooltip: {
+  //             callbacks: {
+  //               label: (tooltipItem) => {
+  //                 return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+  //               },
+  //             },
+  //           },
+  //         },
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Chart canvas element is not found.');
+  //   }
+  // }
+
+  createCustomerChartData(): ChartData<'pie' | 'doughnut'> {
+    return {
+      labels: ['Total Customers', 'Active Customers', 'InAcive Customers'],
+      datasets: [{
+        data: [this.customerInfo?.totalCustomerCount, this.customerInfo?.activeCustomerCount, (this.customerInfo?.totalCustomerCount - this.customerInfo?.activeCustomerCount)],
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+        // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderCustomerChart(): void {
+    if (this.chartCustomerCanvas && this.chartCustomerCanvas.nativeElement) {
+      const canvas = this.chartCustomerCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.customerchart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createCustomerChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 12,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.customerchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.customerchart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/customers/customersList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  createServiceChartData(): ChartData<'pie' | 'doughnut'> {
+    return {
+      labels: [
+        'Claim Rejecteded', 'Claim Settled', 'Open Claims', 'Open Endorsements'
+      ],
+      datasets: [{
+        data: [this.serviceInfo?.rejectedClaimsCount, this.serviceInfo?.settledLessAmountClaimsCount, this.serviceInfo?.openClaimsCount, this.serviceInfo?.openEndorsementsCount],
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+        // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderServiceChart(): void {
+    if (this.chartServicingCanvas && this.chartServicingCanvas.nativeElement) {
+      const canvas = this.chartServicingCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.servicingchart = new Chart(ctx, {
+        type: 'pie', // 'pie' or 'doughnut'
+        data: this.createServiceChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 12,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.servicingchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.servicingchart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/claims/claimsList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  onClickEvents(event: any) {
+    if (event == 'events') {
+      this.route.navigate(['events/eventsList'])
+    } else if (event == 'birthday') {
+      this.route.navigate(['events/birthdaysList'])
+    } else if (event == 'products') {
+      this.route.navigate(['products'])
+    } else {
+      const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
+      this.route.navigateByUrl(url)
+    }
+  }
+
+  onSelectFilter(section: any, filter: any) {
+    this.performanceCard = [];
+    this.tabsInfo = [];
+    this.otherSection = [];
+    this.quickActionDetails = [];
+    this.widgetArr.forEach((action: any) => {
+      if (action.name === section && action.isFilter) {
+        action.filterType = filter;
+      }
+      return action;
+    });
+
+    this.fetchWidgets();
+    this.ngAfterViewInit();
+  }
+
+  getPoductList() {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.dashboardService.Getproductlist().subscribe({
+      next: (res: any) => {
+        this.ProductList = res.data.slice(0, 2).map((item: any) => ({
+          productName: item.productName,
+          desc: item.productDescription,
+          keyFeatures: item.keyFeatures && JSON.parse(item.keyFeatures).slice(0, 3),
+          sumInsured: item.sumInsured && item.sumInsured.split(",")[0]
+        }));
+        console.log(this.ProductList)
+
+      },
+      error: (err) => {
+        console.error(err);
+        if (err.status === 404) {
+        }
+      }
+    })
+
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isDesktopView = screen.width <= 728 ? true : false;
+  }
+
+  calculateDelay(): number {
+    const totalSectionsLength = this.otherSection.length;
+    const totalTabsLength = this.tabsInfo.length;
+    const totalCardsLength = this.dhaCard.length;
+    const totalActionsLength = this.quickActionDetails.length;
+
+    const delay = (totalSectionsLength * 500) + (totalTabsLength * 300) + (totalCardsLength * 200) + (totalActionsLength * 100);
+    const minDelay = 5000;
+    const maxDelay = 30000;
+
+    return Math.max(minDelay, Math.min(delay, maxDelay));
+  }
+
+  onSubmit() {
+    this.dashboardService.submitPreferenceData({}).subscribe((response: any) => {
+      console.log('Data submitted successfully', response);
+    });
+  }
+
+}

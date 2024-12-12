@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { LeadsRoutingModule } from './leads-routing.module';
 import { LeadsListComponent } from './leads-list/leads-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { PrimeNgModule } from '../prime-ng.module';
 import { MyMaterialModule } from '../material.module';
 import { CreateLeadComponent } from './create-lead/create-lead.component';
@@ -35,7 +34,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgxPaginationModule,
     LeadsRoutingModule,
     PrimeNgModule,
     MyMaterialModule,

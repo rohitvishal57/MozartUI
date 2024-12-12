@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class CommonService {
   private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
   dialogRef: any;
+
+  private toggleSidebarSubject = new Subject<boolean>();
+  sidebarState$ = this.toggleSidebarSubject.asObservable();
+  selectedSideBarFlag: any;
 
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
@@ -76,10 +80,14 @@ export class CommonService {
     return this.http.post<any>(formSequence, reqData)
   }
 
-  GetSingleProductQuote(reqData: any) {
-    // const singleProductQuote=this.configService.config.baseUrl + this.configService.config.getSingleProductQuote;
+  GetSingleProductQuote(reqData: any) {;
     const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
+    // const singleProductQuote = 'https://localhost:7188/getquoteforsingleproduct';
     return this.http.post<any>(singleProductQuote, reqData);
+  }
+  UpdateAgentAllFormData(reqData:any){
+    const saveCommonDraftData = "https://usp.monocept.ai/api/rug/UpdateAgentAllFormData";
+    return this.http.post<any>(saveCommonDraftData,reqData);
   }
 
 
@@ -125,8 +133,22 @@ export class CommonService {
       this.dialogRef.close()
     }
   }
-  uploaDocument(reqData:FormData){
+  uploadDocument(reqData:any){
     const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
     return this.http.post(uploadDocument,reqData);
   }
+
+  toggleSidebar(state: any) {
+    this.toggleSidebarSubject.next(state);
+  }
+
+  setValue(value : boolean){
+    this.selectedSideBarFlag = value;
+  }
+
+  getValue(){
+    return this.selectedSideBarFlag;
+  }
+
+  
 }

@@ -24,33 +24,33 @@
           </div>
         </div> -->
 
-    <div class="insurance_optionHUB" [formGroup]="quoteFormGroup">
+    <div class="insurance_optionHUB" #scrollTarget [formGroup]="quoteFormGroup">
       <div class="dropdown-container ">
         <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
         <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
           <!-- Label -->
-          <label class="field_label">{{ dropdown.label }}</label>
+          <label class="field_label">{{ dropdown.label | translate }}</label>
           <!-- Button for each dropdown -->
           <button class="dropdown-button" type="button" id="dropdownlabel-custom-{{i}}"
             name="dropdownlabel-custom-{{i}}" (click)="openCustomDiv(dropdown.label, i+1)">
             <div class="selected-value">
               <span>
                 <ng-container *ngIf="dropdown.label === 'Policy Type'">
-                  {{ quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater' ? 'Family Floater' :
-                  (quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual' ? 'Multi Individual' :
-                  'Please select a policy') }}
+                  {{ quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater' ? ('Family Floater' | translate) :
+                  (quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual' ? ('Multi Individual' | translate) :
+                  ('Please select a policy' | translate)) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Relationship'">
-                  {{ selectedRelation != "" ? selectedRelation : 'Please select a relationship' }}
+                  {{ selectedRelation != "" ? (selectedRelation | translate) : ('Please select a relationship' | translate) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Sum Insured'">
-                  {{ formatTickLabel(selectedSumInsured,false) || 'Please select sum insured' }}
+                  {{ formatTickLabel(selectedSumInsured,false) || ('Please select sum insured' | translate) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
-                  {{ diseaseNames != null ? diseaseNames : 'No Diseases Selected' }}
+                  {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
 
               </span><img src="assets/Img/down_arrow.svg">
@@ -70,10 +70,8 @@
                       (click)="onPlanTypeChange('Family Floater')"
                       [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
                     <span>
-                      <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">Family Floater
-                        Policy</em>
-                      <em class="para-12">A family floater health insurance is a type of policy where you and your
-                        family share the same cover amount.</em>
+                      <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">{{"Family Floater Policy" | translate}}</em>
+                      <em class="para-12">{{"A family floater health insurance is a type of policy where you and your family share the same cover amount." | translate}}</em>
                     </span>
                     <img src="assets/Img/img_selected_policytype.svg" class="selected_policy">
                   </label>
@@ -83,16 +81,14 @@
                       (click)="onPlanTypeChange('Multi Individual')"
                       [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
                     <span>
-                      <em class="pt-head"><img src="assets/Img/icon_multiindividual.svg">Multi-individual Policy</em>
-                      <em class="para-12">A multi-individual health insurance is a type of policy wherein each member
-                        has their own cover amount.</em>
+                      <em class="pt-head"><img src="assets/Img/icon_multiindividual.svg">{{"Multi-individual Policy" | translate}}</em>
+                      <em class="para-12">{{"A multi-individual health insurance is a type of policy wherein each member has their own cover amount." | translate}}</em>
                     </span>
                     <img src="assets/Img/img_selected_policytype.svg" class="selected_policy2">
                   </label>
                 </div>
 
-                <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">You can edit members
-                  to change back to family floater policy.</div>
+                <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">{{"You can edit members to change back to family floater policy." | translate}}</div>
                 <!-- <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button> -->
               </div>
             </div>
@@ -104,7 +100,7 @@
                 <div class="overlay_body sumInsured_selectMain">
                   <div class="sumInsured_select">
                     <header>
-                      <h3>Sum Insured</h3>
+                      <h3>{{"Sum Insured" | translate}}</h3>
                       <div class="sumInsured_value">{{ formatTickLabel(selectedSumInsured,false) }}</div>
                     </header>
                   </div>
@@ -135,7 +131,7 @@
                 </div>
                 <button type="button" id="continue" name="continue" class="suminsured-button"
                   (click)="updateSumInsured()">
-                  Continue
+                  {{"Continue" | translate}}
                 </button>
               </div>
             </div>
@@ -145,56 +141,97 @@
             <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="selectedDropdown === 'Relationship'">
               <!--Overlay: Personal details start-->
               <div class="option_policyType">
-                <div class="overlay_body insurer_detailsMain">
-                  <h3>Personal details</h3>
+                <div class="overlay_body insurer_detailsMain sumInsured_selectMain">
+                  <div class="sumInsured_select">
+                    <header>
+                      <h3>{{"Personal details" | translate}}</h3>
+                      <div class="sumInsured_value"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="font-size: 14px;" (click)="closeCustomDiv()"></button></div>
+                    </header>
+                  </div>
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="nameproposer" name="nameproposer" formControlName="proposerName"
-                          placeholder="Enter name of proposer" class="input-textBox" maxlength="30">
+                          placeholder="" class="input-textBox" maxlength="30" [class.input-havevalue]="quoteFormGroup.get('proposerName')?.value">
+                          <label for="nameproposer" class="get-quote-label">
+                            {{"Enter name of proposer" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || quoteFormGroup.get('proposerName')?.dirty)">
-                          Please enter a valid name (only alphabets, max 30 characters)</span>
+                          *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || showErrors)">
+                          {{"Please enter a valid name (only alphabets, max 30 characters)" | translate}}</span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
-                          placeholder="Enter mobile no of proposer" class="input-textBox" maxlength="10"
+                          placeholder="" class="input-textBox" maxlength="10" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
                           (input)="enforceMaxLength($event, 10)">
+                          <label for="mobileNumber" class="get-quote-label">
+                            {{"Enter mobile no of proposer" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || quoteFormGroup.get('mobileNumber')?.dirty)">
-                          Please enter a valid 10-digit mobile number
+                          *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || showErrors)">
+                         {{" Please enter a valid 10-digit mobile number" | translate}}
                         </span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="pincodeproposer" name="pincodeproposer" [required]="true"
-                          formControlName="proposerPincode" value="" placeholder="Enter your 6 digit pincode"
+                          formControlName="proposerPincode" value="" placeholder="" [class.input-havevalue]="quoteFormGroup.get('proposerPincode')?.value"
                           maxlength="6" (input)="enforceMaxLength($event, 6)" class="input-textBox"
                           (change)="getProposerPincode($event)">
+                          <label for="pincodeproposer" class="get-quote-label">
+                            {{"Enter your 6 digit pincode" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">
-                          Please enter a valid 6-digit pincode
+                          *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || showErrors)">
+                        {{"Please enter a valid 6-digit pincode" | translate}}
                         </span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
-                        <select id="zoneValue" name="zoneValue" formControlName="proposerZone" class="input-textBox" (change)="onZoneChange($event)">
-                          <option value="" disabled selected>Select Zone</option>
-                          <option *ngFor="let zone of availableZones" [value]="zone">{{ zone }}</option>
+                        
+                        <select id="zoneValue" name="zoneValue" formControlName="zoneValue" class="input-textBox" 
+                        [class.input-havevalue]="quoteFormGroup.get('zoneValue')?.value" (change)="onZoneChange($event)">
+                          <option value="" disabled selected>{{"" | translate}}</option>
+                          <option *ngFor="let zone of upgradableZones" [value]="zone.value">{{ zone.name | translate }}</option>
                         </select>
+                        <label for="zoneValue" class="get-quote-label">
+                          {{"Select Zone" | translate}} <span class="required">*</span>
+                        </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerZone')?.invalid && (quoteFormGroup.get('proposerZone')?.touched || quoteFormGroup.get('proposerZone')?.dirty)">
-                          Select Zone
+                          *ngIf="quoteFormGroup.get('proposerZone')?.invalid && (quoteFormGroup.get('proposerZone')?.touched || showErrors)">
+                          {{"Select Zone" | translate}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <div class="input-block input-block-renew input-filed-white">
+                        
+                        <select id="proposerGender" name="proposerGender" formControlName="proposerGender" class="input-textBox" 
+                        [class.input-havevalue]="quoteFormGroup.get('proposerGender')?.value"  (change)="onGenderChange($event)">
+                        <option value="" disabled selected>{{"Select Gender" | translate}}</option>
+                          <option value="M">{{ "Male" | translate }}</option>
+                          <option value="F">{{ "Female" | translate }}</option>
+                        </select>
+                        <label for="proposerGender" class="get-quote-label">
+                          {{"Select Gender" | translate}} <span class="required">*</span>
+                        </label>
+                        <span class="ui-error"
+                          *ngIf="quoteFormGroup.get('proposerGender')?.invalid && (quoteFormGroup.get('proposerGender')?.touched || showErrors)">
+                          {{"Select Gender" | translate}}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <h3>Member details</h3>
-                  <div class="insurer_memberDetails">
+                  <h3>{{"Member details" | translate}}</h3>
+                  <div class="insurer_memberDetails" *ngIf="checkGender">
                     <div class="input-checkbox-block input-checkbox-withIcon">
                       <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="self" value="self" class="input-check">
@@ -214,7 +251,7 @@
                                   class="input-check">
                                   <!-- [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1"> -->
                                 <label for="{{relation.value}}"><img
-                                    src="{{relation.imagePath}}">{{relation.name}}</label>
+                                    src="{{relation.imagePath}}">{{relation.name | translate}}</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
@@ -228,7 +265,7 @@
                                 <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
                                 <button type="button" id="addchildrens" name="addchildrens" class="btn_white btn_addChildren" (click)="incrementMember(relation)"
                                 [disabled]="addHide">
-                                  <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
+                                  <span><img src="{{relation.imagePath}}">{{relation.name | translate}}</span>
                                   <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
                               </div>
@@ -310,7 +347,7 @@
                           </button> -->
                 </div>
                 <button type="button" id="next" name="next" class="btn_red btn_fullWidth"
-                  (click)="addInsuredMemberDetails()">Next</button>
+                  (click)="addInsuredMemberDetails()">{{"Next" | translate}}</button>
               </div>
             </div>
 
@@ -357,6 +394,10 @@
                 </div> -->
 
             <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
+              <div class="close-popup">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                          style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+              </div>
               <div class="option_policyType">
                 <div class="overlay_body checkbox_disease_scroll">
                   <div class="input-checkbox-block checkbox_disease">
@@ -364,12 +405,12 @@
                       <input type="checkbox" [id]="disease.id" name="{{disease.id}}" [value]="disease.value"
                         (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected(disease.value)"
                         class="input-check">
-                      <label [for]="disease.id">{{ disease.label }}</label>
+                      <label [for]="disease.id">{{ disease.label | translate }}</label>
                     </div>
                   </div>
                 </div>
                 <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
-                  (click)="diseaseSelection()">Continue</button>
+                  (click)="diseaseSelection()">{{"Continue" | translate}}</button>
               </div>
             </div>
 
@@ -381,7 +422,7 @@
 
       <div class="continue-btn-container">
         <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey"
-          (click)="continue()">Continue</button>
+          (click)="continue()">{{"Continue" | translate}}</button>
       </div>
     </div>
     <!-- </div>

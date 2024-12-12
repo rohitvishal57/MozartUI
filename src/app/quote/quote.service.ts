@@ -23,12 +23,16 @@ export class QuoteService {
     return this.httpService.post(deleteagentcartitems, reqData);
   }
   Getproductlist2(reqData:any){
-    // const  getquotefortopsellingproducts = `https://localhost:7188/api/getquotefortopsellingproducts`;
+    // const  getquotefortopsellingproducts = `https://localhost:7188/getquotefortopsellingproducts`;
     const  getquotefortopsellingproducts = this.configService.config.baseUrl1 + this.configService.config.getquotefortopsellingproducts;
     return this.httpService.post(getquotefortopsellingproducts,reqData)
   }
   Getproductdetailsandfeatures(reqData:any){
     const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getProductDetailsAndFeatures;
     return this.httpService.post(getproductdetailsandfeatures,reqData)
+  }
+  getquoterelationsviapolicytype(reqData:any){
+    const  getquoterelationsviapolicytype = this.configService.config.baseUrl + this.configService.config.getquoterelationsviapolicytype;
+    return this.httpService.post(getquoterelationsviapolicytype,reqData)
   }
 }

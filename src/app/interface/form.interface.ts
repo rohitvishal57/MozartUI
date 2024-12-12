@@ -87,6 +87,9 @@ export interface IFormControl {
   button?:any;
   icon?:string;
   imageUrl?:string;
+  maxDateLength?: any;
+  minDateLength?:any;
+  maxLength?: any;
 }
 export interface ISubControl {
   name: string;
@@ -112,6 +115,9 @@ export interface ISubControl {
   isButton?:boolean;
   innerArrayControl?:IDynamicControl[][];
   conditionCheck?:boolean;
+  maxDateLength?: any;
+  minDateLength?:any;
+  maxLength?: any;
 }
 
 export interface ITab {
@@ -146,6 +152,10 @@ export interface ISelectCheckboxOption {
   isIncrement?: boolean;
   name?:string;
   dependentControls?: any;
+  gender?:any;
+  id?:any;
+  memberRelationCode?:any;
+  productId?:any;
 }
 
 export interface IImage {
@@ -201,14 +211,17 @@ export interface IDynamicControl {
   image?:IImage;
   tabs?:ITab[];
   getAllOption?: string;
+  maxDateLength?: any;
+  minDateLength?:any;
+  maxLength?: any;
 }
 export interface IValidator {
   validatorName?: string;
   message?: string;
   required?: boolean;
   pattern?: string | undefined;
-  minLength?: number;
-  maxLength?: number;
+  minLength?: any;
+  maxLength?: any;
   email?: string;
 }
 export interface IOptions {
@@ -218,5 +231,5 @@ export interface IOptions {
   value?: any;
   class?: string;
   selected?: boolean;
-  dependentControls?: string[];
+  dependentControls?: any[];
 }

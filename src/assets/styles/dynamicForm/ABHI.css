@@ -150,10 +150,11 @@ body {
 
 .disable{
 
-    background-color: #c7222a !important;
+    /* background-color: #c7222a !important; */
+    background: #AFB3C0 !important;
     color: #fff !important;
     cursor: not-allowed !important;
-    opacity: 0.5 !important;
+    /* opacity: 0.5 !important; */
 }
 
 /* .main-container .right-panel .inputField_Text,
@@ -1028,7 +1029,7 @@ body {
 
 .main-container .right-panel .boldtext_input {
     font-size: 19px;
-    width: 220px;
+    width: 200px;
     border: none;
 }
 
@@ -1561,6 +1562,8 @@ body {
 }
 
 .main-container .main-subContainer .left-nav .left-navInner {
+    position: fixed;
+    width: 220px;
     background-color: #fff;
     border-radius: 12px;
     padding: 12px 14px 38px 14px;
@@ -1764,7 +1767,7 @@ body {
 
 .main-container .right-panel .text-danger {
     font-family: Anek Latin;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     line-height: 12px;
     letter-spacing: 0.3199999928474426px;
@@ -1772,6 +1775,7 @@ body {
     color: #C91429;
     position: absolute;
     margin-top: 5px;
+    margin-left: 5px;
 }
 
 .main-container .right-panel .inputField_Select {
@@ -1840,11 +1844,11 @@ body {
 .main-container .right-panel .checkbox-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
 }
 
 .main-container .right-panel .checkbox-wrapper {
-    width: 165px !important;
+    max-width: 180px !important;
     flex: 0 0 auto !important;
     margin: 0;
 }
@@ -1900,7 +1904,7 @@ body {
     border: none;
     border-radius: 12px;
     width: auto;
-    margin: 0px 0 0 24px;
+    margin: 0px 0 0 5px;
     font-family: Anek Latin;
     font-size: 18px;
     font-weight: 500;
@@ -1915,7 +1919,7 @@ body {
     border: none;
     border-radius: 12px;
     width: auto;
-    margin: 0px 0 0 24px;
+    margin: 0px 0 0 5px;
     font-family: Anek Latin;
     font-size: 18px;
     font-weight: 500;
@@ -2015,10 +2019,6 @@ body {
     margin-bottom: 20px;
 }
 
-.main-container .right-panel .active-button {
-    background-color: green;
-    color: white;
-}
 
 .main-container .right-panel .orlabel {
     margin-top: 30px;
@@ -2246,7 +2246,19 @@ a:not([href]) {
     box-shadow: 0px -4px 36px 0px #0000000D;
     border-radius: 16px 16px 0 0;
     padding: 8px 0 0;
-    z-index: 9;
+    z-index: 1;
+}
+.main-container .right-panel .bottom-section-summary {
+    width: 100%;
+    max-width: 1049px;
+    position: fixed;
+    left: auto;
+    bottom: 0;
+    margin-bottom: 0 !important;
+    box-shadow: 0px -4px 36px 0px #0000000D;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 0 0;
+    z-index: 1;
 }
 input[type=checkbox]:checked {
     background-color: #c7222a !important;
@@ -2584,10 +2596,19 @@ margin: 0;
 .search-bar .form-control::-ms-input-placeholder { /* Edge 12-18 */
     color: #979CAE;
   }
-  
+  /* bottom bar aligment css */
   .search-bar .form-control::placeholder {
-    color: #979CAE;
-  }
+        color: #979CAE;
+    }
+  .typecss.bottom-total-premium {
+    width: 135px !important;
+    }
+    .bottom-total-premium input#totalPremium {
+        width: 110px;
+    }
+    input#productName {
+        text-overflow: ellipsis;
+    }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
@@ -2601,6 +2622,25 @@ margin: 0;
         margin-left: 0;
         width: 100%;
         justify-content: center;
+    }
+    .main-container .right-panel .bottom-section{
+        max-width: initial;
+    width: 90%;
+    left: 5%;
+    }
+    .main-container .right-panel .bottom-section-summary {
+        max-width: initial;
+    width: 90%;
+    left: 5%;
+    }
+    .ah-opcovers.acceptTermsCheck .subButton {
+        margin: 5px 45px;
+    }
+    .main-container .right-panel .ah-opcovers {
+        min-width: 100%;
+    }
+    .main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
+        background-position: top;
     }
 }
 
@@ -2641,14 +2681,28 @@ margin: 0;
 }
 
 @media (max-width:767px) {
-    .main-container {
+    .main-container, .main-container .main-subContainer {
         flex-direction: column;
     }
-
+    .main-container {
+        padding-bottom: 12rem;
+    }
     .main-container .left-nav,
     .main-container .right-panel {
         width: 90%;
         margin: 15px auto;
+    }
+    .main-container .main-subContainer .right-panel {
+        width: 90%;
+        margin: 0 auto 15px;
+    }
+    .main-container .right-panel .bottom-section {
+        margin: 0 -21px;
+        width: 100%;
+    }
+    .main-container .right-panel .bottom-section-summary {
+        margin: 0 -21px;
+        width: 100%;
     }
 
     .main-container .left-nav {
@@ -2687,6 +2741,7 @@ margin: 0;
 
     .left-nav-mobileMain {
         display: block;
+        margin: 15px auto 0;
     }
 
     .main-container .right-panel .radio-card-container {
@@ -2724,8 +2779,58 @@ margin: 0;
     }
 
     /*Overlay CSS*/
- 
-  
+    .main-container .right-panel .checkbox-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .main-container .right-panel .ah-opcovers {
+        min-width: 100%;
+    }
+    .main-container .right-panel .popup-overlay{
+        width: 90% !important;
+    }
+    .main-container .right-panel .popup-overlay .next-btn {
+        left: 0px;
+    }
+    .ah-opcovers.acceptTermsCheck .subButton {
+        margin: 5px 45px;
+    }
+    input#recalculate {
+        left: 150px;
+    }
+    .add-disease-popup{
+        /* height: 350px !important; */
+    }
+    input#sendLink, input#sendOTPBtn, input#verifyLink,input#verifyOTP {
+        width: 30%;
+        margin-bottom:1rem;
+    }
+    .main-container .right-panel .section-paragraph1, .main-container .right-panel .section-paragraph1 p {
+        line-height: 1.2;
+    }
+    .QR-scanner,.app-store-button,.google-play-button,.mobileScreen{
+        position:static;
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .imageautodebit {
+        overflow: auto;
+    }
+
+.abhaIDImage {
+    margin-top: 0;
+    padding-left: 0;
+}
+.abhaIDImage img {
+    width: 100%;
+}
+.abhaLabel2{
+    width: 100%;
+}
+.main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
+    background-position: top;
+}
 }
 .main-container .right-panel .next-btn:focus,
     .main-container .right-panel .add-btn:focus,
@@ -2798,4 +2903,68 @@ margin: 0;
       }
     }
   }
-  
+
+.checkbox-error {
+    position: relative;
+}
+ 
+.checkbox-error .text-danger {
+    top: auto !important;
+    bottom: -13px !important;
+}
+.main-container .right-panel .input-container .tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.main-container .right-panel .input-container .info-icon {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.main-container .right-panel .input-container .info-icon img {
+    width: 14px;
+    height: 14px;
+}
+
+.main-container .right-panel .input-container .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    /* white-space: nowrap; */
+    font-size: 12px;
+    width: 300px;
+}
+
+.main-container .right-panel .input-container:has(.tooltip-wrapper .tooltip-text:not(:empty)):hover .tooltip-wrapper .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Optional: Add pointer */
+.main-container .right-panel .input-container .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.main-container .main-subContainer .left-nav .left-main-cnt{
+ background-color: transparent;
+ padding-top: 0px;
+}

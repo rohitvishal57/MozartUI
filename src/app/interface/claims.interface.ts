@@ -7,6 +7,7 @@ export interface ClaimsInterface {
         requestType: string;
         claimStatus: string;
         raisedDate: Date;
+        mobileNumber: string
       
 }
 
@@ -33,4 +34,16 @@ export interface ClaimData {
     notes: string | null;
     proposerName: string | null;
   }
+
+  export interface CoverDetail {
+        member_Code: string;
+        cover_Code: string;
+        cover_Name: string;
+        loss_Type_Code: string;
+        policy_Number: string;
+        member_Name: string;
+        date_of_Birth: string;
+        gender: string;
+        relation: string;
+      }
   

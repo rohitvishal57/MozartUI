@@ -18,15 +18,35 @@
     }
 }
 @media (max-width:1280px) {
-    
+    .checkbox_renew_optionalCoverages {
+        width: 48%;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildInfo {
+        min-width: 120px;
+        max-width: initial;
+    }
+    .raido_paymentType .input-radiolabel span {
+        flex-direction: column;
+    }
 }
-@media (max-width:1222px) {
-    .siteSidenav .siteSidenavMain.siteSidenavMain_scroll {
+@media only screen and (max-width:1280px) and (max-height:586px) {
+    .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
+    .siteSidenav .sidenavMenu.sidenavMenu_links {
+        max-height: 430px;
+        max-height: 76vh;
+    }
+}
+@media only screen and (max-width:1094px) and (max-height:631px) {
+    .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
+    .siteSidenav .sidenavMenu.sidenavMenu_links {
         max-height: 350px;
+        max-height: 76vh;
     }
 }
 @media (max-width:1093px) {
-    
+    .siteBody {
+        padding: 13rem 2rem 12rem;
+    }
     .siteHeader .abcLinksMain {
         padding: 3px 10px;
     }
@@ -48,6 +68,13 @@
     }
     .siteSidenav.active {
         display: block;
+        width: 100%;
+        background-color: #80808057;
+    }
+    .sidebar-rapper {
+        width: 200px;
+        background-color: #fff;
+        height: 90vh;
     }
     .bodyColumns-1 {
         max-width: 100%;
@@ -163,10 +190,121 @@
         width: 100%;
         left: 0;
     }
+    .siteHeader .logoMain .logoMainLeft {
+        padding:3px 13px 3px 9px ;
+    }
+    .siteHeader .logoMain .logoMainRight {
+        justify-content: space-between;
+        padding: 0 10px 0 15px;
+    }
+    .bottomInfoMain {
+        left: auto;
+        width: 90%;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildInfo, .checkbox_renew_optionalCoverages {
+        width: 100%;
+    }
+    .raido_policyTenure {
+        flex-direction: column !important;
+    }
+
+}
+@media (max-width:991px) {
+    /* .top_mainNavBar .navbar-collapse{
+        min-width: 230px;
+        position: absolute;
+        top: 39px;
+        background: #c91429;
+        left: auto;
+        border-radius: 0 0 16px 16px;
+        
+   }
+   .top_mainNavBar .navbar-collapse .navbar-nav .nav-link {
+        justify-content: space-between;
+   } */
+   .top_mainNavBar .navbar-collapse {
+        width: 100%;
+        height: 100vh;
+        background: #ffffff;
+        position: fixed;
+        top: 0;
+        left: 100%;
+        padding: 106px 0px 0px !important;
+        z-index: -1;
+        /* overflow-y: auto; */
+        align-items: flex-start;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse.show {
+        left: 0;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav {
+        gap:8px;
+        background: #F9F9FB;
+        height: 100%;
+        padding: 20px 20px 100px;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link{
+        font-weight: 500;
+        color: #353941;
+        padding: 16px 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #EBEBEC;
+        border-radius: 10px;
+        background: #fff;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover, 
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
+        background-color: #b51023;
+        border-color: #b51023;
+        color: #fff;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
+        border-radius: 10px 10px 0 0;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show + .dropdown-menu {
+        padding: 0;
+        margin: 0;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show + .dropdown-menu .dropdown-menuSub {
+        border-top-width: 0;
+        border-radius: 0 0 10px 10px;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link .icon_arrowDown:before {
+        background: #353941;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover .icon_arrowDown:before,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:before {
+        background: #fff;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:after {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        position: absolute;
+        transform: rotate(-45deg);
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:before {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        position: absolute;
+        transform: rotate(45deg);
+    }
 }
 @media (max-width:912px){
     .bottomInfoMain, .bottomInfoMessage {
-        width: 100%;
+        width: 90%;
         left: auto;
     }
     .radio_additionalInfo .input-radiolabel span {
@@ -185,6 +323,13 @@
     .bottomInfoMain_comparePolices .bottomInfoSubMain .bi_right {
         justify-content:flex-end;
     }
+    .quickFilterMain_claims .quickFilterMain {
+        flex-direction: row;
+    }
+    .quickFilterMain_claims .quickFilterMain .quickFilterLeft, 
+    .quickFilterMain_claims .quickFilterMain .quickFilterRight {
+        width: auto;
+    }
 }
 @media (max-width:820px) {
     .mobile-flex-column {
@@ -195,6 +340,9 @@
         gap:24px;
         padding: 16px 18px;
         align-items: flex-start !important;
+    }
+    .quickFilterMain.cv_bodyItems_policyInfo {
+        flex-direction: row;
     }
     .common_searchWraper{
         width: 100%;
@@ -210,6 +358,17 @@
     }
     .data-row .data-item.data-itemEdit {
         align-items: flex-start;
+    }
+    .mobile_bodyColumns {
+        flex-direction: column;
+    }
+    .mobile_bodyColumns .bcc_main {
+        padding-bottom: 10px !important;
+    }
+}
+@media (max-width:768px) {
+    .checkbox_renew_optionalCoverages {
+        padding: 7px;
     }
 }
 @media (max-width:767px) {
@@ -238,7 +397,10 @@
     }
     .quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
-        /*min-width: 520px;*/
+        /* min-width: 520px; */
+    }
+    .quickFilterMain.cv_bodyItems_policyInfo .quickFilterLeft .quickFilter {
+        min-width: auto;
     }
     .filterWraperForm {
         min-width: 100%;
@@ -344,19 +506,22 @@
     }
     .popupModalMain .modal-dialog {
         max-width: 100%;
-        width: 100%;
-        left: 0;
+        width: 90%;
+        /* left: 0;
         bottom: 0;
         top: auto;
-        position: absolute;
-        margin: 0;
+        position: absolute; */
+        margin: 5% auto;
     }
     .popupModalMain .modal-content {
-        border-radius: 16px 16px 0 0;
+        /* border-radius: 16px 16px 0 0; */
     }
     .common_searchWraper .field_searchMain button {
         top: auto;
         bottom: 6px;
+   }
+   .btn_text.btn_clearSearch {
+    top: auto !important;
    }
    .common_searchWraper .field_searchMain {
         flex-direction: column;
@@ -380,10 +545,48 @@
     .common_searchWraper_proposals .filterFieldGroup {
         width: 100%;
    }
+   .siteHeader .logoMain .logoMainRight {
+        padding: 0 10px 0 15px;
+   }
+   .siteHeader .logoMain .logoMainRight .btn_headerSearch {
+        width: 30px;
+        height: 30px;
+   }
+   .submain_commonError button {
+        padding: 10px 30px;
+    }
+    .footer_cardViewItem .btn_groupAction, .cardViewItem_planContainer {
+        flex-direction: column;
+    }
+    .footer_cardViewItem .btn_groupAction {
+        gap: 8px;
+    }
+    .main_captcha .captcha-label {
+        font-size: 18px !important;
+    }
+    .quickFilterMain_claims, .quickFilterMain_claims .quickFilterMain {
+        flex-direction: column-reverse;
+    }
+    .quickFilterMain_claims .claims_searchWraper .field_searchMain div button {
+        top: 6px !important;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildButton {
+        min-width: auto;
+    }
+    .checkbox_renew_optionalCoverages {
+        min-width: 100%;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
         flex-direction: column;
+    }
+    .top_mainNavBar .navbar-toggler{
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    .siteHeader .logoMain .logoMainLeft {
+        padding: 3px 5px 3px 4px;
     }
 }
 

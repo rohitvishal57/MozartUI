@@ -66,7 +66,7 @@ export class NotificationsComponent {
 
   getNotificationIcon(notification: any) {
     const headerNotfication = this.headerInformation.notificationType.find((element: any) =>
-      element.notificationType.includes(notification.notificationType)
+      element.notificationType.includes(notification.module)
     );
     if (headerNotfication) {
       return headerNotfication.icon;

@@ -1,6 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NgToastService } from 'ng-angular-popup';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-otp-popup',
@@ -21,7 +23,11 @@ export class OtpPopupComponent implements OnInit{
   captchaText: any;
   captchaImage: string | null = null;
   isCaptchaOne: boolean = false;
-  constructor(private fb: FormBuilder,
+  otpValidateResponse: any;
+  submitted: any;
+  isCaptchaValidated: boolean = false;
+  otpResponse: any;
+  constructor(private fb: FormBuilder,private yatraService: YatraService,private toast: NgToastService,
     private dialogRef: MatDialogRef<OtpPopupComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) { }
@@ -120,51 +126,59 @@ export class OtpPopupComponent implements OnInit{
   }
   async resendOtp(){
     const userCaptcha = this.form.get('captchaInput')?.value;
-    // this.submitted = true;
-    // if (userCaptcha === this.captchaText) {
-    //   this.toastr.success('CAPTCHA validated successfully','');
-    //   // this.result = 'CAPTCHA validated successfully';
-    //   this.isCaptchaValidated=true;
-    //   this.submitted = false;
-    //   this.reloadCaptcha();
-    // } else {
-    //   // this.result = 'Invalid CAPTCHA, please try again';
-    //   // this.submitted = false;
-    //   this.isCaptchaValidated=false;
-    //   this.toastr.warning('Invalid CAPTCHA, please try again','');
-    //   this.reloadCaptcha();
-    // }
-    // if(this.isCaptchaValidated){
-    //   let otpGenReq = this.data.generateOtpReq;
-    //   this.loading = true
-    //   const res = await this.dataService.postApiCall('/BranchBanking/GetBBOTP', otpGenReq);
-    //   this.otpResponse = res;
-    //   if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
-    //     this.loading = false
-    //     this.toastr.success(this.otpResponse.statusMessage,'',
-    //     { timeOut: 5000 }
-    //     );
-    //   }
-    // }
+    this.submitted = true;
+    if (userCaptcha === this.captchaText) {
+      this.toast.success({ detail: "SUCCESS", summary: 'CAPTCHA validated successfully', duration: 3000 });
+      // this.result = 'CAPTCHA validated successfully';
+      this.isCaptchaValidated=true;
+      this.submitted = false;
+      this.reloadCaptcha();
+    } else {
+      // this.result = 'Invalid CAPTCHA, please try again';
+      // this.submitted = false;
+      this.isCaptchaValidated=false;
+      this.toast.warning({ detail: "SUCCESS", summary: 'Invalid CAPTCHA, please try again', duration: 3000 });
+
+      this.reloadCaptcha();
+    }
+    if(this.isCaptchaValidated){
+      let otpGenReq = this.data.generateOtpReq;
+      this.yatraService.getBbOtp(otpGenReq).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          this.otpResponse = JSON.parse(response.data);
+          console.log(this.otpResponse);
+
+          if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
+            this.toast.success({ detail: "SUCCESS", summary: this.otpResponse.message, duration: 3000 });
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    }
   }
   async validateOtp(){
     let reqObjBody = {
       leadId : this.data.leadId,
       otp: this.otpInfoObject
     }
-    // const res = await this.dataService.postApiCall('/BranchBanking/ValidateBBOTP', reqObjBody);
-    // this.otpValidateResponse = res;
-    // this.loading = false;
-    // if(this.otpValidateResponse.isOtpValidated == false){
-    //   this.toastr.warning(this.otpValidateResponse.statusMessage,'',
-    //   { timeOut: 5000 }
-    //   );
-    // }else{
-    //   this.toastr.success(this.otpValidateResponse.statusMessage,'',
-    //   { timeOut: 5000 }
-    //   );
-    //   this.dialogRef.close(this.otpValidateResponse);
-    // }
+    this.yatraService.validateBBOTP(reqObjBody).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.otpValidateResponse = JSON.parse(response.data);
+        console.log(this.otpValidateResponse);
+
+        if (this.otpValidateResponse.statusCode == 200 && this.otpValidateResponse.isSuccess == true) {
+          this.toast.success({ detail: "SUCCESS", summary: this.otpValidateResponse.message, duration: 3000 });
+          this.dialogRef.close(this.otpValidateResponse);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
   close(){
     this.dialogRef.close("close Value");

@@ -1,12 +1,14 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
-        <div class="bodyColumn body_flex_column">
-            <h2>My Customers</h2>
+        <div class="bodyColumn body_flex_column" *ngIf="!customerInfo">
+            <h2>{{"My Customers" | translate}}</h2>
             <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading block-hide">Quick Filter</li>
-                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">All ({{totalRecords}})</button></li>
+                        <li class="quickFilterHeading block-hide">{{"Quick Filter" | translate}}</li>
+                        <li>
+                            <button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">{{"All" | translate}} ({{totalRecords}})</button>
+                        </li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -14,80 +16,83 @@
                         <div class="field_searchMain">
                             <div>
                                 <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">Select an Option</option>
-                                <option id="nameOption" name="nameOption" value="name">Name</option>
-                                <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
-                                <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">Policy Number</option>
-                                <option id="emailIDOption" name="emailIDOption" value="emailID">Email ID</option>
+                                    <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
+                                    <option id="nameOption" name="nameOption" value="name">{{"Name" | translate}}</option>
+                                    <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                    <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">{{"Policy Number" | translate}}</option>
+                                    <option id="emailIDOption" name="emailIDOption" value="emailID">{{"Email ID" | translate}}</option>
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input  class="filterSearch" id="filterSearch" name="filterSearch" [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [formControl]="searchInputControl" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)">
-                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [type]="selected === 'mobileNumber' ? 'tel' : 'text'" [formControl]="searchInputControl" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)"
+                                (keyup.enter)="applySearch()">
+                                <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
-                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Enter a valid 10-digit mobile number.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter a valid policy number.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">Enter a valid name.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">Enter a valid email id.</small>
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">{{"Enter a valid name." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Enter a valid email id." | translate}}</small>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
-                                    <header>Filter</header>
+                                    <header>{{"Filter" | translate}}</header>
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
-                                        <h6>Products</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="product{{i}}">{{product.productName}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>Policy Type</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
-                                                </div>
-                                              </div>                                              
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>Date Range</h6>
+                                        <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <label for="startdate">Select Start Date</label>
+                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">Select End Date</label>
+                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Products" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Policy Type" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <label for="policytype{{i}}">{{policyType.name | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <footer>
-                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                <footer class="mt-3">
+                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
                                 </footer>
                             </div>
                         </div>
@@ -98,117 +103,122 @@
             </section>
             <section class="tableMain quoteView block-show" *ngIf="selectedView == 'list'">
                 <div class="tableSubMain">
-                  <div class="table-responsive">
-                    <table class="table table-borderless table-search">
-                      <thead>
-                        <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col" nowrap>Customer ID</th>
-                          <th scope="col">No.Of.Policies</th>
-                          <th scope="col" nowrap>Email ID</th>
-                          <th scope="col" nowrap>Mobile Number</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody class="table-group-divider tbody-quoteView" *ngFor="let row of customerList; let i = index">
-                        <tr >
-                          <td>{{ row.firstName }} {{row.lastName}}</td>
-                          <td>{{ row.customerID }}</td>
-                          <td>{{ row.noOfPolicy }}</td>
-                          <td>{{ row.emailID }}</td>
-                          <td>{{ row.mobileNumber }}</td>
-                          <td>
-                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info"  class="btn_action btn_moreAction btn_arrowCustomer" [ngClass]="{'active': moreInfoIndex === i}" (click)="toggleMoreInfo(i)">
-                              <img src="assets/Img/icon_table_arrow_right_red.svg" />
-                            </button>
-                          </td>
-                        </tr>              
-                        <tr *ngIf="moreInfoIndex == i" class="info_customerDetails_tr">
-                          <td colspan="6" class="info_customerDetails">
-                            <table class="table table-borderless table-search">
-                              <thead>
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
                                 <tr>
-                                  <th scope="col" nowrap>Policy Number</th>
-                                  <th scope="col" nowrap>Product Name</th>
-                                  <th scope="col" nowrap>Policy Type</th>
-                                  <th scope="col">No.Of.Members</th>
-                                  <th scope="col">Sum Insured</th>
-                                  <th scope="col">Premium</th>
-                                  <th scope="col" nowrap>Start Date <div><small>(dd-mm-yyyy)</small></div></th>
-                                  <th scope="col" nowrap>End Date <div><small>(dd-mm-yyyy)</small></div></th>
-                                  <th scope="col">Status</th>
-                                  <th scope="col">Action</th>
+                                    <th scope="col">{{"Name" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Customer ID" | translate}}</th>
+                                    <th scope="col">{{"No.Of.Policies" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Email ID" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
+                                    <th scope="col"></th>
                                 </tr>
-                              </thead>
-                              <tbody class="table-group-divider">
-                                <tr *ngFor="let policy of row.policyDetails">
-                                  <td>{{ policy.policyNumber ? policy.policyNumber : '-' }}</td>
-                                  <td>{{ policy.productVariantName }}</td>
-                                  <td>{{ policy.policyType }}</td>
-                                  <td>{{policy.noOfInsured}}</td>
-                                  <td>{{policy.sumInsured}}</td>
-                                  <td>{{policy.totalPremium}}</td>
-                                  <td>{{ formatPolicyStartDate(policy.policyStartDate) }}</td>
-                                  <td>{{ formatPolicyStartDate(policy.policyEndDate) }}</td>
-                                  <td>
-                                    <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'IF',
-                                        'info_status_yellow': policy.policyStatus === 'IP',
-                                        'info_status_red': policy.policyStatus == 'RJ',
-                                        'info_status_gray': policy.policyStatus == 'CN'
+                            </thead>
+                            <tbody class="table-group-divider tbody-quoteView" *ngFor="let row of customerList; let i = index">
+                                <tr>
+                                    <td>{{ row.firstName }} {{row.lastName}}</td>
+                                    <td>{{ row.customerID }}</td>
+                                    <td>{{ row.noOfPolicy }}</td>
+                                    <td>{{ row.emailID }}</td>
+                                    <td>{{ row.mobileNumber }}</td>
+                                    <td>
+                                        <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" [ngClass]="{'active': moreInfoIndex === i}" (click)="toggleMoreInfo(i)">
+                                            <img src="assets/Img/icon_table_arrow_right_red.svg" />
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="moreInfoIndex == i" class="info_customerDetails_tr">
+                                    <td colspan="6" class="info_customerDetails">
+                                        <table class="table table-borderless table-search">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" nowrap>{{"Policy Number" | translate}}</th>
+                                                    <th scope="col" nowrap>{{"Product Name" | translate}}</th>
+                                                    <th scope="col" nowrap>{{"Policy Type" | translate}}</th>
+                                                    <th scope="col">{{"No.Of.Members" | translate}}</th>
+                                                    <th scope="col">{{"Sum Insured" | translate}}</th>
+                                                    <th scope="col">Premium</th>
+                                                    <th scope="col" nowrap>{{"Start Date" | translate}}
+                                                        <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div>
+                                                    </th>
+                                                    <th scope="col" nowrap>{{"End Date" | translate}}
+                                                        <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div>
+                                                    </th>
+                                                    <th scope="col">{{"Status" | translate}}</th>
+                                                    <th scope="col">{{"Action" | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-group-divider">
+                                                <tr *ngFor="let policy of row.policyDetails">
+                                                    <td>{{ policy.policyNumber ? policy.policyNumber : '-' }}</td>
+                                                    <td>{{ policy.productVariantName }} </td>
+                                                    <td>{{ policy.policyType }}</td>
+                                                    <td>{{policy.noOfInsured}}</td>
+                                                    <td>{{policy.sumInsured}}</td>
+                                                    <td>{{policy.totalPremium}}</td>
+                                                    <td>{{ formatPolicyStartDate(policy.policyStartDate) }}</td>
+                                                    <td>{{ formatPolicyStartDate(policy.policyEndDate) }}</td>
+                                                    <td>
+                                                        <span class="info_status" [ngClass]="{
+                                        'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
+                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
+                                        'info_status_red': policy.policyStatus === 'RJ' || policy.policyStatus === 'Rejected' || policy.policyStatus !=='Inforced',
+                                        'info_status_gray': policy.policyStatus === 'CN' || policy.policyStatus === 'Cancelled'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>
-                                  </td>
-                                  <td>
-                                    <div class="btn_groupAction">
-                                        <button type="button" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                        <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
-                                            <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                                <ul class="actionItemsMain">
-                                                     <!-- <li class="actionItem" (click)="download(row, 'download')">
-                                                        <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
-                                                    </li> -->
-                                                    <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
-                                                        <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email </span></a>
-                                                    </li>
-                                                    <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
-                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
-                                                    </li>
-                                                    <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
-                                                        <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </mat-menu>
-                                    </div>
-                                </td>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn_groupAction">
+                                                            <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
+                                                                <img src="assets/Img/icon_customer_view.png" />
+                                                            </button>
+                                                            <button type="button" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                                    <ul class="actionItemsMain">
+                                                                        <li class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(policy.policyNumber)">
+                                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
+                                                                        </li>
+                                                                        <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
+                                                                            <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
+                                                                        </li>
+                                                                        <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
+                                                                            <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
+                                                                        </li>
+                                                                        <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
+                                                                            <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </mat-menu>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>        
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                  <nav>
-                    <ul class="pagination">
-                      <li class="page-item">
-                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" 
-                        (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                        </p-paginator>
-                      </li>
-                      <li class="pageCountMain">
-                        <span class="pageCount">Showing {{ first + 1 }} - {{ first + rows > totalRecords ? totalRecords : first + rows }}</span>
-                        of <span class="pageCountTotal">{{ totalRecords }} entries</span>
-                      </li>
-                    </ul>
-                  </nav>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-              </section>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" | translate}} {{ first + 1 }} - {{ first + rows > totalRecords ? totalRecords : first + rows }}</span> of <span class="pageCountTotal">{{ totalRecords }} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
             <section id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let row of customerList; let i = index">
@@ -221,19 +231,19 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems ">
-                                <div class="item_lable">Customer ID</div>
+                                <div class="item_lable">{{"Customer ID" | translate}}</div>
                                 <div class="item_value">{{ row.customerID }}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">No.Of.Policies</div>
+                                <div class="item_lable">{{"No.Of.Policies" | translate}}</div>
                                 <div class="item_value">{{ row.noOfPolicy }}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">Mobile Number</div>
+                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
                                 <div class="item_value">{{ row.mobileNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_100">
-                                <div class="item_lable">Email ID</div>
+                                <div class="item_lable">{{"Email ID" | translate}}</div>
                                 <div class="item_value">{{ row.emailID }}</div>
                             </div>
                             <section class="quickFilterMain cv_bodyItems_policyInfo">
@@ -241,77 +251,81 @@
                                 <div class="quickFilterLeft">
                                     <ul class="quickFilter">
                                         <li *ngIf="row.noOfPolicy >= 1">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 1}"(click)="activePolicys(1, i)">Policy 1</button>
+                                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': row.activePolicy === 1}" (click)="activePolicys(1, i)">{{"Policy 1" | translate}}</button>
                                         </li>
                                         <li *ngIf="row.noOfPolicy >= 2">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 2}"(click)="activePolicys(2, i)">Policy 2</button>
+                                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': row.activePolicy === 2}" (click)="activePolicys(2, i)">{{"Policy 2" | translate}}</button>
                                         </li>
                                         <li *ngIf="row.noOfPolicy >= 3">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 3}"(click)="activePolicys(3, i)">View All</button>
+                                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': row.activePolicy === 3}" (click)="activePolicys(3, i)">{{"View All" | translate}}</button>
                                         </li>
                                     </ul>
                                 </div>
                             </section>
                             <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of getFilteredPolicies(row.policyDetails, row.activePolicy || 0,i)">
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Policy Number</div>
+                                    <div class="item_lable">{{"Policy Number" | translate}}</div>
                                     <div class="item_value">{{ policy.policyNumber ? policy.policyNumber : '-' }}</div>
                                 </div>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Product Name</div>
+                                    <div class="item_lable">{{"Product Name" | translate}}</div>
                                     <div class="item_value">{{ policy.productVariantName }}</div>
                                 </div>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Policy Type</div>
+                                    <div class="item_lable">{{"Policy Type" | translate}}</div>
                                     <div class="item_value">{{ policy.policyType }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">No.Of.Members</div>
+                                    <div class="item_lable">{{"No.Of.Members" | translate}}</div>
                                     <div class="item_value">{{policy.noOfInsured}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Start Date</div>
+                                    <div class="item_lable">{{"Start Date" | translate}}</div>
                                     <div class="item_value">{{ formatPolicyStartDate(policy.policyStartDate) }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">End Date</div>
+                                    <div class="item_lable">{{"End Date" | translate}}</div>
                                     <div class="item_value">{{ formatPolicyStartDate(policy.policyEndDate) }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Sum Insured</div>
+                                    <div class="item_lable">{{"Sum Insured" | translate}}</div>
                                     <div class="item_value">{{policy.sumInsured}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Premium</div>
+                                    <div class="item_lable">{{"Premium" | translate}}</div>
                                     <div class="item_value">{{policy.totalPremium}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Status</div>
+                                    <div class="item_lable">{{"Status" | translate}}</div>
                                     <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'IF',
-                                        'info_status_yellow': policy.policyStatus === 'IP',
-                                        'info_status_red': policy.policyStatus == 'RJ',
-                                        'info_status_gray': policy.policyStatus == 'CN'
+                                        'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
+                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
+                                        'info_status_red': policy.policyStatus == 'RJ' || policy.policyStatus === 'Rejected' || policy.policyStatus !=='Inforced',
+                                        'info_status_gray': policy.policyStatus == 'CN' || policy.policyStatus === 'Cancelled'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>
                                 </div>
                                 <div class="menu_morePolicy">
-                                    <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                    <button type="button" id="View" name="View" class="btn_action btn_moreActionCard" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
+                                        <img src="assets/Img/icon_customer_view.png" />
+                                    </button>
+                                    <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <!-- <li class="actionItem" (click)="download(row, 'download')">
+                                                <li class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(policy.policyNumber)">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
-                                                </li> -->
+                                                </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
-                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
+                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
-                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
+                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
-                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
+                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -329,7 +343,7 @@
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
+                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
@@ -339,10 +353,278 @@
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>No data found</p>
+                        <p>{{"No data found" | translate}}</p>
                     </div>
                 </div>
             </section>
         </div>
+        <!-- Modal Start-->
+        <div class="modal popupModalMain fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content modal-bg-clr">
+                    <div class="modal-header">
+                        <h2>Download Kit</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <p>Select the data fields you wish to download.</p>
+                            <div class="input-checkbox-feild" *ngFor="let document of documents">
+                                <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
+                                class="input-check" />
+                                <label [for]="'checkbox-' + document.omniDocImageIndex">
+                                    {{ document.fileName || '-' }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
+                            {{"Download" | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Modal End-->
+        <div *ngIf="customerInfo">
+            <h3 class="icon_withHeading">
+              <a class="btn_backPage" (click)="backSubquotes()"></a>
+              {{"Customer Policy Details" | translate}}
+            </h3>
+            <div class="accordionMain" *ngIf="customerBasicDetails">
+              <div class="accordionItem">
+                <header>{{ customerBasicDetails?.customerName }} ({{ customerBasicDetails?.policyNo }})</header>
+                <div class="accordionBody">
+                  <div class="accordionBodyRow">
+                    <div class="data-row">
+                      <div class="data-item">
+                        <label>{{ "Member ID" | translate }}</label>
+                        <h6>{{ customerBasicDetails.customerID || "-" }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Product Name" | translate}}</label>
+                        <h6>{{ customerBasicDetails.productVariantName || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Sum Insured" | translate}}</label>
+                        <h6>{{ customerBasicDetails.sumInsured || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Premium" | translate}}</label>
+                        <h6>{{ customerBasicDetails.totalPremium || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Insured Members" | translate}}</label>
+                        <h6>{{ customerBasicDetails.noOfInsured || '-' }}</h6>
+                      </div>
+                      <div class="data-item userInfoItem">
+                          <label>{{"Status" | translate}}</label>
+                          <span
+                            class="info_status"
+                            [ngClass]="{
+                              'info_status_green': customerBasicDetails.policyStatus === 'IF' || customerBasicDetails.policyStatus === 'Inforced',
+                              'info_status_red': customerBasicDetails.policyStatus == 'RJ' || customerBasicDetails.policyStatus === 'Rejected' || customerBasicDetails.policyStatus !=='Inforced'
+                            }"
+                          >
+                            {{ customerBasicDetails.policyStatus }}
+                          </span>
+
+                      </div>
+                      <div class="data-item justify-content-center align-items-center">
+                        <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
+                            <a class="btn_iconText">
+                                <img src="assets/Img/icon_download_grey.svg" class="icon_download" alt="Download">
+                                <span>{{"Download Policy Kit" | translate}}</span>
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <section class="white_container">
+              <div class="quickFilterMain p-0">
+                <div class="quickFilterLeft">
+                  <ul class="quickFilter">
+                    <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                    <li>
+                      <button type="button" id="allpolicies" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'basicDetails'}" (click)="fetchDetails('basicDetails')">{{"Basic Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="30days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'insuredDetails'}" (click)="fetchDetails('insuredDetails')">{{"Insured Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="60days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'claimDetails'}" (click)="fetchDetails('claimDetails')">{{"Claim Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="90days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'serviceRequests'}" (click)="fetchDetails('serviceRequests')">{{"Service Requests" | translate}}</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'basicDetails' && customerBasicDetails">
+                <div class="row mt-2">
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Policy Number" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyNo || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Term" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyTerm || "-"}} Year(s)</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Policy Type" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyType || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Start Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyStartDate || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Renewal Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.renewalDate || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "End Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyEndDate || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Intermediary Name" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryName || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Intermediary Code" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryID || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Source" | translate }}</label>
+                        <h6>{{ customerBasicDetails.source || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Branch" | translate }}</label>
+                        <h6>{{ customerBasicDetails.branchofficename || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Email ID" | translate }}</label>
+                        <h6>{{ customerBasicDetails.emailID || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Mobile Number" | translate}}</label>
+                        <h6>{{ customerBasicDetails.mobileNo || "-" }}</h6>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'insuredDetails'">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let member of customerInsuredDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"First Name" | translate}}</div>
+                                <div class="item_value">{{ member.firstName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Middle Name" | translate}}</div>
+                                <div class="item_value">{{ member.middleName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Last Name" | translate}}</div>
+                                <div class="item_value">{{ member.lastName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date Of Birth" | translate}}</div>
+                                <div class="item_value">{{ member.dateOfBirth | date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Gender" | translate}}</div>
+                                <div class="item_value">{{ member.gender || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Relation" | translate}}</div>
+                                <div class="item_value">{{ member.relation || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Member ID" | translate}}</div>
+                                <div class="item_value">{{ member.memberId || '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let claim of customerClaimDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Claim Number" | translate}}</div>
+                                <div class="item_value">{{ claim.claimNo || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Member Name" | translate}}</div>
+                                <div class="item_value">{{ claim.memberName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date" | translate}}</div>
+                                <div class="item_value">{{ claim.dateofClaim | date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Claim Amount" | translate}}</div>
+                                <div class="item_value">{{ claim.claimedAmount || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Approved Amount" | translate}}</div>
+                                <div class="item_value">{{ claim.approvedAmount !== null && claim.approvedAmount !== undefined ? claim.approvedAmount : '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Status" | translate}}</div>
+                                <div class="item_value">{{ claim.claimStatus || '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'serviceRequests'">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let service of customerEndorsementDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Number" | translate}}</div>
+                                <div class="item_value">{{ service.caseNumber || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Member Name" | translate}}</div>
+                                <div class="item_value">{{ service.memberName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Type" | translate}}</div>
+                                <div class="item_value">{{ service.caseType || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Subtype" | translate}}</div>
+                                <div class="item_value">{{ service.caseSubType || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date" | translate}}</div>
+                                <div class="item_value">{{ service.requestedOn| date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Status" | translate}}</div>
+                                <div class="item_value">{{ service.PolicyStatus || '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="commonInfo.length == 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>{{"No data found" | translate}}</p>
+                    </div>
+                </div>
+            </div>
+            </section>
+          </div> 
     </div>
 </main>

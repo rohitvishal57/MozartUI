@@ -11,6 +11,9 @@ import { SendOtpViaComponent } from '../send-otp-via/send-otp-via.component';
 import { LoginService } from './login.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
+import { Item } from 'src/app/interface/modal-popup.interface';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +27,7 @@ export class LoginComponent implements OnInit {
   backgroundImageUrl: string | undefined;
   otp: string[] = ['', '', '', '', '', ''];
   maskedUserCode = '';
-  loginWithUsername = true;
+  enableLoginForm = true;
   errorMessage = '';
   timeLeft = 30;
   isTimerRunning = false;
@@ -39,6 +42,7 @@ export class LoginComponent implements OnInit {
   contactDetailsReqBody: any = { userId: '' };
   loginResetReqBody: any = { userName: '' };
   validateOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
+  items: Item[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +53,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private languageService: LanguageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required]],
@@ -90,12 +95,15 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.status === 'Success') {
+      console.log(result);
+      if (result.status == 'Success') {
         this.verifyOtpEnable = true;
+        this.enableLoginForm = false;
         this.maskUserCode(result.data);
         this.startTimer();
-      } else if (result.status === 'Failure') {
+      } else {
         this.verifyOtpEnable = false;
+        this.enableLoginForm = true;
         this.errorMessage = result.data;
       }
     });
@@ -124,6 +132,7 @@ export class LoginComponent implements OnInit {
           this.startTimer();
         } else {
           this.errorMessage = res.message;
+          res.message.includes("You have Reached Maximum Number of Attempts") ? this.timerOn = false : this.timerOn = true;
         }
       },
       error: (err => {
@@ -187,7 +196,7 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200') {
           localStorage.setItem('agentCode', this.loginForm.value.userName);
-          window.open(res.data.redirectUrl, "_blank");
+          window.open(res.data.redirectUrl, "_self");
         } else {
           this.userErrorMsg = res.message;
         }
@@ -201,14 +210,14 @@ export class LoginComponent implements OnInit {
   }
 
   handleOtpLogin() {
+    this.errorMessage = '';
     this.contactDetailsReqBody.userId = this.loginForm.value.userName;
     this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody).subscribe({
       next: (res: any) => {
         if (res?.data?.contactInfo?.length > 0) {
           this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-          localStorage.setItem("agentCode", this.loginForm.value.userName);
+          localStorage.setItem('agentCode', res.data.agentId);
           this.openModal(this.contactInfoData);
-          this.loginWithUsername = false;
         } else {
           this.userErrorMsg = res.message;
         }
@@ -225,7 +234,7 @@ export class LoginComponent implements OnInit {
     .subscribe({  
       next: (res:any)=>{
         if (res.data && res.isSuccess && res.statusCode == '200') {
-          window.open(res.data.redirectUrl, "_blank");
+          window.open(res.data.redirectUrl, "_self");
         } else {
           this.userErrorMsg = res.message;
         }
@@ -259,17 +268,27 @@ export class LoginComponent implements OnInit {
   onVerifyOTP() {
     const otpCode = this.otp.join('');
     this.errorMessage = '';
+    this.otp = ['', '', '', '', '', ''];
     if (otpCode.length === 6 && /^[0-9]+$/.test(otpCode)) {
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
       this.validateOtpReqBody.requestId = localStorage.getItem("requestId");
       this.validateOtpReqBody.otpNumber = otpCode;
-      this.otp = ['', '', '', '', '', ''];
 
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody).subscribe({
         next: (res: any) => {
-          if (res.data && res.statusCode == '200' && res.isSuccess && res.token !== null) {
+          if (res.data && res.isSuccess && res.statusCode == '200' && res.token !== null) {
             localStorage.setItem('userData', JSON.stringify(res.data));
-            this.router.navigate(['dashboard']);
+            this.items = this.authService.getUserInfo()?.repotingMembers;
+            this.updatePreferredLanguage();
+            if(res.data.agentCode === "467896"){
+              this.router.navigate(['rug'])
+            }else if(res.data.agentCode === "467895"){
+              this.router.navigate(['rug/av-upload'])
+            }else if(res.data.agentCode === "467894"){
+              this.router.navigate(['rug/base-caller-upload'])
+            }else{
+              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
+            }
           } else {
             this.errorMessage = res.message;
             res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
@@ -336,4 +355,34 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  openBankBranchDialog() {
+    const dialogRef = this.dialog.open(BankbranchModalComponent, {
+      width: '600px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        itemsList: this.items,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.enableLoginForm = true;
+      this.verifyOtpEnable = false;
+    });
+  }
+
+  updatePreferredLanguage() {
+    const language = this.authService.getUserInfo()?.preferredLanguage;
+    let languageCode = "";
+    if(language == 'Hindi') {
+      languageCode = 'hi';
+    } else if(language == 'Telugu'){
+      languageCode = 'te';
+    }else{
+      languageCode = 'en';
+    }
+    this.languageService.setLanguage(languageCode);
+  }
+
 }

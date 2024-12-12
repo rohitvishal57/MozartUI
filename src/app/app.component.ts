@@ -10,19 +10,50 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
 
-  showNavbar: boolean = true;
-  isLoading$: Observable<boolean>;
+  showNavbar: boolean = false;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor(private router:Router, private loadingService: LoadingService){
-    this.isLoading$ = this.loadingService.isLoading;
+   
   }
   ngOnInit(){
     this.router.events.subscribe(() => {
-      if(this.router.url !== '/'){
-        this.showNavbar = true
-      }else{
+      const currentUrl = this.router.url;
+      if (currentUrl === '/' || this.isInvalidPath(currentUrl)) {
         this.showNavbar = false;
+      } else {
+        this.showNavbar = true;
       }
     });
+  }
+
+  private isInvalidPath(url: string): boolean {
+    const validPaths = [
+      '/notifications',
+      '/dashboard',
+      '/leads',
+      '/claims',
+      '/events',
+      '/endorsements',
+      '/products',
+      '/quote',
+      '/yatra',
+      '/rug',
+      '/rug:leadId',
+      '/renewal',
+      '/customers',
+      '/proposals',
+      '/profile',
+      '/declaration',
+      '/performance',
+      '/mycommissions'
+    ];
+    const explicitInvalidPaths = [
+      '/renewal/customerRenewalJourney', // Add more paths that should always hide the navbar
+    ];
+    if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
+      return true;
+    }
+    return !validPaths.some((path) => url.startsWith(path));
   }
 }

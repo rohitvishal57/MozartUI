@@ -10,7 +10,7 @@
                         <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"Expired" | translate}} ({{countsList.expiredCount}})</button></li>
                         <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList.expiringInLessThan30DaysCount}})</button></li>
                         <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.expiringIn30To60DaysCount}})</button></li>
-                        <li><button type="button" id="90days" name="90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">{{"Lapsed" | translate}} ({{countsList.lapsedCount}})</button></li>
+                        <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Lapsed" | translate}} ({{countsList.lapsedCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -25,8 +25,10 @@
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
                                 <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button>
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
@@ -47,6 +49,23 @@
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="fw_formRow">
                                         <h6>{{"Products" | translate}}</h6>
                                         <div class="fw_checkboxWraper">
@@ -69,25 +88,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-                                <footer>
+                                <footer class="mt-3">
                                     <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
                                     <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
                                 </footer>
@@ -148,9 +150,9 @@
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                        </li> -->
+                                                        <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                        </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                             <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                         </li>
@@ -204,9 +206,9 @@
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                </li> -->
+                                                <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                     <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                 </li>

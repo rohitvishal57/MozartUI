@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-5">
-                        <button type="submit" id="leadcontinue" name="leadcontinue" (click)="continueFileUpload()" class="btn_red">{{"Continue" | translate}}</button>
+                        <button type="submit" id="leadcontinue" name="leadcontinue" (click)="continueFileUpload()" class="btn_red" [disabled]="isContinueButtonDisabled">{{"Continue" | translate}}</button>
                     </div>
                 </section>
 

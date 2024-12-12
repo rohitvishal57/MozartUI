@@ -11,10 +11,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
-                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}}</button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}}</button></li>
-                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} </button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} </button></li>
+                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}} ({{totalRecords}})</button></li>
+                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}} ({{activeCount}})</button></li>
+                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
@@ -24,20 +24,26 @@
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">{{"Select an option" | translate}}</option>
-                                    <option value="caseId">{{"Request ID" | translate}}</option>
+                                    <option value="caseId">{{"Endorsement Id" | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberName">{{"Member Name" | translate}}</option>
+                                    <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                    <option value="emailID">{{"Email Id" | translate}}</option>
                                 </select>
                             </div>
                             <div>
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder() | translate" (keydown.enter)="applySearch()" (input)="searchInputChange($event)" maxlength="50" />
                                 <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Request Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement Id." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter Valid Member Name." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter Valid Mobile Number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Enter Valid Email Id." | translate}}</small>
                                 </span>
                             </div>
                         </div>
@@ -51,6 +57,25 @@
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                                 <div class="fw_formBody"> 
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob m-0">
+                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
+                                                    <label for="fromDate">{{"From Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob m-0">
+                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
+                                                    <label for="toDate">{{"To Date" | translate}}</label>
+                                                    <span class="ui-error">Please enter end date</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                         <h6>Products</h6>
                                         <div class="fw_checkboxWraper">
@@ -74,22 +99,7 @@
                                         </div>
                                     </div> -->
                                     <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
-                                                    <label for="fromDate">{{"From Date" | translate}}</label>
-                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
-                                                    <label for="toDate">{{"To Date" | translate}}</label>
-                                                    <span class="ui-error">Please enter end date</span>
-                                                </div>
-                                            </div>
                                             <footer>
                                                 <button type="button" value="cancel" id="filterClear" name="filterClear" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
                                                 <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
@@ -101,6 +111,9 @@
                         </div>
                     </div>
                     <!--Search section end-->
+                    <button type="button" class="btn_grid mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                    </button>
                     <button type="button" id="gridlist" name="gridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="quotesViews('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
                     <button type="button" id="gridcard" name="gridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="quotesViews('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
@@ -111,16 +124,16 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">{{"Request" | translate}}</th>
-                                <th scope="col">{{"Policy No." | translate}}</th>
+                                <th scope="col">{{"Endorsement Id" | translate}}</th>
+                                <th scope="col">{{"Policy Number" | translate}}</th>
                                 <th scope="col">{{"Product Name" | translate}}</th>
                                 <th scope="col">{{"Member Name" | translate}}</th>
+                                <th scope="col">{{"Contact Info" | translate}}</th>
                                 <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">{{"Request Type" | translate}}</th>
                                 <th scope="col">{{"Status" | translate}}</th>
                                 <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
                                 <th scope="col">{{"Action" | translate}}</th>
-                                <!--<th scope="col">Download</th>-->
                             </tr>
                           </thead>
                           <tbody class="table-group-divider" >
@@ -130,18 +143,22 @@
                                 <td >{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.mobileNumber }} {{ row?.emailId }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td>{{ row?.status }}</td>
                                 <td>{{ row?.raisedOn }}</td>
-                                <td>
+                                <td class="d-flex">
                                     <button type="button" id="viewdetails" name="viewdetails" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button
+                                        type="button"
+                                        class="btn_action btn_renewalAction"
+                                        (click)="downloadSingleItem(row)"
+                                        id="Download" name="Download" value="Download" title="Download"
+                                    >
+                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                    </button>
                                 </td>
-                                <!--<td>
-                                    <button type="button" class="btn_icon" (click)="downloadRequest(row)">
-                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
-                                    </button> 
-                                </td>-->
                             </tr>
                           </tbody>
                         </table>
@@ -159,9 +176,9 @@
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
                             <button type="button" id="viewdetails-grid" name="viewdetails-grid" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                            <!-- <div class="card_btnGroup">
-                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
-                            </div> -->
+                            <button type="button" class="btn_action btn_renewalAction" (click)="downloadSingleItem(row)" id="Download" name="Download" value="Download" title="Download">
+                                <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                            </button>
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
@@ -177,9 +194,14 @@
                                 <div class="item_value">{{ row?.memberName }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Contact Info</div>
+                                <div class="item_value">{{ row?.mobileNumber}}</div>
+                                <div class="item_value">{{ row?.emailId }}</div>
+                            </div>
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Relation</div>
                                 <div class="item_value">{{ row?.memberRelation}}</div>
-                            </div>
+                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
                                 <div class="item_value">{{ row?.raisedOn }}</div>
@@ -210,7 +232,7 @@
                         <ul class="pagination">
                             <li class="page-item">
                                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                [rowsPerPageOptions]="[10,30,50]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                [rowsPerPageOptions]="[10,30,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">

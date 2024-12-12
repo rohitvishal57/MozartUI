@@ -23,7 +23,28 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProductCombination',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetPremium',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/BranchBanking/SaveBBCommonDraft',
-    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations'
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations',
+    'https://usp.monocept.ai/api/v1/SaveBBCommonDraft',
+    'https://upuat.adityabirlahealth.com/api/v1/GetBBOTP',
+    'https://upuat.adityabirlahealth.com/api/v1/ValidateBBOTP',
+    'https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft',
+    'https://upuat.adityabirlahealth.com/api/v1/SaveBBCommonDraft',
+    'https://upuat.adityabirlahealth.com/api/v1/HalfQuote',
+    'https://usp.monocept.ai/api/rug/GetSumInsuredList',
+    'https://usp.monocept.ai/api/rug/GetFamilyConstructByProductCode',
+    'https://usp.monocept.ai/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetProposerRelations',
+    'https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId',
+    'https://usp.monocept.ai/api/rug/UpdateAgentAllFormData',
+    'https://upuat.adityabirlahealth.com/api/rug/GetFamilyConstructByProductCode',
+    'https://upuat.adityabirlahealth.com/api/rug/GetSumInsuredList',
+    'https://upuat.adityabirlahealth.com/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetD2CPolicyInfoByLeadId',
+    'https://upuat.adityabirlahealth.com/api/rug/GetD2CPolicyInfoByLeadId',
+    'https://usp.monocept.ai/api/v1/RedirectAxisBranchBankingRequest',
+    'https://usp.monocept.ai/api/rug/GetProductCombination',
+    'https://usp.monocept.ai/api/v1/',
+    'https://upuat.adityabirlahealth.com/api/v1/'
   ];
 
   intercept(

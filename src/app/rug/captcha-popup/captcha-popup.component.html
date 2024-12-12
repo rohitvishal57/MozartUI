@@ -16,10 +16,13 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block input-otp-block m-0">
+                        <div class="input-block input-otp-block m-0"
+                            [ngClass]="{ 'is-invalid': submitted && form.get('captchaInput')?.errors }">
                             <!-- <input type="text" name="otp-captcha" value="" placeholder="" class="input-textBox"> -->
                             <input type="text" id="captchaInput" formControlName="captchaInput" class="input-textBox" />
-                            <span class="ui-error">Please enter valid captcha</span>
+                            <!-- <span class="ui-error" *ngIf="form.get('captchaInput')?.">Please enter a valid captcha code</span> -->
+                            <span class="ui-error block-show" *ngIf="submitted && form.get('captchaInput')?.errors?.['required']">Invalid
+                                CAPTCHA, please try again</span>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">

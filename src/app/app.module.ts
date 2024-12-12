@@ -14,7 +14,6 @@ import { DatePipe } from '@angular/common';
 import { TokenInterceptor } from './intercepter/token.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { HeaderComponent } from './layout/header/header.component';
 import { SideNavbarComponent } from './layout/side-navbar/side-navbar.component';
 import { LoginModule } from './login/login/login.module';
@@ -25,12 +24,16 @@ import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
 import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
 import { LoadingService } from './services/loading.service';
-import { EventsModule } from './events/events-new/events.module';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';  // Import LocationStrategy and PathLocationStrategy
+import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
+
 
 export function loadConfig(configService: ConfigService) {
-  return () => configService.loadConfig().toPromise();
+  return () => configService.loadConfig();
 }
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
@@ -42,7 +45,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HeaderComponent,
     SideNavbarComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    PageNotFoundComponent,
+    CommissionstatementComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +66,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductsModule,
     ProfileModule,
     SharedModule,
-    NgxPaginationModule,
-    EventsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -75,6 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     ConfigService,
     LoadingService,
+    { provide: LocationStrategy, useClass: PathLocationStrategy },  // Use PathLocationStrategy
+
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfig,

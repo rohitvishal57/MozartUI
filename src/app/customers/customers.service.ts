@@ -21,4 +21,33 @@ export class CustomersService {
       const downloadCustomerData=this.configService.config.baseUrl + this.configService.config.download;
       return this.http.post<any>(downloadCustomerData,reqBody)
     }
+    searchDocumentApi(reqBody:any){
+      const searchDocument=this.configService.config.baseUrl + this.configService.config.searchDocument;
+      return this.http.post<any>(searchDocument,reqBody)
+    }
+    downloadDocumentApi(reqBody:any){
+      const downloadDocument=this.configService.config.baseUrl + this.configService.config.downloadDocument;
+      return this.http.post<any>(downloadDocument,reqBody)
+    }
+    getCustomerBasicDetailsApi(reqBody:any){
+      const customerBasicDetails=this.configService.config.baseUrl + this.configService.config.getCustomerBasicDetails;
+      return this.http.post<any>(customerBasicDetails,reqBody)
+    }
+    getCustomerProductDetailsApi(policyNumber:any){
+      const customerProductDetails=this.configService.config.baseUrl + this.configService.config.getCustomerProductDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerProductDetails,policyNumber)
+    }
+    getCustomerInsuredDetailsApi(policyNumber:any){
+      const customerInsuredDetails=this.configService.config.baseUrl + this.configService.config.getCustomerInsuredDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerInsuredDetails,policyNumber)
+    }
+    getCustomerClaimDetailsApi(reqBody:any){
+      const customerClaimDetails=this.configService.config.baseUrl + this.configService.config.getCustomerClaimDetails;
+      return this.http.post<any>(customerClaimDetails,reqBody)
+    }
+    getCustomerEndorsementDetailsApi(policyNumber:any){
+      const customerEndorsementDetails=this.configService.config.baseUrl + this.configService.config.getCustomerEndorsementDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerEndorsementDetails,policyNumber)
+    }
+    
 }

@@ -14,6 +14,7 @@ import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
+import { RenewalJourneyComponent } from './renewal-journey/renewal-journey.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -24,7 +25,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RenewalListComponent,
     RenewalDynamicFormComponent,
     SubQuotesComponent,
-    PaymentstatusComponent
+    PaymentstatusComponent,
+    RenewalJourneyComponent
   ],
   imports: [
     CommonModule,

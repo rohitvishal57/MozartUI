@@ -10,7 +10,7 @@
       </div>
     </div>
     <!--MOBILE: Form Step Process End-->
-    <div class="left-nav left-nav-hideMobile">
+    <div class="left-nav left-nav-hideMobile" *ngIf="!isCustomerJourney">
       <div class="left-navInner">
         <!--     style="cursor: pointer;"-->
         <div class="yourProgress">
@@ -162,6 +162,25 @@
                         </div>
                     </div>
                   </div>
+                </div>
+
+                <div *ngIf="control.type == 'smalltext'" [class]="control.class" class="typecss"
+                  [hidden]="!control.visible">
+                  <div class="label-value-container" >
+
+                    <label *ngIf="control.visibleLabel==true" class="label-text">
+                      {{ control.label ? (control.label | translate) : '' }}
+                      <!-- <span *ngIf="control.validators">*</span> -->
+                    </label>
+                    <input *ngIf="control.disabled" class="value-text no-border no-background"
+                      formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                      [type]="control.type" [placeholder]="control.label" (change)="onInputChange($event, control)"
+                      readonly>
+                  </div>
+
+                 
+
+                  <span style="font-size: 12px; font-family: b-Bold, sans-serif !important;">{{ control.text ? (control.text | translate) : '' }}</span>
                 </div>
 
                 <div *ngIf="control.type==='select'" [class]="control.class" class="typecss input-typecss"
@@ -818,9 +837,11 @@
                         [value]="option.value" style="margin-right: 10px;" (change)="onInputChange($event, control)">
                       <!-- <span [innerHTML]="option.label"></span> -->
                       <span>
-                        <div>{{option.label}} <em>(SI - 10L Lac)</em>
+                        <div>{{option.label}} 
+                          <!-- <em>(SI - 10L Lac)</em> -->
                             <div class="gah-si-premium">
-                                <label>₹15240</label><em>Premium(Inc.Tax)</em></div>
+                                <!-- <label>₹15240</label><em>Premium(Inc.Tax)</em> -->
+                              </div>
                         </div>
                     </span>
                     </label>
@@ -1310,7 +1331,7 @@
 
 
 <!-- Customer Feedback module  -->
-<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
+<!-- <div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
   aria-labelledby="otpModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1321,7 +1342,6 @@
         <div class="modal-body">
           <p class="para-rate-18">Please rate your online renewal experience with us.</p>
 
-          <!-- Star Rating -->
           <div class="star-rating">
             <span class="star" *ngFor="let star of stars; let i = index" [ngClass]="{'selected': i < rating}"
               (click)="setRating(i + 1)">
@@ -1335,7 +1355,6 @@
             </div>
 
             <div class="col-12">
-              <!-- Feedback Buttons -->
               <div class="btn_feedbackGroup">
                 <button type="button" class="btn_quickFilter" (click)="onSelectValue(value)"
                   [ngClass]="{'selected': feedbackImpressedValue === value}"
@@ -1366,6 +1385,6 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
 
 

@@ -53,7 +53,7 @@
                                     <tbody class="table-group-divider" >
                                         <tr *ngFor="let item of notifications ; let i =index">
                                             <td class="td-text-bold">{{i+1}}</td>
-                                            <td><div class="body_flex_row"><img src="assets/Img/icon_notification_list_birthday.svg"> {{item.notificationType}}</div></td>
+                                            <td><div class="body_flex_row"><img src={{getNotificationIcon(item)}}> {{item.notificationType}}</div></td>
                                             <td>{{formatDate(item.createdOn)}}</td>
 
                                         </tr>
@@ -82,66 +82,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="cardViewItem">
-                                <div class="cardViewBody">
-                                    <div class="cv_bodyItems cv_bodyItems_100">
-                                        <div class="cardViewItem_Notifications">
-                                            <div class="img_notifications">
-                                                <img src="assets/Img/icon_notification_card_lead.svg">
-                                            </div>
-                                            <div class="info_notifications">
-                                                <div class="item_lable">New Lead Assignment</div>
-                                                <div class="item_value">2023-03-15</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cardViewItem">
-                                <div class="cardViewBody">
-                                    <div class="cv_bodyItems cv_bodyItems_100">
-                                        <div class="cardViewItem_Notifications">
-                                            <div class="img_notifications">
-                                                <img src="assets/Img/icon_notification_card_paymentfail.svg">
-                                            </div>
-                                            <div class="info_notifications">
-                                                <div class="item_lable">Proposal Payment Failed</div>
-                                                <div class="item_value">2023-03-15</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cardViewItem">
-                                <div class="cardViewBody">
-                                    <div class="cv_bodyItems cv_bodyItems_100">
-                                        <div class="cardViewItem_Notifications">
-                                            <div class="img_notifications">
-                                                <img src="assets/Img/icon_notification_card_dashboard.svg">
-                                            </div>
-                                            <div class="info_notifications">
-                                                <div class="item_lable">HLTMeter product released. </div>
-                                                <div class="item_value">2023-03-15</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cardViewItem">
-                                <div class="cardViewBody">
-                                    <div class="cv_bodyItems cv_bodyItems_100">
-                                        <div class="cardViewItem_Notifications">
-                                            <div class="img_notifications">
-                                                <img src="assets/Img/icon_notification_card_mailestone.svg">
-                                            </div>
-                                            <div class="info_notifications">
-                                                <div class="item_lable">Milestone Reached</div>
-                                                <div class="item_value">2023-03-15</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
                         </div>
                     </section>
                     <!--Card view end-->

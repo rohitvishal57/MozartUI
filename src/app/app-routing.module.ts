@@ -1,11 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
 
 const routes: Routes = [
   {
     path: 'notifications',
     component: NotificationsComponent
+  },
+  {
+    path: 'mycommissions',
+    component: CommissionstatementComponent
   },
   {
     path: '',
@@ -36,6 +42,10 @@ const routes: Routes = [
     loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
   },
   {
+    path: 'products/:leadId',
+    loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
+  },
+  {
     path: 'quote',
     loadChildren: () => import('./quote/quote.module').then((m) => m.QuoteModule)
   },
@@ -48,12 +58,12 @@ const routes: Routes = [
     loadChildren: () => import('./rug/rug-module').then((m) => m.RugModule)
   },
   {
-    path: 'renewal',
-    loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
+    path: 'rug/:leadId',
+    loadChildren: () => import('./rug/rug-module').then((m) => m.RugModule)
   },
   {
-    path: 'leads',
-    loadChildren: () => import("./leads/leads.module").then((m) => m.LeadsModule)
+    path: 'renewal',
+    loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
   },
   {
     path: 'customers',
@@ -75,12 +85,14 @@ const routes: Routes = [
     path: 'performance',
     loadChildren: () => import("./performance/performance.module").then((m) => m.PerformanceModule)
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
-
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

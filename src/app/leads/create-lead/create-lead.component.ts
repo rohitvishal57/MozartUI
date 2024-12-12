@@ -6,9 +6,7 @@ import { DatePipe } from '@angular/common';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
-import { error } from 'jquery';
 import { firstValueFrom } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
@@ -55,25 +53,16 @@ export class CreateLeadComponent implements OnInit {
   productsList: any = [];
   productSumInsured: any = [];
   occupationInfo : any;
-    
-  constructor(private formBuilder: FormBuilder,
-    private toast: NgToastService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private leadsService: LeadsService,
-    private datePipe: DatePipe,
-    public CreateLead: CreateLead,
-    public CreateLeadList: LeadFormListValue,
-    private cdr: ChangeDetectorRef,
-    private datepipe: DatePipe,
-    private commonService: CommonService,
-    private languageService: LanguageService,
-    private translateService: TranslateService
-  ) {
-
-  }
+  pincodeResponse : any='';
+  proposalNumber : any = '';
+ 
+  constructor(private formBuilder: FormBuilder,private toast: NgToastService, private router: Router,private route: ActivatedRoute,private leadsService: LeadsService,
+    private datePipe: DatePipe,public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,private cdr: ChangeDetectorRef,private datepipe: DatePipe,
+    private commonService: CommonService, private languageService: LanguageService, private translateService: TranslateService,private common: CommonService) {}
 
   async ngOnInit() {
+
+      // Subscribe to language changes and update the translation service
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -81,44 +70,38 @@ export class CreateLeadComponent implements OnInit {
         }
       });
     });
+
+      // Initialize the form
     this.inItForm();
+
+    this.CreateLead = new CreateLead;
+    const storedAgentCode = localStorage.getItem('agentCode') || '';
+    this.agentCode = storedAgentCode;
+
+      // Handle query parameters
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
     });
-    this.CreateLead = new CreateLead;
-    const storedAgentCode = localStorage.getItem('agentCode');
-    this.agentCode = storedAgentCode;
-    if (storedAgentCode) {
-      this.CreateLead.AgentCode = storedAgentCode.toString();
-    }
-    else {
-      console.log("agent code is not present in local storege");
-    }
 
-    let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
-    let obj = {
-      "id": 0,
-      "agent": storedAgentCode
-    }
-    this.agentCode = obj.agent;
-
-    if (this.leadNumber && this.action) {
+    // Fetch lead information if leadNumber and action are provided
+    if (this.action) {
       await this.getLeadInformationByLeadNumber(this.leadNumber);
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
       }
     }
-     this.getProducts();
-     this.fetchOccupationInfo();
-     this.getReferenceStatus();
-     this.fetchActivityTypeInfo();
-    this.today = new Date().toISOString().split('T')[0];
+
+    // Fetch additional data
+    this.getProducts();
+    this.fetchOccupationInfo();
+    this.fetchActivityTypeInfo();
   }
 
   inItForm() {
+
+      // Initialize userValidations form group
     this.userValidations = this.formBuilder.group({
-      // campaignname: ['', Validators.required],
       leadType: [''],
       leadVintage: [''],
       source: [''],
@@ -128,14 +111,13 @@ export class CreateLeadComponent implements OnInit {
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       MiddleName: ['', [Validators.pattern('[a-zA-Z ]*')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$')]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       isWhatsapp: false,
       dob: [''],
       age: ['', [Validators.pattern('[0-9]*')]],
       gender: [''],
       maritalStatus: [''],
       numberOfKids: ['', [Validators.pattern('[0-9]*')]],
-      //occupation: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       occupation: [''],
       address1: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       education: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
@@ -143,7 +125,8 @@ export class CreateLeadComponent implements OnInit {
       address3: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       city: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       state: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      pincode: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      pincode: ['', [Validators.required,Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      zoneCode : [''],
       interestedProductName: [''],
       planType: [''],
       policyEndDate: [''],
@@ -153,32 +136,31 @@ export class CreateLeadComponent implements OnInit {
       familyConstruct: [''],
       policyType: [''],
       policyNumber: [null, [Validators.pattern('^[0-9a-zA-Z ,-./]*$')]],
-      //campaignname:  [''],
       campaignnumber: [''],
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
       leadStatus: [''],
       leadSubStatus: ['']
-    }
-    );
+    });
+
+      // Disable the age control
     this.userValidations.get('age')?.disable();
 
-
+      // Initialize addNoteForm form group
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      activityStartDate: ['', Validators.required], // Start date is required
-      activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['', Validators.required], // Use null if control is not available  
+      activityStartDate: ['', Validators.required], 
+      activityStartTime: ['', Validators.required], 
+      activityEndDate: ['', Validators.required],  
       activityEndTime: ['', Validators.required],
-      activityType: ['', Validators.required], // Activity type is required
-      notes: ['', Validators.required] // Notes can be optional
+      activityType: ['', Validators.required], 
+      notes: ['', Validators.required] 
     });
   }
 
 
   changeDob(event: any) {
-    console.log("date", event.target.value);
     if (event.target.value == '') {
       this.userValidations.get('age')?.setValue(0)
     } else {
@@ -211,18 +193,28 @@ export class CreateLeadComponent implements OnInit {
   }
   sendOTP() {
   }
-  onSubmit() {
+  async onSubmit() {
     this.submitted = true;
 
     if (this.userValidations.invalid) {
-      console.log('userValidations ',this.userValidations.errors)
-      // this.disableFormFields()
+      window.scrollTo(0, 0);
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields.", duration: 5000 });
       return;
     }
     else {
-      // Continue with form submission if it's valid
       this.CreateLead = this.userValidations.getRawValue();
     }
+    
+    if (this.action != 'updateStatus') {
+      try {
+        const response = await firstValueFrom(this.common.getProposalNumber());
+        this.proposalNumber = response.data?.proposalNumber;
+      } catch (err) {
+        this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+      }
+    }
+
+    this.CreateLead.proposalNumber = this.proposalNumber
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
@@ -234,18 +226,18 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-   
+    this.CreateLead.zone =  this.userValidations.get('zoneCode')?.value;
+    this.CreateLead.leadPriority  =this.userValidations.get('leadSubStatus')?.value;
 
+    
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
-        console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
             this.toast.success({ detail: "", summary: 'Lead is updated successfully.', duration: 5000 });
           } else {
             this.toast.success({ detail: "", summary: 'Lead is created successfully.', duration: 5000 });
           }
-          console.log(response);
           this.router.navigate(['leads/leadsList'])
         }
         else { console.error("API request was not successful."); }
@@ -264,7 +256,7 @@ export class CreateLeadComponent implements OnInit {
       this.updateleadInformation();
     } 
     catch(error) {
-        console.log("Failed to fetch lead Information!")
+        console.log("Failed to fetch lead Information!",error)
       }
   }
 
@@ -303,14 +295,15 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1,
       leadStatus : this.submittedUser?.leadStatus??'',
       interestedProductName: this.submittedUser?.interestedProductName??'',
+      leadSubStatus : this.submittedUser?.leadPriority??'',
+      zoneCode : this.submittedUser?.zone??''
     });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
+    this.proposalNumber = this.submittedUser.proposalNumber;
   }
-
-
 
   fetchActivityTypeInfo() {
     let fetchActivityTypeRequest: any = {};
@@ -325,51 +318,40 @@ export class CreateLeadComponent implements OnInit {
       });
   }
 
-  getReferenceStatus() {
-    this.leadsService.getReferenceStatus().subscribe(
-      (response: any) => {
-        console.log(response);
-        this.referenceStatus = response?.data;
-
-        if(this.submittedUser){
-          this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === this.submittedUser.leadStatus);
-          this.userValidations.patchValue({
-            leadSubStatus: this.submittedUser?.leadSubStatus??'',
-          });
-        }
-    
-      },
-      (error) => {
-        console.error("Error from getMyReportingUsers API:", error);
-      }
-    );
-  }
-
-  changeReferStatus(event: any) {
-    if (event) {
-      let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
-      console.log('selectedStatus', selectedStatus);
-      this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-      }
-      this.userValidations.patchValue({
-        leadSubStatus:'',
-      });
-
-  }
-
   changeSumInsured(event: any) {
     if (event) {
-      let selectedValue = typeof (event) == 'string' ? event : event.target.value;
-      this.productSumInsured = this.productsList.find((product: any) => product.productName === selectedValue)?.sumInsured.split(",");
+      const selectedValue = typeof (event) === 'string' ? event : event.target.value;  
+      this.productSumInsured = this.productsList.find(
+        (product: any) => product.productName === selectedValue
+      )?.sumInsured.split(",");  
+      this.userValidations.patchValue({
+        sumInsured: ''
+      });  
+      this.setPolicyType(selectedValue);
     }
-    this.userValidations.patchValue({
-      sumInsured:  ''
-    });
+  }
+
+  setPolicyType(selectedProduct: string) {
+    if (selectedProduct === 'Global Health Secure') {
+      this.userValidations.patchValue({
+        policyType: 'Multi Individual'
+      });
+      this.CreateLeadList.PolicyType=["Multi Individual"]
+    } else if (selectedProduct === 'Activ Fit Preferred') {
+      this.userValidations.patchValue({
+        policyType: 'Family Floater'
+      });
+      this.CreateLeadList.PolicyType=["Family Floater"]
+    } else {
+      this.userValidations.patchValue({
+        policyType: ''
+      });
+      this.CreateLeadList.PolicyType=["Multi Individual","Family Floater"]
+    }
   }
 
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
-    console.log('activityType', this.addNoteForm.errors);
     this.notesSubmitted = true;
     if (this.addNoteForm.valid) {
       addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
@@ -383,8 +365,6 @@ export class CreateLeadComponent implements OnInit {
         addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
         addNotesRequestBody.leadnumber = this.leadNumber,
         addNotesRequestBody.isupdate = 0
-
-      console.log('addNoteForm', this.addNoteForm.errors);
 
       this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
         (response) => {
@@ -441,7 +421,6 @@ export class CreateLeadComponent implements OnInit {
         const endTimeInMinutes = this.convertToMinutes(this.addNoteForm.get('activityEndTime')?.value);
         if (endTimeInMinutes < startTimeInMinutes) {
           this.addNoteForm.get('activityEndTime')?.setErrors({ incorrect: true });
-          console.log('activityEndTime',this.addNoteForm.get('activityEndTime')?.getError )
         } else {
           this.addNoteForm.get('activityEndTime')?.setErrors(null); 
         }
@@ -458,7 +437,7 @@ export class CreateLeadComponent implements OnInit {
 
   isCharacter(event: KeyboardEvent) {
     const char = String.fromCharCode(event.which);
-    if (!/[a-zA-Z]/.test(char)) {
+    if (!/[a-zA-Z ]/.test(char)) {
       event.preventDefault();
     }
   }
@@ -472,7 +451,7 @@ export class CreateLeadComponent implements OnInit {
       this.notes = response.data;
     },
       (error) => {
-        console.log("Failed to fetch lead Information!")
+        console.log("Failed to fetch lead Information!",error)
       }
     );
   }
@@ -501,14 +480,13 @@ export class CreateLeadComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log("error coming form getproduct list API");
+        console.log("error coming form getproduct list API",err);
       }
     });
   }
 
   fetchOccupationInfo() {
-    console.log('this.submittedUser fetchOccupationInfo',this.submittedUser?.occupation);
-    this.leadsService.getOccupationInfo('').subscribe(
+    this.leadsService.getOccupationInfo().subscribe(
       (response) => {
         if(response?.isSuccess){
           this.occupationInfo =  response?.data;
@@ -524,12 +502,40 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
-  validateActivityEndTime(){
-  
-  }
 
   stringifyJson(opt: any): string {
     return JSON.stringify(opt); 
   }
+
+  getZoneByPinCode(pincode: any) {
+    const reqData = {
+      "pincode": pincode
+    }
+    this.common.getPinCodeByCity(reqData).subscribe(
+      (response) => {
+        if(response?.isSuccess){
+         this.pincodeResponse = response?.data;         
+         this.userValidations.patchValue({
+          zoneCode: this.pincodeResponse?.zone ?? '',
+          city: this.pincodeResponse?.city ?? '',
+          state: this.pincodeResponse?.state ?? ''
+         });  
+         this.userValidations.get('zoneCode')?.disable();
+         this.userValidations.get('city')?.disable();
+         this.userValidations.get('state')?.disable();
+
+       
+        }else{
+          this.userValidations.get('pincode')?.setErrors({ incorrect: true  ,message : response?.message});
+        }
+      },
+      (error) => {
+        console.log('Failed to fetch pincode Information.',error);
+        this.userValidations.get('pincode')?.setErrors({ incorrect: true , message : 'Please re-enter pincode again.'});
+      }
+    )
+  }
+
+
 }
 
