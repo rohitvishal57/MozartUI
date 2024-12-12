@@ -843,7 +843,7 @@ export class RugDynamicFormComponent {
           }
         });
         if(this.policyDetails){
-          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetailsproposerDetails.premium)
+          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetails.proposerDetails.premium)
           this.policyDetails.policyDetails.forEach((item:any)=>{
             Object.keys(item).forEach((key) => {
                 // Check if the control exists and update its value
@@ -3677,7 +3677,7 @@ export class RugDynamicFormComponent {
                        "Amount": Number(this.d2cDetails.totalPremium),
                        "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
                        "MiddleName": "",
-                       "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1],
+                       "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
                        "Phone": this.d2cDetails.proposerMobileNumber,
                        "Email": "LHME.SHAH@ARVIND.IN",
                        "DOB": "10/07/1997",                       
