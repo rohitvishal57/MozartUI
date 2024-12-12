@@ -341,7 +341,8 @@ export class QuoteProductsComponent implements OnInit {
   }
   async Getagentcartdetails() {
     let reqdata = {
-      "agentCode": this.agentCode
+      "agentCode": this.agentCode,
+      "customerMobileNumber": this.formData.mobileNumber
     }
     await this.quoteService.Getagentcartdetails(reqdata).subscribe({
       next: (res: any) => {
