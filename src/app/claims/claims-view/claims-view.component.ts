@@ -627,21 +627,21 @@ export class ClaimsViewComponent {
 
       const specialCovers = [
         "AYUSH Treatment",
-        "Day Care Treatment",
+        "Day Care Treatments",
         "In-patient Hospitalization",
         "Mental Illness Hospitalization"
       ];
 
       if (specialCovers.includes(selectedCoverName)) {
-        this.showSecondScenario = false;
+        this.showSecondScenario = true;
         this.billsArray.clear();
         this.addBillRow();
-        this.showFirstScenario = true;
+        this.showFirstScenario = false;
         let coverName = this.form.get('coverName')?.value;
         this.handleCoverNameValidation(coverName);
       } else {
-        this.showFirstScenario = false;
-        this.showSecondScenario = true;
+        this.showFirstScenario = true;
+        this.showSecondScenario = false;
       }
     }
   }
@@ -1240,13 +1240,17 @@ export class ClaimsViewComponent {
               this.toast.error({
                 detail: 'ERROR',
                 summary: response.data.message,
-                duration: 5000,
+                duration: 0,
+                sticky: true
               });
               // this.toast.error({ response.data.message: "Failed to submit claims" });
             }
           //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
-            this.toast.error({ detail: "Failed to submit claims" });
+            this.toast.error({ detail: "No response from Jarvis.",
+              duration:0, 
+              sticky: true
+            });
           }
           this.updateStatusLabel();
         },
