@@ -639,8 +639,20 @@ export class LeadsListComponent {
 
   }
 
-
   downloadSingleItem(item: any): void {
     this.excelExportService.exportToExcel([item], `Lead_${item.leadNumber}`);
   }
+
+  maskEmail(email: any): string {
+    const [localPart, domain] = email.split('@');
+    const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
+    return `${maskedLocal}@${domain}`;
+  }
+  
+  maskMobileNumber(mobileNumber: any): string {
+    return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
+  }
+
+
+
 }
