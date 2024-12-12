@@ -88,13 +88,12 @@ export class CreateLeadComponent implements OnInit {
       await this.getLeadInformationByLeadNumber(this.leadNumber);
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
+        this.fetchActivityTypeInfo();
       }
     }
-
     // Fetch additional data
     this.getProducts();
     this.fetchOccupationInfo();
-    this.fetchActivityTypeInfo();
   }
 
   inItForm() {
