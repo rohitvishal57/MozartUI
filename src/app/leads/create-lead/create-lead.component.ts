@@ -175,22 +175,16 @@ export class CreateLeadComponent implements OnInit {
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     return age.toString();
   }
-  campnoSelected() {
-
-  }
-  SETAUDATA() {
-  }
-  SETIDFCDATA() {
-  }
   checkEnableSendOTP() {
     // Check if the Identification Number field is not empty to enable Send OTP button
     this.sendOTPEnabled = this.YESSearchValue.trim() !== '';
   }
-  validate() {
-
-  }
-  sendOTP() {
-  }
+  campnoSelected() {}
+  SETAUDATA() {}
+  SETIDFCDATA() {}
+  validate() {}
+  sendOTP() {}
+  
   async onSubmit() {
     this.submitted = true;
 
