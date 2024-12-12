@@ -14,6 +14,7 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 declare var bootstrap: any;
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
+import { ExcelExportService } from 'src/app/services/excel-export.service';
 
 @Component({
   selector: 'app-leads-list',
@@ -95,7 +96,8 @@ export class LeadsListComponent {
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private excelExportService: ExcelExportService
   ) { }
 
   leadsInfoListRequestBody ={
@@ -638,17 +640,7 @@ export class LeadsListComponent {
   }
 
 
-  exportleadInformation(leadNumber: any) {
-
-
-    this.leadsService.exportLead(leadNumber).subscribe(
-      (response) => {
-        debugger;
-console.log("exportleadInformation",response);
-      },
-      (error) => {
-
-      });
-
+  downloadSingleItem(item: any): void {
+    this.excelExportService.exportToExcel([item], `Lead_${item.leadNumber}`);
   }
 }

@@ -206,8 +206,8 @@
                                             <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote"><img
                                                      src="assets/Img/icon_savenew_subquote.svg">        
                                             </button>
-                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote" (click)="exportleadInformation(row.leadNumber)" title="Export Lead"><img
-                                                src="assets/Img/icon_download2_grey.svg">        
+                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                                src="assets/Img/icon_download_grey.svg">        
                                            </button>
                                             <mat-menu #moreMenu="matMenu"
                                                 class="overlay_popupMenu_Main_CDK moreActionItems active">
