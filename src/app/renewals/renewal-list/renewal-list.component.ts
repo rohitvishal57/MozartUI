@@ -3,7 +3,7 @@ import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
-import { firstValueFrom, Subject } from "rxjs";
+import { empty, firstValueFrom, Subject } from "rxjs";
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
@@ -46,13 +46,13 @@ export class RenewalListComponent {
   ];
   currentDate = new Date().toISOString().split('T')[0];
   proposalNum: string = '';
-  documents:any[]=[];
+  documents: any[] = [];
   selectedDocument: any = null;
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
     private commonService: CommonService, private toast: NgToastService, private encryptionService: EncryptionService, private languageService: LanguageService,
-     private customerService:CustomersService,
+    private customerService: CustomersService,
     private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) { }
 
@@ -83,49 +83,49 @@ export class RenewalListComponent {
     //   if (filter) {
     //     console.log("route filter", filter);
     //     const currentDate = new Date();
-    
+
     //     switch (filter) {
     //       case 'Due Today':
     //         // Start and end date should be the current date
     //         this.startDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //         this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //         break;
-    
+
     //       case 'End of Grace Period Today':
     //         // Assuming grace period is 15 days before today
     //         const gracePeriodDate = new Date(currentDate.setDate(currentDate.getDate() - 15));
     //         this.startDate = this.datePipe.transform(gracePeriodDate, 'yyyy-MM-dd');
     //         this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //         break;
-    
+
     //         case 'Due in 30 Days':
     //           // Start date: 30 days ago, end date: today
     //           this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //           const startDate30DaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
     //           this.startDate = this.datePipe.transform(startDate30DaysAgo, 'yyyy-MM-dd');
     //           break;
-      
+
     //         case 'Due in 60 Days':
     //           // Start date: 60 days ago, end date: today
     //           this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //           const startDate60DaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 60));
     //           this.startDate = this.datePipe.transform(startDate60DaysAgo, 'yyyy-MM-dd');
     //           break;
-    
+
     //       default:
     //         console.log("Unknown filter:", filter);
     //         break;
     //     }
-    
+
     //     console.log("Start Date:", this.startDate);
     //     console.log("End Date:", this.endDate);
-    
+
     //     // Call applyFilter() after setting the dates
     //     this.applyFilter();
     //   }
     // });
-    
-    
+
+
     this.getRenewalsList();
     this.getProducts();
     this.checkView(); //Screen View check
@@ -296,7 +296,7 @@ export class RenewalListComponent {
     if (!this.selectedDocument) {
       this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
       return;
-    }  
+    }
     const downloadPolicyKitRequestBody = {
       agentCode: this.agentCode,
       referenceId: this.agentCode,
@@ -326,9 +326,9 @@ export class RenewalListComponent {
             link.href = fileURL;
             link.download = file.fileName;
             document.body.appendChild(link)
-            link.click();  
+            link.click();
             document.body.removeChild(link)
-            window.open(fileURL, "_blank"); 
+            window.open(fileURL, "_blank");
           }
         } else {
           this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
@@ -368,15 +368,15 @@ export class RenewalListComponent {
         };
         this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
           (response: any) => {
-            if (response.isSuccess) {          
+            if (response.isSuccess) {
               const searchResponse = response.data.searchResponse;
-              console.log("search Response",searchResponse);
+              console.log("search Response", searchResponse);
               if (!searchResponse || searchResponse.length === 0) {
                 this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
               }
-              else{
+              else {
                 this.documents = searchResponse;
-                this.selectedDocument=this.documents[0]  
+                this.selectedDocument = this.documents[0]
                 this.downloadPolicyKit()
               }
             } else {
@@ -392,7 +392,7 @@ export class RenewalListComponent {
       case 'email':
         const emailRequestBody = {
           agentCode: this.agentCode,
-          emailId:item.proposerEmail,
+          emailId: item.proposerEmail,
           mobile: item.proposerMobileNumber || "",
           eventName: "sending payment link to email",
           policyHolderFullName: item.proposerFirstName,
@@ -404,16 +404,16 @@ export class RenewalListComponent {
           attachment: {
             "Flag": "1",
             "Details": {
-                "Document": [
-                    {
-                        "Key": "2",
-                        "Value": item.policyNumber,
-                    },
-                    {
-                        "Key": "15",
-                        "Value": "RN_Notice"
-                    }
-                ]
+              "Document": [
+                {
+                  "Key": "2",
+                  "Value": item.policyNumber,
+                },
+                {
+                  "Key": "15",
+                  "Value": "RN_Notice"
+                }
+              ]
             }
           }
         };
@@ -1502,288 +1502,89 @@ export class RenewalListComponent {
 
     await this.getProposalNum();
 
-    console.log(this.proposalNum,action);
-    
-    if(action=='withmodify'){
-      localStorage.setItem('formIndex','0');
-    }
-    else{
-      localStorage.setItem('formIndex','2');
-    }
-    
-    // const tempFormData =  {
-    //   "productName": "Activ Health V2",
-    //   "memberDobProposer": "1999-11-18",
-    //   "panNo": "",
-    //   "productVariant": "Platinum - Enhanced",
-    //   "ckycNo": "20084759923752",
-    //   "typeOfBusiness": "REN",
-    //   "memberPlan": "",
-    //   "memberRoomCategory": "Single Private A/c Room",
-    //   "productType": "",
-    //   "planCode": "6212100003",
-    //   "productId": 14,
-    //   "preFix": "Mr.",
-    //   "firstName": "Aniket",
-    //   "middleName": "",
-    //   "lastName": "Birambole",
-    //   "memberAgeProposer": 25,
-    //   "proposerGender": "M",
-    //   "emailId": "sohel.shaikh@qualitykiosk.com",
-    //   "proposerAddress1": "aoisfoinasf",
-    //   "proposerAddress2": "oaisfnoiasf",
-    //   "proposerAddress3": "null",
-    //   "city": "Mumbai",
-    //   "country": "India",
-    //   "state": "MAHARASHTRA",
-    //   "mobileNumber": "9930519086",
-    //   "idProof": "",
-    //   "idNo": "",
-    //   "annualIncome": "1000000",
-    //   "occupation": "O002",
-    //   "maritalStatus": "Single",
-    //   "gstDetails": "",
-    //   "educationDetails": "",
-    //   "nationality": "Indian",
-    //   "sumInsured": "2000000",
-    //   "proposerPincode": "400002",
-    //   "zone": "Zone I",
-    //   "zoneValue": "Z001",
-    //   "numberOfInsuredMembers": 1,
-    //   "planDetails": "",
-    //   "totalPremium": "14264.0",
-    //   "memberPolicyType": "Multi Individual",
-    //   "insuredMembers": {
-    //     "Self": true,
-    //     "Spouse": false,
-    //     "Son1": false,
-    //     "Daughter1": false,
-    //     "Mother": false,
-    //     "Father": false,
-    //     "Mother-In-Law": false,
-    //     "Father-In-Law": false,
-    //     "Brother1": false,
-    //     "Sister1": false,
-    //     "Grand-Father": false,
-    //     "Grand-Mother": false,
-    //     "Grand-Son1": false,
-    //     "Grand-Daughter1": false,
-    //     "Son-In-Law1": false,
-    //     "Daughter-In-Law1": false,
-    //     "Brother-In-Law": false,
-    //     "Sister-In-Law": false,
-    //     "Nephew1": false,
-    //     "Niece1": false,
-    //     "Partnership": false,
-    //     "Proprietorship": false,
-    //     "HUF (Hindu Undivided Family)": false,
-    //     "Employer-Employee": false,
-    //     "Uncle": false,
-    //     "Aunt": false,
-    //     "Live-In-Partner": false
-    //   },
-    //   "insuredMemberDetails": [
-    //     {
-    //       "relation": "Self",
-    //       "firstName": "Aniket",
-    //       "lastName": "Birambole",
-    //       "height": "165.1",
-    //       "weight": "55",
-    //       "memberDob": "1999-11-18",
-    //       "emailId": "sohel.shaikh@qualitykiosk.com",
-    //       "mobileNumber": "9930519086",
-    //       "relationshipType": {
-    //         "id": "R001",
-    //         "relationCode": "24",
-    //         "value": "Self",
-    //         "name": "Self",
-    //         "isIncrement": false,
-    //         "imagePath": "assets/Self.png"
-    //       },
-    //       "memberAge": 0,
-    //       "memberGender": "M",
-    //       "sumInsured": "2000000",
-    //       "preExistingDisease": "No",
-    //       "memberIndex": 0,
-    //       "zone": "Z001",
-    //       "middleName": "",
-    //       "upgradableZones": [],
-    //       "covers": [
-    //         {
-    //           "coverId": "AYSH",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "CHMP",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "CTHZ",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "DCHS",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "DCOI",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "DCTT",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "DMAS",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "EXHC",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "HLCU",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "HLTHA",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "HLTHRET",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "HMTT",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "IMAS",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "IPTT",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "MITR",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "MTAT",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "OBTR",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "OPDE",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "ORDR",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "PUHM",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "PRHM",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "PWAIV",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "RACV",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "RVBE",
-    //           "value": "2000000"
-    //         },
-    //         {
-    //           "coverId": "SCOP",
-    //           "value": "2000000"
-    //         }
-    //       ],
-    //       "preFix": "Mr.",
-    //       "chronicDiseases": [],
-    //       "roomCategory": "",
-    //       "memberRelationCode": 0,
-    //       "annualIncome": "1000000",
-    //       "natureOfDuty": "",
-    //       "occupation": "O002",
-    //       "designation": "NA"
-    //     }
-    //   ],
-    //   "noOfChildren": 0,
-    //   "familySize": "",
-    //   "proposerName": "Aniket Birambole",
-    //   "tenure": 1,
-    //   "personalDetails": "",
-    //   "nomineeFirstName": "Shashank",
-    //   "nomineeMiddleName": "",
-    //   "nomineeLastName": "Shashank",
-    //   "nomineeDob": "1999-11-29",
-    //   "nomineeRelationWithProposer": "{\u0022id\u0022:\u00229\u0022,\u0022value\u0022:\u0022R009\u0022,\u0022name\u0022:\u0022Brother\u0022,\u0022gender\u0022:\u0022M\u0022}",
-    //   "gender": "M",
-    //   "nomineeAddress": "oinas",
-    //   "nomineeContactNo": "8722499266",
-    //   "policyNumber": "21-24-0002891-00",
-    //   "isKYCComplete": true,
-    //   "productCode": "6212"
-    // }
+    console.log(this.proposalNum, action);
 
-    const renewalInfoRequestBody = {
-      policy_Number: proposerDetail.policyNumber,
-    };
-    this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-      (res: any) => {
-        if (res.isSuccess) {
-          console.log(res.data);
-          if(action === "withmodify"){
-            const payload = {
-              policyNumber: res.data.policyNumber,
-              mobileNumber: res.data.mobileNumber, 
-              dateOfBirth: "18/11/1999",
-            };
-            this.renewalService.cpRedirectionApi(payload).subscribe(
-              (res: any) => {
-                const encryptedUrl = res.data;   
-                window.open(encryptedUrl, '_blank');
-              },
-              (err) => {
-                console.error("Error from renewal re-direction API:", err);
-                this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+    if (action == 'withmodify') {
+      localStorage.setItem('formIndex', '0');
+    }
+    else {
+      localStorage.setItem('formIndex', '2');
+    }
+
+    if (action === "withmodify") {
+      const payload = {
+        policyNumber: proposerDetail.policyNumber,//res.data.policyNumber,
+        mobileNumber: proposerDetail.proposerMobileNumber,//res.data.mobileNumber, 
+        dateOfBirth: "",//res.data.memberDobProposer
+      };
+      this.renewalService.cpRedirectionApi(payload).subscribe(
+        (res: any) => {
+          const encryptedUrl = res.data;
+          window.open(encryptedUrl, '_blank');
+        },
+        (err) => {
+          console.error("Error from renewal re-direction API:", err);
+          this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+        }
+      );
+    } else if (action == 'withoutmodify') {
+      const renewalInfoRequestBody = {
+        policy_Number: proposerDetail.policyNumber,
+      };
+      this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+        (res: any) => {
+          // if (res.isSuccess && res.data && Object.keys(res.data).length > 0) {
+          //   console.log(res.data);
+            // if(action === "withmodify"){
+            // const payload = {
+            //   policyNumber: "31-24-0005455-00",//res.data.policyNumber,
+            //   mobileNumber: "8097758932",//res.data.mobileNumber, 
+            //   dateOfBirth: "18/11/1999",//res.data.memberDobProposer
+            // };
+            // this.renewalService.cpRedirectionApi(payload).subscribe(
+            //   (res: any) => {
+            //     const encryptedUrl = res.data;   
+            //     window.open(encryptedUrl, '_blank');
+            //   },
+            //   (err) => {
+            //     console.error("Error from renewal re-direction API:", err);
+            //     this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+            //   }
+            // );
+            // } 
+
+            // const convertedData = this.encryptionService.encrypt(res.data);
+            // this.router.navigate(['renewal/renewalJourney'], {
+            //   queryParams: {
+            //     formData: convertedData,
+            //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+            //     policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+            //     journeyProcess: this.encryptionService.encrypt(0)
+            //   }
+            // });
+          // } else 
+          if (action == 'withoutmodify' && res.data && Object.keys(res.data).length > 0) {
+            const convertedData = this.encryptionService.encrypt(res.data);
+
+            console.log(convertedData, this.proposalNum);
+            this.router.navigate(['renewal/renewalJourney'], {
+              queryParams: {
+                formData: convertedData,
+                proposalNum: this.encryptionService.encrypt(this.proposalNum),
+                policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0)
               }
-            );
-          } 
-          else if(action == 'withoutmodify'){         
-          const convertedData = this.encryptionService.encrypt(res.data);
-          this.router.navigate(['renewal/renewalJourney'], {
-            queryParams: {
-              formData: convertedData,
-              proposalNum: this.encryptionService.encrypt(this.proposalNum),
-              policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
-              journeyProcess: this.encryptionService.encrypt(0)
-            }
-          });
+            });
+          } else {
+            this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          }
+        },
+        (err) => {
+          console.error("Error from getRenewalInfo API:", err);
+          this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
         }
-          
-        }
-        else {
-          this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
-        }
-      },
-      (err) => {
-        console.error("Error from getRenewalInfo API:", err);
-        this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
-      }
-    );
+      );
+    }
   }
 
   async getProposalNum() {
@@ -1810,8 +1611,8 @@ export class RenewalListComponent {
   checkView() {
     this.isDesktopView = window.innerWidth <= 1116;
     if (this.isDesktopView) {
-      this.selectedView = 'grid'; 
-    }else {
+      this.selectedView = 'grid';
+    } else {
       this.selectedView = 'list'; // Use 'grid' view for desktop
     }
   }

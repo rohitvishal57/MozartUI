@@ -21,13 +21,13 @@
                          <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li> 
                         <li>
                             <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">{{"All Leads" | translate}}</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All Leads" | translate}} ({{countsList.totalRecords}})</button>
                         </li>
                         <li>
-                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">{{"Assigned Leads" | translate}}</button>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Assigned Leads'}"  (click)="filterQuotes('Assigned Leads','assignLeads')">{{"Assigned Leads" | translate}} ({{countsList.assignLeads}})</button>
                         </li>
                         <li>
-                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">{{"Unassigned Leads" | translate}}</button>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Unassigned Leads'}"  (click)="filterQuotes('Unassigned Leads','unassignLeads')">{{"Unassigned Leads" | translate}} ({{countsList.unassignLeads}})</button>
                         </li>
                     </ul>
                 </div>
@@ -49,6 +49,8 @@
                             <div class="filterFieldGroup">
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)" (keydown.enter)="applySearch()">
                                 <button  type="submit" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
@@ -244,19 +246,15 @@
                         </table>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalCount > 0">
+                <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
-                                    [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
-                                    class="custom-paginator my-paginator">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > countsList.totalCount
-                                    ? countsList.totalCount : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalCount}} {{"entries" | translate}}</span>
+                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>

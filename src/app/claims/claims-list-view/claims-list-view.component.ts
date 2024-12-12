@@ -77,6 +77,7 @@ export class ClaimsListViewComponent implements OnInit {
      private translateService: TranslateService) { }
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     this.designationName = localStorage.getItem('designation')
     if(this.designationName === 'DIRECT'){
       this.designationName = 'Agent'

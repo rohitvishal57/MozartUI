@@ -165,9 +165,9 @@ export class YatraComponent {
       if (history.state.productData.tenureAmounts) {
         this.tenureAmount = history.state.productData.tenureAmounts;
       }
-      if (history.state.productData.quickQuoteRedirect) {
-        this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
-      }
+      // if (history.state.productData.quickQuoteRedirect) {
+      //   this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
+      // }
       if (history.state.productData.leadId) {
         this.leadNumber = history.state.productData.leadId;
       }
@@ -197,6 +197,9 @@ export class YatraComponent {
           this.agentCode = decryptedData.agentCode;
           this.partnerId = decryptedData.partnerId;
           this.productId = decryptedData.productId;
+          if(decryptedData.isLead){
+            this.quickQuoteRedirect = decryptedData.isLead;
+          }
           // this.formData.proposalNumber = decryptedData.proposalNum;
           this.proposalNum = decryptedData.proposalNum;
 
@@ -207,7 +210,10 @@ export class YatraComponent {
               this.formSequence = JSON.parse(res.data.formConfig) || [];
               this.form = JSON.parse(res.data.jsonFormData);
               this.formData = JSON.parse(res.data.formData);
-
+              console.log(this.form,this.formSequence,this.formData,this.quickQuoteRedirect);
+              if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1){
+                this.quickQuoteRedirect = false;
+              }
               if (this.formData) {
                 const proposalRequiredDetails: {
                   totalPremium: any;
@@ -242,7 +248,7 @@ export class YatraComponent {
                 sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
               }
-              console.log(this.form, this.formSequence, this.formData);
+              console.log(this.form, this.formSequence, this.formData,this.quickQuoteRedirect);
 
               this.initializeForm();
             },
@@ -451,9 +457,9 @@ export class YatraComponent {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
         if (control.dynamicControls) {
-          console.log(control.name, control, this.formData);
+          console.log(control.name, control, this.formData,this.quickQuoteRedirect);
 
-          if (this.formData[control.name] && control.visible == true) {
+          if (this.formData[control.name] && (control.visible == true || this.quickQuoteRedirect == true)) {
             console.log(control.dynamicControls[0], this.formData.planType);
             if (this.formData[control.name]) {
               control.value = this.formData[control.name].length;
@@ -2016,13 +2022,14 @@ export class YatraComponent {
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
                     if (control.name === 'zoneValue') {
-                      control.options = [];
-                      res.data.upgradableZones?.forEach((zoneOption: any) => {
-                        control.options.push({
-                          name: zoneOption.zone,
-                          value: zoneOption.zoneCode
-                        });
-                      });
+                      control.options = res.data.upgradableZones;
+                      // .forEach((zoneOption: any) => {
+                      //   control.options.push({
+                      //     name: zoneOption.zone,
+                      //     value: zoneOption.zoneCode
+                      //   });
+                      // });
+
                       // control.visible = true;
                     }
                   });
@@ -2050,6 +2057,7 @@ export class YatraComponent {
       console.log(parentControl.dynamicControls);
 
 
+
       // parentControl.dynamicControls.forEach((dynamicControls: IDynamicControl[]) => {
       parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
         if (dynamicControl.name == 'pincode' && dynamicControl.name == control.name) {
@@ -2064,10 +2072,11 @@ export class YatraComponent {
               if (res.isSuccess && res.data) {
 
                 if (res.data.upgradableZones.length > 0) {
-                  const zoneOptions = res.data.upgradableZones.map((zone: any) => ({
-                    name: zone.zone,   // Zone name
-                    value: zone.zoneCode, // Zone code
-                  }));
+                  const zoneOptions = res.data.upgradableZones;
+                  // .map((zone: any) => ({
+                  //   name: zone.zone,   // Zone name
+                  //   value: zone.zoneCode, // Zone code
+                  // }));
 
                   parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                     if (dynamicControl.name == 'zoneValue') {
@@ -3051,6 +3060,7 @@ export class YatraComponent {
 
       this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
     }
+    console.log(this.form,this.dynamicFormGroup.value);
   }
 
   updateValueAndGroupError(controlGroup: FormGroup) {
@@ -5043,7 +5053,7 @@ export class YatraComponent {
                 // this.totalPremium = this.tenure1Total;
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 // formControl.value = this.tenureAmount[index];
-                option.year = "1year"
+                option.year = "1 year"
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
                 // if (this.selectedIndex == index) {
@@ -5056,7 +5066,7 @@ export class YatraComponent {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
-                option.year = "2years"
+                option.year = "2 years"
                 option.discount = "7.5% off"
                 // if (this.selectedIndex == index) {
                 //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
@@ -5067,7 +5077,7 @@ export class YatraComponent {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
-                option.year = "3years"
+                option.year = "3 years"
                 option.discount = "10% off"
                 // if (this.selectedIndex == index) {
                 //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
@@ -5422,14 +5432,15 @@ export class YatraComponent {
                               if (control.dynamicControls && control.visible == true) {
                                 control.dynamicControls[index + 1].forEach((dynamicControl: any) => {
                                   if (dynamicControl.name == 'zoneValue') {
-                                    dynamicControl.options = []; // Clear any existing options
-                                    response.data.upgradableZones.forEach((zoneOption: any) => {
-                                      console.log(zoneOption);
-                                      dynamicControl.options.push({
-                                        name: zoneOption.zone.toString(), // Display name
-                                        value: zoneOption.zoneCode.toString() // Corresponding value
-                                      });
-                                    });
+                                    dynamicControl.value = response.data.zoneValue;
+                                    dynamicControl.options = response.data.upgradableZones;
+                                    // .forEach((zoneOption: any) => {
+                                    //   console.log(zoneOption);
+                                    //   dynamicControl.options.push({
+                                    //     name: zoneOption.zone.toString(), // Display name
+                                    //     value: zoneOption.zoneCode.toString() // Corresponding value
+                                    //   });
+                                    // });
                                   }
                                 })
                               }
@@ -5440,6 +5451,7 @@ export class YatraComponent {
 
                     }
                   });
+                  console.log(this.formData,this.form,this.dynamicFormGroup.value);
                 }
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
@@ -5470,15 +5482,15 @@ export class YatraComponent {
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
                     if (control.name === 'zoneValue' && control.type === 'select') {
-                      control.value = response.data.zoneCode; // Set the default value
-                      control.options = []; // Clear any existing options
-                      response.data.upgradableZones.forEach((zoneOption: any) => {
-                        console.log(zoneOption);
-                        control.options.push({
-                          name: zoneOption.zone.toString(), // Display name
-                          value: zoneOption.zoneCode.toString() // Corresponding value
-                        });
-                      });
+                      control.value = response.data.zoneValue; // Set the default value
+                      control.options = response.data.upgradableZones;
+                      // .forEach((zoneOption: any) => {
+                      //   console.log(zoneOption);
+                      //   control.options.push({
+                      //     name: zoneOption.zone.toString(), // Display name
+                      //     value: zoneOption.zoneCode.toString() // Corresponding value
+                      //   });
+                      // });
                     }
                     else if (control.name == 'zone') {
                       control.value = response.data.zone;

@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core'; // Import TranslateServi
 export class LeadsListComponent {
   
   leadsList: LeadsList[] = [];
+  filterType: string = "totalRecords";
   countsList: any = [];
   activeFilter: string = "all";
   page: number = 1;
@@ -97,24 +98,21 @@ export class LeadsListComponent {
     private activatedRoute: ActivatedRoute
   ) { }
 
-
-  leadsInfoListRequestBody = {
-    "agentcode": this.agentCode,
-    "myleads": true,
-    "assignedleads": true,
-    "unassignedleads": true,
-    "start": 1,
-    "viewBy": [
-      ""
-    ],
-    "length": 10,
-    "searchby": "",
-    "searchlist": "",
-    "fromdate": null,
-    "todate": null,
-    "policyList": "",
-    "statusList":"",
-    "isSellerPortal": true
+  leadsInfoListRequestBody ={
+    "productName": "",
+    "agentCode": this.agentCode,
+    "name": "",
+    "leadNumber": "",
+    "email": "",
+    "leadAssigne": "",
+    "policyType": "",
+    "startDate": null,
+    "endDate": null,
+    "pageNumber": this.page,
+    "pageSize": this.rows,
+    "mobileNumber": "",
+    "filterType": "",
+    "leadStatus": ""
   }
 
   ngOnInit(): void {
@@ -172,15 +170,15 @@ export class LeadsListComponent {
     this.getLeadsList();
   }
   getLeadsList() {
-    this.leadsInfoListRequestBody.start = this.page;
-    this.leadsInfoListRequestBody.length = this.rows;
+    this.leadsInfoListRequestBody.pageNumber = this.page;
+    this.leadsInfoListRequestBody.pageSize = this.rows;
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
-        if (response) {
+        if (response.isSuccess) {
           this.leadsList = response.data.leadList;
-          console.log("Renewal List", this.leadsList);
+          console.log("Leads List", this.leadsList);
           this.countsList = response.data;
-          this.totalRecords = this.countsList.totalCount;
+          this.totalRecords = response.data[this.filterType]; 
         }
         else { console.error("API request was not successful."); }
       },
@@ -221,13 +219,12 @@ export class LeadsListComponent {
       }
     );
   }
-  filterQuotes(filter: string) {
-    this.leadsInfoListRequestBody.myleads = true;
-    this.leadsInfoListRequestBody.assignedleads = true;
-    this.leadsInfoListRequestBody.unassignedleads = true;
-    this.filterLeads = false;
+  filterQuotes(filter: string,filterRange: string) {
+    this.leadsInfoListRequestBody.filterType = filter;
+    this.first = 0;this.page = 1;
     this.getLeadsList();
     this.activeFilter = filter;
+    this.filterType = filterRange;
   }
   getProducts() {
     const reqData = {
@@ -249,7 +246,6 @@ export class LeadsListComponent {
     }
     this.toggeledropdown = !this.toggeledropdown;
   }
-
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter((product) => product.selected).length;
     const selectedpolicyTypeCount = this.StaticPolicyTypes.filter((policyType) => policyType.selected).length;
@@ -262,10 +258,7 @@ export class LeadsListComponent {
   }
 
   applyFilter() {
-    this.page =1;
-    this.first = 0;
-    this.rows = 10;
-    this.filterLeads = true;
+    // this.filterLeads = true;
     this.calculateAppliedFiltersCount();
     const selectedProducts = this.productsList.filter((product) => product.selected)
       .map((product) => product.productName);
@@ -273,11 +266,13 @@ export class LeadsListComponent {
       .map((policyType) => policyType.name);
       const selectedLeadStatus = this.leadFilterStatus.filter((leadStatus) => leadStatus.selected)
       .map((leadStatus) => leadStatus.name);
-    this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
-    this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
-    this.leadsInfoListRequestBody.statusList = selectedLeadStatus.join(",");
-    this.leadsInfoListRequestBody.fromdate = this.startDate || null;
-    this.leadsInfoListRequestBody.todate = this.endDate || null;
+    this.leadsInfoListRequestBody.productName = selectedProducts.join(",");
+    this.leadsInfoListRequestBody.policyType = selectedPolicyTypes.join(",");
+    this.leadsInfoListRequestBody.leadStatus = selectedLeadStatus.join(",");
+    this.leadsInfoListRequestBody.startDate = this.startDate ;
+    this.leadsInfoListRequestBody.endDate = this.endDate ;
+    this.first = 0;
+    this.page = 1;
     this.getLeadsList();
     this.toggeledropdown = false;
   }
@@ -290,22 +285,23 @@ export class LeadsListComponent {
     this.toggeledropdown = false;
     this.startDate = "";
     this.endDate = "";
-    this.leadsInfoListRequestBody.searchby = "";
+    
+    // this.leadsInfoListRequestBody.searchby = "";
     this.getLeadsList();
   }
   clear() {
-    this.leadsInfoListRequestBody.searchlist = "";
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.policyList = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
+    this.leadsInfoListRequestBody.startDate = null;
+    this.leadsInfoListRequestBody.endDate = null;
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
+    this.leadsInfoListRequestBody.productName = "";
+    this.leadsInfoListRequestBody.policyType = "";
+    this.leadsInfoListRequestBody.leadStatus = "";
     this.appliedFiltersCount = 0;
-    this.startDate = "";
-    this.endDate = "";
+    this.startDate = null;
+    this.endDate = null;
     this.getLeadsList();
   }
   toggleSearchDropdown() {
@@ -322,31 +318,53 @@ export class LeadsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
     if (this.selected == '') {
-        this.leadsInfoListRequestBody.searchby = '';
+        this.leadsInfoListRequestBody.name = '';
+        this.leadsInfoListRequestBody.mobileNumber = '';
+        this.leadsInfoListRequestBody.email = '';
+        this.leadsInfoListRequestBody.leadAssigne = '';
+        this.leadsInfoListRequestBody.leadNumber = '';
         this.getLeadsList();
       }
   }
 
-
   applySearch() {
-    this.page =1;
-    this.first = 0;
-    this.rows = 10;
-    if(this.activeFilter== 'assignedLead'){
-      this.leadsInfoListRequestBody.assignedleads = true;
-      this.leadsInfoListRequestBody.unassignedleads = false;
-
-    }else if(this.activeFilter == 'unAssignedLead'){
-      this.leadsInfoListRequestBody.assignedleads = false;
-      this.leadsInfoListRequestBody.unassignedleads = true;
-    }else{
-      this.leadsInfoListRequestBody.assignedleads = true;
-      this.leadsInfoListRequestBody.unassignedleads = true;
-    }
-
-    this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
+    if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim();
+      if (this.selected === "mobileNumber") {
+        this.leadsInfoListRequestBody.mobileNumber = trimmedValue || "";
+        this.leadsInfoListRequestBody.leadNumber = "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+      } else if (this.selected === "leadId") {
+        this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      } else if (this.selected === "name") {
+        this.leadsInfoListRequestBody.name = trimmedValue || "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }else if (this.selected === "emailID") {
+        this.leadsInfoListRequestBody.email = trimmedValue || "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.leadAssigne = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }else if (this.selected === "AssignedTo") {
+        this.leadsInfoListRequestBody.leadAssigne = trimmedValue || "";
+        this.leadsInfoListRequestBody.email = "";
+        this.leadsInfoListRequestBody.leadNumber= "";
+        this.leadsInfoListRequestBody.name = "";
+        this.leadsInfoListRequestBody.mobileNumber = "";
+      }
+      this.first = 0;
+      this.page = 1;
     this.getLeadsList();
-
+    }
     
   }
 
@@ -401,7 +419,7 @@ export class LeadsListComponent {
           } else {
             this.toast.success({ detail: "", summary: 'Lead has been successfully assigned.', duration: 5000 });
           }
-          this.filterQuotes('all');
+          this.filterQuotes('all','totalRecords');
         }
       }, (error) => {
         console.error("Error: Unable to assign lead. Please try again later.", error);
@@ -429,24 +447,6 @@ export class LeadsListComponent {
   }
   selectAllAssigneLeadDialog() {
     this.showAssigneLeadDialog(this.selectedleadInformation);
-  }
-  getAssignedLeads() {
-    this.filterLeads = false;
-    this.leadsInfoListRequestBody.myleads = false;
-    this.leadsInfoListRequestBody.assignedleads = true;
-    this.leadsInfoListRequestBody.unassignedleads = false;
-    this.getLeadsList();
-    this.activeFilter = "assignedLead";
-    //this.searchInputControl.reset();
-  }
-  getUnAssignedLeads() {
-    this.filterLeads = false;
-    this.leadsInfoListRequestBody.myleads = false;
-    this.leadsInfoListRequestBody.assignedleads = false;
-    this.leadsInfoListRequestBody.unassignedleads = true;
-    this.getLeadsList();
-    this.activeFilter = "unAssignedLead";
-   // this.searchInputControl.reset();
   }
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
@@ -530,18 +530,34 @@ export class LeadsListComponent {
           //   proposalNumber = lead?.proposalNumber??'';
           // }
 
-          const productData = {
-            partnerId: interestedProductItem.partnerId,
-            productId: interestedProductItem.productId,
-            quickQuoteRedirect : true,
-            leadId :  lead.leadNumber,
-            proposalNum: lead?.proposalNumber??''
-          }
+          // const productData = {
+          //   partnerId: interestedProductItem.partnerId,
+          //   productId: interestedProductItem.productId,
+          //   quickQuoteRedirect : true,
+          //   leadId :  lead.leadNumber,
+          //   proposalNum: lead?.proposalNumber??''
+          // }
         
 
-            this.router.navigate(['yatra'], {
-              state: { productData: productData, formSequence: formSequence }
-           });
+          //   this.router.navigate(['yatra'], {
+          //     state: { productData: productData, formSequence: formSequence }
+          //  });
+          const reqData = {
+            partnerId : interestedProductItem.partnerId,
+            productId : interestedProductItem.productId,
+            proposalNum : lead.proposalNumber,
+            agentCode : this.agentCode,
+            isLead : true,
+            currentFormSequence : lead.formSequence,
+            leadId : lead.leadNumber
+          }
+          console.log(reqData);
+          localStorage.setItem("formIndex", lead.formSequence.toString());
+          const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+    
+          this.router.navigate(['yatra'], {
+            queryParams: { data: encodedEncryptedData }
+          });
           
         },
         error: (err) => {

@@ -221,13 +221,13 @@ export class RugDynamicFormComponent {
                 console.log(this.filteredPolicies);
 
                 console.log(this.dynamicFormGroup.value);
-                
-                this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+                const relations = this.policyDetails.proposerDetails.insuredDetails.map((detail: any) => detail.relationWithProposer).join(', ');
+                this.formData.members = relations;
                 this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
                 this.formData.productName = this.filteredPolicies[0]?.productName || null;
-                if(this.policyDetails.proposerDetails.insuredDetails.length > 1){
-                  this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-                }
+                // if(this.policyDetails.proposerDetails.insuredDetails.length > 1){
+                //   this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[1]?.relationWithProposer;
+                // }
                 this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
                 this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
                 this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
@@ -1777,7 +1777,7 @@ export class RugDynamicFormComponent {
         if (dobArray[0] as number >= 1800) {
           const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
-            ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
+            ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob).toString();
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
 
@@ -3337,7 +3337,7 @@ export class RugDynamicFormComponent {
       console.log(filteredData);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
@@ -3353,8 +3353,10 @@ export class RugDynamicFormComponent {
       );
       console.log(filteredData);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
+
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {

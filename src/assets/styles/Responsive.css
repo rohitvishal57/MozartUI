@@ -520,6 +520,9 @@
         top: auto;
         bottom: 6px;
    }
+   .btn_text.btn_clearSearch {
+    top: auto !important;
+   }
    .common_searchWraper .field_searchMain {
         flex-direction: column;
     }
