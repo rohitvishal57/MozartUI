@@ -23,7 +23,7 @@ export class BbTestPageComponent implements OnInit{
     const data = new FormData();
     data.append('Request', this.encryptedString.trim())
     
-    this.http.post<any>('https://usp.monocept.ai/api/v1/RedirectAxisBranchBankingRequest', data)
+    this.http.post<any>('https://upuat.adityabirlahealth.com/api/v1/RedirectAxisBranchBankingRequest', data)
       .subscribe(response => {
         console.log(response);
         response = JSON.parse(response.data)
