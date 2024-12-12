@@ -130,10 +130,77 @@
                                                 <div class="claims_member_info-gradient"></div>
                                             </div>
                                         </div>
+                                        <h4>Detailed View</h4>
+                                        <section id="quotes-list" class="tableMain quoteView block-show "
+                                            *ngIf="selectedView == 'list'">
+                                            <div class="tableSubMain">
+                                                <div class="table-responsive">
+                                                    <table class="table table-borderless table-search">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Agent Code</th>
+                                                                <th>Proposal ID</th>
+                                                                <th>Proposal Substatus</th>
+                                                                <th>Client ID</th>
+                                                                <th>Insured Name</th>
+                                                                <th>Business Type</th>
+                                                                <th>Policy Start Date</th>
+                                                                <th>Policy End Date</th>
+                                                                <th>Policy Number</th>
+                                                                <th>Product Name</th>
+                                                                <th>Policy Variant</th>
+                                                                <th>Plan Type</th>
+                                                                <th>Plan Variant</th>
+                                                                <th>Portability</th>
+                                                                <th>Net Premium</th>
+                                                                <th>Sum Insured</th>
+                                                                <th>Inwarded Date</th>
+                                                                <th>Issue Date</th>
+                                                                <th>PR Date</th>
+                                                                <th>Port%</th>
+                                                                <th>Super%</th>
+                                                                <th>CI/CS/PA/ASP/Credit%</th>
+                                                                <th>SI Credit%</th>
+                                                                <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-group-divider">
+                                                            <tr *ngFor="let row of detailedList; let i = index">
+                                                                <td>{{row.agentCode}}</td>
+                                                                <td>{{row.proposalID}}</td>
+                                                                <td>{{row.proposalSubStatus}}</td>
+                                                                <td>{{row.clientID}}</td>
+                                                                <td>{{row.insuredName}}</td>
+                                                                <td>{{row.businessType}}</td>
+                                                                <td>{{row.policyStartDate}}</td>
+                                                                <td>{{row.policyEndDate}}</td>
+                                                                <td>{{row.policyNumber}}</td>
+                                                                <td>{{row.productName}}</td>
+                                                                <td>{{row.policyVariant}}</td>
+                                                                <td>{{row.planType}}</td>
+                                                                <td>{{row.planVariant}}</td>
+                                                                <td>{{row.planVariant}}</td>
+                                                                <td>{{row.netPremium}}</td>
+                                                                <td>{{row.sumInsured}}</td>
+                                                                <td>{{row.inwardedDate}}</td>
+                                                                <td>{{row.issueDate}}</td>
+                                                                <td>{{row.prDate}}</td>
+                                                                <td>{{row.portPercent}}</td>
+                                                                <td>{{row.superPercent}}</td>
+                                                                <td>{{row.cI_CS_PA_ASPCreditPercent}}</td>
+                                                                <td>{{row.siCreditPercent}}</td>
+                                                                <td>{{row.weightedNetPremium}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div> 
+                                            </section>
                                     </div>
                                 </mat-tab>
 
-                                <mat-tab [label]="'Detailed View' | translate">
+                                <!-- <mat-tab [label]="'Detailed View' | translate">
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let row of detailedList; let i = index">
                                             <div class="claims_member_info">
@@ -237,7 +304,7 @@
                                             </div>
                                         </div>                              
                                     </div>
-                                </mat-tab>
+                                </mat-tab> -->
 
 
 
@@ -307,7 +374,74 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                            </div> -->
+                                            </div> 
+                                            </section>
+                                            </div>
+                                        </mat-tab> -->
+
+                                        <mat-tab label="Commission">
+                                            <div class="body_flex_column gap-32">
+                                                <form (ngSubmit)="fetchCommissionStatement()" [formGroup]="commissionForm">
+
+                                                    <section class="white_container">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                <div class="tipInfo_org"><img src="./assets/Img/icon_lightbulb.svg">Commission statement download is currently available from April’21 cycle. We are
+                                                                    working on previous download statement and will be available soon.</div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-4">
+                                                            <div class="col-12">
+                                                                <h4>My Statements</h4>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                                <div class="input-block form-floating input-block-renew">
+                                                                    <select class="form-select input-selectBox" id="commissonYear" name="commissonYear"  formControlName="year" >
+                                                                    <option value="" disabled selected>{{"Select Year" }}</option>
+                                                                    <option *ngFor="let year of years" [value]="year">
+                                                                        {{ year }}
+                                                                    </option>
+                                                                </select>
+                                                                    <label for="year">{{"Year"}}</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                                <div class="input-block form-floating input-block-renew">
+                                                                    <select class="form-select input-selectBox" id="commissonMonth" name="commissonMonth" formControlName="month">
+                                                                    <option value="" disabled selected>{{"Select Month" }}</option>
+                                                                    <option *ngFor="let month of months" [value]="month">
+                                                                        {{ month }}
+                                                                    </option>
+                                                                </select>
+                                                                    <label for="month">{{"Month"}}</label>
+                                                                </div>
+                                                            </div>
+                                        
+                                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                                <div class="input-block form-floating input-block-renew">
+                                                                    <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
+                                                                    <option value="" disabled selected>{{"Select Cycle" }}</option>
+                                                                    <option *ngFor="let cycle of cycles" [value]="cycle.value">
+                                                                        {{ cycle.name }}
+                                                                    </option>
+                                                                </select>
+                                                                    <label for="cycle">{{"Cycle"}}</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mt-4" >
+                                                                <div class="col-12">
+                                                                    <button type="submit" id="save" name="save" class="btn_red">{{" Download Statement"}}</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </section>
+                                            </form>
+                                        
+                                        
+                                                </div>
+                                                </mat-tab>
+
                                             <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
                                                 <nav>
                                                     <ul class="pagination">
