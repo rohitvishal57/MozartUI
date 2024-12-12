@@ -143,7 +143,7 @@ export class PaymentstatusComponent {
     const orderDetailsReq = {
       "orderId": this.orderId
     }
-    this.renewalService.getFullQuoteApi(orderDetailsReq).subscribe(
+    this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       (res: any) => {
         if (res.isSuccess) {
           const orderData = res.data;
