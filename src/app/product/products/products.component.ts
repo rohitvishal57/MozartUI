@@ -366,7 +366,7 @@ removeCompareItemProduct(item: any){
   
 }
 navigateToProductComparison(){
-  this.productService.navigateToProductComparison(this.compareItems);
+  this.productService.navigateToProductComparison(this.compareItems ,'products');
 }
 
 closeProductComparison(){

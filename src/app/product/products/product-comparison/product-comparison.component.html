@@ -33,8 +33,12 @@
                             <header>
                                 <div class="heading">
                                     <h5>{{comparisonItem1.productName}}</h5>
-                                    <!--<h6>₹6,863*<span>/year</span></h6>-->
+                                        <h6 *ngIf="comparisonItem1.tenure3Premium">
+                                            ₹{{ comparisonItem1?.selectedPremiumAmount ?? comparisonItem1?.tenure3Premium }}
+                                        </h6>
                                 </div>
+                                
+
                                 <div class="compare_btnGroup">
                                     <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
                                         (click)="redirectProducts(comparisonItem1)"><img src="assets/Img/trolley1.svg" alt="">
@@ -99,7 +103,9 @@
                             <header>
                                 <div class="heading">
                                     <h5>{{comparisonItem2.productName}}</h5>
-                                    <!--<h6>₹6,863*<span>/year</span></h6>-->
+                                    <h6 *ngIf="comparisonItem2.tenure3Premium">
+                                        ₹{{ comparisonItem2?.selectedPremiumAmount ?? comparisonItem2?.tenure3Premium }}
+                                    </h6>
                                 </div>
                                 <div class="compare_btnGroup">
                                     <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
@@ -164,7 +170,10 @@
                             <header>
                                 <div class="heading">
                                     <h5>{{comparisonItem3.productName}}</h5>
-                                    <!--<h6>₹6,863*<span>/year</span></h6>-->
+                                    <h6 *ngIf="comparisonItem3.tenure3Premium">
+                                        ₹{{ comparisonItem3?.selectedPremiumAmount ?? comparisonItem3?.tenure3Premium }}
+                                    </h6>
+                                    
                                 </div>
                                 <div class="compare_btnGroup">
                                     <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
