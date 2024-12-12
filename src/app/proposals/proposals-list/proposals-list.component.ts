@@ -161,6 +161,23 @@ export class ProposalsListComponent {
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getProposalList();
   }
+
+
+  getProposal(){
+    this.countsList = [];
+    this.totalRecords = 0;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.proposalListRequestBody.pageNumber = this.page;
+    this.proposalListRequestBody.pageSize = this.rows;
+    this.proposalListRequestBody.productVarientName= "";
+    this.proposalListRequestBody.startDate = null;
+    this.proposalListRequestBody.endDate = null;
+  }
+
   getProposalList() {
     this.proposalListRequestBody.pageNumber = this.page;
     this.proposalListRequestBody.pageSize = this.rows;
@@ -305,7 +322,6 @@ export class ProposalsListComponent {
   }
 
   quoteApplyFilter() {
-    debugger;
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
@@ -480,7 +496,6 @@ export class ProposalsListComponent {
   }
 
   quoteTriggerSearch(): void {
-    debugger;
     if (!this.searchApplied) {
       this.quoteapplySearch();
       this.searchApplied = true;
