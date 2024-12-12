@@ -3213,7 +3213,7 @@ input[type="search"]::-webkit-search-results-decoration {
   box-shadow: 2px 2px 10px 0px #5680B31F;
 }
 .main_listProducts .cardViewItem_planContainer .cardViewItem_plans {
-  padding: 5px 12px;
+  /* padding: 5px 10px; */
 }
 .cardViewItem_planContainer .cardViewItem_plans.highlight {
   background-color: #ffe7e5;
@@ -3245,7 +3245,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .cardViewItem_planContainer .cardViewItem_plans .planDuration {
   font-size: 12px;
   color: #d97706;
-  padding-left: 8px;
+  padding-left: 4px;
 }
 .footer_cardViewItem .btn_groupAction {
   gap: 16px;

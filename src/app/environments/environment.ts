@@ -155,6 +155,6 @@ export const environment = {
     getTopProducts:"api/quote/GetTopSellingProduct",
     updateAgentAllFormData : "api/rug/UpdateAgentAllFormData",
     getd2cPolicyInfoByLeadId: "api/rug/GetD2CPolicyInfoByLeadId",
-    fetchDashboardPreferences: "api/quote/AddDashboardPreference",
-    SubmitDashboardPreferences: "api/quote/AddDashboardPreference"
+    fetchDashboardPreferences: "api/quote/GetDashboardPreference",
+    SubmitDashboardPreferences: "api/quote/InsertDashboardPreference"
   }
