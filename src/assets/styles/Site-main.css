@@ -6295,6 +6295,12 @@ input[type=number]::-webkit-outer-spin-button {
 .submain_commonError button {
   padding: 10px 40px;
 }
+.btn_text.btn_clearSearch{
+  top: 10px !important;
+}
+.common_searchWraper .field_searchMain div {
+  position: relative;
+}
 /*---Common Error styles End--*/
 
 /*----New styles added 13-nov-24 start----*/
