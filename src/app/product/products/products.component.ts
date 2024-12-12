@@ -82,7 +82,8 @@ export class ProductsComponent implements OnInit {
         localStorage.setItem('leadId', this.paramLeadId.LeadId)
         this.agentCode = this.paramLeadId.AgentCode;
       }
-    
+
+    if(this.paramLeadId !== "undefined"){      
       try {
         const reqData = {
           partnerId: this.partnerId,
@@ -92,52 +93,10 @@ export class ProductsComponent implements OnInit {
         console.log(res);
         this.formSequence = JSON.parse(res.data.formSequence);
         console.log(this.formSequence);
-        // if(this.agentCode != "467898"){
-        //   this.isD2C = false;
-        // }
-        // console.log(this.formSequence[this.getFormIndexValue()].formName)
-        // console.log(this.paramLeadId.CurrentIndex)
-        // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-        // if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
-        //   let reqObj = {
-        //     "leadId": this.leadId
-        //   }
-        //   this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
-        //     next: (res: any) => {
-        //       console.log(res);
-        //       res = JSON.parse(res.data).data
-        //       console.log(res);
-        //       this.policyDetails = res;
-        //       console.log(this.policyDetails);
-        //       this.filteredPolicies = this.policyDetails.policyDetails.filter(
-        //         (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
-        //       );
-              
-        //       console.log(this.filteredPolicies);
-
-        //       console.log(this.dynamicFormGroup.value);
-              
-        //       this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-        //       this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
-        //       this.formData.productName = this.filteredPolicies[0]?.productName || null;
-        //       this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-        //       this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
-        //       this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
-        //       // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
-        //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-              
-        //       console.log(this.dynamicFormGroup.value);
-
-        //       // Merging updated formData with dynamicFormGroup values
-        //     },
-        //     error: (err) => {
-        //       console.error(err);
-        //     }
-        //   });
-        // }
       } catch (err) {
         console.error(err);
       }
+    }
     });
     
 
