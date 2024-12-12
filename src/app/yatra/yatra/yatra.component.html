@@ -1216,6 +1216,16 @@
                                             class="typecss col-12" [hidden]="!innerControl.visible">
                                             <div class="input-container">
 
+                                              <!--<mat-form-field class="mat_inputField_Select">
+                                                <mat-label>Favorite food</mat-label>
+                                                <mat-select>
+                                                    <mat-option >Choose...</mat-option>
+                                                    <mat-option >Cancer, tumor, polyp or cyst </mat-option>
+                                                    <mat-option >Asthma / Tuberculosis (TB) / COPD/ Pleural effusion / Bronchitis / Emphysema or any other disease of Lungs, Pleura and airway or Respiratory disease? </mat-option>
+                                                    <mat-option >Thyroid disease/ Cushings disease/ Parathyroid Disease/ Addisons disease / Pituitary tumor/ disease or any other disorder of Endocrine system? </mat-option>
+                                                </mat-select>
+                                              </mat-form-field>-->
+
                                               <select class="inputField_Select" [formControlName]="innerControl.name"
                                                 (change)="onInputChange($event, subControl,control,k-1,innerControl)"
                                                 [name]="innerControl.name" [id]="innerControl.name"
