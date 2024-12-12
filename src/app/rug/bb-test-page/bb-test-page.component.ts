@@ -49,7 +49,7 @@ export class BbTestPageComponent implements OnInit{
     // const data = { Request: this.encryptedString.trim() }; 
     // console.log(data);
     const data = new FormData();
-    data.append('Request', this.encryptedString.trim())
+    data.append('data', this.encryptedString.trim())
     
     this.http.post<any>('https://usp.monocept.ai/api/v1/', data)
       .subscribe(response => {
