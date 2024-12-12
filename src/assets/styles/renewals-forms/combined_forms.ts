@@ -2732,7 +2732,7 @@ export const combinedForms = {
               "disabled": true
             },
             {
-              "name": "quoteValidFromDate",
+              "name": "policyStartDate",
               "label": "Policy Start Date",
               "visibleLabel": true,
               "type": "summary",
@@ -2742,7 +2742,7 @@ export const combinedForms = {
               "disabled": true
             },
             {
-              "name": "quoteValidToDate",
+              "name": "policyEndDate",
               "label": "Policy End Date",
               "visibleLabel": true,
               "type": "summary",
@@ -2752,7 +2752,7 @@ export const combinedForms = {
               "disabled": true
             },
             {
-              "name": "ReceiptNumber",
+              "name": "receiptID",
               "label": "Receipt ID",
               "visibleLabel": true,
               "type": "summary",
@@ -2762,7 +2762,7 @@ export const combinedForms = {
               "disabled": true
             },
             {
-              "name": "policyStatus",
+              "name": "status",
               "label": "Policy Status",
               "visibleLabel": true,
               "type": "summary",

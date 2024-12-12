@@ -2884,10 +2884,10 @@ export class RenewalJourneyComponent {
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
           if (res.isSuccess) {
-            this.formData.policyStatus = res.data.status || null;
-            this.formData.quoteValidFromDate = res.data.policyStartDate || null;
-            this.formData.quoteValidToDate = res.data.policyEndDate || null;
-            this.formData.ReceiptNumber = res.data.receiptID || null;
+            this.formData.status = res.data.status || null;
+            this.formData.policyStartDate = res.data.policyStartDate || null;
+            this.formData.policyEndDate = res.data.policyEndDate || null;
+            this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
