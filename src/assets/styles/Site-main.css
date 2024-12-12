@@ -746,6 +746,7 @@ button {
     top: auto;
     bottom: 20px;
     height: auto;
+    background-color: #fff;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_logout a.linkLogout{
   position: initial;
