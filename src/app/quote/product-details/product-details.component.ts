@@ -46,7 +46,6 @@ export class ProductDetailsComponent {
         }
       });
     });
-    debugger;
     this.productId = history.state.item.productId
     this.partnerId = history.state.item.partnerId;
     this.state = history.state.item

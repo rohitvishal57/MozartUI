@@ -502,6 +502,11 @@ export class LeadsListComponent {
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
+            if(lead.proposalNumber){
+              proposalNumber = lead.proposalNumber;
+            }else{
+              proposalNumber = await this.generateProposalNumnberAndUpdateLeadInfor(lead.leadNumber);
+            }
             const reqData = {
               "partnerId": interestedProductItem.partnerId,
               "productId": interestedProductItem.productId
@@ -518,34 +523,10 @@ export class LeadsListComponent {
           } catch (err) {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
-
-          // if (lead.leadStatus.includes('Open')) {
-          //   try {
-          //     const response = await firstValueFrom(this.common.getProposalNumber());
-          //     proposalNumber = response.data?.proposalNumber;
-          //   } catch (err) {
-          //     this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          //   }
-          // } else {
-          //   proposalNumber = lead?.proposalNumber??'';
-          // }
-
-          // const productData = {
-          //   partnerId: interestedProductItem.partnerId,
-          //   productId: interestedProductItem.productId,
-          //   quickQuoteRedirect : true,
-          //   leadId :  lead.leadNumber,
-          //   proposalNum: lead?.proposalNumber??''
-          // }
-        
-
-          //   this.router.navigate(['yatra'], {
-          //     state: { productData: productData, formSequence: formSequence }
-          //  });
           const reqData = {
             partnerId : interestedProductItem.partnerId,
             productId : interestedProductItem.productId,
-            proposalNum : lead.proposalNumber,
+            proposalNum : proposalNumber,
             agentCode : this.agentCode,
             isLead : true,
             currentFormSequence : lead.formSequence,
@@ -588,5 +569,29 @@ export class LeadsListComponent {
     }else {
       this.selectedView = 'list'; // Use 'grid' view for desktop
     }
+  }
+
+
+  async generateProposalNumnberAndUpdateLeadInfor(leadNumber : any) {
+    try {
+      const proposalGenerateResponse = await firstValueFrom(this.common.getProposalNumber());
+      let proposalNumber = proposalGenerateResponse.data?.proposalNumber;
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
+      const leadInformation = response?.data?.leadList[0];
+      leadInformation.proposalNumber = proposalNumber;
+      leadInformation.isUpdate = 1;
+      this.leadsService.saveLeadData(leadInformation).subscribe(
+        (response) => {
+          console.log("Lead has been Successfully Updated", response);
+        }, (error) => {
+          console.log("Failed to update Lead Infomation", error);
+        });
+      return proposalNumber;
+    }
+    catch (error) {
+      console.log("Failed to fetch lead Information!", error)
+      return 0;
+    }
+
   }
 }
