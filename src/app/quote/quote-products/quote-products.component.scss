@@ -150,4 +150,35 @@
     
     
 }
+.icon_productInfoDetails {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.ribbon_Recommended {
+    font-size: 12px;
+    font-weight: 500;
+    color: #845800;
+    margin-right: -28px;
+    top: 4px;
+    position: relative;
+    border-radius: 0px 3px 0px 0px;
+  }
+  .ribbon_Recommended {
+    --f: .5em; /* control the folded part*/
+    --r: .8em; /* control the ribbon shape */
+    
+    /* position: absolute;
+    top: 20px;
+    right: calc(-1*var(--f)); */
+    padding: 0.25em 1.5em 0.25em 1em;
+    line-height: 1.8;
+    background: linear-gradient(90deg, #FEE1A6 0%, #F8C050 100.02%);
+    border-bottom: var(--f) solid #FEE1A6;
+    border-left: var(--r) solid #FEE1A6;
+    clip-path: 
+      polygon(0 0,100% 0,100% calc(100% - var(--f)),calc(100% - var(--f)) 100%,
+        calc(100% - var(--f)) calc(100% - var(--f)),0 calc(100% - var(--f)),
+        var(--r) calc(50% - var(--f)/2));
+  }
 /*Get Quote styles end*/
