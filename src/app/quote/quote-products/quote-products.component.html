@@ -49,14 +49,14 @@
                                                 <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
                                                     (click)="selectPlan(i, 1)">
                                                     <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
-                                                        ₹{{ item.tenure1Premium }}*<span class="planTenure">/ {{"1year" | translate}}</span>
+                                                        ₹{{ item.tenure1Premium }}*<span class="planTenure">/{{"1year" | translate}}</span>
                                                     </div>
                                                     <div *ngIf="item.t1DiscountPercentage" class="planDuration">
                                                         /{{ item.t1DiscountPercentage }}%
                                                     </div>
                                                     <div *ngIf="item.t1DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 1}">
-                                                        ( {{ item.t1DiscountAmount }} )
+                                                        ({{ item.t1DiscountAmount }})
                                                     </div>
                                                 </div>
             
@@ -64,14 +64,14 @@
                                                 <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
                                                     (click)="selectPlan(i, 2)">
                                                     <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
-                                                        ₹{{ item.tenure2Premium }}*<span class="planTenure">/ {{"2 year" | translate}}</span>
+                                                        ₹{{ item.tenure2Premium }}*<span class="planTenure">/{{"2years" | translate}}</span>
                                                     </div>
                                                     <div *ngIf="item.t2DiscountPercentage" class="planDuration">
                                                          {{ item.t2DiscountPercentage }}%
                                                     </div>
                                                     <div *ngIf="item.t2DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 2}">
-                                                        ( {{ item.t2DiscountAmount }} )
+                                                        ({{ item.t2DiscountAmount }})
                                                     </div>
                                                 </div>
             
@@ -79,14 +79,14 @@
                                                 <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
                                                     (click)="selectPlan(i, 3)">
                                                     <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
-                                                        ₹{{ item.tenure3Premium }}*<span class="planTenure">/ {{"3 year" | translate}}</span>
+                                                        ₹{{ item.tenure3Premium }}*<span class="planTenure">/{{"3years" | translate}}</span>
                                                     </div>
                                                     <div *ngIf="item.t3DiscountPercentage" class="planDuration">
                                                         {{ item.t3DiscountPercentage }}%
                                                     </div>
                                                     <div *ngIf="item.t3DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 3}">
-                                                        ( {{ item.t3DiscountAmount }} )
+                                                        ({{ item.t3DiscountAmount }})
                                                     </div>
                                                 </div>
             
