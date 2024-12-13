@@ -29,6 +29,7 @@ export class ProfileComponent implements OnInit {
   EcalatinDetails: any[] = [];
   showmsg: boolean = false;
   selectedLanguage: string = '';
+  profileLink:any = '';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -73,7 +74,9 @@ export class ProfileComponent implements OnInit {
           icon: this.getIcons(key),
           value: key === 'dateOfBirth' ? new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
-        this.profileDetails = output
+        this.profileDetails = output;
+        this.profileDetails = output.filter(item => item.heading !== 'Profile Link');
+        this.profileLink = res.data.profileLink;
       }
     })
   }
@@ -151,6 +154,11 @@ export class ProfileComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
+        this.toast.error({
+          detail: "Error",
+          summary: error.message || "Not Updating the language preference.",
+          duration: 3000,
+        });
       },
     });
   }
@@ -184,7 +192,11 @@ export class ProfileComponent implements OnInit {
         },
         (error) => {
           console.error('Failed to copy URL:', error);
-          alert('Failed to copy URL. Please try again.');
+          this.toast.error({
+            detail: "Error",
+            summary: error.message || "Failed to copy URL.",
+            duration: 3000,
+          });
         }
       );
     }
@@ -196,7 +208,14 @@ export class ProfileComponent implements OnInit {
       if (url) {
         window.open(url, '_blank'); // Opens the URL in a new tab
       } else {
-        alert('No URL found to open.');
+        (error:any) => {
+          console.error('Failed to copy URL:', error);
+          this.toast.error({
+            detail: "Error",
+            summary: error.message || "No URL found to open.",
+            duration: 3000,
+          });
+        }
       }
     }
   }

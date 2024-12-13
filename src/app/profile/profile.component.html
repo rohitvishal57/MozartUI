@@ -42,8 +42,8 @@
                                                                     <h6>Copy or scan your Agent Code/QR here.</h6>
                                                                     <div class="copy_qrCode">
                                                                         <div class="copy_qrCode_url">
-                                                                            <span id="qrCodeUrl">
-                                                                                https://www.linkedin.com/search/results/people/?firstName=Demo&lastName=Account&origin=SEO_PSERP&sid=jYL
+                                                                            <span id="qrCodeUrl" *ngIf="profileLink">
+                                                                              {{ profileLink }}
                                                                               </span>
                                                                         </div>
                                                                         <div class="btn_group_qrCode">
