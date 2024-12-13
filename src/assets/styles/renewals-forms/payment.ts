@@ -603,7 +603,7 @@ export const payment={
           "name": "nextOffline",
           "label": "Next",
           "visibleLabel": false,
-          "visible": true,
+          "visible": false,
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "onSubmit",

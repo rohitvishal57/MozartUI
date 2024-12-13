@@ -59,7 +59,8 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  // formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
   futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
@@ -84,7 +85,6 @@ export class RenewalJourneyComponent {
 
   ngOnInit() {
     this.showHtmlContent = false;
-    console.log("history.state");
 
     if (localStorage.getItem('agentCode'))
       this.agentCode = localStorage.getItem('agentCode');
@@ -98,6 +98,9 @@ export class RenewalJourneyComponent {
         // Check and set formSequence if it exists in queryParams
         if (params['formSequence']) {
           this.formSequence = this.encryptionService.decrypt(params['formSequence']); // Set to component variable
+        }
+        else{
+          this.formSequence = [new_combinedForms, active_health_covers,payment,thankYou];
         }
 
         // Check and set formIndex in localStorage if it exists in queryParams
@@ -139,7 +142,9 @@ export class RenewalJourneyComponent {
     // this.form = payment;
     // this.form = active_health_covers;
 
-    this.form = this.formSequence[this.getFormIndexValue()];
+    this.form = JSON.parse(JSON.stringify(this.formSequence[this.getFormIndexValue()]));
+    console.log(this.form);
+    
     if (this.journeyProcess == 0) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {

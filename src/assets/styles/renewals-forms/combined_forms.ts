@@ -2722,7 +2722,7 @@ export const combinedForms = {
               "disabled": true
             },
             {
-              "name": "totalPremium",
+              "name": "premiumPaid",
               "label": "Premium Paid",
               "visibleLabel": true,
               "type": "summary",
