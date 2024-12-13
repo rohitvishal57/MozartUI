@@ -1021,13 +1021,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
-
-          upgradableZones.forEach((zone: any) => {
-            this.upgradableZones.push({
-              name: zone.zone,
-              value: zone.zoneCode
-            });
-          })
+          this.upgradableZones = upgradableZones
 
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
         } else {
