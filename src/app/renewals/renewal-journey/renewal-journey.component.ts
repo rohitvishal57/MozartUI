@@ -2921,7 +2921,7 @@ export class RenewalJourneyComponent {
         "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode,
-        "accountNumber": data.accountNumber,
+        "bankAccountNumber": data.accountNumber,
         "documentId": this.documentId
       };
       console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
@@ -3646,24 +3646,19 @@ export class RenewalJourneyComponent {
 
   initiateKycURL(){
     const kycRequestBody = {
-      policyNumber: this.policyNumber,
-      fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "",
-      dob: this.formData.memberDobProposer || "",
-      pepCheck: "",
-      businessType: "REN"
+      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No",businessType: "REN"
     };
-    this.renewalService.kycUpdate(kycRequestBody).subscribe(
+    this.renewalService.getkycURL(kycRequestBody).subscribe(
       (res:any) => {
         console.log("kycRequestBody",res);
-        const kycUrl=res.data.kycUrl;
-        window.open(kycUrl, '_blank');
+        window.open(res.data.kycUrl, '_blank');
       },
       (err) => {
         console.log(err);
       }
     );
-
   }
 
   getDate(dateType: any): string {
@@ -3674,7 +3669,20 @@ export class RenewalJourneyComponent {
     } else if (dateType === 'pastDate') {
       // return this.pastDate;
     }
-    return '';  // Default return if no valid date type is found
+    return ''; 
   }
+  formatDate(dateString: string | Date): string {
+    if (!dateString) return "";
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return ""; // Return empty string if invalid date
+  
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = date.getFullYear();
+  
+    return `${day}-${month}-${year}`;
+  }
+  
   
 }
