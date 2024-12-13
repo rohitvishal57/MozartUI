@@ -14,25 +14,27 @@ export const payment={
       "class": "kyc-container",
       "formControls": [
         {
-          "name": "shareLink",
-          "label": "Share Link",
+          "name": "shareKyc",
+          "label": "Share KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
           "methodName": "checkKycDetail",
+          "onChangeMethod":"",
           // "dependentControls": [
           //   "copyLink"
           // ]
         },
         {
-          "name": "sendLinkButton",
-          "label": "Send Link",
+          "name": "initiateKyc",
+          "label": "Initiate KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "methodName": "",
+          "methodName": "initiateKycURL",
+          "onChangeMethod":"",
           // "dependentControls": [
           //   "copyLink"
           // ]
@@ -151,6 +153,7 @@ export const payment={
             "totalPremium",
             "chequeNumber",
             "chequeDate",
+            "accountNumber",
             "ifscCode",
             "paymentBankName",
             "chequeCopy",
@@ -197,6 +200,10 @@ export const payment={
                 },
                 {
                   "name": "ifscCode",
+                  "visibility": true
+                },
+                {
+                  "name": "accountNumber",
                   "visibility": true
                 },
                 {
@@ -353,6 +360,27 @@ export const payment={
           ]
         },
         {
+          "name": "accountNumber",
+          "label": "Account Number",
+          "visible": false,
+          "visibleLabel": true,
+          "type": "number",
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Account Number is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[0-9]{9,18}$",
+              "message": "Account Number should be between 9 to 18 digits"
+            }
+          ]
+        },
+        {
           "name": "demandDraftNumber",
           "label": "Demand Draft Number",
           "visible": false,
@@ -399,6 +427,8 @@ export const payment={
           "label": "Cheque Date",
           "visible": false,
           "visibleLabel": true,
+          "minDateLength": "currentDate",
+          "maxDateLength": "futureDate",
           "type": "date",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",

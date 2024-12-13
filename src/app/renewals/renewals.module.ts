@@ -15,6 +15,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { RenewalJourneyComponent } from './renewal-journey/renewal-journey.component';
+import { KycStatusComponent } from './kyc-status/kyc-status.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -26,7 +27,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RenewalDynamicFormComponent,
     SubQuotesComponent,
     PaymentstatusComponent,
-    RenewalJourneyComponent
+    RenewalJourneyComponent,
+    KycStatusComponent,
   ],
   imports: [
     CommonModule,

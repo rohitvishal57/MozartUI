@@ -2883,6 +2883,7 @@ export class RenewalJourneyComponent {
         "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode,
+        "accountNumber": data.accountNumber,
         "documentId": this.documentId
       };
       console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
@@ -3603,6 +3604,28 @@ export class RenewalJourneyComponent {
         }
       });
     });
+  }
+
+  initiateKycURL(){
+    const kycRequestBody = {
+      policyNumber: this.policyNumber,
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "",
+      dob: this.formData.memberDobProposer || "",
+      pepCheck: "",
+      businessType: "REN"
+    };
+    this.renewalService.kycUpdate(kycRequestBody).subscribe(
+      (res:any) => {
+        console.log("kycRequestBody",res);
+        const kycUrl=res.data.kycUrl;
+        window.open(kycUrl, '_blank');
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
   }
 
   getDate(dateType: any): string {
