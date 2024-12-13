@@ -35,12 +35,12 @@
           </div>
           <div class="row pt-4">
             <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 pad-0">
-              <button id="loginwithsso" name="loginwithsso" (click)="onSubmit('SSO')">{{"Login with SSO" | translate}}</button>
+              <button id="login" name="login" (click)="onSubmit('SSO')">{{"Login" | translate}}</button>
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 pad-0">
               <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')">{{"Login with OTP" | translate}}</button>
             </div>
-            <p class="text-danger text-center">{{errorMessage | translate}}</p>
+            <p class="text-danger text-center" *ngIf="errorMessage !== ''">{{errorMessage | translate}}</p>
             <div class="col-12">
               <button name="resetpassword" id="resetpassword" (keydown.enter)="onSubmit('RESET')" (click)="onSubmit('RESET')" class="btn_text" [tabindex]="0">
                 {{"Reset password" | translate}}
@@ -62,7 +62,7 @@
           <button type="submit" id="verifylogin" name="verifylogin" (click)="onVerifyOTP()">
             <span>{{"Verify & Login" | translate}}</span>
           </button>
-          <p class="text-danger text-center">{{errorMessage | translate}}</p>
+          <p class="text-danger text-center" *ngIf="errorMessage !== ''">{{errorMessage | translate}}</p>
           <div class="d-flex justify-content-center" *ngIf="timerOn">
             <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">{{"Send OTP again in" | translate}} <span class="timeLeft_color">{{timeLeft}}</span> seconds </label>
             <label *ngIf="timeLeft == 0" class="send_otp_again_wrap p-2" (click)="resendOTP()" (keydown.enter)="resendOTP()" [tabindex]="0">{{"Resend OTP" | translate}}</label>

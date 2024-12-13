@@ -4,8 +4,8 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2>{{"All Requests" | translate}}</h2>
-                <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="redirect('endorsements/new-request')">
-                    <img src="assets/Img/icon_plus_red.svg">{{"New Requests" | translate}}
+                <button type="button" id="newrequest" name="newrequest" class="btn_white btn_newRequest" (click)="redirect('endorsements/new-request')">
+                    <img src="assets/Img/icon_plus_red.svg">{{"New Request" | translate}}
                 </button>
             </div>
             <section class="quickFilterMain">
@@ -76,7 +76,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                    <!-- <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                         <h6>Products</h6>
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
@@ -86,18 +86,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- <div class="fw_formRow">
-                                        <h6>Request Type</h6>
+                                    </div> -->
+                                    <div class="fw_formRow">
+                                        <h6>Endorsement Type</h6>
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
                                                 <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                <label class="" for="policytype{{i}}">{{policyType.name}}</label>
                                                 </div>
                                             </div>                                              
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="fw_formRow">
                                         <div class="row">
                                             <footer>
