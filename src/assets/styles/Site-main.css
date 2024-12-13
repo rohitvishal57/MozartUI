@@ -5377,7 +5377,7 @@ input[type="search"]::-webkit-search-results-decoration {
   right: 10px;
   top: 6px;
   padding: 0 6px;
-  background: #f1f3f6;
+  /* background: #f1f3f6; */
 }
 .common_searchWraper .field_searchMain button img {
   position: initial;
