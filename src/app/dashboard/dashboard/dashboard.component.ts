@@ -1225,7 +1225,7 @@ export class DashboardComponent {
           this.newQuickActionList && this.newQuickActionList.length && this.newQuickActionList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category.name.name) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
@@ -1234,9 +1234,7 @@ export class DashboardComponent {
           break;
 
         case "ABHI":
-
           tab.order = index
-
           break;
 
         case 'Servicing':
@@ -1244,7 +1242,7 @@ export class DashboardComponent {
           this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category?.name?.widgetName) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
@@ -1255,7 +1253,7 @@ export class DashboardComponent {
           this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category?.name?.widgetName) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
@@ -1266,7 +1264,7 @@ export class DashboardComponent {
           this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category?.name?.widgetName) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
@@ -1277,7 +1275,7 @@ export class DashboardComponent {
           this.newPerformanceList && this.newPerformanceList.length && this.newPerformanceList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category?.name?.title) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
@@ -1288,7 +1286,7 @@ export class DashboardComponent {
           this.newWellnessList && this.newWellnessList.length && this.newWellnessList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
               if (k.categoryName == category?.name?.name) {
-                k['subOrder'] = index
+                k.subOrder = index
               }
             })
           });
