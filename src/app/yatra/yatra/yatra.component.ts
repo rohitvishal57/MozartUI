@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, NgZone, Renderer2, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
@@ -198,7 +198,7 @@ export class YatraComponent {
           this.agentCode = decryptedData.agentCode;
           this.partnerId = decryptedData.partnerId;
           this.productId = decryptedData.productId;
-          if(decryptedData.isLead){
+          if (decryptedData.isLead) {
             this.quickQuoteRedirect = decryptedData.isLead;
           }
           // this.formData.proposalNumber = decryptedData.proposalNum;
@@ -211,8 +211,8 @@ export class YatraComponent {
               this.formSequence = JSON.parse(res.data.formConfig) || [];
               this.form = JSON.parse(res.data.jsonFormData);
               this.formData = JSON.parse(res.data.formData);
-              console.log(this.form,this.formSequence,this.formData,this.quickQuoteRedirect);
-              if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1){
+              console.log(this.form, this.formSequence, this.formData, this.quickQuoteRedirect);
+              if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
                 this.quickQuoteRedirect = false;
               }
               if (this.formData) {
@@ -463,7 +463,7 @@ export class YatraComponent {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
         if (control.dynamicControls) {
-          console.log(control.name, control, this.formData,this.quickQuoteRedirect);
+          console.log(control.name, control, this.formData, this.quickQuoteRedirect);
 
           if (this.formData[control.name] && (control.visible == true || this.quickQuoteRedirect == true)) {
             console.log(control.dynamicControls[0], this.formData.planType);
@@ -1851,59 +1851,34 @@ export class YatraComponent {
       }
     }
 
-
-    if (control.type === 'date' && control.dependentControls != null) {
+    if (control.type == 'date' && control.dependentControls != null) {
       const dob = event.target.value;
 
       console.log(dob, dob.length, this.dynamicFormGroup.get(control.name));
 
-      // Parse the DOB into a date object
       const dobArray = dob.split('-'); // [YYYY, MM, DD]
+      const formattedDOB = `${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`; // Convert to dd/MM/yyyy
+
       const year = parseInt(dobArray[0]);
-      const inputDate = new Date(`${dobArray[0]}-${dobArray[1]}-${dobArray[2]}`);
+
+      console.log(year.toString().length);
+
+      const currentYear = new Date().getFullYear();
+      const [years, month, day] = dob.split('-').map(Number);
+      const inputDate = new Date(`${years}-${month}-${day}`);
+      const minDate = new Date('1800-01-01');
       const currentDate = new Date();
+      console.log(currentDate, minDate, inputDate);
 
-      let age = currentDate.getFullYear() - inputDate.getFullYear() -
-        (currentDate.getMonth() < inputDate.getMonth() ||
-          (currentDate.getMonth() === inputDate.getMonth() && currentDate.getDate() < inputDate.getDate()) ? 1 : 0);
-
-      if (age < 0 && control.name === 'memberAgeProposer') {
-        this.form.formSections.forEach((section: any) => {
-          section.formControls.forEach((control: any) => {
-            control.visible = true;
-          });
-        });
-        this.toast.error({
-          detail: 'Error',
-          summary: 'Invalid Date: Age cannot be negative. Please enter a valid date.',
-          duration: 3000
-        });
-
-        if (control.dependentControls) {
-          control.dependentControls.forEach((depControlName: string) => {
-            this.form.formSections.forEach((section: any) => {
-              section.formControls.forEach((formControl: any) => {
-                if (formControl.name === depControlName) {
-                  formControl.visible = false; // Hide control
-                  formControl.value = ''; // Clear value
-                }
-              });
-            });
-          });
-        }
-
-        return;
-      }
-
-      // Validate year range and prevent future dates
+      // Validate year after the full date is entered
       if ((year < 1800 || inputDate > currentDate) && year.toString().length === 4) {
+        // Invalid year: Show error and reset age control
         this.toast.error({
           detail: 'Error',
           summary: 'Invalid Year: Please enter a valid year between 1800 and the current year',
           duration: 3000
         });
-
-        // Clear dependent controls' values if DOB is invalid
+        // Clear age control value if DOB is invalid
         if (parentControl != null && index != null) {
           const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
@@ -1918,65 +1893,41 @@ export class YatraComponent {
             ageControl.markAsTouched();
           }
         }
+        return; // Exit since the year is invalid
+      }
+      else if (year.toString().length === 4) {
+        // Valid year: Proceed with age calculation and form patching if DOB is valid
+        if (parentControl != null && index != null) {
+          const ageControl = this.dynamicFormGroup.get(parentControl.name);
+          if (ageControl) {
+            ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
+            (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
+            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+          }
+        } else {
+          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+          if (dob && ageControl) {
+            ageControl.markAsTouched();
+            const age = this.calculateAge(event.target.value); // Calculate the age based on DOB
+            if (control.name === 'nomineeDob' && control.dependentControls) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (control.dependentControls.includes(formControl.name)) {
+                    console.log(`Updating visibility for dependent control: ${formControl.name}`);
+                    if (typeof age === 'number' && age < 18) {
+                      formControl.visible = true;
+                    } else {
+                      formControl.visible = false;
+                    }
 
-        if (control.dependentControls) {
-          control.dependentControls.forEach((depControlName: string) => {
-            this.form.formSections.forEach((section: any) => {
-              section.formControls.forEach((formControl: any) => {
-                if (formControl.name === depControlName) {
-                  formControl.visible = false; // Hide control
-                  formControl.value = ''; // Clear value
-                }
+                    console.log(`${formControl.name} visibility: ${formControl.visible}`);
+                  }
+                });
               });
-            });
-          });
-        }
-
-        return;
-      }
-
-      if (control.dependentControls && control.name !== 'memberAgeProposer') {
-        control.dependentControls.forEach((depControlName: string) => {
-          this.form.formSections.forEach((section: any) => {
-            section.formControls.forEach((formControl: any) => {
-              if (formControl.name === depControlName) {
-                if (age < 18) {
-                  formControl.visible = true;
-                } else {
-                  // formControl.visible = false;
-                  formControl.value = '';
-                }
-              }
-            });
-          });
-        });
-      }
-
-      if (control.name === 'nomineeDob' && control.dependentControls) {
-        this.form.formSections.forEach((section: any) => {
-          section.formControls.forEach((formControl: any) => {
-            if (control.dependentControls.includes(formControl.name)) {
-              if (age < 18) {
-                formControl.visible = true;
-              } else {
-                formControl.visible = false;
-              }
             }
-          });
-        });
-      }
-      if (parentControl != null && index != null) {
-        const ageControl = this.dynamicFormGroup.get(parentControl.name);
-        if (ageControl) {
-          ageControl.value[index][control.dependentControls[0]] = age;
-          (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
-          this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-        }
-      } else {
-        const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
-        if (dob && ageControl) {
-          ageControl.markAsTouched();
-          ageControl.setValue(age); // Set the calculated age value directly
+
+            ageControl.setValue(age);
+          }
         }
       }
     }
@@ -2188,6 +2139,7 @@ export class YatraComponent {
     }
 
     let age = today.getFullYear() - birthDate.getFullYear();
+    console.log(age);
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
@@ -2198,11 +2150,12 @@ export class YatraComponent {
       if (diffInDays < 91) {
         return 'invalid'; // Less than 91 days is not valid
       }
-      return `${diffInDays}days`; // Return age in 'days' format
+      return `${diffInDays}days`; // Added space between number and "days"
     }
 
     return `${age}`;
   }
+
 
   // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
   //   console.log(methodName);
@@ -2471,7 +2424,7 @@ export class YatraComponent {
     if ((index <= 4 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Individual') {
       const baseName = option.value.replace(/\d+$/, '');
       const newControlName = baseName + index;
-      console.log(option,baseName,index);
+      console.log(option, baseName, index);
       // Add the new control with a unique name
       formGroup.addControl(newControlName, new FormControl(false));
 
@@ -2486,13 +2439,13 @@ export class YatraComponent {
             //   name: option.name
             // });
             formControl.selectCheckboxOptions?.push({
-              gender : option.gender,
+              gender: option.gender,
               id: option.id,
               imagePath: option.imagePath,
               isIncrement: option.isIncrement,
-              memberRelationCode:option.memberRelationCode,
+              memberRelationCode: option.memberRelationCode,
               name: newControlName,
-              productId:option.productId,
+              productId: option.productId,
               value: newControlName
             });
             // Disable the button for the current option
@@ -3071,7 +3024,7 @@ export class YatraComponent {
 
       this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
     }
-    console.log(this.form,this.dynamicFormGroup.value);
+    console.log(this.form, this.dynamicFormGroup.value);
   }
 
   updateValueAndGroupError(controlGroup: FormGroup) {
@@ -3389,9 +3342,9 @@ export class YatraComponent {
           //   await this.uploadSelectedDocument();
           // } else {
           try {
-          console.log('Proceeding without waiting for fullQuote API');
-          await this.resolveMethod(this.form.saveBtnFunction);
-          }catch(error:any){
+            console.log('Proceeding without waiting for fullQuote API');
+            await this.resolveMethod(this.form.saveBtnFunction);
+          } catch (error: any) {
             console.error("Process stopped due to error:", error.message);
             return;
           }
@@ -5429,7 +5382,7 @@ export class YatraComponent {
                       if (key == 'proposerPincode') {
                         control.get('pincode')?.setValue(fieldValue);
                       }
-                      if(key== 'memberDobProposer'){
+                      if (key == 'memberDobProposer') {
                         control.get('memberdob')?.setValue(fieldValue);
                       }
                       else
@@ -5464,7 +5417,7 @@ export class YatraComponent {
 
                     }
                   });
-                  console.log(this.formData,this.form,this.dynamicFormGroup.value);
+                  console.log(this.formData, this.form, this.dynamicFormGroup.value);
                 }
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
@@ -5511,7 +5464,7 @@ export class YatraComponent {
                   });
                 });
               }
-              console.log(this.form,this.dynamicFormGroup.value)
+              console.log(this.form, this.dynamicFormGroup.value)
             }
           }
           else {
@@ -5757,7 +5710,7 @@ export class YatraComponent {
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
       accountType: formData?.accountType || '',
-      bankAccountType:formData?.accountType || '',      
+      bankAccountType: formData?.accountType || '',
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',
@@ -5773,7 +5726,8 @@ export class YatraComponent {
       paymentByRelationship: 'Self',
       payerName: formData?.accountHolderName || '',
       paymentBy: 'customer',
-      PaymentGatewayName: formData?.PaymentGatewayName || ''
+      PaymentGatewayName: formData?.PaymentGatewayName || '',
+      familySize:formData?.familySize || ''
     };
 
     return mappedData;
@@ -5811,6 +5765,7 @@ export class YatraComponent {
             this.formData.quoteValidToDate = res.data.policyEndDate || null;
             this.formData.ReceiptNumber = res.data.receiptNumber || null;
             this.formData.customerId = res.data.customerId || null;
+            this.formData.applicationNumber= res.data.applicationNumber || null;
 
             this.toast.success({
               detail: "SUCCESS",

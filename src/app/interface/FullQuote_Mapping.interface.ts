@@ -66,6 +66,7 @@ export interface IFullQuoteMapping {
     PaymentGatewayName: string
     tenure:string
     bankAccountType:string
+    familySize:string
 }
 
 export interface InsuredMemberDetail {
