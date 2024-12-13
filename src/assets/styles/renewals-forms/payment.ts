@@ -120,24 +120,24 @@ export const payment={
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
-        {
-          "name": "eMandate",
-          "label": "E-Mandate",
-          "visibleLabel": false,
-          "visible": true,
-          "type": "button",
-          "dependentControls": ["nextOnline"],
-          "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
-          "methodName": "onButtonClick"
-        },
-        {
-          "name": "autoDebit",
+          {
+            "name": "autoDebit",
           "label": "Auto Debit",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
           "dependentControls": ["nextOnline"],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-AutoDebit",
+          "methodName": "onButtonClick"
+        },
+        {
+          "name": "online",
+          "label": "Online",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "dependentControls": ["nextOnline"],
+          "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
           "methodName": "onButtonClick"
         },
         {
