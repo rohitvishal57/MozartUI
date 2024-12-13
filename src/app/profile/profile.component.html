@@ -33,7 +33,7 @@
 
 
                                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                            <!-- <div class="userProfile_qrCode">
+                                                            <div class="userProfile_qrCode">
                                                                 <div class="img_qrCode">
                                                                     <img src="../../assets/Img/img_QR_code.png" />
                                                                 </div>
@@ -42,21 +42,23 @@
                                                                     <h6>Copy or scan your Agent Code/QR here.</h6>
                                                                     <div class="copy_qrCode">
                                                                         <div class="copy_qrCode_url">
-                                                                            https://www.adityabirlacapital.com/euv456b
+                                                                            <span id="qrCodeUrl">
+                                                                                https://www.linkedin.com/search/results/people/?firstName=Demo&lastName=Account&origin=SEO_PSERP&sid=jYL
+                                                                              </span>
                                                                         </div>
                                                                         <div class="btn_group_qrCode">
                                                                             <button type="button" id="btn-copy-content"
                                                                                 name="btn-copy-content"
-                                                                                title="Copy"><img
+                                                                                title="Copy" (click)="copyToClipboard()"><img
                                                                                     src="../../assets/Img/icon_content_copy.svg"></button>
                                                                             <button type="button" id="btn-link-content"
                                                                                 name="btn-link-content"
-                                                                                title="Link"><img
+                                                                                title="Link" (click)="openLink()"><img
                                                                                     src="../../assets/Img/icon_link_share.svg"></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div> -->
+                                                            </div>
 
                                                             <div class="language-selector" tabindex="0">
                                                                 <label for="" class="lbl_preferredLang">{{'Preferred Language' | translate}}:</label>

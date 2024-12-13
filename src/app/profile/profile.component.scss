@@ -6,8 +6,10 @@
     border-radius: 8px 0  0 8px;
     display: flex;
     gap: 24px;
-    align-items: center;
+    position: relative;
+    right: 350px;
     margin-right: -26px;
+    
 }
 .img_qrCode {
     border-radius: 5px;
@@ -530,6 +532,8 @@
   justify-content: space-between;
   align-items: end;
   padding: 10px 20px;
+  position: relative;
+  bottom: 114px;
   
 }
 .dropdown{

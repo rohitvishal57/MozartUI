@@ -1,4 +1,7 @@
 export interface IForm {
+  value(arg0: string, value: any): unknown;
+  valid: any;
+  get(field: any): unknown;
   formTitle: string;
   saveBtnTitle?: string;
   saveBtnFunction?: string;

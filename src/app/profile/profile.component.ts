@@ -128,22 +128,6 @@ export class ProfileComponent implements OnInit {
         break;
     }
   }
-  // updatePreferredLanguage() {
-  //   const reqData = {
-  //     AgentCode: this.agentCode,
-  //     LanguagePreference: this.selectedLanguage,
-  //   };
-  //   console.log('Request Data:', reqData);
-  //   this.profileService.updatePreferredLanguage(reqData).subscribe({
-  //     next: (response : any) => {
-  //       console.log('Language preference updated successfully:', response);
-  //       this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
-  //     },
-  //     error: (error) => {
-  //       console.error('Error updating language preference:', error);
-  //     },
-  //   });
-  // }
 
   updatePreferredLanguage(): void {
     const reqData = {
@@ -157,22 +141,19 @@ export class ProfileComponent implements OnInit {
       next: (response: any) => {
         console.log('Language preference updated successfully:', response);
         this.toast.success({ detail: 'SUCCESS', summary: response.message, duration: 3000 });
-
-        // Update localStorage with the new preferred language
         const userData = localStorage.getItem('userData');
         if (userData) {
           const parsedUserData = JSON.parse(userData);
           parsedUserData.preferredLanguage = this.selectedLanguage;
           localStorage.setItem('userData', JSON.stringify(parsedUserData));
         }
+        this.toast.success({ detail: "SUCCESS", summary: "Success", duration: 3000 })
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
       },
     });
   }
-
-
   getEscalationMatrixDetails() {
     let reqObj = {
       agentCode: this.agentCode
@@ -191,6 +172,35 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+  
+  copyToClipboard(): void {
+    const urlElement = document.getElementById('qrCodeUrl');
+    if (urlElement) {
+      const urlText = urlElement.textContent || '';
+      navigator.clipboard.writeText(urlText).then(
+        () => {
+          console.log('URL copied to clipboard:', urlText);
+          this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
+        },
+        (error) => {
+          console.error('Failed to copy URL:', error);
+          alert('Failed to copy URL. Please try again.');
+        }
+      );
+    }
+  }
+  openLink(): void {
+    const urlElement = document.getElementById('qrCodeUrl');
+    if (urlElement) {
+      const url = urlElement.textContent || '';
+      if (url) {
+        window.open(url, '_blank'); // Opens the URL in a new tab
+      } else {
+        alert('No URL found to open.');
+      }
+    }
+  }
+
   getPerformanceData() {
     let reqObj = {
       agentCode: this.agentCode
