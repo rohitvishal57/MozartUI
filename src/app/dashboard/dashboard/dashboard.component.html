@@ -82,7 +82,7 @@
             <!--Important Tasks New design start-->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
               class="commonSection dashboard_LPR_main dashboard_importantEvents "
-              *ngIf="section.WidgetName == 'QuickAction' && quickActionDetails">
+              *ngIf="section.widgetName == 'QuickAction' && quickActionDetails">
               <h3>{{"Important Tasks" | translate}}</h3>
               <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropQuickAct($event)">
@@ -163,7 +163,7 @@
 
             <!-- ABHI -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section.WidgetName == 'ABHI'">
+              class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section.widgetName == 'ABHI'">
               <div class="body_flex_row justify-content-between">
                 <h6>{{"Latest from ABHI" | translate}}</h6>
                 <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -250,7 +250,7 @@
 
             <!-- performance -->
             <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer"
-              *ngIf="section.WidgetName == 'Performance'">
+              *ngIf="section.widgetName == 'Performance'">
               <div class="performance-overview">
                 <div class="body_flex_row justify-content-between align-items-center">
                   <h2>{{"Performance Overview" | translate}}</h2>
@@ -328,7 +328,7 @@
 
              <!-- Business -->
              <section cdkDrag [cdkDragDisabled]="isDesktopView"
-             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.WidgetName == 'Business'">
+             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Business'">
              <div class="body_flex_row justify-content-between align-items-center">
                <h3>{{"Business Summary" | translate}}</h3>
                <div class="filter_performanceOverview">
@@ -353,14 +353,14 @@
                  <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="isDesktopView"
                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                    <header class="leads_itemHeader"
-                     [ngClass]="{'leads_itemHeaderProposal': tab.WidgetName == 'Proposals' }">
-                     <span>{{"Total" | translate}} {{tab.WidgetName | translate}}</span><label>{{tab.totalCount}}</label>
+                     [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
+                     <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span><label>{{tab.totalCount}}</label>
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
                        <div class="data_inscroll">
                          <ng-container *ngFor="let buz of tab.category">
-                           <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.WidgetName">
+                           <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Leads'">
                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
                                  <header>
@@ -397,7 +397,7 @@
 
             <!-- Renewal -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.WidgetName == 'Renewal'">
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Renewal'">
               <div class="body_flex_row justify-content-between align-items-center">
                 <h3>{{"Renewal Summary" | translate}}</h3>
                 <div class="filter_performanceOverview">
@@ -422,14 +422,14 @@
                   <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="isDesktopView"
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                     <header class="leads_itemHeader"
-                      [ngClass]="{'leads_itemHeaderProposal': tab.WidgetName == 'Proposals' }">
-                      <span>{{"Total" | translate}} {{tab.WidgetName | translate}}</span><label>{{tab.totalCount}}</label>
+                      [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
+                      <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span><label>{{tab.totalCount}}</label>
                     </header>
                     <div class="leads_content leads_contentDashboard leads_newService">
                       <div class="scroll_contentDashboard">
                         <div class="data_inscroll">
                           <ng-container *ngFor="let buz of tab.category">
-                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.WidgetName">
+                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                               <div *ngSwitchCase="'Renewal'">
                                 <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
@@ -464,21 +464,21 @@
 
              <!-- Claim and customer -->
              <section cdkDrag [cdkDragDisabled]="isDesktopView"
-             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.WidgetName == 'Servicing'">
+             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Servicing'">
              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                (cdkDropListDropped)="dropCharts($event)">
                <ng-container *ngFor="let tab of otherSection">
                  <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView"
                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                    <header class="leads_itemHeader"
-                     [ngClass]="{'leads_itemHeaderProposal': tab.WidgetName == 'Proposals' }">
-                     <span>{{"Total" | translate}} {{tab.WidgetName | translate}}</span><label>{{tab.totalCount}}</label>
+                     [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
+                     <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span><label>{{tab.totalCount}}</label>
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
                        <div class="data_inscroll">
                          <ng-container *ngFor="let buz of tab.category">
-                           <div class="leads_item_contentDashboard " [ngSwitch]="tab.WidgetName">
+                           <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Customer'">
                                <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
@@ -519,7 +519,7 @@
 
             <!-- others -->
             <section cdkDrag class="dashboard_otherSections commonSection" cdkDropListOrientation="horizontal" cdkDropList
-            (cdkDropListDropped)="dropWellness($event)" *ngIf="section.WidgetName == 'Wellness'">
+            (cdkDropListDropped)="dropWellness($event)" *ngIf="section.widgetName == 'Wellness'">
               <div  class="board_otherSections">
             <ng-container *ngFor="let tab of dhaSection">
 

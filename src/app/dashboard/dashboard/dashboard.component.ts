@@ -85,7 +85,7 @@ export class DashboardComponent {
 
   newOrderList: any = [
     {
-      "WidgetName": "QuickAction",
+      "widgetName": "QuickAction",
       "order": 1,
       "category": [
         {
@@ -103,7 +103,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "ABHI",
+      "widgetName": "ABHI",
       "order": 2,
       "category": [
         {
@@ -121,7 +121,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "Performance",
+      "widgetName": "Performance",
       "order": 3,
       "category": [
         {
@@ -143,7 +143,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "Business",
+      "widgetName": "Business",
       "order": 4,
       "category": [
         {
@@ -157,7 +157,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "Renewal",
+      "widgetName": "Renewal",
       "order": 5,
       "category": [
         {
@@ -171,7 +171,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "Servicing",
+      "widgetName": "Servicing",
       "order": 6,
       "category": [
         {
@@ -185,7 +185,7 @@ export class DashboardComponent {
       ]
     },
     {
-      "WidgetName": "Wellness",
+      "widgetName": "Wellness",
       "order": 7,
       "category": [
         {
@@ -203,7 +203,6 @@ export class DashboardComponent {
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
-
   }
 
   ngOnInit() {
@@ -224,9 +223,9 @@ export class DashboardComponent {
     });
     this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
       if (res.isSuccess) {
-        this.newOrderList = res.data.sort((a: any, b: any) => a.order - b.order).map((item: any) => {
-          item.category.sort((c: any, d: any) => c.subOrder - d.subOrder);
-        });
+        console.log('get preferences', res.data[0].preferences)
+        let arr = res.data && res.data[0].preferences.length ? res.data[0].preferences : this.newOrderList
+        this.newOrderList = arr;
       }
     });
     this.fetchWidgets();
@@ -460,7 +459,7 @@ export class DashboardComponent {
             console.log('customer', res.data)
             this.customerInfo = res.data;
             this.otherSection.push({
-              WidgetName: 'Customer',
+              widgetName: 'Customer',
               chart: 'Customer',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
@@ -477,7 +476,7 @@ export class DashboardComponent {
             console.log('Servicing', res.data)
             this.serviceInfo = res.data;
             this.otherSection.push({
-              WidgetName: 'Claims',
+              widgetName: 'Claims',
               chart: 'Claims',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
@@ -506,7 +505,7 @@ export class DashboardComponent {
             this.businessSummary = res.data;
             this.tabsInfo = [
               {
-                WidgetName: 'Leads',
+                widgetName: 'Leads',
                 chart: 'Leads',
                 totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
@@ -515,7 +514,7 @@ export class DashboardComponent {
                 }))
               },
               {
-                WidgetName: 'Proposals',
+                widgetName: 'Proposals',
                 chart: 'Proposals',
                 totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
@@ -733,7 +732,7 @@ export class DashboardComponent {
   }
 
   createEXChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.renewalDetail.filter((k: any) => k.WidgetName == 'Renewal')
+    const categories = this.renewalDetail.filter((k: any) => k.widgetName == 'Renewal')
     const labels = categories[0].category.map((item: any) => item.name);
     const data = categories[0].category.map((item: any) => item.count);
     return {
@@ -812,7 +811,7 @@ export class DashboardComponent {
   }
 
   // createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
-  //   const categories = this.renewalDetail.filter((k: any) => k.WidgetName == 'Persistency')
+  //   const categories = this.renewalDetail.filter((k: any) => k.widgetName == 'Persistency')
   //   const labels = categories[0].category.map((item: any) => item.name);
   //   const data = categories[0].category.map((item: any) => item.count);
   //   return {
@@ -882,7 +881,7 @@ export class DashboardComponent {
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          WidgetName: 'Renewal',
+          widgetName: 'Renewal',
           chart: 'Renewal',
           totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
           category: res.data.map((item: any) => ({
@@ -895,7 +894,7 @@ export class DashboardComponent {
     this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          WidgetName: 'Persistency',
+          widgetName: 'Persistency',
           chart: 'Persistency',
           totalCount: res.data[0].persistencyPercentage,
           category: res.data.map((item: any) => ({
@@ -1215,7 +1214,7 @@ export class DashboardComponent {
 
   onSubmit() {
     this.newOrderList.map((tab: any, index: any) => {
-      switch (tab.WidgetName) {
+      switch (tab.widgetName) {
         case "QuickAction":
           this.newQuickActionList && this.newQuickActionList.length && this.newQuickActionList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
@@ -1229,7 +1228,7 @@ export class DashboardComponent {
         case 'Customer':
           this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.categoryName == category?.name?.WidgetName) {
+              if (k.categoryName == category?.name?.widgetName) {
                 k['subOrder'] = index
               }
             })
@@ -1238,7 +1237,7 @@ export class DashboardComponent {
         case 'Renewal':
           this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.categoryName == category?.name?.WidgetName) {
+              if (k.categoryName == category?.name?.widgetName) {
                 k['subOrder'] = index
               }
             })
@@ -1247,7 +1246,7 @@ export class DashboardComponent {
         case 'Business':
           this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.categoryName == category?.name?.WidgetName) {
+              if (k.categoryName == category?.name?.widgetName) {
                 k['subOrder'] = index
               }
             })
