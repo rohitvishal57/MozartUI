@@ -1082,6 +1082,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     });
     this.checkGender = true;
+    //delete this.scrollTarget?.nativeElement;
   }
 
   //GET QUOTE FOCUS CODE
@@ -1100,7 +1101,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       //console.log('Page Name:', this.pageName);
       if (this.pageName === 'dashboard')
       {
-        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 160, behavior: 'smooth' });
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
       }else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
@@ -1115,7 +1116,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       //console.log('Page Name:', this.pageName);
       if (this.pageName === 'dashboard')
       {
-        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 160, behavior: 'smooth' });
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
       }else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
