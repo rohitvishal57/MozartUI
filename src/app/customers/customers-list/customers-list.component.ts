@@ -281,12 +281,21 @@ export class CustomersListComponent {
     }
   }
   triggerSearch(): void {
-    if (!this.searchApplied) {
-      this.applySearch(); 
-      this.searchApplied=true;
+    if (!this.selected) {
+      console.log("No dropdown option selected");
+      return;
+    }  
+    if (this.searchInputControl.valid && this.searchInputControl.value?.trim()) {
+      console.log("Valid input", this.searchInputControl.value);  
+      if (!this.searchApplied) {
+        this.applySearch();
+        this.searchApplied = true;
+      } else {
+        this.cancelSearch();
+        this.searchApplied = false;
+      }
     } else {
-      this.cancelSearch(); 
-      this.searchApplied=false;
+      console.log("Invalid input or empty value");
     }
   }
 
