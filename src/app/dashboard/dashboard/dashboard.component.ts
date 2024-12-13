@@ -58,8 +58,6 @@ export class DashboardComponent {
   newQuickActionList: any;
   newPerformanceList: any;
 
-  actualDashboardPrefereces: any;
-
   performanceFilter = 'Quarterly';
   performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
   businessFilter = 'Last7Days';
@@ -87,115 +85,115 @@ export class DashboardComponent {
 
   newOrderList: any = [
     {
-      "tabName": "QuickAction",
+      "WidgetName": "QuickAction",
       "order": 1,
       "category": [
         {
-          "catName": "birthdayDetails",
+          "categoryName": "birthdayDetails",
           "subOrder": 1
         },
         {
-          "catName": "eventDetails",
+          "categoryName": "eventDetails",
           "subOrder": 2
         },
         {
-          "catName": "notifications",
+          "categoryName": "notifications",
           "subOrder": 3
         }
       ]
     },
     {
-      "tabName": "ABHI",
+      "WidgetName": "ABHI",
       "order": 2,
       "category": [
         {
-          "catName": "birthdayDetails",
+          "categoryName": "birthdayDetails",
           "subOrder": 1
         },
         {
-          "catName": "eventDetails",
+          "categoryName": "eventDetails",
           "subOrder": 2
         },
         {
-          "catName": "notifications",
+          "categoryName": "notifications",
           "subOrder": 3
         }
       ]
     },
     {
-      "tabName": "Performance",
+      "WidgetName": "Performance",
       "order": 3,
       "category": [
         {
-          "catName": "My Goals",
+          "categoryName": "My Goals",
           "subOrder": 1
         },
         {
-          "catName": "Policies Sold",
+          "categoryName": "Policies Sold",
           "subOrder": 2
         },
         {
-          "catName": "Premium",
+          "categoryName": "Premium",
           "subOrder": 3
         },
         {
-          "catName": "Commission Earned",
+          "categoryName": "Commission Earned",
           "subOrder": 4
         }
       ]
     },
     {
-      "tabName": "Business",
+      "WidgetName": "Business",
       "order": 4,
       "category": [
         {
-          "catName": "Leads",
+          "categoryName": "Leads",
           "subOrder": 1
         },
         {
-          "catName": "Proposals",
+          "categoryName": "Proposals",
           "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Renewal",
+      "WidgetName": "Renewal",
       "order": 5,
       "category": [
         {
-          "catName": "Renewal",
+          "categoryName": "Renewal",
           "subOrder": 1
         },
         {
-          "catName": "Persistency",
+          "categoryName": "Persistency",
           "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Servicing",
+      "WidgetName": "Servicing",
       "order": 6,
       "category": [
         {
-          "catName": "Claims",
+          "categoryName": "Claims",
           "subOrder": 1
         },
         {
-          "catName": "Customer",
+          "categoryName": "Customer",
           "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Wellness",
+      "WidgetName": "Wellness",
       "order": 7,
       "category": [
         {
-          "catName": "DHA",
+          "categoryName": "DHA",
           "subOrder": 1
         },
         {
-          "catName": "TopSellingProducts",
+          "categoryName": "TopSellingProducts",
           "subOrder": 2
         }
       ]
@@ -226,9 +224,7 @@ export class DashboardComponent {
     });
     this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
       if (res.isSuccess) {
-        // this.actualDashboardPrefereces = res;
-        debugger
-        this.newOrderList.sort((a: any, b: any) => a.order - b.order).map((item: any) => {
+        this.newOrderList = res.data.sort((a: any, b: any) => a.order - b.order).map((item: any) => {
           item.category.sort((c: any, d: any) => c.subOrder - d.subOrder);
         });
       }
@@ -464,7 +460,7 @@ export class DashboardComponent {
             console.log('customer', res.data)
             this.customerInfo = res.data;
             this.otherSection.push({
-              tabName: 'Customer',
+              WidgetName: 'Customer',
               chart: 'Customer',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
@@ -481,7 +477,7 @@ export class DashboardComponent {
             console.log('Servicing', res.data)
             this.serviceInfo = res.data;
             this.otherSection.push({
-              tabName: 'Claims',
+              WidgetName: 'Claims',
               chart: 'Claims',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
@@ -510,7 +506,7 @@ export class DashboardComponent {
             this.businessSummary = res.data;
             this.tabsInfo = [
               {
-                tabName: 'Leads',
+                WidgetName: 'Leads',
                 chart: 'Leads',
                 totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
@@ -519,7 +515,7 @@ export class DashboardComponent {
                 }))
               },
               {
-                tabName: 'Proposals',
+                WidgetName: 'Proposals',
                 chart: 'Proposals',
                 totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
@@ -737,7 +733,7 @@ export class DashboardComponent {
   }
 
   createEXChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Renewal')
+    const categories = this.renewalDetail.filter((k: any) => k.WidgetName == 'Renewal')
     const labels = categories[0].category.map((item: any) => item.name);
     const data = categories[0].category.map((item: any) => item.count);
     return {
@@ -816,7 +812,7 @@ export class DashboardComponent {
   }
 
   // createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
-  //   const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
+  //   const categories = this.renewalDetail.filter((k: any) => k.WidgetName == 'Persistency')
   //   const labels = categories[0].category.map((item: any) => item.name);
   //   const data = categories[0].category.map((item: any) => item.count);
   //   return {
@@ -886,7 +882,7 @@ export class DashboardComponent {
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          tabName: 'Renewal',
+          WidgetName: 'Renewal',
           chart: 'Renewal',
           totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
           category: res.data.map((item: any) => ({
@@ -899,7 +895,7 @@ export class DashboardComponent {
     this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          tabName: 'Persistency',
+          WidgetName: 'Persistency',
           chart: 'Persistency',
           totalCount: res.data[0].persistencyPercentage,
           category: res.data.map((item: any) => ({
@@ -1219,11 +1215,11 @@ export class DashboardComponent {
 
   onSubmit() {
     this.newOrderList.map((tab: any, index: any) => {
-      switch (tab.tabName) {
+      switch (tab.WidgetName) {
         case "QuickAction":
           this.newQuickActionList && this.newQuickActionList.length && this.newQuickActionList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category.name.name) {
+              if (k.categoryName == category.name.name) {
                 k['subOrder'] = index
               }
             })
@@ -1233,7 +1229,7 @@ export class DashboardComponent {
         case 'Customer':
           this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category?.name?.tabName) {
+              if (k.categoryName == category?.name?.WidgetName) {
                 k['subOrder'] = index
               }
             })
@@ -1242,7 +1238,7 @@ export class DashboardComponent {
         case 'Renewal':
           this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category?.name?.tabName) {
+              if (k.categoryName == category?.name?.WidgetName) {
                 k['subOrder'] = index
               }
             })
@@ -1251,7 +1247,7 @@ export class DashboardComponent {
         case 'Business':
           this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category?.name?.tabName) {
+              if (k.categoryName == category?.name?.WidgetName) {
                 k['subOrder'] = index
               }
             })
@@ -1260,7 +1256,7 @@ export class DashboardComponent {
         case 'Performance':
           this.newPerformanceList && this.newPerformanceList.length && this.newPerformanceList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category?.name?.title) {
+              if (k.categoryName == category?.name?.title) {
                 k['subOrder'] = index
               }
             })
@@ -1269,7 +1265,7 @@ export class DashboardComponent {
         case 'Wellness':
           this.newWellnessList && this.newWellnessList.length && this.newWellnessList.map((category: any, index: any) => {
             tab.category.map((k: any) => {
-              if (k.catName == category?.name?.name) {
+              if (k.categoryName == category?.name?.name) {
                 k['subOrder'] = index
               }
             })

@@ -1024,8 +1024,8 @@ export class GetQuoteComponent implements AfterViewChecked {
 
           upgradableZones.forEach((zone: any) => {
             this.upgradableZones.push({
-              name: zone.name,
-              value: zone.value
+              name: zone.zone,
+              value: zone.zoneCode
             });
           })
 
