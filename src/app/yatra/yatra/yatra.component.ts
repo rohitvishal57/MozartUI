@@ -6190,5 +6190,17 @@ export class YatraComponent {
     console.log(control,this.formData,this.dynamicFormGroup.value,PED);
     this.changeOverLayDone();
   }
+
+  checkNomineeAge(control: any, nomineeDob: any = null) {
+    if (nomineeDob == null) {
+      nomineeDob = this.formData.nomineeDob
+    }
+    if (Number(this.calculateAge(nomineeDob)) < 18) {
+      this.changeMainFormDependentControls(control.dependentControls, true);
+    }
+    else {
+      this.changeMainFormDependentControls(control.dependentControls, false);
+    }
+  }
 }
 
