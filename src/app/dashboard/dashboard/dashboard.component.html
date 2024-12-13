@@ -3,10 +3,19 @@
     <div class="bodyColumn body_flex_column">
       <div class="contentBody dashboard_contentContainer body_flex_column">
         <section class="section_fullWidth white_container dashboard_topSection commonSection ">
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
             </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-right align-items-end">
+              <button type="button" class="btn_iconText btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
+                src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
+            </div>
+          </div> -->
+          <div class="body_flex_row align-items-center justify-content-between">
+            <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
+            <button type="button" class="btn_iconText btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
+              src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
           </div>
         </section>
         <div class="section_fullWidth" >
@@ -75,7 +84,6 @@
             </div>
           </div>
         </div>
-        <button (click)="onSubmit()">Customize</button>
         <ng-conatiner class="body_flex_column" cdkDropListOrientation="vertical" cdkDropList
         [cdkDragDisabled]="isDesktopView" (cdkDropListDropped)="dropSections($event)">
           <ng-container *ngFor="let section of newOrderList">

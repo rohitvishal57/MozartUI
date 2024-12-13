@@ -377,7 +377,7 @@ input[type="checkbox"]:focus+label:before {
   position: absolute;
   left: 16px;
   top: 14px;
-  width: 80%;
+  width: auto;
   height: auto;
   /*background: var(--site-body-bg);*/
   padding: 0;
