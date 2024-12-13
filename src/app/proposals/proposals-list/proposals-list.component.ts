@@ -102,7 +102,7 @@ export class ProposalsListComponent {
     this.activatedRoute.queryParams.subscribe((params: any) => {
       let routeStatus = params['status'];
       const filter = params['filter'];
-      if (routeStatus) {
+      if (routeStatus && filter) {
         console.log("route status", routeStatus);
         this.selected = "proposalStatus"
         this.searchInputControl.setValue(routeStatus);
@@ -609,5 +609,14 @@ export class ProposalsListComponent {
     } else {
       this.selectedView = 'list'; // Use 'grid' view for desktop
     }
+  }
+  maskEmail(email: any): string {
+    const [localPart, domain] = email.split('@');
+    const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
+    return `${maskedLocal}@${domain}`;
+  }
+  
+  maskMobileNumber(mobileNumber: any): string {
+    return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
 }

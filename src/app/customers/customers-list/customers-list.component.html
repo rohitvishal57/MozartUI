@@ -479,15 +479,15 @@
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "Start Date" | translate }}</label>
-                        <h6>{{ customerBasicDetails.policyStartDate || "-" }}</h6>
+                        <h6>{{ customerBasicDetails.policyStartDate | date:'dd-MM-yyyy' || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "Renewal Date" | translate }}</label>
-                        <h6>{{ customerBasicDetails.renewalDate || "-" }}</h6>
+                        <h6>{{ customerBasicDetails.renewalDate | date:'dd-MM-yyyy' || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "End Date" | translate }}</label>
-                        <h6>{{ customerBasicDetails.policyEndDate || "-"}}</h6>
+                        <h6>{{ customerBasicDetails.policyEndDate | date:'dd-MM-yyyy' || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "Intermediary Name" | translate }}</label>
