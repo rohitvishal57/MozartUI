@@ -119,6 +119,7 @@ export class YatraComponent {
   quoteLeadInformation: any = {};
   saveData: any = {};
   covers: any[][] = [];
+  pedWaitingPeriod:any;
   documentId: any;
 
   tooltipMessage: string = '';
@@ -218,7 +219,8 @@ export class YatraComponent {
                 const proposalRequiredDetails: {
                   totalPremium: any;
                   proposalNumber: any;
-                  covers?: any;  // Make covers an optional property
+                  covers?: any;
+                  PEDWaitingPeriod?:any;  // Make covers an optional property
                 } = {
                   totalPremium: this.formData.totalPremium,
                   proposalNumber: this.proposalNum
@@ -228,8 +230,11 @@ export class YatraComponent {
 
                 if (this.formData.covers) {
                   proposalRequiredDetails.covers = this.formData.covers;
+                  proposalRequiredDetails.PEDWaitingPeriod = "";
                 }
-
+                if (this.formData.waitingPED && this.formData.waitingPED.pedWaitingPeriod) {
+                  proposalRequiredDetails.PEDWaitingPeriod = this.formData.waitingPED.pedWaitingPeriod;
+                }
                 if (this.formData.tenureAmount) {
                   this.tenureAmount = this.formData.tenureAmount;
                 }
@@ -249,7 +254,7 @@ export class YatraComponent {
 
               }
               console.log(this.form, this.formSequence, this.formData,this.quickQuoteRedirect);
-
+              this.initializeRequiredData();
               this.initializeForm();
             },
             error: (err) => {
@@ -346,6 +351,7 @@ export class YatraComponent {
       if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
         this.totalPremium = proposalRequiredDetails.totalPremium;
         this.covers = proposalRequiredDetails.covers;
+        this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
       }
       else {
         this.totalPremium = 0;
@@ -1835,9 +1841,14 @@ export class YatraComponent {
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
-      console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
-      this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
-      this.changeOverLayDone(control, parentControl, false);
+      if(control.type === 'select'){
+        this.callMethod(parentControl.methodName, control)
+      }
+      else{
+        console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
+        this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
+        this.changeOverLayDone(control, parentControl, false);
+      }
     }
 
 
@@ -3305,11 +3316,14 @@ export class YatraComponent {
           })
         }
         console.log(this.dynamicFormGroup.value);
-
+        if(!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value){
+          this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+        }
         const proposalRequiredDetails = {
           totalPremium: this.dynamicFormGroup.value.totalPremium,
           proposalNumber: this.proposalNum,
-          covers: this.covers
+          covers: this.covers,
+          PEDWaitingPeriod : this.pedWaitingPeriod ?? ""
         };
 
         console.log(proposalRequiredDetails, this.dynamicFormGroup.value);
@@ -4090,7 +4104,7 @@ export class YatraComponent {
           member['isChronic'] = member['isChronic'] ?? "No";
           member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
-
+          member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
           // Set memberRelationCode based on a predefined mapping, if it doesn't already exist
           if (!member.hasOwnProperty('memberRelationCode')) {
             const relationCodeMap: { [key: string]: number } = {
@@ -4139,7 +4153,6 @@ export class YatraComponent {
               error: (error) => reject(error)
             });
           });
-
           // Update tenureAmount and discountList after receiving the response
           this.QuoteNumber = [];
           for (let i = 1; i <= 3; i++) {
@@ -5328,7 +5341,7 @@ export class YatraComponent {
     }
   }
 
-  changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
+  changeOverLayDone(control: any = null, parentControl: any = null, changeValue: boolean = false) {
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((controls: any) => {
@@ -5338,7 +5351,7 @@ export class YatraComponent {
         if (controls.name == 'next') {
           controls.visible = false;
         }
-        if (controls.name == parentControl.name) {
+        if (parentControl != null && controls.name == parentControl.name) {
           if (parentControl.subControls) {
             parentControl.subControls.forEach((subControl: any) => {
               if (subControl.innerSubControls) {
@@ -6209,6 +6222,11 @@ export class YatraComponent {
     }
     return '';  // Default return if no valid date type is found
   }
-
+  allPreselectMember(control:any){
+    const PED = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get(control.name)?.value
+    this.pedWaitingPeriod = PED;
+    console.log(control,this.formData,this.dynamicFormGroup.value,PED);
+    this.changeOverLayDone();
+  }
 }
 

@@ -917,6 +917,23 @@
                     margin-top: 0px;"></label>
                             </div>
                           </div>
+                          <div *ngIf="subControl.type === 'select'" class="typecss">
+                            <div class="input-container">
+                              <select class="inputField_Select" *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                [name]="subControl.name" [id]="subControl.name" aria-label="Default select example"
+                                (change)="onInputChange($event,subControl,control)"
+                                ngClass="has-value">
+                                <ng-container *ngFor="let opt of subControl.options">
+                                  <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
+                                    opt.name?(opt.name | translate):'' }}
+                                  </option>
+                                </ng-container>
+                              </select>
+                              <label class="subControl.label" *ngIf="subControl.visibleLabel==true">{{
+                                subControl.label?(subControl.label | translate):'' }} <span
+                                  *ngIf="subControl.validators"></span></label>
+                            </div>
+                          </div>
                           <div *ngIf="subControl.type === 'overlayControl' && subControl.visible">
 
                             <div class="backdrop" *ngIf="isOverlayVisible"></div>
@@ -1216,17 +1233,21 @@
                                             class="typecss col-12" [hidden]="!innerControl.visible">
                                             <div class="input-container">
 
-                                              <!--<mat-form-field class="mat_inputField_Select">
-                                                <mat-label>Favorite food</mat-label>
-                                                <mat-select>
-                                                    <mat-option >Choose...</mat-option>
-                                                    <mat-option >Cancer, tumor, polyp or cyst </mat-option>
-                                                    <mat-option >Asthma / Tuberculosis (TB) / COPD/ Pleural effusion / Bronchitis / Emphysema or any other disease of Lungs, Pleura and airway or Respiratory disease? </mat-option>
-                                                    <mat-option >Thyroid disease/ Cushings disease/ Parathyroid Disease/ Addisons disease / Pituitary tumor/ disease or any other disorder of Endocrine system? </mat-option>
+                                              <mat-form-field class="mat_inputField_Select" appearance="fill">
+                                                <mat-label>{{ "Choose..." | translate }}</mat-label>
+                                                <mat-select [formControlName]="innerControl.name"
+                                                  (selectionChange)="onInputChange($event, subControl, control, k-1, innerControl)"
+                                                  [ngClass]="{'has-value': hasInnerValue(control, subControl, innerControl, k-1)}">
+                                                
+                                                  <mat-option value="">{{ "Choose..." | translate }}</mat-option>
+                                                  <mat-option *ngFor="let opt of innerControl.options" [value]="opt.id ? stringifyObject(opt) : opt.value">
+                                                    {{ opt.name ? (opt.name | translate) : '' }}
+                                                  </mat-option>
+                                                
                                                 </mat-select>
-                                              </mat-form-field>-->
+                                              </mat-form-field>
 
-                                              <select class="inputField_Select" [formControlName]="innerControl.name"
+                                              <!-- <select class="inputField_Select" [formControlName]="innerControl.name"
                                                 (change)="onInputChange($event, subControl,control,k-1,innerControl)"
                                                 [name]="innerControl.name" [id]="innerControl.name"
                                                 [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}">
@@ -1238,7 +1259,7 @@
                                               </select>
                                               <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label |
                                                 translate}}
-                                                <span *ngIf="innerControl.validators">*</span></label>
+                                                <span *ngIf="innerControl.validators">*</span></label> -->
                                               <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
                                             </div>
                                             <small *ngIf="checkValidations(control,subControl,k-1,innerControl)"
