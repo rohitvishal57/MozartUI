@@ -59,8 +59,8 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  // formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
-  formSequence: any[] = [];
+  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
   futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
@@ -85,49 +85,87 @@ export class RenewalJourneyComponent {
 
   ngOnInit() {
     this.showHtmlContent = false;
-
-    if (localStorage.getItem('agentCode'))
+  
+    // Fetch agentCode from localStorage if present
+    if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
-    if (Object.keys(this.route.snapshot.queryParams).length) {
-      this.route.queryParams.subscribe(async params => {
-        const decryptedData = this.encryptionService.decrypt(params['formData']);
-        this.formData = { ...this.formData, ...decryptedData };
-        this.proposalNum = this.encryptionService.decrypt(params['proposalNum']);
-        this.policyNumber = this.encryptionService.decrypt(params['policyNumber']);
-        this.journeyProcess = this.encryptionService.decrypt(params['journeyProcess']);
-        // Check and set formSequence if it exists in queryParams
-        if (params['formSequence']) {
-          this.formSequence = this.encryptionService.decrypt(params['formSequence']); // Set to component variable
-        }
-        else{
-          this.formSequence = [new_combinedForms, active_health_covers,payment,thankYou];
-        }
-
-        // Check and set formIndex in localStorage if it exists in queryParams
-        if (params['formIndex']) {
-          localStorage.setItem('formIndex', this.encryptionService.decrypt(params['formIndex']));
-        }
-      });
-      if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 0) {
+    }
+  
+    // Extract data from history state
+    const stateData = history.state;
+  
+    if (stateData && Object.keys(stateData).length > 0) {
+      console.log('State Data:', stateData);
+  
+      // Decrypt and assign each piece of data if present
+      if (stateData.formData) {
+        const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
+        this.formData = { ...this.formData, ...decryptedFormData };
+        console.log(this.formData);
+        
+      }
+  
+      if (stateData.proposalNum) {
+        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
+        console.log(this.proposalNum);
+        
+      }
+  
+      if (stateData.policyNumber) {
+        this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+        console.log(this.policyNumber);
+        
+      }
+  
+      if (stateData.journeyProcess) {
+        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
+        console.log(this.journeyProcess);
+        
+      }
+  
+      // Set formSequence if provided in state; otherwise, use default
+      if (stateData.formSequence) {
+        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
+        console.log(this.formSequence);
+        
+      } 
+      // else {
+      //   console.log('inside else');
+        
+      //   this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
+      // }
+  
+      // Set formIndex in localStorage if present in state
+      if (stateData.formIndex) {
+        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
+        localStorage.setItem('formIndex', stateData.formIndex);
+      }
+  
+      // Process insuredMemberDetails if present in the formData
+      if (this.formData?.insuredMemberDetails?.length > 0) {
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
           if (member.covers) {
             this.covers[index] = member.covers;
           }
-          if(member.relation){
+          if (member.relation) {
             this.existingRelations.push(member.relation);
           }
         });
       }
-
-      console.log(this.covers);
-
+  
+      console.log('Covers:', this.covers);
+    } else {
+      // If no data is present in the history state, use default configurations
+      console.warn("No data found in history state.");
+      this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
     }
-
-
+  
     console.log(this.formData, this.proposalNum, this.policyNumber);
-
+  
+    // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
   }
+  
 
   async getFormDataFromFormSequence() {
     console.log(this.formSequence,this.getFormIndexValue(),this.form);

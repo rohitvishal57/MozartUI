@@ -1517,27 +1517,117 @@ export class RenewalListComponent {
   //   );
   // }
 
+  // async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
+
+  //   console.log(proposerDetail);
+
+  //   await this.getProposalNum();
+
+  //   console.log(this.proposalNum, action);
+
+  //   if (action == 'withmodify') {
+  //     localStorage.setItem('formIndex', '0');
+  //   }
+  //   else {
+  //     localStorage.setItem('formIndex', '2');
+  //   }
+
+  //   if (action === "withmodify") {
+  //     const payload = {
+  //       policyNumber: proposerDetail.policyNumber,//res.data.policyNumber,
+  //       mobileNumber: proposerDetail.proposerMobileNumber,//res.data.mobileNumber, 
+  //       dateOfBirth: "",//res.data.memberDobProposer
+  //     };
+  //     this.renewalService.cpRedirectionApi(payload).subscribe(
+  //       (res: any) => {
+  //         const encryptedUrl = res.data;
+  //         window.open(encryptedUrl, '_blank');
+  //       },
+  //       (err) => {
+  //         console.error("Error from renewal re-direction API:", err);
+  //         this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+  //       }
+  //     );
+  //   } else if (action == 'withoutmodify') {
+  //     const renewalInfoRequestBody = {
+  //       policy_Number: proposerDetail.policyNumber,
+  //     };
+  //     this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+  //       (res: any) => {
+  //         // if (res.isSuccess && res.data && Object.keys(res.data).length > 0) {
+  //         //   console.log(res.data);
+  //           // if(action === "withmodify"){
+  //           // const payload = {
+  //           //   policyNumber: "31-24-0005455-00",//res.data.policyNumber,
+  //           //   mobileNumber: "8097758932",//res.data.mobileNumber, 
+  //           //   dateOfBirth: "18/11/1999",//res.data.memberDobProposer
+  //           // };
+  //           // this.renewalService.cpRedirectionApi(payload).subscribe(
+  //           //   (res: any) => {
+  //           //     const encryptedUrl = res.data;   
+  //           //     window.open(encryptedUrl, '_blank');
+  //           //   },
+  //           //   (err) => {
+  //           //     console.error("Error from renewal re-direction API:", err);
+  //           //     this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+  //           //   }
+  //           // );
+  //           // } 
+
+  //           // const convertedData = this.encryptionService.encrypt(res.data);
+  //           // this.router.navigate(['renewal/renewalJourney'], {
+  //           //   queryParams: {
+  //           //     formData: convertedData,
+  //           //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+  //           //     policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+  //           //     journeyProcess: this.encryptionService.encrypt(0)
+  //           //   }
+  //           // });
+  //         // } else 
+  //         if (action == 'withoutmodify' && res.data && Object.keys(res.data).length > 0) {
+  //           const convertedData = this.encryptionService.encrypt(res.data);
+
+  //           console.log(convertedData, this.proposalNum);
+  //           this.router.navigate(['renewal/renewalJourney'], {
+  //             queryParams: {
+  //               formData: convertedData,
+  //               proposalNum: this.encryptionService.encrypt(this.proposalNum),
+  //               policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+  //               journeyProcess: this.encryptionService.encrypt(0)
+  //             }
+  //           });
+  //         } else {
+  //           this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+  //         }
+  //       },
+  //       (err) => {
+  //         console.error("Error from getRenewalInfo API:", err);
+  //         this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+  //       }
+  //     );
+  //   }
+  // }
+
+
   async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
-
     console.log(proposerDetail);
-
+  
+    // Await the proposal number
     await this.getProposalNum();
-
     console.log(this.proposalNum, action);
-
-    if (action == 'withmodify') {
-      localStorage.setItem('formIndex', '0');
-    }
-    else {
-      localStorage.setItem('formIndex', '2');
-    }
-
+  
+    // Set form index based on the action
+    const formIndex = action === 'withmodify' ? '0' : '2';
+    localStorage.setItem('formIndex', formIndex);
+  
     if (action === "withmodify") {
       const payload = {
-        policyNumber: proposerDetail.policyNumber,//res.data.policyNumber,
-        mobileNumber: proposerDetail.proposerMobileNumber,//res.data.mobileNumber, 
-        dateOfBirth: "",//res.data.memberDobProposer
+        policyNumber: proposerDetail.policyNumber, // Policy number
+        mobileNumber: proposerDetail.proposerMobileNumber, // Mobile number
+        dateOfBirth: "", // Date of birth
       };
+  
+      // Call cpRedirectionApi
       this.renewalService.cpRedirectionApi(payload).subscribe(
         (res: any) => {
           const encryptedUrl = res.data;
@@ -1548,53 +1638,32 @@ export class RenewalListComponent {
           this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
         }
       );
-    } else if (action == 'withoutmodify') {
+    } else if (action === 'withoutmodify') {
       const renewalInfoRequestBody = {
         policy_Number: proposerDetail.policyNumber,
       };
+  
+      // Call getRenewalInfoApi
       this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
         (res: any) => {
-          // if (res.isSuccess && res.data && Object.keys(res.data).length > 0) {
-          //   console.log(res.data);
-            // if(action === "withmodify"){
-            // const payload = {
-            //   policyNumber: "31-24-0005455-00",//res.data.policyNumber,
-            //   mobileNumber: "8097758932",//res.data.mobileNumber, 
-            //   dateOfBirth: "18/11/1999",//res.data.memberDobProposer
-            // };
-            // this.renewalService.cpRedirectionApi(payload).subscribe(
-            //   (res: any) => {
-            //     const encryptedUrl = res.data;   
-            //     window.open(encryptedUrl, '_blank');
-            //   },
-            //   (err) => {
-            //     console.error("Error from renewal re-direction API:", err);
-            //     this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
-            //   }
-            // );
-            // } 
-
-            // const convertedData = this.encryptionService.encrypt(res.data);
-            // this.router.navigate(['renewal/renewalJourney'], {
-            //   queryParams: {
-            //     formData: convertedData,
-            //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
-            //     policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
-            //     journeyProcess: this.encryptionService.encrypt(0)
-            //   }
-            // });
-          // } else 
-          if (action == 'withoutmodify' && res.data && Object.keys(res.data).length > 0) {
-            const convertedData = this.encryptionService.encrypt(res.data);
-
-            console.log(convertedData, this.proposalNum);
+          if (res.data && Object.keys(res.data).length > 0) {
+            // Prepare data for state
+            const formData = this.encryptionService.encrypt(res.data);
+            const proposalNum = this.encryptionService.encrypt(this.proposalNum);
+            const policyNumber = this.encryptionService.encrypt(proposerDetail.policyNumber);
+            const journeyProcess = this.encryptionService.encrypt(0);
+  
+            console.log(formData, proposalNum);
+  
+            // Navigate with state
             this.router.navigate(['renewal/renewalJourney'], {
-              queryParams: {
-                formData: convertedData,
-                proposalNum: this.encryptionService.encrypt(this.proposalNum),
-                policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
-                journeyProcess: this.encryptionService.encrypt(0)
-              }
+              state: {
+                formData: formData,
+                proposalNum: proposalNum,
+                policyNumber: policyNumber,
+                journeyProcess: journeyProcess,
+                formIndex: formIndex, // Include formIndex in state
+              },
             });
           } else {
             this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
@@ -1607,6 +1676,7 @@ export class RenewalListComponent {
       );
     }
   }
+  
 
   async getProposalNum() {
     try {

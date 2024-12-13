@@ -143,70 +143,117 @@ export class PaymentstatusComponent {
     const orderDetailsReq = {
       "orderId": this.orderId
     }
+    // this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
+    //   (res: any) => {
+    //     if (res.isSuccess) {
+    //       const orderData = res.data;
+    //       // this.formData.policyStatus = res.data.status || null;
+    //       // this.formData.quoteValidFromDate = res.data.policyStartDate || null;
+    //       // this.formData.quoteValidToDate = res.data.policyEndDate || null;
+    //       // this.formData.ReceiptNumber = res.data.receiptID || null;
+    //       // this.formData.customerId = res.data.customerId || null;
+    //       // this.incrementIndex();
+    //       // this.getFormDataFromFormSequence();
+
+    //       // this.fullQuoteResponse=res.data;          
+    //       // this.setSection('thankyou')
+    //       // this.hideSection=false
+    //       // this.isFeedBackModalVisible = true;
+
+
+
+
+    //       if (orderData.paymentStatus == 'SUCCESS') {
+    //             console.log('inside success');
+                
+    //             this.router.navigate(['renewal/renewalJourney'], {
+    //               queryParams: {
+    //                 formData: this.encryptionService.encrypt(orderData.orderDetails),
+    //                 proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
+    //                 policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
+    //                 journeyProcess:this.encryptionService.encrypt(0),
+    //                 formSequence: this.encryptionService.encrypt([new_combinedForms,active_health_covers,payment,thankYou]),
+    //                 formIndex: this.encryptionService.encrypt("3")
+    //               }
+    //             });
+    //           }
+    //           else if(orderData.paymentStatus == 'FAILED'){
+    //             console.log('inside failed');
+                
+    //             this.router.navigate(['renewal/renewalJourney'], {
+    //               queryParams: {
+    //                 formData: this.encryptionService.encrypt(orderData.orderDetails),
+    //                 proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
+    //                 policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
+    //                 journeyProcess:this.encryptionService.encrypt(0),
+    //                 formSequence: this.encryptionService.encrypt([new_combinedForms,active_health_covers,payment,thankYou]),
+    //                 formIndex: this.encryptionService.encrypt("2")
+    //               }
+    //             });
+    //           }
+    //           else if(orderData.paymentStatus == 'INPROGRESS'){
+    //             console.log('InProgress');
+                
+    //             this.router.navigate(['renewal/renewalList']);
+    //           }
+    //       console.log(res.data);
+
+    //     }
+    //     else {
+    //       this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+    //     }
+    //   },
+    //   (err) => {
+    //     this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
+    //     console.log("error is coming from fullquote api");
+    //   })
+
     this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       (res: any) => {
         if (res.isSuccess) {
           const orderData = res.data;
-          // this.formData.policyStatus = res.data.status || null;
-          // this.formData.quoteValidFromDate = res.data.policyStartDate || null;
-          // this.formData.quoteValidToDate = res.data.policyEndDate || null;
-          // this.formData.ReceiptNumber = res.data.receiptID || null;
-          // this.formData.customerId = res.data.customerId || null;
-          // this.incrementIndex();
-          // this.getFormDataFromFormSequence();
-
-          // this.fullQuoteResponse=res.data;          
-          // this.setSection('thankyou')
-          // this.hideSection=false
-          // this.isFeedBackModalVisible = true;
-
-
-
-
+    
           if (orderData.paymentStatus == 'SUCCESS') {
-                console.log('inside success');
-                
-                this.router.navigate(['renewal/renewalJourney'], {
-                  queryParams: {
-                    formData: this.encryptionService.encrypt(orderData.orderDetails),
-                    proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
-                    policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
-                    journeyProcess:this.encryptionService.encrypt(0),
-                    formSequence: this.encryptionService.encrypt([new_combinedForms,active_health_covers,payment,thankYou]),
-                    formIndex: this.encryptionService.encrypt("3")
-                  }
-                });
+            console.log('inside success');
+            this.router.navigate(['renewal/renewalJourney'], {
+              state: {
+                formData: this.encryptionService.encrypt(orderData.orderDetails),
+                proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
+                policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
+                formSequence: this.encryptionService.encrypt([new_combinedForms, active_health_covers, payment, thankYou]),
+                formIndex: this.encryptionService.encrypt("3"),
               }
-              else if(orderData.paymentStatus == 'FAILED'){
-                console.log('inside failed');
-                
-                this.router.navigate(['renewal/renewalJourney'], {
-                  queryParams: {
-                    formData: this.encryptionService.encrypt(orderData.orderDetails),
-                    proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
-                    policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
-                    journeyProcess:this.encryptionService.encrypt(0),
-                    formSequence: this.encryptionService.encrypt([new_combinedForms,active_health_covers,payment,thankYou]),
-                    formIndex: this.encryptionService.encrypt("2")
-                  }
-                });
+            });
+          } else if (orderData.paymentStatus == 'FAILED') {
+            console.log('inside failed');
+            this.router.navigate(['renewal/renewalJourney'], {
+              state: {
+                formData: this.encryptionService.encrypt(orderData.orderDetails),
+                proposalNum: this.encryptionService.encrypt(orderData.orderDetails.proposalNumber),
+                policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
+                formSequence: this.encryptionService.encrypt([new_combinedForms, active_health_covers, payment, thankYou]),
+                formIndex: this.encryptionService.encrypt("2"),
               }
-              else if(orderData.paymentStatus == 'INPROGRESS'){
-                console.log('InProgress');
-                
-                this.router.navigate(['renewal/renewalList']);
-              }
+            });
+          } else if (orderData.paymentStatus == 'INPROGRESS') {
+            console.log('InProgress');
+            this.router.navigate(['renewal/renewalList']);
+          }
+    
           console.log(res.data);
-
-        }
-        else {
+    
+        } else {
           this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
         }
       },
       (err) => {
         this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
         console.log("error is coming from fullquote api");
-      })
+      }
+    );
+    
 
   }
 
