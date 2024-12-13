@@ -311,12 +311,12 @@ export class LoginComponent implements OnInit {
   
       if (index < 5) {
         setTimeout(() => {
-          const nextInput = document.getElementsByTagName('input')[index + 1] as HTMLInputElement;
-          nextInput.focus();
+          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+          nextInput && nextInput.focus();
         }, 50);
       } else {
         const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
-        btnElement.focus();
+        btnElement && btnElement.focus();
       }
   
     // Handle backspace key
@@ -325,29 +325,30 @@ export class LoginComponent implements OnInit {
   
       if (index > 0) {
         setTimeout(() => {
-          const previousInput = document.getElementsByTagName('input')[index - 1] as HTMLInputElement;
-          previousInput.focus();
+          const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
+          previousInput && previousInput.focus();
         }, 50);
       }
-  
-    // Handle Tab key for navigation
+
     } else if (event.key === 'Tab') {
+      event.preventDefault();
+  
       if (event.shiftKey) {
         if (index > 0) {
           setTimeout(() => {
-            const previousInput = document.getElementsByTagName('input')[index - 1] as HTMLInputElement;
-            previousInput.focus();
+            const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
+            previousInput && previousInput.focus();
           }, 50);
         }
       } else {
         if (index < 5) {
           setTimeout(() => {
-            const nextInput = document.getElementsByTagName('input')[index + 1] as HTMLInputElement;
-            nextInput.focus();
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
           }, 50);
         } else {
           const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
-          btnElement.focus();
+          btnElement && btnElement.focus();
         }
       }
     }

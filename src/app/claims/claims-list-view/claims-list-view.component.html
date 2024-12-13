@@ -248,7 +248,7 @@
                             <tbody class="table-group-divider">
                                 <ng-container *ngIf="claims.length > 0">
                                     <tr class="table-values" *ngFor="let row of claims;let i = index">
-                                        <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
+                                        <td class="card_insureInfo">{{ row?.claimNumber | translate}}</td>
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                         <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
@@ -285,7 +285,7 @@
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
-                                    <div class="insureName">{{ gridClaims.claimInfoId | translate}} </div>
+                                    <div class="insureName">{{ gridClaims.claimNumber | translate}} </div>
                                 </h6>
                             </div>
                             <div class="card_btnGroup">
