@@ -1673,36 +1673,36 @@ export class YatraComponent {
     this.changesMade = true;
     let eventValue = event.target.value;
     const filteredValue = eventValue.replace(/[_-]/g, '');
-    if (["chequeNumber", "demandDraftNumber", "payOrderNumber"].includes(control.name)) {
+    // if (["chequeNumber", "demandDraftNumber", "payOrderNumber"].includes(control.name)) {
 
-      if (!/^\d{6}$/.test(filteredValue)) {
-        this.toast.error({
-          detail: "ERROR",
-          summary: "Number must contain exactly 6 digits.",
-          duration: 3000
-        });
-        return;
-      }
+    //   if (!/^\d{6}$/.test(filteredValue)) {
+    //     this.toast.error({
+    //       detail: "ERROR",
+    //       summary: "Number must contain exactly 6 digits.",
+    //       duration: 3000
+    //     });
+    //     return;
+    //   }
 
-      if (/^[_-]/.test(eventValue) || /[_-]$/.test(eventValue)) {
-        this.toast.error({
-          detail: "ERROR",
-          summary: "Underscores or dashes cannot be at the start or end.",
-          duration: 3000
-        });
-        return;
-      }
+    //   if (/^[_-]/.test(eventValue) || /[_-]$/.test(eventValue)) {
+    //     this.toast.error({
+    //       detail: "ERROR",
+    //       summary: "Underscores or dashes cannot be at the start or end.",
+    //       duration: 3000
+    //     });
+    //     return;
+    //   }
 
-      if (this.isSequential(filteredValue)) {
-        this.toast.error({
-          detail: "ERROR",
-          summary: "Sequential or repetitive numbers are not allowed.",
-          duration: 3000
-        });
-        this.dynamicFormGroup.get(control.name)?.setValue('');
-        return;
-      }
-    }
+    //   if (this.isSequential(filteredValue)) {
+    //     this.toast.error({
+    //       detail: "ERROR",
+    //       summary: "Sequential or repetitive numbers are not allowed.",
+    //       duration: 3000
+    //     });
+    //     this.dynamicFormGroup.get(control.name)?.setValue('');
+    //     return;
+    //   }
+    // }
 
     if (control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
@@ -3139,6 +3139,10 @@ export class YatraComponent {
                       return Validators.required;
                     } else if (val.validatorName === 'pattern' && val.pattern) {
                       return Validators.pattern(val.pattern);
+                    }else if (val.validatorName === 'maxlength' && val.maxLength) {
+                      return Validators.maxLength(val.maxLength);
+                    }else if (val.validatorName === 'minlength' && val.minLength) {
+                      return Validators.minLength(val.minLength);
                     }
                     return null;
                   }).filter(Boolean);
