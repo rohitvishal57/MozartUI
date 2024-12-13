@@ -225,7 +225,13 @@ export class DashboardComponent {
       if (res.isSuccess) {
         console.log('get preferences', res.data[0].preferences)
         let arr = res.data && res.data[0].preferences.length ? res.data[0].preferences : this.newOrderList
-        this.newOrderList = arr;
+        this.newOrderList = arr
+          .sort((a: any, b: any) => a.order - b.order)
+          .map((item: any) => {
+            item.category = item.category.sort((c: any, d: any) => c.subOrder - d.subOrder);
+            return item;
+          });
+
       }
     });
     this.fetchWidgets();
@@ -659,7 +665,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/leads/leadsList/'], {
-                queryParams: { status: label, filter: this.businessFilter},
+                queryParams: { status: label, filter: this.businessFilter },
               });
             }
           }
@@ -1223,7 +1229,16 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
+
           break;
+
+        case "ABHI":
+
+          tab.order = index
+
+          break;
+
         case 'Servicing':
         case 'Customer':
           this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
@@ -1233,6 +1248,8 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
+
           break;
         case 'Renewal':
           this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
@@ -1242,6 +1259,8 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
+
           break;
         case 'Business':
           this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
@@ -1251,6 +1270,8 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
+
           break;
         case 'Performance':
           this.newPerformanceList && this.newPerformanceList.length && this.newPerformanceList.map((category: any, index: any) => {
@@ -1260,6 +1281,8 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
+
           break;
         case 'Wellness':
           this.newWellnessList && this.newWellnessList.length && this.newWellnessList.map((category: any, index: any) => {
@@ -1269,6 +1292,7 @@ export class DashboardComponent {
               }
             })
           });
+          tab.order = index
           break;
       }
     });
