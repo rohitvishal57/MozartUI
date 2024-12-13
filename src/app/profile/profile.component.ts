@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
   profileDetails: any;
   EcalatinDetails: any[] = [];
   showmsg: boolean = false;
-  selectedLanguage: string = 'English';
+  selectedLanguage: string = '';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -43,6 +43,15 @@ export class ProfileComponent implements OnInit {
         }
       });
     });
+    
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      if (parsedUserData.preferredLanguage) {
+        this.selectedLanguage = parsedUserData.preferredLanguage;
+      }
+    }
+
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
       this.agentCode = storedAgentCode;
@@ -119,22 +128,51 @@ export class ProfileComponent implements OnInit {
         break;
     }
   }
-  updatePreferredLanguage() {
+  // updatePreferredLanguage() {
+  //   const reqData = {
+  //     AgentCode: this.agentCode,
+  //     LanguagePreference: this.selectedLanguage,
+  //   };
+  //   console.log('Request Data:', reqData);
+  //   this.profileService.updatePreferredLanguage(reqData).subscribe({
+  //     next: (response : any) => {
+  //       console.log('Language preference updated successfully:', response);
+  //       this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+  //     },
+  //     error: (error) => {
+  //       console.error('Error updating language preference:', error);
+  //     },
+  //   });
+  // }
+
+  updatePreferredLanguage(): void {
     const reqData = {
       AgentCode: this.agentCode,
       LanguagePreference: this.selectedLanguage,
     };
+
     console.log('Request Data:', reqData);
+
     this.profileService.updatePreferredLanguage(reqData).subscribe({
-      next: (response : any) => {
+      next: (response: any) => {
         console.log('Language preference updated successfully:', response);
-        this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+        this.toast.success({ detail: 'SUCCESS', summary: response.message, duration: 3000 });
+
+        // Update localStorage with the new preferred language
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          parsedUserData.preferredLanguage = this.selectedLanguage;
+          localStorage.setItem('userData', JSON.stringify(parsedUserData));
+        }
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
       },
     });
   }
+
+
   getEscalationMatrixDetails() {
     let reqObj = {
       agentCode: this.agentCode
