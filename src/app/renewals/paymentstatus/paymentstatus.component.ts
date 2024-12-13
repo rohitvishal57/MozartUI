@@ -222,7 +222,7 @@ export class PaymentstatusComponent {
                 policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([new_combinedForms, active_health_covers, payment, thankYou]),
-                formIndex: this.encryptionService.encrypt("3"),
+                formIndex: "3",
               }
             });
           } else if (orderData.paymentStatus == 'FAILED') {
@@ -234,7 +234,7 @@ export class PaymentstatusComponent {
                 policyNumber: this.encryptionService.encrypt(orderData.orderDetails.policyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([new_combinedForms, active_health_covers, payment, thankYou]),
-                formIndex: this.encryptionService.encrypt("2"),
+                formIndex: "2",
               }
             });
           } else if (orderData.paymentStatus == 'INPROGRESS') {
