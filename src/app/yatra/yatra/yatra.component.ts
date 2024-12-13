@@ -3237,9 +3237,15 @@ export class YatraComponent {
   async onSubmit() {
     this.changesMade = false;
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
+    const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
+    const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
 
-    if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+    if (insuredMembers < 2 && policyType == 'Family Floater') {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+      return;
+    }
+    if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
+      this.toast.warning({detail: "WARNING",summary: "At least one member must be selected for Multi Individual policy",duration: 3000});
       return;
     }
     else {
@@ -5667,7 +5673,8 @@ export class YatraComponent {
           memberOccupation: member?.productMemberOccupation || '',
           covers: this.covers[index] || [],
           productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
-          memberRoomCategory: member?.memberRoomCategory || ''
+          memberRoomCategory: member?.memberRoomCategory || '',
+          pedWaitingPeriod:this.pedWaitingPeriod || ''
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',

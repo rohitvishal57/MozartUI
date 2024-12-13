@@ -100,6 +100,7 @@ export interface InsuredMemberDetail {
     memberOccupation: string
     covers: Cover[]
     memberRoomCategory:string
+    pedWaitingPeriod:string
 }
 
 export interface Cover {
