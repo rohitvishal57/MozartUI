@@ -5756,7 +5756,7 @@ export class YatraComponent {
         policyNumber: "".toString(),
         agentCode: (this.agentCode || '').toString(),
         bankName: (this.formData?.bankName).toString(),
-        bankAccountNo:(this.formData?.accountNumber).toString(),
+        bankAccountNumber:(this.formData?.accountNumber).toString(),
         IFSC: (this.formData?.ifscCode || '').toString(),
         micrNo: (this.formData?.micrCode || '').toString(),
         instrumentType: (this.formData.paymentOption || '').toString(),
