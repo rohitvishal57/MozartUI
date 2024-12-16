@@ -270,8 +270,8 @@ export class PaymentstatusComponent {
             //     formSequence: this.encryptionService.encrypt([new_combinedForms, active_health_covers, payment, thankYou]),
             //     formIndex: "2",
             //   }
-            // });
-          } else if (orderData.paymentStatus == 'INPROGRESS') {
+            // }); if (orderData.paymentStatus == 'INPROGRESS')
+          } else  {
             console.log('InProgress');
             this.router.navigate(['renewal/renewalList']);
           }
