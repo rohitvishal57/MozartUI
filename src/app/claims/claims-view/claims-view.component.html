@@ -41,7 +41,11 @@
                                     <!-- <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }}</option> 
                                  
                                 </select> -->
-                                <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
+                                <!-- <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
+                                    <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
+                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
+                                  </select> -->
+                                  <select class="form-select input-selectBox" id="memberId" name="memberId" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
                                     <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
                                   </select>
@@ -82,9 +86,6 @@
                                       <div *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
                                         <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required')">
                                           {{"Claim amount is required." | translate}}
-                                        </small>
-                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('minlength')">
-                                          {{"Claim amount must be at least 4 digits." | translate}}
                                         </small>
                                         <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('maxlength')">
                                           {{"Claim amount must not exceed 12 digits." | translate}}
@@ -225,9 +226,6 @@
                                         <div *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
                                           <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required')">
                                             {{"Claim amount is required." | translate}}
-                                          </small>
-                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('minlength')">
-                                            {{"Claim amount must be at least 4 digits." | translate}}
                                           </small>
                                           <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('maxlength')">
                                             {{"Claim amount must not exceed 12 digits." | translate}}
