@@ -1710,36 +1710,7 @@ export class YatraComponent {
     this.changesMade = true;
     let eventValue = event.target.value;
     const filteredValue = eventValue.replace(/[_-]/g, '');
-    // if (["chequeNumber", "demandDraftNumber", "payOrderNumber"].includes(control.name)) {
 
-    //   if (!/^\d{6}$/.test(filteredValue)) {
-    //     this.toast.error({
-    //       detail: "ERROR",
-    //       summary: "Number must contain exactly 6 digits.",
-    //       duration: 3000
-    //     });
-    //     return;
-    //   }
-
-    //   if (/^[_-]/.test(eventValue) || /[_-]$/.test(eventValue)) {
-    //     this.toast.error({
-    //       detail: "ERROR",
-    //       summary: "Underscores or dashes cannot be at the start or end.",
-    //       duration: 3000
-    //     });
-    //     return;
-    //   }
-
-    //   if (this.isSequential(filteredValue)) {
-    //     this.toast.error({
-    //       detail: "ERROR",
-    //       summary: "Sequential or repetitive numbers are not allowed.",
-    //       duration: 3000
-    //     });
-    //     this.dynamicFormGroup.get(control.name)?.setValue('');
-    //     return;
-    //   }
-    // }
 
     if (control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
@@ -2159,6 +2130,20 @@ export class YatraComponent {
         this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
       }
     }    
+
+    if (control.name === 'nomineeRelationWithProposer') {
+      const selectedRelation = event.target.value; // Parse the selected value
+      console.log(selectedRelation);
+      const genderControl = this.dynamicFormGroup.get('Gender'); // Fetch the Gender control
+  
+      if (selectedRelation && selectedRelation.gender) {
+        genderControl?.setValue(selectedRelation.gender); // Set the gender value
+      } else {
+        genderControl?.reset(); // Reset the field if gender is not available
+      }
+  
+      genderControl?.updateValueAndValidity(); // Ensure the control validity is updated
+    }
   }
 
 
