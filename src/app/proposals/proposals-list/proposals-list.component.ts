@@ -176,6 +176,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.productVarientName= "";
     this.proposalListRequestBody.startDate = null;
     this.proposalListRequestBody.endDate = null;
+    this.getProposalList() ;
   }
 
   getProposalList() {
