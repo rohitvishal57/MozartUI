@@ -104,7 +104,7 @@ export class RenewalsService {
     return this.httpService.post(updateKycValue, reqBody);
   }
   getkycURL(reqBody:any, options?: any){
-    const kycURL = this.configService.config.baseUrl + this.configService.config.getkycURL;
+    const kycURL = this.configService.config.baseUrl1 + this.configService.config.getkycURL;
     return this.httpService.post(kycURL, reqBody,options);
   }
   getPaymentStatusApi(orderId:any,reqBody:any){
@@ -123,6 +123,14 @@ export class RenewalsService {
   cpRedirectionApi(reqBody:any){
     const reDirectionLink = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
     return this.httpService.post(reDirectionLink, reqBody);
+  }
+  getKycDetailsApi(reqBody:any){
+    const getKycDetails = this.configService.config.baseUrl + this.configService.config.getKycDetails;
+    return this.httpService.post(getKycDetails, reqBody);
+  }
+  sharekyclinkApi(reqBody:any){
+    const sharekyclink = this.configService.config.baseUrl + this.configService.config.sharekyclink;
+    return this.httpService.post(sharekyclink, reqBody);
   }
 
 }

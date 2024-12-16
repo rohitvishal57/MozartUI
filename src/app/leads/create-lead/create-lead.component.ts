@@ -283,6 +283,17 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
+
+
+    if(this.submittedUser?.leadStatus.includes('In progress')){
+      const formControls = this.userValidations.controls;
+      Object.keys(formControls).forEach((key) => {
+        if (key !== 'email') {
+          formControls[key].disable();
+        }
+      });
+      this.userValidations.get('leadSubStatus')?.enable();
+    }
   }
 
   fetchActivityTypeInfo() {

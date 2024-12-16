@@ -84,6 +84,7 @@ export class LeadsListComponent {
   ProductList :any = [];
   leadId: any;
 
+
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -196,6 +197,7 @@ export class LeadsListComponent {
 
     this.today = new Date().toISOString().split('T')[0];
     this.checkView(); //Screen View check
+    
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
@@ -653,6 +655,40 @@ export class LeadsListComponent {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
 
+  downloadAllLeads(){
+    this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
+     (response)=>{
+     debugger;
+     if(response.isSuccess){
+      //this.downloadExcel(  response.fileContentBase64 ,    response.fileName);
+      const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = response?.data?.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
+
+     }
+     },
+     (error)=>{
+      console.log('Exception',error);
+     });
+  }
 
 
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
+  }
+  
 }

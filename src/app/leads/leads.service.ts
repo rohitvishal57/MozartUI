@@ -92,10 +92,10 @@ export class LeadsService {
     const getOccupationRequestURL = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
     return this.http.get<any>(getOccupationRequestURL);
   }
-
-  exportLead(leadno: string) {
-    const url = `${this.configService.config.baseUrl}${this.configService.config.exportLeadData}${leadno}`;
-    return this.http.post<any>(url, leadno);
-  }
   
+  downloadAllLeads(requestBody:any){
+    const url = this.configService.config.baseUrl + this.configService.config.exportLeads;
+    return this.http.post<any>(url, requestBody);
+  }
+
 }
