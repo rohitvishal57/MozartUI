@@ -59,12 +59,12 @@ jobs:
       run: |
         rm -rf ./dist/*
       
-    - name: Build the project
-      run: |
-        npm run build --prod
+    # - name: Build the project
+    #   run: |
+    #     npm run build --prod
 
-    - name: List Build Artifacts
-      run: ls -la ./dist/
+    # - name: List Build Artifacts
+    #   run: ls -la ./dist/
       
     # - name: Upload build artifacts
     #   uses: actions/upload-artifact@v3
@@ -72,8 +72,8 @@ jobs:
     #     name: angular-artifacts
     #     path: ./dist/*
 
-    - name: Debug:List files after downloading artifacts
-      run: ls -l ./dist/
+    # - name: Debug:List files after downloading artifacts
+    #   run: ls -l ./dist/
 
     # - name: SonarQube Scan
     #   uses: sonarsource/sonarqube-scan-action@v3.0.0
