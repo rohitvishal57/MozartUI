@@ -1229,6 +1229,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newQuickActionList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
 
           break;
@@ -1246,6 +1249,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newCustomerList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
 
           break;
@@ -1257,6 +1263,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newRenewalList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
 
           break;
@@ -1268,6 +1277,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newBusinessList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
 
           break;
@@ -1279,6 +1291,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newPerformanceList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
 
           break;
@@ -1290,6 +1305,9 @@ export class DashboardComponent {
               }
             })
           });
+          this.newWellnessList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
           tab.order = index
           break;
       }
