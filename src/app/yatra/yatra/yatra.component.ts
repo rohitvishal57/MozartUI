@@ -1291,7 +1291,21 @@ export class YatraComponent {
     });
   }
 
-
+  scrollToFirstInvalidField() {
+    const invalidControls = Object.keys(this.dynamicFormGroup.controls).filter(key => 
+      this.dynamicFormGroup.get(key)?.invalid
+    );
+  
+    if (invalidControls.length > 0) {
+      const firstInvalidControlName = invalidControls[0];
+      const firstInvalidElement = document.getElementById(firstInvalidControlName);
+  
+      if (firstInvalidElement) {
+        firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalidElement.focus();
+      }
+    }
+  }
 
   uploadPolicyDocument() {
     const insurerControl = this.dynamicFormGroup.get('getInsurerDetails');
@@ -1403,7 +1417,11 @@ export class YatraComponent {
   }
 
   async callMethod(methodName: string, control: any, section?: any) {
-    if (control.otherControlName && section != undefined) {
+
+    if (this.dynamicFormGroup.invalid) {
+      this.scrollToFirstInvalidField();
+    } 
+    else if (control.otherControlName && section != undefined) {
       let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
       const method = (this as any)[methodName];
       if (method && typeof method === 'function') {
