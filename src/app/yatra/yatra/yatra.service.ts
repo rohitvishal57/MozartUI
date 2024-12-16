@@ -198,4 +198,8 @@ export class YatraService {
     const getBankDetailsViaIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsViaIFSC;
     return this.httpService.post(getBankDetailsViaIFSC,reqData);
   }
+  getBankDetailsByIFSC(reqData:any){
+    const getBankDetailsByIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsByIFSC;
+    return this.httpService.post(getBankDetailsByIFSC,reqData);
+  }
 }

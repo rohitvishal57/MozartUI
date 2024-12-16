@@ -1762,7 +1762,41 @@ export class RugDynamicFormComponent {
       }
     }
 
+    if (parentControl == null && control.name == 'ifscCode') {
+      const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value || '';
+      console.log(ifscCodeDetails);
 
+      if (!ifscCodeDetails) {
+        // Clear the bankName and micrCode fields
+        this.dynamicFormGroup.get('bankName')?.setValue('');
+        this.dynamicFormGroup.get('micrCode')?.setValue('');
+        return; // Exit the function
+      }
+
+      if (ifscCodeDetails.length == 11) {
+        const reqData = {
+          "ifsC_Code": event.target.value
+        }
+        console.log(reqData);
+
+        this.yatraService.getBankDetailsByIFSC(reqData).subscribe({
+          next: (response: any) => {
+            response = JSON.parse(response.data)
+            if (response.isSuccess && response.data) {
+              this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+              this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+              this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
+            } else {
+              // Handle error, you can show a message if required
+              this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+            }
+          },
+          error: (err) => {
+            this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+          }
+        });
+      }
+    }
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
       this.changeOverLayDone(control, parentControl, false);
