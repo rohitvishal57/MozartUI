@@ -3,7 +3,7 @@
     <div class="main-subContainer">
 
         <div class="left-nav left-nav-hideMobile" *ngIf="formIndex != 3">
-            <div class="left-navInner left-main-cnt">
+            <!-- <div class="left-navInner left-main-cnt">
                 <div class="yourProgress bcl_main">
                     <h1>{{"Your Progress" | translate}}</h1>
                     <div class="processBtnGroup">
@@ -20,7 +20,7 @@
                           <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': ![2].includes(formIndex), 'block-hide': [2].includes(formIndex)}">
                           <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': [2].includes(formIndex) , 'block-hide': ![2].includes(formIndex)}">{{"Payment" | translate}}
                       </button>
-                  </div>
+                  </div> -->
                     <!-- <div class="progressDetails"> -->
                         <!-- <div class="details" *ngFor="let case of formSequence;index as i;">
                     <div class="step-count" >
@@ -53,8 +53,8 @@
                   <p>This will help them browse later</p>
                   <a>Send brochure</a>
                 </div> -->
-                </div>
-            </div>
+                <!-- </div>
+            </div> -->
         </div>
         <div class="right-panel">
             <form [formGroup]="renewalFormGroup" style="margin-bottom: 20%;">

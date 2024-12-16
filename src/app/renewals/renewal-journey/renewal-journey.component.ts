@@ -125,6 +125,7 @@ export class RenewalJourneyComponent {
   
       // Set formSequence if provided in state; otherwise, use default
       if (stateData.formSequence) {
+        // this.formSequence = [];
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
         console.log(this.formSequence);
         
@@ -3579,15 +3580,16 @@ export class RenewalJourneyComponent {
     console.log("inside sendPaymentLink");
 
     this.router.navigate(['renewal/customerRenewalJourney'], {
-      queryParams: {
+      state: {
         formData: this.encryptionService.encrypt(this.formData),
         proposalNum: this.encryptionService.encrypt(this.proposalNum),
         policyNumber: this.encryptionService.encrypt(this.policyNumber),
         journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
         formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-        formIndex: this.encryptionService.encrypt("0")
+        formIndex:"0"
       }
     });
+
   }
 
   redirectToJustPay(control: any) {
@@ -3641,7 +3643,7 @@ export class RenewalJourneyComponent {
     }
   }
   checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" || this.formData.isKYCComplete);
+    const isVisible = !(this.formData.ckycNo !== "" && this.formData.isKYCComplete);
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -3663,6 +3665,27 @@ export class RenewalJourneyComponent {
       (res:any) => {
         console.log("kycRequestBody",res);
         window.open(res.data.kycUrl, '_blank');
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  shareKycURL(){
+    const kycRequestBody = {
+      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No",businessType: "REN",emailId:this.formData.emailId,agentCode:this.agentCode
+    };
+    this.renewalService.getkycURL(kycRequestBody).subscribe(
+      (res:any) => {
+        console.log("kycRequestBody",res);
+        this.toast.success({
+          detail: "SUCCESS",
+          summary: res.message,
+          duration: 3000,
+        });
       },
       (err) => {
         console.log(err);
