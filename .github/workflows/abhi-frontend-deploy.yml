@@ -21,7 +21,7 @@ on:
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot"
+  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
   PORT: 4700
 
 jobs:
@@ -184,11 +184,17 @@ jobs:
     - name: Remove Existing Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
+    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+  
+    - name: Clean up the abhi_frontend Directory
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
+  
     - name: Copy Latest Build to IIS web root directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
     
     - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
     
     - name: Start IIS Website
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
