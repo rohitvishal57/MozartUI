@@ -140,26 +140,40 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # Increment and Read Version
-    - name: Read and Increment Version
+    # # Increment and Read Version
+    # - name: Read and Increment Version
+    #   id: version
+    #   run: |
+    #     if [ ! -f version.txt ]; then
+    #       echo "v1" > version.txt
+    #     fi
+    #     VERSION=$(cat version.txt)
+    #     NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
+    #     echo "$NEXT_VERSION" > version.txt
+    #     echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
+    #     echo "New version is: $NEXT_VERSION"
+    #   shell: bash
+
+    # Generate the single version at the workflow level
+    - name: Generate Deployment Version
       id: version
       run: |
-        if [ ! -f version.txt ]; then
-          echo "v1" > version.txt
-        fi
-        VERSION=$(cat version.txt)
-        NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
-        echo "$NEXT_VERSION" > version.txt
-        echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
-        echo "New version is: $NEXT_VERSION"
-      shell: bash
+        # Generate version using current date and time (IST)
+        #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
+        CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
+        TAGGED_VERSION="v${CURRENT_DATE}"
+        echo "Deployment version: $TAGGED_VERSION"
+        # Set the version as an output
+        echo "::set-output name=version::$TAGGED_VERSION"
+        # Also export it as an environment variable for other steps
+        echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
 
     - name: Debug:Show generated version
       run: |
-        echo "Generated version: ${{ env.VERSION }}"
+        echo "Generated version: $TAGGED_vERSION"
 
     - name: Create deployment directory on VM with version
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
 
     # - name: Create deployment directory on VM
     #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
@@ -202,7 +216,7 @@ jobs:
     #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
     - name: Copy Latest Build to IIS web root directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
     
     # - name: Copy Latest Build to IIS web root directory
     #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
@@ -213,22 +227,23 @@ jobs:
     - name: Start IIS Website
       #run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
+    
       # After successful deployment, update version.txt and commit it
-    - name: Commit and push updated version.txt after successful deployment
-      if: ${{ success() }}
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    # - name: Commit and push updated version.txt after successful deployment
+    #   if: ${{ success() }}
+    #   run: |
+    #     git config --global user.name "github-actions[bot]"
+    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Update the version in version.txt
-        echo "${{ env.VERSION }}" > version.txt
+    #     # Update the version in version.txt
+    #     echo "${{ env.VERSION }}" > version.txt
         
-        # Commit and push the changes
-        git add version.txt
-        git commit -m "Update version to ${{ env.VERSION }}"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure GITHUB_TOKEN is available
+    #     # Commit and push the changes
+    #     git add version.txt
+    #     git commit -m "Update version to ${{ env.VERSION }}"
+    #     git push
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure GITHUB_TOKEN is available
 
     - name: Set environment variable based on branch
       run: |
@@ -242,7 +257,7 @@ jobs:
     - name: Tag the commit
       if: ${{ success() }}  # Only tag if the workflow is successful
       run: |
-        TAG="${{ env.ENVIRONMENT }}-v${{ env.VERSION }}"
+        TAG="$environment-v$TAGGED_VERSION"
         git tag $TAG
         git push origin $TAG
 
