@@ -135,8 +135,19 @@ jobs:
       run: |
         echo "Generated version: $TAGGED_VERSION"
 
+    # - name: Create deployment directory on VM with version
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION' -ItemType Directory }\""
+
     - name: Create deployment directory on VM with version
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
+      run: |
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} `
+        "powershell -Command `
+        \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.TAGGED_VERSION }}')) { `
+        New-Item -Path '$DEPLOY_BASE_DIR/${{ env.TAGGED_VERSION }}' -ItemType Directory; `
+        Write-Host 'Directory created: $DEPLOY_BASE_DIR/${{ env.TAGGED_VERSION }}'; `
+        } else { `
+        Write-Host 'Directory already exists: $DEPLOY_BASE_DIR/${{ env.TAGGED_VERSION }}'; `
+        }\""
 
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
