@@ -129,7 +129,7 @@ export const environment = {
   getRUGPremium: "api/rug/GetPremium",
   getFamilyConstruct: "api/rug/GetFamilyConstructByProductCode",
   bbAxisRedirection: "api/v1/RedirectAxisBranchBankingRequest",
-  saveBBCommonDraft: "api/v1/SaveBBCommonDraft",
+  saveBBCommonDraft: "api/rug/SaveBBCommonDraft",
   getLeadStatusCount: "GetLeadStatusCount",
   getProposalStatusCount: "GetProposalStatusCount",
   getRenewalStatusCount: "GetRenewalStatusCount",
