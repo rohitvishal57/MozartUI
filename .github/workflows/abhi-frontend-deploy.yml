@@ -59,32 +59,32 @@ jobs:
       run: |
         rm -rf ./dist/*
       
-    # - name: Build the project
-    #   run: |
-    #     npm run build --prod
+    - name: Build the project
+      run: |
+        npm run build --prod
 
-    # - name: List Build Artifacts
-    #   run: ls -la ./dist/
+    - name: List Build Artifacts
+      run: ls -la ./dist/
       
-    # - name: Upload build artifacts
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: angular-artifacts
-    #     path: ./dist/*
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./dist/*
 
-    # - name: Debug:List files after downloading artifacts
-    #   run: ls -l ./dist/
+    - name: Debug:List files after downloading artifacts
+      run: ls -l ./dist/
 
-    # - name: SonarQube Scan
-    #   uses: sonarsource/sonarqube-scan-action@v3.0.0
-    #   with:
-    #     projectBaseDir: .
-    #     args: |
-    #       -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-    #       -Dsonar.sources=./src
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@v3.0.0
+      with:
+        projectBaseDir: .
+        args: |
+          -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+          -Dsonar.sources=./src
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     # - name: Check SonarQube Quality Gate
     #   run: |
@@ -135,45 +135,45 @@ jobs:
       run: |
         echo "Generated version: $TAGGED_VERSION"
 
-    # - name: Create deployment directory on VM with version
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
+    - name: Create deployment directory on VM with version
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
 
-    # - name: Manage Previous Deployments (Keep Last 3)
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+    - name: Manage Previous Deployments (Keep Last 3)
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
-    # - name: Create directory for artifacts
-    #   run: mkdir -p ./my-artifacts
+    - name: Create directory for artifacts
+      run: mkdir -p ./my-artifacts
       
-    # - name: Download build artifacts
-    #   uses: actions/download-artifact@v3
-    #   with:
-    #     name: angular-artifacts
-    #     path: ./my-artifacts
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./my-artifacts
     
-    # - name: Debug:List files after downloading artifacts
-    #   run: ls -l ./my-artifacts
+    - name: Debug:List files after downloading artifacts
+      run: ls -l ./my-artifacts
 
-    # - name: Upload artifact to VM with versioning
-    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
+    - name: Upload artifact to VM with versioning
+      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
 
-    # - name: Create or Update Application Pool
-    #   run: |
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
+    - name: Create or Update Application Pool
+      run: |
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
     
-    # - name: Stop IIS Website if Exists
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+    - name: Stop IIS Website if Exists
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
     
-    # - name: Remove Existing Website if Exists
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+    - name: Remove Existing Website if Exists
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
-    # - name: Copy Latest Build to IIS web root directory
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+    - name: Copy Latest Build to IIS web root directory
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
     
-    # - name: Deploy application on IIS
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+    - name: Deploy application on IIS
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
     
-    # - name: Start IIS Website
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
+    - name: Start IIS Website
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
     
     - name: Set environment variable based on branch
       run: |
@@ -187,7 +187,7 @@ jobs:
     - name: Tag the commit
       if: ${{ success() }}  # Only tag if the workflow is successful
       run: |
-        TAG="$ENVIRONMENT-v$TAGGED_VERSION"
+        TAG="$ENVIRONMENT-$TAGGED_VERSION"
         echo "Tag: $TAG"  # Debugging the tag value
         git tag $TAG
         git push origin $TAG
