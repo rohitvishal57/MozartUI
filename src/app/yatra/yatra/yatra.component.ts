@@ -1418,10 +1418,7 @@ export class YatraComponent {
 
   async callMethod(methodName: string, control: any, section?: any) {
 
-    if (this.dynamicFormGroup.invalid) {
-      this.scrollToFirstInvalidField();
-    } 
-    else if (control.otherControlName && section != undefined) {
+    if (control.otherControlName && section != undefined) {
       let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
       const method = (this as any)[methodName];
       if (method && typeof method === 'function') {
@@ -3280,7 +3277,9 @@ export class YatraComponent {
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
     const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
     const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
-
+    if (this.dynamicFormGroup.invalid) {
+      this.scrollToFirstInvalidField();
+    } 
     if (insuredMembers < 2 && policyType == 'Family Floater') {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
