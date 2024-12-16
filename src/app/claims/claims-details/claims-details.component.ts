@@ -107,6 +107,7 @@ export class ClaimsDetailsComponent {
   statusMessage: string | undefined;
   uploadedFilesData: any;
   documentId: any;
+  claimType: any;
 
   constructor(
     private fb: FormBuilder,
@@ -197,7 +198,7 @@ export class ClaimsDetailsComponent {
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response: any): void => {
-        this.claims = response.data;
+        this.claims = response.data;        
       },
       (error: any) => {
         console.error("Error fetching claim details", error);

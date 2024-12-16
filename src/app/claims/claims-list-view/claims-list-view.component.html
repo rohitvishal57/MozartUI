@@ -92,7 +92,7 @@
                                                         <input type="date" id="fromDate" name="fromDate" value=""
                                                             placeholder="Select Start Date"
                                                             class="input-textBox input-date" [(ngModel)]="fromDate"
-                                                            (dateChange)="formatDate('fromDate')" [max]="maxDate">
+                                                            (dateChange)="formatDate('startDate')" [max]="maxDate">
                                                         <label for="fromDate">{{"From Date" | translate}}</label>
                                                         <span class="ui-error">{{"Please enter start date" |
                                                             translate}}</span>
@@ -103,7 +103,7 @@
                                                         <input type="date" id="toDate" name="toDate" value=""
                                                             placeholder="Select End Date"
                                                             class="input-textBox input-date" [(ngModel)]="toDate"
-                                                            (dateChange)="formatDate('toDate')" [max]="maxDate"
+                                                            (dateChange)="formatDate('endDate')" [max]="maxDate"
                                                             [min]="fromDate">
                                                         <label for="toDate">{{"To Date" | translate}}</label>
                                                         <span class="ui-error">{{"Please enter end date" |
@@ -236,7 +236,7 @@
                                     <th scope="col">{{"Policy No." | translate}}</th>
                                     <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Member Id" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Member Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                     <th scope="col">{{"Status" | translate}}</th>
                                     <th scope="col">{{"Raised Date" | translate}} <div><small
@@ -252,7 +252,7 @@
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                         <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
-                                        <td>{{ row?.memberId }}</td>
+                                        <td>{{ row?.memberId }}<br/>{{ row?.memberRelation }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                         <td>{{ row?.reportedDateTime | datepipe }}</td>
@@ -312,8 +312,8 @@
                                 <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Member Id" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.memberId | translate}}</div>
+                                <div class="item_lable">{{"Member Info" | translate}}</div>
+                                <div class="item_value">{{ gridClaims.memberId | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Claim Type" | translate}}</div>
