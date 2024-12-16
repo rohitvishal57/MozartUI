@@ -51,23 +51,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    # - name: Print working directory and list its contents
-    #   run: |
-    #     echo "Current working directory is:"
-    #     pwd  # Print the current working directory
-    #     echo "Listing the contents of the current directory:"
-    #     ls -la  # List the contents of the current working directory
-  
-    # - name: List MozartUI-Dev directory contents
-    #   run: |
-    #     echo "Listing the contents of MozartUI-Dev directory:"
-    #     ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
-
-    # - name: Install dependencies
-    #   run: |
-    #     cd MozartUI-Dev
-    #     npm install --legacy-peer-deps
-
     - name: Install dependencies
       run: |
         npm install --legacy-peer-deps
@@ -82,32 +65,26 @@ jobs:
 
     - name: List Build Artifacts
       run: ls -la ./dist/
-
-    # - name: List contents in the current directory
-    #   run: |
-    #     pwd
-    #     ls -la 
-    #     ls -la MozartUI-Dev
       
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./dist/*
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./dist/*
 
     - name: Debug:List files after downloading artifacts
       run: ls -l ./dist/
 
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@v3.0.0
-      with:
-        projectBaseDir: .
-        args: |
-          -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-          -Dsonar.sources=./src
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    # - name: SonarQube Scan
+    #   uses: sonarsource/sonarqube-scan-action@v3.0.0
+    #   with:
+    #     projectBaseDir: .
+    #     args: |
+    #       -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+    #       -Dsonar.sources=./src
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     # - name: Check SonarQube Quality Gate
     #   run: |
@@ -140,20 +117,6 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # # Increment and Read Version
-    # - name: Read and Increment Version
-    #   id: version
-    #   run: |
-    #     if [ ! -f version.txt ]; then
-    #       echo "v1" > version.txt
-    #     fi
-    #     VERSION=$(cat version.txt)
-    #     NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
-    #     echo "$NEXT_VERSION" > version.txt
-    #     echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
-    #     echo "New version is: $NEXT_VERSION"
-    #   shell: bash
-
     # Generate the single version at the workflow level
     - name: Generate Deployment Version
       id: version
@@ -170,81 +133,48 @@ jobs:
 
     - name: Debug:Show generated version
       run: |
-        echo "Generated version: $TAGGED_vERSION"
+        echo "Generated version: $TAGGED_VERSION"
 
-    - name: Create deployment directory on VM with version
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
+    # - name: Create deployment directory on VM with version
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION')) { New-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION' -ItemType Directory }\""
 
-    # - name: Create deployment directory on VM
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
-
-    - name: Manage Previous Deployments (Keep Last 3)
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+    # - name: Manage Previous Deployments (Keep Last 3)
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
-    - name: Create directory for artifacts
-      run: mkdir -p ./my-artifacts
+    # - name: Create directory for artifacts
+    #   run: mkdir -p ./my-artifacts
       
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./my-artifacts
+    # - name: Download build artifacts
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./my-artifacts
     
-    - name: Debug:List files after downloading artifacts
-      run: ls -l ./my-artifacts
+    # - name: Debug:List files after downloading artifacts
+    #   run: ls -l ./my-artifacts
 
-    - name: Upload artifact to VM with versioning
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
+    # - name: Upload artifact to VM with versioning
+    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
 
-    # - name: Upload artifact to VM
-    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
-    
-    - name: Create or Update Application Pool
-      run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
-    
-    - name: Stop IIS Website if Exists
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
-    
-    - name: Remove Existing Website if Exists
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
-  
-    # - name: Ensure abhi_frontend Directory Exists in IIS Web Root
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
-  
-    # - name: Clean up the abhi_frontend Directory
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
-  
-    - name: Copy Latest Build to IIS web root directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_vERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
-    
-    # - name: Copy Latest Build to IIS web root directory
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
-  
-    - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
-    
-    - name: Start IIS Website
-      #run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
-    
-      # After successful deployment, update version.txt and commit it
-    # - name: Commit and push updated version.txt after successful deployment
-    #   if: ${{ success() }}
+    # - name: Create or Update Application Pool
     #   run: |
-    #     git config --global user.name "github-actions[bot]"
-    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-    #     # Update the version in version.txt
-    #     echo "${{ env.VERSION }}" > version.txt
-        
-    #     # Commit and push the changes
-    #     git add version.txt
-    #     git commit -m "Update version to ${{ env.VERSION }}"
-    #     git push
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure GITHUB_TOKEN is available
-
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
+    
+    # - name: Stop IIS Website if Exists
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+    
+    # - name: Remove Existing Website if Exists
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+  
+    # - name: Copy Latest Build to IIS web root directory
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+    
+    # - name: Deploy application on IIS
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+    
+    # - name: Start IIS Website
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
+    
     - name: Set environment variable based on branch
       run: |
         branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
@@ -258,39 +188,8 @@ jobs:
       if: ${{ success() }}  # Only tag if the workflow is successful
       run: |
         TAG="$environment-v$TAGGED_VERSION"
+        echo "Tag: $TAG"  # Debugging the tag value
         git tag $TAG
         git push origin $TAG
 
-    # Tag the commit with the environment and version after successful deployment
-    # - name: Tag the release
-    #   if: ${{ success() }}
-    #   run: |
-    #     ENVIRONMENT="dev"  # Change this value dynamically for each environment (dev, uat, prod)
-    #     TAG_NAME="${ENVIRONMENT}-${{ env.VERSION }}"
-        
-    #     # Create a new tag
-    #     git tag -a "$TAG_NAME" -m "Deployed $TAG_NAME"
-        
-    #     # Push the tag to the repository
-    #     git push origin "$TAG_NAME"
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    # - name: Convert slashes in WEB_ROOT path
-    #   id: convert-path
-    #   run: |
-    #     echo "WEB_ROOT=$(echo 'C:/inetpub/wwwroot/abhi_frontend' | sed 's/\//\\/g')" >> $GITHUB_ENV
-
-    # - name: Deploy application on IIS
-    #   run: |
-    #     # Deploy the website with proper path formatting
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\') -ApplicationPool 'FrontendAppPool'\""
-
-    # - name: Deploy application on IIS
-    #   run: |
-    #     # Convert slashes in the path
-    #     webRoot=${{ env.WEB_ROOT }}
-    #     webRootIIS=$(echo $webRoot | sed 's/\//\\/g')
-        
-    #     # Deploy the website
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$webRootIIS' -ApplicationPool 'FrontendAppPool'\""
+   
