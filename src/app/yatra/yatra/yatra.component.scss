@@ -4,6 +4,9 @@
 .mat_inputField_Select {
     width: 100%;
 }
+.popupModalMain.yatra-modal.popup-overlay {
+    text-align: left;
+}
 ::ng-deep .mat-mdc-text-field-wrapper {
     width: 100%;
     border-radius: 12px;
@@ -42,6 +45,9 @@
 ::ng-deep .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
     left: 0;
     padding-left: 0;
+    top: 0;
+    background: transparent;
+    color: #979CAE !important;
 }
 ::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
     font-size: 12px !important;
@@ -78,5 +84,16 @@
     min-height: initial;
 }
 ::ng-deep .mdc-text-field {
-    overflow: initials !important;
+    overflow: initial !important;
+}
+::ng-deep .mat_inputField_Select .mat_inputField_SelectLabel {
+    left: 0 !important;
+    padding-left: 0 !important;
+}
+::ng-deep .mat_inputField_Select .has-value + .mat_inputField_SelectLabel {
+    left: 0 !important;
+    top: 0 !important;
+    padding-left: 0 !important;
+    color: #4C4C4C !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(242, 243, 246, 0.1) 100%) !important;
 }

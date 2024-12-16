@@ -1234,17 +1234,20 @@
                                             <div class="input-container">
 
                                               <mat-form-field class="mat_inputField_Select" appearance="fill">
-                                                <!--<mat-label>{{ "Disease Name" | translate }}*</mat-label>-->
+                                                <!--<mat-label>{{ "Disease Name" | translate }}</mat-label>-->
                                                 <mat-select [formControlName]="innerControl.name"
                                                   (selectionChange)="onInputChange($event, subControl, control, k-1, innerControl)"
                                                   [ngClass]="{'has-value': hasInnerValue(control, subControl, innerControl, k-1)}">
                                                 
-                                                  <mat-option value="">{{ "Choose..." | translate }}</mat-option>
+                                                  <mat-option value="">{{ "Choose Disease..." | translate }}</mat-option>
                                                   <mat-option *ngFor="let opt of innerControl.options" [value]="opt.id ? stringifyObject(opt) : opt.value">
                                                     {{ opt.name ? (opt.name | translate) : '' }}
                                                   </mat-option>
                                                 
                                                 </mat-select>
+                                                <label class="mat_inputField_SelectLabel" *ngIf="innerControl.visibleLabel==true">{{ innerControl.label |
+                                                translate}}
+                                                <span *ngIf="innerControl.validators">*</span></label>
                                               </mat-form-field>
                                               
                                               <!-- <select class="inputField_Select" [formControlName]="innerControl.name"
