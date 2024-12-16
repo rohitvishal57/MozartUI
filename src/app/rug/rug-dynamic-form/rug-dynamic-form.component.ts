@@ -938,6 +938,7 @@ export class RugDynamicFormComponent {
             const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
             const formGroup = insuredMembersArray.at(index) as FormGroup;
             console.log(insuredMembersArray?.value);
+
             if(insuredMembersArray.value[index].relation == item.relation){
               insuredMembersArray.at(index).patchValue({
                 firstName: item.firstName,
@@ -952,6 +953,10 @@ export class RugDynamicFormComponent {
                 // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
               });
             }
+            insuredMembersArray.at(0).patchValue({
+              mobileNumber:this.bbdetails.proposerMobileNumber,
+              emailId:this.bbdetails.proposerEmailAddress
+            })
           });
         }
       }
@@ -1011,6 +1016,10 @@ export class RugDynamicFormComponent {
           micrCode:this.bbdetails.micrCode,
           branchName:this.bbdetails.branchName,
         })
+        if (this.bbdetails?.ifscCode && this.bbdetails.ifscCode.trim() !== "") {
+          console.log("IFSC Code is valid:", this.bbdetails.ifscCode);
+          this.getBankDetailsByIfsc();
+      }
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
@@ -1969,7 +1978,28 @@ export class RugDynamicFormComponent {
   //   }
   //   return age;
   // }
-
+  getBankDetailsByIfsc(){
+    const reqData = {
+      "ifsC_Code": this.bbdetails.ifscCode
+    }
+    console.log(reqData);
+    this.yatraService.getBankDetailsByIFSC(reqData).subscribe({
+      next: (response: any) => {
+        response = JSON.parse(response.data)
+        if (response.isSuccess && response.data) {
+          this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+          this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+          this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
+        } else {
+          // Handle error, you can show a message if required
+          this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+        }
+      },
+      error: (err) => {
+        this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+      }
+    });
+  }
   calculateAge(dob: Date): number | string {
     const today = new Date();
     const birthDate = new Date(dob);
@@ -2706,6 +2736,10 @@ export class RugDynamicFormComponent {
           });
         }
       });
+      insuredMembersArray.at(0).patchValue({
+        mobileNumber:this.bbdetails.proposerMobileNumber,
+        emailId:this.bbdetails.proposerEmailAddress
+      })
       console.log(this.formSequence[this.getFormIndexValue()].formName);
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
