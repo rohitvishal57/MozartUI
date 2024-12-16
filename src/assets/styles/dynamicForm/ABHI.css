@@ -1774,9 +1774,21 @@ body {
     text-align: left;
     color: #C91429;
     position: absolute;
-    margin-top: 5px;
+    margin-top: 0;
     margin-left: 5px;
 }
+
+/* .main-container .right-panel .text-danger {
+    font-family: Anek Latin;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.3199999928474426px;
+    text-align: left;
+    color: #C91429;
+    position: absolute;
+    margin-top: 0;
+} */
 
 .main-container .right-panel .inputField_Select {
     -webkit-appearance: none;

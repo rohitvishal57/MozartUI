@@ -1271,7 +1271,7 @@ export class RenewalJourneyComponent {
   }
 
   async onSubmit(control: any) {
-    console.log(this.renewalFormGroup.value, this.form);
+    console.log(this.renewalFormGroup.value, this.form,this.renewalFormGroup);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       console.log("formData", this.formData);
@@ -1520,6 +1520,8 @@ export class RenewalJourneyComponent {
               else if (control.name === dependentName) {
                 control.visible = dependentVisibility;
                 if (dependentVisibility) {
+                  console.log(control.name);
+                  
                   let controlValidators: any = [];
                   control.validators?.forEach((val: IValidator) => {
                     if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -1528,6 +1530,8 @@ export class RenewalJourneyComponent {
                     if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
+                  console.log(controlValidators);
+                  
                   this.renewalFormGroup.get(control.name)?.setValidators(controlValidators);
                   console.log(control);
                   if (control.name == 'zoneValue' && control.type == 'select') {
@@ -2647,7 +2651,6 @@ export class RenewalJourneyComponent {
           control.dependentControls.forEach((item: any) => {
             if (controls.name == item) {
               controls.visible = true;
-              control.disabled = true;
               const formControl = this.renewalFormGroup.get(controls.name);
               if (formControl) {
                 formControl.enable();
@@ -2655,6 +2658,12 @@ export class RenewalJourneyComponent {
                   const validators = controls.validators.map((val: any) => {
                     if (val.validatorName === 'required') {
                       return Validators.required;
+                    }else if (val.validatorName === 'pattern') {
+                      return Validators.pattern(val.pattern); // Add pattern validator
+                    }else if (val.validatorName === 'maxlength' && val.maxLength) {
+                      return Validators.maxLength(val.maxLength);
+                    }else if (val.validatorName === 'minlength' && val.minLength) {
+                      return Validators.minLength(val.minLength);
                     }
                     return null;
                   }).filter(Boolean);

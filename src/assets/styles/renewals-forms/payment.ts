@@ -350,12 +350,22 @@ export const payment={
             {
               "validatorName": "required",
               "required": true,
-              "message": "Enter 6 Digits Cheque Number it is required field."
+              "message": "6 Digits Cheque number is required field."
             },
             {
               "validatorName": "pattern",
               "pattern": "^(?!.*[_-]{2,})(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[1-9][0-9]*(?:[_-][0-9]+)*[0-9]$",
               "message": "Enter a valid 6-digit cheque number"
+            },
+            {
+              "validatorName": "maxlength",
+              "maxLength": 8,
+              "message": "Maximum length is 8 characters."
+            },
+            {
+              "validatorName": "minlength",
+              "minLength": 6,
+              "message": "Minimum length is 6 characters."
             }
           ]
         },
@@ -577,7 +587,7 @@ export const payment={
             {
               "validatorName": "required",
               "required": true,
-              "message": "Previous Policy Document Required"
+              "message": "UPLOAD CHQ/DD/NEFT COPY is required"
             }
           ]
         }
