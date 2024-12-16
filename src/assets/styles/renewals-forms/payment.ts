@@ -20,8 +20,8 @@ export const payment={
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
+          "onChangeMethod":"shareKycURL",
           "methodName": "checkKycDetail",
-          "onChangeMethod":"",
           // "dependentControls": [
           //   "copyLink"
           // ]

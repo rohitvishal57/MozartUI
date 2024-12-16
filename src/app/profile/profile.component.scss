@@ -2,14 +2,11 @@
     margin-right: 0;
 }
 .userProfile_qrCode {
-    padding: 15px 24px;
+    padding: 10px 20px;
     border-radius: 8px 0  0 8px;
     display: flex;
     gap: 24px;
-    position: relative;
-    right: 350px;
-    margin-right: -26px;
-    
+    margin-right: -34px;
 }
 .img_qrCode {
     border-radius: 5px;
@@ -528,12 +525,13 @@
   font-size: 16px;
 }
 .language-selector{
+  padding: 10px 0px;
   display: flex;
-  justify-content: space-between;
-  align-items: end;
-  padding: 10px 20px;
-  position: relative;
-  bottom: 114px;
+  flex-direction: column;
+  @media (max-width:767px) {
+    justify-content: center;
+    align-items: center;
+  }
 }
 .dropdown{
   display: flex;
@@ -546,5 +544,40 @@
   padding: 5px 0px;
   border-radius: 8px;
   margin-bottom: 3px;
-  margin-left: 60px;
+}
+
+@media (max-width:767px) {
+  .userProfilePic{
+    margin: auto;
+  }
+  .userProfile_qrCode{
+  right: 0;
+  flex-wrap: wrap;
+  margin-right:0px;
+
+  }
+  .language-selector{
+    bottom: 0px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: center;
+  }
+  .lbl_preferredLang{
+    margin-left: 0px;
+  }
+  .img_qrCode{
+    width: inherit;
+    height: auto;
+    margin: auto;
+  }
+  ::ng-deep .mat-mdc-tab-group.claims_matTabs {
+    .mat-mdc-tab-header {
+      .mat-mdc-tab-label-container {
+        padding: 0;
+      }
+    }
+  }
+  .selectedLanguage-wrapper{
+    justify-content: center;
+  }
 }

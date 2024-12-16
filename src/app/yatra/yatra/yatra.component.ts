@@ -2112,6 +2112,16 @@ export class YatraComponent {
         this.dynamicFormGroup.get('proposerGender')?.setValue('O');
       }
     }
+    if(control.name=="chequeDate"){
+      const inputDate = new Date(event.target.value);
+      const currentDate = new Date();    
+      if (isNaN(inputDate.getTime()) || inputDate.getTime() !== currentDate.getTime()) {
+        const formattedDate = currentDate.toISOString().split('T')[0]; // Format to yyyy-MM-dd
+        event.target.value = formattedDate; // Reset the input value to current date
+        control.value = formattedDate; // Update the control's value
+        this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
+      }
+    }    
   }
 
 
