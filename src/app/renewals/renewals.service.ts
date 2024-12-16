@@ -113,7 +113,7 @@ export class RenewalsService {
   }
 
   getPaymentDetails(reqBody:any){
-    const paymentDetails = this.configService.config.baseUrl + this.configService.config.getPaymentDetails;
+    const paymentDetails = this.configService.config.baseUrl1 + this.configService.config.getPaymentDetails;
     return this.httpService.post(paymentDetails,reqBody);
   }
   getFullQuoteApi(reqBody:any){

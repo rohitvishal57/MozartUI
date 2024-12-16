@@ -3643,7 +3643,7 @@ export class RenewalJourneyComponent {
     }
   }
   checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" && this.formData.isKYCComplete);
+    const isVisible = !(this.formData.ckycNo !== "" || this.formData.isKYCComplete);
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {

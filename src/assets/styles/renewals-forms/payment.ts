@@ -16,12 +16,20 @@ export const payment={
         {
           "name": "shareKyc",
           "label": "Share KYC",
+          "type": "text",
+          "class": "",
+          "disabled": false,
+          "visible": false,
+          "methodName": "checkKycDetail",
+        },
+        {
+          "name": "shareKyc",
+          "label": "Share KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "onChangeMethod":"shareKycURL",
-          "methodName": "checkKycDetail",
+          "methodName": "shareKycURL",
           // "dependentControls": [
           //   "copyLink"
           // ]
@@ -110,7 +118,7 @@ export const payment={
           "type": "text"
         },
         {
-          "name": "enach",
+          "name": "emandate_payment",
           "label": "E-Nach",
           "visibleLabel": false,
           "visible": true,

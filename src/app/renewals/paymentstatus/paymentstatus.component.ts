@@ -8,6 +8,8 @@ import { thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
 import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
 import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-paymentstatus',
@@ -21,7 +23,8 @@ export class PaymentstatusComponent {
     private renewalService: RenewalsService,
     private router: Router,
     private encryptionService: EncryptionService,
-    private toast: NgToastService, private spinner: LoadingService) { }
+    private toast: NgToastService, private spinner: LoadingService,
+    private yatraService: YatraService) { }
 
   ngOnInit() {
     // const pathArray = this.route.snapshot.url;
@@ -211,8 +214,35 @@ export class PaymentstatusComponent {
     this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       (res: any) => {
         if (res.isSuccess) {
-          const orderData = res.data;
+          const orderData = res.data.orderDetails;
+          debugger;
     
+
+            if(res?.data?.paymentMethod == 'emandate_payment'){
+
+              const reqData = {
+                agentcode: '5100003',
+                proposalNumber: '',
+                paymentMethod: 'enach_payment',
+                source: 'Retail',
+                policyType: 'Renewal',
+                policyNumber: orderData?.policyNumber,
+                quoteNumber: '',
+                OrderID: ''
+              };
+
+
+              this.yatraService.justPayRedirection(reqData).subscribe(
+                (response:any)=>{
+                  if(response?.isSuccess){
+                    window.location.href = response.data.paymentURL;
+                  }
+                },(error)=>{
+                  console.log('error',error);
+                });
+                
+            }
+
           if (orderData.paymentStatus == 'SUCCESS') {
             console.log('inside success');
             this.router.navigate(['renewal/renewalJourney'], {

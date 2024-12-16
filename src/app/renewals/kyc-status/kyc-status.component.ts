@@ -39,7 +39,7 @@ export class KycStatusComponent {
   
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
-          if (res.isSuccess) {
+          if (res.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
               // policy_Number: proposerDetail.policyNumber,
@@ -47,6 +47,8 @@ export class KycStatusComponent {
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
                 const formData = this.encryptionService.encrypt(res.data);
+                // this.formData.isKYCComplete=kycData.kycStatus;
+                // this.formData.ckycNo = kycData.kycNumber;
                 if (kycData.paymentStatus == 'SUCCESS') {
                   console.log('inside success');
                   this.router.navigate(['renewal/renewalJourney'], {
