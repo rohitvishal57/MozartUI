@@ -187,7 +187,7 @@ jobs:
     - name: Tag the commit
       if: ${{ success() }}  # Only tag if the workflow is successful
       run: |
-        TAG="$environment-v$TAGGED_VERSION"
+        TAG="$ENVIRONMENT-v$TAGGED_VERSION"
         echo "Tag: $TAG"  # Debugging the tag value
         git tag $TAG
         git push origin $TAG
