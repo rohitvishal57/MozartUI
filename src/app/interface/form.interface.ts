@@ -121,6 +121,8 @@ export interface ISubControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  visibleToolTip?:boolean;
+  toolTipMessage?:string;
 }
 
 export interface ITab {
