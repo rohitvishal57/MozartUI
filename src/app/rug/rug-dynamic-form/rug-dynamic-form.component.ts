@@ -948,7 +948,9 @@ export class RugDynamicFormComponent {
                 age: item.age,
                 weight: item.weight,
                 height: item.height,
-                heightInches: item.heightInches
+                heightInches: item.heightInches,
+                mobileNumber:item.mobileNumber,
+                emailId:item.emailId
                 // height: selfResult.feet !== 0 ? selfResult.feet : null,
                 // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
               });
@@ -1823,7 +1825,7 @@ export class RugDynamicFormComponent {
             ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob).toString();
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-
+            this.calculateBBPremium();
           }
         }
       }
@@ -2717,6 +2719,9 @@ export class RugDynamicFormComponent {
       // // this.dynamicFormGroup.patchValue(this.bbdetails);
         const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
         console.log(insuredMembersArray.value);
+        if(insuredMembersArray.value.length != 1){
+          this.calculateBBPremium();
+        }
       if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
               this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
         // const selfResult = this.centimetersToFeetAndInches(item.height);
@@ -2763,7 +2768,7 @@ export class RugDynamicFormComponent {
       // this.dynamicFormGroup.patchValue({
       //   sumInsured: this.bbdetails.sumInsured
       // })
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
+      // this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
     }
     const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
     if(insuredMembersArray.value.length === this.d2cDetails.insuredMemberDetails.length){
@@ -6305,6 +6310,7 @@ export class RugDynamicFormComponent {
         })
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
+        console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
       },
       error: (err) => {
         console.error(err);
@@ -6480,6 +6486,9 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
     }
 
+  }
+  changeBbInsuredMembers(control: any){
+    console.log(control);
   }
   getBbPremium(filterArr: any){
     // if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
@@ -6671,6 +6680,56 @@ export class RugDynamicFormComponent {
     // dialogRef.afterClosed().subscribe((result: any) => {
     //   console.log(result);
     // })
+  }
+  changeBBNomineeRelation(control: any){
+    console.log(this.bbdetails.insuredMemberDetails);
+    console.log(this.dynamicFormGroup.get('relationWithProposer')?.value);
+    const relationWithProposer = this.dynamicFormGroup.get('relationWithProposer')?.value?.toLowerCase();
+
+    if (relationWithProposer) {
+      const selectedDetails = this.bbdetails.insuredMemberDetails.find((member: any) => {
+        // Normalize member.relation
+        let standardizedRelation = member.relation.toLowerCase();
+    
+        // Remove numeric suffixes like "1" from Son1, Daughter1, etc.
+        standardizedRelation = standardizedRelation.replace(/\d+/g, '');
+    
+        // Compare normalized relation with the input value
+        return standardizedRelation === relationWithProposer;
+      });
+    
+      if (selectedDetails) {
+        // Patch values to the form group if a match is found
+        this.dynamicFormGroup.patchValue({
+          nomineeFirstName: selectedDetails.firstName || '',
+          nomineeLastName: selectedDetails.lastName || '',
+          nomineeDob: selectedDetails.dob || '',
+          nomineeGender: selectedDetails.gender || '',
+          nomineeMobileNumber: selectedDetails.mobileNumber || ''
+        });
+      } else {
+        // Clear the form group fields if no match is found
+        this.dynamicFormGroup.patchValue({
+          nomineeFirstName: '',
+          nomineeLastName: '',
+          nomineeDob: '',
+          nomineeGender: '',
+          nomineeMobileNumber: ''
+        });
+        console.log("No matching member details found.");
+      }
+    } else {
+      console.log("Relation with proposer is not defined.");
+      // Optionally, clear the form group fields if relationWithProposer is empty
+      this.dynamicFormGroup.patchValue({
+        nomineeFirstName: '',
+        nomineeLastName: '',
+        nomineeDob: '',
+        nomineeGender: '',
+        nomineeMobileNumber: ''
+      });
+    }
+    
   }
   backToleads() {
     this.router.navigate(['/leads/leadsList'], {
