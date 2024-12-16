@@ -252,9 +252,24 @@ export class YatraComponent {
                 }
                 sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
+                if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
+                  const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
+                  console.log(proposalRequiredDetails);
+            
+                  // Check if proposalNumber matches
+                  if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
+                    this.totalPremium = proposalRequiredDetails.totalPremium;
+                    this.covers = proposalRequiredDetails.covers;
+                    this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
+                  }
+                  else {
+                    this.totalPremium = 0;
+                    this.covers = [];
+                  }
+                }
               }
               console.log(this.form, this.formSequence, this.formData,this.quickQuoteRedirect);
-              this.initializeRequiredData();
+              // this.initializeRequiredData();
               this.initializeForm();
             },
             error: (err) => {

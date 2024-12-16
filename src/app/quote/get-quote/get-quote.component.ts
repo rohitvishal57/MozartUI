@@ -1088,7 +1088,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
   ngAfterViewChecked() {
-    if (this.activeDropdown && this.scrollTarget) {
+    if (this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
