@@ -915,6 +915,12 @@
                     font-weight: 600;
                     font-size: 16px;
                     margin-top: 0px;"></label>
+                                <div class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
+                                  <span class="info-icon" >
+                                    <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                  </span>
+                                  <span class="tooltip-text">{{ subControl.toolTipMessage }}</span>
+                                </div>
                             </div>
                           </div>
                           <div *ngIf="subControl.type === 'select'" class="typecss">
