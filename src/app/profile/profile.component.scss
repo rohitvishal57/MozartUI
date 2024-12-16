@@ -548,11 +548,13 @@
   right: 0;
   flex-wrap: wrap;
   margin-right:0px;
+
   }
   .language-selector{
     bottom: 0px;
     flex-wrap: wrap;
     justify-content: space-around;
+    text-align: center;
   }
   .lbl_preferredLang{
     margin-left: 0px;
@@ -568,5 +570,8 @@
         padding: 0;
       }
     }
+  }
+  .selectedLanguage-wrapper{
+    justify-content: center;
   }
 }
