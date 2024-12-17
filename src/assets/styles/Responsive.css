@@ -586,6 +586,9 @@
     .checkbox_renew_optionalCoverages {
         min-width: 100%;
     }
+    .main_userDetails .info_userDetails .details_userProfile h6 span{
+        max-width: 180px !important;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
