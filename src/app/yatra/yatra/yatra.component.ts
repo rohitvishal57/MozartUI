@@ -2125,6 +2125,32 @@ export class YatraComponent {
         this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
       }
     }
+    if (control.name === "dateOfDiagnosis") {
+      const inputValue = event.target.value;    
+      if (!inputValue) {
+        control.value = null; 
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        return; 
+      }
+      const inputDate = new Date(inputValue); 
+      const currentDate = new Date();    
+      if (isNaN(inputDate.getTime())) {
+        console.log("Invalid date format:", inputValue);
+        event.target.value = ''; 
+        control.value = null;
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        this.toast.warning({ detail: "", summary: "Invalid date format.", duration: 3000 });
+        return; 
+      }    
+      if (inputDate > currentDate) {
+        console.log("Future date detected:", inputValue);
+        event.target.value = ''; 
+        control.value = null;
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        this.toast.warning({ detail: "", summary: "Date cannot be in the future.", duration: 3000 });
+      }
+    }
+    
   }
 
 
