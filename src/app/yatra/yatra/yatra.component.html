@@ -1139,11 +1139,17 @@
                       <ng-container [formGroupName]="i"> -->
                       <div [class]="control.class" class="typecss">
                         <label class="control.label" *ngIf="control.visibleLabel==true">
-                          {{ h+1 }}. {{ control.label?(control.label | translate):'' }}</label>
+                          {{ h+1 }}. {{ control.label?(control.label | translate):'' }}
+                          <span class="tooltip-wrapper" *ngIf="control.visibleToolTip">
+                            <span class="info-icon">
+                              <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                            </span>
+                            <span class="tooltip-text">{{ control.toolTipMessage }}</span>
+                          </span>
+                        </label>
                       </div>
                       <div class="col-lg-8">
                         <div style="display: flex;">
-
                           <input type="button" (click)="onCheckboxChange($event,'',control)" style="margin-left: 10px;"
                             name="select" id="select" [value]="'SELECT' | translate" class="add-btn" />
                         </div>

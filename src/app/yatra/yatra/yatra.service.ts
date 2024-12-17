@@ -13,6 +13,7 @@ export class YatraService {
 
   Getform(reqData: any) {
     const getform = this.configService.config.baseUrl + this.configService.config.getForm
+    // const getform ='https://localhost:7070/getform'
     return this.httpService.post(getform, reqData)
   }
   getSalutation(){
