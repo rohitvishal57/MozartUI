@@ -49,7 +49,8 @@ export const payment={
         },
         {
           "name": "kycCopyLink",
-          "label": "Copy Link",
+          "label": "KYC Link",
+          "visibleLabel": true,
           "value": "",
           "type": "editableInfo",
           "class": "col-12 col-lg-8 col-md-8",

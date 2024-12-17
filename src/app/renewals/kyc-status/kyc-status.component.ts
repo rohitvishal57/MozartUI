@@ -39,26 +39,27 @@ export class KycStatusComponent {
   
     getKycStatus() {  
       const kycDetailsReq = {
-        "transactionId":  this.transactionId
+        transactionId :  this.transactionId,
+        businessType : "REN"
       }
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
           if (res.data.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
-              policy_Number: "24-24-0000567-00 ",
+              policy_Number: res.data.policyNumber,
             };
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
                 const formData = res.data;                
                 if (kycData.kycStatus == 'SUCCESS') {
-                  if(kycData.kycStatus== 'SUCCESS')formData.ckycFlag='Y';
+                  formData.ckycFlag='Y';
                   formData.ckycNo = kycData.kycNumber;
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
                       proposalNum: this.encryptionService.encrypt(""),
-                      policyNumber: this.encryptionService.encrypt("24-24-0000567-00 "),
+                      policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
                       formIndex: "0",
@@ -69,7 +70,7 @@ export class KycStatusComponent {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
                       proposalNum: this.encryptionService.encrypt(""),
-                      policyNumber: this.encryptionService.encrypt("24-24-0000567-00 "),
+                      policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
                       formIndex: "0",

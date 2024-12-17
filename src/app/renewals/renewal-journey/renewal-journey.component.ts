@@ -3605,40 +3605,48 @@ export class RenewalJourneyComponent {
   sendPaymentLink(control: any) {
     console.log("inside sendPaymentLink",control);
     const sendPaymentRequestBody={
+      firstName: this.formData?.firstName,
+      lastName: this.formData?.lastName,
       agentcode: this.agentCode,
-      emailId : this.formData.emailId
+      emailId: this.formData?.emailId,
+      productName: this.formData?.productName,
+      policyNumber: this.formData?.policyNumber,
+      productCode: this.formData?.productCode,
+      premiumAmount: this.formData?.totalPremium,
+      paymentLink: "",
+      mobilenumber: this.formData?.mobileNumber
     };
-    // this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
-    //   next: (response: any) => {
-    //     console.log(response);
-    //     if (response.data) {
-    //       if (this.selectedButton == '') {
-    //       }
-    //       else {
-    //       }
-    //     } else {
-    //       this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-    //   }
-    // });
-    
-
-    this.router.navigate(['renewal/customerRenewalJourney'], {
-      state: {
-        formData: this.encryptionService.encrypt(this.formData),
-        proposalNum: this.encryptionService.encrypt(this.proposalNum),
-        policyNumber: this.encryptionService.encrypt(this.policyNumber),
-        journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-        formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-        formIndex:"0"
+    this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
+      next: (response: any) => {
+        console.log("sharePaymentLinkApi",response);
+        if (response.data) {
+          this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000,
+          });
+          if (this.selectedButton == '') {
+            this.changeMainFormDependentControls(control.dependentControls, true);
+          }
+          else {
+          }
+        } else {
+          this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+        }
+      },
+      error: (error) => {
+        this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
       }
     });
+    
 
-    this.changeMainFormDependentControls(control.dependentControls, true);
-
+    // this.router.navigate(['renewal/customerRenewalJourney'], {
+    //   state: {
+    //     formData: this.encryptionService.encrypt(this.formData),
+    //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+    //     policyNumber: this.encryptionService.encrypt(this.policyNumber),
+    //     journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
+    //     formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+    //     formIndex:"0"
+    //   }
+    // });
   }
 
   redirectToJustPay(control: any) {
@@ -3693,6 +3701,7 @@ export class RenewalJourneyComponent {
   }
   checkKycDetail(control: any): void {
     const isVisible = !(this.formData.ckycNo !== "" && this.formData.ckycFlag !== "N");
+    // const isVisible=false;
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -3706,9 +3715,12 @@ export class RenewalJourneyComponent {
 
   initiateKycURL() {
     const kycRequestBody = {
-      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No", businessType: "REN"
+      policyNumber: this.policyNumber,
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "", 
+      dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No", 
+      businessType: "REN"
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
       (res: any) => {
@@ -3721,7 +3733,9 @@ export class RenewalJourneyComponent {
     );
   }
 
-  shareKycURL() {
+  shareKycURL(control: any) {
+    console.log(control);
+    
     const kycRequestBody = {
       policyNumber: this.policyNumber, 
       fullName: this.formData.proposerName,
@@ -3738,11 +3752,22 @@ export class RenewalJourneyComponent {
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
         console.log("kycResponseBody", res);
-        this.toast.success({
+        // this.toast.success({
+        //   detail: "SUCCESS",
+        //   summary: res.message,
+        //   duration: 3000,
+        // });
+        if(res.data.isShareKyc){
+          this.toast.success({
           detail: "SUCCESS",
-          summary: res.message,
+          summary: "Link has been sent successfully",
           duration: 3000,
         });
+        }
+
+        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
+      
       },
       (err) => {
         console.log(err);
