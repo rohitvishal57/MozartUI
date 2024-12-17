@@ -3065,22 +3065,22 @@ export class RugDynamicFormComponent {
         OrderID: ''
       };
 
-      this.yatraService.justPayRedirection(reqData).subscribe({
-        next: (response: any) => {
-          console.log('Juspay API Response:', response);
+      // this.yatraService.justPayRedirection(reqData).subscribe({
+      //   next: (response: any) => {
+      //     console.log('Juspay API Response:', response);
 
-          if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
-            window.location.href = response.paymentURL; // Redirect to Juspay Payment URL
-          } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-            console.error('Invalid payment link received:', response);
-          }
-        },
-        error: (error) => {
-          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
-        }
-      });
+      //     if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
+      //       window.location.href = response.paymentURL; // Redirect to Juspay Payment URL
+      //     } else {
+      //       this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+      //       console.error('Invalid payment link received:', response);
+      //     }
+      //   },
+      //   error: (error) => {
+      //     this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+      //     console.error('Error generating payment link:', error);
+      //   }
+      // });
     }
 
     // Handle showing dependent controls if any are specified for the clicked button
