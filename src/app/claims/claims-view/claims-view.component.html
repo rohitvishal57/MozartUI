@@ -36,16 +36,11 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <!-- <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberName" [ngClass]="{'has-value': true}">
-                                    <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
-                                    <!-- <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }}</option> 
-                                 
-                                </select> -->
                                 <!-- <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
                                     <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
                                   </select> -->
-                                  <select class="form-select input-selectBox" id="memberId" name="memberId" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
+                                  <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
                                     <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
                                   </select>
@@ -56,7 +51,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="claimType" name="claimType" formControlName="claimType" (change)="onClaimTypeChange($event)">
                                     <option value="" disabled selected>{{"Select Claim Type" | translate}}</option>
@@ -65,6 +60,24 @@
                                 </select>
                                 <label for="claimtype">{{"Claim Type" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
+                                    {{"Claim type is required" | translate}} 
+                                </small>
+                            </div>
+                        </div> -->
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" 
+                                        id="claimType" 
+                                        name="claimType" 
+                                        formControlName="claimType"
+                                        (change)="onClaimTypeChange($event)">
+                                    <option value="" disabled selected>{{"Select Claim Type" | translate}}</option>
+                                    <option value="Cashless">{{"Cashless" | translate}}</option>
+                                    <option value="Reimbursement">{{"Reimbursement" | translate}}</option>
+                                </select>
+                                <label for="claimtype">{{"Claim Type" | translate}}</label>
+                                <small class="ui-error block-show" 
+                                       *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
                                     {{"Claim type is required" | translate}} 
                                 </small>
                             </div>
@@ -434,7 +447,9 @@
                                 </div>
                                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             </div>
-                            <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
+                            <span *ngIf="isFilenotSelected" class="ui-error block-show">
+                                {{"Please select a file to continue" | translate}}
+                            </span>
                             <span class="ui-error block-show" *ngIf="uploadValidFormat">
                             {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
                           </span>
