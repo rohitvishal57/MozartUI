@@ -166,7 +166,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
                         
-                        <input type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
+                        <input type="number" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
                           placeholder="" class="input-textBox" maxlength="10" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
                           (input)="enforceMaxLength($event, 10)">
                           <label for="mobileNumber" class="get-quote-label">
