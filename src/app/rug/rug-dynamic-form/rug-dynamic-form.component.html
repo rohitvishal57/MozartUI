@@ -120,7 +120,7 @@
                           Plan Details
                     </button>
                 </div> -->
-                  <div class="label-value-container" (click)="planSummary()">
+                  <div class="label-value-container" (click)="(!isD2C && control.name == 'plandetails') ? planBBSummary() : planSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
                     <div class="value-text">{{ control.value }}</div>
@@ -160,6 +160,52 @@
                                 <h6>₹15240</h6>
                             </div>
                         </div>
+                    </div>
+                  </div>
+                  <div *ngIf="isBBPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
+                    <div class="bottom_planDetails_sub body_flex_column">
+                      <div class="common_ProductInfo">
+                        <div class="common_ppi_info">
+                          <h4>{{bbdetails.productName}}</h4>
+                          <!-- <h5>Axis Bank - Open Insurance</h5> -->
+                        </div>
+                      </div>
+                      <div class="bottom_planSummary">
+                        <div class="info_planSummary">
+                          <h5>Base plan premium<span>Sum insured</span></h5>
+                          <h6>₹{{bbdetails.sumInsured}}</h6>
+                        </div>
+                        <div class="info_planSummary"
+                          *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GHI,GPA' || bbdetails.productPlanName == 'GHI' || bbdetails.productPlanName == 'GHI,GP'">
+                          <h5>Group Health Insurance</h5>
+                          <h6>₹{{bbdetails.ghiPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary"
+                          *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GHI,GPA' || bbdetails.productPlanName == 'GPA,GCI'">
+                          <h5>Group Personal Accident</h5>
+                          <h6>₹{{bbdetails.gpaPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GPA,GCI'">
+                          <h5>Group Critical Illness</h5>
+                          <h6>₹{{bbdetails.gciPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI-5L'">
+                          <h5>Group Health Indemnity</h5>
+                          <h6>₹{{bbdetails.deductibleAmount}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI-10L'">
+                          <h5>Group Health Indemnity</h5>
+                          <h6>₹{{bbdetails.deductibleAmount}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI,GP'">
+                          <h5>Group Protect</h5>
+                          <h6>₹{{bbdetails.gpPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary total_planSummary">
+                          <h5>Total premium (incl. GST)</h5>
+                          <h6>₹{{bbdetails.totalPremium}}</h6>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

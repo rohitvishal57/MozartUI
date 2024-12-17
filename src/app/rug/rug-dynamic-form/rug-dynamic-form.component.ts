@@ -100,6 +100,7 @@ export class RugDynamicFormComponent {
   QuoteNumber: any = [];
   customerFeedbackModule: any;
   isPlanDetailsVisible = false;
+  isBBPlanDetailsVisible = false;
   customerFeedbackForm !: FormGroup;
   formIndexValue: number = 0;
   stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
@@ -1442,6 +1443,9 @@ export class RugDynamicFormComponent {
       this.isPlanDetailsVisible = false;
     }
 
+  }
+  planBBSummary(){
+    this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
   addNavbar(index: number, value: any) {
     if (value.formName === 'Confirmation') {
@@ -3435,6 +3439,9 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI"
       );
       console.log(filteredData);
+      this.bbdetails.ghiPremium = filteredData[0].premium.toString();
+      this.bbdetails.productPlanName = "GHI";
+      this.bbdetails.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
@@ -3451,6 +3458,11 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
       );
       console.log(filteredData);
+      console.log(this.bbdetails);
+      this.bbdetails.ghiPremium = filteredData[0].premium.toString();
+      this.bbdetails.gpaPremium = filteredData[1].premium.toString();
+      this.bbdetails.productPlanName = "GHI,GPA";
+      this.bbdetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
@@ -3469,6 +3481,11 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
       );
       console.log(filteredData);
+      this.bbdetails.ghiPremium = filteredData[0].premium.toString();
+      this.bbdetails.gciPremium = filteredData[1].premium.toString();
+      this.bbdetails.gpaPremium = filteredData[2].premium.toString();
+      this.bbdetails.productPlanName = "GHI,GPA,GCI";
+      this.bbdetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
@@ -3487,6 +3504,9 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
       );
       console.log(filteredData);
+      this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
+      this.bbdetails.productPlanName = "GHI-5L";
+      this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
@@ -3504,20 +3524,33 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
       );
       console.log(filteredData);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
-
-      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
-      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
-          return ele;
-        }
-        });
-        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      console.log(this.dynamicFormGroup.get('sumInsured')?.value);
+      if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
+        this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
+        this.bbdetails.productPlanName = "GHI-10L";
+        this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
+  
+        this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+            return ele;
+          }
+          });
+          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      }else{
+        this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
+        this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+        this.calculateBBPremium();
+      }
     }else{
+      this.bbdetails.ghiPremium = premiumObj[0].premium.toString();
+      this.bbdetails.gpPremium = premiumObj[1].premium.toString();
+      this.bbdetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
 
       // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
@@ -3531,14 +3564,21 @@ export class RugDynamicFormComponent {
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GPA" || item.combinationName === "GCI"
       );
+      this.bbdetails.gpaPremium = filteredData[0].premium.toString();
+      this.bbdetails.gciPremium = filteredData[1].premium.toString();
+      this.bbdetails.productPlanName = "GPA,GCI";
+      this.bbdetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
       this.dynamicFormGroup.get('gpPremium')?.setValue(null);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('combiId')?.setValue('8');
     }    
     if(this.bbdetails.productCode == "R03"){
+      this.bbdetails.productPlanName = "GHI,GP";
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
       this.dynamicFormGroup.get('combiId')?.setValue('10');
     }
@@ -6348,7 +6388,7 @@ export class RugDynamicFormComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
   getBbRelations(control: any){
-    if(this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
+    if(this.formSequence[this.getFormIndexValue()].formName == "Add Nominee" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
       this.yatraService.getRelations().subscribe({
         next: (response: any) => {
           response = JSON.parse(response.data).data;
@@ -6375,10 +6415,17 @@ export class RugDynamicFormComponent {
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
         res = JSON.parse(res.data).data
-        res.productSIDetails.map((item: any) => {
-          item.value = item.siPlanValue.split('.')[0],
-            item.name = item.siPlanValue.split('.')[0]
-        })
+        if(this.bbdetails.productCode != "R10"){
+          res.productSIDetails.map((item: any) => {
+            item.value = item.siPlanValue.split('.')[0],
+              item.name = item.siPlanValue.split('.')[0]
+          })
+        }else{
+          res.productSIDetails.map((item: any) => {
+            item.value = item.siPlanValue.split('.')[0],
+              item.name = item.siPlanText
+          })
+        }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
         console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
@@ -6524,7 +6571,9 @@ export class RugDynamicFormComponent {
   async changeBbSumInsured(event: any) {
     console.log(this.sumInsuredData);
     console.log(this.dynamicFormGroup.value.sumInsured);
+    console.log(this.bbdetails);
     let filterArr;
+    
     if(this.sumInsuredData == undefined){
       let sumInsuredObj = {
         ProductCode: this.bbdetails.productCode
@@ -6532,13 +6581,29 @@ export class RugDynamicFormComponent {
       await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
         next: (res: any) => {
           res = JSON.parse(res.data).data
-          res.productSIDetails.map((item: any) => {
-            item.value = item.siPlanValue.split('.')[0],
-              item.name = item.siPlanValue.split('.')[0]
-          })
+          // res.productSIDetails.map((item: any) => {
+          //   item.value = item.siPlanValue.split('.')[0],
+          //     item.name = item.siPlanValue.split('.')[0]
+          // })
+          if(this.bbdetails.productCode != "R10"){
+            res.productSIDetails.map((item: any) => {
+              item.value = item.siPlanValue.split('.')[0],
+                item.name = item.siPlanValue.split('.')[0]
+            })
+          }else{
+            res.productSIDetails.map((item: any) => {
+              item.value = item.siPlanValue.split('.')[0],
+                item.name = item.siPlanText
+            })
+          }
           this.sumInsuredData = res.productSIDetails;
           filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
           console.log(filterArr);
+          if(this.bbdetails.productCode != "R10"){
+            this.bbdetails.sumInsured = this.dynamicFormGroup.value.sumInsured;
+          }else{
+            this.bbdetails.sumInsured = filterArr[0].siPlanText;
+          }
           this.getBbPremium(filterArr);
           this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
           this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
@@ -6551,6 +6616,11 @@ export class RugDynamicFormComponent {
     }else{
       filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
       console.log(filterArr);
+      if(this.bbdetails.productCode != "R10"){
+        this.bbdetails.sumInsured = this.dynamicFormGroup.value.sumInsured;
+      }else{
+        this.bbdetails.sumInsured = filterArr[0].siPlanText;
+      }
       this.getBbPremium(filterArr);
       this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
@@ -6683,6 +6753,7 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
       );
       console.log(filteredData);
+
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
