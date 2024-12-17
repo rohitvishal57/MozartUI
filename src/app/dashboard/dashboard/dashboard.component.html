@@ -88,7 +88,7 @@
         [cdkDragDisabled]="isDesktopView" (cdkDropListDropped)="dropSections($event)">
           <ng-container *ngFor="let section of newOrderList">
             <!--Important Tasks New design start-->
-            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+            <section cdkDrag  [cdkDragDisabled]="!isDesktopView"
               class="commonSection dashboard_LPR_main dashboard_importantEvents "
               *ngIf="section.widgetName == 'QuickAction' && quickActionDetails">
               <h3>{{"Important Tasks" | translate}}</h3>
@@ -96,7 +96,7 @@
                 (cdkDropListDropped)="dropQuickAct($event)">
                 <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
                   <ng-conatiner [ngSwitch]="qucikAction.name">
-                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'eventDetails'"
+                    <div cdkDrag [cdkDragDisabled]="!isDesktopView"*ngSwitchCase="'eventDetails'"
                       class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
                       <header class="body_flex_row align-items-center">
                         <figure>
@@ -120,7 +120,7 @@
                         <a (click)="onClickEvents('events')">{{"View all" | translate}}</a>
                       </footer>
                     </div>
-                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'birthdayDetails'"
+                    <div cdkDrag  [cdkDragDisabled]="!isDesktopView" *ngSwitchCase="'birthdayDetails'"
                       class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
                       <header class="body_flex_row align-items-center">
                         <figure>
@@ -140,7 +140,7 @@
                         <a (click)="onClickEvents('birthday')">{{"View all" | translate}}</a>
                       </footer>
                     </div>
-                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'notifications'"
+                    <div cdkDrag  [cdkDragDisabled]="!isDesktopView" *ngSwitchCase="'notifications'"
                       class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
                       <header class="body_flex_row align-items-center">
                         <figure>
@@ -170,7 +170,7 @@
             </section>
 
             <!-- ABHI -->
-            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+            <section cdkDrag [cdkDragDisabled]="!isDesktopView"
               class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section.widgetName == 'ABHI'">
               <div class="body_flex_row justify-content-between">
                 <h6>{{"Latest from ABHI" | translate}}</h6>
@@ -257,7 +257,7 @@
             </section>
 
             <!-- performance -->
-            <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer"
+            <div cdkDrag [cdkDragDisabled]="!isDesktopView" class="contentBody dashboard_contentContainer"
               *ngIf="section.widgetName == 'Performance'">
               <div class="performance-overview">
                 <div class="body_flex_row justify-content-between align-items-center">
@@ -289,7 +289,7 @@
                     <ng-container *ngFor="let perform of performanceCard">
                       <ng-container [ngSwitch]="perform.type">
                         <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
-                          *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
@@ -298,7 +298,7 @@
                               [src]="perform.subIcon">{{perform.description | translate}}</div>
                         </div>
                         <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
-                          *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
@@ -309,7 +309,7 @@
                           </div>
                         </div>
                         <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
-                          *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
@@ -319,7 +319,7 @@
                           </div>
                         </div>
                         <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
-                          *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
@@ -335,7 +335,7 @@
             </div>
 
              <!-- Business -->
-             <section cdkDrag [cdkDragDisabled]="isDesktopView"
+             <section cdkDrag [cdkDragDisabled]="!isDesktopView"
              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Business'">
              <div class="body_flex_row justify-content-between align-items-center">
                <h3>{{"Business Summary" | translate}}</h3>
@@ -358,7 +358,7 @@
              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                (cdkDropListDropped)="dropTabs($event)">
                <ng-container *ngFor="let tab of tabsInfo">
-                 <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="isDesktopView"
+                 <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="!isDesktopView"
                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                    <header class="leads_itemHeader"
                      [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
@@ -404,7 +404,7 @@
            </section>
 
             <!-- Renewal -->
-            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+            <section cdkDrag [cdkDragDisabled]="!isDesktopView"
               class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Renewal'">
               <div class="body_flex_row justify-content-between align-items-center">
                 <h3>{{"Renewal Summary" | translate}}</h3>
@@ -427,7 +427,7 @@
               <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropRenewal($event)">
                 <ng-container *ngFor="let tab of renewalDetail">
-                  <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="isDesktopView"
+                  <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="!isDesktopView"
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                     <header class="leads_itemHeader"
                       [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
@@ -471,12 +471,12 @@
             </section>
 
              <!-- Claim and customer -->
-             <section cdkDrag [cdkDragDisabled]="isDesktopView"
+             <section cdkDrag [cdkDragDisabled]="!isDesktopView"
              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.widgetName == 'Servicing'">
              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                (cdkDropListDropped)="dropCharts($event)">
                <ng-container *ngFor="let tab of otherSection">
-                 <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView"
+                 <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="!isDesktopView"
                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                    <header class="leads_itemHeader"
                      [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
@@ -526,7 +526,7 @@
            </section>
 
             <!-- others -->
-            <section cdkDrag class="dashboard_otherSections commonSection" cdkDropListOrientation="horizontal" cdkDropList
+            <section cdkDrag [cdkDragDisabled]="!isDesktopView" class="dashboard_otherSections commonSection" cdkDropListOrientation="horizontal" cdkDropList
             (cdkDropListDropped)="dropWellness($event)" *ngIf="section.widgetName == 'Wellness'">
               <div  class="board_otherSections">
             <ng-container *ngFor="let tab of dhaSection">
@@ -598,7 +598,7 @@
               </div>
               <!--Knowledge Centre end-->
               <!--DHA & HR Portfolio start-->
-              <div *ngIf="tab.name == 'DHA'" cdkDrag class="item_otherSections">
+              <div *ngIf="tab.name == 'DHA'" cdkDrag [cdkDragDisabled]="!isDesktopView" class="item_otherSections">
                 <div class="otherSections_wraper">
                   <header>
                     <div class="otherSections_head">
@@ -638,7 +638,7 @@
               </div>
               <!--DHA & HR Portfolio end-->
               <!--Top Selling Products start-->
-              <div class="item_otherSections" cdkDrag *ngIf="tab.name == 'TopSellingProducts'">
+              <div class="item_otherSections" cdkDrag [cdkDragDisabled]="!isDesktopView" *ngIf="tab.name == 'TopSellingProducts'">
                 <div class="otherSections_wraper">
                   <header>
                     <div class="otherSections_head">

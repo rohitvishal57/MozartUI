@@ -49,7 +49,7 @@ export class DashboardComponent {
   dhaSection: any = [];
 
   ProductList: any;
-  isDesktopView = false;
+ isDesktopView: boolean = false;
 
   newSectionList: any;
   newCustomerList: any;
@@ -237,6 +237,7 @@ export class DashboardComponent {
     this.fetchWidgets();
     this.createRenewChart();
     this.getPoductList();
+    this.checkScreenSize();
   }
 
   getTimeOfDay() {
@@ -1200,11 +1201,15 @@ export class DashboardComponent {
 
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isDesktopView = screen.width <= 728 ? true : false;
+  @HostListener('window:resize', [])
+  onResize(): void {
+    this.checkScreenSize();
   }
 
+  // Determine if the screen is desktop or mobile based on width
+  private checkScreenSize(): void {
+    this.isDesktopView = window.innerWidth > 768; // Adjust breakpoint as needed (e.g., 768px)
+  }
   calculateDelay(): number {
     const totalSectionsLength = this.otherSection.length;
     const totalTabsLength = this.tabsInfo.length;
