@@ -18,13 +18,13 @@
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count">
-                <button *ngIf="i < getFormIndexValue() || formSequence.length-1 == getFormIndexValue()" class="btn btn-default" class="nav-index">
+                <button *ngIf="i < getFormIndexValue() || formSequence.length-1 == getFormIndexValue()" (click)="onDrillDown(i, case)" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
                 <button *ngIf="i == getFormIndexValue() && formSequence.length-1 != getFormIndexValue()" class="btn btn-default" class="nav-last">
                   {{i+1}}
                 </button>
-                <button *ngIf="i > getFormIndexValue() " class="btn btn-default" class="nav-bottom">
+                <button *ngIf="i > getFormIndexValue()" class="btn btn-default" class="nav-bottom">
                   {{i+1}}
                 </button>
               </div>
