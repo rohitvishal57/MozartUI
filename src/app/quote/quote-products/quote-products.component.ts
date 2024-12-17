@@ -341,7 +341,8 @@ export class QuoteProductsComponent implements OnInit {
   }
   async Getagentcartdetails() {
     let reqdata = {
-      "agentCode": this.agentCode
+      "agentCode": this.agentCode,
+      "customerMobileNumber": this.formData.mobileNumber
     }
     await this.quoteService.Getagentcartdetails(reqdata).subscribe({
       next: (res: any) => {
@@ -445,10 +446,13 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   addToCompareProducts(item: any) {
-    let productId = this.productService.addToCompare(item, this.compareItems);
+    
+    let productId = this.productService.addToCompare(item, this.compareItems );
     if(productId!=0){
-      this.getProductInformation(productId);
+     // this.getProductInformation(productId);
+      this.compareItems.push(item);
     }
+
   }
 
   removeCompareItemProduct(item: any) {
@@ -456,7 +460,7 @@ export class QuoteProductsComponent implements OnInit {
 
   }
   navigateToProductComparison() {
-    this.productService.navigateToProductComparison(this.compareItems);
+    this.productService.navigateToProductComparison(this.compareItems , 'Quote');
   }
 
   closeProductComparison() {

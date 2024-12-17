@@ -54,7 +54,6 @@ export class CreateLeadComponent implements OnInit {
   productSumInsured: any = [];
   occupationInfo : any;
   pincodeResponse : any='';
-  proposalNumber : any = '';
  
   constructor(private formBuilder: FormBuilder,private toast: NgToastService, private router: Router,private route: ActivatedRoute,private leadsService: LeadsService,
     private datePipe: DatePipe,public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,private cdr: ChangeDetectorRef,private datepipe: DatePipe,
@@ -89,13 +88,12 @@ export class CreateLeadComponent implements OnInit {
       await this.getLeadInformationByLeadNumber(this.leadNumber);
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
+        this.fetchActivityTypeInfo();
       }
     }
-
     // Fetch additional data
     this.getProducts();
     this.fetchOccupationInfo();
-    this.fetchActivityTypeInfo();
   }
 
   inItForm() {
@@ -177,22 +175,16 @@ export class CreateLeadComponent implements OnInit {
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     return age.toString();
   }
-  campnoSelected() {
-
-  }
-  SETAUDATA() {
-  }
-  SETIDFCDATA() {
-  }
   checkEnableSendOTP() {
     // Check if the Identification Number field is not empty to enable Send OTP button
     this.sendOTPEnabled = this.YESSearchValue.trim() !== '';
   }
-  validate() {
-
-  }
-  sendOTP() {
-  }
+  campnoSelected() {}
+  SETAUDATA() {}
+  SETIDFCDATA() {}
+  validate() {}
+  sendOTP() {}
+  
   async onSubmit() {
     this.submitted = true;
 
@@ -204,17 +196,6 @@ export class CreateLeadComponent implements OnInit {
     else {
       this.CreateLead = this.userValidations.getRawValue();
     }
-    
-    if (this.action != 'updateStatus') {
-      try {
-        const response = await firstValueFrom(this.common.getProposalNumber());
-        this.proposalNumber = response.data?.proposalNumber;
-      } catch (err) {
-        this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-      }
-    }
-
-    this.CreateLead.proposalNumber = this.proposalNumber
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
@@ -302,7 +283,17 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
-    this.proposalNumber = this.submittedUser.proposalNumber;
+
+
+    if(this.submittedUser?.leadStatus.includes('In progress')){
+      const formControls = this.userValidations.controls;
+      Object.keys(formControls).forEach((key) => {
+        if (key !== 'email') {
+          formControls[key].disable();
+        }
+      });
+      this.userValidations.get('leadSubStatus')?.enable();
+    }
   }
 
   fetchActivityTypeInfo() {

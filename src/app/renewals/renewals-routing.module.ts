@@ -5,14 +5,16 @@ import { RenewalDynamicFormComponent } from './renewal-dynamic-form/renewal-dyna
 import { SubQuotesComponent } from './sub-quotes/sub-quotes.component';
 import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
 import { RenewalJourneyComponent } from './renewal-journey/renewal-journey.component';
+import { KycStatusComponent } from './kyc-status/kyc-status.component';
 
 const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
   { path: "payment", component: RenewalDynamicFormComponent },
   { path: "renewalJourney", component: RenewalJourneyComponent},
   { path: "quote", component: SubQuotesComponent },
-  {path:"paymentstatus",component:PaymentstatusComponent},
-  {path:"customerRenewalJourney",component:RenewalJourneyComponent}
+  { path: "paymentstatus",component:PaymentstatusComponent},
+  { path: "customerRenewalJourney",component:RenewalJourneyComponent},
+  { path: "kycStatus",component:KycStatusComponent}
 ];
 
 @NgModule({

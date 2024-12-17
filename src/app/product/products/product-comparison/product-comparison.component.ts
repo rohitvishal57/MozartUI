@@ -168,9 +168,8 @@ export class ProductComparisonComponent {
     });
   }
 
-  backToProducts(){
-    this.router.navigate(['/quote/quoteProducts'], {
-    });
+  backToPreviousPage(){
+    window.history.back();
   }
 
 }

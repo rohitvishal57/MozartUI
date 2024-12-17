@@ -28,7 +28,8 @@ export class ProfileComponent implements OnInit {
   profileDetails: any;
   EcalatinDetails: any[] = [];
   showmsg: boolean = false;
-  selectedLanguage: string = 'English';
+  selectedLanguage: string = '';
+  profileLink:any = '';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -43,6 +44,15 @@ export class ProfileComponent implements OnInit {
         }
       });
     });
+    
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      if (parsedUserData.preferredLanguage) {
+        this.selectedLanguage = parsedUserData.preferredLanguage;
+      }
+    }
+
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
       this.agentCode = storedAgentCode;
@@ -64,7 +74,9 @@ export class ProfileComponent implements OnInit {
           icon: this.getIcons(key),
           value: key === 'dateOfBirth' ? new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
-        this.profileDetails = output
+        this.profileDetails = output;
+        this.profileDetails = output.filter(item => item.heading !== 'Profile Link');
+        this.profileLink = res.data.profileLink;
       }
     })
   }
@@ -119,19 +131,34 @@ export class ProfileComponent implements OnInit {
         break;
     }
   }
-  updatePreferredLanguage() {
+
+  updatePreferredLanguage(): void {
     const reqData = {
       AgentCode: this.agentCode,
       LanguagePreference: this.selectedLanguage,
     };
+
     console.log('Request Data:', reqData);
+
     this.profileService.updatePreferredLanguage(reqData).subscribe({
-      next: (response : any) => {
+      next: (response: any) => {
         console.log('Language preference updated successfully:', response);
-        this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+        this.toast.success({ detail: 'SUCCESS', summary: response.message, duration: 3000 });
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          parsedUserData.preferredLanguage = this.selectedLanguage;
+          localStorage.setItem('userData', JSON.stringify(parsedUserData));
+        }
+        this.toast.success({ detail: "SUCCESS", summary: "Success", duration: 3000 })
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
+        this.toast.error({
+          detail: "Error",
+          summary: error.message || "Not Updating the language preference.",
+          duration: 3000,
+        });
       },
     });
   }
@@ -153,6 +180,46 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+  
+  copyToClipboard(): void {
+    const urlElement = document.getElementById('qrCodeUrl');
+    if (urlElement) {
+      const urlText = urlElement.textContent || '';
+      navigator.clipboard.writeText(urlText).then(
+        () => {
+          console.log('URL copied to clipboard:', urlText);
+          this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
+        },
+        (error) => {
+          console.error('Failed to copy URL:', error);
+          this.toast.error({
+            detail: "Error",
+            summary: error.message || "Failed to copy URL.",
+            duration: 3000,
+          });
+        }
+      );
+    }
+  }
+  openLink(): void {
+    const urlElement = document.getElementById('qrCodeUrl');
+    if (urlElement) {
+      const url = urlElement.textContent || '';
+      if (url) {
+        window.open(url, '_blank'); // Opens the URL in a new tab
+      } else {
+        (error:any) => {
+          console.error('Failed to copy URL:', error);
+          this.toast.error({
+            detail: "Error",
+            summary: error.message || "No URL found to open.",
+            duration: 3000,
+          });
+        }
+      }
+    }
+  }
+
   getPerformanceData() {
     let reqObj = {
       agentCode: this.agentCode

@@ -92,7 +92,7 @@
                                                         <input type="date" id="fromDate" name="fromDate" value=""
                                                             placeholder="Select Start Date"
                                                             class="input-textBox input-date" [(ngModel)]="fromDate"
-                                                            (dateChange)="formatDate('fromDate')" [max]="maxDate">
+                                                            (dateChange)="formatDate('startDate')" [max]="maxDate">
                                                         <label for="fromDate">{{"From Date" | translate}}</label>
                                                         <span class="ui-error">{{"Please enter start date" |
                                                             translate}}</span>
@@ -103,7 +103,7 @@
                                                         <input type="date" id="toDate" name="toDate" value=""
                                                             placeholder="Select End Date"
                                                             class="input-textBox input-date" [(ngModel)]="toDate"
-                                                            (dateChange)="formatDate('toDate')" [max]="maxDate"
+                                                            (dateChange)="formatDate('endDate')" [max]="maxDate"
                                                             [min]="fromDate">
                                                         <label for="toDate">{{"To Date" | translate}}</label>
                                                         <span class="ui-error">{{"Please enter end date" |
@@ -161,7 +161,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn_grid mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                        <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
                             <img src="assets/Img/icon_download_grey.svg" alt="Download">
                         </button>
                         <button type="button" id="claimgridlist" name="claimgridlist" value="gridlist"
@@ -236,7 +236,7 @@
                                     <th scope="col">{{"Policy No." | translate}}</th>
                                     <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Member Id" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Member Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                     <th scope="col">{{"Status" | translate}}</th>
                                     <th scope="col">{{"Raised Date" | translate}} <div><small
@@ -248,11 +248,11 @@
                             <tbody class="table-group-divider">
                                 <ng-container *ngIf="claims.length > 0">
                                     <tr class="table-values" *ngFor="let row of claims;let i = index">
-                                        <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
+                                        <td class="card_insureInfo">{{ row?.claimNumber | translate}}</td>
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                         <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
-                                        <td>{{ row?.memberId }}</td>
+                                        <td>{{ row?.memberId }}<br/>{{ row?.memberRelation }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                         <td>{{ row?.reportedDateTime | datepipe }}</td>
@@ -285,7 +285,7 @@
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
-                                    <div class="insureName">{{ gridClaims.claimInfoId | translate}} </div>
+                                    <div class="insureName">{{ gridClaims.claimNumber | translate}} </div>
                                 </h6>
                             </div>
                             <div class="card_btnGroup">
@@ -293,6 +293,9 @@
                                     title="View-Claim" class="btn_action btn_claimAction"
                                     (click)="navigateToViewClaim(gridClaims)"><img
                                         src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                        <button type="button" class="btn_action btn_renewalAction" (click)="downloadSingleItem(gridClaims)" id="Download" name="Download" value="Download" title="Download">
+                                            <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                        </button>
                             </div>
                         </header>
                         <div class="cardViewBody">
@@ -309,8 +312,8 @@
                                 <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Member Id" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.memberId | translate}}</div>
+                                <div class="item_lable">{{"Member Info" | translate}}</div>
+                                <div class="item_value">{{ gridClaims.memberId | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Claim Type" | translate}}</div>

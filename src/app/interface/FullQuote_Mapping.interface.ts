@@ -66,6 +66,7 @@ export interface IFullQuoteMapping {
     PaymentGatewayName: string
     tenure:string
     bankAccountType:string
+    familySize:string
 }
 
 export interface InsuredMemberDetail {
@@ -99,6 +100,7 @@ export interface InsuredMemberDetail {
     memberOccupation: string
     covers: Cover[]
     memberRoomCategory:string
+    pedWaitingPeriod:string
 }
 
 export interface Cover {

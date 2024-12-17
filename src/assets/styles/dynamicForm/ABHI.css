@@ -608,7 +608,12 @@ body {
     margin-top: 5px;
     margin-bottom: 0;
 }
-
+.main-container .right-panel .acceptTermsCheck .checkbox-label.checkbox-label2{
+    padding-left: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 0px;
+}
 .main-container .right-panel .acceptTermsCheck input[type="checkbox"] {
     display: block;
     height: auto;
@@ -1091,7 +1096,7 @@ body {
 
 .main-container .right-panel .custom-line hr {
     border: 0px solid #E6E6E6;
-    margin: 20px 0;
+    margin: 10px 0 15px;
     opacity: 1;
     width: 100%;
     background: #E6E6E6;
@@ -1374,6 +1379,11 @@ body {
     width: 100%;
     border: none;
     background-color: #F9FAFB;
+}
+.main-container .right-panel .banner-container .banner-card .display-container .view_Text.more_view_Text {
+    line-height: normal;
+    max-width: 90%;
+    word-break: break-word;
 }
 
 /* .main-container .right-panel .edit-icon {
@@ -1774,9 +1784,21 @@ body {
     text-align: left;
     color: #C91429;
     position: absolute;
-    margin-top: 5px;
+    margin-top: 0;
     margin-left: 5px;
 }
+
+/* .main-container .right-panel .text-danger {
+    font-family: Anek Latin;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.3199999928474426px;
+    text-align: left;
+    color: #C91429;
+    position: absolute;
+    margin-top: 0;
+} */
 
 .main-container .right-panel .inputField_Select {
     -webkit-appearance: none;
@@ -2086,7 +2108,7 @@ a:not([href]) {
     font-weight: 700;
     line-height: 19.8px;
     color: #797979;
-    margin: 30px 0;
+    margin: 0;
 } 
 .main-container .right-panel .custom-line.custom-line-or:before{
     content: "OR";
@@ -2311,6 +2333,11 @@ input[type=checkbox]:checked {
     letter-spacing: 0.20000000298023224px;
     text-align: left;
     color: #000;
+}
+.main-container .right-panel .bottom-product .boldtext_input:disabled,
+.main-container .right-panel .bottom-total-premium .boldtext_input:disabled,
+.main-container .right-panel .boldtext_input#policyNumber:disabled {
+    background: transparent !important;
 }
 .main-container .right-panel .bottom-product .boldtext_input + span, 
 .main-container .right-panel .bottom-total-premium .boldtext-label {
@@ -2967,4 +2994,32 @@ margin: 0;
 .main-container .main-subContainer .left-nav .left-main-cnt{
  background-color: transparent;
  padding-top: 0px;
+}
+.typecss_summary {
+    padding-bottom: 0 !important;
+    .label-value-container {
+        margin-bottom: 6px !important;
+    }
+}
+@media (max-width:767px){
+    .main-container .right-panel .banner-container .banner-card {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .main-container .right-panel .banner-container .banner-card .display-container {
+        width: 45%;
+    }
+    .main-container .right-panel .paymentBtn {
+        min-width: 48%;
+        margin: 0px 1% 5% 0;
+    }
+    .main-container .right-panel .typecss.bottom-product {
+        width: 50%;
+    }
+    .main-container .right-panel .typecss.bottom-total-premium {
+        width: 40%;
+    }
+    .main-container .right-panel .bottom_proposalNumber {
+        margin-bottom: 10px;
+    }
 }

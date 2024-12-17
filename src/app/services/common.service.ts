@@ -86,7 +86,7 @@ export class CommonService {
     return this.http.post<any>(singleProductQuote, reqData);
   }
   UpdateAgentAllFormData(reqData:any){
-    const saveCommonDraftData = "https://usp.monocept.ai/api/rug/UpdateAgentAllFormData";
+    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData";
     return this.http.post<any>(saveCommonDraftData,reqData);
   }
 

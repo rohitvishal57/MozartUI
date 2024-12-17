@@ -45,17 +45,11 @@ export class DashboardComponent {
   wellnessInfo: any;
   dhaCard: any = [];
 
-  chartsArray: any = [
-    'customer', 'claim', 'dha'
-  ];
-
-  sectionList: any = [
-    'QuickAction', 'ABHI', 'Performance', 'Business', 'Renewals', 'Customer', 'Others'
-  ];
-
   otherSection: any = [];
+  dhaSection: any = [];
+
   ProductList: any;
-  isDesktopView = false;
+ isDesktopView: boolean = false;
 
   newSectionList: any;
   newCustomerList: any;
@@ -63,7 +57,6 @@ export class DashboardComponent {
   newBusinessList: any;
   newQuickActionList: any;
   newPerformanceList: any;
-  actualDashboardPrefereces: any;
 
   performanceFilter = 'Quarterly';
   performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
@@ -92,126 +85,121 @@ export class DashboardComponent {
 
   newOrderList: any = [
     {
-      "tabName": "QuickAction",
-      "priority": 1,
-      "isFilter": false,
+      "widgetName": "QuickAction",
+      "order": 1,
       "category": [
         {
-          "catName": "birthdayDetails",
-          "subpriority": 1
+          "categoryName": "birthdayDetails",
+          "subOrder": 1
         },
         {
-          "catName": "eventDetails",
-          "subpriority": 2
+          "categoryName": "eventDetails",
+          "subOrder": 2
         },
         {
-          "catName": "notifications",
-          "subpriority": 3
+          "categoryName": "notifications",
+          "subOrder": 3
         }
       ]
     },
     {
-      "tabName": "ABHI",
-      "priority": 2,
+      "widgetName": "ABHI",
+      "order": 2,
       "category": [
         {
-          "catName": "birthdayDetails",
-          "subpriority": 1
+          "categoryName": "birthdayDetails",
+          "subOrder": 1
         },
         {
-          "catName": "eventDetails",
-          "subpriority": 2
+          "categoryName": "eventDetails",
+          "subOrder": 2
         },
         {
-          "catName": "notifications",
-          "subpriority": 3
+          "categoryName": "notifications",
+          "subOrder": 3
         }
       ]
     },
     {
-      "tabName": "Performance",
-      "priority": 3,
-      "isFilter": true,
+      "widgetName": "Performance",
+      "order": 3,
       "category": [
         {
-          "catName": "My goals",
-          "subpriority": 1
+          "categoryName": "My Goals",
+          "subOrder": 1
         },
         {
-          "catName": "Policies Sold",
-          "subpriority": 2
+          "categoryName": "Policies Sold",
+          "subOrder": 2
         },
         {
-          "catName": "Premium",
-          "subpriority": 3
+          "categoryName": "Premium",
+          "subOrder": 3
         },
         {
-          "catName": "commisions",
-          "subpriority": 4
+          "categoryName": "Commission Earned",
+          "subOrder": 4
         }
       ]
     },
     {
-      "tabName": "Business",
-      "priority": 4,
-      "isFilter": true,
+      "widgetName": "Business",
+      "order": 4,
       "category": [
         {
-          "catName": "Leads",
-          "subpriority": 1
+          "categoryName": "Leads",
+          "subOrder": 1
         },
         {
-          "catName": "Proposals",
-          "subpriority": 2
+          "categoryName": "Proposals",
+          "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Renewals",
-      "priority": 5,
-      "isFilter": true,
+      "widgetName": "Renewal",
+      "order": 5,
       "category": [
         {
-          "catName": "Renewals",
-          "subpriority": 1
+          "categoryName": "Renewal",
+          "subOrder": 1
         },
         {
-          "catName": "Persistency",
-          "subpriority": 2
+          "categoryName": "Persistency",
+          "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Servicing",
-      "priority": 6,
-      "isFilter": true,
+      "widgetName": "Servicing",
+      "order": 6,
       "category": [
         {
-          "catName": "Claims",
-          "subpriority": 1
+          "categoryName": "Claims",
+          "subOrder": 1
         },
         {
-          "catName": "Customers",
-          "subpriority": 2
+          "categoryName": "Customer",
+          "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Wellness",
-      "priority": 7,
-      "isFilter": true,
+      "widgetName": "Wellness",
+      "order": 7,
       "category": [
         {
-          "catName": "Dha",
-          "subpriority": 1
+          "categoryName": "DHA",
+          "subOrder": 1
         },
         {
-          "catName": "sellingProducts",
-          "subpriority": 2
+          "categoryName": "TopSellingProducts",
+          "subOrder": 2
         }
       ]
     }
   ];
+  newWellnessList: any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -233,14 +221,23 @@ export class DashboardComponent {
         this.profileDetails = res.data;
       }
     });
-    // this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
-    //   if (res.isSuccess) {
-    //     this.actualDashboardPrefereces = res;
-    //   }
-    // });
+    this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
+      if (res.isSuccess) {
+        console.log('get preferences', res.data[0].preferences)
+        let arr = res.data && res.data[0].preferences.length ? res.data[0].preferences : this.newOrderList
+        this.newOrderList = arr
+          .sort((a: any, b: any) => a.order - b.order)
+          .map((item: any) => {
+            item.category = item.category.sort((c: any, d: any) => c.subOrder - d.subOrder);
+            return item;
+          });
+
+      }
+    });
     this.fetchWidgets();
     this.createRenewChart();
     this.getPoductList();
+    this.checkScreenSize();
   }
 
   getTimeOfDay() {
@@ -288,44 +285,56 @@ export class DashboardComponent {
     this.getOrderBy(this.newOrderList, 'section')
   }
 
+  dropWellness(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.dhaSection, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.dhaSection, 'Wellness')
+  }
+
   getOrderBy(widget: any, key: any) {
     switch (key) {
       case 'section':
         this.newSectionList = widget.map((item: any, index: any) => {
-          return { name: item, order: index + 1};
+          return { name: item, order: index + 1 };
         });
         console.log(this.newSectionList)
         break;
       case 'Customer':
         this.newCustomerList = widget.map((item: any, index: any) => {
-          return { main: 'Customer', name: item, order: index + 1};
+          return { main: 'Customer', name: item, order: index + 1 };
         });
         console.log(this.newCustomerList)
         break;
       case 'Renewal':
         this.newRenewalList = widget.map((item: any, index: any) => {
-          return { main: 'Renewal', name: item, order: index + 1};
+          return { main: 'Renewal', name: item, order: index + 1 };
         });
         console.log(this.newRenewalList)
         break;
       case 'Business':
         this.newBusinessList = widget.map((item: any, index: any) => {
-          return { main: 'Business', name: item, order: index + 1};
+          return { main: 'Business', name: item, order: index + 1 };
         });
         console.log(this.newBusinessList)
         break;
       case 'QuickAction':
         this.newQuickActionList = widget.map((item: any, index: any) => {
-          return { main: 'QuickAction', name: item, order: index + 1};
+          return { main: 'QuickAction', name: item, order: index + 1 };
         });
         console.log(this.newQuickActionList)
         break;
 
       case 'Performance':
         this.newPerformanceList = widget.map((item: any, index: any) => {
-          return { main: 'Performance', name: item, order: index + 1};
+          return { main: 'Performance', name: item, order: index + 1 };
         });
         console.log(this.newPerformanceList)
+        break;
+
+      case 'Wellness':
+        this.newWellnessList = widget.map((item: any, index: any) => {
+          return { main: 'Wellness', name: item, order: index + 1 };
+        });
+        console.log(this.newWellnessList)
         break;
 
       default:
@@ -457,7 +466,7 @@ export class DashboardComponent {
             console.log('customer', res.data)
             this.customerInfo = res.data;
             this.otherSection.push({
-              tabName: 'Customer',
+              widgetName: 'Customer',
               chart: 'Customer',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
@@ -474,7 +483,7 @@ export class DashboardComponent {
             console.log('Servicing', res.data)
             this.serviceInfo = res.data;
             this.otherSection.push({
-              tabName: 'Claims',
+              widgetName: 'Claims',
               chart: 'Claims',
               isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
@@ -491,9 +500,9 @@ export class DashboardComponent {
             this.dhaCard = Object.entries(res.data[0]).map(([name, count]) => ({
               name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
               count: count,
-
             }))
-            console.log(this.dhaCard)
+            console.log(this.dhaCard);
+            this.dhaSection.push({ name: 'DHA', value: this.dhaCard })
           })
           break;
 
@@ -503,7 +512,7 @@ export class DashboardComponent {
             this.businessSummary = res.data;
             this.tabsInfo = [
               {
-                tabName: 'Leads',
+                widgetName: 'Leads',
                 chart: 'Leads',
                 totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
@@ -512,7 +521,7 @@ export class DashboardComponent {
                 }))
               },
               {
-                tabName: 'Proposals',
+                widgetName: 'Proposals',
                 chart: 'Proposals',
                 totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
@@ -657,7 +666,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/leads/leadsList/'], {
-                queryParams: { status: label },
+                queryParams: { status: label, filter: this.businessFilter },
               });
             }
           }
@@ -730,7 +739,7 @@ export class DashboardComponent {
   }
 
   createEXChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Renewal')
+    const categories = this.renewalDetail.filter((k: any) => k.widgetName == 'Renewal')
     const labels = categories[0].category.map((item: any) => item.name);
     const data = categories[0].category.map((item: any) => item.count);
     return {
@@ -809,7 +818,7 @@ export class DashboardComponent {
   }
 
   // createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
-  //   const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
+  //   const categories = this.renewalDetail.filter((k: any) => k.widgetName == 'Persistency')
   //   const labels = categories[0].category.map((item: any) => item.name);
   //   const data = categories[0].category.map((item: any) => item.count);
   //   return {
@@ -879,7 +888,7 @@ export class DashboardComponent {
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          tabName: 'Renewal',
+          widgetName: 'Renewal',
           chart: 'Renewal',
           totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
           category: res.data.map((item: any) => ({
@@ -892,7 +901,7 @@ export class DashboardComponent {
     this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(res => {
       this.renewalDetail.push(
         {
-          tabName: 'Persistency',
+          widgetName: 'Persistency',
           chart: 'Persistency',
           totalCount: res.data[0].persistencyPercentage,
           category: res.data.map((item: any) => ({
@@ -1181,8 +1190,7 @@ export class DashboardComponent {
           keyFeatures: item.keyFeatures && JSON.parse(item.keyFeatures).slice(0, 3),
           sumInsured: item.sumInsured && item.sumInsured.split(",")[0]
         }));
-        console.log(this.ProductList)
-
+        this.dhaSection.push({ name: 'TopSellingProducts', value: this.ProductList })
       },
       error: (err) => {
         console.error(err);
@@ -1193,11 +1201,15 @@ export class DashboardComponent {
 
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isDesktopView = screen.width <= 728 ? true : false;
+  @HostListener('window:resize', [])
+  onResize(): void {
+    this.checkScreenSize();
   }
 
+  // Determine if the screen is desktop or mobile based on width
+  private checkScreenSize(): void {
+    this.isDesktopView = window.innerWidth > 768; // Adjust breakpoint as needed (e.g., 768px)
+  }
   calculateDelay(): number {
     const totalSectionsLength = this.otherSection.length;
     const totalTabsLength = this.tabsInfo.length;
@@ -1212,7 +1224,108 @@ export class DashboardComponent {
   }
 
   onSubmit() {
-    this.dashboardService.submitPreferenceData({}).subscribe((response: any) => {
+    this.newOrderList.map((tab: any, index: any) => {
+      switch (tab.widgetName) {
+        case "QuickAction":
+          this.newQuickActionList && this.newQuickActionList.length && this.newQuickActionList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category.name.name) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newQuickActionList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+
+          break;
+
+        case "ABHI":
+          tab.order = index
+          break;
+
+        case 'Servicing':
+        case 'Customer':
+          this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category?.name?.widgetName) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newCustomerList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+
+          break;
+        case 'Renewal':
+          this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category?.name?.widgetName) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newRenewalList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+
+          break;
+        case 'Business':
+          this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category?.name?.widgetName) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newBusinessList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+
+          break;
+        case 'Performance':
+          this.newPerformanceList && this.newPerformanceList.length && this.newPerformanceList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category?.name?.title) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newPerformanceList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+
+          break;
+        case 'Wellness':
+          this.newWellnessList && this.newWellnessList.length && this.newWellnessList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.categoryName == category?.name?.name) {
+                k.subOrder = index
+              }
+            })
+          });
+          this.newWellnessList == undefined && tab.category.map((k: any, j = index) => {
+            k.subOrder = j
+          })
+          tab.order = index
+          break;
+      }
+    });
+
+    const obj = {
+      agentCode: localStorage.getItem('agentCode'),
+      preferences: this.newOrderList
+    }
+
+    console.log('final', obj)
+
+    this.dashboardService.submitPreferenceData(obj).subscribe((response: any) => {
       console.log('Data submitted successfully', response);
     });
   }

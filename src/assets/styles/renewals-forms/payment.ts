@@ -14,25 +14,35 @@ export const payment={
       "class": "kyc-container",
       "formControls": [
         {
-          "name": "shareLink",
-          "label": "Share Link",
+          "name": "shareKyc",
+          "label": "Share KYC",
+          "type": "text",
+          "class": "",
+          "disabled": false,
+          "visible": false,
+          "methodName": "checkKycDetail",
+        },
+        {
+          "name": "shareKyc",
+          "label": "Share KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "methodName": "checkKycDetail",
+          "methodName": "shareKycURL",
           // "dependentControls": [
           //   "copyLink"
           // ]
         },
         {
-          "name": "sendLinkButton",
-          "label": "Send Link",
+          "name": "initiateKyc",
+          "label": "Initiate KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "methodName": "",
+          "methodName": "initiateKycURL",
+          "onChangeMethod":"",
           // "dependentControls": [
           //   "copyLink"
           // ]
@@ -71,8 +81,8 @@ export const payment={
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
-          "visible": true,
           "methodName": "sendPaymentLink",
+          "visible": true,
           "dependentControls": [
             "copyLink"
           ]
@@ -109,7 +119,7 @@ export const payment={
           "type": "text"
         },
         {
-          "name": "enach",
+          "name": "emandate_payment",
           "label": "E-Nach",
           "visibleLabel": false,
           "visible": true,
@@ -118,24 +128,24 @@ export const payment={
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
-        {
-          "name": "eMandate",
-          "label": "E-Mandate",
-          "visibleLabel": false,
-          "visible": true,
-          "type": "button",
-          "dependentControls": ["nextOnline"],
-          "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
-          "methodName": "onButtonClick"
-        },
-        {
-          "name": "autoDebit",
+          {
+            "name": "autoDebit",
           "label": "Auto Debit",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
           "dependentControls": ["nextOnline"],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-AutoDebit",
+          "methodName": "onButtonClick"
+        },
+        {
+          "name": "online",
+          "label": "Online",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "dependentControls": ["nextOnline"],
+          "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
           "methodName": "onButtonClick"
         },
         {
@@ -151,6 +161,7 @@ export const payment={
             "totalPremium",
             "chequeNumber",
             "chequeDate",
+            "accountNumber",
             "ifscCode",
             "paymentBankName",
             "chequeCopy",
@@ -197,6 +208,10 @@ export const payment={
                 },
                 {
                   "name": "ifscCode",
+                  "visibility": true
+                },
+                {
+                  "name": "accountNumber",
                   "visibility": true
                 },
                 {
@@ -343,12 +358,43 @@ export const payment={
             {
               "validatorName": "required",
               "required": true,
-              "message": "Enter 6 Digits Cheque Number it is required field."
+              "message": "6 Digits Cheque number is required field."
             },
             {
               "validatorName": "pattern",
-              "pattern": "^(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[0-9]{6}$",
-              "message": "Enter 6 Digits Cheque Number it is required field."
+              "pattern": "^(?!.*[_-]{2,})(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[1-9][0-9]*(?:[_-][0-9]+)*[0-9]$",
+              "message": "Enter a valid 6-digit cheque number"
+            },
+            {
+              "validatorName": "maxlength",
+              "maxLength": 8,
+              "message": "Maximum length is 8 characters."
+            },
+            {
+              "validatorName": "minlength",
+              "minLength": 6,
+              "message": "Minimum length is 6 characters."
+            }
+          ]
+        },
+        {
+          "name": "accountNumber",
+          "label": "Account Number",
+          "visible": false,
+          "visibleLabel": true,
+          "type": "number",
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Account Number is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[0-9]{9,18}$",
+              "message": "Account Number should be between 9 to 18 digits"
             }
           ]
         },
@@ -399,6 +445,8 @@ export const payment={
           "label": "Cheque Date",
           "visible": false,
           "visibleLabel": true,
+          "minDateLength": "currentDate",
+          "maxDateLength": "futureDate",
           "type": "date",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -547,7 +595,7 @@ export const payment={
             {
               "validatorName": "required",
               "required": true,
-              "message": "Previous Policy Document Required"
+              "message": "UPLOAD CHQ/DD/NEFT COPY is required"
             }
           ]
         }
@@ -603,7 +651,7 @@ export const payment={
           "name": "nextOffline",
           "label": "Next",
           "visibleLabel": false,
-          "visible": true,
+          "visible": false,
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "onSubmit",

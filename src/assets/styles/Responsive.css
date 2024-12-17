@@ -7,7 +7,14 @@
         display: none;
     }
 }*/
-
+/* @media (min-width:1440px) {
+    .bodyColumns-1, .main-container .main-subContainer{
+        max-width:80%;
+    }
+    .cardViewMain .cardViewWraper .cardViewItem {
+        width: 32.55%;
+    }
+} */
 @media (min-width:1280px) and (max-width:1284px) {
     .bodyColumns-3 {
         max-width: 1048px;

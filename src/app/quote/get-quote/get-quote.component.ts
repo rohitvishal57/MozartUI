@@ -235,6 +235,9 @@ export class GetQuoteComponent implements AfterViewChecked {
       if (formData.sumInsured) {
         this.selectedSumInsured = formData.sumInsured;
       }
+      // if(formData.proposerGender){
+      //   this.onGenderChange();
+      // }
       if (formData.insuredMembers && formData.insuredMemberDetails.length > 0) {
         // const currentMember:any = {};
 
@@ -254,6 +257,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
         // Log the final result
         // console.log(JSON.stringify(currentMember, null, 2));
+        this.checkGender = true;
         this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
         console.log(this.relations);
         console.log(this.relationCountMap, this.anotherRelationCountMap);
@@ -476,8 +480,66 @@ export class GetQuoteComponent implements AfterViewChecked {
           else {
             console.log(dobArray[0]);
 
-            const age = this.calculateAge(dob);
-            selectedRelation.age = age;
+            const age : any = this.calculateAge(dob);
+            let isValid = true;
+            if(selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')          ){
+              switch (this.selectedPlan) {
+   
+                case 'Family Floater':
+                  const currentDate : any = new Date();
+   
+    // Convert the birth date into a Date object
+    const birthDateObj : any = new Date(selectedRelation.dob);
+   
+    // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+    // Calculate the difference in milliseconds
+    let daysOld:any
+    if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()){
+      daysOld = this.calculateAgeInDays(selectedRelation.dob);
+    }
+
+      // Check if age is greater than 25 years or if days are less than 91
+      if (age > 25 || (birthDateObj.getFullYear() < currentDate.getFullYear() && daysOld < 91)) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 91 days",
+                      duration: 3000
+                    });
+                    isValid = false;
+                  }
+   
+                  break;
+  
+                  case 'Multi Individual':
+   
+                  if (age < 4  || age > 25) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 4 years",
+                      duration: 3000
+                    });
+                    isValid = false;
+                  }
+   
+                  break;
+                  default:
+                    break;
+              }
+            }
+            else{
+              if (age < 18  || age > 120) {
+                this.toast.error({
+                  detail: "Error",
+                  summary: "Member should be less than 120 years and Greater than 18 years",
+                  duration: 3000
+                });
+                isValid = false;
+              }
+            }
+            if (isValid) {
+              selectedRelation.age = age;
+              console.log("Age set successfully:", selectedRelation.age);
+            }
           }
         }
         console.log(selectedRelation);
@@ -520,6 +582,26 @@ export class GetQuoteComponent implements AfterViewChecked {
     }
 
     return age;
+  }
+
+  calculateAgeInDays(birthDate : any):any | null {
+    // Get the current date
+    const currentDate : any = new Date();
+   
+    // Convert the birth date into a Date object
+    const birthDateObj : any = new Date(birthDate);
+   
+    // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+    // Calculate the difference in milliseconds
+    if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
+      const diffInMilliseconds = currentDate - birthDateObj;
+     
+      // Convert the difference from milliseconds to days
+      const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+     
+      return diffInDays;
+    }
+    return null;
   }
 
   onRelationshipNext() {
@@ -1021,13 +1103,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
-
-          upgradableZones.forEach((zone: any) => {
-            this.upgradableZones.push({
-              name: zone.name,
-              value: zone.value
-            });
-          })
+          this.upgradableZones = upgradableZones
 
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
         } else {
@@ -1074,7 +1150,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     })
   }
-  onGenderChange(event: any) {
+  onGenderChange(event: any = null) {
     console.log(event, event.target.value);
     this.relations.forEach(relation => {
       if (relation.id === "R001") {
@@ -1088,12 +1164,13 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     });
     this.checkGender = true;
+    //delete this.scrollTarget?.nativeElement;
   }
 
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
   ngAfterViewChecked() {
-    if (this.activeDropdown && this.scrollTarget) {
+    if (this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
@@ -1106,7 +1183,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       //console.log('Page Name:', this.pageName);
       if (this.pageName === 'dashboard')
       {
-        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
       }else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
@@ -1121,7 +1198,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       //console.log('Page Name:', this.pageName);
       if (this.pageName === 'dashboard')
       {
-        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
       }else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }

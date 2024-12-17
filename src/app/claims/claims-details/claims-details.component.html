@@ -193,8 +193,8 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="uploadDocument_main">
-                                            <div class="uploadDocument_area" (click)="docUploadFileInput.click()">
+                                        <div class="uploadDocument_main" >
+                                            <div class="uploadDocument_area" *ngIf="claims?.requestType !== 'Cashless'" (click)="docUploadFileInput.click()">
                                                 <div class="ud_area_left">
                                                     <h6>{{"Upload Documents" | translate}}</h6>
                                                     <p>{{"JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)" | translate}}</p>

@@ -397,8 +397,8 @@
       </div>
       <div class="modal-footer modal_footerBtnGroup_column">
         <button type="button" id="verify" name="verify" (click)="validateOTP()" class="verify-btn btn_red btn_fullWidth">Verify</button>
-        <small class="ui-error block-show" *ngIf="otpErrorMsge">{{errorMessage}}</small>
-        <div class="d-flex justify-content-center">
+        <small class="ui-error block-show" *ngIf="errorMessage !== ''">{{errorMessage}}</small>
+        <div class="d-flex justify-content-center" *ngIf="timerOn">
           <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds </label>
           <button type="button" id="resendotp" name="resendotp" *ngIf="timeLeft === 0" class="btn_linkText btn_fullWidth" (click)="resendOTP()">Resend OTP</button>
         </div>

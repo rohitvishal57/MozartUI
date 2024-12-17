@@ -324,6 +324,17 @@ h6 {
 		height: 11px;
 	}
   }
+  .btn_subQuote.btn_exportLead {
+	&:hover {
+		img {
+			filter: brightness(0) invert(1);
+			opacity: 1;
+		}
+	}
+	img {
+		opacity: 0.5;
+	}
+  }
   .btn_assignTo {
 	background: #4CAF50;
 	width: 16px;

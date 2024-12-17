@@ -2,10 +2,19 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="row">
-                <div class="col-12">
-                    <h2 class="mb-2">{{"Products" | translate}}</h2>
-                    <p>{{"Discover our products to insure your health" | translate}}</p>
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                    <h2 class="mb-2">{{ "Products" | translate }}</h2>
+                    <p>{{ "Discover our products to insure your health" | translate }}</p>
                 </div>
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                    <div class="searchFilter_container">
+                        <input  class="inputfilter_search"  id="filterSearch" name="filterSearch"  type="text" [(ngModel)]="searchProductName" 
+                            placeholder="Enter Product Name To Search..." (keyup)="productSearch()"/>
+                            <img _ngcontent-ng-c1672851114="" src="assets/Img/icon_magnify_grey.svg">
+                    </div>
+                </div>
+                
+                
             </div>
             <div class="row" *ngIf="ProductList.length > 0; else noProducts">
                 <div class="col-12">
@@ -116,9 +125,9 @@
     <div class="left-panel-product">
         <div class="r-p-header" style="display: none;">
             <div class="product-heading">Products</div>
-            <div class="prod-head-desc">Discover our products to insure your health
-            </div>
+            <div class="prod-head-desc">Discover our products to insure your health</div> 
         </div>
+     
 
         <div class="product-list-container">
         <div *ngIf="ProductList.length > 0; else noProducts">

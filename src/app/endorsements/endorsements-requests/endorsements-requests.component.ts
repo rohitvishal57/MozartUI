@@ -37,7 +37,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   toggeledropdown: boolean = false;
   appliedFiltersCount: number = 0;
   maxDate: string | undefined
-  /* StaticRequestTypes = [
+  StaticRequestTypes = [
     {
       name: "Aadhar Card Update",
       value: "aadharNumber",
@@ -69,41 +69,11 @@ export class EndorsementsRequestsComponent implements OnInit {
       selected: false
     },
     {
-      name: "Change my Primary Registered Number- Member",
-      value: "memberPrimaryContactNumber",
-      selected: false
-    },
-    {
-      name: "Change my Alternate number- member",
-      value: "memberAlternateContactNumber",
-      selected: false
-    },
-    {
-      name: "Change in my Email ID- member",
-      value: "memberEmail",
-      selected: false
-    },
-    {
-      name: "Change my Alternate Email ID - member",
-      value: "memberAlternateEmail",
-      selected: false
-    },
-    {
       name: "Change of Nominee",
       value: "nomineeContact",
       selected: false
     },
-    {
-      name: "Change in International Contact Number",
-      value: "internationalContactNumber",
-      selected: false
-    },  
-    {
-      name: "Change in International Address",
-      value: "ChangeinInternationalAddress",
-      selected: false
-    },
-  ]; */
+  ];
   agentCode: any;
   productsList: any = [];
   requestTypes:any =[];
@@ -118,6 +88,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -127,10 +98,10 @@ export class EndorsementsRequestsComponent implements OnInit {
     });
 
     this.getRequestList();
-    this.getProducts();
+    // this.getProducts();
     this.checkView(); //Screen View check
   }
-  getProducts() {
+  /* getProducts() {
     this.agentCode =  localStorage.getItem("agentCode");
     const reqData={
       "agentCode": this.agentCode
@@ -147,7 +118,7 @@ export class EndorsementsRequestsComponent implements OnInit {
          console.log("error coming form getproduct list API");
       }
     })
-  }
+  } */
 
   downloadRequest(data: any) {
     alert(data.status);
@@ -181,6 +152,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       "sortDirection": "DESC",
       "searchString": "",
       "products": [],
+      "requestType": [],
       "uiStatus": ""
   }
    
@@ -248,21 +220,22 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.toggeledropdown = false;
   }
   calculateAppliedFiltersCount(){
-    // const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
-    const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
-    let count = selectedProductsCount;
+    const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
+    // const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
+    let count = selectedPolicyTypesCount;
     if (this.fromDate && this.toDate) {
       count++;
     }
     this.appliedFiltersCount = count;
   }
   clear(){
-    this.productsList.forEach((product:any) => (product.selected = false));
-    // this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
+    // this.productsList.forEach((product:any) => (product.selected = false));
+    this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
     this.fromDate = null;
     this.toDate = null;
     this.appliedFiltersCount = 0;
-    this.requestsListRequestBody.products = [];
+    // this.requestsListRequestBody.products = [];
+    this.requestsListRequestBody.requestType = [];
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
     this.getRequestList();
@@ -273,17 +246,17 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.formatDate("toDate");
     this.requestsListRequestBody.fromDate=this.fromDate;
     this.requestsListRequestBody.toDate=this.toDate;
-    const selectedProducts = this.productsList.filter((product: any) => product.selected)
-      .map((product: any) => product.productName);
-    if(selectedProducts.length > 0) {
-      this.requestsListRequestBody.products = selectedProducts;
+    // const selectedProducts = this.productsList.filter((product: any) => product.selected)
+    //   .map((product: any) => product.productName);
+    // if(selectedProducts.length > 0) {
+    //   this.requestsListRequestBody.products = selectedProducts;
+    // }
+
+    const selectedPolicyTypes = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).map((requestType:any) => requestType.name);
+    if(selectedPolicyTypes.length > 0) {
+      this.requestsListRequestBody.requestType = selectedPolicyTypes;
     }
-
-    /* const selectedPolicyTypes = this.StaticRequestTypes
-    .filter((requestType:any) => requestType.selected)
-    .map((requestType:any) => requestType.name);
-    this.requestsListRequestBody.requestType = selectedPolicyTypes.join(", "); */
-
+  
     this.isSearch = true;
     this.first = 0;
     this.getRequestList();

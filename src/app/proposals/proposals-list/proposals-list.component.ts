@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -19,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ProposalsListComponent {
   proposalList: ProposalList[] = [];
+  quoteList: any = [];
   countsList: any = [];
   activeFilter: string = "all";
   page: number = 1;
@@ -34,9 +35,9 @@ export class ProposalsListComponent {
   toggeledropdown: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("");
-  isDesktopView:boolean=false
+  isDesktopView: boolean = false
   filterType: string = "totalRecords";
-  agentCode=localStorage.getItem('agentCode');
+  agentCode = localStorage.getItem('agentCode');
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -46,34 +47,50 @@ export class ProposalsListComponent {
   allJsonFormData: any[] = []
   formData: any = {}
   currentDate = new Date().toISOString().split('T')[0];
-  proposalListRequestBody={
+  proposalListRequestBody = {
     "proposer": "",
-    "productVarientName": "",  
-    "proposalNumber": "", 
-    "agentCode": this.agentCode, 
-    "policyType": "", 
-    "proposalStatus": "", 
+    "productVarientName": "",
+    "proposalNumber": "",
+    "agentCode": this.agentCode,
+    "policyType": "",
+    "proposalStatus": "",
     "startDate": null as string | null,
-    "endDate": null as string | null, 
+    "endDate": null as string | null,
     "pageNumber": this.page,
-    "pageSize": this.rows, 
-    "mobileNumber": "",  
-    "filterType": "",  
-    "email": "",  
+    "pageSize": this.rows,
+    "mobileNumber": "",
+    "filterType": "",
+    "email": "",
     "leadId": ""
- } 
- 
+  }
+
+  quoteListRequestBody = {
+    "agentCode": this.agentCode,
+    "name": "",
+    "productVarientName": "",
+    "proposalNumber": "",
+    "startDate": null as string | null,
+    "endDate": null as string | null,
+    "pageNumber": this.page,
+    "pageSize": this.rows,
+    "mobileNumber": "",
+    "filterType": "",
+    "quoteId": ""
+  }
+
+  searchApplied: boolean = false;
+
   constructor(
     private proposalService: ProposalsService,
     private datePipe: DatePipe,
-    private commonService:CommonService, private router: Router,
+    private commonService: CommonService, private router: Router,
     private toast: NgToastService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
-   private translateService: TranslateService,
-   private activatedRoute: ActivatedRoute
-  ) {}
-  
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute
+  ) { }
+
   ngOnInit(): void {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -82,13 +99,13 @@ export class ProposalsListComponent {
         }
       });
     });
-    this.activatedRoute.queryParams.subscribe((params : any) => {
-      let routeStatus  = params['status'];
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      let routeStatus = params['status'];
       const filter = params['filter'];
-      if(routeStatus){
-        console.log("route status",routeStatus);
+      if (routeStatus && filter) {
+        console.log("route status", routeStatus);
         this.selected = "proposalStatus"
-        this.searchInputControl.setValue(routeStatus); 
+        this.searchInputControl.setValue(routeStatus);
         this.applySearch();
       }
       if (filter) {
@@ -102,14 +119,14 @@ export class ProposalsListComponent {
             );
             this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
             break;
-    
+
           case 'LastMonth':
             const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
             const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
             this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
             this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
             break;
-    
+
           case 'QuarterWise':
             const currentMonth = currentDate.getMonth();
             const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
@@ -118,7 +135,7 @@ export class ProposalsListComponent {
             this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
             this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
             break;
-    
+
           case 'FinancialYear':
             const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
             const financialYearStartDate = new Date(year, 3, 1); // April 1st
@@ -126,11 +143,11 @@ export class ProposalsListComponent {
             this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
             this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
             break;
-    
+
           default:
             console.log("Unknown filter:", filter);
             break;
-        }    
+        }
         this.applyFilter();
       }
     });
@@ -144,19 +161,37 @@ export class ProposalsListComponent {
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getProposalList();
   }
+
+
+  getProposal(){
+    this.countsList = [];
+    this.totalRecords = 0;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.proposalListRequestBody.pageNumber = this.page;
+    this.proposalListRequestBody.pageSize = this.rows;
+    this.proposalListRequestBody.productVarientName= "";
+    this.proposalListRequestBody.startDate = null;
+    this.proposalListRequestBody.endDate = null;
+    this.getProposalList() ;
+  }
+
   getProposalList() {
     this.proposalListRequestBody.pageNumber = this.page;
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalService.getProposalListApi(this.proposalListRequestBody).subscribe(
-      (response) => { 
+      (response) => {
         if (response.isSuccess) {
           this.proposalList = response.data.proposalList.map((item: any) => ({
-            ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
+            ...item, policyStartDate: this.formatStartDate(item.policyStartDate)
           }));
-          console.log("proposal List",this.proposalList);
+          console.log("proposal List", this.proposalList);
           this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType]; 
-        } 
+          this.totalRecords = response.data[this.filterType];
+        }
         else {
           console.error("API request was not successful.");
         }
@@ -166,13 +201,54 @@ export class ProposalsListComponent {
       }
     );
   }
-  filterQuotes(filter: string,filterRange: string) {
+
+  getQuoteList(clean : boolean) {
+    if(clean){
+    this.countsList = [];
+    this.totalRecords = 0;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.quoteListRequestBody.pageNumber = this.page;
+    this.quoteListRequestBody.pageSize = this.rows;
+    this.quoteListRequestBody.productVarientName= "";
+    this.quoteListRequestBody.startDate = null;
+    this.quoteListRequestBody.endDate = null;
+    }
+
+    this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
+      (response) => {
+        if (response.isSuccess) {
+           this.quoteList =  response?.data?.cartList.map((item: any) => ({
+            ...item, createdOn: this.formatStartDate(item.createdOn)
+          }));
+
+           this.countsList = response?.data;
+           this.totalRecords = response.data[this.filterType];
+        }
+      }, (error) => {
+        this.toast.error({ detail: "", summary: "Failed to get quote list.", duration: 2000 });
+      });
+  }
+
+  
+  filterQuotes(filter: string, filterRange: string) {
     this.proposalListRequestBody.filterType = filter;
-    this.first = 0;this.page = 1;
+    this.first = 0; this.page = 1;
     this.getProposalList();
     this.activeFilter = filter;
     this.filterType = filterRange;
   }
+
+  filterQuoteDate(filter: string, filterRange: string) {
+    this.quoteListRequestBody.filterType = filter;
+    this.first = 0; this.page = 1;
+    this.getQuoteList(false);
+    this.activeFilter = filter;
+    this.filterType = filterRange;
+  }
+
   formatStartDate(datetime: string): string {
     return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
@@ -184,13 +260,13 @@ export class ProposalsListComponent {
     }
   }
   getProducts() {
-    const productsReqBody={
+    const productsReqBody = {
       "agentCode": this.agentCode
     }
     this.commonService.Getproductlist(productsReqBody).subscribe({
       next: (res) => {
-        console.log("product list",this.productsList)
-        this.productsList=res.data
+        console.log("product list", this.productsList)
+        this.productsList = res.data
       },
       error: (err) => {
         this.toast.error({ detail: "", summary: "Failed to get Product Names.", duration: 2000 });
@@ -199,7 +275,7 @@ export class ProposalsListComponent {
   }
   toggleFilterDropdown(event: Event) {
     event.stopPropagation();
-    this.toggeledropdown = !this.toggeledropdown;    
+    this.toggeledropdown = !this.toggeledropdown;
   }
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
@@ -224,31 +300,46 @@ export class ProposalsListComponent {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    this.proposalListRequestBody.startDate=this.startDate;
-    console.log("start date taken by request body",this.proposalListRequestBody.startDate);
-    this.proposalListRequestBody.endDate=this.endDate;
-    console.log("end date taken by request body",this.proposalListRequestBody.endDate);
+    this.proposalListRequestBody.startDate = this.startDate;
+    console.log("start date taken by request body", this.proposalListRequestBody.startDate);
+    this.proposalListRequestBody.endDate = this.endDate;
+    console.log("end date taken by request body", this.proposalListRequestBody.endDate);
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("selectedProducts",selectedProducts);     
+    console.log("selectedProducts", selectedProducts);
     this.proposalListRequestBody.productVarientName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.proposalListRequestBody.productVarientName);  
+    console.log("product names which are taking by request body", this.proposalListRequestBody.productVarientName);
     const selectedPolicyTypes = this.StaticPolicyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
-      console.log("selected policy types",selectedPolicyTypes);  
+    console.log("selected policy types", selectedPolicyTypes);
     this.proposalListRequestBody.policyType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body",this.proposalListRequestBody.policyType); 
+    console.log("policy types which are taking by request body", this.proposalListRequestBody.policyType);
     this.first = 0;
     this.page = 1;
     this.getProposalList();
-    this.toggeledropdown=false;
+    this.toggeledropdown = false;
   }
+
+  quoteApplyFilter() {
+    this.calculateAppliedFiltersCount();
+    this.formatDate("startDate");
+    this.formatDate("endDate");
+    this.quoteListRequestBody.startDate = this.startDate;
+    this.quoteListRequestBody.endDate = this.endDate;
+    const selectedProducts = this.productsList.filter((product) => product.selected).map((product) => product.productName);
+    this.quoteListRequestBody.productVarientName = selectedProducts.join(", "); 
+    this.first = 0;
+    this.page = 1;
+    this.getQuoteList(false);
+    this.toggeledropdown = false;
+  }
+
   cancel() {
     this.toggeledropdown = false;
   }
-  clear(){
+  clear() {
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
@@ -260,6 +351,18 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.endDate = null;
     this.getProposalList();
   }
+
+  quoteClear() {
+    this.productsList.forEach((product) => (product.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.quoteListRequestBody.productVarientName = "";
+    this.quoteListRequestBody.startDate = null;
+    this.quoteListRequestBody.endDate = null;
+    this.getQuoteList(false);
+  }
+
   onSelectChanges(event: any): void {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
@@ -295,52 +398,124 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.mobileNumber = "";
     this.proposalListRequestBody.proposer = "";
     this.proposalListRequestBody.leadId = "";
-    this.proposalListRequestBody.proposalNumber ="",
-    this.proposalListRequestBody.proposalStatus ="",
-    this.searchInputControl.reset();
+    this.proposalListRequestBody.proposalNumber = "",
+      this.proposalListRequestBody.proposalStatus = "",
+      this.searchInputControl.reset();
+    this.searchApplied = false;
     this.getProposalList();
   }
-  applySearch() {    
-    if (this.searchInputControl.valid) {  
-      const trimmedValue = this.searchInputControl.value?.trim();     
+  quoteCancelSearch() {
+    this.selected = "";
+    this.quoteListRequestBody.mobileNumber = "";
+    this.quoteListRequestBody.name = "";
+    this.quoteListRequestBody.quoteId = "";
+    this.quoteListRequestBody.proposalNumber = "",
+      this.searchInputControl.reset();
+    this.searchApplied = false;
+    this.getQuoteList(false);
+  }
+  applySearch() {
+    if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim();
       if (this.selected === "mobileNumber") {
         this.proposalListRequestBody.mobileNumber = trimmedValue || "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber =""
-        this.proposalListRequestBody.proposalStatus="";
+        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalStatus = "";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber =""
-        this.proposalListRequestBody.proposalStatus="";
+        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalStatus = "";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.proposalNumber =""
-        this.proposalListRequestBody.proposalStatus="";
-      }else if (this.selected === "proposalNumber") {                
+        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalStatus = "";
+      } else if (this.selected === "proposalNumber") {
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalStatus="";
+        this.proposalListRequestBody.proposalStatus = "";
       }
-      else if (this.selected === "proposalStatus") {  
-        console.log("seleted",this.selected);
+      else if (this.selected === "proposalStatus") {
+        console.log("seleted", this.selected);
         this.proposalListRequestBody.proposalStatus = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalNumber = ""
       }
       this.first = 0;
       this.page = 1;
       this.getProposalList();
     }
   }
+
+  quoteapplySearch() {
+    if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim();
+      if (this.selected === "mobileNumber") {
+        this.quoteListRequestBody.mobileNumber = trimmedValue || "";
+        this.quoteListRequestBody.name = "";
+        this.quoteListRequestBody.quoteId = "";
+        this.quoteListRequestBody.proposalNumber = ""
+      } else if (this.selected === "proposerName") {
+        this.quoteListRequestBody.name = trimmedValue || "";
+        this.quoteListRequestBody.mobileNumber = "";
+        this.quoteListRequestBody.quoteId = "";
+        this.quoteListRequestBody.proposalNumber = ""
+      }else if (this.selected === "proposalNumber") {
+        this.quoteListRequestBody.proposalNumber = trimmedValue || "";
+        this.quoteListRequestBody.mobileNumber = "";
+        this.quoteListRequestBody.name = "";
+        this.quoteListRequestBody.quoteId = "";
+      }else if (this.selected === "quoteId") {
+        this.quoteListRequestBody.quoteId = trimmedValue || "";
+        this.quoteListRequestBody.mobileNumber = "";
+        this.quoteListRequestBody.name = "";
+        this.quoteListRequestBody.proposalNumber = ""
+      }
+      this.first = 0;
+      this.page = 1;
+      this.getQuoteList(false);
+    }
+  }
+  triggerSearch(): void {
+    if (!this.selected) {
+      console.log("No dropdown option selected");
+      return;
+    }  
+    if (this.searchInputControl.valid && this.searchInputControl.value?.trim()) {
+      console.log("Valid input", this.searchInputControl.value);  
+      if (!this.searchApplied) {
+        this.applySearch();
+        this.searchApplied = true;
+      } else {
+        this.cancelSearch();
+        this.searchApplied = false;
+      }
+    } else {
+      console.log("Invalid input or empty value");
+    }
+  }
+
+  quoteTriggerSearch(): void {
+   if(this.searchInputControl.valid){
+    if (!this.searchApplied) {
+      this.quoteapplySearch();
+      this.searchApplied = true;
+    } else {
+      this.quoteCancelSearch();
+      this.searchApplied = false;
+    }
+   }
+  }
+
   customerListView(view: string) {
     this.selectedView = view;
   }
@@ -354,19 +529,19 @@ export class ProposalsListComponent {
         console.warn('Unknown action:', event);
     }
   }
-  async redirect(proposalDetails: any){
+  async redirect(proposalDetails: any) {
 
     console.log(proposalDetails);
-    
+
     try {
       const reqData = {
-        partnerId : proposalDetails.partnerId,
-        productId : proposalDetails.productId,
-        formId : proposalDetails.formId,
-        proposalNum : proposalDetails.proposalNumber,
-        agentCode : this.agentCode,
-        currentFormSequence : proposalDetails.formSequence,
-        leadId : proposalDetails.leadId
+        partnerId: proposalDetails.partnerId,
+        productId: proposalDetails.productId,
+        formId: proposalDetails.formId,
+        proposalNum: proposalDetails.proposalNumber,
+        agentCode: this.agentCode,
+        currentFormSequence: proposalDetails.formSequence,
+        leadId: proposalDetails.leadId
       }
       localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
@@ -377,11 +552,11 @@ export class ProposalsListComponent {
       // await this.getProposalNum();
       // const productData = {
       //  "partnerId": 1,
-  // "productId": 1,
-  // "formId": 1,
-  // "proposalNum": "UPP110611475112",
-  // "agentCode": "4620973",
-  // "currentFormSequence": "0
+      // "productId": 1,
+      // "formId": 1,
+      // "proposalNum": "UPP110611475112",
+      // "agentCode": "4620973",
+      // "currentFormSequence": "0
       // }
       // await this.getFormSequence(productData);
       // if (this.formSequence != null && this.formSequence.length > 0) {
@@ -431,9 +606,18 @@ export class ProposalsListComponent {
   checkView() {
     this.isDesktopView = window.innerWidth <= 1116;
     if (this.isDesktopView) {
-      this.selectedView = 'grid'; 
-    }else {
+      this.selectedView = 'grid';
+    } else {
       this.selectedView = 'list'; // Use 'grid' view for desktop
     }
+  }
+  maskEmail(email: any): string {
+    const [localPart, domain] = email.split('@');
+    const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
+    return `${maskedLocal}@${domain}`;
+  }
+  
+  maskMobileNumber(mobileNumber: any): string {
+    return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
 }

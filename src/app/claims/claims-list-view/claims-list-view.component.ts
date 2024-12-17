@@ -77,6 +77,7 @@ export class ClaimsListViewComponent implements OnInit {
      private translateService: TranslateService) { }
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     this.designationName = localStorage.getItem('designation')
     if(this.designationName === 'DIRECT'){
       this.designationName = 'Agent'
@@ -123,13 +124,13 @@ export class ClaimsListViewComponent implements OnInit {
     this.fetchData();
   }
 
-  getFromDate(event: any) {
-    this.fromDate = event.target.value;
-  }
+  // getFromDate(event: any) {
+  //   this.fromDate = event.target.value;
+  // }
 
-  getToDate(event: any) {
-    this.toDate = event.target.value;
-  }
+  // getToDate(event: any) {
+  //   this.toDate = event.target.value;
+  // }
 
   //---------API Call-------//
   claimsReqBody = {
@@ -138,8 +139,8 @@ export class ClaimsListViewComponent implements OnInit {
     "requestId": "",
     "policyNumber": "",
     "requestType": "",
-    "startDate": null as string | null,
-    "endDate": null as string | null,
+    "startDate": null,
+    "endDate": null,
     "pageNumber": 1,
     "pageSize": 10,
     "mobileNumber": "",
@@ -168,18 +169,6 @@ export class ClaimsListViewComponent implements OnInit {
     });
 
   }
-
-  formatDate(dateType: "fromDate" | "toDate") {
-    if (dateType === "fromDate" && this.fromDate) {
-      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
-    } else if (dateType === "toDate" && this.toDate) {
-      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
-    }
-    if (this.toDate < this.fromDate) {
-      this.toDate = "";
-    }
-  }
-
 
   toggleFilterDropdown() {
     if (this.toggeleSearchdropdown == true) {
@@ -220,20 +209,35 @@ export class ClaimsListViewComponent implements OnInit {
     }
     this.appliedFiltersCount = count;
   }
+  formatDate(dateType: "startDate" | "endDate") {
+    if (dateType === "startDate" && this.fromDate) {
+      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    } else if (dateType === "endDate" && this.toDate) {
+      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    }
+    // Ensure endDate is not earlier than startDate
+    if (this.toDate && this.fromDate && this.toDate < this.fromDate) {
+      this.toDate = null; 
+    }
+  }
+
   applyFilter() {
     this.calculateAppliedFiltersCount();
-    this.formatDate(this.startDate);
-    this.formatDate(this.endDate);
-    this.claimsReqBody.startDate = this.startDate;
+    this.formatDate('startDate');
+    this.formatDate('endDate');
+    
+    this.claimsReqBody.startDate = this.fromDate; 
+    this.claimsReqBody.endDate = this.toDate; 
+    
     console.log("start date taken by request body", this.claimsReqBody.startDate);
-    this.claimsReqBody.endDate = this.endDate;
     console.log("end date taken by request body", this.claimsReqBody.endDate);
-    const selectedProducts = this.productsList
+      const selectedProducts = this.productsList
       .filter((product: any) => product.selected)
       .map((product: any) => product.productName);
     console.log("selectedProducts", selectedProducts);
     this.claimsReqBody.productVarientName = selectedProducts.join(", ");
     console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
+  
     const selectedPolicyTypes = this.StaticRequestTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
@@ -245,6 +249,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.fetchData();
     this.toggeledropdown = false;
   }
+  
   cancel() {
     this.toggeledropdown = false;
   }

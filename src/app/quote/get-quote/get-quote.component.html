@@ -199,7 +199,7 @@
                         
                         <select id="zoneValue" name="zoneValue" formControlName="zoneValue" class="input-textBox" 
                         [class.input-havevalue]="quoteFormGroup.get('zoneValue')?.value" (change)="onZoneChange($event)">
-                          <option value="" disabled selected>{{"" | translate}}</option>
+                          <!-- <option value="" disabled selected>{{"Select Zone" | translate}}</option> -->
                           <option *ngFor="let zone of upgradableZones" [value]="zone.value">{{ zone.name | translate }}</option>
                         </select>
                         <label for="zoneValue" class="get-quote-label">
@@ -219,6 +219,8 @@
                         <option value="" disabled selected>{{"Select Gender" | translate}}</option>
                           <option value="M">{{ "Male" | translate }}</option>
                           <option value="F">{{ "Female" | translate }}</option>
+                          <option value="A">{{ "Other Male" | translate }}</option>
+                          <option value="B">{{ "Other Female" | translate }}</option>
                         </select>
                         <label for="proposerGender" class="get-quote-label">
                           {{"Select Gender" | translate}} <span class="required">*</span>

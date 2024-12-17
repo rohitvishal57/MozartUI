@@ -11,7 +11,8 @@ export interface ProposalList {
     proposalStatus : string;
     productVarientName: string;
     mobileNo: number;
+    sumInsured:string;
     totalPremiumInt: number;
-    emailID: string;
+    proposerEmail: string;
     leadId:string;
   }

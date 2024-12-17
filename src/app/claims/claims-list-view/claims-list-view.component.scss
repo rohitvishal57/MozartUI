@@ -1,6 +1,7 @@
 /* Required Css Start */
-.heading-16-red{
-  font-size: 15px;
+.card_btnGroup{
+  display: flex;
+  gap: 3px;
 }
 ::ng-deep .table>:not(caption)>*>* {
   background: hidden;

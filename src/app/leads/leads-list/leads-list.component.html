@@ -62,6 +62,9 @@
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAllLeads()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                    </button>
                     <div class="filterWraper">
                         <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
@@ -176,7 +179,7 @@
                                     <th>{{"Assigned To" |  translate}}</th>
                                     <th>{{"Lead Status"}}</th>
                                     <th nowrap>{{"Created Date" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
-                                    <th class="text-center">{{"Notice" | translate}}</th>
+                                    <th class="text-center">{{"Action" | translate}}</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -191,7 +194,9 @@
                                     <td>{{row.leadNumber}}</td>
                                     <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
                                     <td><span class="text-break-w200">{{row.interestedProductName}}</span></td> 
-                                    <td>{{row?.phoneNumber}}<br /><span class="text-break-w200" title="{{row.email}}">{{row.email}}</span></td>
+                                    <td>{{maskMobileNumber(row?.phoneNumber)}}<br />
+                                        <span class="text-break-w200" title="{{ row.email }}">{{ maskEmail(row.email) }}</span>                                    
+                                    </td>
                                     <td> {{row?.leadAssignee||'-'}}</td>
                                     <td>{{row.leadStatus ? row.leadStatus : '-'}}</td>
                                     <td>{{formatCreatedOn(row.createdon)}}</td>
@@ -203,22 +208,16 @@
                                                     src="assets/Img/icon_edit_grey.svg"></button>
                                             <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
                                                      src="assets/Img/icon_add_notes.svg"></button>
-                                            <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote" ><img
-                                                     src="assets/Img/icon_savenew_subquote.svg"></button>
-
-                                            <!-- <button type="button" value="more" title="More"
-                                                class="btn_action btn_moreAction" aria-label="item-moreaction"
-                                                [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><img
-                                                    src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
+                                            <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote"><img
+                                                     src="assets/Img/icon_savenew_subquote.svg">        
+                                            </button>
+                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                                src="assets/Img/icon_download_grey.svg">        
+                                           </button>
                                             <mat-menu #moreMenu="matMenu"
                                                 class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <!-- <li class="actionItem"> <a (click)="editLead(row.leadNumber)">
-                                                                <img src="assets/Img/icon_download2_grey.svg">
-                                                                <span>Edit Lead</span></a>
-                                                        </li> -->
                                                         <li class="actionItem">
                                                             <a (click)="markDuplicate(row.leadNumber)">
                                                                 <img src="assets/Img/icon_delete_grey.svg" alt="Delete">

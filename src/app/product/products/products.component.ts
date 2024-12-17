@@ -48,6 +48,8 @@ export class ProductsComponent implements OnInit {
   paramLeadId: any;
   leadId: any;
   quickQuoteRedirect : Boolean = false;
+  searchProductName : any ;
+  productsInformation  : any[] =[];
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -56,9 +58,7 @@ export class ProductsComponent implements OnInit {
    private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
 
   ngOnInit(): void {
-    this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
-    console.log(this.paramLeadId)
-
+    
     this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
       if(this.leadId){
@@ -67,6 +67,8 @@ export class ProductsComponent implements OnInit {
     });
 
     this.route.params.subscribe(async (params) => {
+        this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
+        console.log(this.paramLeadId)
       if (Object.keys(this.route.snapshot.params).length > 0) {
         console.log('Route has parameters:', params);
         this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
@@ -82,7 +84,8 @@ export class ProductsComponent implements OnInit {
         localStorage.setItem('leadId', this.paramLeadId.LeadId)
         this.agentCode = this.paramLeadId.AgentCode;
       }
-    
+
+    if(this.paramLeadId !== "undefined"){      
       try {
         const reqData = {
           partnerId: this.partnerId,
@@ -92,52 +95,10 @@ export class ProductsComponent implements OnInit {
         console.log(res);
         this.formSequence = JSON.parse(res.data.formSequence);
         console.log(this.formSequence);
-        // if(this.agentCode != "467898"){
-        //   this.isD2C = false;
-        // }
-        // console.log(this.formSequence[this.getFormIndexValue()].formName)
-        // console.log(this.paramLeadId.CurrentIndex)
-        // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-        // if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
-        //   let reqObj = {
-        //     "leadId": this.leadId
-        //   }
-        //   this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
-        //     next: (res: any) => {
-        //       console.log(res);
-        //       res = JSON.parse(res.data).data
-        //       console.log(res);
-        //       this.policyDetails = res;
-        //       console.log(this.policyDetails);
-        //       this.filteredPolicies = this.policyDetails.policyDetails.filter(
-        //         (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
-        //       );
-              
-        //       console.log(this.filteredPolicies);
-
-        //       console.log(this.dynamicFormGroup.value);
-              
-        //       this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-        //       this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
-        //       this.formData.productName = this.filteredPolicies[0]?.productName || null;
-        //       this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-        //       this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
-        //       this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
-        //       // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
-        //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-              
-        //       console.log(this.dynamicFormGroup.value);
-
-        //       // Merging updated formData with dynamicFormGroup values
-        //     },
-        //     error: (err) => {
-        //       console.error(err);
-        //     }
-        //   });
-        // }
       } catch (err) {
         console.error(err);
       }
+    }
     });
     
 
@@ -165,7 +126,7 @@ export class ProductsComponent implements OnInit {
     }
     this.productService.Getproductlist(reqData).subscribe({
       next: (res: any) => {
-        this.ProductList = res.data;
+        this.ProductList = this.productsInformation = res.data;
         console.log(this.ProductList)
       },
       error: (err) => {
@@ -177,6 +138,7 @@ export class ProductsComponent implements OnInit {
     })
     
   }
+
   // async insurenow(item: any) {
   //   this.removeFromCart(item);
   //   this.formData = { ...this.formData, productName: item.productName }
@@ -366,7 +328,7 @@ removeCompareItemProduct(item: any){
   
 }
 navigateToProductComparison(){
-  this.productService.navigateToProductComparison(this.compareItems);
+  this.productService.navigateToProductComparison(this.compareItems ,'products');
 }
 
 closeProductComparison(){
@@ -431,6 +393,13 @@ donwloadBrowcher(productName : any){
     catch (error) {
       console.log("Failed to fetch lead Information!", error)
     }
+  }
+
+  productSearch() {
+    this.ProductList = this.productsInformation;
+    this.ProductList = this.ProductList.filter(product =>
+      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
+    );
   }
 
 }

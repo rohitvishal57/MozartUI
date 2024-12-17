@@ -14,6 +14,7 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 declare var bootstrap: any;
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
+import { ExcelExportService } from 'src/app/services/excel-export.service';
 
 @Component({
   selector: 'app-leads-list',
@@ -83,6 +84,7 @@ export class LeadsListComponent {
   ProductList :any = [];
   leadId: any;
 
+
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -95,7 +97,8 @@ export class LeadsListComponent {
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private excelExportService: ExcelExportService
   ) { }
 
   leadsInfoListRequestBody ={
@@ -128,12 +131,54 @@ export class LeadsListComponent {
 
     this.activatedRoute.queryParams.subscribe((params : any) => {
       let routeLeadStatus  = params['status'];
-      if(routeLeadStatus){
+      const filter = params['filter'];
+      if(routeLeadStatus && filter){
         this.leadFilterStatus.map((leadStatus:any)=>{
          if(leadStatus.name == routeLeadStatus){
           leadStatus.selected = true;
          } 
         });
+        if (filter) {
+          console.log("route filter", filter);
+          const currentDate = new Date();
+          switch (filter) {
+            case 'Last7Days':
+              this.startDate = this.datePipe.transform(
+                new Date(currentDate.setDate(currentDate.getDate() - 7)),
+                'yyyy-MM-dd'
+              );
+              this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+              break;
+      
+            case 'LastMonth':
+              const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+              const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+              this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
+              break;
+      
+            case 'QuarterWise':
+              const currentMonth = currentDate.getMonth();
+              const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+              const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
+              const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
+              this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
+              break;
+      
+            case 'FinancialYear':
+              const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
+              const financialYearStartDate = new Date(year, 3, 1); // April 1st
+              const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
+              this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
+              break;
+      
+            default:
+              console.log("Unknown filter:", filter);
+              break;
+          }
+        }
         this.applyFilter();
       }
     });
@@ -152,6 +197,7 @@ export class LeadsListComponent {
 
     this.today = new Date().toISOString().split('T')[0];
     this.checkView(); //Screen View check
+    
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
@@ -502,6 +548,11 @@ export class LeadsListComponent {
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
+            if(lead.proposalNumber){
+              proposalNumber = lead.proposalNumber;
+            }else{
+              proposalNumber = await this.generateProposalNumnberAndUpdateLeadInfor(lead.leadNumber);
+            }
             const reqData = {
               "partnerId": interestedProductItem.partnerId,
               "productId": interestedProductItem.productId
@@ -518,34 +569,10 @@ export class LeadsListComponent {
           } catch (err) {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
-
-          // if (lead.leadStatus.includes('Open')) {
-          //   try {
-          //     const response = await firstValueFrom(this.common.getProposalNumber());
-          //     proposalNumber = response.data?.proposalNumber;
-          //   } catch (err) {
-          //     this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          //   }
-          // } else {
-          //   proposalNumber = lead?.proposalNumber??'';
-          // }
-
-          // const productData = {
-          //   partnerId: interestedProductItem.partnerId,
-          //   productId: interestedProductItem.productId,
-          //   quickQuoteRedirect : true,
-          //   leadId :  lead.leadNumber,
-          //   proposalNum: lead?.proposalNumber??''
-          // }
-        
-
-          //   this.router.navigate(['yatra'], {
-          //     state: { productData: productData, formSequence: formSequence }
-          //  });
           const reqData = {
             partnerId : interestedProductItem.partnerId,
             productId : interestedProductItem.productId,
-            proposalNum : lead.proposalNumber,
+            proposalNum : proposalNumber,
             agentCode : this.agentCode,
             isLead : true,
             currentFormSequence : lead.formSequence,
@@ -589,4 +616,79 @@ export class LeadsListComponent {
       this.selectedView = 'list'; // Use 'grid' view for desktop
     }
   }
+
+
+  async generateProposalNumnberAndUpdateLeadInfor(leadNumber : any) {
+    try {
+      const proposalGenerateResponse = await firstValueFrom(this.common.getProposalNumber());
+      let proposalNumber = proposalGenerateResponse.data?.proposalNumber;
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
+      const leadInformation = response?.data?.leadList[0];
+      leadInformation.proposalNumber = proposalNumber;
+      leadInformation.isUpdate = 1;
+      this.leadsService.saveLeadData(leadInformation).subscribe(
+        (response) => {
+          console.log("Lead has been Successfully Updated", response);
+        }, (error) => {
+          console.log("Failed to update Lead Infomation", error);
+        });
+      return proposalNumber;
+    }
+    catch (error) {
+      console.log("Failed to fetch lead Information!", error)
+      return 0;
+    }
+
+  }
+
+  downloadSingleItem(item: any): void {
+    this.excelExportService.exportToExcel([item], `Lead_${item.leadNumber}`);
+  }
+
+  maskEmail(email: any): string {
+    const [localPart, domain] = email.split('@');
+    const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
+    return `${maskedLocal}@${domain}`;
+  }
+  
+  maskMobileNumber(mobileNumber: any): string {
+    return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
+  }
+
+  downloadAllLeads(){
+    this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
+     (response)=>{
+     debugger;
+     if(response.isSuccess){
+      //this.downloadExcel(  response.fileContentBase64 ,    response.fileName);
+      const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = response?.data?.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
+
+     }
+     },
+     (error)=>{
+      console.log('Exception',error);
+     });
+  }
+
+
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
+  }
+  
 }

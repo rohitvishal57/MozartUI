@@ -30,4 +30,12 @@ export class PerformanceService {
         return data;
       }));
   }
+  fetchCommissionStatement(requestBody: string) {
+    const requestUrl = this.configService.config.baseUrl + this.configService.config.fetchCommmission;
+    return this.http.post<any>(requestUrl, requestBody);
+  }
+  downloadCommissionStatement(requestBody: string) {
+    const requestUrl = this.configService.config.baseUrl + this.configService.config.downloadCommmissionStatement;
+    return this.http.post<any>(requestUrl, requestBody);
+  }
 }

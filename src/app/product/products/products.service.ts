@@ -39,11 +39,13 @@ removeCompareItem(item: any , compareItems : any){
   console.log('Item removed from comparison.');
   return compareItems;
 }
-navigateToProductComparison(compareItems : any){
-  compareItems = compareItems.map((product:any) =>{
-    product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
-    return product;
-  });
+navigateToProductComparison(compareItems : any , module : any ){
+  if(module.includes('z')){
+    compareItems = compareItems.map((product:any) =>{
+      product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
+      return product;
+    });
+  }
   sessionStorage.setItem('compareItems', JSON.stringify(compareItems));
   this.router.navigate(['/products/comparison'], {
   });

@@ -1,4 +1,7 @@
 export interface IForm {
+  value(arg0: string, value: any): unknown;
+  valid: any;
+  get(field: any): unknown;
   formTitle: string;
   saveBtnTitle?: string;
   saveBtnFunction?: string;
@@ -118,6 +121,8 @@ export interface ISubControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  visibleToolTip?:boolean;
+  toolTipMessage?:string;
 }
 
 export interface ITab {

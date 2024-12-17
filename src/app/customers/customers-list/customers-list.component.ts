@@ -55,6 +55,7 @@ export class CustomersListComponent {
   customerClaimDetails: any[]=[];
   customerEndorsementDetails: any[]=[];
   customerInsuredDetails: any[]=[];
+  searchApplied: boolean=false;
 
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
@@ -247,6 +248,7 @@ export class CustomersListComponent {
     this.customerListRequestBody.policyNumber = "";
     this.customerListRequestBody.emailID ="",
     this.searchInputControl.reset();
+    this.searchApplied=false;
     this.getCustomerList();
   }
   applySearch() {    
@@ -276,6 +278,24 @@ export class CustomersListComponent {
       this.first = 0;
       this.page = 1;
       this.getCustomerList();
+    }
+  }
+  triggerSearch(): void {
+    if (!this.selected) {
+      console.log("No dropdown option selected");
+      return;
+    }  
+    if (this.searchInputControl.valid && this.searchInputControl.value?.trim()) {
+      console.log("Valid input", this.searchInputControl.value);  
+      if (!this.searchApplied) {
+        this.applySearch();
+        this.searchApplied = true;
+      } else {
+        this.cancelSearch();
+        this.searchApplied = false;
+      }
+    } else {
+      console.log("Invalid input or empty value");
     }
   }
 

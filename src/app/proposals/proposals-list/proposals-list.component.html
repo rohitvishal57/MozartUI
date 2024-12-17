@@ -1,240 +1,673 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <h2>{{"My Proposals" | translate}}</h2>
-            <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
-                <div class="quickFilterLeft">
-                    <ul class="quickFilter">
-                        <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
-                        <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList.totalRecords}})</button></li>
-                        <li><button type="button" id="af-30days" name="af-30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysCreated'}" (click)="filterQuotes('<30DaysCreated','createdInLessThan30DaysCount')">{{"< 30 Days" | translate}} ({{countsList.createdInLessThan30DaysCount}})</button></li>
-                        <li><button type="button" id="af-60days" name="af-60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60DaysCreated'}" (click)="filterQuotes('30-60DaysCreated','createdIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.createdIn30To60DaysCount}})</button></li>
-                        <li><button type="button" id="af-90days" name="af-90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90DaysCreated'}" (click)="filterQuotes('60-90DaysCreated','createdIn60To90DaysCount')">{{"60-90 Days" | translate}} ({{countsList.createdIn60To90DaysCount}})</button></li>
+            <div class="body_flex_row justify-content-between">
+                <h2>{{"My Proposals" | translate}}</h2>
+                <div class="main_productTabs">
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-proposals-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-proposals" type="button" role="tab" aria-controls="tab-proposals"
+                                aria-selected="true" (click)="getProposal()">{{"Proposals"| translate}}</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-quotes-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-quotes" type="button" role="tab" aria-controls="tab-quotes"
+                                aria-selected="false" (click)="getQuoteList(true)">{{"Quotes" | translate}}</button>
+                        </li>
                     </ul>
                 </div>
-                <div class="quickFilterRight">
-                    <div class="common_searchWraper common_searchWraper_proposals">
-                        <div class="field_searchMain">
-                            <div>
-                                <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                    <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
-                                    <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">{{"Mobile Number" | translate}}</option>
-                                    <option id="proposerNameOption" name="proposerNameOption" value="proposerName">{{"Proposer Name" | translate}}</option>
-                                    <option id="proposalNumberOption" name="proposalNumberOption" value="proposalNumber">{{"Proposal Number" | translate}}</option>
-                                    <option id="leadIdOption" name="leadIdOption" value="leadId">{{"Lead ID" | translate}}</option>
-                                    <option id="proposalStatus" name="proposalStatus" value="proposalStatus">{{"Proposal Status" | translate}}</option>
-                                </select>
+            </div>
+            <!--Tab Content start-->
+            <div class="tab-content" id="pills-tabContent">
+                <!--Tab Content: Notifications start-->
+                <div class="tab-pane fade show active" id="tab-proposals" role="tabpanel"
+                    aria-labelledby="tab-proposals-tab">
+                    <div class="body_flex_column">
+                        <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
+                            <div class="quickFilterLeft">
+                                <ul class="quickFilter">
+                                    <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                                    <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies"
+                                            class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}"
+                                            (click)="filterQuotes('all','totalRecords')">{{"All" | translate}}
+                                            ({{countsList.totalRecords}})</button></li>
+                                    <li><button type="button" id="af-30days" name="af-30days" value="30days"
+                                            class="btn_quickFilter"
+                                            [ngClass]="{'active': activeFilter === '<30DaysCreated'}"
+                                            (click)="filterQuotes('<30DaysCreated','createdInLessThan30DaysCount')">{{"< 30
+                                                Days" | translate}} ({{countsList.createdInLessThan30DaysCount}})</button>
+                                    </li>
+                                    <li><button type="button" id="af-60days" name="af-60days" value="60days"
+                                            class="btn_quickFilter"
+                                            [ngClass]="{'active': activeFilter === '30-60DaysCreated'}"
+                                            (click)="filterQuotes('30-60DaysCreated','createdIn30To60DaysCount')">{{"30-60
+                                            Days" |
+                                            translate}} ({{countsList.createdIn30To60DaysCount}})</button></li>
+                                    <li><button type="button" id="af-90days" name="af-90days" value="90days"
+                                            class="btn_quickFilter"
+                                            [ngClass]="{'active': activeFilter === '60-90DaysCreated'}"
+                                            (click)="filterQuotes('60-90DaysCreated','createdIn60To90DaysCount')">{{"60-90
+                                            Days" |
+                                            translate}} ({{countsList.createdIn60To90DaysCount}})</button></li>
+                                </ul>
                             </div>
-                            <div class="filterFieldGroup">
-                                <input  class="filterSearch" id="filterSearch" name="filterSearch" [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [formControl]="searchInputControl" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
-                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <!--SEARCH CLEAR BUTTON-->
-                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter a valid proposer name." | translate}}</small>
-                                </span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
-                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
-                            <div class="fw_form mobile_popupMain">
-                                <div class="filterHeader">
-                                    <header>{{"Filter" | translate}}</header>
-                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                            <div class="quickFilterRight">
+                                <div class="common_searchWraper common_searchWraper_proposals">
+                                    <div class="field_searchMain">
+                                        <div>
+                                            <select id="filterSearchOption" name="filterSearchOption" class="filterSearch"
+                                                [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null"
+                                                (ngModelChange)="onSelectChanges($event)">
+                                                <option id="selectOption" name="selectOption" value=""
+                                                    (click)="cancelSearch()">
+                                                    {{"Select an Option" | translate}}</option>
+                                                <option id="mobileNumberOption" name="mobileNumberOption"
+                                                    value="mobileNumber">{{"Mobile
+                                                    Number" | translate}}</option>
+                                                <option id="proposerNameOption" name="proposerNameOption"
+                                                    value="proposerName">
+                                                    {{"Proposer Name" | translate}}</option>
+                                                <option id="proposalNumberOption" name="proposalNumberOption"
+                                                    value="proposalNumber">
+                                                    {{"Proposal Number" | translate}}</option>
+                                                <option id="leadIdOption" name="leadIdOption" value="leadId">{{"Lead ID" |
+                                                    translate}}
+                                                </option>
+                                                <option id="proposalStatus" name="proposalStatus" value="proposalStatus">
+                                                    {{"Proposal
+                                                    Status" | translate}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="filterFieldGroup">
+                                            <input class="filterSearch" id="filterSearch" name="filterSearch"
+                                                [type]="selected === 'mobileNumber' ? 'tel' : 'text'"
+                                                [formControl]="searchInputControl" [placeholder]="getPlaceholder()"
+                                                [attr.maxlength]="selected === 'mobileNumber' ? 10 : null"
+                                                (keypress)="restrictInput($event)" (keyup.enter)="triggerSearch()">
+                                            <button type="button" id="filtersearchbtn" name="filtersearchbtn"
+                                                class="btn_text" (click)="triggerSearch()"><img *ngIf="!searchApplied"
+                                                    src="assets/Img/icon_magnify_grey.svg" alt="Search"><img
+                                                    *ngIf="searchApplied" src="assets/Img/icon_search_clear.svg"
+                                                    alt="Clear"></button>
+                                            <span
+                                                *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty"
+                                                class="ui-error ui-error-proposal block-show">
+                                                <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an
+                                                    option and
+                                                    enter." | translate}}</small>
+                                                <small *ngIf="searchInputControl.hasError('required')">{{"This field is
+                                                    required." |
+                                                    translate}}</small>
+                                                <small
+                                                    *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter
+                                                    a valid 10-digit mobile number." | translate}}</small>
+                                                <small
+                                                    *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter
+                                                    a valid proposer name." | translate}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class="fw_formBody">
-                                    <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <label for="startdate">{{"Start Date" | translate}}</label>
+                                <div class="filterWraper">
+                                    <button type="button" id="productFilter" name="productFilter" value="filter"
+                                        (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick"
+                                        [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img
+                                            src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" |
+                                        translate}}
+                                        ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                                    <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
+                                        [ngClass]="{'active': toggeledropdown}">
+                                        <div class="fw_form mobile_popupMain">
+                                            <div class="filterHeader">
+                                                <header>{{"Filter" | translate}}</header>
+                                                <button type="button" id="filterclose" name="filterclose" value="cancel"
+                                                    class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                                    (click)="cancel()"></button>
+                                            </div>
+                                            <div class="fw_formBody">
+                                                <div class="fw_formRow">
+                                                    <h6>{{"Date Range" | translate}}</h6>
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                            <div class="input-block form-floating input-block-dob">
+                                                                <input type="date" id="startdate" name="startdate" value=""
+                                                                    [max]="currentDate" placeholder="Select Start Date"
+                                                                    class="input-textBox input-date" [(ngModel)]="startDate"
+                                                                    (dateChange)="formatDate('startDate')">
+                                                                <label for="startdate">{{"Start Date" | translate}}</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                            <div class="input-block form-floating input-block-dob">
+                                                                <input type="date" id="enddate" name="enddate" value=""
+                                                                    [max]="currentDate" placeholder="Select End Date"
+                                                                    class="input-textBox input-date" [(ngModel)]="endDate"
+                                                                    (dateChange)="formatDate('endDate')">
+                                                                <label for="enddate">{{"End Date" | translate}}</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="fw_formRow">
+                                                    <h6>{{"Products" | translate}}</h6>
+                                                    <div class="fw_checkboxWraper">
+                                                        <div class="input-checkbox-block"
+                                                            *ngFor="let product of productsList; let i = index">
+                                                            <div class="input-checkbox-feild">
+                                                                <input type="checkbox" id="product{{i}}" name="product{{i}}"
+                                                                    value="products" class="input-check"
+                                                                    [(ngModel)]="product.selected"
+                                                                    (change)="calculateAppliedFiltersCount()">
+                                                                <label for="product{{i}}">{{product.productName |
+                                                                    translate}}</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="fw_formRow">
+                                                    <h6>{{"Policy Type" | translate}}</h6>
+                                                    <div class="fw_checkboxWraper">
+                                                        <div class="input-checkbox-block"
+                                                            *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                            <div class="input-checkbox-feild">
+                                                                <input type="checkbox" id="policytype{{i}}"
+                                                                    name="policytype{{i}}" value="policytype"
+                                                                    class="input-check" [(ngModel)]="policyType.selected"
+                                                                    (change)="calculateAppliedFiltersCount()">
+                                                                <label for="policytype{{i}}">{{policyType.name |
+                                                                    translate}}</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">{{"End Date" | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Products" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Policy Type" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                  <label for="policytype{{i}}">{{policyType.name | translate}}</label>
-                                                </div>
-                                              </div>                                              
+                                            <footer class="mt-3">
+                                                <button type="button" id="filterClear" name="filterClear" value="cancel"
+                                                    class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" |
+                                                    translate}}</button>
+                                                <button type="button" id="filterApply" name="filterApply" value="apply"
+                                                    class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" |
+                                                    translate}}</button>
+                                            </footer>
                                         </div>
                                     </div>
                                 </div>
-                                <footer class="mt-3">
-                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
-                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
-                                </footer>
+                                <button type="button" id="gridlist" name="gridlist" value="gridlist"
+                                    class="btn_grid mobile-hide jsBtnClickQuote"
+                                    [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
+                                    (click)="customerListView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
+                                        alt="Grid List"></button>
+                                <button type="button" id="gridcard" name="gridcard" value="gridcard"
+                                    class="btn_grid mobile-hide jsBtnClickQuote"
+                                    [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card"
+                                    (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg"
+                                        alt="Grid Card"></button>
                             </div>
-                        </div>
+                        </section>
+                        <section id="quotes-list" name="quotes-list" class="tableMain quoteView block-show "
+                            *ngIf="selectedView == 'list'">
+                            <div class="tableSubMain">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-search">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">{{"Proposal Number" | translate}}</th>
+                                                <th scope="col">{{"Lead ID" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
+                                                <th scope="col">{{"Product Name" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Policy Type" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Sum Insured" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Premium" | translate}}</th>
+                                                <th scope="col">{{"Status" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Created Date" | translate}} <div>
+                                                        <small>{{"(dd-mm-yyyy)" |
+                                                            translate}}</small>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
+                                                <th scope="col">{{"Action" | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            <tr *ngFor="let row of proposalList; let i = index">
+                                                <td>{{ row.proposalNumber }}</td>
+                                                <td><span class="text-break-w120">{{ row.leadId }}</span></td>
+                                                <td><span class="text-break-w200">{{ row.firstName }} {{row.lastName
+                                                        }}</span></td>
+                                                <td>{{ row.productVarientName }}</td>
+                                                <td>
+                                                    <div class="table-policyType">
+                                                        <div class="row-policyType">
+                                                            <span class="lable">{{ row.policyType }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ row.sumInsured }}</td>
+                                                <td>{{ row.totalPremiumInt }}</td>
+                                                <td>{{ row.proposalStatus }}</td>
+                                                <td>{{ row.policyStartDate }}</td>
+                                                <td>{{maskMobileNumber(row.mobileNo)}}<br />
+                                                    <span class="text-break-w200" title="{{ row.proposerEmail }}">{{ maskEmail(row.proposerEmail) }}</span>                                    
+                                                </td>
+                                                <td>
+                                                    <div class="btn_groupAction">
+                                                        <button type="button" id="edit" name="edit" value="edit"
+                                                            title="Edit" class="btn_action btn_editAction"
+                                                            (click)="redirect(row)"><img
+                                                                src="assets/Img/icon_edit_grey.svg"></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tableNav" *ngIf="totalRecords > 0">
+                                <nav>
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                                [rowsPerPageOptions]="[10,15,25,50,100]"
+                                                (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                            </p-paginator>
+                                        </li>
+                                        <li class="pageCountMain">
+                                            <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows
+                                                >
+                                                totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}}
+                                            <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </section>
+                        <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block"
+                            *ngIf="selectedView == 'grid'">
+                            <div class="cardViewWraper">
+                                <div class="cardViewItem" *ngFor="let row of proposalList; let i = index">
+                                    <header>
+                                        <div class="card_insureInfo">
+                                            <h6>
+                                                <div class="insureName" title="{{ row.firstName }} {{ row.lastName }}">{{
+                                                    row.firstName
+                                                    }} {{ row.lastName }}</div>
+                                            </h6>
+                                            <div class="item_productName">{{ row.productVarientName}}</div>
+                                        </div>
+                                        <div class="card_btnGroup">
+                                            <div class="btn_groupAction">
+                                                <button type="button" id="editgrid" name="editgrid" value="edit"
+                                                    title="Edit" class="btn_action btn_editAction"
+                                                    (click)="redirect(row)"><img
+                                                        src="assets/Img/icon_edit_grey.svg"></button>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <div class="cardViewBody">
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Policy Type" | translate}}</div>
+                                            <div class="item_value">{{ row.policyType }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Proposal Number" | translate}}</div>
+                                            <div class="item_value">{{ row.proposalNumber }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Status" | translate}}</div>
+                                            <div class="item_value">{{ row.proposalStatus}}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Contact Info" | translate}}</div>
+                                            <div class="item_value">{{maskMobileNumber(row.mobileNo)}}</div>
+                                            <div class="item_value">{{ maskEmail(row.proposerEmail) }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Created Date" | translate}}</div>
+                                            <div class="item_value">{{ row.policyStartDate }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Lead ID" | translate}}</div>
+                                            <div class="item_value">{{ row.leadId }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Sum Insured" | translate}}</div>
+                                            <div class="item_value">{{ row.sumInsured }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Premium" | translate}}</div>
+                                            <div class="item_value">{{ row.totalPremiumInt}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tableNav" *ngIf="totalRecords > 0">
+                                <nav>
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                                [rowsPerPageOptions]="[10,15,25,50,100]"
+                                                (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                            </p-paginator>
+                                        </li>
+                                        <li class="pageCountMain">
+                                            <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows
+                                                >
+                                                totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}}
+                                            <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </section>
+                        <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block"
+                            *ngIf="totalRecords === 0">
+                            <div class="cardViewWraper">
+                                <div class="no_dataFound">
+                                    <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                    <p>{{"No data found" | translate}}</p>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                    <button type="button" id="gridlist" name="gridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="customerListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
-                    <button type="button" id="gridcard" name="gridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
-            </section>
-            <section id="quotes-list" name="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
-                <div class="tableSubMain">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-search">
-                            <thead>
-                                <tr>
-                                    <th scope="col">{{"Proposal Number" | translate}}</th>
-                                    <th scope="col">{{"Lead ID" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
-                                    <th scope="col">{{"Product Name" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Policy Type" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Premium" | translate}}</th>
-                                    <th scope="col">{{"Status" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Created Date" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
-                                    <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
-                                    <th scope="col">{{"Notice" | translate}}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr *ngFor="let row of proposalList; let i = index">
-                                    <td>{{ row.proposalNumber }}</td>
-                                    <td><span class="text-break-w120">{{ row.leadId }}</span></td>
-                                    <td><span class="text-break-w200">{{ row.firstName }} {{row.lastName }}</span></td>
-                                    <td>{{ row.productVarientName }}</td>
-                                    <td>
-                                        <div class="table-policyType">
-                                            <div class="row-policyType">
-                                                <span class="lable">{{ row.policyType }}</span>
+            </div>
+
+            <!--Tab Content: Notifications start-->
+            <div class="tab-pane fade" id="tab-quotes" role="tabpanel" aria-labelledby="tab-quotes-tab">
+                <div class="body_flex_column">
+                    <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
+                        <div class="quickFilterLeft">
+                            <ul class="quickFilter">
+                                <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                                <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies"
+                                        class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}"
+                                        (click)="filterQuoteDate('all','totalRecords')">{{"All" | translate}}
+                                        ({{countsList.totalRecords}})</button></li>
+                                <li><button type="button" id="af-30days" name="af-30days" value="30days"
+                                        class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysCreated'}"
+                                        (click)="filterQuoteDate('<30DaysCreated','createdInLessThan30DaysCount')">{{"< 30
+                                            Days" | translate}} ({{countsList.createdInLessThan30DaysCount}})</button>
+                                </li>
+                                <li><button type="button" id="af-60days" name="af-60days" value="60days"
+                                        class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60DaysCreated'}"
+                                        (click)="filterQuoteDate('30-60DaysCreated','createdIn30To60DaysCount')">{{"30-60 Days"
+                                        |
+                                        translate}} ({{countsList.createdIn30To60DaysCount}})</button></li>
+                                <li><button type="button" id="af-90days" name="af-90days" value="90days"
+                                        class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90DaysCreated'}"
+                                        (click)="filterQuoteDate('60-90DaysCreated','createdIn60To90DaysCount')">{{"60-90 Days"
+                                        |
+                                        translate}} ({{countsList.createdIn60To90DaysCount}})</button></li>
+                            </ul>
+                        </div>
+                        <div class="quickFilterRight">
+                            <div class="common_searchWraper common_searchWraper_proposals">
+                                <div class="field_searchMain">
+                                    <div>
+                                        <select id="filterSearchOption" name="filterSearchOption" class="filterSearch"
+                                            [(ngModel)]="selected" (change)="selected === '' ? quoteCancelSearch() : null"
+                                            (ngModelChange)="onSelectChanges($event)">
+                                            <option id="selectOption" name="selectOption" value="" (click)="quoteCancelSearch()">
+                                                {{"Select an Option" | translate}}</option>
+                                            <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">
+                                                {{"Mobile
+                                                Number" | translate}}</option>
+                                            <option id="proposerNameOption" name="proposerNameOption" value="proposerName">
+                                                {{"Proposer Name" | translate}}</option>
+                                            <option id="proposalNumberOption" name="proposalNumberOption"
+                                                value="proposalNumber">
+                                                {{"Proposal Number" | translate}}</option>
+                                            <option id="proposalQuoteOption" name="proposalQuoteOption" value="quoteId">
+                                                {{"Quote ID" | translate}}</option>
+
+
+                                        </select>
+                                    </div>
+                                    <div class="filterFieldGroup">
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch"
+                                            [type]="selected === 'mobileNumber' ? 'tel' : 'text'"
+                                            [formControl]="searchInputControl" [placeholder]="getPlaceholder()"
+                                            [attr.maxlength]="selected === 'mobileNumber' ? 10 : null"
+                                            (keypress)="restrictInput($event)" (keyup.enter)="quoteTriggerSearch()">
+                                        <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text"
+                                            (click)="quoteTriggerSearch()"><img *ngIf="!searchApplied"
+                                                src="assets/Img/icon_magnify_grey.svg" alt="Search"><img
+                                                *ngIf="searchApplied" src="assets/Img/icon_search_clear.svg"
+                                                alt="Clear"></button>
+                                        <span
+                                            *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty"
+                                            class="ui-error ui-error-proposal block-show">
+                                            <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option
+                                                and
+                                                enter." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('required')">{{"This field is
+                                                required." |
+                                                translate}}</small>
+                                            <small
+                                                *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter
+                                                a valid 10-digit mobile number." | translate}}</small>
+                                            <small
+                                                *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter
+                                                a valid proposer name." | translate}}</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="filterWraper">
+                                <button type="button" id="productFilter" name="productFilter" value="filter"
+                                    (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick"
+                                    [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img
+                                        src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" |
+                                    translate}}
+                                    ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                                <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
+                                    [ngClass]="{'active': toggeledropdown}">
+                                    <div class="fw_form mobile_popupMain">
+                                        <div class="filterHeader">
+                                            <header>{{"Filter" | translate}}</header>
+                                            <button type="button" id="filterclose" name="filterclose" value="cancel"
+                                                class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                                (click)="cancel()"></button>
+                                        </div>
+                                        <div class="fw_formBody">
+                                            <div class="fw_formRow">
+                                                <h6>{{"Date Range" | translate}}</h6>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                        <div class="input-block form-floating input-block-dob">
+                                                            <input type="date" id="startdate" name="startdate" value=""
+                                                                [max]="currentDate" placeholder="Select Start Date"
+                                                                class="input-textBox input-date" [(ngModel)]="startDate"
+                                                                (dateChange)="formatDate('startDate')">
+                                                            <label for="startdate">{{"Start Date" | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                        <div class="input-block form-floating input-block-dob">
+                                                            <input type="date" id="enddate" name="enddate" value=""
+                                                                [max]="currentDate" placeholder="Select End Date"
+                                                                class="input-textBox input-date" [(ngModel)]="endDate"
+                                                                (dateChange)="formatDate('endDate')">
+                                                            <label for="enddate">{{"End Date" | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fw_formRow">
+                                                <h6>{{"Products" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block"
+                                                        *ngFor="let product of productsList; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="product{{i}}" name="product{{i}}"
+                                                                value="products" class="input-check"
+                                                                [(ngModel)]="product.selected"
+                                                                (change)="calculateAppliedFiltersCount()">
+                                                            <label for="product{{i}}">{{product.productName |
+                                                                translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td>{{ row.totalPremiumInt }}</td>
-                                    <td>{{ row.proposalStatus }}</td>
-                                    <td>{{ row.policyStartDate }}</td>
-                                    <td>
-                                        <div class="table-policyType">
-                                            <div class="row-policyType">
-                                                <span class="lable">{{ row.mobileNo }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        <footer class="mt-3">
+                                            <button type="button" id="filterClear" name="filterClear" value="cancel"
+                                                class="btn_white btn_fullWidth" (click)="quoteClear()">{{"Clear" |
+                                                translate}}</button>
+                                            <button type="button" id="filterApply" name="filterApply" value="apply"
+                                                class="btn_red btn_fullWidth" (click)="quoteApplyFilter()">{{"Apply" |
+                                                translate}}</button>
+                                        </footer>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="gridlist" name="gridlist" value="gridlist"
+                                class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}"
+                                aria-label="quotes-list" (click)="customerListView('list')"><img
+                                    src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                            <button type="button" id="gridcard" name="gridcard" value="gridcard"
+                                class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}"
+                                aria-label="quotes-card" (click)="customerListView('grid')"><img
+                                    src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                        </div>
+                    </section>
+                    <section id="quotes-list" name="quotes-list" class="tableMain quoteView block-show "
+                        *ngIf="selectedView == 'list'">
+                        <div class="tableSubMain">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-search">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">{{"Proposal Number" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Quote ID" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
+                                            <th scope="col">{{"Product Name" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Premium" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Created Date" | translate}} <div>
+                                                    <small>{{"(dd-mm-yyyy)" |
+                                                        translate}}</small>
+                                                </div>
+                                            </th>
+                                            <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr *ngFor="let row of quoteList; let i = index">
+                                            <td>{{ row.proposalNum }}</td>
+                                            <td>{{ row.quoteNumber }}</td>
+                                            <td>{{ row.proposerName }}</td>
+                                            <td>{{ row.productName }}</td>
+                                            <td>{{ row.selectedPremiumAmount }}</td>
+                                            <td>{{ row.createdOn }}</td>
+                                            <td>
+                                                <div class="table-policyType">
+                                                    <div class="row-policyType">
+                                                        <span class="lable">{{ row.mobileNumber }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                    
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tableNav" *ngIf="totalRecords > 0">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                            class="custom-paginator my-paginator">
+                                        </p-paginator>
+                                    </li>
+                                    <li class="pageCountMain">
+                                        <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows >
+                                            totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                            class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </section>
+                    <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block"
+                        *ngIf="selectedView == 'grid'">
+                        <div class="cardViewWraper">
+                            <div class="cardViewItem" *ngFor="let row of quoteList; let i = index">
+                                <header>
+                                    <div class="card_insureInfo">
+                                        <h6>
+                                            <div class="insureName" title="{{ row.firstName }} {{ row.lastName }}">
+                                                {{ row.proposerName}} </div>
+                                        </h6>
+                                        <div class="item_productName">{{ row.productName}}</div>
+                                    </div>
+                                    <div class="card_btnGroup">
                                         <div class="btn_groupAction">
-                                            <button type="button" id="edit" name="edit" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="editgrid" name="editgrid" value="edit" title="Edit"
+                                                class="btn_action btn_editAction" (click)="redirect(row)"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button>
                                         </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
-                <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of proposalList; let i = index">
-                        <header>
-                            <div class="card_insureInfo">
-                                <h6>
-                                    <div class="insureName" title="{{ row.firstName }} {{ row.lastName }}">{{ row.firstName }} {{ row.lastName }}</div>                                
-                                </h6>
-                                <div class="item_productName">{{ row.productVarientName}}</div>
-                            </div>
-                            <div class="card_btnGroup">
-                                <div class="btn_groupAction">
-                                    <button type="button" id="editgrid" name="editgrid" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    </div>
+                                </header>
+                                <div class="cardViewBody">
+                                    
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Proposal Number" | translate}}</div>
+                                        <div class="item_value">{{ row.proposalNum }}</div>
+                                    </div>
+                                
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Mobile Number" | translate}}</div>
+                                        <div class="item_value">{{ row.mobileNumber}}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Created Date" | translate}}</div>
+                                        <div class="item_value">{{ row.createdOn }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Quote ID" | translate}}</div>
+                                        <div class="item_value">{{ row.quoteNumber }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Premium" | translate}}</div>
+                                        <div class="item_value">{{ row.selectedPremiumAmount}}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </header>
-                        <div class="cardViewBody">
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Policy Type" | translate}}</div>
-                                <div class="item_value">{{ row.policyType }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Proposal Number" | translate}}</div>
-                                <div class="item_value">{{ row.proposalNumber }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Status" | translate}}</div>
-                                <div class="item_value">{{ row.proposalStatus}}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
-                                <div class="item_value">{{ row.mobileNo}}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Created Date" | translate}}</div>
-                                <div class="item_value">{{ row.policyStartDate }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Lead ID" | translate}}</div>
-                                <div class="item_value">{{ row.leadId }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Premium" | translate}}</div>
-                                <div class="item_value">{{ row.totalPremiumInt}}</div>
+                        </div>
+                        <div class="tableNav" *ngIf="totalRecords > 0">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                            class="custom-paginator my-paginator">
+                                        </p-paginator>
+                                    </li>
+                                    <li class="pageCountMain">
+                                        <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows >
+                                            totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                            class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </section>
+                    <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block"
+                        *ngIf="totalRecords === 0">
+                        <div class="cardViewWraper">
+                            <div class="no_dataFound">
+                                <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                <p>{{"No data found" | translate}}</p>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
-                <div class="cardViewWraper">
-                    <div class="no_dataFound">
-                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>{{"No data found" | translate}}</p>
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
     </div>
 </main>

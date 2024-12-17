@@ -11,4 +11,10 @@ export class ProposalsService {
     getProposalListApi(reqBody: any) { 
     const getProposalListApi = this.configService.config.baseUrl + this.configService.config.getProposalListApi;
     return this.http.post<any>(getProposalListApi, reqBody);
-  }}
+  }
+  getQuoteListApi(reqBody: any) { 
+    const getQuoteListApi = this.configService.config.baseUrl + this.configService.config.getQuoteListApi;
+    return this.http.post<any>(getQuoteListApi, reqBody);
+  }
+
+}
