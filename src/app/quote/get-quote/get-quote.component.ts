@@ -532,7 +532,7 @@ export class GetQuoteComponent implements AfterViewChecked {
             }
             else {
               if(birthDateObj.getFullYear() <= currentDate.getFullYear()){
-                age = age.includes("days") ? "1" : age;
+                age = age ? age.toString().includes("days") ? "1" : age : age;
                 if (age < 18 || age > 120) {
                   this.toast.error({
                     detail: "Error",
