@@ -21,8 +21,11 @@ on:
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
-  PORT: 4700
+  WEB_ROOT: "C:/inetpub/wwwroot/UnifiedPortal/ABHI"
+  APP_POOL_NAME: "ABHIUP"
+  SITE_NAME: "ABHIUP"
+  BINDING_HOST: "usp.monocept.ai"
+  PORT: 443
 
 jobs:
   build:
@@ -226,18 +229,81 @@ jobs:
     - name: Remove Existing Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
-    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
+    - name: Ensure frontend Directory Exists ( Web Root )
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
   
-    - name: Clean up the abhi_frontend Directory
+    - name: Clean up the frontend Directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
-    
     - name: Copy Latest Build to IIS web root directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
     
-    - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+
+    - name: Deploy New IIS Site
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
+          New-WebSite -Name '${{ env.SITE_NAME }}' -PhysicalPath '${{ env.DEPLOY_BASE_DIR }}\\${{ env.TAGGED_VERSION }}' `
+            -ApplicationPool '${{ env.APP_POOL_NAME }}' -Port ${{ env.PORT }} -HostHeader '${{ env.BINDING_HOST }}'
+        "
+
+    # - name: Bind SSL Certificate (Optional)
+    #   run: |
+    #     ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
+    #       New-WebBinding -Name '${{ env.SITE_NAME }}' -Protocol 'https' -Port ${{ env.PORT }} `
+    #         -HostHeader '${{ env.BINDING_HOST }}' -CertificateThumbprint '<CERTIFICATE_THUMBPRINT>' `
+    #         -CertificateStoreName 'My'
+    #     "
+
+    # - name: Import SSL Certificate and Bind to IIS
+    #   run: |
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
+    #       \$SSLCertPath = 'C:\\Users\\ABHI\\Desktop\\monolensssl2024.pfx';  # Path where the certificate will be stored
+    #       \$SSLCertPassword = '${{ secrets.SSL_CERT_PASSWORD }}';        # Certificate password (store it in secrets)
+    #       \$SiteName = '${{ env.SITE_NAME }}';                    # Website name
+    #       \$WebRoot = '${{ env.WEB_ROOT }}';                      # Web root path
+    #       \$AppPoolName = '${{ env.APP_POOL_NAME }}';             # App pool name
+
+    #       # 1. Ensure the certificate path exists on the server (optional if it's already pre-stored)
+    #       if (-Not (Test-Path -Path \$SSLCertPath)) {
+    #         Write-Error 'SSL certificate file does not exist at the specified path.';
+    #         exit 1;
+    #       }
+
+    #       # 2. Upload the certificate file
+    #       # Write-Output 'Uploading SSL certificate file...';
+    #       # scp -i ~/.ssh/id_rsa -P 22 ./path-to-your-cert/your-certificate.pfx ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:C:\\certificates\\your-certificate.pfx
+
+    #       # 3. Import the certificate into the local machine store
+    #       Write-Output 'Importing SSL Certificate...';
+    #       \$cert = Import-PfxCertificate -FilePath \$SSLCertPath -CertStoreLocation Cert:\\LocalMachine\\My -Password (ConvertTo-SecureString -String \$SSLCertPassword -AsPlainText -Force);
+
+    #       # 4. Check if the website exists in IIS
+    #       # if (-Not (Get-WebSite -Name \$SiteName -ErrorAction SilentlyContinue)) {
+    #       #   Write-Output 'Creating IIS Website...';
+    #       #   New-WebSite -Name \$SiteName -PhysicalPath \$WebRoot -Port 80 -ApplicationPool \$AppPoolName;
+    #       # }
+
+    #       # 5. Configure SSL Binding
+    #       Write-Output 'Configuring SSL binding...';
+    #       \$CertThumbprint = \$cert.Thumbprint;
+    #       New-WebBinding -Name \$SiteName -Protocol https -Port 443 -CertificateThumbprint \$CertThumbprint -CertificateStoreName My;
+
+    #       # 6. Verify the SSL Binding
+    #       Write-Output 'SSL Binding Complete!';
+    #       Get-WebBinding -Name \$SiteName | Where-Object { \$_.protocol -eq 'https' }
+    #     "
+
+    - name: Start IIS Site
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
+          Start-WebSite -Name '${{ env.SITE_NAME }}'
+        "
+
+    # - name: Copy Latest Build to IIS web root directory
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+    
+    # - name: Deploy application on IIS
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\\') -ApplicationPool 'ABHIUP'\""
 
     - name: Set environment variable based on branch
       run: |
