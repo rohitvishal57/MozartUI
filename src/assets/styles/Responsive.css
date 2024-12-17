@@ -379,6 +379,9 @@
     }
 }
 @media (max-width:767px) {
+    .customiseDashboard_bodyColumns {
+        flex-direction: column;
+    }
     .siteHeader .abcLinksMain .abcTopLinks {
         font-size: 11px;
     }
