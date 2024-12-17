@@ -3598,6 +3598,7 @@ export class YatraComponent {
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
                   this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+                  this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
                   console.log(control);
                   if (control.name == 'zoneValue' && control.type == 'select') {
                     control.options = this.formData.availableZones.map((zone: any) => ({
