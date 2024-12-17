@@ -1913,24 +1913,7 @@ export class YatraComponent {
           const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
           if (dob && ageControl) {
             ageControl.markAsTouched();
-            const age = this.calculateAge(event.target.value); // Calculate the age based on DOB
-            if (control.name === 'nomineeDob' && control.dependentControls) {
-              this.form.formSections.forEach((section: any) => {
-                section.formControls.forEach((formControl: any) => {
-                  if (control.dependentControls.includes(formControl.name)) {
-                    console.log(`Updating visibility for dependent control: ${formControl.name}`);
-                    if (typeof age === 'number' && age < 18) {
-                      formControl.visible = true;
-                    } else {
-                      formControl.visible = false;
-                    }
-
-                    console.log(`${formControl.name} visibility: ${formControl.visible}`);
-                  }
-                });
-              });
-            }
-
+            const age = this.calculateAge(dob);
             ageControl.setValue(age);
           }
         }
@@ -2020,11 +2003,6 @@ export class YatraComponent {
 
     }
     else if (parentControl != null && parentControl.dynamicControls) {
-
-      console.log(parentControl.dynamicControls);
-
-
-
       // parentControl.dynamicControls.forEach((dynamicControls: IDynamicControl[]) => {
       parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
         if (dynamicControl.name == 'pincode' && dynamicControl.name == control.name) {
@@ -2057,7 +2035,9 @@ export class YatraComponent {
 
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(res.data.zone);
-
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('city')?.setValue(res.data.city);
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('state')?.setValue(res.data.state);
+                console.log(this.dynamicFormGroup.value);
 
 
                 // // Locate the `zone` control and update its options
@@ -2126,20 +2106,6 @@ export class YatraComponent {
         control.value = formattedDate; // Update the control's value
         this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
       }
-    }
-
-    if (control.name === 'nomineeRelationWithProposer') {
-      const selectedRelation = event.target.value; // Parse the selected value
-      console.log(selectedRelation);
-      const genderControl = this.dynamicFormGroup.get('Gender'); // Fetch the Gender control
-
-      if (selectedRelation && selectedRelation.gender) {
-        genderControl?.setValue(selectedRelation.gender); // Set the gender value
-      } else {
-        genderControl?.reset(); // Reset the field if gender is not available
-      }
-
-      genderControl?.updateValueAndValidity(); // Ensure the control validity is updated
     }
   }
 
@@ -6284,7 +6250,7 @@ export class YatraComponent {
   //   }
   // }
 
-  onDrillDown(index : any, caseName : any){
+  onDrillDown(index: any, caseName: any) {
     this.setFormIndexValue(index)
     this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
   }

@@ -480,26 +480,30 @@ export class GetQuoteComponent implements AfterViewChecked {
           else {
             console.log(dobArray[0]);
 
-            const age : any = this.calculateAge(dob);
-            let isValid = true;
-            if(selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')          ){
-              switch (this.selectedPlan) {
-   
-                case 'Family Floater':
-                  const currentDate : any = new Date();
-   
-    // Convert the birth date into a Date object
-    const birthDateObj : any = new Date(selectedRelation.dob);
-   
-    // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
-    // Calculate the difference in milliseconds
-    let daysOld:any
-    if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()){
-      daysOld = this.calculateAgeInDays(selectedRelation.dob);
-    }
+            let age: any = this.calculateAge(dob);
+            const currentDate: any = new Date();
 
-      // Check if age is greater than 25 years or if days are less than 91
-      if (age > 25 || (birthDateObj.getFullYear() < currentDate.getFullYear() && daysOld < 91)) {
+            // Convert the birth date into a Date object
+            const birthDateObj: any = new Date(selectedRelation.dob);
+
+            // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+            // Calculate the difference in milliseconds
+            let daysOld: any
+            if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
+              daysOld = this.calculateAgeInDays(selectedRelation.dob);
+            }
+            let isValid = true;
+            if (selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')) {
+              let days = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : age : "0";
+
+
+              switch (this.selectedPlan) {
+
+                case 'Family Floater':
+
+
+                  // Check if age is greater than 25 years or if days are less than 91
+                  if (age > 25 ||  days < 91) {
                     this.toast.error({
                       detail: "Error",
                       summary: "Member should be less than 25 years and Greater than 91 days",
@@ -507,12 +511,12 @@ export class GetQuoteComponent implements AfterViewChecked {
                     });
                     isValid = false;
                   }
-   
+
                   break;
-  
-                  case 'Multi Individual':
-   
-                  if (age < 4  || age > 25) {
+
+                case 'Multi Individual':
+
+                  if (age < 4 || age > 25) {
                     this.toast.error({
                       detail: "Error",
                       summary: "Member should be less than 25 years and Greater than 4 years",
@@ -520,20 +524,23 @@ export class GetQuoteComponent implements AfterViewChecked {
                     });
                     isValid = false;
                   }
-   
+
                   break;
-                  default:
-                    break;
+                default:
+                  break;
               }
             }
-            else{
-              if (age < 18  || age > 120) {
-                this.toast.error({
-                  detail: "Error",
-                  summary: "Member should be less than 120 years and Greater than 18 years",
-                  duration: 3000
-                });
-                isValid = false;
+            else {
+              if(birthDateObj.getFullYear() <= currentDate.getFullYear()){
+                age = age.includes("days") ? "1" : age;
+                if (age < 18 || age > 120) {
+                  this.toast.error({
+                    detail: "Error",
+                    summary: "Member should be less than 120 years and Greater than 18 years",
+                    duration: 3000
+                  });
+                  isValid = false;
+                }
               }
             }
             if (isValid) {
