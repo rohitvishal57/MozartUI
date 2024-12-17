@@ -873,7 +873,7 @@ export class YatraComponent {
 
   }
 
-  initializeSubControls(subControls: any, controlGroup: any = null) {
+  initializeSubControls(subControls: any, controlGroup: any = null, parentControl: any = null) {
     console.log(subControls, controlGroup);
     let formGroup: any
     if (controlGroup) {
@@ -923,7 +923,7 @@ export class YatraComponent {
         else if (control.coreControls) {
           let tempFormArray = this.fb.array([]);
           for (let i = 0; i < control.coreControls.length; i++) {
-            tempFormArray.push(this.initializeSubControls(control.coreControls[i]))
+            tempFormArray.push(this.initializeSubControls(control.coreControls[i],null,control))
           }
           formGroup.addControl(control.name, tempFormArray);
         }
@@ -948,7 +948,7 @@ export class YatraComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.callMethod(subControls.getAllOption, subControls);
+          this.resolveMethod(subControls.getAllOption, subControls,parentControl);
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -6273,6 +6273,133 @@ export class YatraComponent {
     this.setFormIndexValue(index)
     this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
   }
+  deductibleOptionsB(control:any,parentControl:any){
+    console.log(control,parentControl);
+    const data :any = {
+      300000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+      ],
+      400000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+      ],
+      500000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+      ],
+      700000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+      ],
+      1000000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      1500000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      2000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      2500000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      3000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      4000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      5000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      8500000: [
+        { name: "1500000", label: "1500000", value: 1500000 },
+      ],
+      9000000: [
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      9500000: [
+        { name: "500000", label: "500000", value: 500000 },
+      ],
+    };
+    this.formData.insuredMemberDetails.forEach((member:any) => {
+      if(member.relation == parentControl.name){
+        const sumInsured = member.sumInsured;
+        const newOptions = data[sumInsured];
+        control.options = newOptions;
+        console.log(control,parentControl);
+      }
+    })
+  }
+  deductibleOptionsA(control:any,parentControl:any){
+    console.log(control,parentControl);
+    const data :any = {
+      8500000: [
+        {
+          name: '1500000',
+          label: '1500000',
+          value: 1500000
+        }
+      ],
+      9000000: [
+        {
+          name: '1000000',
+          label: '1000000',
+          value: 1000000
+        }
+      ],
+      9500000: [
+        {
+          name: '500000',
+          label: '500000',
+          value: 500000
+        }
+      ]
+    };
 
+    this.formData.insuredMemberDetails.forEach((member:any) => {
+      if(member.relation == parentControl.name){
+        const sumInsured = member.sumInsured;
+        const newOptions = data[sumInsured];
+        control.options = newOptions;
+        console.log(control,parentControl);
+      }
+    })
+  }
 }
 
