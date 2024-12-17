@@ -52,7 +52,7 @@ export class KycStatusComponent {
   
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
-          if (res.kycStatus) {
+          if (res.data.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
               policy_Number: kycData.policyNumber,

@@ -2649,7 +2649,7 @@ export const combinedForms = {
     }
 
     export const thankYou = {
-      "formTitle": "Confirmation",
+      "formTitle": "thankYou",
       "saveBtnTitle": "Save",
       "prevBtnTitle": "Prev",
       "resetBtnTitle": "",

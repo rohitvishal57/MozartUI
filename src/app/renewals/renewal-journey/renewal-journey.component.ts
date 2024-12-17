@@ -79,10 +79,21 @@ export class RenewalJourneyComponent {
   tenureAmount: any[] = [0, 0, 0];
   discountList: number[] = [];
   displayTaxList: any[] = [];
+  customerFeedbackForm !: FormGroup;
+  formIndexValue: number = 0;
+  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
+  rating: number = 0; // Holds the current selected rating
+  feedbackImpressedValues: String[] = ['Seamless payment', 'Ease of policy modification', 'Speedy Policy renewal', 'Payment receipt & confirm']
+  feedBackMessage: boolean = false;
+  impressedValues: boolean = false;
+  feedbackSubmit: boolean = false;
+  impressedLable: String = "";
+  feedbackImpressedValue: String = '';
+  isFeedBackModalVisible: Boolean = false;
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router,private clipboard: Clipboard) {
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router,private clipboard: Clipboard) {}
+ 
 
-  }
 
   ngOnInit() {
     this.showHtmlContent = false;
@@ -103,7 +114,6 @@ export class RenewalJourneyComponent {
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
         this.formData = { ...this.formData, ...decryptedFormData };
         console.log(this.formData);
-        
       }
   
       if (stateData.proposalNum) {
@@ -166,6 +176,11 @@ export class RenewalJourneyComponent {
   
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
+
+    this.customerFeedbackForm = this.fb.group({
+      message: [''],
+      rating: [null, Validators.required], // Add rating to the form
+    });
   }
   
 
@@ -578,6 +593,11 @@ export class RenewalJourneyComponent {
       // this.flattenObject(this.formData);
       // this.spinner.hide();
     }
+
+    if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
+      this.isFeedBackModalVisible = true;
+    }
+    
   }
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null) {
@@ -3646,7 +3666,7 @@ export class RenewalJourneyComponent {
     }
   }
   checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" && this.formData.isKYCComplete);
+    const isVisible = !(this.formData.ckycNo !== "" || this.formData.isKYCComplete);
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -3727,4 +3747,68 @@ export class RenewalJourneyComponent {
   }
 
 
+  setRating(star: number) {
+    console.log(star);
+    
+    this.rating = star;
+    this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+    this.feedbackSubmit = true;
+    this.impressedValues = true;
+    if (star > 3) {
+      this.impressedLable = 'What Impressed you ?';
+      this.feedBackMessage = false;
+    } else {
+      this.impressedLable = 'Why aren\'t you happy?';
+      this.feedBackMessage = true;
+    }
+  }
+  submitFeedback() {
+    let reqData: any = {};
+    reqData.agentCode = this.agentCode;
+    reqData.rating = this.customerFeedbackForm.value.rating;
+    reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
+    reqData.customerId = "";
+    // this.yatraService.submitFeedback(reqData).subscribe((response) => {
+    //   this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+    // }, (error) => {
+    //   this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+    // });
+    // this.customerFeedbackModule.hide();
+    this.isFeedBackModalVisible = false;
+  }
+
+  closeIsFeedBackModalVisible() {
+    let reqData = {
+      "proposalNum": this?.formData?.proposalNumber,
+      // "partnerId": this.partnerId,
+      "agentCode": this.agentCode,
+      "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+      "formName": this.formSequence[this.getFormIndexValue()].formName,
+      "formConfig": JSON.stringify(this.formSequence),
+      // "productId": this.productId.toString(),
+      "formId": this.formSequence[this.getFormIndexValue()].formId,
+      "jsonForm": JSON.stringify(this.form),
+      "formSequence": this.getFormIndexValue(),
+      // "leadNumber": this.leadnumber,
+      // "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+    };
+
+    // console.log(reqData, this.dynamicFormGroup.getRawValue());
+
+    this.yatraService.Insertorupdateformdata(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        // this.leadnumber = res.data;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+    this.isFeedBackModalVisible = false;
+  }
+
+  onSelectValue(value: String) {
+    this.feedbackImpressedValue = value;
+  }
+  
 }
