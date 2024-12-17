@@ -3022,4 +3022,7 @@ margin: 0;
     .main-container .right-panel .bottom_proposalNumber {
         margin-bottom: 10px;
     }
+    .typecss_summary {
+        width: 50%;
+    }
 }
