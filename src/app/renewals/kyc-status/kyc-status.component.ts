@@ -20,17 +20,30 @@ export class KycStatusComponent {
     private router: Router,private encryptionService: EncryptionService,private toast: NgToastService) { 
   }
 
-    ngOnInit() {
-      if (Object.keys(this.route.snapshot.queryParams).length) {
-        const params = this.route.snapshot.queryParams;
-        this.transactionId = params['transactionId'];
-
+  ngOnInit() {
+    console.log("redirection");
+    
+    const params = this.route.snapshot.queryParams;
+  
+    if (Object.keys(params).length) {
+      this.transactionId = params['transactionId'];
+      if (params['token']) {
+        localStorage.setItem('token', params['token']); 
+      } else {
+        console.warn('Token not found in query parameters');
       }
-      this.getKycStatus();
+    }
+  
+    if (!this.transactionId) {
+      console.error('Order ID is missing');
+      return;
+    }
+  
+    console.log('Order ID:', this.transactionId);
+    this.getKycStatus();
+  }
+  
 
-    }  
-
-    // https://usp.monocept.ai/Quote/api/CallBackforKYC?transactionId=UP_241213_ae7c3695&status=auto_approved
 
     getKycStatus() {  
       const kycDetailsReq = {
@@ -42,27 +55,25 @@ export class KycStatusComponent {
           if (res.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
-              // policy_Number: proposerDetail.policyNumber,
+              policy_Number: kycData.policyNumber,
             };
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
-                const formData = this.encryptionService.encrypt(res.data);
-                // this.formData.isKYCComplete=kycData.kycStatus;
-                // this.formData.ckycNo = kycData.kycNumber;
-                if (kycData.paymentStatus == 'SUCCESS') {
-                  console.log('inside success');
+                const formData = res.data;
+                formData.isKYCComplete=kycData.kycStatus;
+                formData.ckycNo = kycData.kycNumber;
+                if (kycData.paymentStatus) {
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
-                      formData: this.encryptionService.encrypt(kycData.orderDetails),
+                      formData: this.encryptionService.encrypt(formData),
                       proposalNum: this.encryptionService.encrypt(kycData.orderDetails.proposalNumber),
                       policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                      formIndex: "2",
+                      formIndex: "0",
                     }
                   });
                 } else if (kycData.paymentStatus == 'FAILED') {
-                  console.log('inside failed');
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(kycData.orderDetails),
@@ -70,7 +81,7 @@ export class KycStatusComponent {
                       policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                      formIndex: "2",
+                      formIndex: "0",
                     }
                   });
                 } else if (kycData.paymentStatus == 'INPROGRESS') {
@@ -90,7 +101,7 @@ export class KycStatusComponent {
           }
         },
         (err) => {
-          this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
+          this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
           console.log("error is coming from fullquote api");
         }
       );

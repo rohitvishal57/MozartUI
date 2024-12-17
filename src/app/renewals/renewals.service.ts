@@ -121,15 +121,15 @@ export class RenewalsService {
     return this.httpService.post(fullquote, reqBody);
   }
   cpRedirectionApi(reqBody:any){
-    const reDirectionLink = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
+    const reDirectionLink = this.configService.config.baseUrl1 + this.configService.config.cpRedirectionApi;
     return this.httpService.post(reDirectionLink, reqBody);
   }
   getKycDetailsApi(reqBody:any){
-    const getKycDetails = this.configService.config.baseUrl + this.configService.config.getKycDetails;
+    const getKycDetails = this.configService.config.baseUrl1 + this.configService.config.getDetailsForKyc;
     return this.httpService.post(getKycDetails, reqBody);
   }
   sharekyclinkApi(reqBody:any){
-    const sharekyclink = this.configService.config.baseUrl + this.configService.config.sharekyclink;
+    const sharekyclink = this.configService.config.baseUrl1 + this.configService.config.sharekyclink;
     return this.httpService.post(sharekyclink, reqBody);
   }
 
