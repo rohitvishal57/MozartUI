@@ -1700,6 +1700,24 @@ export class YatraComponent {
     return isAscending || isDescending || allSame;
   }
 
+  getLabels(control : any){
+    let startIdx = control.indexOf('{{');
+    let endIdx = control.indexOf('}}');
+    let string : any;
+    if (startIdx !== -1 && endIdx !== -1) {
+      string =  control.slice(startIdx + 2, endIdx).trim();
+    }
+    switch (string) {
+      case 'actName':
+        return control.replace("{{actName}}", this.formData?.accountNumber);
+        break;
+    
+      default:
+        return control
+        break;
+    }
+  }
+
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     console.log(event.target.checked, control, parentControl, index, subControl, innerControl, indexj);
@@ -3069,7 +3087,7 @@ export class YatraComponent {
       paymentModeControl.setValue(this.selectedButton);
     }
 
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton !== 'offline' && this.selectedButton !== 'autoDebit') {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
           if (controls.name === 'offline' && controls.dependentControls) {
@@ -3086,7 +3104,7 @@ export class YatraComponent {
       });
     }
     // Handle the Juspay redirection for buttons other than Offline
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton !== 'offline' && this.selectedButton !== 'autoDebit') {
       const reqData = {
         agentcode: this.agentCode,
         proposalNumber: this.proposalNum,

@@ -210,19 +210,18 @@
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                     class="text-danger">
-                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,
-                    JPG,JPEG, PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG, PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'checkbox'" class="checkbox-error">
+                <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">
                   <div [class]="control.class" style="display: -webkit-box;">
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
                       [name]="control.name" id="{{control.name}}" class="checkbox-label"
                       (change)="onCheckboxSelect(control.name)" />
-                    <label [for]="control.name" [innerHTML]="control.label ? (control.label | translate) : ''"
+                    <label [for]="control.name" [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
                       class="checkboxes"><span *ngIf="control.validators">*</span></label>
                   </div>
                   <small
