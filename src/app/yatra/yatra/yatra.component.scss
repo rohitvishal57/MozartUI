@@ -115,8 +115,8 @@
     visibility: hidden;
     position: absolute;
     z-index: 1;
-    bottom: auto;
-    top: 16px;
+    bottom: auto !important;
+    top: -25px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -129,6 +129,13 @@
     /* white-space: nowrap; */
     font-size: 12px;
     width: 300px;
+}
+.tooltip-wrapper .tooltip-text.tooltip-textcheckbox {
+    top: 16px;
+}
+.tooltip-wrapper .tooltip-text.tooltip-textidnumber {
+    bottom: 21px !important;
+    top: auto;
 }
  .input-container:has(.tooltip-wrapper .tooltip-text:not(:empty)):hover .tooltip-wrapper .tooltip-text {
     visibility: visible;
