@@ -36,6 +36,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isFilenotSelected: boolean | any;
   selectedFile: any;
   showNote: boolean = false;
+  fileSizeError: boolean = false;
   namesVariable: any;
   documentType: any;
   showDocInfo: boolean = false;
@@ -685,12 +686,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
     let file;
     let fileExt;
     this.isFilenotSelected = false;
+    this.fileSizeError = false;
+    
     if (e) {
       files = e.target.files;
       file = files[0];
       if (!file) {
         return;
       }
+  
+      if (file.size > 10 * 1024 * 1024) {
+        this.fileSizeError = true;
+        e.target.value = '';
+        this.showNote = false;
+        return;
+      }
+  
       this.selectedFile = file;
       this.selctedFileName = this.selectedFile.name;
       fileExt = this.selectedFile.name.replace(/^.*\./, '');
@@ -699,7 +710,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = file.name;
     this.documentType = file.type;
     this.documentSize = this.convertBytesToKB(file.size);
-
+  
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
       this.showNote = false;
       this.showDocInfo = true;

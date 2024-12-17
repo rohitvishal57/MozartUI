@@ -5403,6 +5403,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .main_userDetails .info_userDetails {
   display: flex;
   gap:12px;
+  width: 100%;
+}
+.main_userDetails .edit_userDetails {
+  width: 32px;
 }
 .main_userDetails .info_userDetails .img_userProfile{
   width: 32px;

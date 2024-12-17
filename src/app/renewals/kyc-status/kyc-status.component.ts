@@ -20,11 +20,8 @@ export class KycStatusComponent {
     private router: Router,private encryptionService: EncryptionService,private toast: NgToastService) { 
   }
 
-  ngOnInit() {
-    console.log("redirection");
-    
+  ngOnInit() {    
     const params = this.route.snapshot.queryParams;
-  
     if (Object.keys(params).length) {
       this.transactionId = params['transactionId'];
       if (params['token']) {
@@ -33,59 +30,52 @@ export class KycStatusComponent {
         console.warn('Token not found in query parameters');
       }
     }
-  
     if (!this.transactionId) {
       console.error('Order ID is missing');
       return;
     }
-  
-    console.log('Order ID:', this.transactionId);
     this.getKycStatus();
   }
   
-
-
     getKycStatus() {  
       const kycDetailsReq = {
         "transactionId":  this.transactionId
       }
-  
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
           if (res.data.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
-              policy_Number: kycData.policyNumber,
+              policy_Number: "24-24-0000567-00 ",
             };
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
-                const formData = res.data;
-                formData.isKYCComplete=kycData.kycStatus;
-                formData.ckycNo = kycData.kycNumber;
-                if (kycData.paymentStatus) {
+                const formData = res.data;                
+                if (kycData.kycStatus == 'SUCCESS') {
+                  if(kycData.kycStatus== 'SUCCESS')formData.ckycFlag='Y';
+                  formData.ckycNo = kycData.kycNumber;
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
-                      proposalNum: this.encryptionService.encrypt(kycData.orderDetails.proposalNumber),
-                      policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
+                      proposalNum: this.encryptionService.encrypt(""),
+                      policyNumber: this.encryptionService.encrypt("24-24-0000567-00 "),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.paymentStatus == 'FAILED') {
+                } else if (kycData.kycStatus == 'FAILED') {
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
-                      formData: this.encryptionService.encrypt(kycData.orderDetails),
-                      proposalNum: this.encryptionService.encrypt(kycData.orderDetails.proposalNumber),
-                      policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
+                      formData: this.encryptionService.encrypt(formData),
+                      proposalNum: this.encryptionService.encrypt(""),
+                      policyNumber: this.encryptionService.encrypt("24-24-0000567-00 "),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.paymentStatus == 'INPROGRESS') {
-                  console.log('InProgress');
+                } else if (kycData.kycStatus == 'INPROGRESS') {
                   this.router.navigate(['renewal/renewalList']);
                 }
               },
@@ -93,9 +83,7 @@ export class KycStatusComponent {
                 console.error("Error from getRenewalInfo API:", err);
                 this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
               }
-            );
-            console.log(res.data);
-      
+            );      
           } else {
             this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
           }

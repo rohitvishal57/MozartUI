@@ -873,7 +873,7 @@ export class YatraComponent {
 
   }
 
-  initializeSubControls(subControls: any, controlGroup: any = null) {
+  initializeSubControls(subControls: any, controlGroup: any = null, parentControl: any = null) {
     console.log(subControls, controlGroup);
     let formGroup: any
     if (controlGroup) {
@@ -923,7 +923,7 @@ export class YatraComponent {
         else if (control.coreControls) {
           let tempFormArray = this.fb.array([]);
           for (let i = 0; i < control.coreControls.length; i++) {
-            tempFormArray.push(this.initializeSubControls(control.coreControls[i]))
+            tempFormArray.push(this.initializeSubControls(control.coreControls[i],null,control))
           }
           formGroup.addControl(control.name, tempFormArray);
         }
@@ -948,7 +948,7 @@ export class YatraComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.callMethod(subControls.getAllOption, subControls);
+          this.resolveMethod(subControls.getAllOption, subControls,parentControl);
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -1700,6 +1700,24 @@ export class YatraComponent {
     return isAscending || isDescending || allSame;
   }
 
+  getLabels(control : any){
+    let startIdx = control.indexOf('{{');
+    let endIdx = control.indexOf('}}');
+    let string : any;
+    if (startIdx !== -1 && endIdx !== -1) {
+      string =  control.slice(startIdx + 2, endIdx).trim();
+    }
+    switch (string) {
+      case 'actName':
+        return control.replace("{{actName}}", this.formData?.accountNumber);
+        break;
+    
+      default:
+        return control
+        break;
+    }
+  }
+
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     console.log(event.target.checked, control, parentControl, index, subControl, innerControl, indexj);
@@ -2107,6 +2125,32 @@ export class YatraComponent {
         this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
       }
     }
+    if (control.name === "dateOfDiagnosis") {
+      const inputValue = event.target.value;    
+      if (!inputValue) {
+        control.value = null; 
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        return; 
+      }
+      const inputDate = new Date(inputValue); 
+      const currentDate = new Date();    
+      if (isNaN(inputDate.getTime())) {
+        console.log("Invalid date format:", inputValue);
+        event.target.value = ''; 
+        control.value = null;
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        this.toast.warning({ detail: "", summary: "Invalid date format.", duration: 3000 });
+        return; 
+      }    
+      if (inputDate > currentDate) {
+        console.log("Future date detected:", inputValue);
+        event.target.value = ''; 
+        control.value = null;
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
+        this.toast.warning({ detail: "", summary: "Date cannot be in the future.", duration: 3000 });
+      }
+    }
+    
   }
 
 
@@ -3069,7 +3113,7 @@ export class YatraComponent {
       paymentModeControl.setValue(this.selectedButton);
     }
 
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton !== 'offline' && this.selectedButton !== 'autoDebit') {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
           if (controls.name === 'offline' && controls.dependentControls) {
@@ -3086,7 +3130,7 @@ export class YatraComponent {
       });
     }
     // Handle the Juspay redirection for buttons other than Offline
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton !== 'offline' && this.selectedButton !== 'autoDebit') {
       const reqData = {
         agentcode: this.agentCode,
         proposalNumber: this.proposalNum,
@@ -6255,6 +6299,133 @@ export class YatraComponent {
     this.setFormIndexValue(index)
     this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
   }
+  deductibleOptionsB(control:any,parentControl:any){
+    console.log(control,parentControl);
+    const data :any = {
+      300000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+      ],
+      400000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+      ],
+      500000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+      ],
+      700000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+      ],
+      1000000: [
+        { name: "100000", label: "100000", value: 100000 },
+        { name: "200000", label: "200000", value: 200000 },
+        { name: "300000", label: "300000", value: 300000 },
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      1500000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      2000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      2500000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      3000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      4000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      5000000: [
+        { name: "400000", label: "400000", value: 400000 },
+        { name: "500000", label: "500000", value: 500000 },
+        { name: "700000", label: "700000", value: 700000 },
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      8500000: [
+        { name: "1500000", label: "1500000", value: 1500000 },
+      ],
+      9000000: [
+        { name: "1000000", label: "1000000", value: 1000000 },
+      ],
+      9500000: [
+        { name: "500000", label: "500000", value: 500000 },
+      ],
+    };
+    this.formData.insuredMemberDetails.forEach((member:any) => {
+      if(member.relation == parentControl.name){
+        const sumInsured = member.sumInsured;
+        const newOptions = data[sumInsured];
+        control.options = newOptions;
+        console.log(control,parentControl);
+      }
+    })
+  }
+  deductibleOptionsA(control:any,parentControl:any){
+    console.log(control,parentControl);
+    const data :any = {
+      8500000: [
+        {
+          name: '1500000',
+          label: '1500000',
+          value: 1500000
+        }
+      ],
+      9000000: [
+        {
+          name: '1000000',
+          label: '1000000',
+          value: 1000000
+        }
+      ],
+      9500000: [
+        {
+          name: '500000',
+          label: '500000',
+          value: 500000
+        }
+      ]
+    };
 
+    this.formData.insuredMemberDetails.forEach((member:any) => {
+      if(member.relation == parentControl.name){
+        const sumInsured = member.sumInsured;
+        const newOptions = data[sumInsured];
+        control.options = newOptions;
+        console.log(control,parentControl);
+      }
+    })
+  }
 }
 

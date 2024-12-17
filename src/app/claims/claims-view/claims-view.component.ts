@@ -207,6 +207,8 @@ export class ClaimsViewComponent {
         }
       });
     }
+
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -220,6 +222,10 @@ export class ClaimsViewComponent {
     this.getProposalDetails();
     this.fetchStates();
       const policyNumberControl = this.form.get('policyNumber');
+      
+    this.form.get('claimType')?.valueChanges.subscribe(claimType => {
+      this.onClaimTypeChange(claimType);
+    });
   }
 
   initializeDocumentLabelForm(): FormGroup {
@@ -573,28 +579,38 @@ export class ClaimsViewComponent {
       "ailmentDescription": "",
       "dischargeDate": "",
       "admissionDate": ""
-    })
-
+    });
+  
     const selectedType = event.target.value;
+    
     if (selectedType === "Cashless") {
+      // Clear file upload validators for Cashless
+      this.form.get('isFileUploadRequired')?.clearValidators();
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showReimbursementFields = false;
+      this.isFilenotSelected = false;
       this.showCashlessFields = true;
+      
       this.form.patchValue({
         coverName: "Hospitalization",
       });
     } else if (selectedType === "Reimbursement") {
+      // Set file upload as required for Reimbursement
+      this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showCashlessFields = false;
-      this.showSecondScenario = false;
-      this.showFirstScenario = false;
+      this.showReimbursementFields = true;
+      this.isFilenotSelected = true;
+      
       this.form.patchValue({
         coverName: "",
       });
-      this.showReimbursementFields = true;
     } else {
       this.showCashlessFields = true;
       this.showReimbursementFields = false;
     }
   }
+  
 
   fetchCoverNames(value: string): void {
      const coverReqBody =  {
@@ -944,6 +960,8 @@ export class ClaimsViewComponent {
     }
     this.updateStatusLabel();
     this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
+    this.isFilenotSelected = false;
+    this.uploadValidFormat = false;
   }
 
   clearSelectedLabel(file: any): void {
@@ -1190,6 +1208,11 @@ memberIdChange(event: any): void {
     });
   }
   submitRequest(): void {
+    if (this.form.get('claimType')?.value === 'Reimbursement' && this.uploadedFiles.length === 0) {
+      this.isFilenotSelected = true;
+      return;
+    }
+
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
@@ -1212,10 +1235,10 @@ memberIdChange(event: any): void {
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
       }));
 
-      if (!this.selectedFile) {
-        this.isFilenotSelected = true;
-        return;
-      }
+      // if (!this.selectedFile) {
+      //   this.isFilenotSelected = true;
+      //   return;
+      // }
 
       // if (!saveClaimData.claimedAmount) {
       //   saveClaimData.claimedAmount = 0;
@@ -1235,6 +1258,7 @@ memberIdChange(event: any): void {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
+      
       // const documentsArray = this.uploadedFiles.map((file) => ({
       //   documentId: file.documentId,
       //   documentName: file.name,
