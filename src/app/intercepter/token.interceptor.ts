@@ -48,7 +48,8 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetBankDetailsByIfsc',
     'https://upuat.adityabirlahealth.com/api/rug/GetProductCombination',
     'https://upuat.adityabirlahealth.com/api/rug/GetProposerRelations',
-    'https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData'
+    'https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData',
+    'https://upuat.adityabirlahealth.com/api/rug/GetBankDetailsByIfsc'
   ];
 
   intercept(

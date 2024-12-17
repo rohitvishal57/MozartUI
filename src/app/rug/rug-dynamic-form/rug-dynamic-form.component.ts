@@ -2719,7 +2719,10 @@ export class RugDynamicFormComponent {
       // // this.dynamicFormGroup.patchValue(this.bbdetails);
         const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
         console.log(insuredMembersArray.value);
-        if(insuredMembersArray.value.length != 1){
+        // if(insuredMembersArray.value.length != 1){
+        //   this.calculateBBPremium();
+        // }
+        if(insuredMembersArray.value.length != 1 && this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
           this.calculateBBPremium();
         }
       if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
@@ -6279,22 +6282,24 @@ export class RugDynamicFormComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
   getBbRelations(control: any){
-    this.yatraService.getRelations().subscribe({
-      next: (response: any) => {
-        response = JSON.parse(response.data).data;
-        this.nomineeRelations = response;
-        console.log(this.nomineeRelations);
-        this.nomineeRelations = this.nomineeRelations.relationShipModels;
-        this.nomineeRelations.map((item: any) => {
-            item.name = item.relationName;
-            item.value = item.relationName;
-        })
-        control.options = this.nomineeRelations;
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
+    if(this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
+      this.yatraService.getRelations().subscribe({
+        next: (response: any) => {
+          response = JSON.parse(response.data).data;
+          this.nomineeRelations = response;
+          console.log(this.nomineeRelations);
+          this.nomineeRelations = this.nomineeRelations.relationShipModels;
+          this.nomineeRelations.map((item: any) => {
+              item.name = item.relationName;
+              item.value = item.relationName;
+          })
+          control.options = this.nomineeRelations;
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    }
   }
   getBbSumInsured(control: any) {
     console.log(this.bbdetails);
