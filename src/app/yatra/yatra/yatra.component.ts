@@ -6284,5 +6284,10 @@ export class YatraComponent {
   //   }
   // }
 
+  onDrillDown(index : any, caseName : any){
+    this.setFormIndexValue(index)
+    this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
+  }
+
 }
 
