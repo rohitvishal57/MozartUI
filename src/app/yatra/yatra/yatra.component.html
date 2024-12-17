@@ -910,17 +910,20 @@
                               <input type="checkbox" formControlName="{{ subControl.name }}" [id]="subControl.name"
                                 [name]="subControl.name" (click)="onCheckboxChange($event, subControl,control)"
                                 style="height:20px; width:20px; margin-left: 10px;" />
-                              <label [for]="subControl.name" [innerHTML]="subControl.label" class="checkbox-label"
-                                style="padding-left: 15px;
-                    font-weight: 600;
-                    font-size: 16px;
-                    margin-top: 0px;"></label>
-                                <div class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
+                              <label [for]="subControl.name"  class="checkbox-label checkbox-label2">
+                                <span [innerHTML]="subControl.label"></span>
+                                <span class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
                                   <span class="info-icon" >
                                     <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
                                   </span>
                                   <span class="tooltip-text">{{ subControl.toolTipMessage }}</span>
-                                </div>
+                                </span></label>
+                                <!--<div class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
+                                  <span class="info-icon" >
+                                    <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                  </span>
+                                  <span class="tooltip-text">{{ subControl.toolTipMessage }}</span>
+                                </div>-->
                             </div>
                           </div>
                           <div *ngIf="subControl.type === 'select'" class="typecss">

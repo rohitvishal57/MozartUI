@@ -608,7 +608,12 @@ body {
     margin-top: 5px;
     margin-bottom: 0;
 }
-
+.main-container .right-panel .acceptTermsCheck .checkbox-label.checkbox-label2{
+    padding-left: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 0px;
+}
 .main-container .right-panel .acceptTermsCheck input[type="checkbox"] {
     display: block;
     height: auto;
