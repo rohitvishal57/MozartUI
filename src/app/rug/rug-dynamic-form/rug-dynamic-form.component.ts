@@ -125,6 +125,7 @@ export class RugDynamicFormComponent {
   filteredPolicies: any;
   premiumArray:any = [];
   D2CproductCode:any
+  premiumObj:any;
   constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -503,6 +504,28 @@ export class RugDynamicFormComponent {
             this.isCustomerJourney = true;
           }
           // this.form.formSections[0].formControls[0].value = "";
+          if(!this.d2cDetails.sumInsured){
+            let obj = {
+              IsMinor: true,
+              SIGroupId: this.productId == 7 ?  1 : this.productId == 8 ? 2: "",
+              PlanSID: this.productId == 7 ?  1 : this.productId == 8 ? 11: "" 
+            }
+            this.yatraService.getPremiumData(obj).subscribe({
+              next: (res: any) => {
+                console.log(res);
+                res = JSON.parse(res.data).data
+                this.bbPremiumData = res.premium;
+                this.calculateInitialD2CPremium()
+                this.initializeForm();
+              },
+              error: (err) => {
+                console.error(err);
+              }
+            });
+          }
+          
+          
+         
           this.initializeForm();
       this.getFamilyConstruct();
 
@@ -514,6 +537,47 @@ export class RugDynamicFormComponent {
 
     }
     console.log(this.form);
+  }
+
+  redioButtonChange(event:any){
+    console.log(this.dynamicFormGroup.value.planAvailable)
+    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
+      const filteredData = this.premiumObj.filter(
+        (item: any) => item.combinationName === "GHI"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    }
+    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+      const filteredData = this.premiumObj.filter(
+        (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+      if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+        return ele;
+      }
+      });
+      this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    }
+
   }
 
   async initializeForm() {
@@ -1826,6 +1890,7 @@ export class RugDynamicFormComponent {
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
             this.calculateBBPremium();
+            this.calculateD2CPremium()
           }
         }
       }
@@ -2683,6 +2748,7 @@ export class RugDynamicFormComponent {
             }
             console.log(this.formData);
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
+            this.calculateD2CPremium()
           }
           // else if(formControl){
           //   Object.keys(this.formData).forEach(key => {
@@ -3632,7 +3698,7 @@ export class RugDynamicFormComponent {
                   occupationType: this.d2cDetails.proposerOccupationType,
                   panNumber: this.d2cDetails.proposerPanNumber,
                   sumInsured: this.d2cDetails.sumInsured,
-                  premium: this.d2cDetails.totalPremium,
+                  premium: this.d2cDetails.totalPremium.toString(),
                   isMinor: this.d2cDetails.IsMinor,
                   relationShipWithChild: null,
                   relationShipWithChildCode: null,
@@ -3645,7 +3711,7 @@ export class RugDynamicFormComponent {
                   occupationName: this.d2cDetails.productPlanName,
                   productPlanCode: this.d2cDetails.productPlanCode.toString(),
                   productPlan: null,                  
-                  groupCode: this.d2cDetails.groupCode,
+                  groupCode: "GRP001",
                   combiId: this.d2cDetails.combiId,
                   combiName: this.d2cDetails.planAvailable,
                   familyConstruct: this.d2cDetails.familyConstruct,
@@ -6370,20 +6436,20 @@ export class RugDynamicFormComponent {
       }
     });
 
-    this.yatraService.getProductCombinations().subscribe({
-      next: (res: any) => {
-        res = JSON.parse(res.data)
-        this.productCombinationData = res.productCombinationModel;
-        console.log(this.productCombinationData);
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    // this.yatraService.getProductCombinations().subscribe({
+    //   next: (res: any) => {
+    //     res = JSON.parse(res.data)
+    //     this.productCombinationData = res.productCombinationModel;
+    //     console.log(this.productCombinationData);
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
     let obj = {
       IsMinor: true,
-      SIGroupId: 1,
-      PlanSID: 1
+      SIGroupId: this.productId == 7 ?  1 : this.productId == 8 ?2: "",
+      PlanSID: this.productId == 7 ?  1 : this.productId == 8 ? 11: "" 
     }
     this.yatraService.getPremiumData(obj).subscribe({
       next: (res: any) => {
@@ -6649,6 +6715,164 @@ export class RugDynamicFormComponent {
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
     }
+    // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
+    // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
+    // this.dynamicFormGroup.value.totalPremium = (this.premiumArray[0].premium + this.premiumArray[1].premium).toFixed(2);
+    // this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    // console.log(this.dynamicFormGroup.value.totalPremium);
+    // console.log(this.bbdetails);
+    // const dialogRef = this.dialog.open(OtpPopupComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
+    // const dialogRef = this.dialog.open(PaymentInfoComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
+    // const dialogRef = this.dialog.open(CaptchaPopupComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
+  }
+
+  calculateInitialD2CPremium() {
+    this.premiumArray = []
+    let memberDob: any ;
+    let memberRelation;
+    let familyConstruct = 1;
+    let selfDob = this.d2cDetails.proposerDob;
+    let spouseDob;
+    let sortedArray: any[] = []
+    console.log(familyConstruct);
+    // this.yatraService.policyDetails.familyConstructId = familyConstruct.toString();
+    // let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
+    // console.log(filteredFamilyConstruct);
+    // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
+    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
+    console.log(ageRange);
+    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
+    console.log(this.bbPremiumData)
+    this.familyConstruct = familyConstruct;
+    // premiumObj = this.bbPremiumData.filter((ele: any) => {
+    //   return (ele.familyConstructId == this.familyConstruct)
+    // })
+ this.d2cDetails.familyConstruct = "1A"
+ this.d2cDetails.familyConstructId = 1
+    // this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
+    // this.dynamicFormGroup.get('familyConstructId')?.setValue(filteredFamilyConstruct[0].familyConstructID);
+
+    this.premiumObj = this.bbPremiumData.filter((ele: any) => {
+      return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+    })
+    let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
+    for(let i = 0; i <= orderOfPremium.length; i++){
+
+      this.premiumObj.forEach((ele: any) => {
+        if(ele.combinationName == orderOfPremium[i]){
+          this.premiumArray.push(ele)
+        }
+      })
+    }
+    console.log(this.premiumObj);
+    // const filteredData = premiumObj.filter(
+    //       (item: any) => item.combinationName === "GHI"
+    //     );
+    // this.d2cDetails.ghiPremium = this.premiumArray[0].premium.toString()
+    if(this.productId == 7){
+      const filteredData = this.premiumObj.filter(
+        (item: any) => item.combinationName === "GHI"
+      );
+      
+      this.d2cDetails.totalPremium = this.premiumArray[0].premium.toString()
+      this.d2cDetails.ghiPremium = this.premiumArray[0].premium.toString()
+      this.d2cDetails.productPlanName = 'GHI'
+      this.d2cDetails.productPlanCode = filteredData[0].planSID
+
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+          return ele;
+        }
+        });
+        this.d2cDetails.combiId = selectedCombiID[0]?.combiId?.toString()
+        // this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    }else if(this.productId == 8){
+      this.d2cDetails.totalPremium = this.premiumArray[0].premium + this.premiumArray[1].premium
+      this.d2cDetails.ghiPremium = this.premiumArray[0].premium.toString()
+      this.d2cDetails.gpaPremium = this.premiumArray[1].premium.toString()
+    }
+    // if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
+    //   const filteredData = premiumObj.filter(
+    //     (item: any) => item.combinationName === "GHI"
+    //   );
+    //   console.log(filteredData);
+    //   this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+    //   // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+    //   this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+    //   this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    //   this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
+    //   this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+    //   let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+    //     if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+    //       return ele;
+    //     }
+    //     });
+    //     this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    // }
+    // if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+    //   const filteredData = premiumObj.filter(
+    //     (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+    //   );
+    //   console.log(filteredData);
+    //   this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+    //   this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+    //   this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+    //   this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    //   this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+    //   this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+    //   let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+    //   if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+    //     return ele;
+    //   }
+    //   });
+    //   this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    // }
+    // if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
+    //   const filteredData = premiumObj.filter(
+    //     (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
+    //   );
+    //   console.log(filteredData);
+    //   this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+    //   this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
+    //   this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
+    //   this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+    //   this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    //   this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+    //   this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+    //   let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+    //     if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+    //       return ele;
+    //     }
+    //     });
+    //     this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+    // }
     // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
     // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
     // this.dynamicFormGroup.value.totalPremium = (this.premiumArray[0].premium + this.premiumArray[1].premium).toFixed(2);
