@@ -659,7 +659,6 @@ export class LeadsListComponent {
   downloadAllLeads(){
     this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
      (response)=>{
-     debugger;
      if(response.isSuccess){
       //this.downloadExcel(  response.fileContentBase64 ,    response.fileName);
       const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

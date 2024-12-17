@@ -28,7 +28,7 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/v1/GetBBOTP',
     'https://upuat.adityabirlahealth.com/api/v1/ValidateBBOTP',
     'https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft',
-    'https://upuat.adityabirlahealth.com/api/v1/SaveBBCommonDraft',
+    'https://upuat.adityabirlahealth.com/api/rug/SaveBBCommonDraft',
     'https://upuat.adityabirlahealth.com/api/v1/HalfQuote',
     'https://usp.monocept.ai/api/rug/GetSumInsuredList',
     'https://usp.monocept.ai/api/rug/GetFamilyConstructByProductCode',
@@ -48,7 +48,8 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetBankDetailsByIfsc',
     'https://upuat.adityabirlahealth.com/api/rug/GetProductCombination',
     'https://upuat.adityabirlahealth.com/api/rug/GetProposerRelations',
-    'https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData'
+    'https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData',
+    'https://upuat.adityabirlahealth.com/api/rug/GetBankDetailsByIfsc'
   ];
 
   intercept(

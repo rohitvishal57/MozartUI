@@ -97,3 +97,62 @@
     color: #4C4C4C !important;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(242, 243, 246, 0.1) 100%) !important;
 }
+
+.tooltip-wrapper .tooltip-wrapper:has(.tooltip-wrapper .tooltip-text:not(:empty)):hover .tooltip-wrapper .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+}
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+.tooltip-wrapper .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    bottom: auto;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    /* white-space: nowrap; */
+    font-size: 12px;
+    width: 300px;
+}
+ .input-container:has(.tooltip-wrapper .tooltip-text:not(:empty)):hover .tooltip-wrapper .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+.tooltip-wrapper .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+.tooltip-wrapper .info-icon img {
+    width: 14px;
+    height: 14px;
+}
+@media (max-width:767px) {
+    .health-lifestyle-selct-btn #select{
+        left: 0;
+    }
+    .health-lifestyle-selct-btn {
+        justify-content: center;
+    }
+}

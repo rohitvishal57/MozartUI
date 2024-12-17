@@ -407,6 +407,9 @@
   .tableSubMain .table td {
     line-height: 10px;
   }
+  .base_quoteRow td {
+    background: var(--site-basequote-bg) !important;
+}
 
   h4 {
     margin: 0; /* Remove default margin */

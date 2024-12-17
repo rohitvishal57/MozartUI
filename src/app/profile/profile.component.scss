@@ -25,6 +25,9 @@
     display: flex;
     flex-direction: column;
     gap:6px;
+    @media (max-width:767px) {
+      width: 100%;
+    }
     h5{
         font-weight: 600;
         font-size: 16px;
@@ -546,15 +549,20 @@
   margin-bottom: 3px;
 }
 
+.shareIcon Img{
+  width: 12px;
+  height: 10px;
+}
+
 @media (max-width:767px) {
   .userProfilePic{
     margin: auto;
   }
   .userProfile_qrCode{
-  right: 0;
-  flex-wrap: wrap;
-  margin-right:0px;
-
+    right: 0;
+    flex-wrap: wrap;
+    margin-right:0px;
+    padding: 10px 0;
   }
   .language-selector{
     bottom: 0px;
@@ -579,5 +587,8 @@
   }
   .selectedLanguage-wrapper{
     justify-content: center;
+  }
+  .mobilePad_container {
+    padding: 16px 8px;
   }
 }

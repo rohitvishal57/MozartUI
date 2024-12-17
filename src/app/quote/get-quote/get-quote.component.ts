@@ -235,6 +235,9 @@ export class GetQuoteComponent implements AfterViewChecked {
       if (formData.sumInsured) {
         this.selectedSumInsured = formData.sumInsured;
       }
+      // if(formData.proposerGender){
+      //   this.onGenderChange();
+      // }
       if (formData.insuredMembers && formData.insuredMemberDetails.length > 0) {
         // const currentMember:any = {};
 
@@ -254,6 +257,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
         // Log the final result
         // console.log(JSON.stringify(currentMember, null, 2));
+        this.checkGender = true;
         this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
         console.log(this.relations);
         console.log(this.relationCountMap, this.anotherRelationCountMap);
@@ -476,8 +480,73 @@ export class GetQuoteComponent implements AfterViewChecked {
           else {
             console.log(dobArray[0]);
 
-            const age = this.calculateAge(dob);
-            selectedRelation.age = age;
+            let age: any = this.calculateAge(dob);
+            const currentDate: any = new Date();
+
+            // Convert the birth date into a Date object
+            const birthDateObj: any = new Date(selectedRelation.dob);
+
+            // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+            // Calculate the difference in milliseconds
+            let daysOld: any
+            if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
+              daysOld = this.calculateAgeInDays(selectedRelation.dob);
+            }
+            let isValid = true;
+            if (selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')) {
+              let days = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : age : "0";
+
+
+              switch (this.selectedPlan) {
+
+                case 'Family Floater':
+
+
+                  // Check if age is greater than 25 years or if days are less than 91
+                  if (age > 25 ||  days < 91) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 91 days",
+                      duration: 3000
+                    });
+                    isValid = false;
+                  }
+
+                  break;
+
+                case 'Multi Individual':
+
+                  if (age < 4 || age > 25) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 4 years",
+                      duration: 3000
+                    });
+                    isValid = false;
+                  }
+
+                  break;
+                default:
+                  break;
+              }
+            }
+            else {
+              if(birthDateObj.getFullYear() <= currentDate.getFullYear()){
+                age = age ? age.toString().includes("days") ? "1" : age : age;
+                if (age < 18 || age > 120) {
+                  this.toast.error({
+                    detail: "Error",
+                    summary: "Member should be less than 120 years and Greater than 18 years",
+                    duration: 3000
+                  });
+                  isValid = false;
+                }
+              }
+            }
+            if (isValid) {
+              selectedRelation.age = age;
+              console.log("Age set successfully:", selectedRelation.age);
+            }
           }
         }
         console.log(selectedRelation);
@@ -520,6 +589,26 @@ export class GetQuoteComponent implements AfterViewChecked {
     }
 
     return age;
+  }
+
+  calculateAgeInDays(birthDate : any):any | null {
+    // Get the current date
+    const currentDate : any = new Date();
+   
+    // Convert the birth date into a Date object
+    const birthDateObj : any = new Date(birthDate);
+   
+    // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+    // Calculate the difference in milliseconds
+    if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
+      const diffInMilliseconds = currentDate - birthDateObj;
+     
+      // Convert the difference from milliseconds to days
+      const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+     
+      return diffInDays;
+    }
+    return null;
   }
 
   onRelationshipNext() {
@@ -1068,7 +1157,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     })
   }
-  onGenderChange(event: any) {
+  onGenderChange(event: any = null) {
     console.log(event, event.target.value);
     this.relations.forEach(relation => {
       if (relation.id === "R001") {

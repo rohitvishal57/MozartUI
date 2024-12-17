@@ -14,7 +14,7 @@
                                     <main class="performBody">
                                         <div class="contentBody bodyColumns-1">
                                             <div class="bodyColumn body_flex_column">
-                                                <section class="white_container">
+                                                <section class="white_container mobilePad_container">
                                                     <div class="row mb-5 qrCode_mr_0">
                                                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                                             <div class="userProfilePic">
@@ -47,8 +47,8 @@
 
                                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                             <div class="userProfile_qrCode">
-                                                                <div class="img_qrCode">
-                                                                    <img src="../../assets/Img/img_QR_code.png" />
+                                                                <div class="img_qrCode" *ngIf="profileQRCode">
+                                                                    <img [src]="qrCodeImage" />
                                                                 </div>
                                                                 <div class="qrCode_agentInfo">
                                                                     <h5>Your Agent Code</h5>
@@ -66,17 +66,15 @@
                                                                                     src="../../assets/Img/icon_content_copy.svg"></button>
                                                                             <button type="button" id="btn-link-content"
                                                                                 name="btn-link-content"
-                                                                                title="Link" (click)="openLink()"><img
-                                                                                    src="../../assets/Img/icon_link_share.svg"></button>
-                                                                        </div>
+                                                                                title="Link" (click)="openLink()"><img src="../../assets/Img/icon_link_share.svg"></button>
+                                                                          <button type="button" id="btn-link-content" class="shareIcon"
+                                                                                name="btn-link-content" (click)="openEmail()"
+                                                                                title="Share"><img src="../../assets/Img/icon_share.svg"></button>     
+                                                                        </div> 
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                          
                                                         </div>
-                                                       
-
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 "

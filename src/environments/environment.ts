@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   baseUrl: "https://usp.monocept.ai/",
-
+  baseUrl1: "https://upuat.adityabirlahealth.com/",
   axisBaseUrl: "https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api",
   getRenewalList: "api/renewal/getrenewallist",
   getRenewalInfo: "api/renewal/renewalinfo",
@@ -129,7 +129,7 @@ export const environment = {
   getRUGPremium: "api/rug/GetPremium",
   getFamilyConstruct: "api/rug/GetFamilyConstructByProductCode",
   bbAxisRedirection: "api/v1/RedirectAxisBranchBankingRequest",
-  saveBBCommonDraft: "api/v1/SaveBBCommonDraft",
+  saveBBCommonDraft: "api/rug/SaveBBCommonDraft",
   getLeadStatusCount: "GetLeadStatusCount",
   getProposalStatusCount: "GetProposalStatusCount",
   getRenewalStatusCount: "GetRenewalStatusCount",

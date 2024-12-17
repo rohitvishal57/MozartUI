@@ -14,17 +14,25 @@ export const payment={
       "class": "kyc-container",
       "formControls": [
         {
+          "name": "checkKycControl",
+          "label": "Check KYC",
+          "type": "text",
+          "class": "",
+          "disabled": false,
+          "visible": false,
+          "methodName": "checkKycDetail",
+        },
+        {
           "name": "shareKyc",
           "label": "Share KYC",
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "onChangeMethod":"shareKycURL",
-          "methodName": "checkKycDetail",
-          // "dependentControls": [
-          //   "copyLink"
-          // ]
+          "methodName": "shareKycURL",
+          "dependentControls": [
+            "kycCopyLink"
+          ]
         },
         {
           "name": "initiateKyc",
@@ -39,6 +47,15 @@ export const payment={
           //   "copyLink"
           // ]
         },
+        {
+          "name": "kycCopyLink",
+          "label": "Copy Link",
+          "value": "",
+          "type": "editableInfo",
+          "class": "col-12 col-lg-8 col-md-8",
+          "disabled": true,
+          "visible": false
+        }
       ],
     }, 
     {
@@ -73,6 +90,7 @@ export const payment={
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
+          "methodName": "sendPaymentLink",
           "visible": true,
           "dependentControls": [
             "copyLink"
@@ -110,7 +128,7 @@ export const payment={
           "type": "text"
         },
         {
-          "name": "enach",
+          "name": "emandate_payment",
           "label": "E-Nach",
           "visibleLabel": false,
           "visible": true,

@@ -549,7 +549,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         AttachmentType: null,
         CaseSubSubType: this.CaseSubSubTypeValue.name,
         CtstID: this.CaseSubSubTypeValue.CtstID,
-        Source:'Customer Portal',
+        Source:'Seller_Portal',
         CaseSubType: "Endorsement",
         CaseTitle: null,
         CaseType: "Endorsement",

@@ -18,13 +18,13 @@
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count">
-                <button *ngIf="i < getFormIndexValue() || formSequence.length-1 == getFormIndexValue()" class="btn btn-default" class="nav-index">
+                <button *ngIf="i < getFormIndexValue() || formSequence.length-1 == getFormIndexValue()" (click)="onDrillDown(i, case)" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
                 <button *ngIf="i == getFormIndexValue() && formSequence.length-1 != getFormIndexValue()" class="btn btn-default" class="nav-last">
                   {{i+1}}
                 </button>
-                <button *ngIf="i > getFormIndexValue() " class="btn btn-default" class="nav-bottom">
+                <button *ngIf="i > getFormIndexValue()" class="btn btn-default" class="nav-bottom">
                   {{i+1}}
                 </button>
               </div>
@@ -116,7 +116,7 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss"
+                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary"
                   [hidden]="!control.visible">
                   <div class="label-value-container">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
@@ -210,19 +210,18 @@
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                     class="text-danger">
-                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,
-                    JPG,JPEG, PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG, PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'checkbox'" class="checkbox-error">
+                <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">
                   <div [class]="control.class" style="display: -webkit-box;">
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
                       [name]="control.name" id="{{control.name}}" class="checkbox-label"
                       (change)="onCheckboxSelect(control.name)" />
-                    <label [for]="control.name" [innerHTML]="control.label ? (control.label | translate) : ''"
+                    <label [for]="control.name" [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
                       class="checkboxes"><span *ngIf="control.validators">*</span></label>
                   </div>
                   <small
@@ -690,7 +689,7 @@
                     <ng-container *ngFor="let allSubForm of control.dynamicControls; index as i">
                       <ng-container *ngIf="i > 0">
                         <ng-container [formGroupName]="i - 1">
-                          <div class="col-md-4 banner-card">
+                          <div class="col-md-6 col-lg-4 banner-card">
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible !== false">
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
@@ -699,9 +698,12 @@
                                     {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
                                   </label>
-                                  <input *ngIf="subControl.disabled" class="view_Text"
+                                  <div *ngIf="subControl.disabled" class="view_Text more_view_Text">
+                                    {{ formData?.[control.name]?.[i-1]?.[subControl.name] }}
+                                  </div>
+                                  <!--<input *ngIf="subControl.disabled" class="view_Text"
                                     formControlName="{{ subControl.name }}" [name]="subControl.name"
-                                    [type]="subControl.type" readonly>
+                                    [type]="subControl.type" readonly>-->
                                 </div>
                               </ng-container>
                             </ng-container>
@@ -825,7 +827,7 @@
                         [value]="option.value" class="radio-card" [checked]="option.selected" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year ? (option.year | translate) : ''}}</div>
-                        <div class="price">₹{{ option.value }}.00</div>
+                        <div class="price">₹{{ option.value }}</div>
                         <div class="discount">{{ option.discount }}</div>
                       </label>
                     </ng-container>
@@ -910,11 +912,20 @@
                               <input type="checkbox" formControlName="{{ subControl.name }}" [id]="subControl.name"
                                 [name]="subControl.name" (click)="onCheckboxChange($event, subControl,control)"
                                 style="height:20px; width:20px; margin-left: 10px;" />
-                              <label [for]="subControl.name" [innerHTML]="subControl.label" class="checkbox-label"
-                                style="padding-left: 15px;
-                    font-weight: 600;
-                    font-size: 16px;
-                    margin-top: 0px;"></label>
+                              <label [for]="subControl.name"  class="checkbox-label checkbox-label2">
+                                <span [innerHTML]="subControl.label"></span>
+                                <span class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
+                                  <span class="info-icon" >
+                                    <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                  </span>
+                                  <span class="tooltip-text">{{ subControl.toolTipMessage }}</span>
+                                </span></label>
+                                <!--<div class="tooltip-wrapper " *ngIf="subControl.visibleToolTip">
+                                  <span class="info-icon" >
+                                    <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                  </span>
+                                  <span class="tooltip-text">{{ subControl.toolTipMessage }}</span>
+                                </div>-->
                             </div>
                           </div>
                           <div *ngIf="subControl.type === 'select'" class="typecss">
@@ -1127,10 +1138,17 @@
                       <ng-container [formGroupName]="i"> -->
                       <div [class]="control.class" class="typecss">
                         <label class="control.label" *ngIf="control.visibleLabel==true">
-                          {{ h+1 }}. {{ control.label?(control.label | translate):'' }}</label>
+                          {{ h+1 }}. {{ control.label?(control.label | translate):'' }}
+                          <span class="tooltip-wrapper" *ngIf="control.visibleToolTip">
+                            <span class="info-icon">
+                              <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                            </span>
+                            <span class="tooltip-text">{{ control.toolTipMessage }}</span>
+                          </span>
+                        </label>
                       </div>
                       <div class="col-lg-8">
-                        <div style="display: flex;">
+                        <div class="health-lifestyle-selct-btn"  style="display: flex;">
 
                           <input type="button" (click)="onCheckboxChange($event,'',control)" style="margin-left: 10px;"
                             name="select" id="select" [value]="'SELECT' | translate" class="add-btn" />

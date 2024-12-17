@@ -1173,6 +1173,20 @@
                                     </small>
                                 </div>
 
+                                <!--type editableInfo-->
+                                <div *ngIf="control.type === 'editableInfo'" [class]="control.class" class="typecss">
+                                    <div [hidden]="!control.visible">
+                                      <div style="display: flex; flex-direction: row;">
+                                        <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                                          formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                                          [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
+                                        <button pButton type="button" class="btn_red btn_redRenew btn_redCopy" (click)="copyText(control)">
+                                          <img src="assets/Img/icon_content_copy.svg" alt="copytext">
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
                                 <!--type button-->
                                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
                                     (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
@@ -1186,4 +1200,112 @@
             </form>
         </div>
     </div>
+</div>
+
+<!-- Customer Feedback module  -->
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback block-hide" id="customerFeedbackModule"
+  tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roomModalLabel">Rate Your Experience</h5>
+        </div>
+        <div class="modal-body">
+          <p class="para-rate-18">Please rate your online renewal experience with us.</p>
+
+          <!-- Star Rating -->
+          <div class="star-rating">
+            <span class="star" *ngFor="let star of stars; let i = index" [ngClass]="{'selected': i < rating}"
+              (click)="setRating(i + 1)">
+              ★
+            </span>
+          </div>
+
+          <div class="row" *ngIf="impressedValues">
+            <div class="col-12 mb-3">
+              <p class="para-rate-16">{{impressedLable}}</p>
+            </div>
+
+            <div class="col-12">
+              <!-- Feedback Buttons -->
+              <div class="btn_feedbackGroup">
+                <button type="button" class="btn_quickFilter" (click)="onSelectValue(value)"
+                  [ngClass]="{'selected': feedbackImpressedValue === value}"
+                  *ngFor="let value of feedbackImpressedValues;">{{value}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3" *ngIf="feedBackMessage">
+            <div class="col-12">
+              <p class="para-rate-lable">What can we do to improve your experience?</p>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <div class="input-block form-floating input-block-renew">
+                <textarea class="form-control input-textBox" id="notes" placeholder="Enter your message"
+                  formControlName="message"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer modal_footerBtnGroup_column">
+          <button *ngIf="feedbackSubmit" type="submit" class=" btn_red btn_fullWidth">Submit</button>
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal"
+              aria-label="Close">Skip for now</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isFeedBackModalVisible">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
+        <div class="modal-header">
+          <h5 class="modal-title">Rate Your Experience</h5>
+        </div>
+        <div class="modal-body">
+          <p class="para-rate-18">Please rate your online renewal experience with us.</p>
+
+          <!-- Star Rating -->
+          <div class="star-rating">
+            <span class="star" *ngFor="let star of stars; let i = index" [ngClass]="{'selected': i < rating}"
+              (click)="setRating(i + 1)">
+              ★
+            </span>
+          </div>
+
+          <div class="feedback-impressed" *ngIf="impressedValues">
+            <div class="impressed-label">{{impressedLable}}</div>
+            <div class="feedback-buttons">
+              <button type="button" class="feedback-btn" (click)="onSelectValue(value)"
+                [ngClass]="{'selected': feedbackImpressedValue === value}"
+                *ngFor="let value of feedbackImpressedValues;">
+                {{value}}
+              </button>
+            </div>
+          </div>
+
+          <div class="feedback-message" *ngIf="feedBackMessage">
+            <div class="message-label">
+              <p class="para-rate-lable">What can we do to improve your experience?</p>
+            </div>
+            <div class="textarea-wrapper">
+              <textarea class="input-textBox" id="notes" placeholder="Enter your message"
+                formControlName="message"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button *ngIf="feedbackSubmit" type="submit" class="btn-submit">Submit</button>
+          <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

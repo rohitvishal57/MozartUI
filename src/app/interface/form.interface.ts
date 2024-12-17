@@ -93,6 +93,8 @@ export interface IFormControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  visibleToolTip?:boolean;
+  toolTipMessage?:string;
 }
 export interface ISubControl {
   name: string;
@@ -121,6 +123,8 @@ export interface ISubControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  visibleToolTip?:boolean;
+  toolTipMessage?:string;
 }
 
 export interface ITab {

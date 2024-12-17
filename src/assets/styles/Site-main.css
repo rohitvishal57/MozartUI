@@ -2126,6 +2126,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .quoteComparisonWraper .qc_item header .heading {
   gap: 10px;
+  padding-right: 20px;
 }
 
 .quoteComparisonWraper .qc_item header .heading h5 {
@@ -2596,7 +2597,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h4 {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 19px;
   color: var(--black-color);
   margin: 0;
@@ -5402,6 +5403,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .main_userDetails .info_userDetails {
   display: flex;
   gap:12px;
+  width: 100%;
+}
+.main_userDetails .edit_userDetails {
+  width: 32px;
 }
 .main_userDetails .info_userDetails .img_userProfile{
   width: 32px;

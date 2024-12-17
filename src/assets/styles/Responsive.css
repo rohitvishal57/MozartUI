@@ -379,6 +379,9 @@
     }
 }
 @media (max-width:767px) {
+    .customiseDashboard_bodyColumns {
+        flex-direction: column;
+    }
     .siteHeader .abcLinksMain .abcTopLinks {
         font-size: 11px;
     }
@@ -582,6 +585,9 @@
     }
     .checkbox_renew_optionalCoverages {
         min-width: 100%;
+    }
+    .main_userDetails .info_userDetails .details_userProfile h6 span{
+        max-width: 180px !important;
     }
 }
 @media (max-width:390px){

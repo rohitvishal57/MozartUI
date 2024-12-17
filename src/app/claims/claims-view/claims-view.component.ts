@@ -102,6 +102,7 @@ export class ClaimsViewComponent {
   coverNames: CoverDetail[] = [];
   selectedCoverCode: string = '';
   policyNoChangeSubject = new Subject<string>();
+  specialCovers: any;
   // coverNames:any
   documentLabelOptions = [
     'govt/KYC ID',
@@ -317,13 +318,12 @@ export class ClaimsViewComponent {
   }
 
   handleCoverNameValidation(coverName: string): void {
-
     const stateControl = this.form.get('state');
     const cityControl = this.form.get('city');
     const hospitalNameControl = this.form.get('hospitalName');
     const hospitalAddressControl = this.form.get('hospitalAddress');
 
-    if (coverName === 'AYUSH Treatment') {
+    if (!this.specialCovers.includes(coverName)) {
       // Remove validators for state, city, and hospital
       stateControl?.clearValidators();
       cityControl?.clearValidators();
@@ -398,23 +398,45 @@ export class ClaimsViewComponent {
   }
 
 
+  // handleDropdownChange(value: string): void {
+  //      this.form.patchValue({
+  //     "memberName": "",
+  //   });
+  //   const selectedPolicyNumber = value;
+  //   this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
+  //     if (!policyValue) {
+  //       this.form.get('memberName')?.setValue('');
+  //       this.memberNames = [];
+  //     }
+  //   });
+  //   const filteredMembers = this.policyNumbers.filter(
+  //     (item: any) => item.policyNumber === selectedPolicyNumber
+  //   );
+  //   //this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+  //   this.form.get("memberName")?.setValue("");
+  //   this.cdr.markForCheck();
+  //   this.getPolicyMembers(value)
+  //   this.fetchCoverNames()
+
+  // }
   handleDropdownChange(value: string): void {
+    this.form.patchValue({
+      "memberId": value,
+    });
     const selectedPolicyNumber = value;
     this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
-        this.form.get('memberName')?.setValue('');
+        this.form.get('memberId')?.setValue('');
         this.memberNames = [];
       }
     });
     const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
-    //this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-    this.form.get("memberName")?.setValue("");
+    this.form.get("memberId")?.setValue("");
     this.cdr.markForCheck();
     this.getPolicyMembers(value)
-    this.fetchCoverNames()
-
+    this.fetchCoverNames(value)
   }
   getPolicyMembers(value: string) {
     const membersReq = {
@@ -436,7 +458,17 @@ export class ClaimsViewComponent {
       });
   }
   getMemberIdList(membersList: Array<any>) {
-    this.memberNames = membersList;
+    // const uniqueMembers = membersList.filter((value, index, self) =>
+    //   index === self.findIndex((t) => (
+    //     t.fullName === value.fullName || t.memberId === value.memberId
+    //   ))
+    // );
+    this.memberNames = membersList.filter((value, index, self) =>
+      index === self.findIndex((t) => (
+        t.memberName === value.memberName // Assuming memberName is the unique identifier
+      ))
+    );
+   // this.memberNames = uniqueMembers;
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim(); 
@@ -479,8 +511,6 @@ export class ClaimsViewComponent {
 
     if (value.length > 12) {
       this.form.get('claimedAmount')?.setErrors({ maxlength: true });
-    } else if (value.length < 4) {
-      this.form.get('claimedAmount')?.setErrors({ minlength: true });
     } else {
       this.form.get('claimedAmount')?.setErrors(null);
     }
@@ -566,9 +596,9 @@ export class ClaimsViewComponent {
     }
   }
 
-  fetchCoverNames(): void {
-    const coverReqBody =  {
-      "memberId": this.selectedMember.memberId,
+  fetchCoverNames(value: string): void {
+     const coverReqBody =  {
+      "memberId": value,
       "policyNumber": this.form.value.policyNumber,
       "familyID": "",
       "agentCode": localStorage.getItem("agentCode")
@@ -614,8 +644,8 @@ export class ClaimsViewComponent {
   //   }
   // }
   onCoverNameChange(event: any): void {
-    const selectedCoverName = event.target.value;
-    const selectedCover = this.coverNames.find(cover => cover.cover_Name === selectedCoverName);
+     this.selectedCoverName = event.target.value;
+    const selectedCover = this.coverNames.find(cover => cover.cover_Name === this.selectedCoverName);
 
     if (selectedCover) {
       this.form.patchValue({
@@ -625,23 +655,24 @@ export class ClaimsViewComponent {
 
       this.selectedCoverCode = selectedCover.cover_Code;
 
-      const specialCovers = [
+       this.specialCovers = [
         "AYUSH Treatment",
         "Day Care Treatments",
         "In-patient Hospitalization",
+        "Inpatient Hospitalization Treatment",
         "Mental Illness Hospitalization"
       ];
 
-      if (specialCovers.includes(selectedCoverName)) {
+      if (this.specialCovers.includes(this.selectedCoverName)) {
         this.showSecondScenario = true;
         this.billsArray.clear();
         this.addBillRow();
         this.showFirstScenario = false;
-        let coverName = this.form.get('coverName')?.value;
-        this.handleCoverNameValidation(coverName);
       } else {
         this.showFirstScenario = true;
         this.showSecondScenario = false;
+        let coverName = this.form.get('coverName')?.value;
+        this.handleCoverNameValidation(coverName);
       }
     }
   }
@@ -1128,16 +1159,15 @@ export class ClaimsViewComponent {
   //   }
   
   // }
-  memberIdChange(event: any) {
-    const selectedMemberId = event.target.value;
-    this.selectedMember = this.policyMembersList.find(member => member.memberId === selectedMemberId);
-    
-    if (this.selectedMember) {
-      this.form.get('memberName')?.setValue(this.selectedMember.memberName);
-      this.form.get('memberId')?.setValue(this.selectedMember.memberId);
-    }
-    this.fetchCoverNames();
+memberIdChange(event: any): void {
+  const memberId = event.target.value;
+  const selectedMember = this.memberNames.find(member => member.memberId === memberId);
+  if (selectedMember) {
+    this.form.get('memberName')?.setValue(selectedMember.memberName);
   }
+  this.fetchCoverNames(memberId);
+
+}
 
   ///////current date and time
   formatUploadDateTime() {
@@ -1191,15 +1221,16 @@ export class ClaimsViewComponent {
       //   saveClaimData.claimedAmount = 0;
       // }
 
-      let coverName = this.form.get('coverName')?.value;
-      if (coverName) {
-        this.handleCoverNameValidation(coverName);
-        if (coverName === 'AYUSH Treatment') {
-          saveClaimData.state = "";
-          saveClaimData.city = "";
-          saveClaimData.hospitalName = "";
-        }
-      }
+      //let coverName = this.form.get('coverName')?.value;
+      // if (coverName) {
+      //   this.handleCoverNameValidation(coverName);
+      //   if (coverName === 'AYUSH Treatment') {
+      //     saveClaimData.state = "";
+      //     saveClaimData.city = "";
+      //     saveClaimData.hospitalName = "";
+      //     saveClaimData.hospitalAddress = "";
+      //   }
+      // }
 
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
