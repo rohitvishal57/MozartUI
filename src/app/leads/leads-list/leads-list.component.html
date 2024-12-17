@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn_grid mobile-hide jsBtnClickQuote" (click)="downloadAllLeads()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAllLeads()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
                         <img src="assets/Img/icon_download_grey.svg" alt="Download">
                     </button>
                     <div class="filterWraper">
@@ -211,7 +211,7 @@
                                             <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote"><img
                                                      src="assets/Img/icon_savenew_subquote.svg">        
                                             </button>
-                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
                                                 src="assets/Img/icon_download_grey.svg">        
                                            </button>
                                             <mat-menu #moreMenu="matMenu"
