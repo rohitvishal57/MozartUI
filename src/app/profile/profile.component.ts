@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
   selectedLanguage: string = '';
   profileLink:any = '';
   isShareOptionsVisible = false;
+  qrCodeImage: any;
+  profileQRCode:any = '';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -69,17 +71,20 @@ export class ProfileComponent implements OnInit {
     }
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
-        // this.profileDetails = res.data;
         const output = Object.keys(res.data).map(key => ({
           heading: key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
           icon: this.getIcons(key),
           value: key === 'dateOfBirth' ? new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
         this.profileDetails = output;
-        this.profileDetails = output.filter(item => item.heading !== 'Profile Link');
         this.profileLink = res.data.profileLink;
+        this.profileDetails = output.filter(item => item.heading !== 'Profile Link' && item.heading !== 'Profile QRCode');
+        this.profileQRCode = res.data.profileQRCode;
+        if (this.profileQRCode) {
+          this.qrCodeImage = `data:image/png;base64,${this.profileQRCode}`;
+        }   
       }
-    })
+    });
   }
 
   getIcons(key: string) {
@@ -133,9 +138,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  toggleShareOptions(): void {
-    this.isShareOptionsVisible = !this.isShareOptionsVisible;
-  }
+  // toggleShareOptions(): void {
+  //   this.isShareOptionsVisible = !this.isShareOptionsVisible;
+  // }
+
   updatePreferredLanguage(): void {
     const reqData = {
       AgentCode: this.agentCode,

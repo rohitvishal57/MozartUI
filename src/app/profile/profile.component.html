@@ -47,8 +47,8 @@
 
                                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                             <div class="userProfile_qrCode">
-                                                                <div class="img_qrCode">
-                                                                    <img src="../../assets/Img/img_QR_code.png" />
+                                                                <div class="img_qrCode" *ngIf="profileQRCode">
+                                                                    <img [src]="qrCodeImage" />
                                                                 </div>
                                                                 <div class="qrCode_agentInfo">
                                                                     <h5>Your Agent Code</h5>
@@ -69,7 +69,7 @@
                                                                                 title="Link" (click)="openLink()"><img src="../../assets/Img/icon_link_share.svg"></button>
                                                                           <button type="button" id="btn-link-content" class="shareIcon"
                                                                                 name="btn-link-content" (click)="openEmail()"
-                                                                                title="Link" ><img src="../../assets/Img/icon_share.svg"></button>     
+                                                                                title="Share"><img src="../../assets/Img/icon_share.svg"></button>     
                                                                         </div> 
                                                                     </div>
                                                                 </div>
