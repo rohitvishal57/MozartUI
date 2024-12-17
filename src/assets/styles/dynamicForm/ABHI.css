@@ -2329,6 +2329,11 @@ input[type=checkbox]:checked {
     text-align: left;
     color: #000;
 }
+.main-container .right-panel .bottom-product .boldtext_input:disabled,
+.main-container .right-panel .bottom-total-premium .boldtext_input:disabled,
+.main-container .right-panel .boldtext_input#policyNumber:disabled {
+    background: transparent !important;
+}
 .main-container .right-panel .bottom-product .boldtext_input + span, 
 .main-container .right-panel .bottom-total-premium .boldtext-label {
     font-family: Anek Latin;
