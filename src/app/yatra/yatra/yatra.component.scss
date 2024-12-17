@@ -148,3 +148,11 @@
     width: 14px;
     height: 14px;
 }
+@media (max-width:767px) {
+    .health-lifestyle-selct-btn #select{
+        left: 0;
+    }
+    .health-lifestyle-selct-btn {
+        justify-content: center;
+    }
+}
