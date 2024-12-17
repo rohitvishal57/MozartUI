@@ -1173,6 +1173,20 @@
                                     </small>
                                 </div>
 
+                                <!--type editableInfo-->
+                                <div *ngIf="control.type === 'editableInfo'" [class]="control.class" class="typecss">
+                                    <div [hidden]="!control.visible">
+                                      <div style="display: flex; flex-direction: row;">
+                                        <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                                          formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                                          [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
+                                        <button pButton type="button" class="btn_red btn_redRenew btn_redCopy" (click)="copyText(control)">
+                                          <img src="assets/Img/icon_content_copy.svg" alt="copytext">
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
                                 <!--type button-->
                                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
                                     (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"

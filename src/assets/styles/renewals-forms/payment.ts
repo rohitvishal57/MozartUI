@@ -81,6 +81,7 @@ export const payment={
           "type": "button",
           "class": "send-link-btn send-btn",
           "disabled": false,
+          "methodName": "sendPaymentLink",
           "visible": true,
           "dependentControls": [
             "copyLink"

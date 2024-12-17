@@ -17,6 +17,7 @@ import { RenewalsService } from '../renewals.service';
 import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -79,7 +80,7 @@ export class RenewalJourneyComponent {
   discountList: number[] = [];
   displayTaxList: any[] = [];
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router) {
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router,private clipboard: Clipboard) {
 
   }
 
@@ -3576,19 +3577,21 @@ export class RenewalJourneyComponent {
     }
   }
 
-  sendPaymentLink() {
-    console.log("inside sendPaymentLink");
+  sendPaymentLink(control: any) {
+    console.log("inside sendPaymentLink",control);
 
-    this.router.navigate(['renewal/customerRenewalJourney'], {
-      state: {
-        formData: this.encryptionService.encrypt(this.formData),
-        proposalNum: this.encryptionService.encrypt(this.proposalNum),
-        policyNumber: this.encryptionService.encrypt(this.policyNumber),
-        journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-        formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-        formIndex:"0"
-      }
-    });
+    // this.router.navigate(['renewal/customerRenewalJourney'], {
+    //   state: {
+    //     formData: this.encryptionService.encrypt(this.formData),
+    //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+    //     policyNumber: this.encryptionService.encrypt(this.policyNumber),
+    //     journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
+    //     formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+    //     formIndex:"0"
+    //   }
+    // });
+
+    this.changeMainFormDependentControls(control.dependentControls,true);
 
   }
 
@@ -3716,5 +3719,12 @@ export class RenewalJourneyComponent {
     return `${day}-${month}-${year}`;
   }
   
-  
+  copyText(control: any) {
+    console.log(control);
+    this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
+    this.toast.success({ detail: "SUCCESS", summary: `Text copied to clipboard!`, duration: 3000 });
+    // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
+  }
+
+
 }
