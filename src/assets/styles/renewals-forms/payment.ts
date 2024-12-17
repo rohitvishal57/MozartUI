@@ -14,8 +14,8 @@ export const payment={
       "class": "kyc-container",
       "formControls": [
         {
-          "name": "shareKyc",
-          "label": "Share KYC",
+          "name": "checkKycControl",
+          "label": "Check KYC",
           "type": "text",
           "class": "",
           "disabled": false,
@@ -30,9 +30,9 @@ export const payment={
           "disabled": false,
           "visible": true,
           "methodName": "shareKycURL",
-          // "dependentControls": [
-          //   "copyLink"
-          // ]
+          "dependentControls": [
+            "kycCopyLink"
+          ]
         },
         {
           "name": "initiateKyc",
@@ -47,6 +47,15 @@ export const payment={
           //   "copyLink"
           // ]
         },
+        {
+          "name": "kycCopyLink",
+          "label": "Copy Link",
+          "value": "",
+          "type": "editableInfo",
+          "class": "col-12 col-lg-8 col-md-8",
+          "disabled": true,
+          "visible": false
+        }
       ],
     }, 
     {
