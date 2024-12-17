@@ -435,11 +435,12 @@ export class LeadsListComponent {
     );
   }
   fetchReportingUsers() {
+    debugger;
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response: any) => {
-        this.agentCodes = response != null ? response?.data : [];
+        this.agentCodes = response != null ? response?.data[0].split(",") : [];
         if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
