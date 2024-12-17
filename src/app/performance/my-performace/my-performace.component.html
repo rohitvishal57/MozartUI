@@ -131,44 +131,43 @@
                                             </div>
                                         </div>
                                         <h4><b>Detailed View</b></h4>
-                                        <br>
-                                        <section id="quotes-list" class="tableMain quoteView block-show "
+                                        <section id="quotes-list" class="tableMain user-quoteView block-show mt-3"
                                             *ngIf="selectedView == 'list'">
                                             <div class="tableSubMain">
                                                 <div class="table-responsive">
                                                     <table class="table table-borderless table-search">
                                                         <thead>
                                                             <tr>
-                                                                <th>Agent Code</th>
-                                                                <th>Proposal ID</th>
-                                                                <th>Proposal Substatus</th>
-                                                                <th>Client ID</th>
-                                                                <th>Insured Name</th>
-                                                                <th>Business Type</th>
-                                                                <th>Policy Start Date</th>
-                                                                <th>Policy End Date</th>
-                                                                <th>Policy Number</th>
-                                                                <th>Product Name</th>
-                                                                <th>Policy Variant</th>
-                                                                <th>Plan Type</th>
-                                                                <th>Plan Variant</th>
-                                                                <th>Portability</th>
-                                                                <th>Net Premium</th>
-                                                                <th>Sum Insured</th>
-                                                                <th>Inwarded Date</th>
-                                                                <th>Issue Date</th>
-                                                                <th>PR Date</th>
-                                                                <th>Port%</th>
-                                                                <th>Super%</th>
-                                                                <th>CI/CS/PA/ASP/Credit%</th>
-                                                                <th>SI Credit%</th>
-                                                                <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
+                                                                <th class="head_quoteType" nowrap>Agent Code</th>
+                                                                <th nowrap>Proposal ID</th>
+                                                                <th nowrap>Proposal Substatus</th>
+                                                                <th nowrap>Client ID</th>
+                                                                <th nowrap>Insured Name</th>
+                                                                <th nowrap>Business Type</th>
+                                                                <th nowrap>Policy Start Date</th>
+                                                                <th nowrap>Policy End Date</th>
+                                                                <th nowrap>Policy Number</th>
+                                                                <th nowrap>Product Name</th>
+                                                                <th nowrap>Policy Variant</th>
+                                                                <th nowrap>Plan Type</th>
+                                                                <th nowrap>Plan Variant</th>
+                                                                <th nowrap>Portability</th>
+                                                                <th nowrap>Net Premium</th>
+                                                                <th nowrap>Sum Insured</th>
+                                                                <th nowrap>Inwarded Date</th>
+                                                                <th nowrap>Issue Date</th>
+                                                                <th nowrap>PR Date</th>
+                                                                <th nowrap>Port%</th>
+                                                                <th nowrap>Super%</th>
+                                                                <th nowrap>CI/CS/PA/ASP/Credit%</th>
+                                                                <th nowrap>SI Credit%</th>
+                                                                <th nowrap>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
                                                                 </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody class="table-group-divider">
-                                                            <tr *ngFor="let row of detailedList; let i = index">
-                                                                <td>{{row.agentCode}}</td>
+                                                            <tr class="base_quoteRow" *ngFor="let row of detailedList; let i = index">
+                                                                <td class="base_quote">{{row.agentCode}}</td>
                                                                 <td>{{row.proposalID}}</td>
                                                                 <td>{{row.proposalSubStatus}}</td>
                                                                 <td>{{row.clientID}}</td>

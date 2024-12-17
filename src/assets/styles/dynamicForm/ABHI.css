@@ -1380,6 +1380,11 @@ body {
     border: none;
     background-color: #F9FAFB;
 }
+.main-container .right-panel .banner-container .banner-card .display-container .view_Text.more_view_Text {
+    line-height: normal;
+    max-width: 90%;
+    word-break: break-word;
+}
 
 /* .main-container .right-panel .edit-icon {
     padding: 2% 1%;
@@ -2989,4 +2994,32 @@ margin: 0;
 .main-container .main-subContainer .left-nav .left-main-cnt{
  background-color: transparent;
  padding-top: 0px;
+}
+.typecss_summary {
+    padding-bottom: 0 !important;
+    .label-value-container {
+        margin-bottom: 6px !important;
+    }
+}
+@media (max-width:767px){
+    .main-container .right-panel .banner-container .banner-card {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .main-container .right-panel .banner-container .banner-card .display-container {
+        width: 45%;
+    }
+    .main-container .right-panel .paymentBtn {
+        min-width: 48%;
+        margin: 0px 1% 5% 0;
+    }
+    .main-container .right-panel .typecss.bottom-product {
+        width: 50%;
+    }
+    .main-container .right-panel .typecss.bottom-total-premium {
+        width: 40%;
+    }
+    .main-container .right-panel .bottom_proposalNumber {
+        margin-bottom: 10px;
+    }
 }

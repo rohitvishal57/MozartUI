@@ -116,7 +116,7 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss"
+                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary"
                   [hidden]="!control.visible">
                   <div class="label-value-container">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
@@ -699,9 +699,12 @@
                                     {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
                                   </label>
-                                  <input *ngIf="subControl.disabled" class="view_Text"
+                                  <div *ngIf="subControl.disabled" class="view_Text more_view_Text">
+                                    {{ formData?.[control.name]?.[i-1]?.[subControl.name] }}
+                                  </div>
+                                  <!--<input *ngIf="subControl.disabled" class="view_Text"
                                     formControlName="{{ subControl.name }}" [name]="subControl.name"
-                                    [type]="subControl.type" readonly>
+                                    [type]="subControl.type" readonly>-->
                                 </div>
                               </ng-container>
                             </ng-container>
