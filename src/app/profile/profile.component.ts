@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit {
   showmsg: boolean = false;
   selectedLanguage: string = '';
   profileLink:any = '';
+  isShareOptionsVisible = false;
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -132,6 +133,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  toggleShareOptions(): void {
+    this.isShareOptionsVisible = !this.isShareOptionsVisible;
+  }
   updatePreferredLanguage(): void {
     const reqData = {
       AgentCode: this.agentCode,
@@ -218,6 +222,11 @@ export class ProfileComponent implements OnInit {
         }
       }
     }
+  }
+  openEmail(): void {
+    const subject = encodeURIComponent('Check this out');
+    const body = encodeURIComponent('Here is the content to share.');
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 
   getPerformanceData() {
