@@ -690,7 +690,7 @@
                     <ng-container *ngFor="let allSubForm of control.dynamicControls; index as i">
                       <ng-container *ngIf="i > 0">
                         <ng-container [formGroupName]="i - 1">
-                          <div class="col-md-4 banner-card">
+                          <div class="col-md-6 col-lg-4 banner-card">
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible !== false">
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
