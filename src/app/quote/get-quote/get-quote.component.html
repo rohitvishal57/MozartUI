@@ -423,7 +423,7 @@
       </div>
 
       <div class="continue-btn-container">
-        <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey"
+        <button type="button" id="mainContinue" [disabled]="this.quoteFormGroup.status == 'INVALID'" name="mainContinue" class="continue-btn-0 btn_grey"
           (click)="continue()">{{"Continue" | translate}}</button>
       </div>
     </div>
