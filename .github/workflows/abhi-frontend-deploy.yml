@@ -20,13 +20,14 @@ on:
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
-  DEPLOY_BASE_DIR: "D:/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot"
-  PORT: 4800
+  DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
+  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
+  PORT: 4700
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout code
@@ -70,6 +71,10 @@ jobs:
     - name: Install dependencies
       run: |
         npm install --legacy-peer-deps
+
+    - name: Clean previous build artifacts
+      run: |
+        rm -rf ./dist/*
       
     - name: Build the project
       run: |
@@ -126,6 +131,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 10
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up SSH
       run: |
@@ -136,8 +142,45 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Create deployment directory on VM
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
+    # Generate the single version at the workflow level
+    - name: Generate Deployment Version
+      id: version
+      run: |
+        # Generate version using current date and time (IST)
+        #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
+        CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
+        TAGGED_VERSION="v${CURRENT_DATE}"
+        echo "Deployment version: $TAGGED_VERSION"
+        # Set the version as an output
+        echo "::set-output name=version::$TAGGED_VERSION"
+        # Also export it as an environment variable for other steps
+        echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
+  
+    - name: Debug:Show generated version
+      run: |
+        echo "Generated version: $TAGGED_VERSION"
+  
+    
+    # - name: Create deployment directory on VM
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
+
+    - name: Create deployment directory on VM with version
+      run: |
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
+          \$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION';
+          try {
+            if (-Not (Test-Path -Path \$DeployDir)) {
+              Write-Output \"Creating deployment directory: \$DeployDir\";
+              New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
+            } else {
+              Write-Output \"Deployment directory already exists: \$DeployDir\";
+            }
+          } catch {
+            Write-Output \"Error while creating deployment directory: \$DeployDir\";
+            Write-Output \$_.Exception.Message;
+            exit 1;
+          }
+        "
 
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
@@ -154,9 +197,9 @@ jobs:
     - name: Debug:List files after downloading artifacts
       run: ls -l ./my-artifacts
 
-    - name: Upload artifact to VM
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
-    
+    - name: Upload artifact to VM with versioning
+      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
+
     - name: Create or Update Application Pool
       run: |
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
@@ -183,15 +226,33 @@ jobs:
     - name: Remove Existing Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
-    # - name: Ensure abhi_frontend Directory Exists in IIS Web Root
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
   
-    # - name: Clean up the abhi_frontend Directory
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
+    - name: Clean up the abhi_frontend Directory
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
+    
     - name: Copy Latest Build to IIS web root directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
-  
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+    
     - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+
+    - name: Set environment variable based on branch
+      run: |
+        branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
+        environment=${branch_name}
+        if [ "$environment" == "main" ]; then
+          environment="prod"
+        fi
+        echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+
+    - name: Tag the commit
+      if: ${{ success() }}  # Only tag if the workflow is successful
+      run: |
+        TAG="$ENVIRONMENT-$TAGGED_VERSION"
+        echo "Tag: $TAG"  # Debugging the tag value
+        git tag $TAG
+        git push origin $TAG
     
