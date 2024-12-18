@@ -435,7 +435,6 @@ export class LeadsListComponent {
     );
   }
   fetchReportingUsers() {
-    debugger;
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
