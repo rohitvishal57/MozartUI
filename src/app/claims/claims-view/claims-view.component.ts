@@ -208,7 +208,6 @@ export class ClaimsViewComponent {
       });
     }
 
-
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -310,7 +309,6 @@ export class ClaimsViewComponent {
             documentName: [""],
             status: [""],
             labelName: [""]
-       
           }),
         ]),
     });
@@ -389,7 +387,6 @@ export class ClaimsViewComponent {
           this.policyNumbers = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.filteredPolicyList = [...this.policyNumbers];
           this.cdr.markForCheck();
-
         }
       },
       (err) => {
@@ -402,7 +399,6 @@ export class ClaimsViewComponent {
       return arr.map((mapObj: any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
-
 
   // handleDropdownChange(value: string): void {
   //      this.form.patchValue({
@@ -453,10 +449,8 @@ export class ClaimsViewComponent {
     this.claimsService.getMemberDetails(membersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp.data.policyMembersList          
-          this.getMemberIdList(this.policyMembersList)    
-          console.log(this.policyMembersList);
-                
+          this.policyMembersList = resp.data.policyMembersList
+          this.getMemberIdList(this.policyMembersList)                
         }
       },
       (err) => {
@@ -464,17 +458,11 @@ export class ClaimsViewComponent {
       });
   }
   getMemberIdList(membersList: Array<any>) {
-    // const uniqueMembers = membersList.filter((value, index, self) =>
-    //   index === self.findIndex((t) => (
-    //     t.fullName === value.fullName || t.memberId === value.memberId
-    //   ))
-    // );
     this.memberNames = membersList.filter((value, index, self) =>
       index === self.findIndex((t) => (
-        t.memberName === value.memberName // Assuming memberName is the unique identifier
+        t.memberId === value.memberId
       ))
     );
-   // this.memberNames = uniqueMembers;
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim(); 
@@ -489,18 +477,6 @@ export class ClaimsViewComponent {
     if(input.length >=16) {
       this.policyNoChangeSubject.next(input);
     }
-
-    // const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    // const regex = /^[0-9-]$/;
-
-    // if (allowedKeys.includes(event.key)) {
-    //   return;
-    // }
-
-    // Prevent default if the key is not allowed
-    // if (regex.test(event.key)) {
-    //   event.preventDefault();
-    // }
 }
 
 
