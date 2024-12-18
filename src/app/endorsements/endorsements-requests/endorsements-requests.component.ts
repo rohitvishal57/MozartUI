@@ -9,7 +9,6 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { ExcelExportService } from 'src/app/services/excel-export.service';
-
 @Component({
   selector: 'app-endorsements-requests',
   templateUrl: './endorsements-requests.component.html',
@@ -175,7 +174,7 @@ export class EndorsementsRequestsComponent implements OnInit {
               ...obj, raisedOn:formattedDate
             }
           });
-          this.filterCounts(response);
+          this.filterCounts(response?.data);
         } else {
           console.error("API request was not successful.");
         }
@@ -186,13 +185,14 @@ export class EndorsementsRequestsComponent implements OnInit {
     );
   }
 
-  filterCounts(resp: any) {
-    this.totalRecords = resp.data[this.filterType];
-    console.log(this.totalRecords, this.filterType);
-    this.activeCount = resp.data.activeCount;
-    this.resolvedCount = resp.data.resolvedCount;
-    this.cancelledCount = resp.data.cancelledCount;
+  
+  filterCounts(data: any) {
+    this.totalRecords = (data?.[this.filterType] ?? 0);  // Use nullish coalescing to set 0 if null or undefined
+    this.activeCount = (data?.activeCount ?? 0);
+    this.resolvedCount = (data?.resolvedCount ?? 0);
+    this.cancelledCount = (data?.cancelledCount ?? 0);
   }
+  
 
   statusFilter(filter: string, filterRange: string) {
     if (filter === "All") {
