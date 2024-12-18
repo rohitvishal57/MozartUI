@@ -271,6 +271,15 @@ export class GetQuoteComponent implements AfterViewChecked {
                 currentCount += 1;
                 this.relationCountMap.set(item.id, currentCount);
               }
+              formData.insuredMemberDetails.forEach((member:any)=>{
+                if(member.relation == memberName){
+                  item.age= member.memberAge;
+                  item.dob = member.memberdob;
+                  item.gender = member.memberGender;
+                }
+              })
+              console.log(mockEvent,item,formData.insuredMemberDetails);
+              
               this.onRelationChange(mockEvent, item);
             }
           });
