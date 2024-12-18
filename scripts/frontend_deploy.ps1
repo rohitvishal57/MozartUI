@@ -11,8 +11,8 @@ param(
 try {
     # Debugging: Output the application pool path to see if it matches
     Write-Output "Checking if Application Pool exists at IIS:\AppPools\$AppPoolName"
-
-    if (Test-Path "IIS:\AppPools\$AppPoolName") {
+    $apppool = "IIS:\AppPools\$AppPoolName"
+    if (Test-Path $apppool) {
         Write-Output "Application Pool '$AppPoolName' already exists. Skipping creation."
     } else {
         Write-Output "Creating Application Pool: $AppPoolName"
