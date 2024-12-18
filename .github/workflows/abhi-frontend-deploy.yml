@@ -172,7 +172,7 @@ jobs:
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; try { if (-Not (Test-Path -Path \$DeployDir)) { Write-Output \"Creating deployment directory: \$DeployDir\"; New-Item -Path \$DeployDir -ItemType Directory; } else { Write-Output \"Deployment directory already exists: \$DeployDir\"; } } catch { Write-Output \"Error while creating deployment directory: \$DeployDir\"; Write-Output \$_.Exception.Message; exit 1; }"
 
     - name: Manage Previous Deployments (Keep Last 3)
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '${{ env.DEPLOY_BASE_DIR }}'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
     - name: Create directory for artifacts
       run: mkdir -p ./my-artifacts
@@ -191,30 +191,27 @@ jobs:
 
     - name: Create or Update Application Pool
       run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$AppPoolName = 'FrontendAppPool'; try { if (Test-Path 'IIS:\\AppPools\\\$AppPoolName') { Write-Output \"Application Pool '\$AppPoolName' already exists. Skipping creation.\"; } else { Write-Output \"Creating Application Pool: \$AppPoolName\"; New-WebAppPool -Name \$AppPoolName; Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity; } } catch { Write-Output \"Error while creating Application Pool: \$AppPoolName\"; Write-Output \$_.Exception.Message; exit 1; }"
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$AppPoolName = '${{ env.APP_POOL_NAME }}'; try { if (Test-Path 'IIS:\\AppPools\\\$AppPoolName') { Write-Output \"Application Pool '\$AppPoolName' already exists. Skipping creation.\"; } else { Write-Output \"Creating Application Pool: \$AppPoolName\"; New-WebAppPool -Name \$AppPoolName; Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity; } } catch { Write-Output \"Error while creating Application Pool: \$AppPoolName\"; Write-Output \$_.Exception.Message; exit 1; }"
 
     - name: Stop IIS Website if Exists
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name '${{ env.SITE_NAME }}' -ErrorAction SilentlyContinue) { Stop-WebSite -Name '${{ env.SITE_NAME }}' } else { Write-Output 'Website not found' }\""
     
     - name: Remove Existing Website if Exists
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name '${{ env.SITE_NAME }}' -ErrorAction SilentlyContinue) { Remove-WebSite -Name '${{ env.SITE_NAME }}' } else { Write-Output 'Website not found' }\""
   
     - name: Ensure frontend Directory Exists ( Web Root )
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '${{ env.WEB_ROOT }}')) { New-Item -Path '${{ env.WEB_ROOT }}' -ItemType Directory }\""
   
     - name: Clean up the frontend Directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '${{ env.WEB_ROOT }}\\*' -Recurse -Force\""
   
     - name: Copy Latest Build to IIS web root directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '${{ env.WEB_ROOT }}' -Recurse -Force\""
     
 
     - name: Deploy New IIS Site
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          New-WebSite -Name '${{ env.SITE_NAME }}' -PhysicalPath '${{ env.DEPLOY_BASE_DIR }}\\${{ env.TAGGED_VERSION }}' `
-            -ApplicationPool '${{ env.APP_POOL_NAME }}' -Port ${{ env.PORT }} -HostHeader '${{ env.BINDING_HOST }}'
-        "
+        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "New-WebSite -Name '${{ env.SITE_NAME }}' -PhysicalPath '${{ env.DEPLOY_BASE_DIR }}\\${{ env.TAGGED_VERSION }}' -ApplicationPool '${{ env.APP_POOL_NAME }}' -Port ${{ env.PORT }} -HostHeader '${{ env.BINDING_HOST }}'"
 
     # - name: Bind SSL Certificate (Optional)
     #   run: |
@@ -265,9 +262,7 @@ jobs:
 
     - name: Start IIS Site
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          Start-WebSite -Name '${{ env.SITE_NAME }}'
-        "
+        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "Start-WebSite -Name '${{ env.SITE_NAME }}'"
 
     # - name: Copy Latest Build to IIS web root directory
     #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$TAGGED_VERSION/*' -Destination '$WEB_ROOT' -Recurse -Force\""
