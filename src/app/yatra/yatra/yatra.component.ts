@@ -1727,6 +1727,7 @@ export class YatraComponent {
   }
 
   getLabels(control: any) {
+    console.log('padma',control.includes('I hereby consent that the policy documents may be sent to me by email at {{emailId}}') ? true : false)
     let startIdx = control.indexOf('{{');
     let endIdx = control.indexOf('}}');
     let string: any;
@@ -1737,7 +1738,9 @@ export class YatraComponent {
       case 'actName':
         return control.replace("{{actName}}", this.formData?.accountNumber);
         break;
-
+      case 'emailId':
+        return control.replace("{{emailId}}", this.formData?.emailId);
+        break;
       default:
         return control
         break;

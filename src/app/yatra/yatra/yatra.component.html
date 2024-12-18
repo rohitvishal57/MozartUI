@@ -157,7 +157,7 @@
                 </div>
 
                 <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
-                  <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                  <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
                   <p *ngIf="control.value" [innerHTML]="control.value"></p>
                 </div>
 
