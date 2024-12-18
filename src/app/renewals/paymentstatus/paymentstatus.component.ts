@@ -67,9 +67,13 @@ export class PaymentstatusComponent {
                 });
             }else if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
             this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
+            const formData = {
+              productName: res.data.productName,
+              ...res.data.orderDetails,
+            };            
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
-                formData: this.encryptionService.encrypt(orderData),
+                formData: this.encryptionService.encrypt(formData),
                 proposalNum: this.encryptionService.encrypt(""),
                 policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
