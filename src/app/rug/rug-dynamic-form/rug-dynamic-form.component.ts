@@ -3609,7 +3609,7 @@ export class RugDynamicFormComponent {
     console.log(this.bbdetails);
   }
   updateValidators(planAvailable: string) {
-    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome');
+    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome ');
     const occupationControl = this.dynamicFormGroup.get('occupation');
     
     if (planAvailable === 'GHI+GPA') {
