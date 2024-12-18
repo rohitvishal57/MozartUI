@@ -3086,6 +3086,10 @@ margin: 0;
     .main-container .right-panel .typecss.bottom-total-premium {
         width: 40%;
     }
+    .main-container .right-panel .typecss.bottom-product .boldtext_input,
+    .main-container .right-panel .typecss.bottom-total-premium .boldtext_input {
+        width: 100%;
+    }
     .main-container .right-panel .bottom_proposalNumber {
         margin-bottom: 10px;
     }
