@@ -121,8 +121,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: 
-      name: ${{ github.ref_name }}
+    # environment: 
+    #   name: ${{ github.ref_name }}
 
     steps:
     - name: Checkout code
