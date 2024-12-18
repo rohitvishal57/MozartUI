@@ -27,7 +27,7 @@ export const environment = {
   getLeadsListApi: "api/yatra/getLeadList",
   getActiveCampaignDetails: "api/yatra/getactivecampaignsdetails",
   saveLeadData: "api/yatra/createlead",
-  exportLeadData: "api/yatra/exportlead?leadno=",
+  exportLeads: "api/yatra/exportleadAll",
   getLeadInfoByLeadNumber: "api/yatra/leadbyleadnumber?leadNumber=",
   getcampaignsdetails: "api/yatra/getcampaignsdetails",
   createbulklead: "api/yatra/createbulklead",
