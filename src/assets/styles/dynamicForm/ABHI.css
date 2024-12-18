@@ -2697,6 +2697,10 @@ margin: 0;
     }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
+    .main-container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
     .main-container .right-panel .case-referred {
         width: 100%;
         text-align: center;
