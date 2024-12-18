@@ -11,10 +11,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
-                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}} ({{totalRecords}})</button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}} ({{activeCount}})</button></li>
-                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
+                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All', 'totalRecords')">{{"All" | translate}} ({{totalRecords}})</button></li>
+                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active', 'activeCount')">{{"Active" | translate}} ({{activeCount}})</button></li>
+                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved', 'resolvedCount')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled', 'cancelledCount')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
