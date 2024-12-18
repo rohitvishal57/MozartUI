@@ -366,7 +366,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
+                        <div *ngIf="errorMessages.length > 0">
+                            <p class="text-danger">{{ errorMessages }}</p>
+                          </div>
+                        <div *ngIf="errorMessages.length === 0">
                             <p>Select the data fields you wish to download.</p>
                             <div class="input-checkbox-feild" *ngFor="let document of documents">
                                 <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
@@ -378,8 +381,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
+                        <button *ngIf="errorMessages.length === 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
                             {{"Download" | translate}}
+                        </button>
+                        <button *ngIf="errorMessages.length > 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
+                            {{"Ok" | translate}}
                         </button>
                     </div>
                 </div>
