@@ -3452,6 +3452,8 @@ export class RugDynamicFormComponent {
         }
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+
     }
     else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
       const filteredData = premiumObj.filter(
@@ -3474,6 +3476,7 @@ export class RugDynamicFormComponent {
       }
       });
       this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
 
     }
     else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
@@ -3498,6 +3501,8 @@ export class RugDynamicFormComponent {
         }
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+
 
     }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
       const filteredData = premiumObj.filter(
@@ -3518,6 +3523,8 @@ export class RugDynamicFormComponent {
         }
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+
 
     }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
       const filteredData = premiumObj.filter(
@@ -3547,6 +3554,8 @@ export class RugDynamicFormComponent {
         this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
         this.calculateBBPremium();
       }
+      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+
     }else{
       this.bbdetails.ghiPremium = premiumObj[0].premium.toString();
       this.bbdetails.gpPremium = premiumObj[1].premium.toString();
@@ -3584,6 +3593,21 @@ export class RugDynamicFormComponent {
     }
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
+  }
+  updateValidators(planAvailable: string) {
+    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome');
+    const occupationControl = this.dynamicFormGroup.get('occupation');
+    
+    if (planAvailable === 'GHI+GPA') {
+      annualIncomeControl?.setValidators([Validators.required]);
+      occupationControl?.setValidators([Validators.required]);
+    } else {
+      annualIncomeControl?.clearValidators();
+      occupationControl?.clearValidators();
+    }
+  
+    annualIncomeControl?.updateValueAndValidity();
+    occupationControl?.updateValueAndValidity();
   }
   onBbCustomerSubmit(){
     // let reqObjBody = {
