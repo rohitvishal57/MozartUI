@@ -894,6 +894,17 @@ export class RugDynamicFormComponent {
       console.log(this.dynamicFormGroup, this.formData);
       console.log(this.formSequence);
       console.log(this.formSequence[this.getFormIndexValue()].formId);
+      if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+        console.log(this.form);
+        console.log(this.bbdetails.paymentMode);
+        this.form.formSections.forEach((section: any) => {
+          console.log(section);
+          if (section.sectionTitle == "Details of Your Proposal" && this.bbdetails.paymentMode == "yes") {
+            section.visible = false;
+          }
+        });
+
+      }
       // Extract form array for 'insuredMemberDetails' to preserve it
       const insuredMemberDetailsArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
 
@@ -3652,8 +3663,11 @@ export class RugDynamicFormComponent {
           });
           dialogRef.afterClosed().subscribe((result: any) => {
             console.log(result);
-            if (this.bbdetails?.paymentMode == 'easypay') {
-              this.router.navigateByUrl('/thankyou');
+            if (this.bbdetails?.paymentMode == 'yes') {
+              if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                this.incrementIndex();
+                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              }
             }else{
               console.log(this.bbdetails)
               // let reqBody = {
