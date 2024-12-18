@@ -1729,7 +1729,6 @@ export class YatraComponent {
   }
 
   getLabels(control: any) {
-    console.log('padma',control.includes('I hereby consent that the policy documents may be sent to me by email at {{emailId}}') ? true : false)
     let startIdx = control.indexOf('{{');
     let endIdx = control.indexOf('}}');
     let string: any;
