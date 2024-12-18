@@ -202,4 +202,8 @@ export class YatraService {
     const getBankDetailsByIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsByIFSC;
     return this.httpService.post(getBankDetailsByIFSC,reqData);
   }
+  pennyDropVerfication(reqData:any){
+    const Pennydropverification = this.configService.config.baseUrl + this.configService.config.fetchPennydropverification;
+    return this.httpService.post(Pennydropverification,reqData);
+  }
 }

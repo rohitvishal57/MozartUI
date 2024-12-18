@@ -124,6 +124,7 @@ export class YatraComponent {
 
   tooltipMessage: string = '';
   currentLanguage = 'en';
+  pennyDropVerficationDetails: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -851,7 +852,7 @@ export class YatraComponent {
           }
         });
       });
-      
+
       let nameList = [];
       const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
       nameList.push(parsedName);
@@ -1666,6 +1667,7 @@ export class YatraComponent {
     const data = JSON.parse(event.target.value);
     this.dynamicFormGroup.get('ifscCode')?.setValue(data.id);
     this.dynamicFormGroup.get('micrCode')?.setValue(data.value);
+    this.changeMainFormDependentControls(['pennyBtn'], true)
   }
 
   memberDetailsOption(control: any) {
@@ -1855,7 +1857,6 @@ export class YatraComponent {
     if (parentControl == null && control.name == 'ifscCode') {
       const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value || '';
       console.log(ifscCodeDetails);
-
       if (!ifscCodeDetails) {
         // Clear the bankName and micrCode fields
         this.dynamicFormGroup.get('bankName')?.setValue('');
@@ -1868,12 +1869,14 @@ export class YatraComponent {
           "ifscCode": event.target.value
         }
         console.log(reqData);
-
         this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
           next: (response: any) => {
             if (response.isSuccess && response.data) {
               this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
               this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+              if (control.dependentControls.includes("pennyBtn")) {
+                this.changeMainFormDependentControls(control.dependentControls, true)
+              }
             } else {
               // Handle error, you can show a message if required
               this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
@@ -6462,6 +6465,35 @@ export class YatraComponent {
       middleName,
       lastName
     };
+  }
+
+  pennyDrop(control: any, dataObj?: any) {
+    if (control.dependentControls.includes("pennyBtn")) {
+      this.changeMainFormDependentControls(control.dependentControls, true)
+    }
+  }
+
+  onClickPennyBtn() {
+    const obj = {
+      "proposalNum": this.dynamicFormGroup?.controls['proposalNumber'].value,
+      "proposerName": this.dynamicFormGroup?.controls['accountHolderName'].value,
+      "bankAccountNumber": this.dynamicFormGroup?.controls['accountNumber'].value,
+      "ifscCode": this.dynamicFormGroup?.controls['ifscCode'].value
+    }
+
+    this.yatraService.pennyDropVerfication(obj).subscribe({
+      next: (response: any) => {
+        if (response.isSuccess && response.data) {
+          this.pennyDropVerficationDetails = response.data;
+        } else {
+          // Handle error, you can show a message if required
+          this.toast.warning({ detail: "WARNING", summary: 'Failed transaction', duration: 3000 });
+        }
+      },
+      error: (err) => {
+        this.toast.error({ detail: "ERROR", summary: 'Failed transaction', duration: 3000 });
+      }
+    });
   }
 }
 
