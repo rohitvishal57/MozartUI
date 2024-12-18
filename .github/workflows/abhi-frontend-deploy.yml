@@ -141,19 +141,19 @@ jobs:
     - name: Create deployment directory on VM with version
       run: |
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          \$DeployDir = 'C:/ABHI_DATA/abhi_deployments/frontend_deployments/$TAGGED_VERSION';
-          try {
+        $DeployDir = 'C:/ABHI_DATA/abhi_deployments/frontend_deployments/$TAGGED_VERSION';
+        try {
             if (-Not (Test-Path -Path \$DeployDir)) {
               Write-Output 'Creating deployment directory: \$DeployDir';
               New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
             } else {
               Write-Output 'Deployment directory already exists: \$DeployDir';
             }
-          } catch {
+        } catch {
             Write-Output 'Error while creating deployment directory: \$DeployDir';
             Write-Output \$_.Exception.Message;
             exit 1;
-          }
+        }
         "
 
     # - name: Manage Previous Deployments (Keep Last 3)
