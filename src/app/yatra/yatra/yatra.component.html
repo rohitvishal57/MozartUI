@@ -483,8 +483,7 @@
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}" readonly>
                                       <label class="inputField_Label" *ngIf="subControl.visibleLabel">{{
                                         subControl.label ?
-                                        (subControl.label | translate) : '' }}<span
-                                          *ngIf="subControl.validators">*</span></label>
+                                        (subControl.label | translate) : '' }}<span *ngIf="subControl.validators && isFieldRequired(subControl.validators)">*</span></label>
                                     </div>
                                     <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                       getValidationErrors(subControl,control,i-1)?

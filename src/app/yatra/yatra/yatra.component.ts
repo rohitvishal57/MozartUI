@@ -1080,6 +1080,15 @@ export class YatraComponent {
     }
   }
 
+  isFieldRequired(validators: any[]): boolean {
+    if (!validators || validators.length === 0) {
+      return false;
+    }
+    return validators.some(
+      (validator) =>
+        validator.validatorName === 'required' && validator.required === true
+    );
+  }
   getValidationErrors(control: IFormControl | IDynamicControl | ISubControl, parentControl: IFormControl | ISubControl | null = null, index: number | null = null,
     subControl: any | null = null,
     innerControl: any | null = null,
