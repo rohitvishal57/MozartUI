@@ -1,22 +1,22 @@
 name: Build and Deploy Angular App to Azure VM
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - Dev
-  #     - release
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'abhi_dev'
-        type: choice
-        options:
-          - abhi_dev
-          - abhi_uat
-          - abhi_prod
+  push:
+    branches:
+      - main
+      - Dev
+      - release
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: 'Deployment environment'
+  #       required: true
+  #       default: 'abhi_dev'
+  #       type: choice
+  #       options:
+  #         - abhi_dev
+  #         - abhi_uat
+  #         - abhi_prod
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
@@ -27,7 +27,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    #environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout code
@@ -141,18 +141,18 @@ jobs:
     - name: Create deployment directory on VM with version
       run: |
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          \$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION';
-          try {
-            if (-Not (Test-Path -Path \$DeployDir)) {
-              Write-Output 'Creating deployment directory: \$DeployDir';
-              New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
-            } else {
-              Write-Output 'Deployment directory already exists: \$DeployDir';
-            }
-          } catch {
-              Write-Output 'Error while creating deployment directory: \$DeployDir';
-              Write-Output \$_.Exception.Message;
-              exit 1;
+          \$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; `
+          try { `
+            if (-Not (Test-Path -Path \$DeployDir)) { `
+              Write-Output 'Creating deployment directory: \$DeployDir'; `
+              New-Item -Path \$DeployDir -ItemType Directory | Out-Null; `
+            } else { `
+              Write-Output 'Deployment directory already exists: \$DeployDir'; `
+            } `
+          } catch { `
+              Write-Output 'Error while creating deployment directory: \$DeployDir'; `
+              Write-Output \$_.Exception.Message; `
+              exit 1; `
             }
           "
 
