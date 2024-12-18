@@ -164,5 +164,8 @@
     }
     .tooltip-wrapper .tooltip-text {
         max-width: 150px;
+        line-height: normal;
+        z-index: 5;
+        padding: 5px;
     }
 }
