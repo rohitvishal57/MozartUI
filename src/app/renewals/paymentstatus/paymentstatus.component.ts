@@ -38,7 +38,8 @@ export class PaymentstatusComponent {
 
   getPaymentStatus() {
     const orderDetailsReq = {
-      "orderId": this.orderId
+      "orderId": this.orderId,
+      businessType : "REN"
     }
     this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       (res: any) => {
@@ -54,7 +55,7 @@ export class PaymentstatusComponent {
                 policyType: 'Renewal',
                 policyNumber: orderData?.policyNumber,
                 quoteNumber: '',
-                OrderID: ''
+                ProductName: res.data.productName
               };
               this.yatraService.justPayRedirection(reqData).subscribe(
                 (response:any)=>{

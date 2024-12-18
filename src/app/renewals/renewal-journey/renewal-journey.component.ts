@@ -3678,8 +3678,7 @@ export class RenewalJourneyComponent {
         policyType: 'Renewal',
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
-        OrderId:""
-        // ProductName: this.formData.productName
+        ProductName: this.formData.productName
       };
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
