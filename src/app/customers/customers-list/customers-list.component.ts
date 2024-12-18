@@ -348,6 +348,7 @@ toggleMoreInfo(index: number): void {
       }
     );
   }
+  errorMessages: string = '';
   searchDocument(policyNumber: any) {
     const searchDocumentRequestBody = {
       referenceId: this.agentCode,
@@ -376,12 +377,15 @@ toggleMoreInfo(index: number): void {
       (response: any) => {
         if (response.isSuccess) {          
           const searchResponse = response.data.searchResponse;
-          if (!searchResponse || searchResponse.length === 0) {
-            this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
+          if (searchResponse && searchResponse[0]?.error?.length > 0) {
+            this.errorMessages = searchResponse[0].error
+              .map((err: any) => err.description)
+              .join(', ');
+            this.documents = []; 
+            return;
           }
-          else{
-            this.documents = searchResponse;
-          }
+          this.errorMessages = '';
+          this.documents = searchResponse;
         } else {
           this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
         }

@@ -983,6 +983,21 @@ button {
 .btn_white:hover {
   color: var(--primary-red-color);
 }
+.btn_white_cancel {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--white-color);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--primary-red-color);
+  border: 1px solid var(--primary-red-color);
+}
+
+.btn_white_cancel:hover {
+  color: var(--text-black-4c);
+  border: 1px solid var(--text-black-4c);
+}
 .btn_pink {
   background: var(--site-pink);
   border: 1px solid var(--site-pink);

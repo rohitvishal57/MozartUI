@@ -324,7 +324,7 @@ export class QuoteProductsComponent implements OnInit {
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
       "quoteNumber": item.QuoteNumber,
-      "mobileNumber": this.formData.mobileNumber
+      "mobileNumber": this.formData.mobileNumber.toString()
     }
     console.log(reqdata);
     await this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
@@ -342,7 +342,7 @@ export class QuoteProductsComponent implements OnInit {
   async Getagentcartdetails() {
     let reqdata = {
       "agentCode": this.agentCode,
-      "customerMobileNumber": this.formData.mobileNumber
+      "customerMobileNumber": this.formData.mobileNumber.toString()
     }
     await this.quoteService.Getagentcartdetails(reqdata).subscribe({
       next: (res: any) => {

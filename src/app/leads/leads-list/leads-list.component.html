@@ -412,10 +412,13 @@
             </div>
 
             <div class="modal-footer modal_footerBtnGroup_column">
-                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [disabled]="agentCodes.length===0">{{"Save" | translate}}</button>
-                <div class="d-flex justify-content-center">
-                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >{{"Cancel" | translate}}</button>
+                <div class="body_flex_row container-fluid">
+                    <button type="button" id="cancel" name="cancel"  class="btn_white_cancel btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >{{"Cancel" | translate}}</button>
+                    <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [disabled]="agentCodes.length===0">{{"Save" | translate}}</button>
                 </div>
+                <!-- <div class="d-flex justify-content-center">
+                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >{{"Cancel" | translate}}</button>
+                </div> -->
             </div>
          </form>
         </div>
