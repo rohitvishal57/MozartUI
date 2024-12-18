@@ -3758,11 +3758,7 @@ export class RenewalJourneyComponent {
         //   duration: 3000,
         // });
         if(res.data.isShareKyc){
-          this.toast.success({
-          detail: "SUCCESS",
-          summary: "Link has been sent successfully",
-          duration: 3000,
-        });
+          this.toast.success({detail: "SUCCESS",summary: "Link has been sent successfully",duration: 3000});
         }
 
         this.changeMainFormDependentControls(control.dependentControls,true);
@@ -3807,8 +3803,6 @@ export class RenewalJourneyComponent {
 
 
   setRating(star: number) {
-    console.log(star);
-    
     this.rating = star;
     this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
     this.feedbackSubmit = true;
