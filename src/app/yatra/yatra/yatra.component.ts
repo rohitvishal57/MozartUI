@@ -853,12 +853,14 @@ export class YatraComponent {
         });
       });
 
-      let nameList = [];
-      const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
-      nameList.push(parsedName);
-      this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
-      this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
-      this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
+      if (this.isQuote) {
+        let nameList = [];
+        const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
+        nameList.push(parsedName);
+        this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
+        this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
+        this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
+      }
       this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
       //dynamic css
       // this.showHtmlContent = true;
@@ -6492,6 +6494,7 @@ export class YatraComponent {
       next: (response: any) => {
         if (response.isSuccess && response.data) {
           this.pennyDropVerficationDetails = response.data;
+          this.toast.success({ detail: "", summary: response.message, duration: 3000 });
         } else {
           // Handle error, you can show a message if required
           this.toast.warning({ detail: "WARNING", summary: 'Failed transaction', duration: 3000 });
