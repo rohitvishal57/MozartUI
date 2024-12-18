@@ -2791,7 +2791,7 @@ margin: 0;
         margin: 15px auto;
     }
     .main-container .main-subContainer .right-panel {
-        width: 90%;
+        width: 100%;
         margin: 0 auto 15px;
     }
     .main-container .right-panel .bottom-section {
@@ -2931,6 +2931,9 @@ margin: 0;
 }
 .main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
     background-position: top;
+}
+.left-nav-mobileMain{
+    width: 100%;
 }
 }
 .main-container .right-panel .next-btn:focus,
