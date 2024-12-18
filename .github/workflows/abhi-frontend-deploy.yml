@@ -190,7 +190,7 @@ jobs:
     
     - name: Execute frontend_deploy.ps1 script on VM
       run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1 -AppPoolName "${{ env.APP_POOL_NAME }}" -SiteName "${{ env.SITE_NAME }}" -WebRoot "${{ env.WEB_ROOT }}" -DeployBaseDir "${{ env.DEPLOY_BASE_DIR }}" -TaggedVersion "${{ env.TAGGED_VERSION }} -Port "${{env.PORT}}""
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}}"
 #######################################################################################
     # - name: Create or Update Application Pool
     #   run: |
