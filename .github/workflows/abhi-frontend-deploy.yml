@@ -140,8 +140,8 @@ jobs:
 
     - name: Create deployment directory on VM with version
       run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -NoLogo -NoProfile -Command "
-          \$DeployDir = 'C:/ABHI_DATA/abhi_deployments/frontend_deployments/${{ env.TAGGED_VERSION }}';
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -NoLogo -NoProfile -Command 
+        " \$DeployDir = 'C:/ABHI_DATA/abhi_deployments/frontend_deployments/${{ env.TAGGED_VERSION }}';
           if (-Not (Test-Path -Path \$DeployDir)) {
             Write-Output 'Creating deployment directory: \$DeployDir';
             New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
