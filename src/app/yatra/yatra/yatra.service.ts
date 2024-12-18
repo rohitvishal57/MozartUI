@@ -145,7 +145,7 @@ export class YatraService {
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getBBPolicyInfoByLeadId(reqData:any){
-    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
+    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/rug/GetBBPolicyInfoByLeadId";
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getd2cPolicyInfoByLeadId(reqData:any){
@@ -177,7 +177,7 @@ export class YatraService {
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   bbHalfQuote(reqData:any){
-    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/v1/HalfQuote";
+    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/rug/HalfQuote";
     return this.httpService.post(halfQuoteData,reqData);
   }
   d2cJustpayRedirection(reqData:any){

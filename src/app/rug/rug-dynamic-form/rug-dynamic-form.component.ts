@@ -7055,6 +7055,9 @@ export class RugDynamicFormComponent {
     }
     
   }
+  changeBbNomineeDob(){
+    
+  }
   backToleads() {
     this.router.navigate(['/leads/leadsList'], {
     });
