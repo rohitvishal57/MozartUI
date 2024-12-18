@@ -5896,8 +5896,7 @@ export class YatraComponent {
       familySize: formData?.familySize || '',
       appointeeName: formData?.appointeeName || '',
       appointeeMobileNumber: formData?.appointeeContactNo || '',
-      // appointeeRelationCode: this.jsonParse(formData?.appointeeRelationWithNominee, 'value') || ''
-      appointeeRelationCode: formData?.appointeeRelationWithNominee != null ? this.jsonParse(formData?.appointeeRelationWithNominee, 'value') : ''
+      appointeeRelationCode: formData?.appointeeRelationWithNominee? this.jsonParse(formData.appointeeRelationWithNominee, 'value'): ''
     };
 
     return mappedData;
