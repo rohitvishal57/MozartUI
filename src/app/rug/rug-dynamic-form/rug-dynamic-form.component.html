@@ -123,7 +123,7 @@
                   <div class="label-value-container" (click)="(!isD2C && control.name == 'plandetails') ? planBBSummary() : planSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
-                    <div class="value-text">{{ control.value }}</div>
+                    <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
                     
                   </div>
                   <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">

@@ -2384,6 +2384,9 @@ input[type=checkbox]:checked {
     left: 48%;
     display: block;
 }
+.planDetails_iconActive {
+    transform: rotate(180deg);
+}
 .main-container .right-panel .bottom-product .boldtext_input {
     font-family: Anek Latin;
     font-size: 18px;
