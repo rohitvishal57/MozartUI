@@ -67,6 +67,9 @@ export interface IFullQuoteMapping {
     tenure:string
     bankAccountType:string
     familySize:string
+    appointeeName:string
+    appointeeMobileNumber:string
+    appointeeRelationCode:string
 }
 
 export interface InsuredMemberDetail {

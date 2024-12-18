@@ -5818,7 +5818,10 @@ export class YatraComponent {
       payerName: formData?.accountHolderName || '',
       paymentBy: 'customer',
       PaymentGatewayName: formData?.PaymentGatewayName || '',
-      familySize: formData?.familySize || ''
+      familySize: formData?.familySize || '',
+      appointeeName: formData?.appointeeName || '',
+      appointeeMobileNumber: formData?.appointeeContactNo || '',
+      appointeeRelationCode: this.jsonParse(formData?.appointeeRelationWithNominee, 'value') || ''
     };
 
     return mappedData;
@@ -5843,6 +5846,7 @@ export class YatraComponent {
         source: "Retail".toString(),
         documentId: (this.documentId || '').toString(),
         proposalNum: this.proposalNum.toString(),
+        productName: this.formData.productName || ''
       };
 
       console.log(formData);
