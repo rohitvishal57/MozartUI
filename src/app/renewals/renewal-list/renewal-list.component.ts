@@ -411,6 +411,7 @@ export class RenewalListComponent {
       }
     );
   }
+  errorMessages: string = '';
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
@@ -442,8 +443,10 @@ export class RenewalListComponent {
             if (response.isSuccess) {
               const searchResponse = response.data.searchResponse;
               console.log("search Response", searchResponse);
-              if (!searchResponse || searchResponse.length === 0) {
-                this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
+              if (searchResponse && searchResponse[0]?.error?.length > 0) {
+                const errorMessages = searchResponse[0].error.map((err: any) => err.description).join(', ');
+                this.toast.error({ detail: "", summary: errorMessages, duration: 3000 });
+                return;
               }
               else {
                 this.documents = searchResponse;
