@@ -1444,6 +1444,17 @@ h4 {
       }
     }
   }
+  .overlay_popupMain {
+    padding: 14px;
+  }
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy {
+    top: -2px;
+    width: 120px;
+  }
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy2 {
+    top: 128px;
+    width: 120px;
+  }
 }
 
 .close-popup{
