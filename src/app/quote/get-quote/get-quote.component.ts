@@ -900,10 +900,21 @@ export class GetQuoteComponent implements AfterViewChecked {
 
   onPlanTypeChange(planType: string) {
     this.getrelationsviapolicytype(planType);
+    console.log(this.quoteFormGroup)
     this.selectedPlan = planType;
     this.selectedRelation = "";
     this.selectedRelationships = [];
     this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
+    this.quoteFormGroup.get('zoneValue')?.reset();
+    this.quoteFormGroup.get('proposerPincode')?.reset();
+    this.quoteFormGroup.get('proposerName')?.reset();
+    this.quoteFormGroup.get('proposerGender')?.reset();
+    this.quoteFormGroup.get('mobileNumber')?.reset();
+    (this.quoteFormGroup.get('insuredMemberDetails') as FormArray).clear();
+    Object.keys((this.quoteFormGroup.get('insuredMembers') as FormGroup).controls).forEach(key =>
+      (this.quoteFormGroup.get('insuredMembers') as FormGroup).removeControl(key)
+    );
+    console.log(this.quoteFormGroup)
     // this.relations = JSON.parse(this.anotherRelations);
     // console.log(this.anotherRelationCountMap);
     // this.relationCountMap = new Map(this.anotherRelationCountMap);
@@ -911,6 +922,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.numberOfChild = 0;
     this.addHide = false;
     this.activeDropdown = null;
+    this.checkGender = false;
     //window.scrollTo({ top: 0, behavior: 'smooth' });
     this.getQuoteFocusScroll();
   }
