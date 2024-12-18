@@ -144,13 +144,13 @@ jobs:
     - name: Create deployment directory on VM with version
       run: |
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-        \$DeployDir = 'C:\\ABHI_DATA\\abhi_deployments\\frontend_deployments\\\$env:TAGGED_VERSION';
-        if (-Not (Test-Path -Path \$DeployDir)) {
-          Write-Output 'Creating deployment directory: \$DeployDir';
-          New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
-        } else {
-          Write-Output 'Deployment directory already exists: \$DeployDir';
-        }
+        \$DeployDir = 'C:\\ABHI_DATA\\abhi_deployments\\frontend_deployments\\\$TAGGED_VERSION';
+          if (-Not (Test-Path -Path \$DeployDir)) {
+            Write-Output 'Creating deployment directory: \$DeployDir';
+            New-Item -Path \$DeployDir -ItemType Directory | Out-Null;
+          } else {
+            Write-Output 'Deployment directory already exists: \$DeployDir';
+          }
         "
 
         # ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "$(cat <<'EOF'
