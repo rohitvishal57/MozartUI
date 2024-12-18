@@ -3,15 +3,21 @@ param(
     [string]$SiteName,
     [string]$WebRoot,
     [string]$DeployBaseDir,
-    [string]$TaggedVersion
+    [string]$TaggedVersion,
+    [string]$Port
 )
 
 # Create or Update Application Pool
 try {
+    # Debugging: Output the application pool path to see if it matches
+    Write-Output "Checking if Application Pool exists at IIS:\\AppPools\\$AppPoolName"
+
     if (Test-Path "IIS:\\AppPools\\$AppPoolName") {
         Write-Output "Application Pool '$AppPoolName' already exists. Skipping creation."
     } else {
         Write-Output "Creating Application Pool: $AppPoolName"
+        
+        # Create the Application Pool with Force to override if it already exists
         New-WebAppPool -Name $AppPoolName
         Set-ItemProperty IIS:\\AppPools\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0'
         Set-ItemProperty IIS:\\AppPools\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity
@@ -21,7 +27,6 @@ try {
     Write-Output $_.Exception.Message
     exit 1
 }
-
 # Stop and Remove IIS Website if Exists
 try {
     if (Get-WebSite -Name $SiteName -ErrorAction SilentlyContinue) {
@@ -84,7 +89,7 @@ try {
 # Deploy New IIS Site
 try {
     Write-Output "Creating new IIS website for: $SiteName"
-    New-WebSite -Name $SiteName -Port 80 -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
+    New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
 } catch {
     Write-Output "Error while deploying new IIS site: $SiteName"
     Write-Output $_.Exception.Message
