@@ -48,7 +48,7 @@ export class YatraComponent {
   bankCode: any;
   bankCity: any;
   formControls: IFormControl[] = [];
-
+  isPlanDetailsVisible: boolean =false;
   activeMemberTabIndex: number = 0;
   selectedIndex: number = -1;
   insuredMemberDetails: any = {};
@@ -60,10 +60,11 @@ export class YatraComponent {
   premiumAmountDetails: number[][] = [];
   addOnList: any[] = [];
 
+  isBBPlanDetailsVisible: boolean = false;
   premiumDetails: any[][] = [];
   taxList: number[] = [];
   discountList: number[] = [];
-  netPremiumList: number[] = [];
+  basePremiumList: number[] = [];
   totalPremiumList: any[] = [];
   indPremiumList: any[] = [];
   addOnPremiumValueList: number[][][] = [];
@@ -337,14 +338,21 @@ export class YatraComponent {
       this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
     }
 
-    // if (sessionStorage.getItem('displayTaxList') != null) {
-    //   this.displayTaxList = this.encryptionService.decrypt(sessionStorage.getItem('displayTaxList') as string);
+    // if (sessionStorage.getItem('taxList') != null) {
+    //   this.taxList = this.encryptionService.decrypt(sessionStorage.getItem('taxList') as string);
+    // }
+
+    // if (sessionStorage.getItem('discountList') != null) {
+    //   this.discountList = this.encryptionService.decrypt(sessionStorage.getItem('discountList') as string);
+    // }
+
+    // if (sessionStorage.getItem('basePremiumList') != null) {
+    //   this.basePremiumList = this.encryptionService.decrypt(sessionStorage.getItem('basePremiumList') as string);
     // }
 
     // if (sessionStorage.getItem('tenureAmount')) {
     //   this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
     //   console.log(this.tenureAmount);
-
     // }
 
     if (sessionStorage.getItem('premiumAmountDetails')) {
@@ -2963,6 +2971,7 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
@@ -3445,6 +3454,9 @@ export class YatraComponent {
           sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
           sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+          sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+          sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+          sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
 
           console.log(this.QuoteNumber, this.selectedIndex);
           if (this.QuoteNumber.length > 0) {
@@ -4199,12 +4211,16 @@ export class YatraComponent {
           this.QuoteNumber = [];
           for (let i = 1; i <= 3; i++) {
             const premiumKey = `tenure${i}Premium`;
-            const discountKey = `t${i}DiscountPercentage`;
+            const discountKey = `t${i}DiscountAmount`;
             const Quote = `tenure${i}QuoteNumber`;
+            const basePremiumKey = `t${i}BasePremium`;
+            const taxKey = `t${i}TaxAmount`;
             this.QuoteNumber.push(res.data[Quote]);
 
             this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
             this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+            this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
+            this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
           }
 
           this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
@@ -6503,6 +6519,10 @@ export class YatraComponent {
         this.toast.error({ detail: "ERROR", summary: 'Failed transaction', duration: 3000 });
       }
     });
+  }
+  openPlanSummary(){
+    this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
+    this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
 }
 

@@ -118,10 +118,46 @@
 
                 <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary"
                   [hidden]="!control.visible">
-                  <div class="label-value-container">
+                  <div class="label-value-container" (click)="openPlanSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
-                    <div class="value-text">{{ control.value }}</div>
+                      <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
+                  </div>
+                  <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
+                    <div class="bottom_planDetails_sub body_flex_column">
+                        <div class="common_ProductInfo">
+                            <div class="common_ppi_info">
+                                <h4>{{this.dynamicFormGroup.get('productName')?.value}}</h4>
+                                <h5>Aditya Birla Health Insurance</h5>
+                            </div>
+                        </div>
+                        <div class="bottom_planSummary">
+                            <div class="info_planSummary">
+                              <h5>Base plan premium<span>Sum insured</span></h5>
+                                <h6>₹{{this.basePremiumList[this.selectedIndex]}}</h6>
+                            </div>
+                            <div class="info_planSummary">
+                                <h5>Discount Amount</h5>
+                                <h6>₹{{this.discountList[this.selectedIndex]}}</h6>
+                            </div>
+                            <!-- <div class="info_planSummary">
+                                <h5>Group Personal Accident</h5>
+                                <h6>₹720</h6>
+                            </div> -->
+                            <!-- <div class="info_planSummary">
+                                <h5>Accidental Cover</h5>
+                                <h6>₹840</h6>
+                            </div> -->
+                            <div class="info_planSummary">
+                                <h5>GST (18%)</h5>
+                                <h6>₹{{this.taxList[this.selectedIndex]}}</h6>
+                            </div> 
+                            <div class="info_planSummary total_planSummary">
+                                <h5>Total premium (incl. GST)</h5>
+                                <h6>₹{{this.tenureAmount[this.selectedIndex]}}</h6>
+                            </div>
+                        </div>
+                    </div>
                   </div>
                 </div>
 
