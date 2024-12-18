@@ -61,11 +61,6 @@ jobs:
         echo "Listing the contents of the current directory:"
         ls -la  # List the contents of the current working directory
   
-    - name: List MozartUI-Dev directory contents
-      run: |
-        echo "Listing the contents of MozartUI-Dev directory:"
-        ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
-
     # - name: Install dependencies
     #   run: |
     #     cd MozartUI-Dev
