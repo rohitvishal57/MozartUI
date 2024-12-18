@@ -9,13 +9,13 @@ param(
 
 # Create or Update Application Pool
 try {
+    
     # Debugging: Output the application pool path to see if it matches
     Write-Output "Checking if Application Pool exists at IIS:\AppPools\$AppPoolName"
     # Ensure the IIS module is loaded
     Import-Module WebAdministration
-    
-    $apppool = "IIS:\AppPools\$AppPoolName"
-    if (Test-Path $apppool) {
+
+    if (Test-Path "IIS:\AppPools\$AppPoolName") {
         Write-Output "Application Pool '$AppPoolName' already exists. Skipping creation."
     } else {
         Write-Output "Creating Application Pool: $AppPoolName"
@@ -30,6 +30,7 @@ try {
     Write-Output $_.Exception.Message
     exit 1
 }
+
 # Stop and Remove IIS Website if Exists
 try {
     if (Get-WebSite -Name $SiteName -ErrorAction SilentlyContinue) {
