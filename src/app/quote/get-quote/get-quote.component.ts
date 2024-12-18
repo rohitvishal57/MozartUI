@@ -222,13 +222,15 @@ export class GetQuoteComponent implements AfterViewChecked {
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
-    this.onPlanTypeChange(this.selectedPlan)
+    if(this.router.url.includes('dashboard')){
+      this.onPlanTypeChange(this.selectedPlan);
+    }
     if (formData) {
       this.quoteFormGroup.patchValue(formData);
       console.log(formData);
-      if (formData.memberPolicyType) {
-        this.onPlanTypeChange(formData.memberPolicyType);
-      }
+      // if (formData.memberPolicyType) {
+      //   this.onPlanTypeChange(formData.memberPolicyType);
+      // }
       if (formData.upgradableZones) {
         this.upgradableZones = formData.upgradableZones;
       }
@@ -271,13 +273,13 @@ export class GetQuoteComponent implements AfterViewChecked {
                 currentCount += 1;
                 this.relationCountMap.set(item.id, currentCount);
               }
-              formData.insuredMemberDetails.forEach((member:any)=>{
-                if(member.relation == memberName){
-                  item.age= member.memberAge;
-                  item.dob = member.memberdob;
-                  item.gender = member.memberGender;
-                }
-              })
+              // formData.insuredMemberDetails.forEach((member:any)=>{
+              //   if(member.relation == memberName){
+              //     item.age= member.memberAge;
+              //     item.dob = member.memberdob;
+              //     item.gender = member.memberGender;
+              //   }
+              // })
               console.log(mockEvent,item,formData.insuredMemberDetails);
               
               this.onRelationChange(mockEvent, item);
