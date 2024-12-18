@@ -1076,12 +1076,15 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
         this.dynamicFormGroup.patchValue({
           bankName:this.bbdetails.branchName,
           IFSCCode:this.bbdetails.ifscCode,
           accountNo:this.bbdetails.accountNumber,
           micrCode:this.bbdetails.micrCode,
           branchName:this.bbdetails.branchName,
+          startDate: formattedDate
         })
         if (this.bbdetails?.ifscCode && this.bbdetails.ifscCode.trim() !== "") {
           console.log("IFSC Code is valid:", this.bbdetails.ifscCode);
@@ -4500,6 +4503,17 @@ export class RugDynamicFormComponent {
 
     this.activeMemberTabIndex = tempIndex;
     console.log(this.form);
+    console.log(this.dynamicFormGroup.get('paymentMode')?.value);
+    if(this.dynamicFormGroup.get('paymentMode')?.value == 'yes'){
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      this.dynamicFormGroup.patchValue({
+        frequencyOfPayment: 'As and when presented',
+        startDate: formattedDate,
+        endDate: "Untill Cancelled",
+        debitType: "Maximum Amount"
+      })
+    }
   }
 
 
