@@ -11,6 +11,9 @@ param(
 try {
     # Debugging: Output the application pool path to see if it matches
     Write-Output "Checking if Application Pool exists at IIS:\AppPools\$AppPoolName"
+    # Ensure the IIS module is loaded
+    Import-Module WebAdministration
+    
     $apppool = "IIS:\AppPools\$AppPoolName"
     if (Test-Path $apppool) {
         Write-Output "Application Pool '$AppPoolName' already exists. Skipping creation."
