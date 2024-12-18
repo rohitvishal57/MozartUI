@@ -5788,7 +5788,7 @@ export class YatraComponent {
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
-    console.log(formData, this.covers);
+    console.log(formData, this.covers,formData?.appointeeRelationWithNominee);
 
     const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
@@ -5896,7 +5896,8 @@ export class YatraComponent {
       familySize: formData?.familySize || '',
       appointeeName: formData?.appointeeName || '',
       appointeeMobileNumber: formData?.appointeeContactNo || '',
-      appointeeRelationCode: this.jsonParse(formData?.appointeeRelationWithNominee, 'value') || ''
+      // appointeeRelationCode: this.jsonParse(formData?.appointeeRelationWithNominee, 'value') || ''
+      appointeeRelationCode: formData?.appointeeRelationWithNominee != null ? this.jsonParse(formData?.appointeeRelationWithNominee, 'value') : ''
     };
 
     return mappedData;
@@ -5997,6 +5998,8 @@ export class YatraComponent {
   }
 
   jsonParse(string: any, extract: any) {
+    console.log(string);
+    
     const value = JSON.parse(string);
     return value[extract];
   }
