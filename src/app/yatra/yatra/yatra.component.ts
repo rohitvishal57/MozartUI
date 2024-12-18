@@ -851,6 +851,13 @@ export class YatraComponent {
           }
         });
       });
+      
+      let nameList = [];
+      const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
+      nameList.push(parsedName);
+      this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
+      this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
+      this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
       this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
       //dynamic css
       // this.showHtmlContent = true;
@@ -923,7 +930,7 @@ export class YatraComponent {
         else if (control.coreControls) {
           let tempFormArray = this.fb.array([]);
           for (let i = 0; i < control.coreControls.length; i++) {
-            tempFormArray.push(this.initializeSubControls(control.coreControls[i],null,control))
+            tempFormArray.push(this.initializeSubControls(control.coreControls[i], null, control))
           }
           formGroup.addControl(control.name, tempFormArray);
         }
@@ -948,7 +955,7 @@ export class YatraComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.resolveMethod(subControls.getAllOption, subControls,parentControl);
+          this.resolveMethod(subControls.getAllOption, subControls, parentControl);
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -1700,18 +1707,18 @@ export class YatraComponent {
     return isAscending || isDescending || allSame;
   }
 
-  getLabels(control : any){
+  getLabels(control: any) {
     let startIdx = control.indexOf('{{');
     let endIdx = control.indexOf('}}');
-    let string : any;
+    let string: any;
     if (startIdx !== -1 && endIdx !== -1) {
-      string =  control.slice(startIdx + 2, endIdx).trim();
+      string = control.slice(startIdx + 2, endIdx).trim();
     }
     switch (string) {
       case 'actName':
         return control.replace("{{actName}}", this.formData?.accountNumber);
         break;
-    
+
       default:
         return control
         break;
@@ -2126,31 +2133,31 @@ export class YatraComponent {
       }
     }
     if (control.name === "dateOfDiagnosis") {
-      const inputValue = event.target.value;    
+      const inputValue = event.target.value;
       if (!inputValue) {
-        control.value = null; 
+        control.value = null;
         this.dynamicFormGroup.get(control.name)?.setValue(null);
-        return; 
+        return;
       }
-      const inputDate = new Date(inputValue); 
-      const currentDate = new Date();    
+      const inputDate = new Date(inputValue);
+      const currentDate = new Date();
       if (isNaN(inputDate.getTime())) {
         console.log("Invalid date format:", inputValue);
-        event.target.value = ''; 
+        event.target.value = '';
         control.value = null;
         this.dynamicFormGroup.get(control.name)?.setValue(null);
         this.toast.warning({ detail: "", summary: "Invalid date format.", duration: 3000 });
-        return; 
-      }    
+        return;
+      }
       if (inputDate > currentDate) {
         console.log("Future date detected:", inputValue);
-        event.target.value = ''; 
+        event.target.value = '';
         control.value = null;
         this.dynamicFormGroup.get(control.name)?.setValue(null);
         this.toast.warning({ detail: "", summary: "Date cannot be in the future.", duration: 3000 });
       }
     }
-    
+
   }
 
 
@@ -6299,9 +6306,9 @@ export class YatraComponent {
     this.setFormIndexValue(index)
     this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
   }
-  deductibleOptionsB(control:any,parentControl:any){
-    console.log(control,parentControl);
-    const data :any = {
+  deductibleOptionsB(control: any, parentControl: any) {
+    console.log(control, parentControl);
+    const data: any = {
       300000: [
         { name: "100000", label: "100000", value: 100000 },
         { name: "200000", label: "200000", value: 200000 },
@@ -6383,18 +6390,18 @@ export class YatraComponent {
         { name: "500000", label: "500000", value: 500000 },
       ],
     };
-    this.formData.insuredMemberDetails.forEach((member:any) => {
-      if(member.relation == parentControl.name){
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      if (member.relation == parentControl.name) {
         const sumInsured = member.sumInsured;
         const newOptions = data[sumInsured];
         control.options = newOptions;
-        console.log(control,parentControl);
+        console.log(control, parentControl);
       }
     })
   }
-  deductibleOptionsA(control:any,parentControl:any){
-    console.log(control,parentControl);
-    const data :any = {
+  deductibleOptionsA(control: any, parentControl: any) {
+    console.log(control, parentControl);
+    const data: any = {
       8500000: [
         {
           name: '1500000',
@@ -6418,14 +6425,26 @@ export class YatraComponent {
       ]
     };
 
-    this.formData.insuredMemberDetails.forEach((member:any) => {
-      if(member.relation == parentControl.name){
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      if (member.relation == parentControl.name) {
         const sumInsured = member.sumInsured;
         const newOptions = data[sumInsured];
         control.options = newOptions;
-        console.log(control,parentControl);
+        console.log(control, parentControl);
       }
     })
+  }
+
+  parseName(fullName: any) {
+    const nameParts = fullName.value.trim().split(/\s+/);
+    let firstName = nameParts[0];
+    let middleName = nameParts.length > 2 ? nameParts[1] : ''; // If there's a middle name
+    let lastName = nameParts[nameParts.length - 1];  // Last part is always the last name
+    return {
+      firstName,
+      middleName,
+      lastName
+    };
   }
 }
 
