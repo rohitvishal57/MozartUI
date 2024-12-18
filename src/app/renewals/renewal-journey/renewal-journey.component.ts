@@ -60,7 +60,7 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  formSequence: any[] = [payment, thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
@@ -136,7 +136,23 @@ export class RenewalJourneyComponent {
       if (stateData.journeyProcess) {
         this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
         console.log(this.journeyProcess);
+      }
 
+      if (stateData.paymentStatus) {
+          const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
+          if(paymentStatus == "SUCCESS"){
+            this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
+          }else if(paymentStatus == "INTIATED"){
+            this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
+          }
+      }
+      if (stateData.kycStatus) {
+        const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
+        if(kycStatus){
+          this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
+        }else if(!kycStatus){
+          this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
+        }
       }
 
       // Set formSequence if provided in state; otherwise, use default
@@ -174,7 +190,7 @@ export class RenewalJourneyComponent {
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
-      this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
+      this.formSequence = [payment, thankYou];
     }
 
     console.log(this.formData, this.proposalNum, this.policyNumber);
@@ -2958,7 +2974,8 @@ export class RenewalJourneyComponent {
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode,
         "bankAccountNumber": data.accountNumber,
-        "documentId": this.documentId
+        "documentId": this.documentId,
+        "productName": this.formData.productName
       };
       console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
@@ -3620,8 +3637,7 @@ export class RenewalJourneyComponent {
       next: (response: any) => {
         console.log("sharePaymentLinkApi",response);
         if (response.data) {
-          this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000,
-          });
+          this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000});
           if (this.selectedButton == '') {
             this.changeMainFormDependentControls(control.dependentControls, true);
           }
@@ -3662,7 +3678,8 @@ export class RenewalJourneyComponent {
         policyType: 'Renewal',
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
-        OrderID: ''
+        OrderId:""
+        // ProductName: this.formData.productName
       };
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
@@ -3700,8 +3717,8 @@ export class RenewalJourneyComponent {
     }
   }
   checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" && this.formData.ckycFlag !== "N");
-    // const isVisible=false;
+    const isVisible = !(this.formData.isKycCompleted);
+    // const isVisible=true;
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -3848,15 +3865,15 @@ export class RenewalJourneyComponent {
 
     // console.log(reqData, this.dynamicFormGroup.getRawValue());
 
-    this.yatraService.Insertorupdateformdata(reqData).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        // this.leadnumber = res.data;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    // this.yatraService.Insertorupdateformdata(reqData).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     // this.leadnumber = res.data;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
     this.isFeedBackModalVisible = false;
   }
 

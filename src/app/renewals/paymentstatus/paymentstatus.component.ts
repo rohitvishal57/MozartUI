@@ -64,9 +64,8 @@ export class PaymentstatusComponent {
                 },(error)=>{
                   console.log('error',error);
                 });
-            }
-
-          if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
+            }else if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
+            this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(orderData),
@@ -74,22 +73,40 @@ export class PaymentstatusComponent {
                 policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                paymentStatus: this.encryptionService.encrypt(res.data.paymentStatus),
                 formIndex: "1",
               }
             });
           } else if(res.data.paymentStatus == 'INPROGRESS'|| res.data.paymentStatus == 'PENDING'){
-            this.router.navigate(['renewal/renewalList']);
-          } else{
-            this.router.navigate(['renewal/renewalJourney'], {
+            this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+            this.router.navigate(['renewal/renewalList'], {
               state: {
-                formData: this.encryptionService.encrypt(orderData.orderDetails),
-                proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
-                journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                formIndex: "0",
+                paymentStatus: this.encryptionService.encrypt(res.data.paymentStatus),
               }
             });
+          } else{
+            const renewalInfoRequestBody = {
+              policy_Number: res.data.policyNumber
+            };
+            this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+              (res: any) => {
+                const formData = res.data;                
+                  this.router.navigate(['renewal/renewalJourney'], {
+                  state: {
+                    formData: this.encryptionService.encrypt(formData),
+                    proposalNum: this.encryptionService.encrypt(""),
+                    policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
+                    journeyProcess: this.encryptionService.encrypt(0),
+                    formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                    formIndex: "0",
+                  }
+                });
+              },
+              (err) => {
+                console.error("Error from getRenewalInfo API:", err);
+                this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+              }
+            );   
           } 
         } else {
           this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });

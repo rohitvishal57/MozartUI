@@ -44,6 +44,8 @@ export class KycStatusComponent {
       }
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
+          console.log(res);
+          
           if (res.data.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
@@ -52,9 +54,9 @@ export class KycStatusComponent {
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
                 const formData = res.data;                
-                if (kycData.kycStatus == 'SUCCESS') {
-                  formData.ckycFlag='Y';
-                  formData.ckycNo = kycData.kycNumber;
+                if (kycData.kycStatus) {
+                  console.log("kycStatue" , res.data.kycStatus);
+                  formData.isKycCompleted=true;
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
@@ -62,10 +64,11 @@ export class KycStatusComponent {
                       policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                      kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.kycStatus == 'FAILED') {
+                } else if (!kycData.kycStatus) {
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
@@ -73,10 +76,11 @@ export class KycStatusComponent {
                       policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                      kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.kycStatus == 'INPROGRESS') {
+                } else {
                   this.router.navigate(['renewal/renewalList']);
                 }
               },

@@ -180,6 +180,18 @@ export class RenewalListComponent {
     this.getRenewalsList();
     this.getProducts();
     this.checkView(); //Screen View check
+    const stateData = history.state;
+
+    if (stateData && Object.keys(stateData).length > 0) {
+      if (stateData.paymentStatus) {
+        const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
+        if(paymentStatus == "PENDING"){
+          this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+        }else if(paymentStatus == "INPROGRESS"){
+          this.toast.success({detail: "SUCCESS",summary: "payment inprogress",duration: 5000});
+        }
+      }
+    }
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -1715,7 +1727,7 @@ export class RenewalListComponent {
                 proposalNum: proposalNum,
                 policyNumber: policyNumber,
                 journeyProcess: journeyProcess,
-                formIndex: formIndex, // Include formIndex in state
+                formIndex: "0", // Include formIndex in state
               },
             });
           } else {
