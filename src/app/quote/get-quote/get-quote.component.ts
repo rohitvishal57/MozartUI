@@ -189,6 +189,7 @@ export class GetQuoteComponent implements AfterViewChecked {
         }
       });
     });
+    this.loadSelectedDiseases();
     console.log(this.currentDate);
     console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
@@ -832,9 +833,16 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log('Slider value changed to:', newValue);
   }
 
+  loadSelectedDiseases() {
+    const storedDiseases = sessionStorage.getItem('selectedDiseases');
+    if (storedDiseases) {
+      this.selectedDiseases = JSON.parse(storedDiseases);
+      this.updateDiseaseNames();  // Update disease names based on stored diseases
+    }
+  }
+
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
-    console.log(selectedValue);
 
     if (event.target.checked) {
       // Add the value to the array if the checkbox is checked and not already present
@@ -845,29 +853,40 @@ export class GetQuoteComponent implements AfterViewChecked {
       // Remove the value from the array if the checkbox is unchecked
       this.selectedDiseases = this.selectedDiseases.filter(disease => disease !== selectedValue);
     }
+
+    // Update sessionStorage and diseaseNames
+    this.saveSelectedDiseases();
+    this.updateDiseaseNames();
     console.log('Selected Diseases:', this.selectedDiseases);
-    // this.saveDataToStorage();
+  }
+  updateDiseaseNames() {
+    if (this.selectedDiseases.length > 0) {
+      this.diseaseNames = this.selectedDiseases.join(', ');  // Join selected diseases as a string
+    } else {
+      this.diseaseNames = 'No Diseases Selected';  // Default message when no diseases are selected
+    }
+  }
+  saveSelectedDiseases() {
+    sessionStorage.setItem('selectedDiseases', JSON.stringify(this.selectedDiseases));
   }
 
   diseaseSelection() {
     this.diseaseNames = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : '';
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
 
-    console.log(insuredMembersArray);
-
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
-      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames != "" ? this.diseaseNames : null);
-      memberGroup.get('isChronic')?.setValue(this.diseaseNames != "" ? "Yes" : "No");
+      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
+      memberGroup.get('isChronic')?.setValue(this.diseaseNames !== "" ? "Yes" : "No");
     });
+
     this.activeDropdown = null;
-    // this.saveDataToStorage();
   }
+
 
   isDiseaseSelected(disease: string): boolean {
     return this.selectedDiseases.includes(disease);
   }
-
   // saveDataToStorage() {
   //   const data = {
   //     selectedOptions: this.selectedOptions,          // Store selected options (array of strings)
