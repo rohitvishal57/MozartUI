@@ -1299,14 +1299,22 @@ export class YatraComponent {
   }
 
   scrollToFirstInvalidField() {
-    const invalidControls = Object.keys(this.dynamicFormGroup.controls).filter(key =>
-      this.dynamicFormGroup.get(key)?.invalid
-    );
-
-    if (invalidControls.length > 0) {
-      const firstInvalidControlName = invalidControls[0];
+    const findInvalidControlId = (controls: { [key: string]: any }): string | null => {
+      for (const key in controls) {
+        if (controls[key].invalid) {
+          if (controls[key].controls) {
+            const nestedInvalidId = findInvalidControlId(controls[key].controls);
+            if (nestedInvalidId) return nestedInvalidId;
+          } else {
+            return key;
+          }
+        }
+      }
+      return null;
+    };
+    const firstInvalidControlName = findInvalidControlId(this.dynamicFormGroup.controls);
+    if (firstInvalidControlName) {
       const firstInvalidElement = document.getElementById(firstInvalidControlName);
-
       if (firstInvalidElement) {
         firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         firstInvalidElement.focus();
