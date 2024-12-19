@@ -6694,7 +6694,8 @@ export class YatraComponent {
       panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No",
-      businessType: "NB"
+      businessType: "NB",
+      userType:"Agent"
     };
     console.log(kycRequestBody);
     this.renewalService.getkycURL(kycRequestBody).subscribe(
@@ -6785,7 +6786,8 @@ export class YatraComponent {
   getKycStatus() {
     const kycDetailsReq = {
       "transactionId": this.transactionId,
-      "businessType": "NB"
+      "businessType": "NB",
+      "userType":"Agent"
     }
     this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
       async (res: any) => {
@@ -6822,6 +6824,7 @@ export class YatraComponent {
             // }
           } else if (kycData.kycStatus == 'False') {
             if (formId) {
+              this.formData.verifyKYC = null;
             }
           }
           // this.getFormDataFromFormSequence(formId);
@@ -6891,10 +6894,11 @@ export class YatraComponent {
               proposalNumber: '',
               paymentMethod: 'enach_payment',
               source: 'Retail',
-              policyType: 'Renewal',
+              policyType: 'New Business',
               policyNumber: orderData?.policyNumber,
               quoteNumber: '',
-              OrderID: ''
+              productName:'',
+              userType:"Agent"
             };
             this.yatraService.justPayRedirection(reqData).subscribe(
               (response: any) => {
@@ -6912,6 +6916,7 @@ export class YatraComponent {
           } else if (res.data.paymentStatus == 'INPROGRESS' || res.data.paymentStatus == 'PENDING') {
             this.router.navigate(['proposals/proposalsList']);
           } else {
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId)
             // this.router.navigate(['renewal/renewalJourney'], {
             //   state: {
             //     formData: this.encryptionService.encrypt(orderData.orderDetails),

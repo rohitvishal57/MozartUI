@@ -86,7 +86,7 @@ const routes: Routes = [
     loadChildren: () => import("./performance/performance.module").then((m) => m.PerformanceModule)
   },
   {
-    path: 'portal',
+    path: '',
     loadChildren: () => import("./portal/portal.module").then((m) => m.PortalModule)
   },
   {
