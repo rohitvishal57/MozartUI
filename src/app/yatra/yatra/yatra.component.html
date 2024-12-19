@@ -116,7 +116,7 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary"
+                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary plandetails_summary"
                   [hidden]="!control.visible">
                   <div class="label-value-container" (click)="openPlanSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
@@ -126,6 +126,9 @@
                   <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
                     <div class="bottom_planDetails_sub body_flex_column">
                         <div class="common_ProductInfo">
+                            <div class="common_ppi_img">
+                              <img src="./assets/Img/icon_activeone.svg">
+                            </div>
                             <div class="common_ppi_info">
                                 <h4>{{this.dynamicFormGroup.get('productName')?.value}}</h4>
                                 <h5>Aditya Birla Health Insurance</h5>
@@ -824,7 +827,7 @@
                 </div>
 
 
-                <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss"
+                <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss typecss_proposalNumber"
                   [hidden]="!control.visible">
                   <label *ngIf="control.visibleLabel==true" class="boldtext-label">
                     {{ control.label ? (control.label | translate) : '' }}
@@ -859,7 +862,7 @@
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
-                        [value]="option.value" class="radio-card" [checked]="option.selected" />
+                        [value]="option.value" class="radio-card" (change)="onInputChange($event, control)" [checked]="option.selected" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year ? (option.year | translate) : ''}}</div>
                         <div class="price">₹ {{ option.value }}</div>
