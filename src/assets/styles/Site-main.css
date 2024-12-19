@@ -6589,8 +6589,8 @@ position: relative;
 .ul_addon_policySummary {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 10px;
 }
 .ul_addon_policySummary li {

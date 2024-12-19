@@ -3116,6 +3116,9 @@ margin: 0;
     .typecss_summary {
         width: 50%;
     }
+    .typecss_summary.typecss_summary_addon {
+        width: 100%;
+    }
     .bottom-section-axis .plandetails_summary {
         width: 100%;
     }
