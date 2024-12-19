@@ -124,17 +124,29 @@ try {
     Write-Output "Creating new IIS website for: $SiteName"
 
     # Create the new IIS website
-    New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -Port 443 -HostHeader $BindingHost -Protocol "https"
+    New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -HostHeader $BindingHost
 
     Write-Output "Successfully created IIS site: $SiteName"
 
+    # Remove the default HTTP binding (if it exists)
+    $httpBinding = Get-WebBinding -Name $SiteName -Protocol "http" -Port 80
+    if ($httpBinding) {
+       Write-Output "Removing HTTP binding on port 80."
+       Remove-WebBinding -Name $SiteName -Port 80 -HostHeader $BindingHost -Protocol "http"
+    }
+
     # Add the HTTPS binding for the domain on port 443
-    # New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
-    # New-WebBinding -Name $SiteName -Protocol "https" -Port 443
+    Write-Output "Adding HTTPS binding on port 443."
+    New-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost
 
     # Assign the SSL certificate to the binding
     $binding = Get-WebBinding -Name $SiteName -Protocol "https"
-    $binding.AddSslCertificate($certThumbprint, "My")
+    if ($binding) {
+       $binding.AddSslCertificate($certThumbprint, "My")
+       Write-Output "Successfully assigned certificate."
+    } else {
+      Write-Error "HTTPS binding not found. Check if it was created correctly."
+    }
 
     Write-Output "Successfully created IIS site and configured HTTPS binding for: $SiteName"
 } catch {
