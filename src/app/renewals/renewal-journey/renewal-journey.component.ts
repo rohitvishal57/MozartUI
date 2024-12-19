@@ -119,6 +119,12 @@ export class RenewalJourneyComponent {
         this.formData = { ...this.formData, ...decryptedFormData };
         console.log(this.formData);
 
+        // if (decryptedFormData.errorObject.errorMessage) {
+        //   console.log("testing");
+          
+        //   this.toast.warning({detail: "SUCCESS",summary:decryptedFormData.errorObject.errorMessage || "payment",duration: 5000});
+        // }
+
       }
 
       if (stateData.proposalNum) {
@@ -2986,6 +2992,7 @@ export class RenewalJourneyComponent {
             this.formData.policyEndDate = res.data.policyEndDate || null;
             this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
+            this.formData.premiumPaid = res.data.premiumPaid || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
 
@@ -3638,11 +3645,11 @@ export class RenewalJourneyComponent {
         console.log("sharePaymentLinkApi",response);
         if (response.data) {
           this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000});
-          if (this.selectedButton == '') {
-            this.changeMainFormDependentControls(control.dependentControls, true);
-          }
-          else {
-          }
+          // if (this.selectedButton == '') {
+            // this.changeMainFormDependentControls(control.dependentControls, true);
+          // }
+          // else {
+          // }
         } else {
           this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
         }
@@ -3678,7 +3685,8 @@ export class RenewalJourneyComponent {
         policyType: 'Renewal',
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
-        ProductName: this.formData.productName
+        ProductName: this.formData.productName,
+        userType:"Agent",
       };
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {

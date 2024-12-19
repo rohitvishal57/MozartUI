@@ -5771,6 +5771,9 @@ background: var(--white-color);
   line-height: 24px;
   color: var(--text-black-4c);
 }
+.bottom_planDetails_sub .common_ProductInfo {
+  align-items: flex-start;
+}
 .btn_sellingTips {
   font-weight: 400;
   font-size: 12px;
@@ -6582,5 +6585,21 @@ position: relative;
 }
 .details-elementDisease .typecss {
   padding-bottom: 15px !important;
+}
+.ul_addon_policySummary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ul_addon_policySummary li {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #2e2e2e !important;
+  padding: 4px 16px;
+  border-radius: 19px;
+  background: #F7F7F7;
+  cursor: initial;
 }
 /*----yatra popup end----*/

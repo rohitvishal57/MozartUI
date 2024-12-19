@@ -361,23 +361,23 @@ export const payment={
           "label": "Cheque Number",
           "visible": false,
           "visibleLabel": true,
-          "type": "number",
+          "type": "text",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
               "validatorName": "required",
               "required": true,
-              "message": "6 Digits Cheque number is required field."
+              "message": "Enter 6 Digits Cheque Number it is required field."
             },
             {
               "validatorName": "pattern",
-              "pattern": "^(?!.*[_-]{2,})(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[1-9][0-9]*(?:[_-][0-9]+)*[0-9]$",
-              "message": "Enter a valid 6-digit cheque number"
+              "pattern": "^(?:[-_]*\\d){6}[-_]*$",
+              "message": "Only 6 digits are allowed, including optional - or _."
             },
             {
               "validatorName": "maxlength",
-              "maxLength": 8,
+              "maxLength": 6,
               "message": "Maximum length is 8 characters."
             },
             {
@@ -456,7 +456,7 @@ export const payment={
           "visible": false,
           "visibleLabel": true,
           "minDateLength": "currentDate",
-          "maxDateLength": "futureDate",
+          "maxDateLength": "currentDate",
           "type": "date",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
