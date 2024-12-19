@@ -1201,7 +1201,7 @@ export class YatraComponent {
     return false;
   }
 
-  onCheckboxSelect(controlName: string, event? : any) {
+  onCheckboxSelect(controlName: string, event?: any) {
     const control = this.dynamicFormGroup.get(controlName);
     console.log(control);
     if (control) {
@@ -1822,10 +1822,10 @@ export class YatraComponent {
     const filteredValue = eventValue.replace(/[_-]/g, '');
 
     if (control.name == 'totalPremium') {
-      console.log(this.tenureAmount,this.selectedIndex);
-      
+      console.log(this.tenureAmount, this.selectedIndex);
+
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
-      
+
     }
     if (control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
@@ -3048,8 +3048,8 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
-                if(this.dynamicFormGroup.get('occupation')?.value != '')
-                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(JSON.parse(this.dynamicFormGroup.get('occupation')?.value).value);
+                if (this.dynamicFormGroup.get('occupation')?.value != '')
+                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(JSON.parse(this.dynamicFormGroup.get('occupation')?.value).value);
                 console.log(memberupgradableZones);
 
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
@@ -4827,7 +4827,7 @@ export class YatraComponent {
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
     console.log(addOnData);
-    
+
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
@@ -6652,7 +6652,7 @@ export class YatraComponent {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
-  shareKycURL(control:any) {
+  shareKycURL(control: any) {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
@@ -6671,14 +6671,14 @@ export class YatraComponent {
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
         console.log("kycResponseBody", res);
-        if(res.data.isShareKyc){
+        if (res.data.isShareKyc) {
           this.toast.success({
             detail: "SUCCESS",
             summary: res.message,
             duration: 3000,
           });
         }
-        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.changeMainFormDependentControls(control.dependentControls, true);
         this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
@@ -6934,15 +6934,15 @@ export class YatraComponent {
     );
   }
 
-  getPermanentAddressDetails(flag : boolean){
-    if(flag){
+  getPermanentAddressDetails(flag: boolean) {
+    if (flag) {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
     } else {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
     }
-    
+
   }
 
   getCityStateByPin(){
