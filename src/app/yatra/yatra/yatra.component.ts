@@ -6613,7 +6613,7 @@ export class YatraComponent {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
-  shareKycURL() {
+  shareKycURL(control:any) {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
@@ -6632,11 +6632,15 @@ export class YatraComponent {
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
         console.log("kycResponseBody", res);
-        this.toast.success({
-          detail: "SUCCESS",
-          summary: res.message,
-          duration: 3000,
-        });
+        if(res.data.isShareKyc){
+          this.toast.success({
+            detail: "SUCCESS",
+            summary: res.message,
+            duration: 3000,
+          });
+        }
+        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
         console.log(err);
