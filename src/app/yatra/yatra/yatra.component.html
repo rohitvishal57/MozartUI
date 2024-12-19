@@ -859,7 +859,7 @@
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
-                        [value]="option.value" class="radio-card" [checked]="option.selected" />
+                        [value]="option.value" class="radio-card" (change)="onInputChange($event, control)" [checked]="option.selected" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year ? (option.year | translate) : ''}}</div>
                         <div class="price">₹ {{ option.value }}</div>

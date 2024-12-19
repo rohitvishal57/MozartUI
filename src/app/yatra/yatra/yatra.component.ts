@@ -49,7 +49,7 @@ export class YatraComponent {
   bankCode: any;
   bankCity: any;
   formControls: IFormControl[] = [];
-  isPlanDetailsVisible: boolean =false;
+  isPlanDetailsVisible: boolean = false;
   activeMemberTabIndex: number = 0;
   selectedIndex: number = -1;
   insuredMemberDetails: any = {};
@@ -127,7 +127,7 @@ export class YatraComponent {
   tooltipMessage: string = '';
   currentLanguage = 'en';
   pennyDropVerficationDetails: any;
-  transactionId:string | undefined;
+  transactionId: string | undefined;
   orderId: any;
 
 
@@ -197,25 +197,25 @@ export class YatraComponent {
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.route.queryParams.subscribe(async params => {
         console.log(params);
-        if(params['transactionId']){
+        if (params['transactionId']) {
           this.transactionId = params['transactionId'];
           if (params['token']) {
-            localStorage.setItem('token', params['token']); 
+            localStorage.setItem('token', params['token']);
           } else {
             console.warn('Token not found in query parameters');
           }
           this.getKycStatus();
         }
-        else if(params['orderid']){
+        else if (params['orderid']) {
           this.orderId = params['orderid'];
           if (params['token']) {
-            localStorage.setItem('token', params['token']); 
+            localStorage.setItem('token', params['token']);
           } else {
             console.warn('Token not found in query parameters');
           }
           this.getPaymentStatus();
         }
-        else{
+        else {
           const decryptedData = this.encryptionService.decrypt(params['data']);
           if (decryptedData) {
             console.log(decryptedData);
@@ -228,7 +228,7 @@ export class YatraComponent {
             }
             // this.formData.proposalNumber = decryptedData.proposalNum;
             this.proposalNum = decryptedData.proposalNum;
-  
+
             decryptedData.currentFormSequence = this.getFormIndexValue().toString();
             await this.yatraService.Getform(decryptedData).subscribe({
               next: (res: any) => {
@@ -250,9 +250,9 @@ export class YatraComponent {
                     totalPremium: this.formData.totalPremium,
                     proposalNumber: this.proposalNum
                   };
-  
+
                   console.log(this.formData);
-  
+
                   if (this.formData.covers) {
                     proposalRequiredDetails.covers = this.formData.covers;
                     proposalRequiredDetails.PEDWaitingPeriod = "";
@@ -263,24 +263,24 @@ export class YatraComponent {
                   if (this.formData.tenureAmount) {
                     this.tenureAmount = this.formData.tenureAmount;
                   }
-  
+
                   if (this.formData.displayTaxList) {
                     this.displayTaxList = this.formData.displayTaxList;
                   }
-  
+
                   if (this.formData.covers) {
                     this.covers = this.formData.covers;
                   }
-  
+
                   if (this.formData.quoteIdDetails) {
                     this.QuoteNumber = this.formData.quoteIdDetails;
                   }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
-  
+
                   if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
                     const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
                     console.log(proposalRequiredDetails);
-  
+
                     // Check if proposalNumber matches
                     if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
                       this.totalPremium = proposalRequiredDetails.totalPremium;
@@ -1788,7 +1788,12 @@ export class YatraComponent {
     let eventValue = event.target.value;
     const filteredValue = eventValue.replace(/[_-]/g, '');
 
-
+    if (control.name == 'totalPremium') {
+      console.log(this.tenureAmount,this.selectedIndex);
+      
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+      
+    }
     if (control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
       console.log("id proof", idProof);
@@ -3007,6 +3012,8 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+                if(this.dynamicFormGroup.get('occupation')?.value != '')
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(JSON.parse(this.dynamicFormGroup.get('occupation')?.value).value);
                 console.log(memberupgradableZones);
 
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
@@ -5228,7 +5235,8 @@ export class YatraComponent {
                 option.selected = true;
                 if (this.dynamicFormGroup.getRawValue().totalPremium) {
 
-                  this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
+                  // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
+                  this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
                 }
                 console.log(this.dynamicFormGroup.getRawValue());
 
@@ -5788,7 +5796,7 @@ export class YatraComponent {
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
-    console.log(formData, this.covers,formData?.appointeeRelationWithNominee);
+    console.log(formData, this.covers, formData?.appointeeRelationWithNominee);
 
     const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
@@ -5896,7 +5904,7 @@ export class YatraComponent {
       familySize: formData?.familySize || '',
       appointeeName: formData?.appointeeName || '',
       appointeeMobileNumber: formData?.appointeeContactNo || '',
-      appointeeRelationCode: formData?.appointeeRelationWithNominee? this.jsonParse(formData.appointeeRelationWithNominee, 'value'): ''
+      appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : ''
     };
 
     return mappedData;
@@ -5998,7 +6006,7 @@ export class YatraComponent {
 
   jsonParse(string: any, extract: any) {
     console.log(string);
-    
+
     const value = JSON.parse(string);
     return value[extract];
   }
@@ -6404,9 +6412,9 @@ export class YatraComponent {
   // }
 
   onDrillDown(index: any, caseName: any) {
-    console.log(this.getFormIndexValue(),index);
+    console.log(this.getFormIndexValue(), index);
     const lastPage = this.getFormIndexValue()
-    if(this.formSequence.length-1 == lastPage){
+    if (this.formSequence.length - 1 == lastPage) {
       return;
     }
     this.setFormIndexValue(index)
@@ -6582,24 +6590,24 @@ export class YatraComponent {
       }
     });
   }
-  openPlanSummary(){
+  openPlanSummary() {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
   shareKycURL() {
     const kycRequestBody = {
-      policyNumber: "", 
-      proposerNumber: this.formData.proposalNumber, 
+      policyNumber: "",
+      proposerNumber: this.formData.proposalNumber,
       fullName: this.formData.accountHolderName,
-      panNumber: this.formData.panNo || "", 
+      panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No", 
-      businessType: "NB", 
-      emailId: this.formData.emailId, 
+      pepCheck: "No",
+      businessType: "NB",
+      emailId: this.formData.emailId,
       agentCode: this.agentCode,
-      MobileNumber:"9642697588",
-      ProductName:this.formData.productName,
-      ProductCode:this.formData.productId
+      MobileNumber: "9642697588",
+      ProductName: this.formData.productName,
+      ProductCode: this.formData.productId
     };
     console.log(kycRequestBody);
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
@@ -6619,11 +6627,11 @@ export class YatraComponent {
   initiateKycURL() {
     const kycRequestBody = {
       policyNumber: "",
-      proposerNumber: this.formData.proposalNumber, 
+      proposerNumber: this.formData.proposalNumber,
       fullName: this.formData.accountHolderName,
-      panNumber: this.formData.panNo || "", 
+      panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No", 
+      pepCheck: "No",
       businessType: "NB"
     };
     console.log(kycRequestBody);
@@ -6712,156 +6720,156 @@ export class YatraComponent {
 
     }
   }
-  getKycStatus() {  
-        const kycDetailsReq = {
-          "transactionId":  this.transactionId,
-          "businessType": "NB"
-        }
-        this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
-          async (res: any) => {
-            if (res.data.kycStatus) {
-              const kycData = res.data;
-              // const renewalInfoRequestBody = {
-              //   proposalNum: res.data.proposalNumber,
-              // };
-              // this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-              //   (res: any) => {
-                this.agentCode = localStorage.getItem('agentCode');
-                this.partnerId = kycData.partnerId;
-                this.productId = kycData.productId;
-                if(kycData.leadId){
-                  this.quickQuoteRedirect = true;
-                }
-                this.leadNumber = kycData.leadId;
-                this.proposalNum = kycData.proposalNumber;
+  getKycStatus() {
+    const kycDetailsReq = {
+      "transactionId": this.transactionId,
+      "businessType": "NB"
+    }
+    this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
+      async (res: any) => {
+        if (res.data.kycStatus) {
+          const kycData = res.data;
+          // const renewalInfoRequestBody = {
+          //   proposalNum: res.data.proposalNumber,
+          // };
+          // this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+          //   (res: any) => {
+          this.agentCode = localStorage.getItem('agentCode');
+          this.partnerId = kycData.partnerId;
+          this.productId = kycData.productId;
+          if (kycData.leadId) {
+            this.quickQuoteRedirect = true;
+          }
+          this.leadNumber = kycData.leadId;
+          this.proposalNum = kycData.proposalNumber;
 
-                    const reqData = {
-                      "partnerId": kycData.partnerId,
-                      "productId": kycData.productId
-                    }
-                    const sequence = await firstValueFrom(this.commonService.Getformsequence(reqData));
-                    console.log(sequence);
-                    this.formSequence = JSON.parse(sequence.data.formSequence);
-                  const formId = this.getFormIndexValue()
-                  if (kycData.kycStatus == 'True') {
-                    if(kycData.kycStatus== 'True')kycData.ckycFlag='Y';
-                    this.formData.verifyKYC = kycData.kycStatus;
-                    console.log(this.getFormIndexValue(),this.formSequence,kycData,this.formData);
-                    // if (formId) {
-                    //   this.getFormDataFromFormSequence(formId);
-                    // }
-                  } else if (kycData.kycStatus == 'False') {
-                    if (formId) {
-                    }
-                  }
-                  // this.getFormDataFromFormSequence(formId);
-                  const Data = {
-                    partnerId: this.partnerId.toString(),
-                    productId: this.productId.toString(),
-                    formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
-                    proposalNum: this.proposalNum,
-                    agentCode: this.agentCode,
-                    leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
-                    isLead: this.quickQuoteRedirect == false ? false : true,
-                    currentFormSequence: this.getFormIndexValue().toString()
-                  }
-              
-                  console.log(Data);
-              
-                  await this.yatraService.Getform(Data).subscribe({
-                    next: (res: any) => {
-                      console.log(res);
-                      this.formSequence = JSON.parse(res.data.formConfig) || [];
-                      this.form = JSON.parse(res.data.jsonFormData);
-                      console.log(this.formData);
-
-                      const kk = this.formData.verifyKYC
-              
-                      this.formData = JSON.parse(res.data.formData)
-                      this.formData.verifyKYC = kk;
-                      console.log(this.form, this.formSequence, this.formData);
-              
-                      this.initializeForm();
-                    },
-                    error: (err) => {
-                      console.log(err);
-                    }
-                  });
-                // },
-                // (err) => {
-                //   console.error("Error from getRenewalInfo API:", err);
-                //   this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
-                // }
-              // );      
-            } else {
-              this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+          const reqData = {
+            "partnerId": kycData.partnerId,
+            "productId": kycData.productId
+          }
+          const sequence = await firstValueFrom(this.commonService.Getformsequence(reqData));
+          console.log(sequence);
+          this.formSequence = JSON.parse(sequence.data.formSequence);
+          const formId = this.getFormIndexValue()
+          if (kycData.kycStatus == 'True') {
+            if (kycData.kycStatus == 'True') kycData.ckycFlag = 'Y';
+            this.formData.verifyKYC = kycData.kycStatus;
+            console.log(this.getFormIndexValue(), this.formSequence, kycData, this.formData);
+            // if (formId) {
+            //   this.getFormDataFromFormSequence(formId);
+            // }
+          } else if (kycData.kycStatus == 'False') {
+            if (formId) {
             }
-          },
-          (err) => {
-            this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
-            console.log("error is coming from fullquote api");
           }
-        );
-      }
+          // this.getFormDataFromFormSequence(formId);
+          const Data = {
+            partnerId: this.partnerId.toString(),
+            productId: this.productId.toString(),
+            formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
+            proposalNum: this.proposalNum,
+            agentCode: this.agentCode,
+            leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
+            isLead: this.quickQuoteRedirect == false ? false : true,
+            currentFormSequence: this.getFormIndexValue().toString()
+          }
 
-      getPaymentStatus() {
-          const orderDetailsReq = {
-            "orderId": this.orderId,
-            "businessType" : "NB"
-          }
-          console.log(orderDetailsReq);
-          this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
-            (res: any) => {
-              if (res.isSuccess) {
-                const orderData = res.data.orderDetails;          
-                  if(res?.data?.paymentMethod == 'emandate_payment'){
-      
-                    const reqData = {
-                      agentcode: localStorage.getItem('agentCode'),
-                      proposalNumber: '',
-                      paymentMethod: 'enach_payment',
-                      source: 'Retail',
-                      policyType: 'Renewal',
-                      policyNumber: orderData?.policyNumber,
-                      quoteNumber: '',
-                      OrderID: ''
-                    };
-                    this.yatraService.justPayRedirection(reqData).subscribe(
-                      (response:any)=>{
-                        if(response?.isSuccess){
-                          window.location.href = response.data.paymentURL;
-                        }
-                      },(error)=>{
-                        console.log('error',error);
-                      });
-                  }
-      
-                if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
-                  this.incrementIndex();
-                  this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId)
-                } else if(res.data.paymentStatus == 'INPROGRESS'|| res.data.paymentStatus == 'PENDING'){
-                  this.router.navigate(['proposals/proposalsList']);
-                } else{
-                  // this.router.navigate(['renewal/renewalJourney'], {
-                  //   state: {
-                  //     formData: this.encryptionService.encrypt(orderData.orderDetails),
-                  //     proposalNum: this.encryptionService.encrypt(""),
-                  //     policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
-                  //     journeyProcess: this.encryptionService.encrypt(0),
-                  //     formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                  //     formIndex: "0",
-                  //   }
-                  // });
-                } 
-              } else {
-                this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
-              }
+          console.log(Data);
+
+          await this.yatraService.Getform(Data).subscribe({
+            next: (res: any) => {
+              console.log(res);
+              this.formSequence = JSON.parse(res.data.formConfig) || [];
+              this.form = JSON.parse(res.data.jsonFormData);
+              console.log(this.formData);
+
+              const kk = this.formData.verifyKYC
+
+              this.formData = JSON.parse(res.data.formData)
+              this.formData.verifyKYC = kk;
+              console.log(this.form, this.formSequence, this.formData);
+
+              this.initializeForm();
             },
-            (err) => {
-              this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
-              console.log("error is coming from fullquote api");
+            error: (err) => {
+              console.log(err);
             }
-          );
+          });
+          // },
+          // (err) => {
+          //   console.error("Error from getRenewalInfo API:", err);
+          //   this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          // }
+          // );      
+        } else {
+          this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
         }
+      },
+      (err) => {
+        this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+        console.log("error is coming from fullquote api");
+      }
+    );
+  }
+
+  getPaymentStatus() {
+    const orderDetailsReq = {
+      "orderId": this.orderId,
+      "businessType": "NB"
+    }
+    console.log(orderDetailsReq);
+    this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
+      (res: any) => {
+        if (res.isSuccess) {
+          const orderData = res.data.orderDetails;
+          if (res?.data?.paymentMethod == 'emandate_payment') {
+
+            const reqData = {
+              agentcode: localStorage.getItem('agentCode'),
+              proposalNumber: '',
+              paymentMethod: 'enach_payment',
+              source: 'Retail',
+              policyType: 'Renewal',
+              policyNumber: orderData?.policyNumber,
+              quoteNumber: '',
+              OrderID: ''
+            };
+            this.yatraService.justPayRedirection(reqData).subscribe(
+              (response: any) => {
+                if (response?.isSuccess) {
+                  window.location.href = response.data.paymentURL;
+                }
+              }, (error) => {
+                console.log('error', error);
+              });
+          }
+
+          if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
+            this.incrementIndex();
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId)
+          } else if (res.data.paymentStatus == 'INPROGRESS' || res.data.paymentStatus == 'PENDING') {
+            this.router.navigate(['proposals/proposalsList']);
+          } else {
+            // this.router.navigate(['renewal/renewalJourney'], {
+            //   state: {
+            //     formData: this.encryptionService.encrypt(orderData.orderDetails),
+            //     proposalNum: this.encryptionService.encrypt(""),
+            //     policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
+            //     journeyProcess: this.encryptionService.encrypt(0),
+            //     formSequence: this.encryptionService.encrypt([payment, thankYou]),
+            //     formIndex: "0",
+            //   }
+            // });
+          }
+        } else {
+          this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+        }
+      },
+      (err) => {
+        this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
+        console.log("error is coming from fullquote api");
+      }
+    );
+  }
 }
 
