@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
@@ -21,13 +21,13 @@
                          <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li> 
                         <li>
                             <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All Leads" | translate}} ({{countsList.totalRecords}})</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList.totalRecords}})</button>
                         </li>
                         <li>
-                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Assigned Leads'}"  (click)="filterQuotes('Assigned Leads','assignLeads')">{{"Assigned Leads" | translate}} ({{countsList.assignLeads}})</button>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Assigned Leads'}"  (click)="filterQuotes('Assigned Leads','assignLeads')">{{"Assigned" | translate}} ({{countsList.assignLeads}})</button>
                         </li>
                         <li>
-                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Unassigned Leads'}"  (click)="filterQuotes('Unassigned Leads','unassignLeads')">{{"Unassigned Leads" | translate}} ({{countsList.unassignLeads}})</button>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Unassigned Leads'}"  (click)="filterQuotes('Unassigned Leads','unassignLeads')">{{"Unassigned" | translate}} ({{countsList.unassignLeads}})</button>
                         </li>
                     </ul>
                 </div>

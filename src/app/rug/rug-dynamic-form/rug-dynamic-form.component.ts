@@ -6440,7 +6440,7 @@ export class RugDynamicFormComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
   getBbRelations(control: any){
-    if(this.formSequence[this.getFormIndexValue()].formName == "Add Nominee" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
+    if(this.formSequence[this.getFormIndexValue()].formName == "Add Nominee" || this.formSequence[this.getFormIndexValue()].formName == "Nominee & Bank Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
       this.yatraService.getRelations().subscribe({
         next: (response: any) => {
           response = JSON.parse(response.data).data;

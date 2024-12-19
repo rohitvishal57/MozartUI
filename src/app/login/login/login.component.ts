@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -54,7 +54,8 @@ export class LoginComponent implements OnInit {
     public dialog: MatDialog,
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private ngZone: NgZone
   ) {
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required]],
@@ -304,16 +305,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onKey(event: KeyboardEvent, index: number) {
-    event.preventDefault();
+  onKey(event: KeyboardEvent, index: number): void {
+    event.preventDefault();  
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;
   
       if (index < 5) {
-        setTimeout(() => {
-          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-          nextInput && nextInput.focus();
-        }, 50);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
+          }, 50);
+        });
       } else {
         const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
         btnElement && btnElement.focus();
@@ -324,33 +327,36 @@ export class LoginComponent implements OnInit {
       this.otp[index] = '';
   
       if (index > 0) {
-        setTimeout(() => {
-          const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
-          previousInput && previousInput.focus();
-        }, 50);
-      }
-
-    } else if (event.key === 'Tab') {
-      event.preventDefault();
-  
-      if (event.shiftKey) {
-        if (index > 0) {
+        this.ngZone.run(() => {
           setTimeout(() => {
             const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
             previousInput && previousInput.focus();
           }, 50);
-        }
-      } else {
-        if (index < 5) {
-          setTimeout(() => {
-            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-            nextInput && nextInput.focus();
-          }, 50);
-        } else {
-          const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
-          btnElement && btnElement.focus();
-        }
+        });
       }
+  
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      this.ngZone.run(() => {
+        if (event.shiftKey) {
+          if (index > 0) {
+            setTimeout(() => {
+              const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
+              previousInput && previousInput.focus();
+            }, 50);
+          }
+        } else {
+          if (index < 5) {
+            setTimeout(() => {
+              const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+              nextInput && nextInput.focus();
+            }, 50);
+          } else {
+            const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
+            btnElement && btnElement.focus();
+          }
+        }
+      });
     }
   }
 

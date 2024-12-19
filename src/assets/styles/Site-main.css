@@ -806,7 +806,7 @@ button {
   background: var(--site-body-bg);
   border: 1px solid var(--site-body-bg);
   border-radius: 16px;
-  padding: 9px 12px 7px;
+  padding: 9px 10px 7px;
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
@@ -1997,6 +1997,9 @@ input[type="search"]::-webkit-search-results-decoration {
   /* background: var(--bg-verylight-grey); */
   background: var(--site-body-bg);
     min-height: 100vh;
+}
+.siteBody_padding {
+  padding-bottom: 6rem;
 }
 .siteBody_renewJourney {
     background: var(--site-body-bg);
