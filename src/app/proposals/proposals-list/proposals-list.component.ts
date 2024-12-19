@@ -164,6 +164,14 @@ export class ProposalsListComponent {
     this.getProposalList();
   }
 
+  onQuotePageChange(event: any) {
+    debugger;
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getQuoteList(false);
+  }
+
 
   getProposal(){
     this.countsList = [];
