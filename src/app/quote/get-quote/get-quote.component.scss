@@ -1455,6 +1455,16 @@ h4 {
     top: 128px;
     width: 120px;
   }
+  .member_extraInfo {
+    right: 24px;
+  }
+  .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox{
+    width: 100px;
+  }
+  .input-checkbox-withIcon .input-checkbox-feild .input-check + label{
+    gap: 5px;
+    font-size: 11px;
+  }
 }
 
 .close-popup{
