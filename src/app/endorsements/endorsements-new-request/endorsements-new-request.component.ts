@@ -11,6 +11,7 @@ declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -112,25 +113,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       CtstID:"ABHI_Endorsement_Request21"
     }, */
   ];
-  relationships = [
-    "Brother",
-    "Brother in-law",
-    "Daughter in-law",
-    "Dependent Daughter",
-    "Dependent Son",
-    "Father",
-    "Father-In-Law",
-    "Granddaughter",
-    "Grandfather",
-    "Grandmother",
-    "Grandson",
-    "Mother",
-    "Mother-In-Law",
-    "Nephew",
-    "Sister",
-    "Sister in-law",
-    "Son in-law"
-  ];
+  relationships: any = [];
   filteredActivity: Observable<any[]> | any;
   selectedPolicyNumber: any;
   MemberIdList: any;
@@ -166,6 +149,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private _router: Router,
     private dialog: MatDialog,
     private ngZone: NgZone,
+    private yatraService: YatraService,
     private languageService: LanguageService,
     private translateService: TranslateService) {
       this.policyNoChangeSubject.pipe(
@@ -373,9 +357,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      if (this.externalPolicyData?.policyData?.[0]) {
-        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No || "No policy data available");
-      }
+      this.getNomineeRelationShipData();
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.currentNomineeDetails());
     }
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -439,6 +422,47 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = false;
     }
   }
+
+  getNomineeRelationShipData() {
+    this.yatraService.getNomineeRelationship().subscribe({
+      next: (res: any) => {
+        this.relationships = res?.data
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  currentNomineeDetails(): string {
+    const nomineeFirstName = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name;
+    const relationship = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship;
+    const nomineeContactNo = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No;
+  
+    let policyDetails = "";
+  
+    if (nomineeFirstName || relationship || nomineeContactNo) {
+      if (nomineeFirstName) {
+        policyDetails += nomineeFirstName;
+      }
+      if (nomineeFirstName && (relationship || nomineeContactNo)) {
+        policyDetails += ", ";
+      }
+      if (relationship) {
+        policyDetails += relationship;
+      }
+      if ((relationship || nomineeFirstName) && nomineeContactNo) {
+        policyDetails += ", ";
+      }
+      if (nomineeContactNo) {
+        policyDetails += nomineeContactNo;
+      }
+    } else {
+      policyDetails = "No policy data available";
+    }
+  
+    return policyDetails;
+  }  
 
   onKeydown(e: any) {
     return Helper.isNumberValidation(e);

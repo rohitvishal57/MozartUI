@@ -147,8 +147,8 @@
                       <div class="input-block form-floating input-block-renew">
                         <select class="form-select input-selectBox" id="nomineeRelationship" name="nomineeRelationship" formControlName="nomineeRelationship">
                           <option value="" disabled selected>{{"Select Nominee" | translate}}</option>
-                          <option *ngFor="let opt of relationships" [value]="opt">
-                            {{ opt | translate }}
+                          <option *ngFor="let opt of relationships" [value]="opt.value">
+                            {{ opt.name | translate }}
                           </option>
                         </select>
                         <label for="nomineeRelationship">{{"Nominee Relationship" | translate}}</label>
