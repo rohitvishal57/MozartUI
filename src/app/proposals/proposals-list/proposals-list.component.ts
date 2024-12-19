@@ -185,6 +185,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposalStatus="";
     this.searchInputControl.reset();
     this.selected ='';
+    this.selectedView = 'list';
     this.getProposalList() ;
   }
 
@@ -230,6 +231,7 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.quoteId = "";
     this.searchInputControl.reset("");
     this.selected ='';
+    this.selectedView = 'list';
     }
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
