@@ -378,9 +378,7 @@ toggleMoreInfo(index: number): void {
         if (response.isSuccess) {          
           const searchResponse = response.data.searchResponse;
           if (searchResponse && searchResponse[0]?.error?.length > 0) {
-            this.errorMessages = searchResponse[0].error
-              .map((err: any) => err.description)
-              .join(', ');
+            this.errorMessages = "No documents are available to download."
             this.documents = []; 
             return;
           }

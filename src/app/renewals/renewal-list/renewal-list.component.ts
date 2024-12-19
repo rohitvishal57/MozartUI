@@ -456,8 +456,8 @@ export class RenewalListComponent {
               const searchResponse = response.data.searchResponse;
               console.log("search Response", searchResponse);
               if (searchResponse && searchResponse[0]?.error?.length > 0) {
-                const errorMessages = searchResponse[0].error.map((err: any) => err.description).join(', ');
-                this.toast.error({ detail: "", summary: errorMessages, duration: 3000 });
+                const errorMessages ="No documents are available to download."
+                this.toast.warning({ detail: "", summary: errorMessages, duration: 3000 });
                 return;
               }
               else {
