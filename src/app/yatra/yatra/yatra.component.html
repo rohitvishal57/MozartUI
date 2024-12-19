@@ -163,7 +163,21 @@
                     </div>
                   </div>
                 </div>
-
+                <div *ngIf="control.type === 'displaycovers'" [class]="control.class" class="typecss typecss_summary"
+                [hidden]="!control.visible">
+                <div class="label-value-container">
+                  <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
+                    translate) : '' }}</label>
+                  <ul *ngIf="control.value && control.value.length > 0">
+                    <li *ngFor="let coverName of control.value" class="value-text">
+                      {{ coverName }}
+                    </li>
+                  </ul>
+                  <div *ngIf="!control.value || control.value.length === 0" class="value-text">
+                    No covers selected.
+                  </div>
+                </div>
+              </div>
                 <div *ngIf="control.type==='select'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
                   <div class="input-container">
