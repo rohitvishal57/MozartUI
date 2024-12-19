@@ -4315,7 +4315,7 @@ export class YatraComponent {
             const taxKey = `t${i}TaxAmount`;
             this.QuoteNumber.push(res.data[Quote]);
 
-            this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
+            this.tenureAmount[i - 1] = res.data[premiumKey]? Math.round(res.data[premiumKey]) : 0;
             this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
             this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
@@ -5213,6 +5213,12 @@ export class YatraComponent {
 
     })
     if (this.selectedIndex == -1) {
+      console.log(this.tenureAmount.length,this.tenureAmount);
+      if(this.tenureAmount.length>0){
+        const filteredLength = this.tenureAmount.filter(num => num !== 0).length;
+        this.selectedIndex = filteredLength-1;
+      }
+      else
       this.selectedIndex = 2;
     }
     this.form.formSections.forEach((section: any) => {
