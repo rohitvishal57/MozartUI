@@ -6,7 +6,19 @@ import { Router } from '@angular/router';
 import { NgToastService } from "ng-angular-popup";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
-
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+interface ReferenceData {
+  proposalNum?: string;
+  leadNumber?: string;
+  name: string;
+  phoneNumber: string;
+}
+interface ApiResponse {
+  isSuccess: boolean;
+  statusCode: number;
+  message: string;
+  data: ReferenceData[];
+}
 @Component({
   selector: 'app-events-new',
   templateUrl: './events-new.component.html',
@@ -15,6 +27,19 @@ import { LanguageService } from 'src/app/services/language.service';
 export class EventsNewComponent implements OnInit {
   saveEvent!: FormGroup;
   isSubmitting = false;
+  isLoading = false;
+  showNameMobile = true;
+  filteredReferenceList: ReferenceData[] = [];
+  eventNumber: any;
+  private referenceSearchSubject = new Subject<string>();
+
+  agentCode = localStorage.getItem('agentCode')
+  eventTypes = [
+    { value: 'lead', label: 'Lead Number' },
+    { value: 'proposal', label: 'Proposal Number' },
+    { value: 'others', label: 'Others' }
+  ];
+  referenceList: ReferenceData[] = [];
 
   activityTypes = [
     { value: 'Callback', label: 'Callback' },
@@ -49,11 +74,15 @@ export class EventsNewComponent implements OnInit {
       });
     });
     this.saveForm();
+    this.subscribeToEventTypeChanges();
   }
 
   saveForm(): void {
     this.saveEvent = this.fb.group({
-      agentCode: localStorage.getItem('agentCode'),
+      agentCode: this.agentCode,
+      id:0,
+      eventType: ['', Validators.required],
+      eventNumber: [''],
       customerName: ['',  [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]],
       mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       activityTitle: ['', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]],
@@ -126,6 +155,128 @@ export class EventsNewComponent implements OnInit {
       this.saveEvent.markAllAsTouched();
     }
   }
+  setupReferenceSearch() {
+    this.referenceSearchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.filterReferenceListInternal(searchTerm);
+    });
+  }
+
+  filterReferenceList(event: any) {
+    const input = (event.target as HTMLInputElement).value.trim();
+    
+    this.saveEvent.patchValue({
+      customerName: '',
+      mobileNumber: ''
+    });
+
+    this.referenceSearchSubject.next(input);
+  }
+
+  filterReferenceListInternal(searchTerm: string) {
+    if (!searchTerm) {
+      this.filteredReferenceList = this.referenceList;
+      return;
+    }
+
+    const eventType = this.saveEvent.get('eventType')?.value;
+    
+    this.filteredReferenceList = this.referenceList.filter(item => {
+      this.eventNumber = eventType === 'proposal' 
+        ? item.proposalNum 
+        : item.leadNumber;
+      
+      return this.eventNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  }
+
+  onReferenceNumberSelect(selectedNumber?: string) {
+    const eventNumber = selectedNumber || this.saveEvent.get('eventNumber')?.value;    
+    const eventType = this.saveEvent.get('eventType')?.value;
+
+    const selectedReference = this.referenceList.find(item => 
+      eventType === 'proposal' 
+        ? item.proposalNum === eventNumber
+        : item.leadNumber === eventNumber
+    );
+
+    if (selectedReference) {
+      this.saveEvent.patchValue({
+        customerName: selectedReference.name,
+        mobileNumber: selectedReference.phoneNumber
+      });
+    }
+  }
+  subscribeToEventTypeChanges() {
+      this.saveEvent.get('eventType')?.valueChanges.subscribe(type => {
+      this.saveEvent.get('eventNumber')?.reset();
+      this.saveEvent.get('customerName')?.reset();
+      this.saveEvent.get('mobileNumber')?.reset();
+
+      switch(type) {
+        case 'proposal':
+          this.showNameMobile = true;
+          this.fetchReferenceData('proposal');
+          break;
+        case 'lead':
+          this.showNameMobile = true;
+          this.fetchReferenceData('lead');
+          break;
+        case 'others':
+          this.showNameMobile = false;
+          this.referenceList = [];
+          break;
+      }
+    });
+  }
+
+  fetchReferenceData(type: string) {
+    this.isLoading = true;
+    this.referenceList = [];
+
+    const params = {
+      agentCode: this.agentCode
+    };
+
+    if (type === 'proposal') {
+      this.eventsService.getEventProposals(params).subscribe(
+        response => {
+          this.handleReferenceDataResponse(response);
+        },
+        error => {
+          this.handleReferenceDataError(error);
+        }
+      );
+    } else if (type === 'lead') {
+      this.eventsService.getEventLeads(params).subscribe(
+        response => {
+          this.handleReferenceDataResponse(response);
+        },
+        error => {
+          this.handleReferenceDataError(error);
+        }
+      );
+    }
+  }
+
+  private handleReferenceDataResponse(response: ApiResponse) {
+    this.isLoading = false;
+    if (response.isSuccess && response.data) {
+      this.referenceList = response.data;
+      this.filteredReferenceList = [...this.referenceList];
+    } else {
+      console.error('Error fetching data', response.message);
+    }
+  }
+
+  private handleReferenceDataError(error: any) {
+    this.isLoading = false;
+    console.error('Error fetching data', error);
+  }
+  
+ 
 
   navigateToListEvent() {
     this.route.navigate(["events/eventsList"]);
