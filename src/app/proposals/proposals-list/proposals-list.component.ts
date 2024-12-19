@@ -11,6 +11,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { GalleriaThumbnails } from 'primeng/galleria';
 
 @Component({
   selector: 'app-proposals-list',
@@ -176,6 +177,13 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.productVarientName= "";
     this.proposalListRequestBody.startDate = null;
     this.proposalListRequestBody.endDate = null;
+    this.proposalListRequestBody.mobileNumber = "";
+    this.proposalListRequestBody.proposer="";
+    this.proposalListRequestBody.proposalNumber="";
+    this.proposalListRequestBody.leadId="";
+    this.proposalListRequestBody.proposalStatus="";
+    this.searchInputControl.reset();
+    this.selected ='';
     this.getProposalList() ;
   }
 
@@ -215,6 +223,12 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.productVarientName= "";
     this.quoteListRequestBody.startDate = null;
     this.quoteListRequestBody.endDate = null;
+    this.quoteListRequestBody.mobileNumber = "";
+    this.quoteListRequestBody.proposalNumber = "";
+    this.quoteListRequestBody.name = "";
+    this.quoteListRequestBody.quoteId = "";
+    this.searchInputControl.reset("");
+    this.selected ='';
     }
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
@@ -370,6 +384,7 @@ export class ProposalsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
+  
   restrictInput(event: KeyboardEvent): void {
     if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
       event.preventDefault();
