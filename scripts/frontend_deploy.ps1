@@ -148,7 +148,8 @@ try {
     #New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
 
     # Add the HTTPS binding for the domain on port 443
-    New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
+    # New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
+    New-WebBinding -Name $SiteName -Protocol "https" -Port 443
 
     # Assign the SSL certificate to the binding
     $binding = Get-WebBinding -Name $SiteName -Protocol "https"
