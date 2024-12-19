@@ -1998,6 +1998,9 @@ input[type="search"]::-webkit-search-results-decoration {
   background: var(--site-body-bg);
     min-height: 100vh;
 }
+.siteBody_padding {
+  padding-bottom: 6rem;
+}
 .siteBody_renewJourney {
     background: var(--site-body-bg);
 }
