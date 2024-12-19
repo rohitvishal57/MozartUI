@@ -1200,12 +1200,20 @@ export class YatraComponent {
     return false;
   }
 
-  onCheckboxSelect(controlName: string) {
+  onCheckboxSelect(controlName: string, event? : any) {
     const control = this.dynamicFormGroup.get(controlName);
     console.log(control);
     if (control) {
       control.markAsTouched();
       control.updateValueAndValidity();
+    }
+    switch (controlName) {
+      case 'addressTitle1':
+        this.getPermanentAddressDetails(event.target.checked);
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -6870,6 +6878,17 @@ export class YatraComponent {
         console.log("error is coming from fullquote api");
       }
     );
+  }
+
+  getPermanentAddressDetails(flag : boolean){
+    if(flag){
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
+    } else {
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
+    }
+    
   }
 }
 

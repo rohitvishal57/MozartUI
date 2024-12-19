@@ -259,7 +259,7 @@
                   <div [class]="control.class" style="display: -webkit-box;">
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
                       [name]="control.name" id="{{control.name}}" class="checkbox-label"
-                      (change)="onCheckboxSelect(control.name)" />
+                      (change)="onCheckboxSelect(control.name, $event)"/>
                     <label [for]="control.name" [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
                       class="checkboxes"><span *ngIf="control.validators">*</span></label>
                   </div>
