@@ -5,7 +5,8 @@ param(
     [string]$DeployBaseDir,
     [string]$TaggedVersion,
     [string]$Port,
-    [string]$BindingHost
+    [string]$BindingHost,
+    [System.Security.SecureString]$PfxPassword 
 )
 
 # Create or Update Application Pool
@@ -91,10 +92,46 @@ try {
     exit 1
 }
 
-# Deploy New IIS Site
+# # Deploy New IIS Site
+# try {
+#     Write-Output "Creating new IIS website for: $SiteName"
+#     New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -HostHeader $BindingHost
+# } catch {
+#     Write-Output "Error while deploying new IIS site: $SiteName"
+#     Write-Output $_.Exception.Message
+#     exit 1
+# }
+
+# Path to the PFX certificate file
+$pfxPath = "C:\\Users\\ABHI\\Desktop\\monolensssl2024.pfx" # Update this with the actual path to your PFX file
+
+# Retrieve the pfxPassword from GitHub Secrets using the environment variable
+#$pfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
+
+# Deploy New IIS Site with HTTPS Binding
 try {
+    Write-Output "Importing SSL certificate from PFX file"
+
+    # Import the PFX certificate into the personal store
+    $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $PfxPassword
+
+    # Get the thumbprint of the imported certificate
+    $certThumbprint = $cert.Thumbprint
+    Write-Output "Certificate imported successfully with Thumbprint: $certThumbprint"
+
     Write-Output "Creating new IIS website for: $SiteName"
-    New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -HostHeader $BindingHost
+
+    # Create the website without bindings first (HTTP binding can be set if needed)
+    #New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
+
+    # Add the HTTPS binding for the domain on port 443
+    New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
+
+    # Assign the SSL certificate to the binding
+    $binding = Get-WebBinding -Name $SiteName -Protocol "https"
+    $binding.AddSslCertificate($certThumbprint, "My")
+
+    Write-Output "Successfully created IIS site and configured HTTPS binding for: $SiteName"
 } catch {
     Write-Output "Error while deploying new IIS site: $SiteName"
     Write-Output $_.Exception.Message
