@@ -163,5 +163,7 @@ export const environment = {
   fetchDashboardPreferences: "api/quote/GetDashboardPreference",
   SubmitDashboardPreferences: "api/quote/InsertDashboardPreference",
   getBankDetailsByIFSC:"api/rug/GetBankDetailsByIfsc",
-  fetchPennydropverification:"api/yatra/pennydropverification"
+  fetchPennydropverification:"api/yatra/pennydropverification",
+  downloadQuotePDf : "api/yatra/GeneratePDF",
+  seriveRequest : "api/auth/GenerateTokenAndSsoUrl"
 };

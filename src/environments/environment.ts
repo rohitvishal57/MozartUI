@@ -167,4 +167,3 @@ export const environment = {
   downloadQuotePDf : "api/yatra/GeneratePDF",
   seriveRequest : "api/auth/GenerateTokenAndSsoUrl"
 };
-
