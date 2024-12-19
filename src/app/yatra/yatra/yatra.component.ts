@@ -1769,6 +1769,26 @@ export class YatraComponent {
     return isAscending || isDescending || allSame;
   }
 
+  // getLabels(control: any) {
+  //   let startIdx = control.indexOf('{{');
+  //   let endIdx = control.indexOf('}}');
+  //   let string: any;
+  //   if (startIdx !== -1 && endIdx !== -1) {
+  //     string = control.slice(startIdx + 2, endIdx).trim();
+  //   }
+  //   switch (string) {
+  //     case 'actName':
+  //       return control.replace("{{actName}}", this.formData?.accountNumber);
+  //       break;
+  //     case 'emailId':
+  //       return control.replace("{{emailId}}", this.formData?.emailId);
+  //       break;
+  //     default:
+  //       return control
+  //       break;
+  //   }
+  // }
+
   getLabels(control: any) {
     let startIdx = control.indexOf('{{');
     let endIdx = control.indexOf('}}');
@@ -1776,18 +1796,22 @@ export class YatraComponent {
     if (startIdx !== -1 && endIdx !== -1) {
       string = control.slice(startIdx + 2, endIdx).trim();
     }
+  
     switch (string) {
       case 'actName':
-        return control.replace("{{actName}}", this.formData?.accountNumber);
-        break;
+        return control.replace('{{actName}}', this.formData?.accountNumber);
       case 'emailId':
-        return control.replace("{{emailId}}", this.formData?.emailId);
-        break;
+        const emailId = this.formData?.emailId;
+        if (emailId) {
+          const anchorTag = `<a href="mailto:${emailId}">${emailId}</a>`;
+          return control.replace('{{emailId}}', anchorTag);
+        }
+        return control; // Fallback if emailId is not available
       default:
-        return control
-        break;
+        return control;
     }
   }
+  
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {

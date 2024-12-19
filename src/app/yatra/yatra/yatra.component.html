@@ -209,10 +209,24 @@
                   <hr />
                 </div>
 
-                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
+                <!-- <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
                   <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
                   <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                </div> -->
+
+                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
+                  <ng-container *ngIf="control.name === 'consentBell'; else defaultParagraph">
+                    <div class="tipInfo_org tipInfo_buyflow">
+                      <img src="./assets/Img/icon_bell_org.svg" alt="Bell Icon" style="width: 15px;">
+                      <span [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></span>
+                    </div>
+                  </ng-container>
+                  <ng-template #defaultParagraph>
+                    <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
+                  </ng-template>
+                  <p *ngIf="control.value" [innerHTML]="control.value"></p>
                 </div>
+                
 
 
                 <div *ngIf="control.type === 'idnumber'" [class]="control.class" class="typecss">
