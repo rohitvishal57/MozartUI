@@ -12,6 +12,7 @@ import { searchValidationConfig } from 'src/app/interface/common-validation.inte
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GalleriaThumbnails } from 'primeng/galleria';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-proposals-list',
@@ -634,5 +635,46 @@ export class ProposalsListComponent {
   
   maskMobileNumber(mobileNumber: any): string {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
+  }
+
+
+  downloadQuote(proposalNum : any){
+    let requestBody : any ={};
+    requestBody.proposalID = proposalNum;
+    requestBody.generationType = "";
+    requestBody.isDownload = "";
+    this.proposalService.quoteDownloadPdf(requestBody).subscribe(
+      (response)=>{
+        if(response.isSuccess){
+          let  blob :any = '';
+          try{
+             blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
+          }catch(exception){
+            this.toast.error({ detail: "", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+          }
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = proposalNum +".pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          this.toast.success({ detail: "", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
+        }
+      },(error)=>{
+        console.log('failed to generate PDF ',error);
+      });
+  }
+
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
   }
 }
