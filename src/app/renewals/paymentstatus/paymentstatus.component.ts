@@ -15,7 +15,8 @@ import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 })
 export class PaymentstatusComponent {
   orderId: string | undefined;
-  paymentStatus: string | undefined
+  paymentStatus: string | undefined;
+  userType:string | undefined;
   constructor(private route: ActivatedRoute,
     private renewalService: RenewalsService,
     private router: Router,
@@ -32,13 +33,16 @@ export class PaymentstatusComponent {
       if (params['token']) {
         localStorage.setItem('token', 'aa59deee594c4c90abd5737929d0302e');
       }
+      if(params['userType']){
+        this.userType= params['userType']
+      }
     }
     this.getPaymentStatus();
   }
 
   getPaymentStatus() {
     const orderDetailsReq = {
-      "orderId": this.orderId,
+      orderId: this.orderId,
       businessType : "REN"
     }
     this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
@@ -46,7 +50,6 @@ export class PaymentstatusComponent {
         if (res.isSuccess) {
           const orderData = res.data.orderDetails;          
             if(res?.data?.paymentMethod == 'emandate_payment'){
-
               const reqData = {
                 agentcode: localStorage.getItem('agentCode'),
                 proposalNumber: '',
@@ -55,7 +58,8 @@ export class PaymentstatusComponent {
                 policyType: 'Renewal',
                 policyNumber: orderData?.policyNumber,
                 quoteNumber: '',
-                ProductName: res.data.productName
+                ProductName: res.data.productName,
+                userType:this.userType
               };
               this.yatraService.justPayRedirection(reqData).subscribe(
                 (response:any)=>{
@@ -66,22 +70,22 @@ export class PaymentstatusComponent {
                   console.log('error',error);
                 });
             }else if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
-            this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
-            const formData = {
-              productName: res.data.productName,
-              ...res.data.orderDetails,
-            };            
-            this.router.navigate(['renewal/renewalJourney'], {
-              state: {
-                formData: this.encryptionService.encrypt(formData),
-                proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
-                journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                paymentStatus: this.encryptionService.encrypt(res.data.paymentStatus),
-                formIndex: "1",
-              }
-            });
+                this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
+                const formData = {
+                  productName: res.data.productName,
+                  ...res.data.orderDetails,
+                };            
+                this.router.navigate(['renewal/renewalJourney'], {
+                  state: {
+                    formData: this.encryptionService.encrypt(formData),
+                    proposalNum: this.encryptionService.encrypt(""),
+                    policyNumber: this.encryptionService.encrypt(orderData.policyNumber),
+                    journeyProcess: this.encryptionService.encrypt(0),
+                    formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                    paymentStatus: this.encryptionService.encrypt(res.data.paymentStatus),
+                    formIndex: "1",
+                  }
+                });
           } else if(res.data.paymentStatus == 'INPROGRESS'|| res.data.paymentStatus == 'PENDING'){
             this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
             this.router.navigate(['renewal/renewalList'], {

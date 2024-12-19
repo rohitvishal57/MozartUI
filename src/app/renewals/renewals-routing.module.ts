@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: "quote", component: SubQuotesComponent },
   { path: "paymentstatus",component:PaymentstatusComponent},
   { path: "customerRenewalJourney",component:RenewalJourneyComponent},
-  { path: "kycStatus",component:KycStatusComponent}
+  { path: "kycStatus",component:KycStatusComponent},
+  { path: "customer/kycStatus",component:KycStatusComponent}
 ];
 
 @NgModule({

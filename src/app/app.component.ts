@@ -49,7 +49,10 @@ export class AppComponent {
       '/mycommissions'
     ];
     const explicitInvalidPaths = [
-      '/renewal/customerRenewalJourney', // Add more paths that should always hide the navbar
+      '/renewal/customerPayment', // Add more paths that should always hide the navbar
+      'yatra/customerKyc',
+      'renewal/customerKyc',
+      '/yatra/customerPayment'
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
       return true;

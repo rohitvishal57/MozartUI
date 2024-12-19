@@ -30,32 +30,35 @@ export const customer_payment={
             "type": "text"
           },
           {
-            "name": "enach",
+            "name": "emandate_payment",
             "label": "E-Nach",
             "visibleLabel": false,
             "visible": true,
             "type": "button",
+            "dependentControls": ["nextOnline"],
             "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
             "methodName": "onButtonClick"
           },
-          {
-            "name": "eMandate",
-            "label": "E-Mandate",
-            "visibleLabel": false,
-            "visible": true,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
-            "methodName": "onButtonClick"
-          },
-          {
-            "name": "autoDebit",
+            {
+              "name": "autoDebit",
             "label": "Auto Debit",
             "visibleLabel": false,
             "visible": true,
             "type": "button",
+            "dependentControls": ["nextOnline"],
             "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-AutoDebit",
             "methodName": "onButtonClick"
-          }
+          },
+          {
+            "name": "online",
+            "label": "Online",
+            "visibleLabel": false,
+            "visible": true,
+            "type": "button",
+            "dependentControls": ["nextOnline"],
+            "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
+            "methodName": "onButtonClick"
+          },
         ]
       },
       {
@@ -95,23 +98,14 @@ export const customer_payment={
             "disabled": true
           },
           {
-            "name": "next",
+            "name": "nextOnline",
             "label": "Next",
             "visibleLabel": false,
-            "visible": true,
+            "visible": false,
             "type": "button",
             "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "onSubmit"
+            "methodName": "redirectToJustPay"
           },
-          {
-            "name": "back",
-            "label": "Back",
-            "visibleLabel": false,
-            "visible": true,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 back-btn",
-            "methodName": "onPrevious"
-          }
         ]
       }
     ]
