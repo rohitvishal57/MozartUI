@@ -3078,6 +3078,14 @@ margin: 0;
         margin-bottom: 6px !important;
     }
 }
+.main-container .right-panel .typecss.typecss_proposalNumber {
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.main-container .right-panel .typecss_proposalNumber .boldtext_input{
+    width: 180px;
+}
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
         display: flex;
@@ -3108,10 +3116,13 @@ margin: 0;
     .typecss_summary {
         width: 50%;
     }
-    .plandetails_summary {
+    .bottom-section-axis .plandetails_summary {
         width: 100%;
     }
     .typecss_proposalNumber {
         padding-bottom: 5px !important;
+    }
+    .main-container .right-panel .acceptTermsCheck .checkboxes {
+        width: 90%;
     }
 }

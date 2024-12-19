@@ -168,7 +168,7 @@
                 <div class="label-value-container">
                   <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                     translate) : '' }}</label>
-                  <ul *ngIf="control.value && control.value.length > 0">
+                  <ul class="ul_addon_policySummary" *ngIf="control.value && control.value.length > 0">
                     <li *ngFor="let coverName of control.value" class="value-text">
                       {{ coverName }}
                     </li>
