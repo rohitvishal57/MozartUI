@@ -92,16 +92,6 @@ try {
     exit 1
 }
 
-# # Deploy New IIS Site
-# try {
-#     Write-Output "Creating new IIS website for: $SiteName"
-#     New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -HostHeader $BindingHost
-# } catch {
-#     Write-Output "Error while deploying new IIS site: $SiteName"
-#     Write-Output $_.Exception.Message
-#     exit 1
-# }
-
 # Path to the PFX certificate file
 $pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" 
 
@@ -109,17 +99,6 @@ $pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx"
 if (-not (Test-Path $pfxPath)) {
     throw "The PFX file does not exist at the specified path: $pfxPath"
 }
-
-# Retrieve the pfxPassword from GitHub Secrets using the environment variable
-#$pfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
-
-# Function to convert plain text password to SecureString
-# function ConvertTo-SecureStringFromPlainText {
-#     param (
-#         [string]$plainPass
-#     )
-#     return ConvertTo-SecureString -String $plainPassword -AsPlainText -Force
-# }
 
 # Deploy New IIS Site with HTTPS Binding
 try {
@@ -144,8 +123,10 @@ try {
 
     Write-Output "Creating new IIS website for: $SiteName"
 
-    # Create the website without bindings first (HTTP binding can be set if needed)
-    #New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
+    # Create the new IIS website
+    New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -Port $Port -HostHeader $BindingHost
+
+    Write-Output "Successfully created IIS site: $SiteName"
 
     # Add the HTTPS binding for the domain on port 443
     # New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
