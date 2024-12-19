@@ -103,7 +103,7 @@ try {
 # }
 
 # Path to the PFX certificate file
-$pfxPath = "C:\\Users\\ABHI\\Desktop\\monolensssl2024.pfx" # Update this with the actual path to your PFX file
+$pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" # Update this with the actual path to your PFX file
 
 # Retrieve the pfxPassword from GitHub Secrets using the environment variable
 #$pfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
