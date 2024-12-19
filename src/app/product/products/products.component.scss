@@ -484,7 +484,8 @@
                         filter: brightness(0.5) invert(1);
                     }
                     &:hover {
-                        color: #767d93;
+                        /* color: #767d93; */
+                        color: #c7222a;
                         img {
                             filter: brightness(0) invert(0);
                             opacity: 0.5;
