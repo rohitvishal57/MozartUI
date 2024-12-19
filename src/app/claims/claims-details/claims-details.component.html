@@ -337,7 +337,7 @@
                                         <div class="col-12">
                                             <div class="tracker_claimDetails">
                                                 <div class="main_claimProgressSteps">
-                                                    <div class="submain_claimProgressSteps">
+                                                    <div class="submain_claimProgressSteps" *ngIf="customeStepperStatuses.length > 0">
                                                         <div class="item_claimProgressSteps"
                                                             *ngFor="let status of customeStepperStatuses"
                                                             [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
@@ -357,9 +357,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="item_claimProgressInfo" *ngIf="statusMessage">
-                                                    {{statusMessage}}</div>
-
+                                                <div class="item_claimProgressInfo" *ngIf="statusMessage && customeStepperStatuses.length > 0">{{statusMessage}}</div>
                                                 <div class="item_claimProgressButtons">
                                                     <button type="button" name="claimshistory" id="claimshistory"
                                                         class="btn_iconText" (click)="toggleViewDetails()">

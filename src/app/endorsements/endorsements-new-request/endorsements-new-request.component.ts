@@ -672,7 +672,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       disableClose: true,
       data: { 
         title: 'Endorsement',
-        id: `Endorsement Id: ${resp.data.response.caseId}`
+        id: `Endorsement No: ${resp.data.response.caseId}`
       },
     });
 

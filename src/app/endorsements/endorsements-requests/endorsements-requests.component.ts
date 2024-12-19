@@ -284,7 +284,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   getPlaceholder(): string {
     if (this.selected === "caseId") {
-      return "Enter Endorsement Id";
+      return "Enter Endorsement No.";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
     } else if (this.selected === "policyNumber") {

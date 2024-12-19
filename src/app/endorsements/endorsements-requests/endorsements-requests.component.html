@@ -24,7 +24,7 @@
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">{{"Select an option" | translate}}</option>
-                                    <option value="caseId">{{"Endorsement Id" | translate}}</option>
+                                    <option value="caseId">{{"Endorsement No." | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberName">{{"Member Name" | translate}}</option>
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
@@ -39,7 +39,7 @@
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement No." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter Valid Member Name." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter Valid Mobile Number." | translate}}</small>
@@ -124,7 +124,7 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">{{"Endorsement Id" | translate}}</th>
+                                <th scope="col">{{"Endorsement No." | translate}}</th>
                                 <th scope="col">{{"Policy Number" | translate}}</th>
                                 <th scope="col">{{"Product Name" | translate}}</th>
                                 <th scope="col">{{"Member Name" | translate}}</th>

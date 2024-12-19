@@ -156,11 +156,9 @@ export class ClaimsDetailsComponent {
  
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
-        this.status = response.data;
-      //  this.statusMessage = response.data.notes;
-        console.log('ststu', this.status, response, this.statusMessage);
-        
-        (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
+        this.status = response?.data;
+        this.statusMessage = response?.data?.notes;        
+        (response?.data?.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
       },
       (error: any) => {
         console.error("Error fetching claim details", error);
@@ -175,7 +173,7 @@ export class ClaimsDetailsComponent {
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data;        
+        this.customeStepperStatuses = response?.data;        
         this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });

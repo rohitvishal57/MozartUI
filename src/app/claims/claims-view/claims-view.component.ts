@@ -1174,8 +1174,8 @@ memberIdChange(event: any): void {
       width: '400px',
       disableClose: true,
       data: {
-        title: 'Claims',
-        id: `Claim Id: ${resp.data.claim_Number}`,
+        title: 'Claim',
+        id: `Claim No: ${resp.data.claim_Number}`,
       },
     });
  
