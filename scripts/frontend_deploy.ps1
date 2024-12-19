@@ -123,15 +123,15 @@ if (-not (Test-Path $pfxPath)) {
 
 # Deploy New IIS Site with HTTPS Binding
 try {
-    
+
     # Convert plaintext password to SecureString
-    if (-not $PfxPassword) {
+    if (-not $PfxPass) {
         throw "PfxPassword parameter is null or not passed correctly."
     } else {
         Write-Output "PfxPassword received successfully."
     }
 
-    $securePassword = ConvertTo-SecureString -String $PfxPassword -AsPlainText -Force
+    $securePassword = ConvertTo-SecureString -String $PfxPass -AsPlainText -Force
 
     Write-Output "Importing SSL certificate from PFX file: $pfxPath"
 
