@@ -124,13 +124,13 @@ try {
     Write-Output "Creating new IIS website for: $SiteName"
 
     # Create the new IIS website
-    New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -Port $Port -HostHeader $BindingHost
+    New-WebSite -Name $SiteName -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -Port 443 -HostHeader $BindingHost -Protocol "https"
 
     Write-Output "Successfully created IIS site: $SiteName"
 
     # Add the HTTPS binding for the domain on port 443
     # New-WebBinding -Name $SiteName -BindingInformation "*:443:" -Protocol "https"
-    New-WebBinding -Name $SiteName -Protocol "https" -Port 443
+    # New-WebBinding -Name $SiteName -Protocol "https" -Port 443
 
     # Assign the SSL certificate to the binding
     $binding = Get-WebBinding -Name $SiteName -Protocol "https"
