@@ -129,7 +129,8 @@ export class YatraComponent {
   pennyDropVerficationDetails: any;
   transactionId: string | undefined;
   orderId: any;
-
+  city: string = '';
+  state: string = '';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -769,7 +770,7 @@ export class YatraComponent {
               });
               this.dynamicFormGroup.addControl(control.name, controlGroup);
             }
-            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary','displaycovers'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -1200,12 +1201,20 @@ export class YatraComponent {
     return false;
   }
 
-  onCheckboxSelect(controlName: string) {
+  onCheckboxSelect(controlName: string, event? : any) {
     const control = this.dynamicFormGroup.get(controlName);
     console.log(control);
     if (control) {
       control.markAsTouched();
       control.updateValueAndValidity();
+    }
+    switch (controlName) {
+      case 'addressTitle1':
+        this.getPermanentAddressDetails(event.target.checked);
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -1760,6 +1769,26 @@ export class YatraComponent {
     return isAscending || isDescending || allSame;
   }
 
+  // getLabels(control: any) {
+  //   let startIdx = control.indexOf('{{');
+  //   let endIdx = control.indexOf('}}');
+  //   let string: any;
+  //   if (startIdx !== -1 && endIdx !== -1) {
+  //     string = control.slice(startIdx + 2, endIdx).trim();
+  //   }
+  //   switch (string) {
+  //     case 'actName':
+  //       return control.replace("{{actName}}", this.formData?.accountNumber);
+  //       break;
+  //     case 'emailId':
+  //       return control.replace("{{emailId}}", this.formData?.emailId);
+  //       break;
+  //     default:
+  //       return control
+  //       break;
+  //   }
+  // }
+
   getLabels(control: any) {
     let startIdx = control.indexOf('{{');
     let endIdx = control.indexOf('}}');
@@ -1767,18 +1796,22 @@ export class YatraComponent {
     if (startIdx !== -1 && endIdx !== -1) {
       string = control.slice(startIdx + 2, endIdx).trim();
     }
+  
     switch (string) {
       case 'actName':
-        return control.replace("{{actName}}", this.formData?.accountNumber);
-        break;
+        return control.replace('{{actName}}', this.formData?.accountNumber);
       case 'emailId':
-        return control.replace("{{emailId}}", this.formData?.emailId);
-        break;
+        const emailId = this.formData?.emailId;
+        if (emailId) {
+          const anchorTag = `<a href="mailto:${emailId}">${emailId}</a>`;
+          return control.replace('{{emailId}}', anchorTag);
+        }
+        return control; // Fallback if emailId is not available
       default:
-        return control
-        break;
+        return control;
     }
   }
+  
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
@@ -2176,11 +2209,14 @@ export class YatraComponent {
       if (selectedPrefix === 'Mr') {
         this.dynamicFormGroup.get('proposerGender')?.setValue('M');
       }
-      else if (selectedPrefix === 'Mrs') {
+      else if (selectedPrefix === 'Mrs' || selectedPrefix === 'Ms' || selectedPrefix === 'Miss') {
         this.dynamicFormGroup.get('proposerGender')?.setValue('F');
       }
-      else {
+      else if (selectedPrefix === 'Mx' || selectedPrefix === 'Others') {
         this.dynamicFormGroup.get('proposerGender')?.setValue('O');
+      }
+      else {
+        this.dynamicFormGroup.get('proposerGender')?.setValue('-');
       }
     }
     if (control.name == "chequeDate") {
@@ -3581,7 +3617,7 @@ export class YatraComponent {
             }
 
             this.quickQuoteRedirect = false;
-            console.log(this.isQuote);
+            console.log(this.isQuote,this.formData);
           },
           error: (err) => {
             console.error(err);
@@ -4790,6 +4826,8 @@ export class YatraComponent {
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    console.log(addOnData);
+    
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
@@ -4798,7 +4836,7 @@ export class YatraComponent {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
             const coverId = addOnData.addOnId;
-            const coverName = addOnData.additionalCoverName;
+            const coverName = addOnData.optionalCoverName;
             let coverFound = false;
 
             if (!member.covers) {
@@ -5264,7 +5302,21 @@ export class YatraComponent {
     control.value = a;
     console.log(control, this.formData, a);
   }
-
+  displaySelectedAddons(control: any) {
+    console.log("FORM DATA", this.formData);
+    const coverNames: string[] = [];  
+    for (const key in this.formData) {
+      if (this.formData.hasOwnProperty(key)) {
+        const addon = this.formData[key];
+        if (addon && addon.addOnCover === true) {
+          coverNames.push(addon.optionalCoverName || addon.additionalCoverName);
+        }
+      }
+    }
+    control.value = coverNames;
+    console.log("Selected Cover Names: ", coverNames);
+  }
+  
   selectEditField(control: any) {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
@@ -6594,7 +6646,7 @@ export class YatraComponent {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
-  shareKycURL() {
+  shareKycURL(control:any) {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
@@ -6613,11 +6665,15 @@ export class YatraComponent {
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
         console.log("kycResponseBody", res);
-        this.toast.success({
-          detail: "SUCCESS",
-          summary: res.message,
-          duration: 3000,
-        });
+        if(res.data.isShareKyc){
+          this.toast.success({
+            detail: "SUCCESS",
+            summary: res.message,
+            duration: 3000,
+          });
+        }
+        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
         console.log(err);
@@ -6870,6 +6926,30 @@ export class YatraComponent {
         console.log("error is coming from fullquote api");
       }
     );
+  }
+
+  getPermanentAddressDetails(flag : boolean){
+    if(flag){
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
+    } else {
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
+    }
+    
+  }
+
+  getCityStateByPin(){
+    const reqData = {
+      "pincode": this.formData.proposerPincode
+    }
+    this.commonService.getPinCodeByCity(reqData).subscribe(res=>{
+      if (res.isSuccess && res.data) {
+        // Update city and state fields
+        this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
+        this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
+      }
+    });
   }
 }
 

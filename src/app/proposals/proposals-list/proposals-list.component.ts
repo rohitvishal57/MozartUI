@@ -11,6 +11,8 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { GalleriaThumbnails } from 'primeng/galleria';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-proposals-list',
@@ -162,6 +164,14 @@ export class ProposalsListComponent {
     this.getProposalList();
   }
 
+  onQuotePageChange(event: any) {
+    debugger;
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getQuoteList(false);
+  }
+
 
   getProposal(){
     this.countsList = [];
@@ -171,11 +181,22 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
+    this.searchInputControl.reset();
+    this.selected ='';
+    this.selectedView = 'list';
+    this.first = 0;
+    this.rows = 10;
+    this.page =1;
     this.proposalListRequestBody.pageNumber = this.page;
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalListRequestBody.productVarientName= "";
     this.proposalListRequestBody.startDate = null;
     this.proposalListRequestBody.endDate = null;
+    this.proposalListRequestBody.mobileNumber = "";
+    this.proposalListRequestBody.proposer="";
+    this.proposalListRequestBody.proposalNumber="";
+    this.proposalListRequestBody.leadId="";
+    this.proposalListRequestBody.proposalStatus="";
     this.getProposalList() ;
   }
 
@@ -210,11 +231,21 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
+    this.searchInputControl.reset("");
+    this.selected ='';
+    this.selectedView = 'list';
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     this.quoteListRequestBody.pageNumber = this.page;
     this.quoteListRequestBody.pageSize = this.rows;
     this.quoteListRequestBody.productVarientName= "";
     this.quoteListRequestBody.startDate = null;
     this.quoteListRequestBody.endDate = null;
+    this.quoteListRequestBody.mobileNumber = "";
+    this.quoteListRequestBody.proposalNumber = "";
+    this.quoteListRequestBody.name = "";
+    this.quoteListRequestBody.quoteId = "";
     }
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
@@ -370,6 +401,7 @@ export class ProposalsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
+  
   restrictInput(event: KeyboardEvent): void {
     if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
       event.preventDefault();
@@ -619,5 +651,46 @@ export class ProposalsListComponent {
   
   maskMobileNumber(mobileNumber: any): string {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
+  }
+
+
+  downloadQuote(proposalNum : any){
+    let requestBody : any ={};
+    requestBody.proposalID = proposalNum;
+    requestBody.generationType = "";
+    requestBody.isDownload = "";
+    this.proposalService.quoteDownloadPdf(requestBody).subscribe(
+      (response)=>{
+        if(response.isSuccess){
+          let  blob :any = '';
+          try{
+             blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
+          }catch(exception){
+            this.toast.error({ detail: "", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+          }
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = proposalNum +".pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          this.toast.success({ detail: "", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
+        }
+      },(error)=>{
+        console.log('failed to generate PDF ',error);
+      });
+  }
+
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
   }
 }

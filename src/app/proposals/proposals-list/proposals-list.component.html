@@ -257,8 +257,12 @@
                                                             title="Edit" class="btn_action btn_editAction"
                                                             (click)="redirect(row)"><img
                                                                 src="assets/Img/icon_edit_grey.svg"></button>
+                                                        <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadQuote(row.proposalNumber)"  title="Download Quote"><img
+                                                                    src="assets/Img/icon_download_grey.svg">        
+                                                               </button>
                                                     </div>
-                                                </td>
+                                               
+                                                  </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -372,8 +376,7 @@
                         </section>
                     </div>
                 </div>
-            </div>
-
+        
             <!--Tab Content: Notifications start-->
             <div class="tab-pane fade" id="tab-quotes" role="tabpanel" aria-labelledby="tab-quotes-tab">
                 <div class="body_flex_column">
@@ -419,7 +422,7 @@
                                             <option id="proposalNumberOption" name="proposalNumberOption"
                                                 value="proposalNumber">
                                                 {{"Proposal Number" | translate}}</option>
-                                            <option id="proposalQuoteOption" name="proposalQuoteOption" value="quoteId">
+                                            <option id="proposalQuoteOption" name="proposalQuoteId" value="quoteId">
                                                 {{"Quote ID" | translate}}</option>
 
 
@@ -580,7 +583,7 @@
                                 <ul class="pagination">
                                     <li class="page-item">
                                         <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onQuotePageChange($event)"
                                             class="custom-paginator my-paginator">
                                         </p-paginator>
                                     </li>
@@ -644,7 +647,7 @@
                                 <ul class="pagination">
                                     <li class="page-item">
                                         <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onQuotePageChange($event)"
                                             class="custom-paginator my-paginator">
                                         </p-paginator>
                                     </li>
@@ -668,6 +671,7 @@
                     </section>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </main>

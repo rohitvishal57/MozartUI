@@ -66,7 +66,7 @@ const routes: Routes = [
     loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
   },
   {
-    path: 'customers',
+    path: '',
     loadChildren: () => import("./customers/customers.module").then((m) => m.CustomersModule)
   },
   {
@@ -84,6 +84,10 @@ const routes: Routes = [
   {
     path: 'performance',
     loadChildren: () => import("./performance/performance.module").then((m) => m.PerformanceModule)
+  },
+  {
+    path: 'portal',
+    loadChildren: () => import("./portal/portal.module").then((m) => m.PortalModule)
   },
   {
     path: '**',

@@ -186,9 +186,9 @@ export class RenewalListComponent {
       if (stateData.paymentStatus) {
         const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
         if(paymentStatus == "PENDING"){
-          this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+          this.toast.warning({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
         }else if(paymentStatus == "INPROGRESS"){
-          this.toast.success({detail: "SUCCESS",summary: "payment inprogress",duration: 5000});
+          this.toast.warning({detail: "SUCCESS",summary: "payment inprogress",duration: 5000});
         }
       }
     }

@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef,  } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -1157,8 +1157,9 @@ export class GetQuoteComponent implements AfterViewChecked {
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
           this.upgradableZones = upgradableZones
-
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
+
+          console.log("City and State updated in service:", this.proposerCity, this.proposerState);
         } else {
           this.toast.error({
             detail: "WARNING",
@@ -1223,7 +1224,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
   ngAfterViewChecked() {
-    if (this.activeDropdown != 2 && this.scrollTarget) {
+    if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       

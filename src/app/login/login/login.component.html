@@ -58,7 +58,7 @@
             <input type="password" id="otp3" class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)" inputmode="numeric">
             <input type="password" id="otp4" class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)" inputmode="numeric">
             <input type="password" id="otp5" class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)" inputmode="numeric">
-          </div>
+          </div>    
           <button type="submit" id="verifylogin" name="verifylogin" (click)="onVerifyOTP()">
             <span>{{"Verify & Login" | translate}}</span>
           </button>

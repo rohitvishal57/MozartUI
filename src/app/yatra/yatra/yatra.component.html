@@ -116,9 +116,9 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary"
+                <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss typecss_summary plandetails_summary"
                   [hidden]="!control.visible">
-                  <div class="label-value-container" (click)="openPlanSummary()">
+                  <div class="label-value-container" (click)="control.name === 'plandetails' && openPlanSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
                       <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
@@ -126,6 +126,9 @@
                   <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
                     <div class="bottom_planDetails_sub body_flex_column">
                         <div class="common_ProductInfo">
+                            <div class="common_ppi_img">
+                              <img src="./assets/Img/icon_activeone.svg">
+                            </div>
                             <div class="common_ppi_info">
                                 <h4>{{this.dynamicFormGroup.get('productName')?.value}}</h4>
                                 <h5>Aditya Birla Health Insurance</h5>
@@ -160,7 +163,21 @@
                     </div>
                   </div>
                 </div>
-
+                <div *ngIf="control.type === 'displaycovers'" [class]="control.class" class="typecss typecss_summary"
+                [hidden]="!control.visible">
+                <div class="label-value-container">
+                  <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
+                    translate) : '' }}</label>
+                  <ul class="ul_addon_policySummary" *ngIf="control.value && control.value.length > 0">
+                    <li *ngFor="let coverName of control.value" class="value-text">
+                      {{ coverName }}
+                    </li>
+                  </ul>
+                  <div *ngIf="!control.value || control.value.length === 0" class="value-text">
+                    No covers selected.
+                  </div>
+                </div>
+              </div>
                 <div *ngIf="control.type==='select'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
                   <div class="input-container">
@@ -192,10 +209,24 @@
                   <hr />
                 </div>
 
-                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
+                <!-- <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
                   <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
                   <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                </div> -->
+
+                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
+                  <ng-container *ngIf="control.name === 'consentBell'; else defaultParagraph">
+                    <div class="tipInfo_org tipInfo_buyflow">
+                      <img src="./assets/Img/icon_bell_org.svg" alt="Bell Icon" style="width: 15px;">
+                      <span [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></span>
+                    </div>
+                  </ng-container>
+                  <ng-template #defaultParagraph>
+                    <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
+                  </ng-template>
+                  <p *ngIf="control.value" [innerHTML]="control.value"></p>
                 </div>
+                
 
 
                 <div *ngIf="control.type === 'idnumber'" [class]="control.class" class="typecss">
@@ -256,7 +287,7 @@
                   <div [class]="control.class" style="display: -webkit-box;">
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
                       [name]="control.name" id="{{control.name}}" class="checkbox-label"
-                      (change)="onCheckboxSelect(control.name)" />
+                      (change)="onCheckboxSelect(control.name, $event)"/>
                     <label [for]="control.name" [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
                       class="checkboxes"><span *ngIf="control.validators">*</span></label>
                   </div>
@@ -824,7 +855,7 @@
                 </div>
 
 
-                <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss"
+                <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss typecss_proposalNumber"
                   [hidden]="!control.visible">
                   <label *ngIf="control.visibleLabel==true" class="boldtext-label">
                     {{ control.label ? (control.label | translate) : '' }}
@@ -859,7 +890,7 @@
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
-                        [value]="option.value" class="radio-card" (change)="onInputChange($event, control)" [checked]="option.selected" />
+                        [value]="option.value" class="radio-card" (change)="onInputChange($event,control)" [checked]="option.selected" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year ? (option.year | translate) : ''}}</div>
                         <div class="price">₹ {{ option.value }}</div>
