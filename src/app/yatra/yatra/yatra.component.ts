@@ -17,7 +17,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
-import { PincodeSharedService } from 'src/app/services/pincode-shared.service';
 
 @Component({
   selector: 'app-yatra',
@@ -139,17 +138,10 @@ export class YatraComponent {
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe,
-    private renewalService: RenewalsService, private pincodeSharedService: PincodeSharedService) {
+    private renewalService: RenewalsService) {
   }
 
   ngOnInit() {
-    this.pincodeSharedService.cityState$.subscribe((data) => {
-      console.log('Received data in Component B:', data);
-      if (data.city && data.state) {
-        this.city = data.city;
-        this.state = data.state;
-      }
-    });
 
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -6921,6 +6913,19 @@ export class YatraComponent {
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
     }
     
+  }
+
+  getCityStateByPin(){
+    const reqData = {
+      "pincode": this.formData.proposerPincode
+    }
+    this.commonService.getPinCodeByCity(reqData).subscribe(res=>{
+      if (res.isSuccess && res.data) {
+        // Update city and state fields
+        this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
+        this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
+      }
+    });
   }
 }
 
