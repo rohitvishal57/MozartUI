@@ -181,6 +181,12 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
+    this.searchInputControl.reset();
+    this.selected ='';
+    this.selectedView = 'list';
+    this.first = 0;
+    this.rows = 10;
+    this.page =1;
     this.proposalListRequestBody.pageNumber = this.page;
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalListRequestBody.productVarientName= "";
@@ -191,9 +197,6 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposalNumber="";
     this.proposalListRequestBody.leadId="";
     this.proposalListRequestBody.proposalStatus="";
-    this.searchInputControl.reset();
-    this.selected ='';
-    this.selectedView = 'list';
     this.getProposalList() ;
   }
 
@@ -228,6 +231,12 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
+    this.searchInputControl.reset("");
+    this.selected ='';
+    this.selectedView = 'list';
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     this.quoteListRequestBody.pageNumber = this.page;
     this.quoteListRequestBody.pageSize = this.rows;
     this.quoteListRequestBody.productVarientName= "";
@@ -237,9 +246,6 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.proposalNumber = "";
     this.quoteListRequestBody.name = "";
     this.quoteListRequestBody.quoteId = "";
-    this.searchInputControl.reset("");
-    this.selected ='';
-    this.selectedView = 'list';
     }
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
