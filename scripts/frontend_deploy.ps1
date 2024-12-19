@@ -103,30 +103,40 @@ try {
 # }
 
 # Path to the PFX certificate file
-$pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" # Update this with the actual path to your PFX file
+$pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" 
+
+# Validate the file path
+if (-not (Test-Path $pfxPath)) {
+    throw "The PFX file does not exist at the specified path: $pfxPath"
+}
 
 # Retrieve the pfxPassword from GitHub Secrets using the environment variable
 #$pfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
 
 # Function to convert plain text password to SecureString
-function ConvertTo-SecureStringFromPlainText {
-    param (
-        [string]$plainPass
-    )
-    return ConvertTo-SecureString -String $plainPassword -AsPlainText -Force
-}
+# function ConvertTo-SecureStringFromPlainText {
+#     param (
+#         [string]$plainPass
+#     )
+#     return ConvertTo-SecureString -String $plainPassword -AsPlainText -Force
+# }
 
 # Deploy New IIS Site with HTTPS Binding
 try {
-    Write-Output "Importing SSL certificate from PFX file"
-
-    # Convert plain text password to SecureString (GitHub Secrets provide as plain text)
-    if ($PfxPass -is [string]) {
-        $PfxPass = ConvertTo-SecureStringFromPlainText -plainPassword $PfxPass
+    
+    # Convert plaintext password to SecureString
+    if (-not $PfxPassword) {
+        throw "PfxPassword parameter is null or not passed correctly."
+    } else {
+        Write-Output "PfxPassword received successfully."
     }
 
+    $securePassword = ConvertTo-SecureString -String $PfxPassword -AsPlainText -Force
+
+    Write-Output "Importing SSL certificate from PFX file: $pfxPath"
+
     # Import the PFX certificate into the personal store
-    $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $PfxPass
+    $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $securePassword
 
     # Get the thumbprint of the imported certificate
     $certThumbprint = $cert.Thumbprint
