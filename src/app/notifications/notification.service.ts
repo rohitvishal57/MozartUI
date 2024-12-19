@@ -25,4 +25,10 @@ export class NotificationService {
     const url = `${this.configService.config.baseUrl}${this.configService.config.markNotification}${notificationId}`;
     return this.http.post<any>(url, notificationId);
   }
+
+  serviceRequest(requestBody : any){
+    const requestUrl = this.configService.config.baseUrl +  this.configService.config.seriveRequest;
+    return this.http.post<any>(requestUrl , requestBody);
+  }
+
 }

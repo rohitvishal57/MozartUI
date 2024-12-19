@@ -164,6 +164,7 @@ export const environment = {
   SubmitDashboardPreferences: "api/quote/InsertDashboardPreference",
   getBankDetailsByIFSC:"api/rug/GetBankDetailsByIfsc",
   fetchPennydropverification:"api/yatra/pennydropverification",
-  downloadQuotePDf : "api/yatra/GeneratePDF"
+  downloadQuotePDf : "api/yatra/GeneratePDF",
+  seriveRequest : "api/auth/GenerateTokenAndSsoUrl"
 };
 
