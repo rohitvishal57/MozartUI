@@ -6,7 +6,7 @@ param(
     [string]$TaggedVersion,
     [string]$Port,
     [string]$BindingHost,
-    [System.Security.SecureString]$PfxPassword 
+    [String]$PfxPass 
 )
 
 # Create or Update Application Pool
@@ -108,12 +108,25 @@ $pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" # Update this with the 
 # Retrieve the pfxPassword from GitHub Secrets using the environment variable
 #$pfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
 
+# Function to convert plain text password to SecureString
+function ConvertTo-SecureStringFromPlainText {
+    param (
+        [string]$plainPass
+    )
+    return ConvertTo-SecureString -String $plainPassword -AsPlainText -Force
+}
+
 # Deploy New IIS Site with HTTPS Binding
 try {
     Write-Output "Importing SSL certificate from PFX file"
 
+    # Convert plain text password to SecureString (GitHub Secrets provide as plain text)
+    if ($PfxPass -is [string]) {
+        $PfxPass = ConvertTo-SecureStringFromPlainText -plainPassword $PfxPass
+    }
+
     # Import the PFX certificate into the personal store
-    $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $PfxPassword
+    $cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $PfxPass
 
     # Get the thumbprint of the imported certificate
     $certThumbprint = $cert.Thumbprint
