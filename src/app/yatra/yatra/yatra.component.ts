@@ -4807,6 +4807,8 @@ export class YatraComponent {
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    console.log(addOnData);
+    
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
@@ -4815,7 +4817,7 @@ export class YatraComponent {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
             const coverId = addOnData.addOnId;
-            const coverName = addOnData.additionalCoverName;
+            const coverName = addOnData.optionalCoverName;
             let coverFound = false;
 
             if (!member.covers) {
