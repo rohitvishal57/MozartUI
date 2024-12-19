@@ -91,95 +91,10 @@ export class CustomerJourneyComponent {
 
 
   ngOnInit() {
-    this.showHtmlContent = false;
 
     // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
-    }
-
-    // Extract data from history state
-    const stateData = history.state;
-
-    if (stateData && Object.keys(stateData).length > 0) {
-      console.log('State Data:', stateData);
-
-      if (stateData.formData) {
-        console.log(stateData.formData);
-        
-        const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
-        console.log(decryptedFormData);
-        
-        this.formData = { ...this.formData, ...decryptedFormData };
-        console.log(this.formData);
-
-
-      }
-
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-        console.log(this.proposalNum);
-
-      }
-
-      if (stateData.policyNumber) {
-        this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-        console.log(this.policyNumber);
-
-      }
-
-      if (stateData.journeyProcess) {
-        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-        console.log(this.journeyProcess);
-      }
-
-      if (stateData.paymentStatus) {
-          const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
-          if(paymentStatus == "SUCCESS"){
-            this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
-          }else if(paymentStatus == "INTIATED"){
-            this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
-          }
-      }
-      if (stateData.kycStatus) {
-        const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
-        if(kycStatus){
-          this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
-        }else if(!kycStatus){
-          this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
-        }
-      }
-
-      // Set formSequence if provided in state; otherwise, use default
-      if (stateData.formSequence) {
-        // this.formSequence = [];
-        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
-        console.log(this.formSequence);
-
-      }
-
-      if (stateData.formIndex) {
-        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
-        localStorage.setItem('formIndex', stateData.formIndex);
-      }
-
-      // Process insuredMemberDetails if present in the formData
-      if (this.formData?.insuredMemberDetails?.length > 0) {
-        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-          if (member.covers) {
-            this.covers[index] = member.covers;
-          }
-          if (member.relation) {
-            this.existingRelations.push(member.relation);
-          }
-        });
-      }
-
-      console.log('Covers:', this.covers);
-    } else {
-      // If no data is present in the history state, use default configurations
-      console.warn("No data found in history state.");
-      this.formSequence = [customer_payment, thankYou];
     }
 
     console.log(this.formData, this.proposalNum, this.policyNumber);
@@ -736,8 +651,6 @@ export class CustomerJourneyComponent {
     return formGroup;
   }
 
-
-
   async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
     console.log(methodName);
 
@@ -890,16 +803,16 @@ export class CustomerJourneyComponent {
 
             } else {
               console.error('Failed to fetch zone details.');
-              this.resetZoneAndLocationFields();
+              // this.resetZoneAndLocationFields();
             }
           },
           error: (err: any) => {
             console.error('Error fetching zone details:', err);
-            this.resetZoneAndLocationFields();
+            // this.resetZoneAndLocationFields();
           }
         });
       } else {
-        this.resetZoneAndLocationFields();
+        // this.resetZoneAndLocationFields();
       }
 
     }
@@ -2434,48 +2347,48 @@ export class CustomerJourneyComponent {
     }
   }
 
-  triggerFileInput(controlName: string) {
-    console.log("getting called");
+  // triggerFileInput(controlName: string) {
+  //   console.log("getting called");
 
-    const fileInputControl = this.document.getElementById(controlName);
-    fileInputControl?.click();
-  }
+  //   const fileInputControl = this.document.getElementById(controlName);
+  //   fileInputControl?.click();
+  // }
 
-  onFileSelected(inputName: string, event: any) {
-    const file = event.target.files[0];
-    console.log(file);
+  // onFileSelected(inputName: string, event: any) {
+  //   const file = event.target.files[0];
+  //   console.log(file);
 
-    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
-    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-    const control = this.renewalFormGroup.get(inputName);
-    console.log(control);
-    if (file) {
-      // Clear previous errors
-      control?.setErrors(null);
+  //   const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+  //   const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+  //   const control = this.renewalFormGroup.get(inputName);
+  //   console.log(control);
+  //   if (file) {
+  //     // Clear previous errors
+  //     control?.setErrors(null);
 
-      // Validate file type
-      if (!allowedFileTypes.includes(file.type)) {
-        console.log(allowedFileTypes);
-        control?.setErrors({ fileType: true });
-      }
+  //     // Validate file type
+  //     if (!allowedFileTypes.includes(file.type)) {
+  //       console.log(allowedFileTypes);
+  //       control?.setErrors({ fileType: true });
+  //     }
 
-      // Validate file size
-      if (file.size > maxSizeInBytes) {
-        control?.setErrors({ fileSize: true });
-      }
+  //     // Validate file size
+  //     if (file.size > maxSizeInBytes) {
+  //       control?.setErrors({ fileSize: true });
+  //     }
 
-      // If no errors, proceed to set the selected file
-      if (!control?.errors) {
-        this.selectedFile = file;
-        control?.setValue(file.name);
-      } else {
-        control?.markAsTouched();
-        this.selectedFile = null;
-      }
+  //     // If no errors, proceed to set the selected file
+  //     if (!control?.errors) {
+  //       this.selectedFile = file;
+  //       control?.setValue(file.name);
+  //     } else {
+  //       control?.markAsTouched();
+  //       this.selectedFile = null;
+  //     }
 
 
-    }
-  }
+  //   }
+  // }
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
@@ -2557,447 +2470,253 @@ export class CustomerJourneyComponent {
     });
   }
 
+  // calculateAge(dob: Date): number | string {
+  //   const today = new Date();
+  //   const birthDate = new Date(dob);
 
-  //get-Premium
-  async getPremiumAmount() {
-    // console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
+  //   if (birthDate > today) {
+  //     return 'invalid';
+  //   }
 
-    console.log(this.renewalFormGroup.getRawValue());
+  //   let age = today.getFullYear() - birthDate.getFullYear();
+  //   const monthDifference = today.getMonth() - birthDate.getMonth();
+  //   if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+  //     age--;
+  //   }
+  //   if (age < 1) {
+  //     const diffInMs = today.getTime() - birthDate.getTime();
+  //     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  //     if (diffInDays < 91) {
+  //       return 'invalid'; // Less than 91 days is not valid
+  //     }
+  //     return `${diffInDays}days`; // Return age in 'days' format
+  //   }
 
-    // if (this.changesMade) {
-    //   this.changeRecalculate(false);
-    // }
-    this.changeRecalculate(false);
+  //   return `${age}`;
+  // }
 
-    const data = this.formData;
-    console.log(data);
-
-
-    const requestPayload = {
-      productId: data.productId,
-      agentCode: this.agentCode.toString(), // Fill in agent code manually if available
-      proposerPincode: data.proposerPincode || "",
-      productCode: data.planCode || "", // Assuming planCode maps to productCode
-      memberPolicyType: data.memberPolicyType || "",
-      typeOfBusiness: data.typeOfBusiness || "",
-      isEmployee: data.isEmployee || false,
-      sumInsured: data.insuredMemberDetails?.[0]?.sumInsured || "",
-      numberOfInsuredMembers: data.numberOfInsuredMembers || "",
-      insuredMemberDetails: data.insuredMemberDetails.map((member: any, index: number) => ({
-        roomCategory: "", // If roomCategory is determined dynamically, set it here
-        memberAge: this.calculateAge(member.memberDob), // Calculate age from DOB
-        sumInsured: member.sumInsured || "",
-        isChronic: member.isChronic || "N", // Assuming default as 'N'
-        chronicDiseases: member.chronicDiseases || "",
-        zone: data.zoneValue || "", // Assuming `zoneValue` is the zone
-        memberGender: member.memberGender || "",
-        memberDob: member.memberDob || "",
-        relation: member.relation || "",
-        memberRelationCode: member.relationshipType?.relationCode || "",
-        natureOfDuty: member.productMemberNatureWork || "",
-        riskClass: "", // Risk class not provided in the input data
-        designation: member.productMemberDesignation || "",
-        covers: this.covers[index] || []
-      }))
-    };
-    console.log("fdgfhjkhgg", requestPayload);
-
-    let reqData = {
-      "agentCode": this.agentCode,
-      "productId": this.formData.productId,
-      "quoteData": JSON.stringify(requestPayload)
-    };
-
-    console.log(reqData);
-
-
-    try {
-      const res: any = await new Promise((resolve, reject) => {
-        this.commonService.GetSingleProductQuote(reqData).subscribe({
-          next: (response) => resolve(response),
-          error: (error) => reject(error)
-        });
-      });
-
-      console.log(res);
-
-
-      // Update tenureAmount and discountList after receiving the response
-      this.QuoteNumber = [];
-      for (let i = 1; i <= 3; i++) {
-        const premiumKey = `tenure${i}Premium`;
-        const discountKey = `t${i}DiscountPercentage`;
-        const Quote = `tenure${i}QuoteNumber`;
-        this.QuoteNumber.push(res.data[Quote]);
-
-        this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
-        this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
-      }
-
-      this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-      if (this.form.formTitle === 'Leads') {
-        // this.formData.tenureAmount = this.tenureAmount;
-        // this.formData.displayTaxList = this.displayTaxList;
-        this.renewalFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-        this.renewalFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
-      }
-
-      console.log(this.formData, this.form, this.renewalFormGroup.value);
-
-      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-
-      // After setting tenureAmount and discountList, call setPremiumAmount()
-      this.setPremiumAmount();
-
-    } catch (error) {
-      console.error("Error while fetching product tenure", error);
-    } finally {
-      // this.spinner.hide();
-    }
-  }
-
-  calculateAge(dob: Date): number | string {
-    const today = new Date();
-    const birthDate = new Date(dob);
-
-    if (birthDate > today) {
-      return 'invalid';
-    }
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    if (age < 1) {
-      const diffInMs = today.getTime() - birthDate.getTime();
-      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-      if (diffInDays < 91) {
-        return 'invalid'; // Less than 91 days is not valid
-      }
-      return `${diffInDays}days`; // Return age in 'days' format
-    }
-
-    return `${age}`;
-  }
-
-  setPremiumAmount(control?: any) {
-    if (this.form.formTitle == 'Total Premium') {
-      console.log("Hello world");
-
-    }
-    if (this.formData.tenure) {
-      this.selectedIndex = this.formData.tenure - 1;
-    }
-    console.log(this.renewalFormGroup.value, this.form, this.displayTaxList, this.selectedIndex, this.formData, this.QuoteNumber);
-    this.tenureAmount.forEach(member => {
-      console.log(member);
-
-    })
-    if (this.selectedIndex == -1) {
-      this.selectedIndex = 2;
-    }
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((formControl: any) => {
-        if (formControl.name == 'totalPremium') {
-          if (formControl.radioOptions) {
-            formControl.radioOptions.forEach((option: any, index: number) => {
-              if (index === 0) {
-                // this.totalPremium = this.tenure1Total;
-                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
-                // formControl.value = this.tenureAmount[index];
-                option.year = "1 year"
-                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenureAmount[index];
-                // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
-                //   this.selectedIndex = index;
-                //   this.formData.tenure = this.selectedIndex + 1;
-                // }
-                console.log(this.selectedIndex);
-              } else if (index === 1) {
-                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
-                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenureAmount[index];
-                option.year = "2 years"
-                option.discount = "7.5% off"
-                // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
-                //   this.selectedIndex = index;
-                //   this.formData.tenure = this.selectedIndex + 1;
-                // }
-              } else if (index === 2) {
-                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
-                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenureAmount[index];
-                option.year = "3 years"
-                option.discount = "10% off"
-                // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
-                //   this.selectedIndex = index;
-                //   this.formData.tenure = this.selectedIndex + 1;
-                // }
-              }
-              console.log(this.selectedIndex, index);
-
-              if (this.selectedIndex === index) {
-                let radioOptionsControl = this.renewalFormGroup.get('totalPremium');
-                if (!radioOptionsControl) {
-                  // Add control if it doesn't exist
-                  this.renewalFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
-                  // radioOptionsControl = this.renewalFormGroup.get('totalPremium');
-                }
-
-                // if (radioOptionsControl) {
-                //   radioOptionsControl.setValue(this.tenureAmount[this.selectedIndex], { emitEvent: true });
-                //   // this.renewalFormGroup.value.totalPremium = this.tenureAmount[this.selectedIndex];
-                // }
-                option.selected = true;
-                if (this.renewalFormGroup.value.totalPremium) {
-
-                  this.renewalFormGroup.value.totalPremium = this.tenureAmount[this.selectedIndex];
-                }
-                console.log(this.renewalFormGroup.value);
-
-                // Update additional data
-                if (this.QuoteNumber.length > 0) {
-                  this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-                }
-                this.formData.tenure = this.selectedIndex + 1;
-              }
-              else {
-                option.selected = false;
-              }
-            });
-          }
-        }
-      });
-    });
-    console.log(this.renewalFormGroup.value, this.formData);
-  }
   jsonParse(string: any, extract: any) {
     const value = JSON.parse(string);
     return value[extract];
   }
 
-  async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
-    const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
-    console.log(formData, this.covers);
+  // async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
+  //   console.log(formData, this.covers);
 
-    const mappedData: Partial<IFullQuoteMapping> = {
-      agentCode: this.agentCode || '',
-      productName: formData?.productName || '',
-      productCode: formData?.productId || '',
-      planCode: formData?.planCode || '',
-      planName: formData?.productVariant || '',
-      proposalNum: this.proposalNum || '',
-      policyType: formData?.memberPolicyType || '',
-      businessType: formData?.typeOfBusiness || '',
-      insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
-        return {
-          relation: member?.relation || '',
-          // memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
-          memberSalutation: member?.preFix || '',
-          firstName: member?.firstName || '',
-          middleName: member?.middleName || '',
-          lastName: member?.lastName || '',
-          height: member?.height || '',
-          heightInInches: member?.heightInches || '',
-          weight: member?.weight || '',
-          memberdob: member?.memberDob || '',
-          emailId: member?.emailId || '',
-          mobileNumber: member?.mobileNumber || '',
-          // memberNationality: this.jsonParse(formData.nationality, 'name') || '',
-          relationshipType: member.relation || '',
-          memberAge: this.calculateAge(member?.memberDob) || '',
-          memberGender: member?.memberGender || '',
-          // memberPincode: member?.pincode || '',
-          // preExistingDisease: member?.preExistingDisease || '',
-          // memberIndex: member.memberIndex || '',
-          // zone: member?.zone || '',
-          // zoneValue: member?.zoneValue || '',
-          // state: member?.state || '',
-          // city: member?.city || '',
-          memberType: member?.memberType || '',
-          memberSumInsured: member?.sumInsured || '',
-          // memberZone: member?.zoneValue || '',
-          memberNatureOfDuty: member?.natureOfDuty || '',
-          memberDesignation: member?.designation || '',
-          memberOccupation: member?.occupation || '',
-          covers: this.covers[index] || [],
-          // memberRoomCategory: member?.memberRoomCategory || ''
-        };
-      }) || [],
-      CKYCNo: this.formData?.ckycNo || '',
-      // QuoteId: formData?.quoteId || '',
-      // LeadId: formData?.leadNumber || '',
-      proposerSalutation: formData?.preFix || '',
-      proposerFirstName: formData?.firstName || '',
-      proposerMiddleName: formData?.middleName || '',
-      proposerLastName: formData?.lastName || '',
-      proposerDob: formData?.memberDobProposer || '',
-      proposerAge: formData?.memberAgeProposer || '',
-      proposerGender: formData?.proposerGender || '',
-      proposerMobileNumber: formData?.mobileNumber || '',
-      proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
-      proposerAddress1: formData?.proposerAddress1 || '',
-      proposerAddress2: formData?.proposerAddress2 || '',
-      proposerCity: formData?.city || '',
-      proposerState: formData?.state || '',
-      proposerEmailId: formData?.emailId || '',
-      proposerPincode: formData?.proposerPincode || '',
-      // idProof: this.jsonParse(formData?.idProof, 'value') || '',
-      // idNo: formData?.idNo || '',
-      proposerAnnualIncome: formData?.annualIncome || '',
-      proposerOccupation: formData?.occupation || '',
-      // proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
-      // proposerPANNo: formData?.panNo || '',
-      // gstDetails: formData?.gstDetails || '',
-      // proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
-      // ifPEP: formData?.isPep || '',
-      // proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
-      nomineeFirstName: formData?.nomineeFirstName || '',
-      nomineeMidleName: formData?.nomineeMiddleName || '',
-      nomineeLastName: formData?.nomineeLastName || '',
-      nomineeRelation: formData?.nomineeRelationWithProposer || '',
-      nomineeRelationCode: formData?.nomineeRelationWithProposer || '',
-      nomineeContactNumber: formData?.nomineeContactNo || '',
-      nomineeAddress: formData?.nomineeAddress || '',
-      nomineeDob: formData?.nomineeDob || '',
-      nomineeAge: nomineeAge || '',
-      NameofAccountHolder: formData?.firstName || '',
-      accountNumber: formData?.accountNumber || '',
-      accountType: formData?.accountType || '',
-      bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
-      bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
-      paymentMode: this.selectedButton || '',
-      chequeNumber: formData?.chequeNumber || '',
-      chequeDate: formData?.chequeDate || '',
-      bankName: this.formData?.bankName || '',
-      ifscCode: formData?.ifscCode || '',
-      micrNo: formData?.micrCode || '',
-      premiumAmount: formData?.totalPremium || '',
-      selectedTenure: (parseInt(formData?.tenure)).toString() || '',
-      paymentDate: new Date().toISOString().split("T")[0] as any || '',
-      paymentCollectionMode: formData.paymentOption || '',
-      paymentByRelationship: 'Self',
-      payerName: formData?.accountHolderName || '',
-      paymentBy: 'customer',
-      PaymentGatewayName: formData?.PaymentGatewayName || '',
-      // tenure: formData?.tenure,
-    };
+  //   const mappedData: Partial<IFullQuoteMapping> = {
+  //     agentCode: this.agentCode || '',
+  //     productName: formData?.productName || '',
+  //     productCode: formData?.productId || '',
+  //     planCode: formData?.planCode || '',
+  //     planName: formData?.productVariant || '',
+  //     proposalNum: this.proposalNum || '',
+  //     policyType: formData?.memberPolicyType || '',
+  //     businessType: formData?.typeOfBusiness || '',
+  //     insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
+  //       return {
+  //         relation: member?.relation || '',
+  //         // memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
+  //         memberSalutation: member?.preFix || '',
+  //         firstName: member?.firstName || '',
+  //         middleName: member?.middleName || '',
+  //         lastName: member?.lastName || '',
+  //         height: member?.height || '',
+  //         heightInInches: member?.heightInches || '',
+  //         weight: member?.weight || '',
+  //         memberdob: member?.memberDob || '',
+  //         emailId: member?.emailId || '',
+  //         mobileNumber: member?.mobileNumber || '',
+  //         // memberNationality: this.jsonParse(formData.nationality, 'name') || '',
+  //         relationshipType: member.relation || '',
+  //         memberAge: this.calculateAge(member?.memberDob) || '',
+  //         memberGender: member?.memberGender || '',
+  //         // memberPincode: member?.pincode || '',
+  //         // preExistingDisease: member?.preExistingDisease || '',
+  //         // memberIndex: member.memberIndex || '',
+  //         // zone: member?.zone || '',
+  //         // zoneValue: member?.zoneValue || '',
+  //         // state: member?.state || '',
+  //         // city: member?.city || '',
+  //         memberType: member?.memberType || '',
+  //         memberSumInsured: member?.sumInsured || '',
+  //         // memberZone: member?.zoneValue || '',
+  //         memberNatureOfDuty: member?.natureOfDuty || '',
+  //         memberDesignation: member?.designation || '',
+  //         memberOccupation: member?.occupation || '',
+  //         covers: this.covers[index] || [],
+  //         // memberRoomCategory: member?.memberRoomCategory || ''
+  //       };
+  //     }) || [],
+  //     CKYCNo: this.formData?.ckycNo || '',
+  //     // QuoteId: formData?.quoteId || '',
+  //     // LeadId: formData?.leadNumber || '',
+  //     proposerSalutation: formData?.preFix || '',
+  //     proposerFirstName: formData?.firstName || '',
+  //     proposerMiddleName: formData?.middleName || '',
+  //     proposerLastName: formData?.lastName || '',
+  //     proposerDob: formData?.memberDobProposer || '',
+  //     proposerAge: formData?.memberAgeProposer || '',
+  //     proposerGender: formData?.proposerGender || '',
+  //     proposerMobileNumber: formData?.mobileNumber || '',
+  //     proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
+  //     proposerAddress1: formData?.proposerAddress1 || '',
+  //     proposerAddress2: formData?.proposerAddress2 || '',
+  //     proposerCity: formData?.city || '',
+  //     proposerState: formData?.state || '',
+  //     proposerEmailId: formData?.emailId || '',
+  //     proposerPincode: formData?.proposerPincode || '',
+  //     // idProof: this.jsonParse(formData?.idProof, 'value') || '',
+  //     // idNo: formData?.idNo || '',
+  //     proposerAnnualIncome: formData?.annualIncome || '',
+  //     proposerOccupation: formData?.occupation || '',
+  //     // proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
+  //     // proposerPANNo: formData?.panNo || '',
+  //     // gstDetails: formData?.gstDetails || '',
+  //     // proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
+  //     // ifPEP: formData?.isPep || '',
+  //     // proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
+  //     nomineeFirstName: formData?.nomineeFirstName || '',
+  //     nomineeMidleName: formData?.nomineeMiddleName || '',
+  //     nomineeLastName: formData?.nomineeLastName || '',
+  //     nomineeRelation: formData?.nomineeRelationWithProposer || '',
+  //     nomineeRelationCode: formData?.nomineeRelationWithProposer || '',
+  //     nomineeContactNumber: formData?.nomineeContactNo || '',
+  //     nomineeAddress: formData?.nomineeAddress || '',
+  //     nomineeDob: formData?.nomineeDob || '',
+  //     nomineeAge: nomineeAge || '',
+  //     NameofAccountHolder: formData?.firstName || '',
+  //     accountNumber: formData?.accountNumber || '',
+  //     accountType: formData?.accountType || '',
+  //     bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
+  //     bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
+  //     paymentMode: this.selectedButton || '',
+  //     chequeNumber: formData?.chequeNumber || '',
+  //     chequeDate: formData?.chequeDate || '',
+  //     bankName: this.formData?.bankName || '',
+  //     ifscCode: formData?.ifscCode || '',
+  //     micrNo: formData?.micrCode || '',
+  //     premiumAmount: formData?.totalPremium || '',
+  //     selectedTenure: (parseInt(formData?.tenure)).toString() || '',
+  //     paymentDate: new Date().toISOString().split("T")[0] as any || '',
+  //     paymentCollectionMode: formData.paymentOption || '',
+  //     paymentByRelationship: 'Self',
+  //     payerName: formData?.accountHolderName || '',
+  //     paymentBy: 'customer',
+  //     PaymentGatewayName: formData?.PaymentGatewayName || '',
+  //     // tenure: formData?.tenure,
+  //   };
 
-    return mappedData;
-  }
+  //   return mappedData;
+  // }
 
-  async fullQuotation(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // this.spinner.show();
-      console.log("beforeMap", this.formData);
+  // async fullQuotation(): Promise<void> {
+  //   return new Promise((resolve, reject) => {
+  //     // this.spinner.show();
+  //     console.log("beforeMap", this.formData);
 
-      this.mappedFormDataFullQuote(this.formData)
-        .then((data) => {
-          console.log("mapped Data", data);
+  //     this.mappedFormDataFullQuote(this.formData)
+  //       .then((data) => {
+  //         console.log("mapped Data", data);
 
-          const reqData: any = {
-            agentCode: this.agentCode,
-            productId: this.formData.productId,
-            productType: this.formData.productType,
-            fullQuoteRequestJson: JSON.stringify(data)
-          }
-          console.log("reqData", reqData);
+  //         const reqData: any = {
+  //           agentCode: this.agentCode,
+  //           productId: this.formData.productId,
+  //           productType: this.formData.productType,
+  //           fullQuoteRequestJson: JSON.stringify(data)
+  //         }
+  //         console.log("reqData", reqData);
 
 
-          this.yatraService.getFullQuote(reqData).subscribe({
-            next: (response: any) => {
-              console.log(response);
+  //         this.yatraService.getFullQuote(reqData).subscribe({
+  //           next: (response: any) => {
+  //             console.log(response);
 
-              if (response?.isSuccess) {
-                const responseData = response.data;
+  //             if (response?.isSuccess) {
+  //               const responseData = response.data;
 
-                // Setting response data to formData
-                // this.formData.policyNumber = responseData.policyNumber || null;
-                this.formData.policyStatus = responseData.policyStatus || null;
-                this.formData.quoteValidFromDate = responseData.policyStartDate || null;
-                this.formData.quoteValidToDate = responseData.policyEndDate || null;
-                this.formData.ReceiptNumber = responseData.receiptNumber || null;
-                this.formData.customerId = responseData.customerId || null;
+  //               // Setting response data to formData
+  //               // this.formData.policyNumber = responseData.policyNumber || null;
+  //               this.formData.policyStatus = responseData.policyStatus || null;
+  //               this.formData.quoteValidFromDate = responseData.policyStartDate || null;
+  //               this.formData.quoteValidToDate = responseData.policyEndDate || null;
+  //               this.formData.ReceiptNumber = responseData.receiptNumber || null;
+  //               this.formData.customerId = responseData.customerId || null;
 
-                console.log(this.renewalFormGroup.value);
+  //               console.log(this.renewalFormGroup.value);
 
-                // Merging updated formData with dynamicFormGroup values
-                this.formData = { ...this.formData, ...this.renewalFormGroup.value };
+  //               // Merging updated formData with dynamicFormGroup values
+  //               this.formData = { ...this.formData, ...this.renewalFormGroup.value };
 
-                // Encrypting and saving formData to session storage
-                sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+  //               // Encrypting and saving formData to session storage
+  //               sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
 
-                // Showing success toast
-                this.toast.success({
-                  detail: "SUCCESS",
-                  summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
-                  duration: 3000,
-                });
+  //               // Showing success toast
+  //               this.toast.success({
+  //                 detail: "SUCCESS",
+  //                 summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
+  //                 duration: 3000,
+  //               });
 
-                resolve(); // Allow navigation
-              } else {
-                const errorMessage =
-                  response.message
-                console.log(errorMessage);
-                // Showing error toast
-                this.toast.error({
-                  detail: "ERROR",
-                  summary: errorMessage,
-                  duration: 5000,
-                });
+  //               resolve(); // Allow navigation
+  //             } else {
+  //               const errorMessage =
+  //                 response.message
+  //               console.log(errorMessage);
+  //               // Showing error toast
+  //               this.toast.error({
+  //                 detail: "ERROR",
+  //                 summary: errorMessage,
+  //                 duration: 5000,
+  //               });
 
-                console.error("Full Quote generation failed:", response);
-                reject(new Error(errorMessage)); // Prevent navigation
-              }
-            },
-            error: (err) => {
-              // this.spinner.hide();
-              console.error(err);
+  //               console.error("Full Quote generation failed:", response);
+  //               reject(new Error(errorMessage)); // Prevent navigation
+  //             }
+  //           },
+  //           error: (err) => {
+  //             // this.spinner.hide();
+  //             console.error(err);
 
-              // Showing generic error toast for API failure
-              this.toast.error({
-                detail: "ERROR",
-                summary: "Something went wrong. Please try again.",
-                duration: 3000,
-              });
+  //             // Showing generic error toast for API failure
+  //             this.toast.error({
+  //               detail: "ERROR",
+  //               summary: "Something went wrong. Please try again.",
+  //               duration: 3000,
+  //             });
 
-              reject(err); // Reject the promise
-            },
-          });
-        })
-        .catch((err) => {
-          // this.spinner.hide();
+  //             reject(err); // Reject the promise
+  //           },
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         // this.spinner.hide();
 
-          // Showing error toast for mapping failure
-          this.toast.error({
-            detail: "ERROR",
-            summary: "Failed to map form data",
-            duration: 3000,
-          });
+  //         // Showing error toast for mapping failure
+  //         this.toast.error({
+  //           detail: "ERROR",
+  //           summary: "Failed to map form data",
+  //           duration: 3000,
+  //         });
 
-          reject(err);
-        }); console.log("afterMap", this.formData);
+  //         reject(err);
+  //       }); console.log("afterMap", this.formData);
 
-    });
-  }
+  //   });
+  // }
 
-  resetZoneAndLocationFields() {
-    this.renewalFormGroup.get('city')?.setValue('');
-    this.renewalFormGroup.get('state')?.setValue('');
-    this.renewalFormGroup.get('zone')?.disable();
-    this.renewalFormGroup.get('zone')?.setValue('');
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((control: any) => {
-        if (control.name === 'zoneValue') {
-          control.options = [];
-        }
-      });
-    });
-  }
+  // resetZoneAndLocationFields() {
+  //   this.renewalFormGroup.get('city')?.setValue('');
+  //   this.renewalFormGroup.get('state')?.setValue('');
+  //   this.renewalFormGroup.get('zone')?.disable();
+  //   this.renewalFormGroup.get('zone')?.setValue('');
+  //   this.form.formSections.forEach((section: any) => {
+  //     section.formControls.forEach((control: any) => {
+  //       if (control.name === 'zoneValue') {
+  //         control.options = [];
+  //       }
+  //     });
+  //   });
+  // }
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
