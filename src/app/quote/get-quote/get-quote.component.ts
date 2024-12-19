@@ -9,6 +9,7 @@ import { QuoteService } from '../quote.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { PincodeSharedService } from 'src/app/services/pincode-shared.service';
 
 @Component({
   selector: 'app-get-quote',
@@ -180,7 +181,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   formData:any;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
-    private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
+    private translateService: TranslateService, private router: Router,private quoteService:QuoteService, private pincodeSharedService: PincodeSharedService) { }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -1157,8 +1158,10 @@ export class GetQuoteComponent implements AfterViewChecked {
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
           this.upgradableZones = upgradableZones
-
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
+
+          this.pincodeSharedService.updateCityState({ city: this.proposerCity, state: this.proposerState });
+          console.log("City and State updated in service:", this.proposerCity, this.proposerState);
         } else {
           this.toast.error({
             detail: "WARNING",
@@ -1223,7 +1226,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
   ngAfterViewChecked() {
-    if (this.activeDropdown != 2 && this.scrollTarget) {
+    if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       

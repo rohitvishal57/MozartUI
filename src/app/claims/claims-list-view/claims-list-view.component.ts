@@ -91,7 +91,6 @@ export class ClaimsListViewComponent implements OnInit {
     });
 
     this.fetchData();
-    this.getProducts();
     //this.fetchClaimStatusCounts(this.agentCode);
     this.checkView();
   }
@@ -365,12 +364,12 @@ export class ClaimsListViewComponent implements OnInit {
   navigateToViewClaim(row: any) {
     let claimDetailsReqBody = {
       "id": row.id,
-      "claimNumber": row.claimInfoId,
+      "claimNumber": row.claimNumber,
       "policyNumber": row.policyNumber
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
-        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimInfoId}/${row.policyNumber}`]);
+        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimNumber}/${row.policyNumber}`]);
       },
       (error) => {
         console.error('Error fetching claim details', error);

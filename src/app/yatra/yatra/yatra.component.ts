@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
+import { PincodeSharedService } from 'src/app/services/pincode-shared.service';
 
 @Component({
   selector: 'app-yatra',
@@ -129,7 +130,8 @@ export class YatraComponent {
   pennyDropVerficationDetails: any;
   transactionId: string | undefined;
   orderId: any;
-
+  city: string = '';
+  state: string = '';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -137,10 +139,17 @@ export class YatraComponent {
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe,
-    private renewalService: RenewalsService) {
+    private renewalService: RenewalsService, private pincodeSharedService: PincodeSharedService) {
   }
 
   ngOnInit() {
+    this.pincodeSharedService.cityState$.subscribe((data) => {
+      console.log('Received data in Component B:', data);
+      if (data.city && data.state) {
+        this.city = data.city;
+        this.state = data.state;
+      }
+    });
 
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -1200,12 +1209,20 @@ export class YatraComponent {
     return false;
   }
 
-  onCheckboxSelect(controlName: string) {
+  onCheckboxSelect(controlName: string, event? : any) {
     const control = this.dynamicFormGroup.get(controlName);
     console.log(control);
     if (control) {
       control.markAsTouched();
       control.updateValueAndValidity();
+    }
+    switch (controlName) {
+      case 'addressTitle1':
+        this.getPermanentAddressDetails(event.target.checked);
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -4790,6 +4807,8 @@ export class YatraComponent {
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    console.log(addOnData);
+    
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
@@ -4798,7 +4817,7 @@ export class YatraComponent {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
             const coverId = addOnData.addOnId;
-            const coverName = addOnData.additionalCoverName;
+            const coverName = addOnData.optionalCoverName;
             let coverFound = false;
 
             if (!member.covers) {
@@ -6870,6 +6889,17 @@ export class YatraComponent {
         console.log("error is coming from fullquote api");
       }
     );
+  }
+
+  getPermanentAddressDetails(flag : boolean){
+    if(flag){
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
+    } else {
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
+    }
+    
   }
 }
 
