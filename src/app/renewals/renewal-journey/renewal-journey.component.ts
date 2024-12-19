@@ -3637,7 +3637,7 @@ export class RenewalJourneyComponent {
       policyNumber: this.formData?.policyNumber,
       productCode: this.formData?.productCode,
       premiumAmount: this.formData?.totalPremium,
-      // paymentLink: "",
+      paymentLink: "",
       mobilenumber: this.formData?.mobileNumber
     };
     this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
@@ -3660,16 +3660,16 @@ export class RenewalJourneyComponent {
     });
     
 
-    this.router.navigate(['renewal/customerRenewalJourney'], {
-      state: {
-        formData: this.encryptionService.encrypt(this.formData),
-        proposalNum: this.encryptionService.encrypt(this.proposalNum),
-        policyNumber: this.encryptionService.encrypt(this.policyNumber),
-        journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-        formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-        formIndex:"0"
-      }
-    });
+    // this.router.navigate(['renewal/customerRenewalJourney'], {
+    //   state: {
+    //     formData: this.encryptionService.encrypt(this.formData),
+    //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+    //     policyNumber: this.encryptionService.encrypt(this.policyNumber),
+    //     journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
+    //     formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+    //     formIndex:"0"
+    //   }
+    // });
   }
 
   redirectToJustPay(control: any) {
