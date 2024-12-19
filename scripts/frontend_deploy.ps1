@@ -4,7 +4,8 @@ param(
     [string]$WebRoot,
     [string]$DeployBaseDir,
     [string]$TaggedVersion,
-    [string]$Port
+    [string]$Port,
+    [string]$BindingHost
 )
 
 # Create or Update Application Pool
@@ -93,7 +94,7 @@ try {
 # Deploy New IIS Site
 try {
     Write-Output "Creating new IIS website for: $SiteName"
-    New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName
+    New-WebSite -Name $SiteName -Port $Port -PhysicalPath $WebRoot -ApplicationPool $AppPoolName -HostHeader $BindingHost
 } catch {
     Write-Output "Error while deploying new IIS site: $SiteName"
     Write-Output $_.Exception.Message
