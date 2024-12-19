@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, interval, map, Observable, startWith, Subject, take } from 'rxjs';
@@ -165,6 +165,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private toast: NgToastService,
     private _router: Router,
     private dialog: MatDialog,
+    private ngZone: NgZone,
     private languageService: LanguageService,
     private translateService: TranslateService) {
       this.policyNoChangeSubject.pipe(
@@ -905,16 +906,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
-    const target = event.target as HTMLInputElement;
   
     if (event.key >= '0' && event.key <= '9') {
-      this.otp[index] = event.key;  // Store digit
+      this.otp[index] = event.key;
   
       if (index < 5) {
-        setTimeout(() => {
-          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-          nextInput && nextInput.focus();
-        }, 50);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
+          }, 50);
+        });
       } else {
         const btnElement = document.getElementById('verify') as HTMLButtonElement;
         btnElement && btnElement.focus();
@@ -922,36 +924,40 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
   
     else if (event.key === 'Backspace') {
-      this.otp[index] = '';  // Clear current box
+      this.otp[index] = '';
   
       if (index > 0) {
-        setTimeout(() => {
-          const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
-          previousInput && previousInput.focus();
-        }, 50);
-      }
-    }
-  
-    else if (event.key === 'Tab') {
-      if (event.shiftKey) {
-        if (index > 0) {
+        this.ngZone.run(() => {
           setTimeout(() => {
             const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
             previousInput && previousInput.focus();
           }, 50);
-        }
-      } else {
-        if (index < 5) {
-          setTimeout(() => {
-            const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
-            nextInput && nextInput.focus();
-          }, 50);
-        } else {
-          const btnElement = document.getElementById('verify') as HTMLButtonElement;
-          btnElement && btnElement.focus();
-        }
+        });
       }
     }
-  }
   
+    else if (event.key === 'Tab') {
+      event.preventDefault();
+      this.ngZone.run(() => {
+        if (event.shiftKey) {
+          if (index > 0) {
+            setTimeout(() => {
+              const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
+              previousInput && previousInput.focus();
+            }, 50);
+          }
+        } else {
+          if (index < 5) {
+            setTimeout(() => {
+              const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
+              nextInput && nextInput.focus();
+            }, 50);
+          } else {
+            const btnElement = document.getElementById('verify') as HTMLButtonElement;
+            btnElement && btnElement.focus();
+          }
+        }
+      });
+    }
+  }  
 }

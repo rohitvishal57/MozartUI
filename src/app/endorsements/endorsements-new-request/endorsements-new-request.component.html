@@ -387,12 +387,12 @@
         <div class="detailsRow">
           <div class="detailsHeading">Enter OTP</div>
           <div class="OTPContainer">
-            <input type="password" name="otp0" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-            <input type="password" name="otp1" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-            <input type="password" name="otp2" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-            <input type="password" name="otp3" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-            <input type="password" name="otp4" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-            <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+            <input type="password" name="otp0" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)" inputmode="numeric">
+            <input type="password" name="otp1" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)" inputmode="numeric">
+            <input type="password" name="otp2" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)" inputmode="numeric">
+            <input type="password" name="otp3" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)" inputmode="numeric">
+            <input type="password" name="otp4" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)" inputmode="numeric">
+            <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)" inputmode="numeric">
           </div>
         </div>
       </div>
