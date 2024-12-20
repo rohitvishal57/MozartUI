@@ -2747,7 +2747,9 @@ export class RugDynamicFormComponent {
           if(this.isD2C == true && controls.name == 'insuredMembers' && this.isFormLoaded == true){
             this.calculateD2CPremium();
           }
-
+          if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
+            this.calculateBBPremium();
+          }
         }
         else if (checkbox.checked == false) {
           if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
@@ -2783,6 +2785,9 @@ export class RugDynamicFormComponent {
           if(this.isD2C == true && controls.name == 'insuredMembers' && this.isFormLoaded == true){
             this.calculateD2CPremium();
           }
+          if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
+            this.calculateBBPremium();
+          }
 
         }
       });
@@ -2814,9 +2819,9 @@ export class RugDynamicFormComponent {
         // if(insuredMembersArray.value.length != 1){
         //   this.calculateBBPremium();
         // }
-        if(insuredMembersArray.value.length != 1 && this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
-          this.calculateBBPremium();
-        }
+        // if(insuredMembersArray.value.length != 1 && this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
+        //   this.calculateBBPremium();
+        // }
       if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
               this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
         // const selfResult = this.centimetersToFeetAndInches(item.height);
@@ -6523,6 +6528,7 @@ export class RugDynamicFormComponent {
   }
   getBbSumInsured(control: any) {
     console.log(this.bbdetails);
+    let filterArr;
     let sumInsuredObj = {
       ProductCode: this.bbdetails.productCode
     }
@@ -6543,6 +6549,16 @@ export class RugDynamicFormComponent {
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
         console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
+        this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
+
+        filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
+        console.log(filterArr);
+        if(this.bbdetails.productCode != "R10"){
+          this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
+        }else{
+          this.bbdetails.sumInsured = filterArr[0].siPlanText;
+        }
+        this.getBbPremium(filterArr);
       },
       error: (err) => {
         console.error(err);
