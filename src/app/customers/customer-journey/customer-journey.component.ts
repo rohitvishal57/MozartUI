@@ -8,7 +8,7 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { thankYou} from 'src/assets/styles/renewals-forms/combined_forms';
+import { kycThankYou, thankYou} from 'src/assets/styles/renewals-forms/combined_forms';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
@@ -55,7 +55,7 @@ export class CustomerJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[] = [customer_payment, thankYou];
+  formSequence: any[] = [customer_payment,thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
@@ -63,7 +63,6 @@ export class CustomerJourneyComponent {
 
 
   activeSection: string = "primary";
-
   // activeSection: string = "primary";
   formIndex: number = 0;
 
@@ -98,6 +97,26 @@ export class CustomerJourneyComponent {
     }
 
     console.log(this.formData, this.proposalNum, this.policyNumber);
+
+    const stateData = history.state;
+    if (stateData && Object.keys(stateData).length > 0) {
+      if (stateData.formData) {
+        console.log(stateData.formData);
+        
+        const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
+        console.log(decryptedFormData);
+        
+        this.formData = { ...this.formData, ...decryptedFormData };
+
+      }
+      if (stateData.formSequence) {
+        // this.formSequence = [];
+        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
+        console.log('formSequence',this.formSequence);
+
+      }
+    }
+    
 
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();

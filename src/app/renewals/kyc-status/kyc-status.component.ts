@@ -40,7 +40,8 @@ export class KycStatusComponent {
     getKycStatus() {  
       const kycDetailsReq = {
         transactionId :  this.transactionId,
-        businessType : "REN"
+        businessType : "REN",
+        userType: ""
       }
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
@@ -53,7 +54,7 @@ export class KycStatusComponent {
             };
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
-                const formData = res.data;                
+                const formData = res.data;     
                 if (kycData.kycStatus) {
                   console.log("kycStatue" , res.data.kycStatus);
                   formData.isKycCompleted=true;

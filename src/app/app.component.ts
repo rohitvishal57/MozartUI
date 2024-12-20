@@ -52,7 +52,11 @@ export class AppComponent {
       '/renewal/customerPayment', // Add more paths that should always hide the navbar
       '/yatra/customerKyc',
       '/renewal/customerKyc',
-      '/yatra/customerPayment'
+      '/yatra/customerPayment',
+      '/renewal/kyc',
+      '/renewal/payment',
+      '/yatra/kyc',
+      '/yatra/payment',
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
       return true;

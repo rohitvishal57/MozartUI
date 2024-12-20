@@ -3744,7 +3744,8 @@ export class RenewalJourneyComponent {
       panNumber: this.formData.panNo || "", 
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No", 
-      businessType: "REN"
+      businessType: "REN",
+      userType:"Agent"
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
       (res: any) => {
@@ -3784,10 +3785,8 @@ export class RenewalJourneyComponent {
         if(res.data.isShareKyc){
           this.toast.success({detail: "SUCCESS",summary: "Link has been sent successfully",duration: 3000});
         }
-
         this.changeMainFormDependentControls(control.dependentControls,true);
         this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
-      
       },
       (err) => {
         console.log(err);

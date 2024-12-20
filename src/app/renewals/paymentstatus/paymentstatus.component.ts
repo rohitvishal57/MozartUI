@@ -33,9 +33,9 @@ export class PaymentstatusComponent {
       if (params['token']) {
         localStorage.setItem('token', 'aa59deee594c4c90abd5737929d0302e');
       }
-      if(params['userType']){
-        this.userType= params['userType']
-      }
+      // if(params['userType']){
+      //   this.userType= params['userType']
+      // }
     }
     this.getPaymentStatus();
   }
@@ -71,10 +71,11 @@ export class PaymentstatusComponent {
                 });
             }else if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
                 this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
-                const formData = {
-                  productName: res.data.productName,
-                  ...res.data.orderDetails,
-                };            
+                // const formData = {
+                //   productName: res.data.productName,
+                //   ...res.data.orderDetails,
+                // };   
+                const formData=res.data;         
                 this.router.navigate(['renewal/renewalJourney'], {
                   state: {
                     formData: this.encryptionService.encrypt(formData),
