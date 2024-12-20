@@ -5145,6 +5145,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .download_policyKit .btn_downloadKit:hover {
   opacity: 0.5;
 }
+.button_policyKit {
+  display: flex;
+  gap:8px;
+}
 .img_daha {
   position: relative;
   min-height: 269px;
