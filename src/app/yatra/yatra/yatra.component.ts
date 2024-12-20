@@ -3971,7 +3971,6 @@ export class YatraComponent {
   //           console.log(this.form);
 
   //           if(this.form.formTitle =='Total Premium'){
-  //             console.log("haleluya");
 
   //             this.formData.tenureAmount = this.tenureAmount;
   //             this.formData.displayTaxList = this.displayTaxList;
@@ -6975,6 +6974,39 @@ export class YatraComponent {
         this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
       }
     });
+  }
+
+  //halfQuotation
+  halfQuotation(){
+    const reqData = {
+      "proposalNum":this.proposalNum,
+      "agentCode": this.agentCode
+  }
+
+  console.log(reqData);
+  
+
+  this.yatraService.getHalfQuote(reqData).subscribe({
+    next: (response: any) => {
+      if (response.isSuccess && response.data) {
+        this.toast.success({ detail: "SUCCESS", summary: 'Half Quote generated successfully with application number'+ response.data.applicationNumber, duration: 3000 });
+        this.onSubmit();
+      }
+      else{
+        this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((control: any) => {
+            if (control.name === 'next') {
+              control.disabled = true;
+            }
+          })
+        });
+      }
+    },
+    error: (err) => {
+      this.toast.error({ detail: "ERROR", summary: 'Failed to generate half Quote', duration: 3000 });
+    }
+  });
   }
 }
 

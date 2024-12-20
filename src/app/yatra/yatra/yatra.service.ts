@@ -88,7 +88,8 @@ export class YatraService {
     return this.httpService.post(CalculateAddonValue,reqData);
   }
   getHalfQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
+    const  GetHalfQuote = this.configService.config.baseUrl1 + this.configService.config.getHalfQuote;
+    // const  GetHalfQuote = 'https://localhost:7070/gethalfquote';
     return this.httpService.post(GetHalfQuote,reqData);
   }
   getFullQuote(reqData: any){
