@@ -595,6 +595,10 @@
     .fw_form.mobile_popupMain .input-block-dob{
         margin-bottom: 16px !important;
     }
+    .download_policyKit {
+        flex-direction: column;
+        gap:10px;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
