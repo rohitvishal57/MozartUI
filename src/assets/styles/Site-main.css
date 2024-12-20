@@ -1484,7 +1484,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .input-checkbox-feild .input-check + label:before {
   content: "";
-  margin-right: 1rem;
+  margin-right: 0.5rem;
   display: inline-block;
   vertical-align: text-top;
   width: 16px;
@@ -2885,14 +2885,17 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .filterWraperForm .fw_form .fw_checkboxWraper {
-  gap: 16px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
   width: 48%;
 }
-
+.fw_checkboxWraper .input-checkbox-feild .input-check:checked + label:after {
+  bottom: auto;
+    top: 3px;
+}
 .field_searchWraper {
   background: rgba(255, 255, 255, 0.85);
   position: absolute;
