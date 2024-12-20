@@ -198,11 +198,11 @@ export class ClaimsListViewComponent implements OnInit {
 
 
   calculateAppliedFiltersCount() {
-    const selectedProductsCount = this.productsList.filter(
-      (product: any) => product.selected).length;
+    // const selectedProductsCount = this.productsList.filter(
+    //   (product: any) => product.selected).length;
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (policyType: any) => policyType.selected).length;
-    let count = selectedProductsCount + selectedPolicyTypesCount;
+    let count = selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
       count++;
     }
@@ -230,12 +230,12 @@ export class ClaimsListViewComponent implements OnInit {
     
     console.log("start date taken by request body", this.claimsReqBody.startDate);
     console.log("end date taken by request body", this.claimsReqBody.endDate);
-      const selectedProducts = this.productsList
-      .filter((product: any) => product.selected)
-      .map((product: any) => product.productName);
-    console.log("selectedProducts", selectedProducts);
-    this.claimsReqBody.productVarientName = selectedProducts.join(", ");
-    console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
+    //   const selectedProducts = this.productsList
+    //   .filter((product: any) => product.selected)
+    //   .map((product: any) => product.productName);
+    // console.log("selectedProducts", selectedProducts);
+    // this.claimsReqBody.productVarientName = selectedProducts.join(", ");
+    // console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
   
     const selectedPolicyTypes = this.StaticRequestTypes
       .filter((policyType) => policyType.selected)
