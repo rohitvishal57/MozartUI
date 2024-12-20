@@ -195,6 +195,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.mobileNumber = "";
     this.proposalListRequestBody.proposer="";
     this.proposalListRequestBody.proposalNumber="";
+    this.proposalListRequestBody.email="";
     this.proposalListRequestBody.leadId="";
     this.proposalListRequestBody.proposalStatus="";
     this.getProposalList() ;
@@ -418,6 +419,8 @@ export class ProposalsListComponent {
       return "Enter Proposal Number";
     } else if (this.selected === "leadId") {
       return "Enter Lead ID";
+    } else if (this.selected === "email") {
+      return "Enter Email ID";  
     } else if (this.selected === "proposalStatus") {
       return "Enter Proposal Status";
     }
@@ -431,8 +434,9 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposer = "";
     this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber = "",
-      this.proposalListRequestBody.proposalStatus = "",
-      this.searchInputControl.reset();
+    this.proposalListRequestBody.email = "",
+    this.proposalListRequestBody.proposalStatus = "",
+    this.searchInputControl.reset();
     this.searchApplied = false;
     this.getProposalList();
   }
@@ -442,7 +446,7 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.name = "";
     this.quoteListRequestBody.quoteId = "";
     this.quoteListRequestBody.proposalNumber = "",
-      this.searchInputControl.reset();
+    this.searchInputControl.reset();
     this.searchApplied = false;
     this.getQuoteList(false);
   }
@@ -453,34 +457,45 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.mobileNumber = trimmedValue || "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "proposalNumber") {
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
+      } else if (this.selected == "email") {
+        this.proposalListRequestBody.email = trimmedValue || "";
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.proposalNumber = "";
       }
       else if (this.selected === "proposalStatus") {
-        console.log("seleted", this.selected);
         this.proposalListRequestBody.proposalStatus = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.email = "";
       }
       this.first = 0;
       this.page = 1;
