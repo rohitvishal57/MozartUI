@@ -45,7 +45,7 @@ h6 {
 
 .tableSubMain .table th,
 .tableSubMain .table td {
-	padding: 8px 8px;
+	padding: 8px 6px;
 }
 
 .quickFilterMain {
@@ -247,13 +247,13 @@ h6 {
 	border: 1px solid var(--white-color);
 	width: 100%;
 }
-.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
 	background: var(--primary-red-color) !important;
 	color: white;
 	img{
 		filter: brightness(0) invert(1);
 	}
-  }
+  } */
   .btn_quickFilter {
 	font-size: 11px;
 }   
