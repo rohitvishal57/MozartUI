@@ -770,7 +770,7 @@ export class YatraComponent {
               });
               this.dynamicFormGroup.addControl(control.name, controlGroup);
             }
-            if (['text', 'email', 'password', 'number', 'date', 'summary','displaycovers'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary', 'displaycovers'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -1796,7 +1796,7 @@ export class YatraComponent {
     if (startIdx !== -1 && endIdx !== -1) {
       string = control.slice(startIdx + 2, endIdx).trim();
     }
-  
+
     switch (string) {
       case 'actName':
         return control.replace('{{actName}}', this.formData?.accountNumber);
@@ -1811,7 +1811,7 @@ export class YatraComponent {
         return control;
     }
   }
-  
+
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
@@ -1825,6 +1825,20 @@ export class YatraComponent {
       console.log(this.tenureAmount, this.selectedIndex);
 
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+
+    }
+    if (control.name == 'confAccountNumber') {
+
+      if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
+        this.toast.error({ detail: "ERROR", summary: 'AccountNumber and Confirm confAccountNumber should be matched', duration: 3000 });
+        const idNumberControl = this.dynamicFormGroup.get('confAccountNumber');
+        idNumberControl?.setValidators([
+          Validators.required
+        ]);
+        idNumberControl?.setValue('');
+        idNumberControl?.setErrors({ required: true });
+        idNumberControl?.updateValueAndValidity();
+      }
 
     }
     if (control.name === 'idProof') {
@@ -3617,7 +3631,7 @@ export class YatraComponent {
             }
 
             this.quickQuoteRedirect = false;
-            console.log(this.isQuote,this.formData);
+            console.log(this.isQuote, this.formData);
           },
           error: (err) => {
             console.error(err);
@@ -4315,7 +4329,7 @@ export class YatraComponent {
             const taxKey = `t${i}TaxAmount`;
             this.QuoteNumber.push(res.data[Quote]);
 
-            this.tenureAmount[i - 1] = res.data[premiumKey]? Math.round(res.data[premiumKey]) : 0;
+            this.tenureAmount[i - 1] = res.data[premiumKey] ? Math.round(res.data[premiumKey]) : 0;
             this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
             this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
@@ -5213,13 +5227,13 @@ export class YatraComponent {
 
     })
     if (this.selectedIndex == -1) {
-      console.log(this.tenureAmount.length,this.tenureAmount);
-      if(this.tenureAmount.length>0){
+      console.log(this.tenureAmount.length, this.tenureAmount);
+      if (this.tenureAmount.length > 0) {
         const filteredLength = this.tenureAmount.filter(num => num !== 0).length;
-        this.selectedIndex = filteredLength-1;
+        this.selectedIndex = filteredLength - 1;
       }
       else
-      this.selectedIndex = 2;
+        this.selectedIndex = 2;
     }
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
@@ -5310,7 +5324,7 @@ export class YatraComponent {
   }
   displaySelectedAddons(control: any) {
     console.log("FORM DATA", this.formData);
-    const coverNames: string[] = [];  
+    const coverNames: string[] = [];
     for (const key in this.formData) {
       if (this.formData.hasOwnProperty(key)) {
         const addon = this.formData[key];
@@ -5322,7 +5336,7 @@ export class YatraComponent {
     control.value = coverNames;
     console.log("Selected Cover Names: ", coverNames);
   }
-  
+
   selectEditField(control: any) {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
@@ -6695,7 +6709,7 @@ export class YatraComponent {
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No",
       businessType: "NB",
-      userType:"Agent"
+      userType: "Agent"
     };
     console.log(kycRequestBody);
     this.renewalService.getkycURL(kycRequestBody).subscribe(
@@ -6787,7 +6801,7 @@ export class YatraComponent {
     const kycDetailsReq = {
       "transactionId": this.transactionId,
       "businessType": "NB",
-      "userType":"Agent"
+      "userType": "Agent"
     }
     this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
       async (res: any) => {
@@ -6897,8 +6911,8 @@ export class YatraComponent {
               policyType: 'New Business',
               policyNumber: orderData?.policyNumber,
               quoteNumber: '',
-              productName:'',
-              userType:"Agent"
+              productName: '',
+              userType: "Agent"
             };
             this.yatraService.justPayRedirection(reqData).subscribe(
               (response: any) => {
@@ -6950,11 +6964,11 @@ export class YatraComponent {
 
   }
 
-  getCityStateByPin(){
+  getCityStateByPin() {
     const reqData = {
       "pincode": this.formData.proposerPincode
     }
-    this.commonService.getPinCodeByCity(reqData).subscribe(res=>{
+    this.commonService.getPinCodeByCity(reqData).subscribe(res => {
       if (res.isSuccess && res.data) {
         // Update city and state fields
         this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
