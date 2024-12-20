@@ -458,11 +458,12 @@ export class ClaimsViewComponent {
       });
   }
   getMemberIdList(membersList: Array<any>) {
-    this.memberNames = membersList.filter((value, index, self) =>
+    /* this.memberNames = membersList.filter((value, index, self) =>
       index === self.findIndex((t) => (
         t.memberId === value.memberId
       ))
-    );
+    ); */
+    this.memberNames = membersList;
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim(); 

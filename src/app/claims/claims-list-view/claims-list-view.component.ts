@@ -166,7 +166,6 @@ export class ClaimsListViewComponent implements OnInit {
         console.error("API request was not successful.");
       }
     });
-
   }
 
   toggleFilterDropdown() {
@@ -196,7 +195,6 @@ export class ClaimsListViewComponent implements OnInit {
     })
   }
 
-
   calculateAppliedFiltersCount() {
     // const selectedProductsCount = this.productsList.filter(
     //   (product: any) => product.selected).length;
@@ -208,6 +206,7 @@ export class ClaimsListViewComponent implements OnInit {
     }
     this.appliedFiltersCount = count;
   }
+  
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.fromDate) {
       this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
@@ -252,6 +251,7 @@ export class ClaimsListViewComponent implements OnInit {
   cancel() {
     this.toggeledropdown = false;
   }
+
   clear() {
     this.productsList.forEach((product: any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
@@ -264,6 +264,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.claimsReqBody.endDate = null;
     this.fetchData();
   }
+  
   onSelectChanges(event: any): void {
     if (this.selected === "") {
       this.claimsReqBody.filterType = "";
@@ -295,6 +296,7 @@ export class ClaimsListViewComponent implements OnInit {
       return 'Search...';
     }
   }
+
   resetFilters(): void {
     this.claimsReqBody.filterType = '';
     //this.claimsReqBody.searchString = [];
