@@ -2289,31 +2289,34 @@ export class YatraComponent {
   //   return age;
   // }
 
-  calculateAge(dob: Date): number | string {
+  calculateAge(dob: Date): string {
     const today = new Date();
     const birthDate = new Date(dob);
 
     if (birthDate > today) {
-      return 'invalid';
+      return 'Date of birth cannot be in the future';
     }
 
     let age = today.getFullYear() - birthDate.getFullYear();
-    console.log(age);
     const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    const dayDifference = today.getDate() - birthDate.getDate();
+
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
       age--;
     }
     if (age < 1) {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-      if (diffInDays < 91) {
-        return 'invalid'; // Less than 91 days is not valid
-      }
-      return `${diffInDays}days`; // Added space between number and "days"
-    }
 
-    return `${age}`;
+      if (diffInDays < 91) {
+        return `${diffInDays} days`;
+      }
+      const diffInMonths = Math.floor(diffInDays / 30);
+      return `${diffInMonths} months`;
+    }
+    return `${age} years`;
   }
+
 
 
   // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
