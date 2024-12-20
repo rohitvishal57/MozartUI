@@ -5141,6 +5141,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 600;
   font-size: 12px;
   color: #144DB8;
+  align-items: center;
 }
 .download_policyKit .btn_downloadKit:hover {
   opacity: 0.5;

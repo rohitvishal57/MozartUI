@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
+import { CustomersService } from 'src/app/customers/customers.service';
 
 @Component({
   selector: 'app-yatra',
@@ -131,6 +132,7 @@ export class YatraComponent {
   orderId: any;
   city: string = '';
   state: string = '';
+  retrievedDocuments : any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -138,7 +140,7 @@ export class YatraComponent {
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe,
-    private renewalService: RenewalsService) {
+    private renewalService: RenewalsService, private customerService: CustomersService) {
   }
 
   ngOnInit() {
@@ -6976,16 +6978,12 @@ export class YatraComponent {
     });
   }
 
-  //halfQuotation
   halfQuotation(){
     const reqData = {
       "proposalNum":this.proposalNum,
       "agentCode": this.agentCode
   }
-
   console.log(reqData);
-  
-
   this.yatraService.getHalfQuote(reqData).subscribe({
     next: (response: any) => {
       if (response.isSuccess && response.data) {
@@ -7007,6 +7005,95 @@ export class YatraComponent {
       this.toast.error({ detail: "ERROR", summary: 'Failed to generate half Quote', duration: 3000 });
     }
   });
+}
+
+  onClickDownloadFromConfirmation() {
+    this.onSearchDocumentFromConfirmation();
+    const downloadPolicyKitRequestBody = {
+      agentCode: this.agentCode,
+      referenceId: this.agentCode,
+      eventName: "Download policy kit request from customers",
+      proposalNumber: this.dynamicFormGroup.get('policyNumber')?.value,
+      downloadRequest: [
+        {
+          omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
+          fileName: this.retrievedDocuments[0].fileName,
+        },
+      ],
+      sourceSystemName: "",
+      identifier: "",
+    };
+    this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+          const file = response.data.downloadResponse[0];
+          if (file.byteArray && file.fileName) {
+            const byteArray = new Uint8Array(
+              atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+            );
+            const blob = new Blob([byteArray], { type: "application/pdf" });
+            const fileURL = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = fileURL;
+            link.download = file.fileName;
+            document.body.appendChild(link)
+            link.click();  
+            document.body.removeChild(link)
+            window.open(fileURL, "_blank");
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+        }
+      },
+      (error: any) => {
+        console.error("Download Policy Kit Error:", error);
+        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+      }
+    );
+  }
+
+  onSearchDocumentFromConfirmation() {
+    const searchDocumentRequestBody = {
+      referenceId: this.agentCode,
+      searchRequest: [
+        {
+          categoryID: "",
+          description: "",
+          dataClassParam: [
+            {
+              docSearchParamId: "2",
+              value: this.dynamicFormGroup.get('policyNumber')?.value
+            },
+            {
+              docSearchParamId: "15",
+              value: "PS_04",
+            },
+          ],
+        },
+      ],
+      agentCode: this.agentCode,
+      eventName: "Search policy kit request from customers",
+      sourceSystemName: "",
+      searchOperator: "AND",
+    };
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          const searchResponse = response.data.searchResponse;
+          this.retrievedDocuments = searchResponse;
+          if (searchResponse && searchResponse[0]?.error?.length > 0) {
+            this.toast.success({ detail: "", summary: "No documents are available to download.", duration: 2000 });
+            return;
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+        }
+      },
+      (error: any) => {
+        console.error("Search document error", error);
+        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+      }
+    );
   }
 }
 
