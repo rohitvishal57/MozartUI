@@ -2845,6 +2845,7 @@ export class RugDynamicFormComponent {
         mobileNumber:this.bbdetails.proposerMobileNumber,
         emailId:this.bbdetails.proposerEmailAddress
       })
+      insuredMembersArray.at(0).get('gender')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
@@ -2915,6 +2916,7 @@ export class RugDynamicFormComponent {
             });
           }
         });
+        insuredMembersArray.at(0).get('gender')?.disable();
       }
     }
 
