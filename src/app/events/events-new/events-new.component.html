@@ -22,7 +22,7 @@
               </div>
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
-            *ngIf="saveEvent.get('eventType')?.value === 'Proposals' || 
+            *ngIf="saveEvent.get('eventType')?.value === 'proposals' || 
                    saveEvent.get('eventType')?.value === 'lead'">
          <div class="input-block form-floating input-block-renew">
            <input 
@@ -34,15 +34,15 @@
              placeholder="" 
            />
            <label for="eventNumber">
-             {{ (saveEvent.get('eventType')?.value === 'Proposals' ? 
+             {{ (saveEvent.get('eventType')?.value === 'proposals' ? 
                  'Proposal Number' : 'Lead Number') | translate }}
            </label>
          </div>
          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onReferenceNumberSelect($event.option.value)">
            <mat-option *ngFor="let item of filteredReferenceList" 
-                       [value]="saveEvent.get('eventType')?.value === 'Proposals' ? 
+                       [value]="saveEvent.get('eventType')?.value === 'proposals' ? 
                                 item.proposalNum : item.leadNumber">
-             {{ saveEvent.get('eventType')?.value === 'Proposals' ? 
+             {{ saveEvent.get('eventType')?.value === 'proposals' ? 
                  item.proposalNum : item.leadNumber }}
            </mat-option>
          </mat-autocomplete>
