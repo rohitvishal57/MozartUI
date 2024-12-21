@@ -679,6 +679,9 @@ export class YatraComponent {
             }
             else {
               control.subControls.forEach((subControl: ISubControl) => {
+                if(subControl.name == 'addOnCover' && control.name == 'deductible'){
+                  subControl.value = true;
+                }
                 if (subControl.name == 'addOnDetails') {
                   let demoTypeIndex: any;
                   let doneButton: any;
@@ -704,6 +707,22 @@ export class YatraComponent {
                       const tempRelationshipType = JSON.parse(member.relationshipType);
                       tempInnerControl.label = tempRelationshipType.value;
                       tempInnerControl.name = tempRelationshipType.value;
+                      console.log(tempInnerControl);
+                      
+                      if(control.name == 'deductible'){
+                        tempInnerControl.coreControls.forEach((coreControl:any)=>{
+                          if(coreControl.type == 'checkbox'){
+                            coreControl.value = true;
+                          }
+                          else if(coreControl.type == 'select'){
+                            coreControl.value = member.deductibleAmount;
+                          }
+                          console.log(control);
+                          
+                          
+                        })
+                      }
+
                       if (subControl.conditionCheck) {
                         tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
                           if (corecontrol.dependentControls && this.formData[control.name]) {
@@ -916,6 +935,9 @@ export class YatraComponent {
       console.log(this.form);
       console.log(this.dynamicFormGroup.getRawValue(), this.formData);
 
+      if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
+        this.getPremiumAmount();
+      }
 
       this.flattenObject(this.formData);
       this.spinner.hide();
@@ -1953,6 +1975,9 @@ export class YatraComponent {
         if (control.dependentControls) {
           this.resolveMethod(control.onChangeMethod, control, eventValue);
         }
+        else if(control.onChangeMethod == 'setDeductibleAmount'){
+          this.resolveMethod(control.onChangeMethod,control,parentControl,index);
+        }
         else {
           eventValue = selectedValue === 'Others' ? true : false;
           const selectedOption = control.options.find((option: any) => option.value === selectedValue);
@@ -2007,8 +2032,10 @@ export class YatraComponent {
         this.callMethod(parentControl.methodName, control)
       }
       else {
-        console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
-        this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
+        if(innerControl!=null && innerControl.dependentControls){
+          console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
+          this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
+        }
         this.changeOverLayDone(control, parentControl, false);
       }
     }
@@ -4880,7 +4907,7 @@ export class YatraComponent {
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
-    console.log(addOnData);
+    console.log(addOnData,control,parentControl);
 
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
@@ -4889,54 +4916,66 @@ export class YatraComponent {
         modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
-            const coverId = addOnData.addOnId;
-            const coverName = addOnData.optionalCoverName;
-            let coverFound = false;
-
-            if (!member.covers) {
-              member.covers = [];
+            if(parentControl.name == 'deductible'){
+              addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+                if (addOnDetail.addOnSumInsured) {
+                  member.deductibleAmount = addOnDetail.addOnSumInsured;
+                }
+              })
+              console.log(member);
+              
             }
-
-            addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
-              if (addOnDetail.addOnSumInsured) {
-                addOnSumInsured = addOnDetail.addOnSumInsured;
+            else{
+              const coverId = addOnData.addOnId;
+              const coverName = addOnData.optionalCoverName;
+              let coverFound = false;
+  
+              if (!member.covers) {
+                member.covers = [];
               }
-              if (addOnData.addOnId === 'PA' && addOnDetail.occupation) {
-                member.occupationCode = JSON.parse(addOnDetail.occupation).value;
-              }
-              if (addOnData.addOnId === 'PA' && addOnDetail.occupationRisk) {
-                member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
-              }
-            });
-
-            member.covers.forEach((cover: any) => {
-              if (cover.coverId === coverId) {
-                cover.value = addOnSumInsured;
-                coverFound = true;
-              }
-            });
-
-            if (!coverFound) {
-              member.covers.push({
-                coverId: coverId,
-                value: addOnSumInsured,
-                coverName: coverName
+  
+              addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+                if (addOnDetail.addOnSumInsured) {
+                  addOnSumInsured = addOnDetail.addOnSumInsured;
+                }
+                if (addOnData.addOnId === 'PA' && addOnDetail.occupation) {
+                  member.occupationCode = JSON.parse(addOnDetail.occupation).value;
+                }
+                if (addOnData.addOnId === 'PA' && addOnDetail.occupationRisk) {
+                  member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+                }
               });
-            }
-
-            if (!this.covers[index]) {
-              this.covers[index] = [];
-            }
-
-            let coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-            if (coverInCovers) {
-              coverInCovers.value = addOnSumInsured;
-            } else {
-              this.covers[index].push({
-                coverId: coverId,
-                value: addOnSumInsured,
-                coverName: coverName
+  
+              member.covers.forEach((cover: any) => {
+                if (cover.coverId === coverId) {
+                  cover.value = addOnSumInsured;
+                  coverFound = true;
+                }
               });
+  
+              if (!coverFound) {
+                member.covers.push({
+                  coverId: coverId,
+                  value: addOnSumInsured,
+                  coverName: coverName
+                });
+              }
+  
+              if (!this.covers[index]) {
+                this.covers[index] = [];
+              }
+  
+              let coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+              if (coverInCovers) {
+                coverInCovers.value = addOnSumInsured;
+              } else {
+                this.covers[index].push({
+                  coverId: coverId,
+                  value: addOnSumInsured,
+                  coverName: coverName
+                });
+              }
+
             }
           }
         });
@@ -6532,7 +6571,7 @@ export class YatraComponent {
     this.setFormIndexValue(index)
     this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
   }
-  deductibleOptionsB(control: any, parentControl: any) {
+  deductibleOptionsB(control: any, parentControl: any,sumInsured:any) {
     console.log(control, parentControl);
     const data: any = {
       300000: [
@@ -6616,6 +6655,11 @@ export class YatraComponent {
         { name: "500000", label: "500000", value: 500000 },
       ],
     };
+    if(control== null && parentControl == null){
+      console.log(sumInsured,data[sumInsured][0].value);
+      return data[sumInsured][0].value;
+      
+    }
     this.formData.insuredMemberDetails.forEach((member: any) => {
       if (member.relation == parentControl.name) {
         const sumInsured = member.sumInsured;
@@ -6625,7 +6669,7 @@ export class YatraComponent {
       }
     })
   }
-  deductibleOptionsA(control: any, parentControl: any) {
+  deductibleOptionsA(control: any, parentControl: any,sumInsured:any) {
     console.log(control, parentControl);
     const data: any = {
       8500000: [
@@ -6650,6 +6694,11 @@ export class YatraComponent {
         }
       ]
     };
+
+    if(control== null && parentControl == null){
+      console.log(sumInsured,data.sumInsured);
+      
+    }
 
     this.formData.insuredMemberDetails.forEach((member: any) => {
       if (member.relation == parentControl.name) {
@@ -7138,6 +7187,42 @@ export class YatraComponent {
         this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
       }
     );
+  }
+
+  setDeductibleAmount(control:any,parentControl:any=null,index:any=null){
+
+    console.log(control,parentControl,index);
+    
+    if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater'){
+
+    }
+    else if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual'){
+      const insuredMemberDetailsControl = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      const sumInsuredControl = insuredMemberDetailsControl.controls[index].get(control.name);
+      console.log(sumInsuredControl);
+      
+      console.log(insuredMemberDetailsControl,sumInsuredControl,index,control);
+      this.form.formSections.forEach((section:any)=>{
+        if(section.sectionTitle == 'Insured Member Details'){
+          section.formControls.forEach((control:any)=>{
+            if(control.visible == true){
+              control.dynamicControls[0].forEach((dynamicControl:any)=>{
+                if(dynamicControl.name == 'deductibleAmount'){
+                  if(dynamicControl.onChangeMethod == 'deductibleOptionsB'){
+                    const deductibleValue = this.deductibleOptionsB(null,null,sumInsuredControl?.value);
+                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                  }
+                  else{
+                    this.deductibleOptionsA(null,null,sumInsuredControl?.value);
+                  }
+                }
+              })
+            }
+          })
+        }
+      })
+      
+    }
   }
 }
 

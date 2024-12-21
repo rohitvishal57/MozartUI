@@ -472,9 +472,8 @@
                                       [formControlName]="subControl.name" [name]="subControl.name"
                                       [id]="subControl.name"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
-                                      aria-label="Default select example">
-                                      <!-- <option value="" disabled selected>Select {{
-                                    subControl.label }}</option> -->
+                                      aria-label="Default select example"
+                                      (change)="onInputChange($event, subControl,control,i-1)">
                                       <ng-container *ngFor="let opt of subControl.options">
                                         <option [value]="opt.value">{{ opt.name?(opt.name | translate): '' }}
                                         </option>
@@ -1076,6 +1075,7 @@
                                                     <input type="checkbox" formControlName="{{ innerControl.name }}"
                                                       [name]="innerControl.name" [id]="innerControl.name"
                                                       style="height:25px; width:25px; margin-left: 10px;"
+                                                      [disabled]="true"
                                                       (change)="onInputChange($event, subControl,control,k,innerSubForm,innerControl,l)" />
                                                     <label [for]="innerControl.name"
                                                       [innerHTML]="innerControl.label ? innerControl.label : innerSubForm.label"
