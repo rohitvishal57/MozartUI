@@ -207,4 +207,8 @@ export class YatraService {
     const Pennydropverification = this.configService.config.baseUrl + this.configService.config.fetchPennydropverification;
     return this.httpService.post(Pennydropverification,reqData);
   }
+  sharePaymentLink(reqData:any){
+    const sharePaymentLink = this.configService.config.baseUrl + this.configService.config.sharePaymentLink;
+    return this.httpService.post(sharePaymentLink,reqData);
+  }
 }

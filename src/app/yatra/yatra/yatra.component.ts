@@ -278,6 +278,19 @@ export class YatraComponent {
                   if (this.formData.quoteIdDetails) {
                     this.QuoteNumber = this.formData.quoteIdDetails;
                   }
+                  if(decryptedData.currentFormSequence == "8"){
+                    this.formData.policyNumber = decryptedData.policyNumber || null;
+                    this.formData.policyStatus = decryptedData.policyStatus || null;
+                    this.formData.quoteValidFromDate = decryptedData.policyStartDate || null;
+                    this.formData.quoteValidToDate = decryptedData.policyEndDate || null;
+                    this.formData.ReceiptNumber = decryptedData.ReceiptNumber || null;
+                    this.formData.customerId = decryptedData.customerId || null;
+                    this.formData.applicationNumber = decryptedData.applicationNumber || null;
+                  }
+                  if(decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED'){
+                    console.log('PENDING');
+                    this.toast.error({ detail: "ERROR", summary: "Payment is Pending", duration: 3000 });
+                  }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
                   if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
@@ -3243,7 +3256,7 @@ export class YatraComponent {
 
   onButtonClick(control: any) {
     this.selectedButton = control.name;
-    console.log(this.selectedButton);
+    console.log(this.selectedButton,control);
 
     const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
     if (paymentModeControl) {
@@ -3298,41 +3311,44 @@ export class YatraComponent {
       });
     }
     // Handle the Juspay redirection for buttons other than Offline
-    // if (this.selectedButton !== 'offline' && this.selectedButton !== 'autoDebit') {
-    //   const reqData = {
-    //     agentcode: this.agentCode,
-    //     proposalNumber: this.proposalNum,
-    //     paymentMethod: this.selectedButton,
-    //     source: 'Retail',
-    //     policyType: 'New Business',
-    //     policyNumber: '',
-    //     quoteNumber: '',
-    //     OrderID: ''
-    //   };
-    //   this.yatraService.justPayRedirection(reqData).subscribe({
-    //     next: (response: any) => {
-    //       console.log('Juspay API Response:', response);
+    if (this.selectedButton === 'sendLinkButton') {
+      const reqData = {
+        firstName: this.formData.firstName,
+        lastName: this.formData.lastName,
+        agentcode: this.agentCode,
+        emailId: 'saisatya@monocept.com',
+        productName: this.formData.productName,
+        pNumber: this.formData.proposalNumber,
+        businessType: 'NB',
+        productCode: this.formData.productId,
+        premiumAmount:this.formData.totalPremium,
+        mobilenumber:'7396201298',
+      };
+      console.log(reqData);
+      this.yatraService.sharePaymentLink(reqData).subscribe({
+        next: (response: any) => {
+          console.log('Juspay API Response:', response);
 
-    //       if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-    //         if (this.selectedButton == 'sendLinkButton') {
-    //           console.log(response);
-    //           this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-    //           // res = response.data.paymentURL;
-    //         }
-    //         else {
-    //           window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-    //         }
-    //       } else {
-    //         this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-    //         console.error('Invalid payment link received:', response);
-    //       }
-    //     },
-    //     error: (error) => {
-    //       this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-    //       console.error('Error generating payment link:', error);
-    //     }
-    //   });
-    // }
+          if (response.data.paymentLink && response.data.paymentLink !== null && response.data.paymentLink !== '') {
+            if (this.selectedButton == 'sendLinkButton') {
+              console.log(response);
+              this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+              // res = response.data.paymentLink;
+            }
+            else {
+              window.location.href = response.data.paymentLink; // Redirect to Juspay Payment URL
+            }
+          } else {
+            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            console.error('Invalid payment link received:', response);
+          }
+        },
+        error: (error) => {
+          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          console.error('Error generating payment link:', error);
+        }
+      });
+    }
 
     // Handle showing dependent controls if any are specified for the clicked button
     if (control.dependentControls) {
@@ -6739,15 +6755,15 @@ export class YatraComponent {
   }
   checkKycDetail(control: any): void {
     // const isVisible = !(this.formData.verifyKYC !== "" || this.formData.kycStatus !== "" || this.formData.isKYCComplete);
-    const isVisible = this.formData.verifyKYC === "" || this.formData.verifyKYC === null;
-    this.form.formSections.forEach((section) => {
-      section.formControls.forEach((formControl: IFormControl) => {
-        if (formControl.name === control.name) {
-          section.visible = isVisible;
-          this.form.formSections[1].visible = !isVisible;
-        }
-      });
-    });
+    // const isVisible = this.formData.verifyKYC === "" || this.formData.verifyKYC === null;
+    // this.form.formSections.forEach((section) => {
+    //   section.formControls.forEach((formControl: IFormControl) => {
+    //     if (formControl.name === control.name) {
+    //       section.visible = isVisible;
+    //       this.form.formSections[1].visible = !isVisible;
+    //     }
+    //   });
+    // });
   }
   formatDate(dateString: string | Date): string {
     if (!dateString) return "";
@@ -6769,12 +6785,13 @@ export class YatraComponent {
       const reqData = {
         agentcode: this.agentCode,
         proposalNumber: this.formData.proposalNumber,
-        paymentMethod: this.selectedButton,
+        paymentMethod: this.selectedButton === 'enach' ? 'emandate_payment' : this.selectedButton,
         source: 'Retail',
-        policyType: 'New Business',
+        policyType: 'NB',
         policyNumber: '',
-        quoteNumber: '',
-        productName: this.formData.productName
+        quoteNumber: this.formData.quoteId,
+        productName: this.formData.productName,
+        userType:'Agent'
       };
       console.log(reqData);
       this.yatraService.justPayRedirection(reqData).subscribe({
@@ -6818,6 +6835,7 @@ export class YatraComponent {
       "businessType": "NB",
       "userType": "Agent"
     }
+    console.log(kycDetailsReq);
     this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
       async (res: any) => {
         if (res.data.kycStatus) {

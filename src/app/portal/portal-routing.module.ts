@@ -5,10 +5,10 @@ import { PaymentComponent } from './payment/payment.component';
 
 
 const routes: Routes = [
+    {path: 'payment',component: PaymentComponent},
     {path: 'yatra/kyc',component: KycComponent},
     {path: 'renewal/kyc',component: KycComponent},
-    {path: 'yatra/payment',component: PaymentComponent},
-    {path: 'renewal/payment',component: PaymentComponent}
+    {path: 'sharePayment',component: PaymentComponent}
 ];
 
 @NgModule({
