@@ -132,7 +132,7 @@ export class YatraComponent {
   orderId: any;
   city: string = '';
   state: string = '';
-  retrievedDocuments : any;
+  retrievedDocuments: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -2293,29 +2293,44 @@ export class YatraComponent {
     const today = new Date();
     const birthDate = new Date(dob);
 
-    if (birthDate > today) {
-      return 'Date of birth cannot be in the future';
-    }
-
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     const dayDifference = today.getDate() - birthDate.getDate();
 
+    // Adjust age if birth date is in the future relative to today
     if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
       age--;
     }
+
+    if (age < 0) {
+      // Birthdate is in the future; calculate absolute difference
+      const diffInMs = birthDate.getTime() - today.getTime();
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+      if (diffInDays < 91) {
+        return `-${diffInDays} days`; // Negative days
+      }
+
+      const diffInMonths = Math.floor(diffInDays / 30); // Approximate months
+      return `-${diffInMonths}`; // Negative months
+    }
+
+    // Return age in days or months if less than 1 year
     if (age < 1) {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
       if (diffInDays < 91) {
-        return `${diffInDays} days`;
+        return `${diffInDays} days`; // Return days
       }
-      const diffInMonths = Math.floor(diffInDays / 30);
-      return `${diffInMonths} months`;
+
+      const diffInMonths = Math.floor(diffInDays / 30); // Approximate months
+      return `${diffInMonths}`; // Return months
     }
-    return `${age} years`;
+
+    return `${age}`; // Return years
   }
+
 
 
 
@@ -6981,34 +6996,34 @@ export class YatraComponent {
     });
   }
 
-  halfQuotation(){
+  halfQuotation() {
     const reqData = {
-      "proposalNum":this.proposalNum,
+      "proposalNum": this.proposalNum,
       "agentCode": this.agentCode
-  }
-  console.log(reqData);
-  this.yatraService.getHalfQuote(reqData).subscribe({
-    next: (response: any) => {
-      if (response.isSuccess && response.data) {
-        this.toast.success({ detail: "SUCCESS", summary: 'Half Quote generated successfully with application number'+ response.data.applicationNumber, duration: 3000 });
-        this.onSubmit();
-      }
-      else{
-        this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
-        this.form.formSections.forEach((section: any) => {
-          section.formControls.forEach((control: any) => {
-            if (control.name === 'next') {
-              control.disabled = true;
-            }
-          })
-        });
-      }
-    },
-    error: (err) => {
-      this.toast.error({ detail: "ERROR", summary: 'Failed to generate half Quote', duration: 3000 });
     }
-  });
-}
+    console.log(reqData);
+    this.yatraService.getHalfQuote(reqData).subscribe({
+      next: (response: any) => {
+        if (response.isSuccess && response.data) {
+          this.toast.success({ detail: "SUCCESS", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
+          this.onSubmit();
+        }
+        else {
+          this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((control: any) => {
+              if (control.name === 'next') {
+                control.disabled = true;
+              }
+            })
+          });
+        }
+      },
+      error: (err) => {
+        this.toast.error({ detail: "ERROR", summary: 'Failed to generate half Quote', duration: 3000 });
+      }
+    });
+  }
 
   onClickDownloadFromConfirmation() {
     this.onSearchDocumentFromConfirmation();
@@ -7040,7 +7055,7 @@ export class YatraComponent {
             link.href = fileURL;
             link.download = file.fileName;
             document.body.appendChild(link)
-            link.click();  
+            link.click();
             document.body.removeChild(link)
             window.open(fileURL, "_blank");
           }
