@@ -2297,38 +2297,34 @@ export class YatraComponent {
     const monthDifference = today.getMonth() - birthDate.getMonth();
     const dayDifference = today.getDate() - birthDate.getDate();
 
-    // Adjust age if birth date is in the future relative to today
     if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
       age--;
     }
 
     if (age < 0) {
-      // Birthdate is in the future; calculate absolute difference
       const diffInMs = birthDate.getTime() - today.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
       if (diffInDays < 91) {
-        return `-${diffInDays} days`; // Negative days
+        return `-${diffInDays} days`;
       }
 
-      const diffInMonths = Math.floor(diffInDays / 30); // Approximate months
-      return `-${diffInMonths}`; // Negative months
+      const diffInMonths = Math.floor(diffInDays / 30);
+      return `-${diffInMonths}`; 
     }
-
-    // Return age in days or months if less than 1 year
     if (age < 1) {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
       if (diffInDays < 91) {
-        return `${diffInDays} days`; // Return days
+        return `${diffInDays} days`;
       }
 
-      const diffInMonths = Math.floor(diffInDays / 30); // Approximate months
-      return `${diffInMonths}`; // Return months
+      const diffInMonths = Math.floor(diffInDays / 30);
+      return `${diffInMonths}`;
     }
 
-    return `${age}`; // Return years
+    return `${age}`;
   }
 
 
