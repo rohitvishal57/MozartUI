@@ -7027,47 +7027,50 @@ export class YatraComponent {
 
   onClickDownloadFromConfirmation() {
     this.onSearchDocumentFromConfirmation();
-    const downloadPolicyKitRequestBody = {
-      agentCode: this.agentCode,
-      referenceId: this.agentCode,
-      eventName: "Download policy kit request from customers",
-      proposalNumber: this.dynamicFormGroup.get('policyNumber')?.value,
-      downloadRequest: [
-        {
-          omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
-          fileName: this.retrievedDocuments[0].fileName,
-        },
-      ],
-      sourceSystemName: "",
-      identifier: "",
-    };
-    this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
-      (response: any) => {
-        if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
-          const file = response.data.downloadResponse[0];
-          if (file.byteArray && file.fileName) {
-            const byteArray = new Uint8Array(
-              atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
-            );
-            const blob = new Blob([byteArray], { type: "application/pdf" });
-            const fileURL = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = fileURL;
-            link.download = file.fileName;
-            document.body.appendChild(link)
-            link.click();
-            document.body.removeChild(link)
-            window.open(fileURL, "_blank");
+    if(this.retrievedDocuments){
+      const downloadPolicyKitRequestBody = {
+        agentCode: this.agentCode,
+        referenceId: this.agentCode,
+        eventName: "Download policy kit request from customers",
+        proposalNumber: this.dynamicFormGroup.get('policyNumber')?.value,
+        downloadRequest: [
+          {
+            omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
+            fileName: this.retrievedDocuments[0].fileName,
+          },
+        ],
+        sourceSystemName: "",
+        identifier: "",
+      };
+      this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+        (response: any) => {
+          if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+            const file = response.data.downloadResponse[0];
+            if (file.byteArray && file.fileName) {
+              const byteArray = new Uint8Array(
+                atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+              );
+              const blob = new Blob([byteArray], { type: "application/pdf" });
+              const fileURL = window.URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = fileURL;
+              link.download = file.fileName;
+              document.body.appendChild(link)
+              link.click();  
+              document.body.removeChild(link)
+              window.open(fileURL, "_blank");
+            }
+          } else {
+            this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
           }
-        } else {
-          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+        },
+        (error: any) => {
+          console.error("Download Policy Kit Error:", error);
+          this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
         }
-      },
-      (error: any) => {
-        console.error("Download Policy Kit Error:", error);
-        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
-      }
-    );
+      );
+    }
+    
   }
 
   onSearchDocumentFromConfirmation() {
