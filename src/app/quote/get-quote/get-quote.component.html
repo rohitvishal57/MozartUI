@@ -52,7 +52,10 @@
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
                   {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
-
+                <ng-container *ngIf="dropdown.label === 'Porting'">
+                  {{ quoteFormGroup.get('isPortability')?.value ? quoteFormGroup.get('isPortability')?.value : ('Select' | translate) }}
+                </ng-container>
+                
               </span><img src="assets/Img/down_arrow.svg">
             </div>
           </button>
@@ -419,6 +422,22 @@
                       (click)="diseaseSelection()">{{"Continue" | translate}}</button>
                   </div>
                 </div>
+           
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Porting'">
+                  <div class="close-popup">
+                    <button type="button" class="btn-close" aria-label="Close"
+                      style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+                  </div>
+                  <div class="option_policyType">
+                    <div class="overlay_body checkbox_disease_scroll">
+                      <div class="input-checkbox-block checkbox_disease">
+                        <div class="input-checkbox-feild" *ngFor="let port of PotingValues" (click)="selectPort(port.value)">
+                          <label [for]="port.id">{{ port.label | translate }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
           </div>
         </div>
       </div>

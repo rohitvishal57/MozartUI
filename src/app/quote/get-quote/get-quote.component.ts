@@ -60,7 +60,10 @@ export class GetQuoteComponent implements AfterViewChecked {
     { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
     { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
   ];
-
+  PotingValues = [
+    { id: 'Yes', value: 'Yes', label: 'Yes' },
+    { id: 'No', value: 'No', label: 'No' }
+  ];
   proposerZone: any;
   proposerZoneValue: any = '';
   proposerCity: any;
@@ -224,6 +227,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       memberPolicyType: [this.selectedPlan],
       memberDobProposer: [''],
       memberAgeProposer: [''],
+      isPortability: [null],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
@@ -698,6 +702,10 @@ export class GetQuoteComponent implements AfterViewChecked {
     {
       label: 'Diseases',
       options: []
+    },
+    {
+      label: 'Porting',
+      options: []
     }
   ];
 
@@ -730,7 +738,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.quoteFormGroup.get('upgradableZones')?.setValue(this.upgradableZones);
     this.quoteFormGroup.get('zone')?.setValue(this.upgradedZone);
     this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
-    console.log(this.quoteFormGroup.value);
+    console.log("quoteForm Group",this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
     sessionStorage.setItem("relations", this.encryptionService.encrypt(this.relations));
     console.log(this.quoteFormGroup.get('insuredMemberDetails')?.value.length);
@@ -1258,4 +1266,9 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     }
   }
+  selectPort(value: string) {
+    this.quoteFormGroup.get('isPortability')?.setValue(value); 
+    this.closeCustomDiv()
+  }
+  
 }
