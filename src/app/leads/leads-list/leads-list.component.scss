@@ -5,6 +5,9 @@
 .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
 	width: 48%;
 }
+.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+	width: 23%;
+}
 
 .searchWraperForm {
 	padding: 10px 20px;
@@ -345,13 +348,17 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
-  @media only screen and (max-width: 767px) {
+  
+@media only screen and (max-width: 1024) {
 	.filterWraperForm{
 		padding: 0px;
 	}
 }
-@media only screen and (max-width: 1024) {
+  @media only screen and (max-width: 767px) {
 	.filterWraperForm{
 		padding: 0px;
+	}
+	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+		width: 30%;
 	}
 }

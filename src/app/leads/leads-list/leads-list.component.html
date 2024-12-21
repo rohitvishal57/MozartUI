@@ -77,13 +77,13 @@
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
                                         <h6>{{"Lead Status" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
+                                        <div class="fw_checkboxWraper fw_checkboxWraper_leads">
                                             <div class="input-checkbox-block" *ngFor="let leadFilter of leadFilterStatus; let i = index">
                                                 <div class="input-checkbox-feild">
                                                   <input type="checkbox" id="leadFilter{{i}}" name="leadFilter{{i}}" value="leadFilter" class="input-check" [(ngModel)]="leadFilter.selected" (change)="calculateAppliedFiltersCount()">
                                                   <label for="leadFilter{{i}}">{{leadFilter.name | translate}}</label>
                                                 </div>
-                                              </div>                                              
+                                            </div>                                              
                                         </div>
                                     </div>
 
