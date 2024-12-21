@@ -1879,6 +1879,9 @@ export class YatraComponent {
       }
 
     }
+    if (control.name == 'correspondentPincode') {
+        this.getCityStateByPinByCorressponding();
+    }
     if (control.name === 'idProof') {
 
       const idProof = JSON.parse(event.target.value);
@@ -2009,7 +2012,21 @@ export class YatraComponent {
         this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
           next: (response: any) => {
             if (response.isSuccess && response.data) {
-              this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+              const nobj = {
+                id : 1,
+                value : response.data.bankName
+              }
+              this.dynamicFormGroup.get('bankName')?.setValue(nobj || '');
+              const bobj = {
+                id : 1,
+                value : response.data.bankBranch
+              }
+              this.dynamicFormGroup.get('bankBranch')?.setValue(bobj || '');
+              const obj = {
+                id : 1,
+                value : response.data.bankCity
+              }
+              this.dynamicFormGroup.get('bankCity')?.setValue(obj || '');
               this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
               if (control.dependentControls.includes("pennyBtn")) {
                 this.changeMainFormDependentControls(control.dependentControls, true)
@@ -7048,9 +7065,17 @@ export class YatraComponent {
     if (flag) {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
+      this.dynamicFormGroup?.controls['proposerAddress3'].setValue(this.dynamicFormGroup?.controls['permanentAddress3'].value)
+      this.dynamicFormGroup?.controls['correspondentPincode'].setValue(this.dynamicFormGroup?.controls['proposerPincode'].value)
+      this.dynamicFormGroup?.controls['correspondingCity'].setValue(this.dynamicFormGroup?.controls['city'].value)
+      this.dynamicFormGroup?.controls['correspondingState'].setValue(this.dynamicFormGroup?.controls['state'].value)
     } else {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress3'].setValue('')
+      this.dynamicFormGroup?.controls['correspondentPincode'].setValue('')
+      this.dynamicFormGroup?.controls['correspondingCity'].setValue('')
+      this.dynamicFormGroup?.controls['correspondingState'].setValue('')
     }
 
   }
@@ -7064,6 +7089,21 @@ export class YatraComponent {
         // Update city and state fields
         this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
         this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
+        
+      }
+    });
+  }
+
+  getCityStateByPinByCorressponding() {
+    const reqData = {
+      "pincode": this.dynamicFormGroup.get('correspondentPincode')?.value
+    }
+    this.commonService.getPinCodeByCity(reqData).subscribe(res => {
+      if (res.isSuccess && res.data) {
+        // Update city and state fields
+        this.dynamicFormGroup.get('correspondingCity')?.setValue(res.data.city || '');
+        this.dynamicFormGroup.get('correspondingState')?.setValue(res.data.state || '');
+        
       }
     });
   }
