@@ -272,3 +272,14 @@ h6 {
 .siteBody {
 	padding-bottom: 6rem;
 }
+@media (max-width:767px) {
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
+	}
+	.quickFilterLeft .quickFilter {
+		min-width: 420px;
+	}
+	.head_myProposals {
+		gap: 8px;
+	}
+}
