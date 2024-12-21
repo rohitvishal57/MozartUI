@@ -39,7 +39,7 @@ export class EventsListTableViewComponent implements OnInit {
   staticEventTypes = [
     { name: 'Leads', selected: false },
     { name: 'Proposals', selected: false },
-    { name: 'Others', selected: false },
+    { name: 'others', selected: false },
 
   ];
 
@@ -61,6 +61,7 @@ export class EventsListTableViewComponent implements OnInit {
     this.appliedFiltersCount = 0;
     this.getEventReq.startDate = null;
     this.getEventReq.endDate = null;
+    this.getEventReq.eventType = "";
     this.loadEvents();
   }
   calculateAppliedFiltersCount() {
@@ -118,19 +119,6 @@ export class EventsListTableViewComponent implements OnInit {
         if (response?.isSuccess) {
           this.events = response?.data?.eventList
           this.totalRecords = response?.data?.totalRecords
-          // this.totalRecords = this.events;
-          
-          // this.events = response.data.map((event: any) => {
-          //   return event.eventSchedule.map((schedule: any) => {
-              // const startDateTime = this.parseDateTime(schedule.date, schedule.startTime);
-              // const endDateTime = this.parseDateTime(schedule.date, schedule.endTime);
-  
-              // if (!startDateTime || !endDateTime) {
-              //   console.error("Invalid date/time for event:", event);
-              //   return null;
-              // }
-          //   });
-          // })
         } else {
           console.error("Error loading events:", response.message);
         }
@@ -271,12 +259,9 @@ export class EventsListTableViewComponent implements OnInit {
       id: row.id,
     };
     console.log('row',row);
-    // const rowStartDate = this.datePipe.transform(new Date(row.startDate), 'MM-dd-yyyy');
-    // const rowEndDate = this.datePipe.transform(new Date(row.endDate), 'MM-dd-yyyy');
-    // console.log(rowStartDate, rowEndDate);
     const formatDate = (dateTime: string): string => {
       const date = new Date(dateTime);
-      return date.toISOString().split('T')[0]; // Extracts only the date portion
+      return date.toISOString().split('T')[0]; 
     };
     
     this.eventsService.eventListById(claimDetailsReqBody).subscribe(
