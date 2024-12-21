@@ -935,9 +935,9 @@ export class YatraComponent {
       console.log(this.form);
       console.log(this.dynamicFormGroup.getRawValue(), this.formData);
 
-      if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
-        this.getPremiumAmount();
-      }
+      // if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
+      //   this.getPremiumAmount();
+      // }
 
       this.flattenObject(this.formData);
       this.spinner.hide();
