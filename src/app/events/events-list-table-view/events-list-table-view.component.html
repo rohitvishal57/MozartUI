@@ -142,8 +142,8 @@
                     <table class="table table-borderless table-search">
                         <thead>
                             <tr>
-                                <th scope="col">{{"Event Number" | translate}}</th>
                                 <th scope="col">{{"Event Type" | translate}}</th>
+                                <th scope="col">{{"Event Number" | translate}}</th>
                                 <th scope="col">{{"Customer Name" | translate}}</th>
                                 <th scope="col">{{"Mobile Number" | translate}}</th>
                                 <th scope="col">{{"Activity Type" | translate}}</th>
@@ -160,21 +160,19 @@
                         <tbody class="table-group-divider">
                             <ng-container *ngIf="events.length > 0">
                                 <tr class="table-values" *ngFor="let row of events;let i = index">
-                                    <td>{{ row?.eventNumber }}</td>
                                     <td>{{ row?.eventType }}</td>
+                                    <td>{{ row?.eventNumber }}</td>
                                     <td class="card_insureInfo">{{ row?.customerName | translate}}</td>
                                     <td>{{ row?.mobileNumber }}</td>
                                     <td>{{ row?.activityType | translate}}</td>
                                     <td><span class="text-break-w100">{{ row?.activityTitle | translate}}</span></td>
-                                    <td>{{ row?.startDate }}</td>
-                                    <td>{{ row?.endDate }}</td>
-
+                                    <td>{{ row?.startDate | date:'dd-MM-yyyy'}}</td>
+                                    <td>{{ row?.endDate | date:'dd-MM-yyyy'}}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" id="viewclaim" name="viewclaim" value="view"
-                                                title="View-Claim" class="btn_action btn_claimAction"
-                                                (click)="navigateToEditEvent(row)"><img
-                                                    src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                         <button type="button" id="eventedit" name="eventedit" value="edit" title="Modify" 
+                                         class="btn_action btn_editAction"  (click)="navigateToEditEvent(row)">
+                                         <img src="assets/Img/icon_edit_grey.svg" ></button>
                                                     <div class="uploadedFiles_infoItem">
                                                         <button type="button" id="deletefile" name="deletefile" class="delete-button" (click)="deleteRow(row)">
                                                             <img src="assets/Img/icon_delete_red2.svg">

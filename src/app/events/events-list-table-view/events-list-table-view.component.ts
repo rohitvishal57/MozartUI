@@ -37,8 +37,8 @@ export class EventsListTableViewComponent implements OnInit {
   startDate: any;
   endDate: any;
   staticEventTypes = [
-    { name: 'Lead Number', selected: false },
-    { name: 'Proposal Number', selected: false },
+    { name: 'Leads', selected: false },
+    { name: 'Proposals', selected: false },
     { name: 'Others', selected: false },
 
   ];
@@ -79,11 +79,12 @@ export class EventsListTableViewComponent implements OnInit {
     
     this.getEventReq.startDate = this.fromDate; 
     this.getEventReq.endDate = this.toDate; 
+    
     const selectedEventTypes = this.staticEventTypes
     .filter((eventType) => eventType.selected)
     .map((eventType) => eventType.name);
   console.log("selected event types", selectedEventTypes);
-  this.getEventReq.eventType = selectedEventTypes.join(", ");
+  this.getEventReq.eventType = selectedEventTypes.join(",");
     console.log("start date taken by request body", this.getEventReq.startDate);
     console.log("end date taken by request body", this.getEventReq.endDate);
     this.first = 0;
@@ -250,18 +251,56 @@ export class EventsListTableViewComponent implements OnInit {
   navigateToEvents() {
     this.route.navigate(["events/eventsList"]);
   }
-  navigateToEditEvent(row:any){
-    let claimDetailsReqBody = {
-      "id": row.id,
+  // navigateToEditEvent(row:any){
+  //   let claimDetailsReqBody = {
+  //     "id": row.id,
     
-    };
-    this.eventsService.eventListById(claimDetailsReqBody).subscribe(
-      (response:any) => {
-        this.route.navigate([`/events/editEvents/${row.id}`]);
-      },
-      (error:any) => {
-        console.error('Error fetching claim details', error);
+  //   };
+  //   this.eventsService.eventListById(claimDetailsReqBody).subscribe(
+  //     (response:any) => {
+  //       this.route.navigate([`/events/editEvents/${row.id}`]);
+  //     },
+  //     (error:any) => {
+  //       console.error('Error fetching claim details', error);
 
+  //     }
+  //   );
+  // }
+  navigateToEditEvent(row: any) {
+    let claimDetailsReqBody = {
+      id: row.id,
+    };
+    console.log('row',row);
+    // const rowStartDate = this.datePipe.transform(new Date(row.startDate), 'MM-dd-yyyy');
+    // const rowEndDate = this.datePipe.transform(new Date(row.endDate), 'MM-dd-yyyy');
+    // console.log(rowStartDate, rowEndDate);
+    const formatDate = (dateTime: string): string => {
+      const date = new Date(dateTime);
+      return date.toISOString().split('T')[0]; // Extracts only the date portion
+    };
+    
+    this.eventsService.eventListById(claimDetailsReqBody).subscribe(
+      (response: any) => {
+        const queryParams = {
+          id: row.id,
+          eventType: row.eventType,
+          eventNumber: row.eventNumber,
+          customerName: row.customerName,
+          mobileNumber: row.mobileNumber,
+          activityTitle: row.activityTitle,
+          activityType: row.activityType,
+          startDate: formatDate(row.startDate),
+          endDate: formatDate(row.endDate),
+          startTime: row.eventSchedule[0].startTime,
+          endTime: row.eventSchedule[0].endTime,
+          note: row.note
+        };
+        console.log('query', queryParams);
+        
+        this.route.navigate([`/events/editEvents/${row.id}`], { queryParams });
+            },
+      (error: any) => {
+        console.error('Error fetching claim details', error);
       }
     );
   }

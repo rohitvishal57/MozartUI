@@ -35,8 +35,8 @@ export class EventsNewComponent implements OnInit {
 
   agentCode = localStorage.getItem('agentCode')
   eventTypes = [
-    { value: 'lead', label: 'Lead Number' },
-    { value: 'proposal', label: 'Proposal Number' },
+    { value: 'lead', label: 'Leads' },
+    { value: 'proposal', label: 'Proposals' },
     { value: 'others', label: 'Others' }
   ];
   referenceList: ReferenceData[] = [];
@@ -184,7 +184,7 @@ export class EventsNewComponent implements OnInit {
     const eventType = this.saveEvent.get('eventType')?.value;
     
     this.filteredReferenceList = this.referenceList.filter(item => {
-      this.eventNumber = eventType === 'proposal' 
+      this.eventNumber = eventType === 'Proposals' 
         ? item.proposalNum 
         : item.leadNumber;
       
@@ -197,7 +197,7 @@ export class EventsNewComponent implements OnInit {
     const eventType = this.saveEvent.get('eventType')?.value;
 
     const selectedReference = this.referenceList.find(item => 
-      eventType === 'proposal' 
+      eventType === 'Proposals' 
         ? item.proposalNum === eventNumber
         : item.leadNumber === eventNumber
     );
@@ -216,9 +216,9 @@ export class EventsNewComponent implements OnInit {
       this.saveEvent.get('mobileNumber')?.reset();
 
       switch(type) {
-        case 'proposal':
+        case 'Proposals':
           this.showNameMobile = true;
-          this.fetchReferenceData('proposal');
+          this.fetchReferenceData('Proposals');
           break;
         case 'lead':
           this.showNameMobile = true;

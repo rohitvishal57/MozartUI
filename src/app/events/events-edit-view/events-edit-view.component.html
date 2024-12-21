@@ -24,35 +24,42 @@
                       <label for="eventType">{{"Event Type" | translate}}<span class="text-danger">*</span></label>
                     </div>
                   </div>
+
+                  <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
+                  *ngIf="eventForm.get('eventType')?.value === 'proposal' || 
+                         eventForm.get('eventType')?.value === 'Leads'">
+                  <div class="input-block form-floating input-block-renew">
+                    <input type="text" 
+                           class="form-control input-textBox" 
+                           id="eventNumber" 
+                           formControlName="eventNumber" 
+                           placeholder="">
+                    <label for="eventNumber">
+                      {{ (eventForm.get('eventType')?.value === 'proposal' ? 
+                          'Proposal Number' : 'Lead Number') | translate }}
+                    </label>
+                  </div>
+                </div> -->
   
-              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
-              *ngIf="eventForm.get('eventType')?.value === 'proposalNumber' || 
-                     eventForm.get('eventType')?.value === 'leadNumber'">
-           <div class="input-block form-floating input-block-renew">
-             <input type="text" 
-                    class="form-control input-textBox" 
-                    id="eventNumber" 
-                    formControlName="eventNumber" 
-                    placeholder="">
-             <label for="eventNumber">
-               {{ (eventForm.get('eventType')?.value === 'proposalNumber' ? 
-                   'Proposal Number' : 'Lead Number') | translate }}
-             </label>
-             <div *ngIf="eventForm.get('eventNumber')?.invalid && 
-                         (eventForm.get('eventNumber')?.dirty || 
-                          eventForm.get('eventNumber')?.touched)">
-               <div class="text-danger" *ngIf="eventForm.get('eventNumber')?.errors?.['required']">
-                 {{ (eventForm.get('eventType')?.value === 'proposalNumber' ? 
-                     'Proposal number is required' : 'Lead number is required') | translate }}
-               </div>
-             </div>
-           </div>
-         </div>
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
+                  *ngIf="eventForm.get('eventType')?.value === 'proposal' || eventForm.get('eventType')?.value === 'Leads'">
+                  <div class="input-block form-floating input-block-renew">
+                    <input type="text" 
+                           class="form-control input-textBox" 
+                           id="eventNumber" 
+                           formControlName="eventNumber" 
+                           placeholder="">
+                    <label for="eventNumber">
+                      {{ (eventForm.get('eventType')?.value === 'proposal' ? 'Proposal Number' : 'Lead Number') | translate }}
+                    </label>
+                  </div>
+                </div>
+             
   
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
                   <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName" 
-                         placeholder="" pattern="^[A-Za-z\s]+$">
+                         placeholder="" pattern="^[A-Za-z\\s]+$">
                   <label for="customerName">{{"Customer Name" | translate}}</label>
                   <div *ngIf="eventForm.get('customerName')?.invalid && (eventForm.get('customerName')?.dirty || eventForm.get('customerName')?.touched)">
                     <div class="text-danger" *ngIf="eventForm.get('customerName')?.errors?.['required']">
@@ -85,7 +92,7 @@
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
                   <input type="text" class="form-control input-textBox" id="activityTitle" formControlName="activityTitle" 
-                         placeholder="" pattern="^[A-Za-z\s]+$">
+                         placeholder="">
                   <label for="activityTitle">{{"Activity Title" | translate}}<span class="text-danger">*</span></label>
                   <div *ngIf="eventForm.get('activityTitle')?.invalid && (eventForm.get('activityTitle')?.dirty || eventForm.get('activityTitle')?.touched)">
                     <div class="text-danger" *ngIf="eventForm.get('activityTitle')?.errors?.['required']">
@@ -101,10 +108,11 @@
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
                   <select class="form-select input-selectBox" id="activityType" formControlName="activityType">
-                    <option value="" disabled selected>{{"Choose option" | translate}}</option>
-                    <option value="Demo">Demo</option>
+                    <option *ngFor="let type of activityTypes" [value]="type.value">
+                      {{ type.label | translate }}
+                    </option>
                   </select>
-                  <label for="activityType">{{"Select Activity Type" | translate}}<span class="text-danger">*</span></label>
+                  <label for="activityType">{{"Activity Type" | translate}}<span class="text-danger">*</span></label>
                 </div>
               </div>
             </div>
@@ -112,21 +120,21 @@
             <div class="row mb-3">
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
-                  <input type="date" class="form-control input-textBox" id="startDate" formControlName="activityStartDate">
+                  <input type="date" class="form-control input-textBox" id="startDate" formControlName="startDate">
                   <label for="startDate">{{"Activity Start Date" | translate}}<span class="text-danger">*</span></label>
                 </div>
               </div>
   
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
-                  <input type="time" class="form-control input-textBox" id="startTime" formControlName="activityStartTime">
+                  <input type="time" class="form-control input-textBox" id="startTime" formControlName="startTime">
                   <label for="startTime">{{"Activity Start Time" | translate}}<span class="text-danger">*</span></label>
                 </div>
               </div>
   
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
-                  <input type="time" class="form-control input-textBox" id="endTime" formControlName="activityEndTime">
+                  <input type="time" class="form-control input-textBox" id="endTime" formControlName="endTime">
                   <label for="endTime">{{"Activity End Time" | translate}}<span class="text-danger">*</span></label>
                 </div>
               </div>
@@ -135,7 +143,7 @@
             <div class="row mb-3">
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
-                  <input type="date" class="form-control input-textBox" id="endDate" formControlName="activityEndDate">
+                  <input type="date" class="form-control input-textBox" id="endDate" formControlName="endDate">
                   <label for="endDate">{{"Activity End Date" | translate}}<span class="text-danger">*</span></label>
                 </div>
               </div>
@@ -156,7 +164,7 @@
   
             <div class="d-flex justify-content-end">
               <button type="submit" class="btn_red" >
-                {{"Save" | translate}}
+                {{"Update" | translate}}
               </button>
             </div>
           </section>

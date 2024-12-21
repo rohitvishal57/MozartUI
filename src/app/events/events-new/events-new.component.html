@@ -13,6 +13,7 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
               <div class="input-block form-floating input-block-renew">
                 <select class="form-select input-selectBox" id="eventType" formControlName="eventType">
+                  <option value="" disabled selected>{{"Select event type" | translate}}</option>
                   <option *ngFor="let type of eventTypes" [value]="type.value">
                     {{ type.label }}
                   </option>
@@ -21,7 +22,7 @@
               </div>
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
-            *ngIf="saveEvent.get('eventType')?.value === 'proposal' || 
+            *ngIf="saveEvent.get('eventType')?.value === 'Proposals' || 
                    saveEvent.get('eventType')?.value === 'lead'">
          <div class="input-block form-floating input-block-renew">
            <input 
@@ -33,15 +34,15 @@
              placeholder="" 
            />
            <label for="eventNumber">
-             {{ (saveEvent.get('eventType')?.value === 'proposal' ? 
+             {{ (saveEvent.get('eventType')?.value === 'Proposals' ? 
                  'Proposal Number' : 'Lead Number') | translate }}
            </label>
          </div>
          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onReferenceNumberSelect($event.option.value)">
            <mat-option *ngFor="let item of filteredReferenceList" 
-                       [value]="saveEvent.get('eventType')?.value === 'proposal' ? 
+                       [value]="saveEvent.get('eventType')?.value === 'Proposals' ? 
                                 item.proposalNum : item.leadNumber">
-             {{ saveEvent.get('eventType')?.value === 'proposal' ? 
+             {{ saveEvent.get('eventType')?.value === 'Proposals' ? 
                  item.proposalNum : item.leadNumber }}
            </mat-option>
          </mat-autocomplete>
