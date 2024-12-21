@@ -147,3 +147,20 @@ padding:0 0 0 10px !important;
 .siteBody {
   padding-bottom: 6rem;
 }
+.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+	width: 23%;
+}
+.filterWraperForm {
+  right: -20px;
+}
+@media only screen and (max-width: 767px) {
+  .filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+		width: 30%;
+	}
+  .filterWraperForm {
+    right: 0px;
+  }
+  .quickFilterMain_events {
+    flex-direction: column;
+  }
+}
