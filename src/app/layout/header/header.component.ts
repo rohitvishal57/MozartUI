@@ -205,8 +205,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
       (error) => {
         console.log('Failed to Raise request', error);
       });
-    window.location.href = 'https://usp.monocept.ai';
+      window.location.href = "https://qmsbot.adityabirlacapital.com/Link_external/#/login?iframeembeded=true&token=%s&url=case";
   }
-
 }
 
