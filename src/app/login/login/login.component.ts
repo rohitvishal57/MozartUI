@@ -13,7 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
-import { Item } from 'src/app/interface/modal-popup.interface';
+import { Item, MenuItem } from 'src/app/interface/modal-popup.interface';
 
 @Component({
   selector: 'app-login',
@@ -37,12 +37,13 @@ export class LoginComponent implements OnInit {
   captchaErrorMsg = '';
   captchaCode = '';
   isSubmitted = false;
-
   sendOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   contactDetailsReqBody: any = { userId: '' };
   loginResetReqBody: any = { userName: '' };
   validateOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   items: Item[] = [];
+  menuItems: MenuItem[] = [];
+  currentRoute:string=''
 
   constructor(
     private fb: FormBuilder,
@@ -281,15 +282,19 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.items = this.authService.getUserInfo()?.repotingMembers;
             this.updatePreferredLanguage();
-            if(res.data.agentCode === "467896"){
-              this.router.navigate(['rug'])
-            }else if(res.data.agentCode === "467895"){
-              this.router.navigate(['rug/av-upload'])
-            }else if(res.data.agentCode === "467894"){
-              this.router.navigate(['rug/base-caller-upload'])
-            }else{
-              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
+            this.menuItems=this.authService.getUserInfo()?.moduleAccessList;
+            if(this.menuItems.length>0){
+              this.currentRoute=this.menuItems[0].routePath;
             }
+            // if(res.data.agentCode === "467896"){
+            //   this.router.navigate(['rug'])
+            // }else if(res.data.agentCode === "467895"){
+            //   this.router.navigate(['rug/av-upload'])
+            // }else if(res.data.agentCode === "467894"){
+            //   this.router.navigate(['rug/base-caller-upload'])
+            // }else{
+              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate([this.currentRoute||'dashboard']);
+            //}
           } else {
             this.errorMessage = res.message;
             res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
