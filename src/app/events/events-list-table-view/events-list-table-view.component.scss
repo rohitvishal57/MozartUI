@@ -138,6 +138,12 @@ padding:0 0 0 10px !important;
 }
 
 .delete-button{
-border: none;
-background-color: #fff7f5;
+  img {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.siteBody {
+  padding-bottom: 6rem;
 }
