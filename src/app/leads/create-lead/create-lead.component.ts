@@ -285,17 +285,16 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('email')?.disable();
 
 
-    if(this.submittedUser?.formSequence >0){
+   // ng if(this.submittedUser?.formSequence >0){
+      if(this.submittedUser?.leadStatus == 'In progress'){
       const formControls = this.userValidations.controls;
       Object.keys(formControls).forEach((key) => {
         if (key !== 'email') {
           formControls[key].disable();
         }
       });
-      this.userValidations.get('leadStatus')?.enable();
+      //this.userValidations.get('leadStatus')?.enable();
       this.userValidations.get('leadSubStatus')?.enable();
-
-
     }
   }
 
