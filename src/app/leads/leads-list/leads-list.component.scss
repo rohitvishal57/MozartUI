@@ -358,6 +358,9 @@ h6 {
 	.filterWraperForm{
 		padding: 0px;
 	}
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
+	}
 	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
 		width: 30%;
 	}
