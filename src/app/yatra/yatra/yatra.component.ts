@@ -133,6 +133,7 @@ export class YatraComponent {
   city: string = '';
   state: string = '';
   retrievedDocuments: any;
+  patternErrorMessage: string="";
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -1857,6 +1858,7 @@ export class YatraComponent {
 
     }
     if (control.name === 'idProof') {
+
       const idProof = JSON.parse(event.target.value);
       console.log("id proof", idProof);
       this.idProofType = idProof.value;
@@ -1866,19 +1868,22 @@ export class YatraComponent {
 
       switch (this.idProofType) {
         case 'Aadhar Card':
+          const inputElement = event.target as HTMLInputElement;
           idNumberControl?.setValidators([
             Validators.required,
             Validators.pattern('[0-9]{4}')
           ]);
           this.tooltipMessage = 'Please enter the last 4 digits of your Aadhar ID.';
+          this.patternErrorMessage = 'Aadhar ID must be exactly last 4 digits.';
           break;
 
         case 'Passport':
           idNumberControl?.setValidators([
             Validators.required,
-            Validators.pattern('^[A-Z][0-9]{2}(?:\\s?[0-9]{5})?$')
+            Validators.pattern('^[A-Z][0-9]{2}(?: [0-9]{5}|[0-9]{5})$')
           ]);
           this.tooltipMessage = 'Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.';
+          this.patternErrorMessage = 'Passport Number must follow the format: First letter (A-Z), 2 numbers, optional space and 5 numbers.';
           break;
 
         case 'Voter ID':
@@ -1887,6 +1892,7 @@ export class YatraComponent {
             Validators.pattern('^[A-Z]{3}[0-9]{7}$')
           ]);
           this.tooltipMessage = 'Please enter a valid Voter ID, e.g., WED1234567.';
+          this.patternErrorMessage = 'Voter ID must follow the format: 3 uppercase letters followed by 7 digits.';
           break;
 
         case 'Driving License':
@@ -1895,6 +1901,7 @@ export class YatraComponent {
             Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
           ]);
           this.tooltipMessage = 'The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.';
+          this.patternErrorMessage = 'Driving License must follow the format: 2 uppercase letters, 2 digits, 4 digits, 7 digits.';
           break;
 
         case '10th (SSC) Mark sheet':
@@ -1903,11 +1910,13 @@ export class YatraComponent {
             Validators.pattern('^[0-9]{7}$')
           ]);
           this.tooltipMessage = 'Please enter a valid SSC Marksheet number with 7 digits.';
+          this.patternErrorMessage = 'SSC Marksheet number must be exactly 7 digits.';
           break;
 
         default:
           idNumberControl?.clearValidators();
           this.tooltipMessage = '';
+          this.patternErrorMessage = '';
       }
 
       idNumberControl?.updateValueAndValidity();

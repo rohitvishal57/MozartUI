@@ -258,8 +258,10 @@
                   </div>
                   <small
                     *ngIf="dynamicFormGroup.get('idNo')?.errors?.['pattern'] || dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">This field is mandatory.
+                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) : ''}}
                   </small>
+                <small *ngIf="dynamicFormGroup.get('idNo')?.errors?.['pattern'] && dynamicFormGroup.get('idNo')?.touched" 
+                  class="text-danger">{{ patternErrorMessage }}</small>
                 </div>
 
 
