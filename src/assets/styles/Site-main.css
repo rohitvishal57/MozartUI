@@ -87,6 +87,7 @@ body {
   background: var(--white-color);
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
+  background: var(--site-body-bg);
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -1998,9 +1999,10 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 23px 0%;
   padding-bottom: 16rem;
   padding-top: 13rem;
-  /* background: var(--bg-verylight-grey); */
+  /* background: var(--bg-verylight-grey); 
+  min-height: 100vh;*/
   background: var(--site-body-bg);
-    min-height: 100vh;
+    
 }
 .siteBody_padding {
   padding-bottom: 6rem;
