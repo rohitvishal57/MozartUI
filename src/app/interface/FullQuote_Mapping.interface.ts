@@ -70,6 +70,7 @@ export interface IFullQuoteMapping {
     appointeeName:string
     appointeeMobileNumber:string
     appointeeRelationCode:string
+    lrFlag:string
 }
 
 export interface InsuredMemberDetail {
