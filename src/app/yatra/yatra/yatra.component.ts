@@ -6750,7 +6750,7 @@ export class YatraComponent {
 
     if(control== null && parentControl == null){
       console.log(sumInsured,data.sumInsured);
-      
+      return data[sumInsured][0].value;
     }
 
     this.formData.insuredMemberDetails.forEach((member: any) => {
