@@ -31,6 +31,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                            <div class="profile_changePassword">
+                                                                <button type="button" id="profile_changePassword" name="profile_changePassword" class="btn_profile_changePassword">
+                                                                    <span><img src="./assets/Img/icon_changePassword.svg"></span> Change Password
+                                                                </button>
+                                                            </div>
                                                             <div class="language-selector" tabindex="0">
                                                                 <label for="" class="lbl_preferredLang">{{'Preferred Language' | translate}}:</label>
                                                                <div class="d-flex selectedLanguage-wrapper">
@@ -45,7 +50,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                        <div class="col-12 col-sm-12 col-md-10 col-lg-6 col-xl-6">
                                                             <div class="userProfile_qrCode">
                                                                 <div class="img_qrCode" *ngIf="profileQRCode">
                                                                     <img [src]="qrCodeImage" />
