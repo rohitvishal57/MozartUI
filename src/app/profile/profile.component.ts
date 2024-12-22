@@ -4,6 +4,7 @@ import { PerformanceService } from 'src/app/performance/performance.service';
 import { LanguageService } from '../services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
+import { LoginService } from '../login/login/login.service';
 
 
 
@@ -36,7 +37,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
-    private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService
+    private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService,
+    private loginService: LoginService,
 
   ) { }
   ngOnInit(): void {
@@ -303,8 +305,26 @@ export class ProfileComponent implements OnInit {
     this.docType = key;
   }
 
-
-  // Personal Info code
-
-
+  handlePassword() {
+    const payload = {
+      userName: localStorage.getItem("agentCode")
+    }
+    this.loginService.resetPasswordRequestApi(payload)
+    .subscribe({  
+      next: (res:any)=>{
+        if (res.data && res.isSuccess && res.statusCode == '200') {
+          window.open(res.data.redirectUrl, "_self");
+        } else {
+          this.toast.error({
+            detail: 'ERROR',
+            summary: res.message,
+            duration: 5000,
+          });
+        }
+      },
+      error: ((err:any) => {
+        console.log(err);
+      })
+    })
+  }
 }
