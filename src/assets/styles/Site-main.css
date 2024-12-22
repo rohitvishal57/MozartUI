@@ -515,6 +515,9 @@ button {
   background: #E6E6E6;
   margin: 10px auto;
 }
+.no-border {
+  border-width: 0 !important;
+}
 /*Common end*/
 
 /*Header start*/
