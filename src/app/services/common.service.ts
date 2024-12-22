@@ -149,6 +149,10 @@ export class CommonService {
   getValue(){
     return this.selectedSideBarFlag;
   }
+  getkycstatus(reqData:any){
+    const getkycstatus = this.configService.config.baseUrl + this.configService.config.getkycstatus;
+    return this.http.post<any>(getkycstatus, reqData)
+  }
 
   
 }

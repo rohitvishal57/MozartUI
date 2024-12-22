@@ -88,6 +88,7 @@ export class CustomerJourneyComponent {
   isFeedBackModalVisible: Boolean = false;
   quickQuoteRedirect!: boolean;
   proposalNumber!:any;
+  rowData:any={}
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
@@ -107,7 +108,8 @@ export class CustomerJourneyComponent {
     console.log(this.formData, this.proposalNum, this.policyNumber);
 
     const stateData = history.state;
-    console.log(stateData);
+    this.rowData = this.encryptionService.decrypt(stateData.formData);
+    console.log(stateData,this.rowData);
     if (stateData && Object.keys(stateData).length > 0) {
       if (stateData.formData) {
         console.log(stateData.formData);
@@ -133,7 +135,8 @@ export class CustomerJourneyComponent {
           let resdata : any = {};
           try {
             const response = await firstValueFrom(this.proposalService.getProposalListApi(proposalListRequestBody));
-            console.log(response);    
+            console.log(response);  
+            this.rowData = {...this.rowData , ...response.data.proposalList[0]}  
              resdata= response.data.proposalList[0];
              const data:any={
               proposalNum : resdata.proposalNumber,
@@ -219,7 +222,53 @@ export class CustomerJourneyComponent {
         })
       })
     }
+    if(this.getFormIndexValue() == 1){
+      const rData = {
+        "partnerId": this.rowData.partnerId,
+        "productId": this.rowData.productId
+      }
+      const res = await firstValueFrom(this.commonService.Getformsequence(rData));
+      const Sequence = JSON.parse(res.data.formSequence);
+      console.log(this.rowData,this.formData);
+      const Data = {
+        proposalNumber: this.rowData.proposalNumber,
+        policyNumber: this.rowData.policyNumber || this.formData.policyNumber,
+        policyStatus: this.rowData.policyStatus,
+        policyStartDate: this.rowData.policyStartDate,
+        policyEndDate: this.rowData.policyEndDate,
+        receiptID: this.rowData.receiptID,
+        customerId: this.rowData.customerId,
+        applicationNumber: this.rowData.applicationNumber,
+        status: this.rowData.policyStatus,
+        premiumPaid : this.formData.totalPremium
+      };
+      let reqData = {
+        "proposalNum": this.rowData.proposalNumber,
+        "partnerId": this.rowData.partnerId,
+        "agentCode": "5100003",
+        "formData": JSON.stringify(Data),
+        "formName": Sequence[Sequence.length - 1].formName,
+        "formConfig": JSON.stringify(Sequence),
+        "productId": this.rowData.productId.toString(),
+        "formId": Sequence[Sequence.length - 1].formId,
+        "jsonForm": JSON.stringify(this.form),
+        "formSequence": (Sequence.length - 1),
+        "leadNumber": this.rowData.leadId,
+        "quoteNumber": ""
+      };
 
+      console.log(reqData);
+
+      await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          // Call getFormDataFromFormSequence only after insert/update is complete
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
     this.initializeForm();
   }
 

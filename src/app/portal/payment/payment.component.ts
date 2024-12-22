@@ -193,7 +193,7 @@ export class PaymentComponent {
             applicationNumber : this.paymentDetail.applicationNumber,
             paymentStatus : this.paymentDetail.paymentStatus
           }
-          if(this.paymentDetail.paymentStatus == 'SUCCESS'){
+          if(this.paymentDetail.paymentStatus == 'SUCCESS' && this.paymentDetail.isFullQuoteSuccess == true){
             localStorage.setItem("formIndex", "8");
           }
           else{

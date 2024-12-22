@@ -133,7 +133,8 @@ export class YatraComponent {
   city: string = '';
   state: string = '';
   retrievedDocuments: any;
-  patternErrorMessage: string = "";
+  patternErrorMessage: string="";
+  verifyKYCStatus : boolean | undefined;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -279,21 +280,21 @@ export class YatraComponent {
                   if (this.formData.quoteIdDetails) {
                     this.QuoteNumber = this.formData.quoteIdDetails;
                   }
-                  if (decryptedData.currentFormSequence == "8") {
-                    this.formData.policyNumber = decryptedData.policyNumber || null;
-                    this.formData.policyStatus = decryptedData.policyStatus || null;
-                    this.formData.quoteValidFromDate = decryptedData.policyStartDate || null;
-                    this.formData.quoteValidToDate = decryptedData.policyEndDate || null;
-                    this.formData.ReceiptNumber = decryptedData.ReceiptNumber || null;
-                    this.formData.customerId = decryptedData.customerId || null;
-                    this.formData.applicationNumber = decryptedData.applicationNumber || null;
-                  }
-                  if (decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED') {
+                  if (decryptedData.currentFormSequence === "8") {
+                    this.formData.policyNumber = decryptedData.policyNumber ?? this.formData.policyNumber;
+                    this.formData.policyStatus = decryptedData.policyStatus ?? this.formData.policyStatus;
+                    this.formData.quoteValidFromDate = decryptedData.policyStartDate ?? this.formData.quoteValidFromDate;
+                    this.formData.quoteValidToDate = decryptedData.policyEndDate ?? this.formData.quoteValidToDate;
+                    this.formData.ReceiptNumber = decryptedData.ReceiptNumber ?? this.formData.ReceiptNumber;
+                    this.formData.customerId = decryptedData.customerId ?? this.formData.customerId;
+                    this.formData.applicationNumber = decryptedData.applicationNumber ?? this.formData.applicationNumber;
+                  }    
+                  if(decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED'){
                     console.log('PENDING');
                     this.toast.error({ detail: "ERROR", summary: "Payment is Pending", duration: 3000 });
                   }
-                  if (decryptedData.verifyKyc == true) {
-                    this.formData.verifyKYC = true;
+                  if(decryptedData.verifyKyc == true){
+                    this.verifyKYCStatus = true;
                   }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
@@ -494,6 +495,19 @@ export class YatraComponent {
     // }
     console.log(this.formData);
     console.log(this.partnerId, this.productId, this.formSequence);
+    if(this.getFormIndexValue() == 7){
+      const req = {
+        proposalNum : this.proposalNum
+      }
+      await this.commonService.getkycstatus(req).subscribe({
+        next: (value:any) => {
+          this.verifyKYCStatus = true
+        },
+        error: (err:any) => {
+
+        }
+      })
+    }
     const reqData = {
       partnerId: this.partnerId.toString(),
       productId: this.productId.toString(),
@@ -508,7 +522,7 @@ export class YatraComponent {
     console.log(reqData);
 
     await this.yatraService.Getform(reqData).subscribe({
-      next: (res: any) => {
+      next: async (res: any) => {
         console.log(res);
         this.formSequence = JSON.parse(res.data.formConfig) || [];
         this.form = JSON.parse(res.data.jsonFormData);
@@ -518,8 +532,12 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
+        
         console.log(this.form, this.formSequence, this.formData);
 
+        if(this.formData.verifyKYC || this.formData.verifyKYC == null){
+          this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false; 
+        }
         this.initializeForm();
       },
       error: (err) => {
@@ -6867,7 +6885,7 @@ export class YatraComponent {
   }
   checkKycDetail(control: any): void {
     // const isVisible = !(this.formData.verifyKYC !== "" || this.formData.kycStatus !== "" || this.formData.isKYCComplete);
-    const isVisible = this.formData.verifyKYC === "" || this.formData.verifyKYC === null;
+    const isVisible = !this.verifyKYCStatus;
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
@@ -6977,6 +6995,7 @@ export class YatraComponent {
           if (kycData.kycStatus == 'True') {
             if (kycData.kycStatus == 'True') kycData.ckycFlag = 'Y';
             this.formData.verifyKYC = kycData.kycStatus;
+            this.verifyKYCStatus = kycData.kycStatus;
             console.log(this.getFormIndexValue(), this.formSequence, kycData, this.formData);
             // if (formId) {
             //   this.getFormDataFromFormSequence(formId);
@@ -7011,6 +7030,7 @@ export class YatraComponent {
 
               this.formData = JSON.parse(res.data.formData)
               this.formData.verifyKYC = kk;
+              this.verifyKYCStatus = kk;
               console.log(this.form, this.formSequence, this.formData);
 
               this.initializeForm();
