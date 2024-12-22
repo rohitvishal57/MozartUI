@@ -3,7 +3,7 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -13,6 +13,8 @@ import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { error } from 'jquery';
+import { ProposalsService } from 'src/app/proposals/proposals.service';
 
 @Component({
   selector: 'app-customer-journey',
@@ -84,12 +86,18 @@ export class CustomerJourneyComponent {
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
   isFeedBackModalVisible: Boolean = false;
+  quickQuoteRedirect!: boolean;
+  proposalNumber!:any;
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) {}
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
+    @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
+    public commonService: CommonService, private renewalService: RenewalsService, private router: Router, 
+    private clipboard: Clipboard,    private proposalService: ProposalsService,
+    ) {}
  
 
 
-  ngOnInit() {
+  async ngOnInit() {
 
     // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
@@ -99,15 +107,67 @@ export class CustomerJourneyComponent {
     console.log(this.formData, this.proposalNum, this.policyNumber);
 
     const stateData = history.state;
+    console.log(stateData);
     if (stateData && Object.keys(stateData).length > 0) {
       if (stateData.formData) {
         console.log(stateData.formData);
         
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
         console.log(decryptedFormData);
-        
-        this.formData = { ...this.formData, ...decryptedFormData };
+        if(decryptedFormData.proposalNumber){
+          this.proposalNumber = decryptedFormData.proposalNumber;
+          const proposalListRequestBody = {
+            pageNumber: 1,
+            pageSize: 10,
+            productVarientName: "",
+            startDate: null,
+            endDate: null,
+            mobileNumber: "",
+            proposer: "",
+            proposalNumber: decryptedFormData.proposalNumber,
+            email: "",
+            leadId: "",
+            proposalStatus: "",
+            agentCode: "5100003"
+          };
+          let resdata : any = {};
+          try {
+            const response = await firstValueFrom(this.proposalService.getProposalListApi(proposalListRequestBody));
+            console.log(response);    
+             resdata= response.data.proposalList[0];
+             const data:any={
+              proposalNum : resdata.proposalNumber,
+              formId:resdata.formId,
+              partnerId:resdata.partnerId,
+              productId:resdata.productId,
+              agentCode: "5100003",
+              currentFormSequence:resdata.formSequence,
+              leadId: this.quickQuoteRedirect == false ? '' : resdata.leadNumber,
+              isLead: this.quickQuoteRedirect == false ? false : true,
+            };
+            
+            try {
+              const res: any = await this.yatraService.Getform(data).toPromise();
+              this.formData = JSON.parse(res.data.formData);
+              this.formData = {...this.formData , ...this.encryptionService.decrypt(stateData.formData)}
+              console.log(this.formData);
+            } catch (err) {
+              console.log(err);
+            }
 
+          } catch (error) {
+            console.error(error);
+          }
+              
+
+
+        }
+        else if(decryptedFormData.policyNumber){
+          
+          this.formData = { ...this.formData, ...decryptedFormData };
+        }
+        
+        console.log(this.formData);
       }
       if (stateData.formSequence) {
         // this.formSequence = [];
@@ -486,7 +546,7 @@ export class CustomerJourneyComponent {
 
 
     }
-
+    console.log(this.renewalFormGroup.value);
     if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
       this.isFeedBackModalVisible = true;
     }
@@ -2479,6 +2539,7 @@ export class CustomerJourneyComponent {
 
           }
           else {
+            this.getFormDataFromFormSequence();
             this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
           }
         },
@@ -2744,15 +2805,16 @@ export class CustomerJourneyComponent {
     if (this.selectedButton !== 'offline') {
       const reqData = {
         agentcode: this.agentCode,
-        proposalNumber: '',
+        proposalNumber: this.proposalNumber ? this.proposalNumber : '',
         paymentMethod: this.selectedButton,
         source: 'Retail',
-        policyType: 'Renewal',
-        policyNumber: this.formData.policyNumber,
+        policyType: this.proposalNumber ? 'NB' : 'Renewal',
+        policyNumber: this.proposalNumber ? '' : this.formData.policyNumber,
         quoteNumber: '',
         ProductName: this.formData.productName,
-        userType:"Agent",
+        userType:"Customer",
       };
+      console.log(reqData);
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
           console.log('Juspay API Response:', response);

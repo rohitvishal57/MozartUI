@@ -33,19 +33,72 @@ export class PaymentComponent {
      }
 
   ngOnInit() {
+    debugger;
     if (Object.keys(this.route.snapshot.queryParams).length) {
       const params = this.route.snapshot.queryParams;
       this.orderId = params['orderId'] ? params['orderId'] : "" ;
-      this.businessType = params['bT'] ? params['bT'] : ""
-      if (params['token']) {
-        localStorage.setItem('token', params['token']); 
+      if(this.orderId){
+        // const orderDetailsReq = {
+        //   orderId: this.orderId,
+        //   businessType:""
+        // }
+        // this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
+        //   async (res: any) => {
+        //     this.userType  = res.data.userType;
+        //   },
+        //   (error:any) => {
+        //   console.log(error);
+        //   }); 
+        this.getOrderDetails();
+      }else{
+
+        this.businessType = params['bT'] ? params['bT'] : ""
+        if (params['token']) {
+          localStorage.setItem('token', params['token']); 
+        }
       }
-    }
+      this.route.url.subscribe((segments: UrlSegment[]) => {
+        if (segments.length > 0 && segments[0].path === 'sharePayment') {
+          this.userType = "Customer";
+      
+          if (this.businessType === 'REN') {
+            const formData = {
+              policyNumber: this.route.snapshot.queryParams['pNo'],
+            };
+            localStorage.setItem('agentCode', '5100003');
+            this.router.navigate(['renewal/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "0",
+              }
+            });return;
+          } else if (this.businessType === 'NB') {
+            const formData = {
+              proposalNumber: this.route.snapshot.queryParams['pNo'],
+            };
+            localStorage.setItem('agentCode', '5100003');
+            this.router.navigate(['yatra/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "0",
+              }
+            });
+            return;
+          }
+        } else {
+          this.userType = "Agent";
+        }
+      });
+      }
+    
+        
     console.log(this.orderId);
     // this.user='Customer';
     // this.userModule='renewal';
     // this.getPaymentStatus();
-    this.getOrderDetails();
+   // this.getOrderDetails();
   }
 
   async getOrderDetails(){
@@ -164,12 +217,24 @@ export class PaymentComponent {
       }
     }
     else if(this.paymentDetail.userType == 'Customer'){
+      const formData = {
+        proposalNumber: this.paymentDetail.proposalId,
+        policyNumber: this.paymentDetail.policyNumber,
+        policyStatus: this.paymentDetail.policyStatus,
+        policyStartDate: this.paymentDetail.policyStartDate,
+        policyEndDate: this.paymentDetail.policyEndDate,
+        receiptID: this.paymentDetail.receiptNumber,
+        customerId: this.paymentDetail.customerId,
+        applicationNumber: this.paymentDetail.applicationNumber,
+        status: this.paymentDetail.paymentStatus
+      };
+      localStorage.setItem('agentCode', '5100003');
+      localStorage.setItem('formIndex', '1');
       this.router.navigate(['yatra/customerPayment'], {
         state: {
-          // formData: this.encryptionService.encrypt(),
+          formData: this.encryptionService.encrypt(formData),
           formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-          // kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
-          // formIndex: "1",
+          formIndex: "1",
         }
       });
     }

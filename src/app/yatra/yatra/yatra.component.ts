@@ -292,6 +292,9 @@ export class YatraComponent {
                     console.log('PENDING');
                     this.toast.error({ detail: "ERROR", summary: "Payment is Pending", duration: 3000 });
                   }
+                  if(decryptedData.verifyKyc == true){
+                    this.formData.verifyKYC = true;
+                  }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
                   if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
@@ -6830,15 +6833,15 @@ export class YatraComponent {
   }
   checkKycDetail(control: any): void {
     // const isVisible = !(this.formData.verifyKYC !== "" || this.formData.kycStatus !== "" || this.formData.isKYCComplete);
-    // const isVisible = this.formData.verifyKYC === "" || this.formData.verifyKYC === null;
-    // this.form.formSections.forEach((section) => {
-    //   section.formControls.forEach((formControl: IFormControl) => {
-    //     if (formControl.name === control.name) {
-    //       section.visible = isVisible;
-    //       this.form.formSections[1].visible = !isVisible;
-    //     }
-    //   });
-    // });
+    const isVisible = this.formData.verifyKYC === "" || this.formData.verifyKYC === null;
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name === control.name) {
+          section.visible = isVisible;
+          this.form.formSections[1].visible = !isVisible;
+        }
+      });
+    });
   }
   formatDate(dateString: string | Date): string {
     if (!dateString) return "";

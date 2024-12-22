@@ -6,7 +6,7 @@ import { PaymentComponent } from './payment/payment.component';
 
 const routes: Routes = [
     {path: 'payment',component: PaymentComponent},
-    {path: 'yatra/kyc',component: KycComponent},
+    {path: 'kyc',component: KycComponent},
     {path: 'renewal/kyc',component: KycComponent},
     {path: 'sharePayment',component: PaymentComponent}
 ];
