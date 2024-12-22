@@ -3737,6 +3737,14 @@ export class YatraComponent {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
     }
+    if(this.form.formTitle == 'Total Premium'){
+      if(this.dynamicFormGroup.get('deductible')){
+        if(this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false){
+          this.toast.warning({ detail: "WARNING", summary: "Deductible Cover is mandatory", duration: 3000 });
+          return;
+        }
+      }
+    }
     if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
       this.toast.warning({ detail: "WARNING", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
       return;
@@ -3825,7 +3833,7 @@ export class YatraComponent {
           this.dynamicFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
         }
         if (this.form.formTitle.includes("Health & Lifestyle")) {
-          this.mappingForQuestionnaire(this.form);
+          await this.mappingForQuestionnaire(this.form);
         }
 
         if (this.form.formTitle.includes("Leads")) {
@@ -3904,7 +3912,7 @@ export class YatraComponent {
           "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
         };
 
-        console.log(reqData, this.dynamicFormGroup.getRawValue());
+        console.log(reqData, this.dynamicFormGroup.getRawValue(),this.dynamicFormGroup);
 
         await this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
@@ -5445,6 +5453,41 @@ export class YatraComponent {
     // this.getPremiumAmount();
   }
 
+  // addOnRemoved(control: any, parentControl: any = null) {
+  //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+  //   let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+  
+  //   // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
+  //   Object.keys(addOnData.addOnDetails).forEach((key) => {
+  //     if (!addOnData.addOnDetails[key][0].memberCheckbox) {
+  //       modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
+  //         if (member.relation === key) {
+  //           const coverId = addOnData.addOnId;
+  
+  //           if (parentControl.name === 'deductible') {
+  //             // Remove deductible-specific properties
+              
+  //           } else {
+  //             // Remove the add-on from the covers array of insuredMemberDetails
+  //             if (member.covers) {
+  //               member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
+  //             }
+  
+  //             // Synchronize the change in the local covers variable
+  //             if (this.covers[index]) {
+  //               this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
+  //             }
+  //           }
+  //         }
+  //       });
+  //     }
+  //   });
+  
+  //   // Call getPremiumAmount after removing the add-on if needed
+  //   // this.getPremiumAmount();
+  // }
+  
+
 
 
   calculatePremiumPerype(insuredMembers: any): String {
@@ -6620,11 +6663,46 @@ export class YatraComponent {
         }
       })
     })
-    this.formData.insuredMemberDetails.forEach((member: any) => {
-      member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
-      this.flattenObjectInsert(this.formData);
+    // this.formData.insuredMemberDetails.forEach((member: any) => {
+    //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
+    //   this.flattenObjectInsert(this.formData);
+    // })
+    this.formData.insuredMemberDetails.forEach((member: any,index:any) => {
+      // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      // const dindex = dynamicform.at(index) as FormGroup;
+      // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
+      if (!this.dynamicFormGroup.contains('insuredMemberDetails'))
+      {
+        this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+      }
+ 
+      const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+ 
+      // Ensure the FormArray has enough entries
+      while (dynamicform.length <= index)
+      {
+        dynamicform.push(new FormGroup({}));
+      }
+ 
+      const dindex = dynamicform.at(index) as FormGroup;
+      Object.keys(member).forEach((key: string) => {
+        dindex.addControl(key,new FormControl(member[key]));
+      });
+      // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
+      // console.log(stringifiedProductQuestionnaire);
+
+      const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
+      dindex.addControl('productQuestionnaire', '');
+      
+      // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
+      console.log(stringifiedProductQuestionnaire);
+      
+      dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
+      
+      // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
+      // this.flattenObjectInsert(this.formData);
     })
-    console.log(this.formData, this.dynamicFormGroup.getRawValue(), this.form);
+    console.log(this.formData, this.dynamicFormGroup.getRawValue(), this.form,this.dynamicFormGroup);
   }
 
   backToleads() {
