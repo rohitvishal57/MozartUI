@@ -382,22 +382,28 @@ export class YatraComponent {
       this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
     }
 
-    // if (sessionStorage.getItem('taxList') != null) {
-    //   this.taxList = this.encryptionService.decrypt(sessionStorage.getItem('taxList') as string);
-    // }
+    if (sessionStorage.getItem('taxList') != null) {
+      this.taxList = this.encryptionService.decrypt(sessionStorage.getItem('taxList') as string);
+    }
 
-    // if (sessionStorage.getItem('discountList') != null) {
-    //   this.discountList = this.encryptionService.decrypt(sessionStorage.getItem('discountList') as string);
-    // }
+    if (sessionStorage.getItem('discountList') != null) {
+      this.discountList = this.encryptionService.decrypt(sessionStorage.getItem('discountList') as string);
+      console.log(this.discountList);
+      
+    }
 
-    // if (sessionStorage.getItem('basePremiumList') != null) {
-    //   this.basePremiumList = this.encryptionService.decrypt(sessionStorage.getItem('basePremiumList') as string);
-    // }
+    if (sessionStorage.getItem('basePremiumList') != null) {
+      this.basePremiumList = this.encryptionService.decrypt(sessionStorage.getItem('basePremiumList') as string);
+    }
 
-    // if (sessionStorage.getItem('tenureAmount')) {
-    //   this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
-    //   console.log(this.tenureAmount);
-    // }
+    if(sessionStorage.getItem('selectedIndex') != null){
+      this.selectedIndex = this.encryptionService.decrypt(sessionStorage.getItem('selectedIndex') as string);
+    }
+
+    if (sessionStorage.getItem('tenureAmount')) {
+      this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
+      console.log(this.tenureAmount);
+    }
 
     if (sessionStorage.getItem('premiumAmountDetails')) {
       this.premiumAmountDetails = this.encryptionService.decrypt(sessionStorage.getItem('premiumAmountDetails') as string)
@@ -3657,6 +3663,7 @@ export class YatraComponent {
           sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
           sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
           sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+          sessionStorage.setItem('selectedIndex', this.encryptionService.encrypt(this.selectedIndex));
 
           console.log(this.QuoteNumber, this.selectedIndex);
           if (this.QuoteNumber.length > 0) {
@@ -4406,6 +4413,8 @@ export class YatraComponent {
               error: (error) => reject(error)
             });
           });
+          console.log(this.form);
+          
           // Update tenureAmount and discountList after receiving the response
           this.QuoteNumber = [];
           for (let i = 1; i <= 3; i++) {
@@ -4426,8 +4435,13 @@ export class YatraComponent {
           if (this.form.formTitle === 'Leads') {
             // this.formData.tenureAmount = this.tenureAmount;
             // this.formData.displayTaxList = this.displayTaxList;
+            sessionStorage.setItem('tenureAmount',this.encryptionService.encrypt(this.tenureAmount));
+            sessionStorage.setItem('discountList',this.encryptionService.encrypt(this.discountList));
+            sessionStorage.setItem('taxList',this.encryptionService.encrypt(this.taxList));
+            sessionStorage.setItem('basePremiumList',this.encryptionService.encrypt(this.basePremiumList));
             this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
             this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+
           }
 
           console.log(this.formData, this.form, this.dynamicFormGroup.getRawValue());
@@ -7256,7 +7270,8 @@ export class YatraComponent {
                     insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
                   }
                   else{
-                    this.deductibleOptionsA(null,null,sumInsuredControl?.value);
+                    const deductibleValue = this.deductibleOptionsA(null,null,sumInsuredControl?.value);
+                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
                   }
                 }
               })
