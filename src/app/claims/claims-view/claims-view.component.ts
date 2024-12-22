@@ -921,6 +921,7 @@ export class ClaimsViewComponent {
   onFileSelected(event: any): void {
     this.resetErrors();
     const files = event.target.files as File[];
+    this.totalFilesCount += files.length;
     for (const file of files) {
       if (!this.allowedFileTypes.includes(file.type)) {
         this.errors.invalidFormat = true;
