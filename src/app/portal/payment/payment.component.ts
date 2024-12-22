@@ -38,20 +38,8 @@ export class PaymentComponent {
       const params = this.route.snapshot.queryParams;
       this.orderId = params['orderId'] ? params['orderId'] : "" ;
       if(this.orderId){
-        // const orderDetailsReq = {
-        //   orderId: this.orderId,
-        //   businessType:""
-        // }
-        // this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
-        //   async (res: any) => {
-        //     this.userType  = res.data.userType;
-        //   },
-        //   (error:any) => {
-        //   console.log(error);
-        //   }); 
         this.getOrderDetails();
       }else{
-
         this.businessType = params['bT'] ? params['bT'] : ""
         if (params['token']) {
           localStorage.setItem('token', params['token']); 
@@ -104,18 +92,25 @@ export class PaymentComponent {
   async getOrderDetails(){
     const orderDetailsReq = {
       orderId: this.orderId,
-      businessType:"NB"
+      businessType: this.businessType || ""
     }
-    console.log(orderDetailsReq);
+    console.log(orderDetailsReq,"orderId");
    
     await this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       async (res: any) => {
         console.log(res);
+        if(res.data.businessType == 'Renewal'){
+          this.businessType='REN'
+          this.userType=res.data.userType          
+        }else if(res.data.businessType == 'NB'){
+          this.businessType='NB'
+          this.userType=res.data.userType
+        }
         this.paymentDetail=res.data;
         if(this.paymentDetail.paymentMethodType == "enach_payment"){
           const orderDetailsReq = {
             orderId: this.paymentDetail.mandateOrderId,
-            businessType:"NB"
+            businessType:this.businessType
           }
           console.log(orderDetailsReq);
          
@@ -212,11 +207,79 @@ export class PaymentComponent {
           });
         }
       }
-      else if(this.paymentDetail.businessType == 'RENEWAL'){
+      else if(this.businessType == 'REN'){
+        if(this.paymentDetail?.paymentMethodType == 'emandate_payment'){
+          const reqData = {
+            agentcode: this.paymentDetail.agentCode,
+            proposalNumber: '',
+            paymentMethod: 'enach_payment',
+            source: 'Retail',
+            policyType: 'Renewal',
+            policyNumber: this.paymentDetail?.policyNumber || '',
+            quoteNumber: "",
+            productName: this.paymentDetail.productName,
+            userType:'Agent',
+            mandateOrderId:this.paymentDetail.orderId
+          };
+          this.yatraService.justPayRedirection(reqData).subscribe(
+            (response:any)=>{
+              if(response?.isSuccess){
+                window.location.href = response.data.paymentURL;
+              }
+            },(error)=>{
+              console.log('error',error);
+            });
+        }else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
+            const formData=this.paymentDetail; 
+            this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});       
+            this.router.navigate(['renewal/renewalJourney'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                proposalNum: this.encryptionService.encrypt(""),
+                policyNumber: this.encryptionService.encrypt(this.paymentDetail.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
+                formSequence: this.encryptionService.encrypt([payment,thankYou]),
+                paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
+                formIndex: "1",
+              }
+            });
+      } else if(this.paymentDetail?.paymentStatus == 'INPROGRESS'|| this.paymentDetail?.paymentStatus == 'PENDING'){
+        this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+        this.router.navigate(['renewal/renewalList'], {
+          state: {
+            paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
+          }
+        });
+      } else{
+        const renewalInfoRequestBody = {
+          policy_Number: this.paymentDetail?.policyNumber
+        };
+        this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+          (res: any) => {
+            const formData = res.data;                
+              this.router.navigate(['renewal/renewalJourney'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                proposalNum: this.encryptionService.encrypt(""),
+                policyNumber: this.encryptionService.encrypt(this.paymentDetail.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
+                formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                formIndex: "0",
+              }
+            });
+          },
+          (err) => {
+            console.error("Error from getRenewalInfo API:", err);
+            this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          }
+        );   
+      }
 
       }
+
     }
     else if(this.paymentDetail.userType == 'Customer'){
+      if(this.businessType == 'NB'){
       const formData = {
         proposalNumber: this.paymentDetail.proposalId,
         policyNumber: this.paymentDetail.policyNumber,
@@ -237,55 +300,76 @@ export class PaymentComponent {
           formIndex: "1",
         }
       });
+    }else if(this.businessType == 'REN' || this.paymentDetail.businessType == 'Renewal'){
+      if(this.paymentDetail?.paymentMethodType == 'emandate_payment'){
+        const reqData = {
+            agentcode: this.paymentDetail.agentCode,
+            proposalNumber: '',
+            paymentMethod: 'enach_payment',
+            source: 'Retail',
+            policyType: 'Renewal',
+            policyNumber: this.paymentDetail?.policyNumber || '',
+            quoteNumber: "",
+            productName: this.paymentDetail.productName,
+            userType:'Customer',
+            mandateOrderId:this.paymentDetail.orderId
+        };
+        this.yatraService.justPayRedirection(reqData).subscribe(
+          (response:any)=>{
+            if(response?.isSuccess){
+              window.location.href = response.data.paymentURL;
+            }
+          },(error)=>{
+            console.log('error',error);
+          });
+      }else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
+          this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});  
+          const formData=this.paymentDetail;         
+          this.router.navigate(['renewal/customerPayment'], {
+            state: {
+              formData: this.encryptionService.encrypt(formData),
+              proposalNum: this.encryptionService.encrypt(""),
+              policyNumber: this.encryptionService.encrypt(this.paymentDetail.policyNumber),
+              journeyProcess: this.encryptionService.encrypt(0),
+              formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+              paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
+              formIndex: "1",
+            }
+          });
+    } else if(this.paymentDetail.paymentStatus == 'INPROGRESS'|| this.paymentDetail?.paymentStatus == 'PENDING'){
+      this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+      this.router.navigate(['renewal/customerPayment'], {
+        state: {
+          paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
+        }
+      });
+    } 
+    // else{
+    //   const renewalInfoRequestBody = {
+    //     policy_Number: res.data.policyNumber
+    //   };
+    //   this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+    //     (res: any) => {
+    //       const formData = res.data;                
+    //         this.router.navigate(['renewal/renewalJourney'], {
+    //         state: {
+    //           formData: this.encryptionService.encrypt(formData),
+    //           proposalNum: this.encryptionService.encrypt(""),
+    //           policyNumber: this.encryptionService.encrypt(this.paymentDetail.policyNumber),
+    //           journeyProcess: this.encryptionService.encrypt(0),
+    //           formSequence: this.encryptionService.encrypt([payment, thankYou]),
+    //           formIndex: "0",
+    //         }
+    //       });
+    //     },
+    //     (err) => {
+    //       console.error("Error from getRenewalInfo API:", err);
+    //       this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+    //     }
+    //   );   
+    // }
+
     }
-  }
-  getPaymentStatus() {
-    if(this.user == 'Customer'){
-      if(this.userModule == 'renewal'){
-        this.router.navigate(['renewal/customerPayment'], {
-          state: {
-            // formData: this.encryptionService.encrypt(),
-            formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-            // kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
-            // formIndex: "1",
-          }
-        });
-      }else if(this.userModule == 'yatra'){
-        this.router.navigate(['yatra/customerPayment'], {
-          state: {
-            // formData: this.encryptionService.encrypt(),
-            formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-            // kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
-            // formIndex: "1",
-          }
-        });
-
-      }else{
-
-      }
-    }else if(this.user == 'Agent'){
-      if(this.userModule == 'renewal'){
-        this.router.navigate(['renewal/paymentstatus'], {
-          queryParams: {
-            orderid: 'UP_241216_c3698374',
-            token: 'aa59deee594c4c90abd5737929d0302e'
-          }
-        });        
-      }else if(this.userModule == 'yatra'){
-        this.router.navigate(['yatra'], {
-          state: {
-            // formData: this.encryptionService.encrypt(),
-            // formSequence: this.encryptionService.encrypt([]),
-            // kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
-            // formIndex: "1",
-          }
-        });
-
-      }else{
-
-      }
-    }else{
-
     }
   }
 

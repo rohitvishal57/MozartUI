@@ -3,7 +3,7 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -89,7 +89,7 @@ export class RenewalJourneyComponent {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
-  isFeedBackModalVisible: Boolean = false;
+  isFeedBackModalVisible: Boolean = false; 
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) {}
  
@@ -126,48 +126,63 @@ export class RenewalJourneyComponent {
         // }
 
       }
-
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-        console.log(this.proposalNum);
-
-      }
-
-      if (stateData.policyNumber) {
-        this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-        console.log(this.policyNumber);
-
-      }
-
-      if (stateData.journeyProcess) {
-        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-        console.log(this.journeyProcess);
-      }
-
-      if (stateData.paymentStatus) {
-          const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
-          if(paymentStatus == "SUCCESS"){
-            this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
-          }else if(paymentStatus == "INTIATED"){
-            this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
-          }
-      }
-      if (stateData.kycStatus) {
-        const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
-        if(kycStatus){
-          this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
-        }else if(!kycStatus){
-          this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
-        }
-      }
-
-      // Set formSequence if provided in state; otherwise, use default
       if (stateData.formSequence) {
         // this.formSequence = [];
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
         console.log(this.formSequence);
 
       }
+      if (stateData.journeyProcess) {
+        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
+        console.log(this.journeyProcess);
+      }
+      if (stateData.formIndex) {
+        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
+        localStorage.setItem('formIndex', stateData.formIndex);
+        console.log(stateData.formIndex);
+        
+      }
+
+      if (stateData.proposalNum) {
+        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
+        console.log(this.proposalNum);
+      }
+      // else{
+      //   try {
+      //     const res = await firstValueFrom(this.commonService.getProposalNumber());
+      //     this.proposalNum = res.data.proposalNumber;
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // }
+      try{
+        if (stateData.policyNumber) {
+          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+          console.log(this.policyNumber);
+      }
+      }catch (error){
+          console.error(error);
+
+      }
+     
+      // if (stateData.paymentStatus) {
+      //     const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
+      //     if(paymentStatus == "SUCCESS"){
+      //       this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
+      //     }else if(paymentStatus == "INTIATED"){
+      //       this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
+      //     }
+      // }
+      // if (stateData.kycStatus) {
+      //   const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
+      //   if(kycStatus){
+      //     this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
+      //   }else if(!kycStatus){
+      //     this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
+      //   }
+      // }
+
+      // Set formSequence if provided in state; otherwise, use default
       // else {
       //   console.log('inside else');
 
@@ -175,10 +190,6 @@ export class RenewalJourneyComponent {
       // }
 
       // Set formIndex in localStorage if present in state
-      if (stateData.formIndex) {
-        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
-        localStorage.setItem('formIndex', stateData.formIndex);
-      }
 
       // Process insuredMemberDetails if present in the formData
       if (this.formData?.insuredMemberDetails?.length > 0) {
@@ -3632,24 +3643,21 @@ export class RenewalJourneyComponent {
       firstName: this.formData?.firstName,
       lastName: this.formData?.lastName,
       agentcode: this.agentCode,
-      emailId: this.formData?.emailId,
+      emailId: "saisatya@monocept.com",
       productName: this.formData?.productName,
-      policyNumber: this.formData?.policyNumber,
+      businessType:"REN",
+      pNumber: this.formData?.policyNumber,
       productCode: this.formData?.productCode,
       premiumAmount: this.formData?.totalPremium,
-      paymentLink: "",
-      mobilenumber: this.formData?.mobileNumber
+      mobilenumber: "7396201298"
     };
     this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
       next: (response: any) => {
         console.log("sharePaymentLinkApi",response);
         if (response.data) {
           this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000});
-          // if (this.selectedButton == '') {
-            // this.changeMainFormDependentControls(control.dependentControls, true);
-          // }
-          // else {
-          // }
+            this.changeMainFormDependentControls(control.dependentControls, true);
+            this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
         } else {
           this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
         }
@@ -3763,6 +3771,7 @@ export class RenewalJourneyComponent {
     
     const kycRequestBody = {
       policyNumber: this.policyNumber, 
+      proposerNumber: "",
       fullName: this.formData.proposerName,
       panNumber: this.formData.panNo || "", 
       dob: this.formatDate(this.formData.memberDobProposer) || "",

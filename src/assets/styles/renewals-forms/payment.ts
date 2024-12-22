@@ -389,7 +389,7 @@ export const payment={
         },
         {
           "name": "accountNumber",
-          "label": "Account Number",
+          "label": "Account No",
           "visible": false,
           "visibleLabel": true,
           "type": "number",
@@ -404,7 +404,7 @@ export const payment={
             {
               "validatorName": "pattern",
               "pattern": "^[0-9]{9,18}$",
-              "message": "Account Number should be between 9 to 18 digits"
+              "message": "Provide between 9 to 18 digits"
             }
           ]
         },

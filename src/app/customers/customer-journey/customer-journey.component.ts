@@ -163,8 +163,12 @@ export class CustomerJourneyComponent {
 
         }
         else if(decryptedFormData.policyNumber){
-          
-          this.formData = { ...this.formData, ...decryptedFormData };
+          const renewalInfoRequestBody = {
+            policy_Number: decryptedFormData.policyNumber
+          };
+          const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+
+          this.formData = { ...this.formData, ...response.data };
         }
         
         console.log(this.formData);
@@ -174,6 +178,12 @@ export class CustomerJourneyComponent {
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
         console.log('formSequence',this.formSequence);
 
+      }
+      if (stateData.formIndex) {
+        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
+        localStorage.setItem('formIndex', stateData.formIndex);
+        console.log(stateData.formIndex);
+        
       }
     }
     

@@ -23,12 +23,10 @@ export class KycStatusComponent {
   ngOnInit() {    
     const params = this.route.snapshot.queryParams;
     if (Object.keys(params).length) {
-      this.transactionId = params['transactionId'];
       if (params['token']) {
         localStorage.setItem('token', params['token']); 
-      } else {
-        console.warn('Token not found in query parameters');
       }
+      this.transactionId = params['transactionId'];
     }
     if (!this.transactionId) {
       console.error('Order ID is missing');
