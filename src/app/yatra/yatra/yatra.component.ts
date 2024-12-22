@@ -1747,7 +1747,7 @@ export class YatraComponent {
     });
   }
 
-  getBranchDetails(event: any, otherControl: any) {
+  getBranchDetails(event: any, otherControl: any) {    
     otherControl.value = "";
     otherControl.options = []; // Reset options to an empty array
 
@@ -2042,45 +2042,122 @@ export class YatraComponent {
         this.dynamicFormGroup.get('micrCode')?.setValue('');
         return; // Exit the function
       }
-
       if (ifscCodeDetails.length == 11) {
-        const reqData = {
-          "ifscCode": event.target.value
-        }
-        console.log(reqData);
-        this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
-          next: (response: any) => {
-            if (response.isSuccess && response.data) {
-              const nobj = {
-                id: 1,
-                value: response.data.bankName
+        let bankDetails: any[] = [];
+        this.yatraService.getAllBankDetails().subscribe({
+          next: (res: any) => {
+            bankDetails = res.data || [];
+            const reqData = { ifscCode: event.target.value };
+            this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
+              next: (response: any) => {
+                if (response.isSuccess && response.data) {
+                  const matchingBank = bankDetails.find((bank) => bank.name === response.data.bankName);
+                  const nobj = {
+                    id: matchingBank ? matchingBank.id : "Unknown",
+                    value: response.data.bankName,
+                    name: response.data.bankName
+                  };
+                  this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                  this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+      
+                  if (response.data.bankCode) {
+                    const cityReqData = { cityCode: "", bankCode: response.data.bankCode };
+                    this.yatraService.getBankCity(cityReqData).subscribe({
+                      next: (cityRes: any) => {
+                        const cityDetails = cityRes.data || [];
+                        const matchingCity = cityDetails.find((city: any) => city.name === response.data.bankCity);
+                        const cobj = {
+                          id: matchingCity ? matchingCity.id : "Unknown",
+                          value: response.data.bankCity,
+                          name: response.data.bankCity
+                        };
+                        console.log(cobj);
+      
+                        if (control.onChangeMethod != null && "bankCity" != null) {
+                          this.form.formSections.forEach((section: any) => {
+                            section.formControls.forEach((formControl: any) => {
+                              if (formControl.name == "bankCity") {
+                                const event = {
+                                  target: {
+                                    value: JSON.stringify(nobj) 
+                                  }
+                                };
+                                this.getBankCity(event, formControl);
+                              }
+                            });
+                          });
+                        }
+                        this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
+                          const branchReqData = {
+                          bankCode: response.data.bankCode,
+                          cityCode: response.data.cityCode
+                        };
+                        this.yatraService.getBranchDetails(branchReqData).subscribe({
+                          next: (branchRes: any) => {
+                            const branchDetails = branchRes.data || [];
+                            const matchingBranch = branchDetails.find(
+                              (branch: any) => branch.name === response.data.bankBranch
+                            );
+                            const branchObj = {
+                              id: matchingBranch ? matchingBranch.id : "Unknown",
+                              value: matchingBranch.value,
+                              name: matchingBranch.name
+                            };
+                            console.log("branch obj",branchObj);
+                            if (control.onChangeMethod != null && "bankBranch" != null) {
+                              this.form.formSections.forEach((section: any) => {
+                                section.formControls.forEach((formControl: any) => {
+                                  if (formControl.name == "bankBranch") {
+                                    const event = {
+                                      target: {
+                                        value: JSON.stringify(cobj) 
+                                      }
+                                    };
+                                    this.getBranchDetails(event, formControl);
+                                  }
+                                });
+                              });
+                            }
+                            this.dynamicFormGroup.get('bankBranch')?.setValue(JSON.stringify(branchObj) || '');
+                          },
+                          error: (err) => {
+                            console.error('Error fetching branch details', err);
+                          }
+                        });
+                      },
+                      error: (err) => {
+                        console.error('Error fetching city details', err);
+                      }
+                    });
+                  }
+                  if (control.dependentControls.includes("pennyBtn")) {
+                    this.changeMainFormDependentControls(control.dependentControls, true);
+                  }
+                } else {
+                  this.toast.warning({
+                    detail: "WARNING",
+                    summary: 'Failed to Fetch Bank Details',
+                    duration: 3000
+                  });
+                }
+              },
+              error: (err) => {
+                this.toast.error({
+                  detail: "ERROR",
+                  summary: 'Failed to Fetch Bank Details',
+                  duration: 3000
+                });
               }
-              this.dynamicFormGroup.get('bankName')?.setValue(nobj || '');
-              const bobj = {
-                id: 1,
-                value: response.data.bankBranch
-              }
-              this.dynamicFormGroup.get('bankBranch')?.setValue(bobj || '');
-              const obj = {
-                id: 1,
-                value: response.data.bankCity
-              }
-              this.dynamicFormGroup.get('bankCity')?.setValue(obj || '');
-              this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
-              if (control.dependentControls.includes("pennyBtn")) {
-                this.changeMainFormDependentControls(control.dependentControls, true)
-              }
-            } else {
-              // Handle error, you can show a message if required
-              this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
-            }
+            });
           },
           error: (err) => {
-            this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+            console.error('Failed to fetch all bank details', err);
           }
         });
       }
-    }
+      
+      
+    }      
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
