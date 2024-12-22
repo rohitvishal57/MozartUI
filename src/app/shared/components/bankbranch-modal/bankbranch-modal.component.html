@@ -1,4 +1,6 @@
 <div class="dialog-container">
+    <button class="dashboard_btn" (click)="navigateToDashboard()">Go To Dashboard</button>
+    <h6 style="color: grey; font-size: 15px;">(or)</h6>
     <div class="input-block form-floating input-block-renew col-10 mt-4">
         <input class="form-control input-textBox" type="text" id="searchNameCode" name="" placeholder="" [(ngModel)]="searchQuery" (input)="filterList()">
         <label for="searchNameCode">Search by Name/Code<span class="text-danger">*</span></label>
