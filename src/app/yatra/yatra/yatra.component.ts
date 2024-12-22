@@ -18,6 +18,7 @@ import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-yatra',
@@ -135,6 +136,8 @@ export class YatraComponent {
   retrievedDocuments: any;
   patternErrorMessage: string="";
   verifyKYCStatus : boolean | undefined;
+  otpRequestId : string = "";
+
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -3497,6 +3500,27 @@ export class YatraComponent {
 
 
   onEmailClick(control: any) {
+    debugger;
+
+    let requestBody: any = {};
+    requestBody.emailId = this.formData.emailId;
+    requestBody.mobileNumber = this.formData.mobileNumber;
+    requestBody.name = this.formData.proposerName;
+    requestBody.agentCode = this.agentCode;
+    requestBody.proposalNumber = this.formData.proposalNumber;
+    requestBody.premiumAmount = this.formData.totalPremium;
+    requestBody.productName = this.formData.productName;
+
+    this.yatraService.sendEmailLink(requestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess) {
+          this.toast.success({ detail: "SUCCESS", summary: "Communication send Successfully", duration: 3000 });
+        }
+      },
+      (error) => {
+        console.error(error);
+      });
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
         if (controls.dependentControls) {
@@ -3525,12 +3549,38 @@ export class YatraComponent {
   }
 
   onOtpClick(control: any) {
+    let sendOTPReqeustBody: any = {};
+    sendOTPReqeustBody.emailId = this.formData.mobileNumber,
+    sendOTPReqeustBody.mobileNumber =
+    sendOTPReqeustBody.name = "",
+    sendOTPReqeustBody.agentCode = this.agentCode;
+
+    this.yatraService.sendOTP(sendOTPReqeustBody).subscribe(
+      (res : any) => {
+        if(res.isSuccess){
+            if(res.message =='Success'){
+              this.otpRequestId =  res.data.requestId;
+              control.visible = false;
+
+              this.toast.success({
+                detail: "SUCCESS",
+                summary: `Communication has been sent Successfully`,
+                duration: 3000,
+              });
+            }
+        }
+      },
+      (error) => {
+        console.error(error);
+
+      });
+    
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
         if (controls.dependentControls) {
           controls.dependentControls.forEach((item: any) => {
             const controlToHide = section.formControls.find((c: any) => c.name === item);
-            if (controlToHide) {
+            if (controlToHide && controlToHide.name !="sendLink") {
               controlToHide.visible = false; // Hide all dependent controls initially
             }
           });
@@ -3552,6 +3602,48 @@ export class YatraComponent {
     }
   }
 
+
+  verifyOTP(control: any) {
+    if(!this.otpRequestId){
+      this.toast.warning({
+        detail: "WARNING",
+        summary: `Please click On Send OTP.`,
+        duration: 3000,
+      });
+    }
+    let verifyRequest: any = {}
+    verifyRequest.agentCode = this.agentCode;
+    verifyRequest.requestId = this.otpRequestId;
+    verifyRequest.otpNumber = this.dynamicFormGroup.value.otpField.toString();
+    verifyRequest.mobileNumber =this.formData.mobileNumber;
+    verifyRequest.eMailId = this.formData.emailId;
+    this.yatraService.verifyOTP(verifyRequest).subscribe(
+      (res: any) => {
+        if(res.isSuccess){
+          this.toast.success({
+            detail: "SUCCESS",
+            summary: `SuccessFully Validated`,
+            duration: 3000,
+          });
+        }
+      }, 
+      (error)=>{
+        console.log("err",error);
+      });
+
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = section.formControls.find((c: any) => c.name === item);
+              if (controlToHide ) {
+                controlToHide.visible = false; // Hide all dependent controls initially
+              }
+            });
+          }
+        });
+      });
+  }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
     return this.selectedButton === control.name ? 'active-button' : '';

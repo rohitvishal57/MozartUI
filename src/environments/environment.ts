@@ -169,5 +169,10 @@ export const environment = {
   getBankDetailsByIFSC:"api/rug/GetBankDetailsByIfsc",
   fetchPennydropverification:"api/yatra/pennydropverification",
   downloadQuotePDf : "api/yatra/GeneratePDF",
-  seriveRequest : "api/auth/GenerateTokenAndSsoUrl"
+  seriveRequest : "api/auth/GenerateTokenAndSsoUrl",
+  sendOTP : "api/yatra/declarationotp",
+  verifyOTP : "api/yatra/declarationvalidateotp",
+  sendEmailLink : "api/yatra/emaillink"
+
+
 };

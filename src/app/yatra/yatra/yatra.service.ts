@@ -211,4 +211,16 @@ export class YatraService {
     const sharePaymentLink = this.configService.config.baseUrl + this.configService.config.sharePaymentLink;
     return this.httpService.post(sharePaymentLink,reqData);
   }
+  sendOTP(reqData : any){
+    const sendOtpReqeustURL = this.configService.config.baseUrl + this.configService.config.sendOTP;
+    return this.httpService.post(sendOtpReqeustURL,reqData);
+  }
+  verifyOTP(reqData : any){
+    const verifyOTPURL = this.configService.config.baseUrl + this.configService.config.verifyOTP;
+    return this.httpService.post(verifyOTPURL,reqData);
+  }
+  sendEmailLink(reqData : any){
+    const emailLinkURL = this.configService.config.baseUrl + this.configService.config.sendEmailLink;
+    return this.httpService.post(emailLinkURL,reqData);
+  }
 }
