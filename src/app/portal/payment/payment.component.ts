@@ -215,13 +215,13 @@ export class PaymentComponent {
             paymentMethod: 'enach_payment',
             source: 'Retail',
             policyType: 'Renewal',
-            policyNumber: this.paymentDetail?.policyNumber || '',
+            policyNumber: this.paymentDetail?.oldPolicyNumber || '',
             quoteNumber: "",
             productName: this.paymentDetail.productName,
             userType:'Agent',
             mandateOrderId:this.paymentDetail.orderId
           };
-          this.yatraService.justPayRedirection(reqData).subscribe(
+          this.renewalService.justPayRedirection(reqData).subscribe(
             (response:any)=>{
               if(response?.isSuccess){
                 window.location.href = response.data.paymentURL;
@@ -308,13 +308,13 @@ export class PaymentComponent {
             paymentMethod: 'enach_payment',
             source: 'Retail',
             policyType: 'Renewal',
-            policyNumber: this.paymentDetail?.policyNumber || '',
+            policyNumber: this.paymentDetail?.oldPolicyNumber || '',
             quoteNumber: "",
             productName: this.paymentDetail.productName,
             userType:'Customer',
             mandateOrderId:this.paymentDetail.orderId
         };
-        this.yatraService.justPayRedirection(reqData).subscribe(
+        this.renewalService.justPayRedirection(reqData).subscribe(
           (response:any)=>{
             if(response?.isSuccess){
               window.location.href = response.data.paymentURL;
