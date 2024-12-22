@@ -1891,70 +1891,70 @@ export class YatraComponent {
     if (control.name == 'correspondentPincode') {
         this.getCityStateByPinByCorressponding();
     }
-    if (control.name === 'idProof') {
+    // if (control.name === 'idProof') {
 
-      const idProof = JSON.parse(event.target.value);
-      console.log("id proof", idProof);
-      this.idProofType = idProof.value;
+    //   const idProof = JSON.parse(event.target.value);
+    //   console.log("id proof", idProof);
+    //   this.idProofType = idProof.value;
 
-      const idNumberControl = this.dynamicFormGroup.get('idNo');
-      idNumberControl?.setValue('');
+    //   const idNumberControl = this.dynamicFormGroup.get('idNo');
+    //   idNumberControl?.setValue('');
 
-      switch (this.idProofType) {
-        case 'Aadhar Card':
-          const inputElement = event.target as HTMLInputElement;
-          idNumberControl?.setValidators([
-            Validators.required,
-            Validators.pattern('[0-9]{4}')
-          ]);
-          this.tooltipMessage = 'Please enter the last 4 digits of your Aadhar ID.';
-          this.patternErrorMessage = 'Aadhar ID must be exactly last 4 digits.';
-          break;
+    //   switch (this.idProofType) {
+    //     case 'Aadhar Card':
+    //       const inputElement = event.target as HTMLInputElement;
+    //       idNumberControl?.setValidators([
+    //         Validators.required,
+    //         Validators.pattern('[0-9]{4}')
+    //       ]);
+    //       this.tooltipMessage = 'Please enter the last 4 digits of your Aadhar ID.';
+    //       this.patternErrorMessage = 'Aadhar ID must be exactly last 4 digits.';
+    //       break;
 
-        case 'Passport':
-          idNumberControl?.setValidators([
-            Validators.required,
-            Validators.pattern('^[A-Z][0-9]{2}(?: [0-9]{5}|[0-9]{5})$')
-          ]);
-          this.tooltipMessage = 'Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.';
-          this.patternErrorMessage = 'Passport Number must follow the format: First letter (A-Z), 2 numbers, optional space and 5 numbers.';
-          break;
+    //     case 'Passport':
+    //       idNumberControl?.setValidators([
+    //         Validators.required,
+    //         Validators.pattern('^[A-Z][0-9]{2}(?: [0-9]{5}|[0-9]{5})$')
+    //       ]);
+    //       this.tooltipMessage = 'Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.';
+    //       this.patternErrorMessage = 'Passport Number must follow the format: First letter (A-Z), 2 numbers, optional space and 5 numbers.';
+    //       break;
 
-        case 'Voter ID':
-          idNumberControl?.setValidators([
-            Validators.required,
-            Validators.pattern('^[A-Z]{3}[0-9]{7}$')
-          ]);
-          this.tooltipMessage = 'Please enter a valid Voter ID, e.g., WED1234567.';
-          this.patternErrorMessage = 'Voter ID must follow the format: 3 uppercase letters followed by 7 digits.';
-          break;
+    //     case 'Voter ID':
+    //       idNumberControl?.setValidators([
+    //         Validators.required,
+    //         Validators.pattern('^[A-Z]{3}[0-9]{7}$')
+    //       ]);
+    //       this.tooltipMessage = 'Please enter a valid Voter ID, e.g., WED1234567.';
+    //       this.patternErrorMessage = 'Voter ID must follow the format: 3 uppercase letters followed by 7 digits.';
+    //       break;
 
-        case 'Driving License':
-          idNumberControl?.setValidators([
-            Validators.required,
-            Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
-          ]);
-          this.tooltipMessage = 'The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.';
-          this.patternErrorMessage = 'Driving License must follow the format: 2 uppercase letters, 2 digits, 4 digits, 7 digits.';
-          break;
+    //     case 'Driving License':
+    //       idNumberControl?.setValidators([
+    //         Validators.required,
+    //         Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
+    //       ]);
+    //       this.tooltipMessage = 'The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.';
+    //       this.patternErrorMessage = 'Driving License must follow the format: 2 uppercase letters, 2 digits, 4 digits, 7 digits.';
+    //       break;
 
-        case '10th (SSC) Mark sheet':
-          idNumberControl?.setValidators([
-            Validators.required,
-            Validators.pattern('^[0-9]{7}$')
-          ]);
-          this.tooltipMessage = 'Please enter a valid SSC Marksheet number with 7 digits.';
-          this.patternErrorMessage = 'SSC Marksheet number must be exactly 7 digits.';
-          break;
+    //     case '10th (SSC) Mark sheet':
+    //       idNumberControl?.setValidators([
+    //         Validators.required,
+    //         Validators.pattern('^[0-9]{7}$')
+    //       ]);
+    //       this.tooltipMessage = 'Please enter a valid SSC Marksheet number with 7 digits.';
+    //       this.patternErrorMessage = 'SSC Marksheet number must be exactly 7 digits.';
+    //       break;
 
-        default:
-          idNumberControl?.clearValidators();
-          this.tooltipMessage = '';
-          this.patternErrorMessage = '';
-      }
+    //     default:
+    //       idNumberControl?.clearValidators();
+    //       this.tooltipMessage = '';
+    //       this.patternErrorMessage = '';
+    //   }
 
-      idNumberControl?.updateValueAndValidity();
-    }
+    //   idNumberControl?.updateValueAndValidity();
+    // }
 
     if (control.onChangeMethod) {
 
@@ -1989,6 +1989,15 @@ export class YatraComponent {
         }
         else if(control.onChangeMethod == 'setDeductibleAmount'){
           this.resolveMethod(control.onChangeMethod,control,parentControl,index);
+        }
+        else if(control.onChangeMethod == 'changeMainFormDependentControls'){
+          if(!control.dependentControls){
+            console.log(selectedValue);
+            const selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
+            console.log(selectedOption);
+            
+            this.resolveMethod(control.onChangeMethod,selectedOption.dependentControls)
+          }
         }
         else {
           eventValue = selectedValue === 'Others' ? true : false;
@@ -2155,8 +2164,9 @@ export class YatraComponent {
 
 
     if (parentControl == null && control.name == 'proposerPincode') {
+    console.log("jhsakhskjdahsjda");
 
-      const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.length || 0;
+      const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.toString().length || 0;
 
       if (pinCodeLength === 6) {
         const reqData = {
@@ -4388,10 +4398,17 @@ export class YatraComponent {
             : this.formData.insuredMemberDetails[0].pincode;
           const zone = this.formData['zone'];
           const zoneValue = this.formData['zoneValue'];
+          let deductibleAmount: any='';
+          if(this.formData['deductibleAmount']){
+            deductibleAmount = this.formData['deductibleAmount'];
+          }
           this.formData.insuredMemberDetails.forEach((member: any) => {
             member.pincode = pincode
             member.zone = zone;
             member.zoneValue = zoneValue;
+            if(deductibleAmount != ''){
+              member.deductibleAmount = deductibleAmount;
+            }
           });
         }
 
@@ -5407,7 +5424,8 @@ export class YatraComponent {
                 if (this.dynamicFormGroup.getRawValue().totalPremium) {
 
                   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
-                  this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
+                  // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
+                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
                 }
                 console.log(this.dynamicFormGroup.getRawValue());
 
@@ -5981,6 +5999,7 @@ export class YatraComponent {
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
+    const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
     console.log(formData, this.covers, formData?.appointeeRelationWithNominee);
 
     const mappedData: Partial<IFullQuoteMapping> = {
@@ -6048,7 +6067,7 @@ export class YatraComponent {
       proposerEmailId: formData?.emailId || '',
       proposerPincode: formData?.proposerPincode || '',
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
-      idNo: formData?.idNo || '',
+      idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
       proposerOccupation: this.jsonParse(formData?.occupation, 'name') || '',
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
@@ -7251,6 +7270,22 @@ export class YatraComponent {
     console.log(control,parentControl,index);
     
     if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater'){
+      const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+      this.form.formSections.forEach((section:any)=>{
+          section.formControls.forEach((control:any)=>{
+                if(control.name == 'deductibleAmount'){
+                  if(control.onChangeMethod == 'deductibleOptionsB'){
+                    const deductibleValue = this.deductibleOptionsB(null,null,sumInsuredControl?.value);
+                    this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                  }
+                  else{
+                    const deductibleValue = this.deductibleOptionsA(null,null,sumInsuredControl?.value);
+                    this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                  }
+                }
+          })
+        
+      })
 
     }
     else if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual'){
@@ -7282,5 +7317,21 @@ export class YatraComponent {
       
     }
   }
+
+  restrictNumberLength(event: Event, maxLength: number): void {
+    const inputElement = event.target as HTMLInputElement;
+  
+    // Convert input value to a string and truncate if it exceeds maxLength
+    if (inputElement.value.length > maxLength) {
+      inputElement.value = inputElement.value.slice(0, maxLength);
+    }
+  
+    // Update the form control's value to match the truncated value
+    const formControl = this.dynamicFormGroup.get(inputElement.name);
+    if (formControl) {
+      formControl.setValue(inputElement.value);
+    }
+  }  
+  
 }
 
