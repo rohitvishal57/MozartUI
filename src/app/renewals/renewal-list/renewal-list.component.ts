@@ -49,6 +49,7 @@ export class RenewalListComponent {
   documents: any[] = [];
   selectedDocument: any = null;
   searchApplied: boolean = false;
+  policyNumber:any;
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
@@ -190,6 +191,15 @@ export class RenewalListComponent {
         }else if(paymentStatus == "INPROGRESS"){
           this.toast.warning({detail: "SUCCESS",summary: "payment inprogress",duration: 5000});
         }
+      }
+      try{
+        if (stateData.policyNumber) {
+          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+          console.log(this.policyNumber);
+      }
+      }catch (error){
+          console.error(error);
+
       }
     }
   }

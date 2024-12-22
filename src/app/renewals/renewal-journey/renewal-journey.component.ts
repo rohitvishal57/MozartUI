@@ -95,7 +95,7 @@ export class RenewalJourneyComponent {
  
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.showHtmlContent = false;
 
     // Fetch agentCode from localStorage if present
@@ -115,6 +115,14 @@ export class RenewalJourneyComponent {
         
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
         console.log(decryptedFormData);
+        if(decryptedFormData.oldPolicyNumber){
+          const renewalInfoRequestBody = {
+            policy_Number: decryptedFormData.oldPolicyNumber
+          };
+          const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+
+          this.formData = { ...this.formData, ...response.data };
+        }
         
         this.formData = { ...this.formData, ...decryptedFormData };
         console.log(this.formData);

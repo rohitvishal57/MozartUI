@@ -99,8 +99,6 @@ export class CustomerJourneyComponent {
 
 
   async ngOnInit() {
-
-    // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
     }
@@ -165,9 +163,9 @@ export class CustomerJourneyComponent {
 
 
         }
-        else if(decryptedFormData.policyNumber){
+        else if(decryptedFormData.oldPolicyNumber){
           const renewalInfoRequestBody = {
-            policy_Number: decryptedFormData.policyNumber
+            policy_Number: decryptedFormData.oldPolicyNumber
           };
           const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
