@@ -3609,6 +3609,12 @@ export class RugDynamicFormComponent {
     }    
     if(this.bbdetails.productCode == "R03"){
       this.bbdetails.productPlanName = "GHI,GP";
+      console.log(premiumObj);
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GPA" || item.combinationName === "GP"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
       this.dynamicFormGroup.get('combiId')?.setValue('10');
     }
@@ -3693,7 +3699,8 @@ export class RugDynamicFormComponent {
                     let justpayPayload = { 
                        "agentcode": this.agentCode,
                        "proposalNumber": this.bbdetails?.leadId,
-                       "paymentMethod": "autoDebit",
+                      //  "paymentMethod": "autoDebit",
+                       "paymentMethod": this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
                        "source": "RUG",
                        "policyType": "New Business",
                        "policyNumber": "", 
@@ -4118,7 +4125,7 @@ export class RugDynamicFormComponent {
                     isPayment: false,
                     groupCode: this.bbdetails.groupCode,
                     productPlanName: this.bbdetails.productPlanName,
-                    productPlanCode: this.bbdetails.productPlanCode,
+                    productPlanCode: this.bbdetails.productPlanCode.toString(),
                     combiId: this.bbdetails.combiId,
                     combiName: null,
                     familyConstructId: this.bbdetails.familyConstructId,
