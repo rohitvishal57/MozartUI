@@ -3546,7 +3546,7 @@ export class RugDynamicFormComponent {
       this.bbdetails.productPlanName = "GHI-5L";
       this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.get('deductibleAmount')?.setValue("500000");
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
@@ -3573,7 +3573,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
   
-        this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.get('deductibleAmount')?.setValue("1000000");
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
         this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
