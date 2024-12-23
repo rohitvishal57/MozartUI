@@ -2903,7 +2903,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .fw_checkboxWraper .input-checkbox-feild .input-check:checked + label:after {
   bottom: auto;
-    top: 3px;
+    top: 2px;
 }
 .field_searchWraper {
   background: rgba(255, 255, 255, 0.85);
