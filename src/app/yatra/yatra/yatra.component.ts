@@ -134,9 +134,9 @@ export class YatraComponent {
   city: string = '';
   state: string = '';
   retrievedDocuments: any;
-  patternErrorMessage: string="";
-  verifyKYCStatus : boolean | undefined;
-  otpRequestId : string = "";
+  patternErrorMessage: string = "";
+  verifyKYCStatus: boolean | undefined;
+  otpRequestId: string = "";
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -291,12 +291,12 @@ export class YatraComponent {
                     this.formData.ReceiptNumber = decryptedData.ReceiptNumber ?? this.formData.ReceiptNumber;
                     this.formData.customerId = decryptedData.customerId ?? this.formData.customerId;
                     this.formData.applicationNumber = decryptedData.applicationNumber ?? this.formData.applicationNumber;
-                  }    
-                  if(decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED'){
+                  }
+                  if (decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED') {
                     console.log('PENDING');
                     this.toast.error({ detail: "ERROR", summary: "Payment is Pending", duration: 3000 });
                   }
-                  if(decryptedData.verifyKyc == true){
+                  if (decryptedData.verifyKyc == true) {
                     this.verifyKYCStatus = true;
                   }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
@@ -498,15 +498,15 @@ export class YatraComponent {
     // }
     console.log(this.formData);
     console.log(this.partnerId, this.productId, this.formSequence);
-    if(this.getFormIndexValue() == 7){
+    if (this.getFormIndexValue() == 7) {
       const req = {
-        proposalNum : this.proposalNum
+        proposalNum: this.proposalNum
       }
       await this.commonService.getkycstatus(req).subscribe({
-        next: (value:any) => {
+        next: (value: any) => {
           this.verifyKYCStatus = true
         },
-        error: (err:any) => {
+        error: (err: any) => {
 
         }
       })
@@ -535,11 +535,11 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
-        
+
         console.log(this.form, this.formSequence, this.formData);
 
-        if(this.formData.verifyKYC || this.formData.verifyKYC == null){
-          this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false; 
+        if (this.formData.verifyKYC || this.formData.verifyKYC == null) {
+          this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false;
         }
         this.initializeForm();
       },
@@ -1747,7 +1747,7 @@ export class YatraComponent {
     });
   }
 
-  getBranchDetails(event: any, otherControl: any) {    
+  getBranchDetails(event: any, otherControl: any) {
     otherControl.value = "";
     otherControl.options = []; // Reset options to an empty array
 
@@ -2011,13 +2011,13 @@ export class YatraComponent {
         else if (control.onChangeMethod == 'setDeductibleAmount') {
           this.resolveMethod(control.onChangeMethod, control, parentControl, index);
         }
-        else if(control.onChangeMethod == 'changeMainFormDependentControls'){
-          if(!control.dependentControls){
+        else if (control.onChangeMethod == 'changeMainFormDependentControls') {
+          if (!control.dependentControls) {
             console.log(selectedValue);
             const selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
             console.log(selectedOption);
-            
-            this.resolveMethod(control.onChangeMethod,selectedOption.dependentControls)
+
+            this.resolveMethod(control.onChangeMethod, selectedOption.dependentControls)
           }
         }
         else {
@@ -2059,7 +2059,7 @@ export class YatraComponent {
                   };
                   this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
                   this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
-      
+
                   if (response.data.bankCode) {
                     const cityReqData = { cityCode: "", bankCode: response.data.bankCode };
                     this.yatraService.getBankCity(cityReqData).subscribe({
@@ -2072,14 +2072,14 @@ export class YatraComponent {
                           name: response.data.bankCity
                         };
                         console.log(cobj);
-      
+
                         if (control.onChangeMethod != null && "bankCity" != null) {
                           this.form.formSections.forEach((section: any) => {
                             section.formControls.forEach((formControl: any) => {
                               if (formControl.name == "bankCity") {
                                 const event = {
                                   target: {
-                                    value: JSON.stringify(nobj) 
+                                    value: JSON.stringify(nobj)
                                   }
                                 };
                                 this.getBankCity(event, formControl);
@@ -2088,7 +2088,7 @@ export class YatraComponent {
                           });
                         }
                         this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
-                          const branchReqData = {
+                        const branchReqData = {
                           bankCode: response.data.bankCode,
                           cityCode: response.data.cityCode
                         };
@@ -2103,14 +2103,14 @@ export class YatraComponent {
                               value: matchingBranch.value,
                               name: matchingBranch.name
                             };
-                            console.log("branch obj",branchObj);
+                            console.log("branch obj", branchObj);
                             if (control.onChangeMethod != null && "bankBranch" != null) {
                               this.form.formSections.forEach((section: any) => {
                                 section.formControls.forEach((formControl: any) => {
                                   if (formControl.name == "bankBranch") {
                                     const event = {
                                       target: {
-                                        value: JSON.stringify(cobj) 
+                                        value: JSON.stringify(cobj)
                                       }
                                     };
                                     this.getBranchDetails(event, formControl);
@@ -2155,9 +2155,9 @@ export class YatraComponent {
           }
         });
       }
-      
-      
-    }      
+
+
+    }
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
@@ -2262,7 +2262,7 @@ export class YatraComponent {
 
 
     if (parentControl == null && control.name == 'proposerPincode') {
-    console.log("jhsakhskjdahsjda");
+      console.log("jhsakhskjdahsjda");
 
       const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.toString().length || 0;
 
@@ -2456,22 +2456,6 @@ export class YatraComponent {
 
   }
 
-
-  // calculateAge(dob: string): number {
-  //   const today = new Date();
-  //   const birthDate = new Date(dob);
-  //   if (isNaN(birthDate.getTime())) {
-  //     console.error('Invalid date format');
-  //     return 0; // Or handle it according to your application's needs
-  //   }
-  //   let age = today.getFullYear() - birthDate.getFullYear();
-  //   const monthDifference = today.getMonth() - birthDate.getMonth();
-  //   if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-  //     age--;
-  //   }
-  //   return age;
-  // }
-
   calculateAge(dob: Date): string {
     const today = new Date();
     const birthDate = new Date(dob);
@@ -2480,35 +2464,20 @@ export class YatraComponent {
     const monthDifference = today.getMonth() - birthDate.getMonth();
     const dayDifference = today.getDate() - birthDate.getDate();
 
+    // Adjust age if the birth date hasn't occurred yet in the current year
     if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
       age--;
     }
 
-    if (age < 0) {
-      const diffInMs = birthDate.getTime() - today.getTime();
-      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-      if (diffInDays < 91) {
-        return `-${diffInDays} days`;
-      }
-
-      const diffInMonths = Math.floor(diffInDays / 30);
-      return `-${diffInMonths}`;
-    }
     if (age < 1) {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-      if (diffInDays < 91) {
-        return `${diffInDays} days`;
-      }
-
-      const diffInMonths = Math.floor(diffInDays / 30);
-      return `${diffInMonths}`;
+      return `${diffInDays}days`; // Return age in days
     }
 
     return `${age}`;
   }
+
 
 
 
@@ -3628,36 +3597,36 @@ export class YatraComponent {
   onOtpClick(control: any) {
     let sendOTPReqeustBody: any = {};
     sendOTPReqeustBody.emailId = this.formData.mobileNumber,
-    sendOTPReqeustBody.mobileNumber =
-    sendOTPReqeustBody.name = "",
-    sendOTPReqeustBody.agentCode = this.agentCode;
+      sendOTPReqeustBody.mobileNumber =
+      sendOTPReqeustBody.name = "",
+      sendOTPReqeustBody.agentCode = this.agentCode;
 
     this.yatraService.sendOTP(sendOTPReqeustBody).subscribe(
-      (res : any) => {
-        if(res.isSuccess){
-            if(res.message =='Success'){
-              this.otpRequestId =  res.data.requestId;
-              control.visible = false;
+      (res: any) => {
+        if (res.isSuccess) {
+          if (res.message == 'Success') {
+            this.otpRequestId = res.data.requestId;
+            control.visible = false;
 
-              this.toast.success({
-                detail: "SUCCESS",
-                summary: `Communication has been sent Successfully`,
-                duration: 3000,
-              });
-            }
+            this.toast.success({
+              detail: "SUCCESS",
+              summary: `Communication has been sent Successfully`,
+              duration: 3000,
+            });
+          }
         }
       },
       (error) => {
         console.error(error);
 
       });
-    
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
         if (controls.dependentControls) {
           controls.dependentControls.forEach((item: any) => {
             const controlToHide = section.formControls.find((c: any) => c.name === item);
-            if (controlToHide && controlToHide.name !="sendLink") {
+            if (controlToHide && controlToHide.name != "sendLink") {
               controlToHide.visible = false; // Hide all dependent controls initially
             }
           });
@@ -3681,7 +3650,7 @@ export class YatraComponent {
 
 
   verifyOTP(control: any) {
-    if(!this.otpRequestId){
+    if (!this.otpRequestId) {
       this.toast.warning({
         detail: "WARNING",
         summary: `Please click On Send OTP.`,
@@ -3692,34 +3661,34 @@ export class YatraComponent {
     verifyRequest.agentCode = this.agentCode;
     verifyRequest.requestId = this.otpRequestId;
     verifyRequest.otpNumber = this.dynamicFormGroup.value.otpField.toString();
-    verifyRequest.mobileNumber =this.formData.mobileNumber;
+    verifyRequest.mobileNumber = this.formData.mobileNumber;
     verifyRequest.eMailId = this.formData.emailId;
     this.yatraService.verifyOTP(verifyRequest).subscribe(
       (res: any) => {
-        if(res.isSuccess){
+        if (res.isSuccess) {
           this.toast.success({
             detail: "SUCCESS",
             summary: `SuccessFully Validated`,
             duration: 3000,
           });
         }
-      }, 
-      (error)=>{
-        console.log("err",error);
+      },
+      (error) => {
+        console.log("err", error);
       });
 
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          if (controls.dependentControls) {
-            controls.dependentControls.forEach((item: any) => {
-              const controlToHide = section.formControls.find((c: any) => c.name === item);
-              if (controlToHide ) {
-                controlToHide.visible = false; // Hide all dependent controls initially
-              }
-            });
-          }
-        });
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.dependentControls) {
+          controls.dependentControls.forEach((item: any) => {
+            const controlToHide = section.formControls.find((c: any) => c.name === item);
+            if (controlToHide) {
+              controlToHide.visible = false; // Hide all dependent controls initially
+            }
+          });
+        }
       });
+    });
   }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
@@ -3737,9 +3706,9 @@ export class YatraComponent {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
     }
-    if(this.form.formTitle == 'Total Premium'){
-      if(this.dynamicFormGroup.get('deductible')){
-        if(this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false){
+    if (this.form.formTitle == 'Total Premium') {
+      if (this.dynamicFormGroup.get('deductible')) {
+        if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
           this.toast.warning({ detail: "WARNING", summary: "Deductible Cover is mandatory", duration: 3000 });
           return;
         }
@@ -3912,7 +3881,7 @@ export class YatraComponent {
           "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
         };
 
-        console.log(reqData, this.dynamicFormGroup.getRawValue(),this.dynamicFormGroup);
+        console.log(reqData, this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup);
 
         await this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
@@ -4593,15 +4562,15 @@ export class YatraComponent {
             : this.formData.insuredMemberDetails[0].pincode;
           const zone = this.formData['zone'];
           const zoneValue = this.formData['zoneValue'];
-          let deductibleAmount: any='';
-          if(this.formData['deductibleAmount']){
+          let deductibleAmount: any = '';
+          if (this.formData['deductibleAmount']) {
             deductibleAmount = this.formData['deductibleAmount'];
           }
           this.formData.insuredMemberDetails.forEach((member: any) => {
             member.pincode = pincode
             member.zone = zone;
             member.zoneValue = zoneValue;
-            if(deductibleAmount != ''){
+            if (deductibleAmount != '') {
               member.deductibleAmount = deductibleAmount;
             }
           });
@@ -5456,23 +5425,23 @@ export class YatraComponent {
   // addOnRemoved(control: any, parentControl: any = null) {
   //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
   //   let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
-  
+
   //   // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
   //   Object.keys(addOnData.addOnDetails).forEach((key) => {
   //     if (!addOnData.addOnDetails[key][0].memberCheckbox) {
   //       modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
   //         if (member.relation === key) {
   //           const coverId = addOnData.addOnId;
-  
+
   //           if (parentControl.name === 'deductible') {
   //             // Remove deductible-specific properties
-              
+
   //           } else {
   //             // Remove the add-on from the covers array of insuredMemberDetails
   //             if (member.covers) {
   //               member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
   //             }
-  
+
   //             // Synchronize the change in the local covers variable
   //             if (this.covers[index]) {
   //               this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
@@ -5482,11 +5451,11 @@ export class YatraComponent {
   //       });
   //     }
   //   });
-  
+
   //   // Call getPremiumAmount after removing the add-on if needed
   //   // this.getPremiumAmount();
   // }
-  
+
 
 
 
@@ -6667,42 +6636,40 @@ export class YatraComponent {
     //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
     //   this.flattenObjectInsert(this.formData);
     // })
-    this.formData.insuredMemberDetails.forEach((member: any,index:any) => {
+    this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
       // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       // const dindex = dynamicform.at(index) as FormGroup;
       // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
-      if (!this.dynamicFormGroup.contains('insuredMemberDetails'))
-      {
+      if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
         this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
       }
- 
+
       const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
- 
+
       // Ensure the FormArray has enough entries
-      while (dynamicform.length <= index)
-      {
+      while (dynamicform.length <= index) {
         dynamicform.push(new FormGroup({}));
       }
- 
+
       const dindex = dynamicform.at(index) as FormGroup;
       Object.keys(member).forEach((key: string) => {
-        dindex.addControl(key,new FormControl(member[key]));
+        dindex.addControl(key, new FormControl(member[key]));
       });
       // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
       // console.log(stringifiedProductQuestionnaire);
 
       const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
       dindex.addControl('productQuestionnaire', '');
-      
+
       // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
       console.log(stringifiedProductQuestionnaire);
-      
+
       dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-      
+
       // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
       // this.flattenObjectInsert(this.formData);
     })
-    console.log(this.formData, this.dynamicFormGroup.getRawValue(), this.form,this.dynamicFormGroup);
+    console.log(this.formData, this.dynamicFormGroup.getRawValue(), this.form, this.dynamicFormGroup);
   }
 
   backToleads() {
@@ -7014,8 +6981,8 @@ export class YatraComponent {
       ]
     };
 
-    if(control== null && parentControl == null){
-      console.log(sumInsured,data.sumInsured);
+    if (control == null && parentControl == null) {
+      console.log(sumInsured, data.sumInsured);
       return data[sumInsured][0].value;
     }
 
@@ -7535,24 +7502,24 @@ export class YatraComponent {
 
   setDeductibleAmount(control: any, parentControl: any = null, index: any = null) {
 
-    console.log(control,parentControl,index);
-    
-    if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater'){
+    console.log(control, parentControl, index);
+
+    if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
       const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
-      this.form.formSections.forEach((section:any)=>{
-          section.formControls.forEach((control:any)=>{
-                if(control.name == 'deductibleAmount'){
-                  if(control.onChangeMethod == 'deductibleOptionsB'){
-                    const deductibleValue = this.deductibleOptionsB(null,null,sumInsuredControl?.value);
-                    this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
-                  }
-                  else{
-                    const deductibleValue = this.deductibleOptionsA(null,null,sumInsuredControl?.value);
-                    this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
-                  }
-                }
-          })
-        
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if (control.name == 'deductibleAmount') {
+            if (control.onChangeMethod == 'deductibleOptionsB') {
+              const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+              this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+            }
+            else {
+              const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+              this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+            }
+          }
+        })
+
       })
 
     }
@@ -7588,20 +7555,20 @@ export class YatraComponent {
 
   restrictNumberLength(event: Event, maxLength: number): void {
     const inputElement = event.target as HTMLInputElement;
-  
+
     // Convert input value to a string and truncate if it exceeds maxLength
     if (inputElement.value.length > maxLength) {
       inputElement.value = inputElement.value.slice(0, maxLength);
     }
-  
+
     // Update the form control's value to match the truncated value
     const formControl = this.dynamicFormGroup.get(inputElement.name);
     if (formControl) {
       formControl.setValue(inputElement.value);
     }
-  }  
-  
-  calculateEmployeeDiscount(control:any) {
+  }
+
+  calculateEmployeeDiscount(control: any) {
     const employeeIdValue = this.dynamicFormGroup.get('employeeId')?.value;
     console.log(employeeIdValue);
     this.formData = {
@@ -7610,7 +7577,7 @@ export class YatraComponent {
     };
 
     this.getPremiumAmount();
-    control.disabled=true;
+    control.disabled = true;
   }
 }
 
