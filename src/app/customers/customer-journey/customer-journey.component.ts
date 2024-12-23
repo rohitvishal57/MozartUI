@@ -167,9 +167,9 @@ export class CustomerJourneyComponent {
 
 
         }
-        else if(decryptedFormData.oldPolicyNumber){
+        else if(decryptedFormData.policyNumber){
           const renewalInfoRequestBody = {
-            policy_Number: decryptedFormData.oldPolicyNumber
+            policy_Number: decryptedFormData.policyNumber
           };
           const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
