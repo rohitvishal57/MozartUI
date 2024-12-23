@@ -44,7 +44,7 @@ export class RenewalsService {
     this.policyState.next({ policyNo, activeSection });
   }
   getRenewalListApi(reqBody: any) {
-    const getRenewalList = this.configService.config.baseUrl + this.configService.config.getRenewalList;
+    const getRenewalList = this.configService.config.baseUrl1 + this.configService.config.getRenewalList;
     return this.httpService.post(getRenewalList, reqBody);
   }
   sendRenewalWhatsappApi(reqBody: any) {

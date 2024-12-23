@@ -59,22 +59,16 @@ export class RenewalJourneyComponent {
   selectedFile: any;
   documentId: any;
   agentCode: any;
-
+  rowData:any;
   formSequence: any[] = [payment, thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
   futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
-
-
   activeSection: string = "primary";
-
   // activeSection: string = "primary";
   formIndex: number = 0;
-
   existingRelations: any[] = [];
-
-
   QuoteNumber: any = [];
   tenureAmount: any[] = [0, 0, 0];
   discountList: number[] = [];
@@ -93,8 +87,6 @@ export class RenewalJourneyComponent {
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) {}
  
-
-
   async ngOnInit() {
     this.showHtmlContent = false;
 
@@ -111,9 +103,12 @@ export class RenewalJourneyComponent {
 
       // Decrypt and assign each piece of data if present
       if (stateData.formData) {
-        console.log(stateData.formData);
+        console.log(stateData.formData,"formData");
         
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
+        if ('isFullQuoteSuccess' in decryptedFormData) {
+          this.rowData = decryptedFormData;
+        }        
         console.log(decryptedFormData);
         if(decryptedFormData.oldPolicyNumber){
           const renewalInfoRequestBody = {
@@ -3690,7 +3685,11 @@ export class RenewalJourneyComponent {
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-
+      if ( this.rowData != null &&!this.rowData.isFullQuoteSuccess) {
+        this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
+        return;
+      }
+    
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
