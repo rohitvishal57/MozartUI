@@ -5423,6 +5423,8 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  background: #f1f3f6 url(../Img/icon_profile.svg) no-repeat center center;
+  background-size: 30%;
 }
 .userProfilePic img {
   width: 100%;
