@@ -247,7 +247,8 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.proposalNumber = "";
     this.quoteListRequestBody.name = "";
     this.quoteListRequestBody.quoteId = "";
-    }
+  this.checkView();  
+  }
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
       (response) => {

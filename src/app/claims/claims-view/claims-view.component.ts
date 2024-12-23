@@ -601,7 +601,7 @@ export class ClaimsViewComponent {
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showCashlessFields = false;
       this.showReimbursementFields = true;
-      this.isFilenotSelected = true;
+      this.isFilenotSelected = false;
       
       this.form.patchValue({
         coverName: "",
@@ -1066,7 +1066,6 @@ export class ClaimsViewComponent {
     } else {
       this.errors.duplicateDocs = ''; 
     }
-
     this.cdr.detectChanges();
   }
   uploadFiles(files: File[]): void {
@@ -1236,7 +1235,6 @@ memberIdChange(event: any): void {
         this.errors.fileNotSelected = true;
         return;
       }
-
       const validationResult = this.validateRequiredDocuments();
       if (!validationResult.isValid) {
         // this.toast.error({ 
@@ -1247,10 +1245,7 @@ memberIdChange(event: any): void {
         return;
       }
     }
-
-
     this.claimSubmitted = true;
-
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;

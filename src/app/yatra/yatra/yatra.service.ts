@@ -223,4 +223,11 @@ export class YatraService {
     const emailLinkURL = this.configService.config.baseUrl + this.configService.config.sendEmailLink;
     return this.httpService.post(emailLinkURL,reqData);
   }
+
+  getStaticForms(reqData : any){
+    const staticFormURL = this.configService.config.baseUrl + this.configService.config.staticForm;
+    return this.httpService.post(staticFormURL,reqData);
+  }
+
+
 }
