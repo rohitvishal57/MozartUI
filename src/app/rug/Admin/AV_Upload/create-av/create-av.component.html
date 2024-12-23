@@ -1,0 +1,254 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToAV()" title="Back To List"></a>
+                    CREATE AV
+                </h2>
+            </div>
+            <form [formGroup]="createAvForm" (ngSubmit)="onSubmit()">
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">AV Details</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="avid" 
+                                    name="avid" 
+                                    placeholder="AV Id *" 
+                                    formControlName="avid" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('avid')?.invalid && (createAvForm.get('avid')?.touched || submitted) }">
+                                <label for="avid">AV Id *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('avid')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('avid')?.errors?.['required']">
+                                        Please enter AV Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('avid')?.errors?.['pattern']">
+                                        AV Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="avname" 
+                                    name="avname" 
+                                    placeholder="AV Name *" 
+                                    formControlName="avname" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('avname')?.invalid && (createAvForm.get('avname')?.touched || submitted) }">
+                                <label for="avname">AV Name *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('avname')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('avname')?.errors?.['required']">
+                                        Please enter AV Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('avname')?.errors?.['pattern']">
+                                        AV Name should only contain alphabets.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="spcode" 
+                                    name="spcode" 
+                                    placeholder="SP Code *" 
+                                    formControlName="spcode" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('spcode')?.invalid && (createAvForm.get('spcode')?.touched || submitted) }">
+                                <label for="spcode">SP Code *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('spcode')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('spcode')?.errors?.['required']">
+                                        Please enter SP Code.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('spcode')?.errors?.['pattern']">
+                                        SP Code should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="avcenter" 
+                                    name="avcenter" 
+                                    formControlName="avcenter"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('avcenter')?.invalid && (createAvForm.get('avcenter')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Center</option>
+                                    <option *ngFor="let opt of center" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="avcenter">Center *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('avcenter')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('avcenter')?.errors?.['required']">
+                                        Please select a Center.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="axisprocess" 
+                                    name="axisprocess" 
+                                    formControlName="axisprocess"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('axisprocess')?.invalid && (createAvForm.get('axisprocess')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Axis Process</option>
+                                    <option *ngFor="let opt of AxisProcess" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="axisprocess">Axis Process*</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('axisprocess')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('axisprocess')?.errors?.['required']">
+                                        Please select Axis Process
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="lefdate" 
+                                    name="lefdate" 
+                                    placeholder="License Expiry From Date *" 
+                                    formControlName="lefdate" 
+                                    type="date" 
+                                    [max]="today"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('lefdate')?.invalid && (createAvForm.get('lefdate')?.touched || submitted) }">
+                                <label for="lefdate">License Expiry From Date *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('lefdate')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('lefdate')?.errors?.['required']">
+                                        Please select a date.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="letdate" 
+                                    name="letdate" 
+                                    placeholder="License Expiry To Date *" 
+                                    formControlName="letdate" 
+                                    type="date" 
+                                    [max]="today"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('letdate')?.invalid && (createAvForm.get('letdate')?.touched || submitted) }">
+                                <label for="letdate">License Expiry To Date *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('letdate')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('letdate')?.errors?.['required']">
+                                        Please select a date.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="tlid" 
+                                    name="tlid" 
+                                    placeholder="TL ID *" 
+                                    formControlName="tlid" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('tlid')?.invalid && (createAvForm.get('tlid')?.touched || submitted) }">
+                                <label for="tlid">TL ID *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('tlid')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('tlid')?.errors?.['required']">
+                                        Please enter TL ID.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="tlName" 
+                                    name="tlName" 
+                                    placeholder="TL Name *" 
+                                    formControlName="tlName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('tlName')?.invalid && (createAvForm.get('tlName')?.touched || submitted) }">
+                                <label for="tlName">TL Name *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('tlName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('tlName')?.errors?.['required']">
+                                        Please enter TL Name.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="imdCode" 
+                                    name="imdCode" 
+                                    placeholder="IMD Code *" 
+                                    formControlName="imdCode" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('imdCode')?.invalid && (createAvForm.get('imdCode')?.touched || submitted) }">
+                                <label for="imdCode">IMD Code *</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('imdCode')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('imdCode')?.errors?.['required']">
+                                        Please enter IMD Code.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="axisVendor" 
+                                    name="axisVendor" 
+                                    formControlName="axisVendor"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('axisVendor')?.invalid && (createAvForm.get('axisVendor')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Axis Vendor</option>
+                                    <option *ngFor="let opt of AxisVendor" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="axisVendor">Axis Vendor*</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('axisVendor')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('axisVendor')?.errors?.['required']">
+                                        Please select Axis Vendor
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="axisLob" 
+                                    name="axisLob" 
+                                    formControlName="axisLob"
+                                    [ngClass]="{ 'is-invalid': createAvForm.get('axisLob')?.invalid && (createAvForm.get('axisLob')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Axis Lob</option>
+                                    <option *ngFor="let opt of AxisVendor" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="axisLob">Axis Lob*</label>
+                                <span class="invalid-feedback" *ngIf="createAvForm.get('axisLob')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createAvForm.get('axisLob')?.errors?.['required']">
+                                        Please select Axis Vendor
+                                    </span>
+                                </span>
+                            </div>
+                        </div>         
+                        <div class="col-12 mt-4">
+                            <button type="submit" id="save" name="save" class="btn_red">Save</button>
+                        </div>
+                    </div>
+                </section>
+            </form>        
+        </div>
+    </div>
+</main>
