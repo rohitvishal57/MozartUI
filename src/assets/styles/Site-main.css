@@ -1484,7 +1484,7 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--black-color);
   line-height: 17px;
   display: inline-block;
-  padding-left: 20px;
+  padding-left: 20px !important;
 }
 
 .input-checkbox-feild .input-check + label:before {
@@ -3489,6 +3489,9 @@ input[type="search"]::-webkit-search-results-decoration {
 /*User Quotes view options - Card end*/
 
 /*Custom overlay dropdown start*/
+.overlay_dropdown_w220 {
+  width: 220px;
+}
 .overlay_dropdown_w360 {
     width: 360px;
 }
