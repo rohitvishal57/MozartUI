@@ -1,0 +1,175 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+      <div class="bodyColumn body_flex_column">
+        <div class="body_flex_row event-title">
+          <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListEvent()">
+            <a class="btn_backPage" title="Back To List"></a>
+            {{"Edit Event" | translate}}
+          </h2>
+
+          <!-- <button type="button" id="eventedit" name="eventedit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="toggleEdit()"><img src="assets/Img/icon_edit_grey.svg" ></button> -->
+
+        </div>
+  
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+          <section class="white_container">
+            <div class="row mb-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                    <div class="input-block form-floating input-block-renew">
+                      <select class="form-select input-selectBox" id="eventType" formControlName="eventType">
+                        <option *ngFor="let type of eventTypes" [value]="type.value">
+                          {{ type.label | translate }}
+                        </option>
+                      </select>
+                      <label for="eventType">{{"Event Type" | translate}}<span class="text-danger">*</span></label>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
+                  *ngIf="eventForm.get('eventType')?.value === 'proposal' || 
+                         eventForm.get('eventType')?.value === 'Leads'">
+                  <div class="input-block form-floating input-block-renew">
+                    <input type="text" 
+                           class="form-control input-textBox" 
+                           id="eventNumber" 
+                           formControlName="eventNumber" 
+                           placeholder="">
+                    <label for="eventNumber">
+                      {{ (eventForm.get('eventType')?.value === 'proposal' ? 
+                          'Proposal Number' : 'Lead Number') | translate }}
+                    </label>
+                  </div>
+                </div> -->
+  
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
+                  *ngIf="eventForm.get('eventType')?.value === 'proposal' || eventForm.get('eventType')?.value === 'Leads'">
+                  <div class="input-block form-floating input-block-renew">
+                    <input type="text" 
+                           class="form-control input-textBox" 
+                           id="eventNumber" 
+                           formControlName="eventNumber" 
+                           placeholder="">
+                    <label for="eventNumber">
+                      {{ (eventForm.get('eventType')?.value === 'proposal' ? 'Proposal Number' : 'Lead Number') | translate }}
+                    </label>
+                  </div>
+                </div>
+             
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName" 
+                         placeholder="" pattern="^[A-Za-z\\s]+$">
+                  <label for="customerName">{{"Customer Name" | translate}}</label>
+                  <div *ngIf="eventForm.get('customerName')?.invalid && (eventForm.get('customerName')?.dirty || eventForm.get('customerName')?.touched)">
+                    <div class="text-danger" *ngIf="eventForm.get('customerName')?.errors?.['required']">
+                      {{"Customer name is required" | translate}}
+                    </div>
+                    <div class="text-danger" *ngIf="eventForm.get('customerName')?.errors?.['pattern']">
+                      {{"Customer name should contain only letters and spaces" | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row mb-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="text" class="form-control input-textBox" id="mobileNumber" formControlName="mobileNumber" placeholder="">
+                  <label for="mobileNumber">{{"Mobile No." | translate}}<span class="text-danger">*</span></label>
+                  <div *ngIf="eventForm.get('mobileNumber')?.invalid && (eventForm.get('mobileNumber')?.dirty || eventForm.get('mobileNumber')?.touched)">
+                    <div class="text-danger" *ngIf="eventForm.get('mobileNumber')?.errors?.['required']">
+                      {{"Mobile number is required" | translate}}
+                    </div>
+                    <div class="text-danger" *ngIf="eventForm.get('mobileNumber')?.errors?.['pattern']">
+                      {{"Invalid mobile number" | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="text" class="form-control input-textBox" id="activityTitle" formControlName="activityTitle" 
+                         placeholder="">
+                  <label for="activityTitle">{{"Activity Title" | translate}}<span class="text-danger">*</span></label>
+                  <div *ngIf="eventForm.get('activityTitle')?.invalid && (eventForm.get('activityTitle')?.dirty || eventForm.get('activityTitle')?.touched)">
+                    <div class="text-danger" *ngIf="eventForm.get('activityTitle')?.errors?.['required']">
+                      {{"Activity title is required" | translate}}
+                    </div>
+                    <div class="text-danger" *ngIf="eventForm.get('activityTitle')?.errors?.['pattern']">
+                      {{"Activity title should contain only letters and spaces" | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" id="activityType" formControlName="activityType">
+                    <option *ngFor="let type of activityTypes" [value]="type.value">
+                      {{ type.label | translate }}
+                    </option>
+                  </select>
+                  <label for="activityType">{{"Activity Type" | translate}}<span class="text-danger">*</span></label>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row mb-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="date" class="form-control input-textBox" id="startDate" formControlName="startDate">
+                  <label for="startDate">{{"Activity Start Date" | translate}}<span class="text-danger">*</span></label>
+                </div>
+              </div>
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="time" class="form-control input-textBox" id="startTime" formControlName="startTime">
+                  <label for="startTime">{{"Activity Start Time" | translate}}<span class="text-danger">*</span></label>
+                </div>
+              </div>
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="time" class="form-control input-textBox" id="endTime" formControlName="endTime">
+                  <label for="endTime">{{"Activity End Time" | translate}}<span class="text-danger">*</span></label>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row mb-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="date" class="form-control input-textBox" id="endDate" formControlName="endDate">
+                  <label for="endDate">{{"Activity End Date" | translate}}<span class="text-danger">*</span></label>
+                </div>
+              </div>
+  
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <input type="text" class="form-control input-textBox" id="note" formControlName="note" 
+                         placeholder="" pattern="^[A-Za-z0-9\s.,!?;:()-]*$">
+                  <label for="note">{{"Note" | translate}}</label>
+                  <div *ngIf="eventForm.get('note')?.invalid && (eventForm.get('note')?.dirty || eventForm.get('note')?.touched)">
+                    <div class="text-danger" *ngIf="eventForm.get('note')?.errors?.['pattern']">
+                      {{"Note should contain letters, numbers, spaces, and certain punctuation marks (.,!?;:()-)." | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn_red" >
+                {{"Update" | translate}}
+              </button>
+            </div>
+          </section>
+        </form>
+      </div>
+    </div>
+  </main>
+  

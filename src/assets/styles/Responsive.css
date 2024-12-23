@@ -379,6 +379,9 @@
     }
 }
 @media (max-width:767px) {
+    .customiseDashboard_bodyColumns {
+        flex-direction: column;
+    }
     .siteHeader .abcLinksMain .abcTopLinks {
         font-size: 11px;
     }
@@ -582,6 +585,22 @@
     }
     .checkbox_renew_optionalCoverages {
         min-width: 100%;
+    }
+    .main_userDetails .info_userDetails .details_userProfile h6 span{
+        max-width: 180px !important;
+    }
+    .popupModalMain.yatra-modal .input-container {
+        margin-bottom: 5px;
+    }
+    .fw_form.mobile_popupMain .input-block-dob{
+        margin-bottom: 16px !important;
+    }
+    .download_policyKit {
+        flex-direction: column;
+        gap:10px;
+    }
+    .siteSidenav .sidenavMenu.sidenavMenu_logout {
+        width: auto;
     }
 }
 @media (max-width:390px){

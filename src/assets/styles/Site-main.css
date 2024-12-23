@@ -87,6 +87,7 @@ body {
   background: var(--white-color);
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
+  background: var(--site-body-bg);
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -514,6 +515,9 @@ button {
   background: #E6E6E6;
   margin: 10px auto;
 }
+.no-border {
+  border-width: 0 !important;
+}
 /*Common end*/
 
 /*Header start*/
@@ -806,7 +810,7 @@ button {
   background: var(--site-body-bg);
   border: 1px solid var(--site-body-bg);
   border-radius: 16px;
-  padding: 9px 12px 7px;
+  padding: 9px 10px 7px;
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
@@ -982,6 +986,21 @@ button {
 
 .btn_white:hover {
   color: var(--primary-red-color);
+}
+.btn_white_cancel {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--white-color);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--primary-red-color);
+  border: 1px solid var(--primary-red-color);
+}
+
+.btn_white_cancel:hover {
+  color: var(--text-black-4c);
+  border: 1px solid var(--text-black-4c);
 }
 .btn_pink {
   background: var(--site-pink);
@@ -1465,11 +1484,12 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--black-color);
   line-height: 17px;
   display: inline-block;
+  padding-left: 20px;
 }
 
 .input-checkbox-feild .input-check + label:before {
   content: "";
-  margin-right: 1rem;
+  margin-right: 0.5rem;
   display: inline-block;
   vertical-align: text-top;
   width: 16px;
@@ -1479,6 +1499,9 @@ input[type="search"]::-webkit-search-results-decoration {
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   border-radius: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .input-checkbox-feild .input-check:checked + label:before {
@@ -1979,9 +2002,13 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 23px 0%;
   padding-bottom: 16rem;
   padding-top: 13rem;
-  /* background: var(--bg-verylight-grey); */
+  /* background: var(--bg-verylight-grey); 
+  min-height: 100vh;*/
   background: var(--site-body-bg);
-    min-height: 100vh;
+    
+}
+.siteBody_padding {
+  padding-bottom: 6rem;
 }
 .siteBody_renewJourney {
     background: var(--site-body-bg);
@@ -2126,6 +2153,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .quoteComparisonWraper .qc_item header .heading {
   gap: 10px;
+  padding-right: 20px;
 }
 
 .quoteComparisonWraper .qc_item header .heading h5 {
@@ -2596,7 +2624,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h4 {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 19px;
   color: var(--black-color);
   margin: 0;
@@ -2866,14 +2894,17 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .filterWraperForm .fw_form .fw_checkboxWraper {
-  gap: 16px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
   width: 48%;
 }
-
+.fw_checkboxWraper .input-checkbox-feild .input-check:checked + label:after {
+  bottom: auto;
+    top: 3px;
+}
 .field_searchWraper {
   background: rgba(255, 255, 255, 0.85);
   position: absolute;
@@ -5119,9 +5150,14 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 600;
   font-size: 12px;
   color: #144DB8;
+  align-items: center;
 }
 .download_policyKit .btn_downloadKit:hover {
   opacity: 0.5;
+}
+.button_policyKit {
+  display: flex;
+  gap:8px;
 }
 .img_daha {
   position: relative;
@@ -5387,6 +5423,8 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  background: #f1f3f6 url(../Img/icon_profile.svg) no-repeat center center;
+  background-size: 30%;
 }
 .userProfilePic img {
   width: 100%;
@@ -5402,6 +5440,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .main_userDetails .info_userDetails {
   display: flex;
   gap:12px;
+  width: 100%;
+}
+.main_userDetails .edit_userDetails {
+  width: 32px;
 }
 .main_userDetails .info_userDetails .img_userProfile{
   width: 32px;
@@ -5747,6 +5789,9 @@ background: var(--white-color);
   font-size: 14px;
   line-height: 24px;
   color: var(--text-black-4c);
+}
+.bottom_planDetails_sub .common_ProductInfo {
+  align-items: flex-start;
 }
 .btn_sellingTips {
   font-weight: 400;
@@ -6559,5 +6604,21 @@ position: relative;
 }
 .details-elementDisease .typecss {
   padding-bottom: 15px !important;
+}
+.ul_addon_policySummary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ul_addon_policySummary li {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #2e2e2e !important;
+  padding: 4px 16px;
+  border-radius: 19px;
+  background: #F7F7F7;
+  cursor: initial;
 }
 /*----yatra popup end----*/

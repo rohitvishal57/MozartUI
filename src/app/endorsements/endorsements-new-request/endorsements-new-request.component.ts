@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, interval, map, Observable, startWith, Subject, take } from 'rxjs';
@@ -11,6 +11,7 @@ declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -36,6 +37,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isFilenotSelected: boolean | any;
   selectedFile: any;
   showNote: boolean = false;
+  fileSizeError: boolean = false;
   namesVariable: any;
   documentType: any;
   showDocInfo: boolean = false;
@@ -111,25 +113,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       CtstID:"ABHI_Endorsement_Request21"
     }, */
   ];
-  relationships = [
-    "Brother",
-    "Brother in-law",
-    "Daughter in-law",
-    "Dependent Daughter",
-    "Dependent Son",
-    "Father",
-    "Father-In-Law",
-    "Granddaughter",
-    "Grandfather",
-    "Grandmother",
-    "Grandson",
-    "Mother",
-    "Mother-In-Law",
-    "Nephew",
-    "Sister",
-    "Sister in-law",
-    "Son in-law"
-  ];
+  relationships: any = [];
   filteredActivity: Observable<any[]> | any;
   selectedPolicyNumber: any;
   MemberIdList: any;
@@ -164,6 +148,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private toast: NgToastService,
     private _router: Router,
     private dialog: MatDialog,
+    private ngZone: NgZone,
+    private yatraService: YatraService,
     private languageService: LanguageService,
     private translateService: TranslateService) {
       this.policyNoChangeSubject.pipe(
@@ -371,9 +357,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      if (this.externalPolicyData?.policyData?.[0]) {
-        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No || "No policy data available");
-      }
+      this.getNomineeRelationShipData();
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.currentNomineeDetails());
     }
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -437,6 +422,47 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = false;
     }
   }
+
+  getNomineeRelationShipData() {
+    this.yatraService.getNomineeRelationship().subscribe({
+      next: (res: any) => {
+        this.relationships = res?.data
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  currentNomineeDetails(): string {
+    const nomineeFirstName = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name;
+    const relationship = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship;
+    const nomineeContactNo = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No;
+  
+    let policyDetails = "";
+  
+    if (nomineeFirstName || relationship || nomineeContactNo) {
+      if (nomineeFirstName) {
+        policyDetails += nomineeFirstName;
+      }
+      if (nomineeFirstName && (relationship || nomineeContactNo)) {
+        policyDetails += ", ";
+      }
+      if (relationship) {
+        policyDetails += relationship;
+      }
+      if ((relationship || nomineeFirstName) && nomineeContactNo) {
+        policyDetails += ", ";
+      }
+      if (nomineeContactNo) {
+        policyDetails += nomineeContactNo;
+      }
+    } else {
+      policyDetails = "No policy data available";
+    }
+  
+    return policyDetails;
+  }  
 
   onKeydown(e: any) {
     return Helper.isNumberValidation(e);
@@ -671,7 +697,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       disableClose: true,
       data: { 
         title: 'Endorsement',
-        id: `Endorsement Id: ${resp.data.response.caseId}`
+        id: `Endorsement No: ${resp.data.response.caseId}`
       },
     });
 
@@ -685,12 +711,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
     let file;
     let fileExt;
     this.isFilenotSelected = false;
+    this.fileSizeError = false;
+    
     if (e) {
       files = e.target.files;
       file = files[0];
       if (!file) {
         return;
       }
+  
+      if (file.size > 10 * 1024 * 1024) {
+        this.fileSizeError = true;
+        e.target.value = '';
+        this.showNote = false;
+        return;
+      }
+  
       this.selectedFile = file;
       this.selctedFileName = this.selectedFile.name;
       fileExt = this.selectedFile.name.replace(/^.*\./, '');
@@ -699,7 +735,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = file.name;
     this.documentType = file.type;
     this.documentSize = this.convertBytesToKB(file.size);
-
+  
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
       this.showNote = false;
       this.showDocInfo = true;
@@ -894,16 +930,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
-    const target = event.target as HTMLInputElement;
   
     if (event.key >= '0' && event.key <= '9') {
-      this.otp[index] = event.key;  // Store digit
+      this.otp[index] = event.key;
   
       if (index < 5) {
-        setTimeout(() => {
-          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-          nextInput && nextInput.focus();
-        }, 50);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
+          }, 50);
+        });
       } else {
         const btnElement = document.getElementById('verify') as HTMLButtonElement;
         btnElement && btnElement.focus();
@@ -911,36 +948,40 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
   
     else if (event.key === 'Backspace') {
-      this.otp[index] = '';  // Clear current box
+      this.otp[index] = '';
   
       if (index > 0) {
-        setTimeout(() => {
-          const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
-          previousInput && previousInput.focus();
-        }, 50);
-      }
-    }
-  
-    else if (event.key === 'Tab') {
-      if (event.shiftKey) {
-        if (index > 0) {
+        this.ngZone.run(() => {
           setTimeout(() => {
             const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
             previousInput && previousInput.focus();
           }, 50);
-        }
-      } else {
-        if (index < 5) {
-          setTimeout(() => {
-            const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
-            nextInput && nextInput.focus();
-          }, 50);
-        } else {
-          const btnElement = document.getElementById('verify') as HTMLButtonElement;
-          btnElement && btnElement.focus();
-        }
+        });
       }
     }
-  }
   
+    else if (event.key === 'Tab') {
+      event.preventDefault();
+      this.ngZone.run(() => {
+        if (event.shiftKey) {
+          if (index > 0) {
+            setTimeout(() => {
+              const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
+              previousInput && previousInput.focus();
+            }, 50);
+          }
+        } else {
+          if (index < 5) {
+            setTimeout(() => {
+              const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
+              nextInput && nextInput.focus();
+            }, 50);
+          } else {
+            const btnElement = document.getElementById('verify') as HTMLButtonElement;
+            btnElement && btnElement.focus();
+          }
+        }
+      });
+    }
+  }  
 }

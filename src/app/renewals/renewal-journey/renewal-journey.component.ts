@@ -3,7 +3,7 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -60,89 +60,145 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  formSequence: any[] = [payment, thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
   futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
-  
+
 
   activeSection: string = "primary";
 
   // activeSection: string = "primary";
   formIndex: number = 0;
 
-  existingRelations: any [] = [];
+  existingRelations: any[] = [];
 
 
   QuoteNumber: any = [];
   tenureAmount: any[] = [0, 0, 0];
   discountList: number[] = [];
   displayTaxList: any[] = [];
+  customerFeedbackForm !: FormGroup;
+  formIndexValue: number = 0;
+  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
+  rating: number = 0; // Holds the current selected rating
+  feedbackImpressedValues: String[] = ['Seamless payment', 'Ease of policy modification', 'Speedy Policy renewal', 'Payment receipt & confirm']
+  feedBackMessage: boolean = false;
+  impressedValues: boolean = false;
+  feedbackSubmit: boolean = false;
+  impressedLable: String = "";
+  feedbackImpressedValue: String = '';
+  isFeedBackModalVisible: Boolean = false; 
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router,private clipboard: Clipboard) {
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) {}
+ 
 
-  }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.showHtmlContent = false;
-  
+
     // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
     }
-  
+
     // Extract data from history state
     const stateData = history.state;
-  
+
     if (stateData && Object.keys(stateData).length > 0) {
       console.log('State Data:', stateData);
-  
+
       // Decrypt and assign each piece of data if present
       if (stateData.formData) {
+        console.log(stateData.formData);
+        
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
+        console.log(decryptedFormData);
+        if(decryptedFormData.oldPolicyNumber){
+          const renewalInfoRequestBody = {
+            policy_Number: decryptedFormData.oldPolicyNumber
+          };
+          const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+
+          this.formData = { ...this.formData, ...response.data };
+        }
+        
         this.formData = { ...this.formData, ...decryptedFormData };
         console.log(this.formData);
-        
+
+        // if (decryptedFormData.errorObject.errorMessage) {
+        //   console.log("testing");
+          
+        //   this.toast.warning({detail: "SUCCESS",summary:decryptedFormData.errorObject.errorMessage || "payment",duration: 5000});
+        // }
+
       }
-  
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-        console.log(this.proposalNum);
-        
-      }
-  
-      if (stateData.policyNumber) {
-        this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-        console.log(this.policyNumber);
-        
-      }
-  
-      if (stateData.journeyProcess) {
-        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-        console.log(this.journeyProcess);
-        
-      }
-  
-      // Set formSequence if provided in state; otherwise, use default
       if (stateData.formSequence) {
         // this.formSequence = [];
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
         console.log(this.formSequence);
-        
-      } 
-      // else {
-      //   console.log('inside else');
-        
-      //   this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
-      // }
-  
-      // Set formIndex in localStorage if present in state
+
+      }
+      if (stateData.journeyProcess) {
+        this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
+        console.log(this.journeyProcess);
+      }
       if (stateData.formIndex) {
         // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
         localStorage.setItem('formIndex', stateData.formIndex);
+        console.log(stateData.formIndex);
+        
       }
-  
+
+      if (stateData.proposalNum) {
+        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
+        console.log(this.proposalNum);
+      }
+      // else{
+      //   try {
+      //     const res = await firstValueFrom(this.commonService.getProposalNumber());
+      //     this.proposalNum = res.data.proposalNumber;
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // }
+      try{
+        if (stateData.policyNumber) {
+          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+          console.log(this.policyNumber);
+      }
+      }catch (error){
+          console.error(error);
+
+      }
+     
+      // if (stateData.paymentStatus) {
+      //     const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
+      //     if(paymentStatus == "SUCCESS"){
+      //       this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
+      //     }else if(paymentStatus == "INTIATED"){
+      //       this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
+      //     }
+      // }
+      // if (stateData.kycStatus) {
+      //   const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
+      //   if(kycStatus){
+      //     this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
+      //   }else if(!kycStatus){
+      //     this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
+      //   }
+      // }
+
+      // Set formSequence if provided in state; otherwise, use default
+      // else {
+      //   console.log('inside else');
+
+      //   this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
+      // }
+
+      // Set formIndex in localStorage if present in state
+
       // Process insuredMemberDetails if present in the formData
       if (this.formData?.insuredMemberDetails?.length > 0) {
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
@@ -154,23 +210,28 @@ export class RenewalJourneyComponent {
           }
         });
       }
-  
+
       console.log('Covers:', this.covers);
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
-      this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
+      this.formSequence = [payment, thankYou];
     }
-  
+
     console.log(this.formData, this.proposalNum, this.policyNumber);
-  
+
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
+
+    this.customerFeedbackForm = this.fb.group({
+      message: [''],
+      rating: [null, Validators.required], // Add rating to the form
+    });
   }
-  
+
 
   async getFormDataFromFormSequence() {
-    console.log(this.formSequence,this.getFormIndexValue(),this.form);
+    console.log(this.formSequence, this.getFormIndexValue(), this.form);
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
@@ -184,7 +245,7 @@ export class RenewalJourneyComponent {
 
     this.form = JSON.parse(JSON.stringify(this.formSequence[this.getFormIndexValue()]));
     console.log(this.form);
-    
+
     if (this.journeyProcess == 0) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
@@ -578,6 +639,11 @@ export class RenewalJourneyComponent {
       // this.flattenObject(this.formData);
       // this.spinner.hide();
     }
+
+    if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
+      this.isFeedBackModalVisible = true;
+    }
+    
   }
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null) {
@@ -1273,7 +1339,7 @@ export class RenewalJourneyComponent {
   }
 
   async onSubmit(control: any) {
-    console.log(this.renewalFormGroup.value, this.form,this.renewalFormGroup);
+    console.log(this.renewalFormGroup.value, this.form, this.renewalFormGroup);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       console.log("formData", this.formData);
@@ -1523,7 +1589,7 @@ export class RenewalJourneyComponent {
                 control.visible = dependentVisibility;
                 if (dependentVisibility) {
                   console.log(control.name);
-                  
+
                   let controlValidators: any = [];
                   control.validators?.forEach((val: IValidator) => {
                     if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -1533,7 +1599,7 @@ export class RenewalJourneyComponent {
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
                   console.log(controlValidators);
-                  
+
                   this.renewalFormGroup.get(control.name)?.setValidators(controlValidators);
                   console.log(control);
                   if (control.name == 'zoneValue' && control.type == 'select') {
@@ -1589,10 +1655,10 @@ export class RenewalJourneyComponent {
     // if (event != null) {
     //   this.isQuote = false;
     // }
-    console.log(option,this.existingRelations);
+    console.log(option, this.existingRelations);
 
-    if(event !=null){
-      if(this.existingRelations.some(relation => relation.includes(option.value))){
+    if (event != null) {
+      if (this.existingRelations.some(relation => relation.includes(option.value))) {
         const selectedCheckbox = event.target as HTMLInputElement;
         selectedCheckbox.checked = true;
         return;
@@ -2660,11 +2726,11 @@ export class RenewalJourneyComponent {
                   const validators = controls.validators.map((val: any) => {
                     if (val.validatorName === 'required') {
                       return Validators.required;
-                    }else if (val.validatorName === 'pattern') {
+                    } else if (val.validatorName === 'pattern') {
                       return Validators.pattern(val.pattern); // Add pattern validator
-                    }else if (val.validatorName === 'maxlength' && val.maxLength) {
+                    } else if (val.validatorName === 'maxlength' && val.maxLength) {
                       return Validators.maxLength(val.maxLength);
-                    }else if (val.validatorName === 'minlength' && val.minLength) {
+                    } else if (val.validatorName === 'minlength' && val.minLength) {
                       return Validators.minLength(val.minLength);
                     }
                     return null;
@@ -2933,7 +2999,8 @@ export class RenewalJourneyComponent {
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode,
         "bankAccountNumber": data.accountNumber,
-        "documentId": this.documentId
+        "documentId": this.documentId,
+        "productName": this.formData.productName
       };
       console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
@@ -2944,6 +3011,7 @@ export class RenewalJourneyComponent {
             this.formData.policyEndDate = res.data.policyEndDate || null;
             this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
+            this.formData.premiumPaid = res.data.premiumPaid || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
 
@@ -3579,6 +3647,34 @@ export class RenewalJourneyComponent {
 
   sendPaymentLink(control: any) {
     console.log("inside sendPaymentLink",control);
+    const sendPaymentRequestBody={
+      firstName: this.formData?.firstName,
+      lastName: this.formData?.lastName,
+      agentcode: this.agentCode,
+      emailId: "saisatya@monocept.com",
+      productName: this.formData?.productName,
+      businessType:"REN",
+      pNumber: this.formData?.policyNumber,
+      productCode: this.formData?.productCode,
+      premiumAmount: this.formData?.totalPremium,
+      mobilenumber: "7396201298"
+    };
+    this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
+      next: (response: any) => {
+        console.log("sharePaymentLinkApi",response);
+        if (response.data) {
+          this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000});
+            this.changeMainFormDependentControls(control.dependentControls, true);
+            this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+        } else {
+          this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+        }
+      },
+      error: (error) => {
+        this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+      }
+    });
+    
 
     // this.router.navigate(['renewal/customerRenewalJourney'], {
     //   state: {
@@ -3590,9 +3686,6 @@ export class RenewalJourneyComponent {
     //     formIndex:"0"
     //   }
     // });
-
-    this.changeMainFormDependentControls(control.dependentControls,true);
-
   }
 
   redirectToJustPay(control: any) {
@@ -3608,9 +3701,10 @@ export class RenewalJourneyComponent {
         policyType: 'Renewal',
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
-        OrderID: ''
+        ProductName: this.formData.productName,
+        userType:"Agent",
       };
-      this.yatraService.justPayRedirection(reqData).subscribe({
+      this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
           console.log('Juspay API Response:', response);
 
@@ -3633,7 +3727,7 @@ export class RenewalJourneyComponent {
           console.error('Error generating payment link:', error);
         }
       });
-    
+
       // this.router.navigate(['/renewal/paymentstatus'],{
       //   queryParams: {
       //     orderid: 'UP_241209_ef1cf656',
@@ -3642,11 +3736,12 @@ export class RenewalJourneyComponent {
       //     // agentCode: '500013'
       //   }
       // });
-    
+
     }
   }
   checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" && this.formData.isKYCComplete);
+    const isVisible = !(this.formData.isKycCompleted);
+    // const isVisible=true;
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -3658,15 +3753,19 @@ export class RenewalJourneyComponent {
     });
   }
 
-  initiateKycURL(){
+  initiateKycURL() {
     const kycRequestBody = {
-      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No",businessType: "REN"
+      policyNumber: this.policyNumber,
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "", 
+      dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No", 
+      businessType: "REN",
+      userType:"Agent"
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
-      (res:any) => {
-        console.log("kycRequestBody",res);
+      (res: any) => {
+        console.log("kycRequestBody", res);
         window.open(res.data.kycUrl, '_blank');
       },
       (err) => {
@@ -3675,20 +3774,36 @@ export class RenewalJourneyComponent {
     );
   }
 
-  shareKycURL(){
+  shareKycURL(control: any) {
+    console.log(control);
+    
     const kycRequestBody = {
-      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No",businessType: "REN",emailId:this.formData.emailId,agentCode:this.agentCode
+      policyNumber: this.policyNumber, 
+      proposerNumber: "",
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "", 
+      dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No",
+      businessType: "REN",
+      emailId:this.formData.emailId,
+      agentCode:this.agentCode,
+      MobileNumber:this.formData.mobileNumber,
+      ProductName:this.formData.productName,
+      ProductCode:this.formData.productCode
     };
-    this.renewalService.getkycURL(kycRequestBody).subscribe(
-      (res:any) => {
-        console.log("kycRequestBody",res);
-        this.toast.success({
-          detail: "SUCCESS",
-          summary: res.message,
-          duration: 3000,
-        });
+    this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
+      (res: any) => {
+        console.log("kycResponseBody", res);
+        // this.toast.success({
+        //   detail: "SUCCESS",
+        //   summary: res.message,
+        //   duration: 3000,
+        // });
+        if(res.data.isShareKyc){
+          this.toast.success({detail: "SUCCESS",summary: "Link has been sent successfully",duration: 3000});
+        }
+        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
         console.log(err);
@@ -3704,21 +3819,21 @@ export class RenewalJourneyComponent {
     } else if (dateType === 'pastDate') {
       // return this.pastDate;
     }
-    return ''; 
+    return '';
   }
   formatDate(dateString: string | Date): string {
     if (!dateString) return "";
-    
+
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return ""; // Return empty string if invalid date
-  
+
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const year = date.getFullYear();
-  
+
     return `${day}-${month}-${year}`;
   }
-  
+
   copyText(control: any) {
     console.log(control);
     this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
@@ -3727,4 +3842,66 @@ export class RenewalJourneyComponent {
   }
 
 
+  setRating(star: number) {
+    this.rating = star;
+    this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+    this.feedbackSubmit = true;
+    this.impressedValues = true;
+    if (star > 3) {
+      this.impressedLable = 'What Impressed you ?';
+      this.feedBackMessage = false;
+    } else {
+      this.impressedLable = 'Why aren\'t you happy?';
+      this.feedBackMessage = true;
+    }
+  }
+  submitFeedback() {
+    let reqData: any = {};
+    reqData.agentCode = this.agentCode;
+    reqData.rating = this.customerFeedbackForm.value.rating;
+    reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
+    reqData.customerId = "";
+    // this.yatraService.submitFeedback(reqData).subscribe((response) => {
+    //   this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+    // }, (error) => {
+    //   this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+    // });
+    // this.customerFeedbackModule.hide();
+    this.isFeedBackModalVisible = false;
+  }
+
+  closeIsFeedBackModalVisible() {
+    let reqData = {
+      "proposalNum": this?.formData?.proposalNumber,
+      // "partnerId": this.partnerId,
+      "agentCode": this.agentCode,
+      "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+      "formName": this.formSequence[this.getFormIndexValue()].formName,
+      "formConfig": JSON.stringify(this.formSequence),
+      // "productId": this.productId.toString(),
+      "formId": this.formSequence[this.getFormIndexValue()].formId,
+      "jsonForm": JSON.stringify(this.form),
+      "formSequence": this.getFormIndexValue(),
+      // "leadNumber": this.leadnumber,
+      // "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+    };
+
+    // console.log(reqData, this.dynamicFormGroup.getRawValue());
+
+    // this.yatraService.Insertorupdateformdata(reqData).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     // this.leadnumber = res.data;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
+    this.isFeedBackModalVisible = false;
+  }
+
+  onSelectValue(value: String) {
+    this.feedbackImpressedValue = value;
+  }
+  
 }

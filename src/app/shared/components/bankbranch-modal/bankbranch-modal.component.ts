@@ -32,6 +32,10 @@ export class BankbranchModalComponent {
 
   selectItem(item: any) {
     localStorage.setItem('agentCode', item.agentCode);
+    this.navigateToDashboard();
+  }
+
+  navigateToDashboard() {
     this.dialogRef.close();
     this._router.navigate(['dashboard']);
   }

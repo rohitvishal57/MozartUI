@@ -1,0 +1,15 @@
+.body_flex_row {
+    display: flex;
+    width: 100%;
+    gap: 81%;
+}
+
+.btn_action {
+    width: 30px;
+    height: 30px;
+    border-width: 0;
+    background: var(--site-table-pink);
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+}

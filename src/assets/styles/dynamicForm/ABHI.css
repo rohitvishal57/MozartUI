@@ -117,6 +117,11 @@ body {
     bottom: -3px;
     width: 75%;
 }
+.main-container .right-panel .bottom-section-axis {
+    position: fixed;
+    bottom: -3px;
+    width: 75%;
+}
 
 .main-container .right-panel .typecss {
     display: inline-table;
@@ -2023,8 +2028,8 @@ body {
     background: transparent;
     border: none;
     padding: 0;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 24px;
     text-align: left;
     color: #4c4c4c;
@@ -2270,6 +2275,18 @@ a:not([href]) {
     padding: 8px 0 0;
     z-index: 1;
 }
+.main-container .right-panel .bottom-section-axis {
+    width: 100%;
+    max-width: 808px;
+    position: fixed;
+    left: auto;
+    bottom: 0;
+    margin-bottom: 0 !important;
+    box-shadow: 0px -4px 36px 0px #0000000D;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 0 0;
+    z-index: 1;
+}
 .main-container .right-panel .bottom-section-summary {
     width: 100%;
     max-width: 1049px;
@@ -2289,10 +2306,19 @@ input[type=checkbox]:checked {
 .bottom-section .accordionCardBody > .typecss {
     padding: 0;
 }
+.bottom-section-axis.accordionCardBody > .typecss {
+    padding: 0;
+}
 .bottom-section .accordionCardBody > .typecss:first-child {
     display: none;
 }
+.bottom-section-axis .accordionCardBody > .typecss:first-child {
+    display: block;
+}
 .accordionCard.bottom-section .accordionCardBody{
+    padding: 6px 16px 5px !important;
+}
+.accordionCard.bottom-section-axis .accordionCardBody{
     padding: 6px 16px 5px !important;
 }
 .bottom-section .label-value-container {
@@ -2310,7 +2336,31 @@ input[type=checkbox]:checked {
     position: relative;
     display: none;
 }
+.bottom-section-axis .label-value-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0px;
+    text-align: center;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    color: #2e2e2e;
+    position: relative;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
 .bottom-section .label-value-container .label-text {
+    text-transform: uppercase;
+    color: #2e2e2e;
+    font-size: 12px;
+    font-weight: 600;
+}
+.bottom-section-axis .label-value-container .label-text {
     text-transform: uppercase;
     color: #2e2e2e;
     font-size: 12px;
@@ -2324,6 +2374,18 @@ input[type=checkbox]:checked {
     top: -20px;
     left: 48%;
     display: none;
+}
+.bottom-section-axis .label-value-container .value-text {
+    width: 32px;
+    height: 5px;
+    background: url(../../../assets/Img/icon_plan_details_arrow.svg) no-repeat;
+    position: absolute;
+    top: -9px;
+    left: 48%;
+    display: block;
+}
+.planDetails_iconActive {
+    transform: rotate(180deg);
 }
 .main-container .right-panel .bottom-product .boldtext_input {
     font-family: Anek Latin;
@@ -2638,6 +2700,10 @@ margin: 0;
     }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
+    .main-container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
     .main-container .right-panel .case-referred {
         width: 100%;
         text-align: center;
@@ -2656,6 +2722,11 @@ margin: 0;
     left: 5%;
     }
     .main-container .right-panel .bottom-section-summary {
+        max-width: initial;
+    width: 90%;
+    left: 5%;
+    }
+    .main-container .right-panel .bottom-section-axis {
         max-width: initial;
     width: 90%;
     left: 5%;
@@ -2720,7 +2791,7 @@ margin: 0;
         margin: 15px auto;
     }
     .main-container .main-subContainer .right-panel {
-        width: 90%;
+        width: 100%;
         margin: 0 auto 15px;
     }
     .main-container .right-panel .bottom-section {
@@ -2731,7 +2802,10 @@ margin: 0;
         margin: 0 -21px;
         width: 100%;
     }
-
+    .main-container .right-panel .bottom-section-axis {
+        margin: 0 -21px;
+        width: 100%;
+    }
     .main-container .left-nav {
         display: flex;
         flex-direction: row;
@@ -2857,6 +2931,9 @@ margin: 0;
 }
 .main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
     background-position: top;
+}
+.left-nav-mobileMain{
+    width: 100%;
 }
 }
 .main-container .right-panel .next-btn:focus,
@@ -3001,6 +3078,14 @@ margin: 0;
         margin-bottom: 6px !important;
     }
 }
+.main-container .right-panel .typecss.typecss_proposalNumber {
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.main-container .right-panel .typecss_proposalNumber .boldtext_input{
+    width: 180px;
+}
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
         display: flex;
@@ -3015,11 +3100,32 @@ margin: 0;
     }
     .main-container .right-panel .typecss.bottom-product {
         width: 50%;
+        padding-bottom: 5px;
     }
     .main-container .right-panel .typecss.bottom-total-premium {
         width: 40%;
+        padding-bottom: 5px;
+    }
+    .main-container .right-panel .typecss.bottom-product .boldtext_input,
+    .main-container .right-panel .typecss.bottom-total-premium .boldtext_input {
+        width: 100%;
     }
     .main-container .right-panel .bottom_proposalNumber {
         margin-bottom: 10px;
+    }
+    .typecss_summary {
+        width: 50%;
+    }
+    .typecss_summary.typecss_summary_addon {
+        width: 100%;
+    }
+    .bottom-section-axis .plandetails_summary {
+        width: 100%;
+    }
+    .typecss_proposalNumber {
+        padding-bottom: 5px !important;
+    }
+    .main-container .right-panel .acceptTermsCheck .checkboxes {
+        width: 90%;
     }
 }

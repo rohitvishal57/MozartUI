@@ -1167,6 +1167,9 @@ export class DashboardComponent {
     this.tabsInfo = [];
     this.otherSection = [];
     this.quickActionDetails = [];
+    this.renewalDetail = [];
+    this.otherSection = [];
+    this.dhaSection = [];
     this.widgetArr.forEach((action: any) => {
       if (action.name === section && action.isFilter) {
         action.filterType = filter;

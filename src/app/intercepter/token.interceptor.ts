@@ -49,7 +49,11 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/rug/GetProductCombination',
     'https://upuat.adityabirlahealth.com/api/rug/GetProposerRelations',
     'https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData',
-    'https://upuat.adityabirlahealth.com/api/rug/GetBankDetailsByIfsc'
+    'https://upuat.adityabirlahealth.com/api/rug/GetBankDetailsByIfsc',
+    'https://upuat.adityabirlahealth.com/api/rug/GetBBOTP',
+    'https://upuat.adityabirlahealth.com/api/rug/ValidateBBOTP',
+    'https://upuat.adityabirlahealth.com/api/rug/HalfQuote',
+    'https://upuat.adityabirlahealth.com/api/rug/GetBBPolicyInfoByLeadId'
   ];
 
   intercept(

@@ -49,6 +49,7 @@ export class RenewalListComponent {
   documents: any[] = [];
   selectedDocument: any = null;
   searchApplied: boolean = false;
+  policyNumber:any;
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
@@ -180,6 +181,27 @@ export class RenewalListComponent {
     this.getRenewalsList();
     this.getProducts();
     this.checkView(); //Screen View check
+    const stateData = history.state;
+
+    if (stateData && Object.keys(stateData).length > 0) {
+      if (stateData.paymentStatus) {
+        const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
+        if(paymentStatus == "PENDING"){
+          this.toast.warning({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+        }else if(paymentStatus == "INPROGRESS"){
+          this.toast.warning({detail: "SUCCESS",summary: "payment inprogress",duration: 5000});
+        }
+      }
+      try{
+        if (stateData.policyNumber) {
+          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+          console.log(this.policyNumber);
+      }
+      }catch (error){
+          console.error(error);
+
+      }
+    }
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -411,6 +433,7 @@ export class RenewalListComponent {
       }
     );
   }
+  errorMessages: string = '';
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
@@ -442,8 +465,10 @@ export class RenewalListComponent {
             if (response.isSuccess) {
               const searchResponse = response.data.searchResponse;
               console.log("search Response", searchResponse);
-              if (!searchResponse || searchResponse.length === 0) {
-                this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
+              if (searchResponse && searchResponse[0]?.error?.length > 0) {
+                const errorMessages ="No documents are available to download."
+                this.toast.warning({ detail: "", summary: errorMessages, duration: 3000 });
+                return;
               }
               else {
                 this.documents = searchResponse;
@@ -1712,7 +1737,7 @@ export class RenewalListComponent {
                 proposalNum: proposalNum,
                 policyNumber: policyNumber,
                 journeyProcess: journeyProcess,
-                formIndex: formIndex, // Include formIndex in state
+                formIndex: "0", // Include formIndex in state
               },
             });
           } else {

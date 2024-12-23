@@ -52,7 +52,10 @@
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
                   {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
-
+                <ng-container *ngIf="dropdown.label === 'Porting'">
+                  {{ quoteFormGroup.get('isPortability')?.value ? quoteFormGroup.get('isPortability')?.value : ('Select' | translate) }}
+                </ng-container>
+                
               </span><img src="assets/Img/down_arrow.svg">
             </div>
           </button>
@@ -166,9 +169,9 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
                         
-                        <input type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
-                          placeholder="" class="input-textBox" maxlength="10" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
-                          (input)="enforceMaxLength($event, 10)">
+                        <input type="text"  maxlength="10"  id="mobileNumber" name="mobileNumber" formControlName="mobileNumber"
+                           class="input-textBox" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
+                           (input)="enforceMaxLength($event, 10)">
                           <label for="mobileNumber" class="get-quote-label">
                             {{"Enter mobile no of proposer" | translate}} <span class="required">*</span>
                           </label>
@@ -395,35 +398,52 @@
                   </div>
                 </div> -->
 
-            <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
-              <div class="close-popup">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                          style="font-size: 14px;" (click)="closeCustomDiv()"></button>
-              </div>
-              <div class="option_policyType">
-                <div class="overlay_body checkbox_disease_scroll">
-                  <div class="input-checkbox-block checkbox_disease">
-                    <div class="input-checkbox-feild" *ngFor="let disease of diseases">
-                      <input type="checkbox" [id]="disease.id" name="{{disease.id}}" [value]="disease.value"
-                        (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected(disease.value)"
-                        class="input-check">
-                      <label [for]="disease.id">{{ disease.label | translate }}</label>
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
+                  <div class="close-popup">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+                      style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+                  </div>
+                  <div class="option_policyType">
+                    <div class="overlay_body checkbox_disease_scroll">
+                      <div class="input-checkbox-block checkbox_disease">
+                        <div class="input-checkbox-feild" *ngFor="let disease of diseases">
+                          <input type="checkbox" 
+                                 [id]="disease.id" 
+                                 name="{{disease.id}}" 
+                                 [value]="disease.value" 
+                                 (change)="onDiseaseChange($event)" 
+                                 [checked]="isDiseaseSelected(disease.value)" 
+                                 class="input-check">
+                          <label [for]="disease.id">{{ disease.label | translate }}</label>
+                        </div>
+                      </div>
                     </div>
+                    <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
+                      (click)="diseaseSelection()">{{"Continue" | translate}}</button>
                   </div>
                 </div>
-                <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
-                  (click)="diseaseSelection()">{{"Continue" | translate}}</button>
-              </div>
-            </div>
-
-
-
+           
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Porting'">
+                  <div class="close-popup">
+                    <button type="button" class="btn-close" aria-label="Close"
+                      style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+                  </div>
+                  <div class="option_policyType">
+                    <div class="overlay_body checkbox_disease_scroll">
+                      <div class="input-checkbox-block checkbox_disease">
+                        <div class="input-checkbox-feild" *ngFor="let port of PotingValues" (click)="selectPort(port.value)">
+                          <label [for]="port.id">{{ port.label | translate }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
           </div>
         </div>
       </div>
 
       <div class="continue-btn-container">
-        <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey"
+        <button type="button" id="mainContinue" [disabled]="this.quoteFormGroup.status == 'INVALID' ? true : false" name="mainContinue" class="continue-btn-0 btn_grey"
           (click)="continue()">{{"Continue" | translate}}</button>
       </div>
     </div>

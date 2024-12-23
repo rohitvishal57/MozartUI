@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
   <div class="contentBody bodyColumns-1">
     <div class="bodyColumn body_flex_column">
 
@@ -8,6 +8,9 @@
             <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 align-items-center">
               <div class="body_flex_row">
                 <h2>{{"Events" | translate}}</h2>
+                <button type="button" id="btn-birthday" name="btn-birthday" class="btn_red btn_redBirthday" (click)="navigateToEventsList()">
+                  {{"List" | translate}}
+                </button>
                 <button type="button" id="btn-birthday" name="btn-birthday" class="btn_red btn_redBirthday" (click)="navigateToBirthdays()">
                   {{"Birthdays" | translate}}
                 </button>

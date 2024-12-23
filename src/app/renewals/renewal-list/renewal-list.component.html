@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <h2>{{"Renewals List" | translate }}</h2>
@@ -6,11 +6,11 @@
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
-                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList.totalRecords}})</button></li>
-                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"Expired" | translate}} ({{countsList.expiredCount}})</button></li>
-                        <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList.expiringInLessThan30DaysCount}})</button></li>
+                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList?.totalRecords !== undefined ? countsList.totalRecords : 0}})</button></li>
+                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"Expired" | translate}} ({{countsList?.expiredCount !== undefined ? countsList.expiredCount : 0}})</button></li>
+                        <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList?.expiringInLessThan30DaysCount !== undefined ? countsList.expiringInLessThan30DaysCount : 0}})</button></li>
                         <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.expiringIn30To60DaysCount}})</button></li>
-                        <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Lapsed" | translate}} ({{countsList.lapsedCount}})</button></li>
+                        <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Lapsed" | translate}} ({{countsList?.lapsedCount !== undefined ? countsList.lapsedCount : 0}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -230,7 +230,7 @@
                                 <div class="item_value">{{ row.policyType }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Policy No." | translate}}</div>
+                                <div class="item_lable">{{"Policy Number" | translate}}</div>
                                 <div class="item_value">{{ row.policyNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
@@ -238,11 +238,11 @@
                                 <div class="item_value">{{ row.renewalStatus }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Mobile No." | translate}}</div>
+                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
                                 <div class="item_value">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Date of Renewal" | translate}}</div>
+                                <div class="item_lable">{{"Date Of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
                                 <div class="item_value">{{ row.policyEndDate }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
