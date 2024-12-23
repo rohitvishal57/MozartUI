@@ -88,7 +88,8 @@ export class CustomerJourneyComponent {
   isFeedBackModalVisible: Boolean = false;
   quickQuoteRedirect!: boolean;
   proposalNumber!:any;
-  rowData:any={}
+  rowData:any={};
+  isFullQuoteStatus:string='true';
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
@@ -113,6 +114,9 @@ export class CustomerJourneyComponent {
         console.log(stateData.formData);
         
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
+        if ('isFullQuoteSuccess' in decryptedFormData) {
+          this.isFullQuoteStatus = decryptedFormData.isFullQuoteSuccess;
+        }
         console.log(decryptedFormData);
         if(decryptedFormData.proposalNumber){
           this.proposalNumber = decryptedFormData.proposalNumber;
@@ -163,9 +167,9 @@ export class CustomerJourneyComponent {
 
 
         }
-        else if(decryptedFormData.oldPolicyNumber){
+        else if(decryptedFormData.policyNumber){
           const renewalInfoRequestBody = {
-            policy_Number: decryptedFormData.oldPolicyNumber
+            policy_Number: decryptedFormData.policyNumber
           };
           const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
@@ -211,15 +215,15 @@ export class CustomerJourneyComponent {
     this.form = JSON.parse(JSON.stringify(this.formSequence[this.getFormIndexValue()]));
     console.log(this.form);
 
-    if (this.journeyProcess == 0) {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((control: any) => {
-          if (control.name == 'back') {
-            control.visible = false;
-          }
-        })
-      })
-    }
+    // if (this.journeyProcess == 0) {
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((control: any) => {
+    //       if (control.name == 'back') {
+    //         control.visible = false;
+    //       }
+    //     })
+    //   })
+    // }
     if(this.getFormIndexValue() == 1){
       const rData = {
         "partnerId": this.rowData.partnerId,
@@ -2483,49 +2487,6 @@ export class CustomerJourneyComponent {
     }
   }
 
-  // triggerFileInput(controlName: string) {
-  //   console.log("getting called");
-
-  //   const fileInputControl = this.document.getElementById(controlName);
-  //   fileInputControl?.click();
-  // }
-
-  // onFileSelected(inputName: string, event: any) {
-  //   const file = event.target.files[0];
-  //   console.log(file);
-
-  //   const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
-  //   const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-  //   const control = this.renewalFormGroup.get(inputName);
-  //   console.log(control);
-  //   if (file) {
-  //     // Clear previous errors
-  //     control?.setErrors(null);
-
-  //     // Validate file type
-  //     if (!allowedFileTypes.includes(file.type)) {
-  //       console.log(allowedFileTypes);
-  //       control?.setErrors({ fileType: true });
-  //     }
-
-  //     // Validate file size
-  //     if (file.size > maxSizeInBytes) {
-  //       control?.setErrors({ fileSize: true });
-  //     }
-
-  //     // If no errors, proceed to set the selected file
-  //     if (!control?.errors) {
-  //       this.selectedFile = file;
-  //       control?.setValue(file.name);
-  //     } else {
-  //       control?.markAsTouched();
-  //       this.selectedFile = null;
-  //     }
-
-
-  //   }
-  // }
-
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
     console.log("getFormIndexValue()", formIndex ? parseInt(formIndex, 10) : 0);
@@ -2607,257 +2568,17 @@ export class CustomerJourneyComponent {
     });
   }
 
-  // calculateAge(dob: Date): number | string {
-  //   const today = new Date();
-  //   const birthDate = new Date(dob);
-
-  //   if (birthDate > today) {
-  //     return 'invalid';
-  //   }
-
-  //   let age = today.getFullYear() - birthDate.getFullYear();
-  //   const monthDifference = today.getMonth() - birthDate.getMonth();
-  //   if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-  //     age--;
-  //   }
-  //   if (age < 1) {
-  //     const diffInMs = today.getTime() - birthDate.getTime();
-  //     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  //     if (diffInDays < 91) {
-  //       return 'invalid'; // Less than 91 days is not valid
-  //     }
-  //     return `${diffInDays}days`; // Return age in 'days' format
-  //   }
-
-  //   return `${age}`;
-  // }
-
   jsonParse(string: any, extract: any) {
     const value = JSON.parse(string);
     return value[extract];
   }
 
-  // async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
-  //   console.log(formData, this.covers);
-
-  //   const mappedData: Partial<IFullQuoteMapping> = {
-  //     agentCode: this.agentCode || '',
-  //     productName: formData?.productName || '',
-  //     productCode: formData?.productId || '',
-  //     planCode: formData?.planCode || '',
-  //     planName: formData?.productVariant || '',
-  //     proposalNum: this.proposalNum || '',
-  //     policyType: formData?.memberPolicyType || '',
-  //     businessType: formData?.typeOfBusiness || '',
-  //     insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
-  //       return {
-  //         relation: member?.relation || '',
-  //         // memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
-  //         memberSalutation: member?.preFix || '',
-  //         firstName: member?.firstName || '',
-  //         middleName: member?.middleName || '',
-  //         lastName: member?.lastName || '',
-  //         height: member?.height || '',
-  //         heightInInches: member?.heightInches || '',
-  //         weight: member?.weight || '',
-  //         memberdob: member?.memberDob || '',
-  //         emailId: member?.emailId || '',
-  //         mobileNumber: member?.mobileNumber || '',
-  //         // memberNationality: this.jsonParse(formData.nationality, 'name') || '',
-  //         relationshipType: member.relation || '',
-  //         memberAge: this.calculateAge(member?.memberDob) || '',
-  //         memberGender: member?.memberGender || '',
-  //         // memberPincode: member?.pincode || '',
-  //         // preExistingDisease: member?.preExistingDisease || '',
-  //         // memberIndex: member.memberIndex || '',
-  //         // zone: member?.zone || '',
-  //         // zoneValue: member?.zoneValue || '',
-  //         // state: member?.state || '',
-  //         // city: member?.city || '',
-  //         memberType: member?.memberType || '',
-  //         memberSumInsured: member?.sumInsured || '',
-  //         // memberZone: member?.zoneValue || '',
-  //         memberNatureOfDuty: member?.natureOfDuty || '',
-  //         memberDesignation: member?.designation || '',
-  //         memberOccupation: member?.occupation || '',
-  //         covers: this.covers[index] || [],
-  //         // memberRoomCategory: member?.memberRoomCategory || ''
-  //       };
-  //     }) || [],
-  //     CKYCNo: this.formData?.ckycNo || '',
-  //     // QuoteId: formData?.quoteId || '',
-  //     // LeadId: formData?.leadNumber || '',
-  //     proposerSalutation: formData?.preFix || '',
-  //     proposerFirstName: formData?.firstName || '',
-  //     proposerMiddleName: formData?.middleName || '',
-  //     proposerLastName: formData?.lastName || '',
-  //     proposerDob: formData?.memberDobProposer || '',
-  //     proposerAge: formData?.memberAgeProposer || '',
-  //     proposerGender: formData?.proposerGender || '',
-  //     proposerMobileNumber: formData?.mobileNumber || '',
-  //     proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
-  //     proposerAddress1: formData?.proposerAddress1 || '',
-  //     proposerAddress2: formData?.proposerAddress2 || '',
-  //     proposerCity: formData?.city || '',
-  //     proposerState: formData?.state || '',
-  //     proposerEmailId: formData?.emailId || '',
-  //     proposerPincode: formData?.proposerPincode || '',
-  //     // idProof: this.jsonParse(formData?.idProof, 'value') || '',
-  //     // idNo: formData?.idNo || '',
-  //     proposerAnnualIncome: formData?.annualIncome || '',
-  //     proposerOccupation: formData?.occupation || '',
-  //     // proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
-  //     // proposerPANNo: formData?.panNo || '',
-  //     // gstDetails: formData?.gstDetails || '',
-  //     // proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
-  //     // ifPEP: formData?.isPep || '',
-  //     // proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
-  //     nomineeFirstName: formData?.nomineeFirstName || '',
-  //     nomineeMidleName: formData?.nomineeMiddleName || '',
-  //     nomineeLastName: formData?.nomineeLastName || '',
-  //     nomineeRelation: formData?.nomineeRelationWithProposer || '',
-  //     nomineeRelationCode: formData?.nomineeRelationWithProposer || '',
-  //     nomineeContactNumber: formData?.nomineeContactNo || '',
-  //     nomineeAddress: formData?.nomineeAddress || '',
-  //     nomineeDob: formData?.nomineeDob || '',
-  //     nomineeAge: nomineeAge || '',
-  //     NameofAccountHolder: formData?.firstName || '',
-  //     accountNumber: formData?.accountNumber || '',
-  //     accountType: formData?.accountType || '',
-  //     bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
-  //     bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
-  //     paymentMode: this.selectedButton || '',
-  //     chequeNumber: formData?.chequeNumber || '',
-  //     chequeDate: formData?.chequeDate || '',
-  //     bankName: this.formData?.bankName || '',
-  //     ifscCode: formData?.ifscCode || '',
-  //     micrNo: formData?.micrCode || '',
-  //     premiumAmount: formData?.totalPremium || '',
-  //     selectedTenure: (parseInt(formData?.tenure)).toString() || '',
-  //     paymentDate: new Date().toISOString().split("T")[0] as any || '',
-  //     paymentCollectionMode: formData.paymentOption || '',
-  //     paymentByRelationship: 'Self',
-  //     payerName: formData?.accountHolderName || '',
-  //     paymentBy: 'customer',
-  //     PaymentGatewayName: formData?.PaymentGatewayName || '',
-  //     // tenure: formData?.tenure,
-  //   };
-
-  //   return mappedData;
-  // }
-
-  // async fullQuotation(): Promise<void> {
-  //   return new Promise((resolve, reject) => {
-  //     // this.spinner.show();
-  //     console.log("beforeMap", this.formData);
-
-  //     this.mappedFormDataFullQuote(this.formData)
-  //       .then((data) => {
-  //         console.log("mapped Data", data);
-
-  //         const reqData: any = {
-  //           agentCode: this.agentCode,
-  //           productId: this.formData.productId,
-  //           productType: this.formData.productType,
-  //           fullQuoteRequestJson: JSON.stringify(data)
-  //         }
-  //         console.log("reqData", reqData);
-
-
-  //         this.yatraService.getFullQuote(reqData).subscribe({
-  //           next: (response: any) => {
-  //             console.log(response);
-
-  //             if (response?.isSuccess) {
-  //               const responseData = response.data;
-
-  //               // Setting response data to formData
-  //               // this.formData.policyNumber = responseData.policyNumber || null;
-  //               this.formData.policyStatus = responseData.policyStatus || null;
-  //               this.formData.quoteValidFromDate = responseData.policyStartDate || null;
-  //               this.formData.quoteValidToDate = responseData.policyEndDate || null;
-  //               this.formData.ReceiptNumber = responseData.receiptNumber || null;
-  //               this.formData.customerId = responseData.customerId || null;
-
-  //               console.log(this.renewalFormGroup.value);
-
-  //               // Merging updated formData with dynamicFormGroup values
-  //               this.formData = { ...this.formData, ...this.renewalFormGroup.value };
-
-  //               // Encrypting and saving formData to session storage
-  //               sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-
-  //               // Showing success toast
-  //               this.toast.success({
-  //                 detail: "SUCCESS",
-  //                 summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
-  //                 duration: 3000,
-  //               });
-
-  //               resolve(); // Allow navigation
-  //             } else {
-  //               const errorMessage =
-  //                 response.message
-  //               console.log(errorMessage);
-  //               // Showing error toast
-  //               this.toast.error({
-  //                 detail: "ERROR",
-  //                 summary: errorMessage,
-  //                 duration: 5000,
-  //               });
-
-  //               console.error("Full Quote generation failed:", response);
-  //               reject(new Error(errorMessage)); // Prevent navigation
-  //             }
-  //           },
-  //           error: (err) => {
-  //             // this.spinner.hide();
-  //             console.error(err);
-
-  //             // Showing generic error toast for API failure
-  //             this.toast.error({
-  //               detail: "ERROR",
-  //               summary: "Something went wrong. Please try again.",
-  //               duration: 3000,
-  //             });
-
-  //             reject(err); // Reject the promise
-  //           },
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         // this.spinner.hide();
-
-  //         // Showing error toast for mapping failure
-  //         this.toast.error({
-  //           detail: "ERROR",
-  //           summary: "Failed to map form data",
-  //           duration: 3000,
-  //         });
-
-  //         reject(err);
-  //       }); console.log("afterMap", this.formData);
-
-  //   });
-  // }
-
-  // resetZoneAndLocationFields() {
-  //   this.renewalFormGroup.get('city')?.setValue('');
-  //   this.renewalFormGroup.get('state')?.setValue('');
-  //   this.renewalFormGroup.get('zone')?.disable();
-  //   this.renewalFormGroup.get('zone')?.setValue('');
-  //   this.form.formSections.forEach((section: any) => {
-  //     section.formControls.forEach((control: any) => {
-  //       if (control.name === 'zoneValue') {
-  //         control.options = [];
-  //       }
-  //     });
-  //   });
-  // }
-
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-
+    if ( this.rowData != null && !this.rowData.isFullQuoteSuccess) {
+      this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
+      return;
+    }
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
