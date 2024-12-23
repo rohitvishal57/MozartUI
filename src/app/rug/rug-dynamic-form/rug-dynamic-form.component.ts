@@ -3476,6 +3476,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3500,6 +3501,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
       if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
         return ele;
@@ -3525,6 +3527,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3547,6 +3550,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3573,6 +3577,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
         this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
         let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
           if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
             return ele;
@@ -3612,6 +3617,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
       this.dynamicFormGroup.get('gpPremium')?.setValue(null);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('combiId')?.setValue('8');
