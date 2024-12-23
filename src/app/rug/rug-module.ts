@@ -4,10 +4,10 @@ import { CommonModule } from "@angular/common";
 import { RugDynamicFormComponent } from "./rug-dynamic-form/rug-dynamic-form.component";
 import { PrimeNgModule } from "../prime-ng.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { RugRoutingModule } from "./rug-routing.module";
 import { OtpPopupComponent } from './otp-popup/otp-popup.component';
 import { MyMaterialModule } from "../material.module";
@@ -18,18 +18,21 @@ import { ProductDownloadComponent } from "./components/product-download/product-
 import { SafeUrlPipe } from "./components/product-download/safe-url.pipe";
 import { D2cTestPageComponent } from './d2c-test-page/d2c-test-page.component';
 import { BbTestPageComponent } from './bb-test-page/bb-test-page.component';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/','.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-    declarations:[RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent, ViewLeadsComponent,
+    declarations: [RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent, ViewLeadsComponent,
         ProductDownloadComponent,
         SafeUrlPipe,
         D2cTestPageComponent,
-        BbTestPageComponent
+        BbTestPageComponent,
+     
     ],
-    imports:[
+    imports: [
         CommonModule,
         PrimeNgModule,
         ClipboardModule,
@@ -39,11 +42,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         FormsModule,
         TranslateModule.forRoot({
             loader: {
-              provide: TranslateLoader,
-              useFactory: HttpLoaderFactory,
-              deps: [HttpClient]
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
             }
         })
     ]
 })
-export class RugModule{}
+export class RugModule { }
