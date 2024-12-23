@@ -114,9 +114,9 @@ export class CustomerJourneyComponent {
         console.log(stateData.formData);
         
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
-        if ('isFullQuoteSuccess' in decryptedFormData) {
-          this.isFullQuoteStatus = decryptedFormData.isFullQuoteSuccess;
-        }
+        // if ('isFullQuoteSuccess' in decryptedFormData) {
+        //   this.isFullQuoteStatus = decryptedFormData.isFullQuoteSuccess;
+        // }
         console.log(decryptedFormData);
         if(decryptedFormData.proposalNumber){
           this.proposalNumber = decryptedFormData.proposalNumber;
@@ -2548,13 +2548,6 @@ export class CustomerJourneyComponent {
             this.formData.premiumPaid = res.data.premiumPaid || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-
-            // this.fullQuoteResponse=res.data;          
-            // this.setSection('thankyou')
-            // this.hideSection=false
-            // this.isFeedBackModalVisible = true;
-            console.log(res.data);
-
           }
           else {
             this.getFormDataFromFormSequence();
@@ -2575,10 +2568,10 @@ export class CustomerJourneyComponent {
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-    if ( this.rowData != null && !this.rowData.isFullQuoteSuccess) {
-      this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
-      return;
-    }
+    // if ( this.rowData != null && !this.rowData.isFullQuoteSuccess) {
+    //   this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
+    //   return;
+    // }
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
@@ -2616,15 +2609,6 @@ export class CustomerJourneyComponent {
           console.error('Error generating payment link:', error);
         }
       });
-
-      // this.router.navigate(['/renewal/paymentstatus'],{
-      //   queryParams: {
-      //     orderid: 'UP_241209_ef1cf656',
-      //     token: 'aa59deee594c4c90abd5737929d0302e'
-      //     // ,
-      //     // agentCode: '500013'
-      //   }
-      // });
 
     }
   }

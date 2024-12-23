@@ -3741,7 +3741,6 @@ export class RenewalJourneyComponent {
   checkKycDetail(control: any): void {
     const isVisible = !(this.formData.isKycCompleted);
     // const isVisible=true;
-
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
