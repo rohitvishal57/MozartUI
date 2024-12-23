@@ -88,7 +88,8 @@ export class YatraService {
     return this.httpService.post(CalculateAddonValue,reqData);
   }
   getHalfQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
+    const  GetHalfQuote = this.configService.config.baseUrl1 + this.configService.config.getHalfQuote;
+    // const  GetHalfQuote = 'https://localhost:7070/gethalfquote';
     return this.httpService.post(GetHalfQuote,reqData);
   }
   getFullQuote(reqData: any){
@@ -145,7 +146,7 @@ export class YatraService {
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getBBPolicyInfoByLeadId(reqData:any){
-    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
+    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/rug/GetBBPolicyInfoByLeadId";
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getd2cPolicyInfoByLeadId(reqData:any){
@@ -177,7 +178,7 @@ export class YatraService {
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   bbHalfQuote(reqData:any){
-    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/v1/HalfQuote";
+    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/rug/HalfQuote";
     return this.httpService.post(halfQuoteData,reqData);
   }
   d2cJustpayRedirection(reqData:any){
@@ -201,5 +202,25 @@ export class YatraService {
   getBankDetailsByIFSC(reqData:any){
     const getBankDetailsByIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsByIFSC;
     return this.httpService.post(getBankDetailsByIFSC,reqData);
+  }
+  pennyDropVerfication(reqData:any){
+    const Pennydropverification = this.configService.config.baseUrl + this.configService.config.fetchPennydropverification;
+    return this.httpService.post(Pennydropverification,reqData);
+  }
+  sharePaymentLink(reqData:any){
+    const sharePaymentLink = this.configService.config.baseUrl + this.configService.config.sharePaymentLink;
+    return this.httpService.post(sharePaymentLink,reqData);
+  }
+  sendOTP(reqData : any){
+    const sendOtpReqeustURL = this.configService.config.baseUrl + this.configService.config.sendOTP;
+    return this.httpService.post(sendOtpReqeustURL,reqData);
+  }
+  verifyOTP(reqData : any){
+    const verifyOTPURL = this.configService.config.baseUrl + this.configService.config.verifyOTP;
+    return this.httpService.post(verifyOTPURL,reqData);
+  }
+  sendEmailLink(reqData : any){
+    const emailLinkURL = this.configService.config.baseUrl + this.configService.config.sendEmailLink;
+    return this.httpService.post(emailLinkURL,reqData);
   }
 }

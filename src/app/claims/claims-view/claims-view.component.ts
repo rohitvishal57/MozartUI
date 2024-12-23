@@ -14,6 +14,12 @@ import { debounceTime, Subject } from 'rxjs';
 import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
+interface UploadErrors {
+  fileNotSelected: boolean;
+  invalidFormat: boolean;
+  requiredDocs: string;
+  duplicateDocs: string;
+}
 @Component({
   selector: "app-claims-view",
   templateUrl: "./claims-view.component.html",
@@ -41,6 +47,13 @@ export class ClaimsViewComponent {
     createdBy?: string;
     documentLabelForm: FormGroup
   }[] = [];
+  errors: UploadErrors = {
+    fileNotSelected: false,
+    invalidFormat: false,
+    requiredDocs: '',
+    duplicateDocs: ''
+  };
+  
   // uploadedFiles: File[] = [];
   form!: FormGroup;
   activePolicyNumbers: string[] = [];
@@ -94,6 +107,7 @@ export class ClaimsViewComponent {
   fromDate: any;
   hospitalId:any;
   toDate: any;
+  claimSubmitted: boolean = false;
   maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
@@ -115,7 +129,16 @@ export class ClaimsViewComponent {
     'Claim form',
     'Others'
   ];
-
+  private requiredDocumentTypes = [
+    'govt/KYC ID',
+    'Hospital bill invoice',
+    'Investigation report',
+    'Doctor’s Prescription',
+    'NEFT/ Cancelled cheque/ Passbook',
+    'Hospital discharge form',
+    'Consultation form',
+    'Claim form'
+  ];
   documentLabelForm!: FormGroup;
 
   // coverNames = [
@@ -207,6 +230,7 @@ export class ClaimsViewComponent {
         }
       });
     }
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -220,14 +244,19 @@ export class ClaimsViewComponent {
     this.getProposalDetails();
     this.fetchStates();
       const policyNumberControl = this.form.get('policyNumber');
-  }
-
-  initializeDocumentLabelForm(): FormGroup {
-    return this.fb.group({
-      documentLabel: [''],
-      customLabel: [{ value: '', disabled: true }]
+      
+    this.form.get('claimType')?.valueChanges.subscribe(claimType => {
+      this.onClaimTypeChange(claimType);
     });
   }
+
+  private initializeDocumentLabelForm(): FormGroup {
+    return new FormGroup({
+      documentLabel: new FormControl(''),
+      customLabel: new FormControl({ value: '', disabled: true })
+    });
+  }
+
   navigateToListClaim() {
     this.router.navigate(['claims/claimsList'])
   }
@@ -304,7 +333,6 @@ export class ClaimsViewComponent {
             documentName: [""],
             status: [""],
             labelName: [""]
-       
           }),
         ]),
     });
@@ -383,7 +411,6 @@ export class ClaimsViewComponent {
           this.policyNumbers = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.filteredPolicyList = [...this.policyNumbers];
           this.cdr.markForCheck();
-
         }
       },
       (err) => {
@@ -396,7 +423,6 @@ export class ClaimsViewComponent {
       return arr.map((mapObj: any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
-
 
   // handleDropdownChange(value: string): void {
   //      this.form.patchValue({
@@ -447,10 +473,8 @@ export class ClaimsViewComponent {
     this.claimsService.getMemberDetails(membersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp.data.policyMembersList          
-          this.getMemberIdList(this.policyMembersList)    
-          console.log(this.policyMembersList);
-                
+          this.policyMembersList = resp.data.policyMembersList
+          this.getMemberIdList(this.policyMembersList)                
         }
       },
       (err) => {
@@ -458,17 +482,12 @@ export class ClaimsViewComponent {
       });
   }
   getMemberIdList(membersList: Array<any>) {
-    // const uniqueMembers = membersList.filter((value, index, self) =>
-    //   index === self.findIndex((t) => (
-    //     t.fullName === value.fullName || t.memberId === value.memberId
-    //   ))
-    // );
-    this.memberNames = membersList.filter((value, index, self) =>
+    /* this.memberNames = membersList.filter((value, index, self) =>
       index === self.findIndex((t) => (
-        t.memberName === value.memberName // Assuming memberName is the unique identifier
+        t.memberId === value.memberId
       ))
-    );
-   // this.memberNames = uniqueMembers;
+    ); */
+    this.memberNames = membersList;
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim(); 
@@ -483,18 +502,6 @@ export class ClaimsViewComponent {
     if(input.length >=16) {
       this.policyNoChangeSubject.next(input);
     }
-
-    // const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    // const regex = /^[0-9-]$/;
-
-    // if (allowedKeys.includes(event.key)) {
-    //   return;
-    // }
-
-    // Prevent default if the key is not allowed
-    // if (regex.test(event.key)) {
-    //   event.preventDefault();
-    // }
 }
 
 
@@ -573,28 +580,38 @@ export class ClaimsViewComponent {
       "ailmentDescription": "",
       "dischargeDate": "",
       "admissionDate": ""
-    })
-
+    });
+  
     const selectedType = event.target.value;
+    
     if (selectedType === "Cashless") {
+      // Clear file upload validators for Cashless
+      this.form.get('isFileUploadRequired')?.clearValidators();
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showReimbursementFields = false;
+      this.isFilenotSelected = false;
       this.showCashlessFields = true;
+      
       this.form.patchValue({
         coverName: "Hospitalization",
       });
     } else if (selectedType === "Reimbursement") {
+      // Set file upload as required for Reimbursement
+      this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showCashlessFields = false;
-      this.showSecondScenario = false;
-      this.showFirstScenario = false;
+      this.showReimbursementFields = true;
+      this.isFilenotSelected = true;
+      
       this.form.patchValue({
         coverName: "",
       });
-      this.showReimbursementFields = true;
     } else {
       this.showCashlessFields = true;
       this.showReimbursementFields = false;
     }
   }
+  
 
   fetchCoverNames(value: string): void {
      const coverReqBody =  {
@@ -845,9 +862,6 @@ export class ClaimsViewComponent {
   }
   //-------------- Method to handle file upload------------------//
   
-  
-  
-  
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
@@ -855,27 +869,29 @@ export class ClaimsViewComponent {
   // onFileSelected(event: any): void {
   //   const inputElement = event.target;
   //   const files = inputElement.files as File[];
+
   //   this.totalFilesCount += files.length;
   //   this.isFilenotSelected = false;
 
   //   for (let i = 0; i < files.length; i++) {
   //     const file = files[i];
   //     this.selectedFile = file;
-  //     // Check if the file was previously deleted and re-uploaded
-  //     const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
+
+  //     const fileExists = this.uploadedFiles.some((uploadedFile) =>
+  //       uploadedFile.name === file.name && uploadedFile.size === file.size
+  //     );
 
   //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-  //       // Initialize label with an empty value for new files
-  //       this.uploadedFiles.push({
+  //       const newFile = {
   //         documentId: uuidv4(),
   //         name: file.name,
   //         type: file.type,
   //         size: file.size,
   //         label: "Label this document",
-  //         isEditing: false,
+  //         editableControl: new FormControl(""),
+  //         isEditing: true,
   //         isEdited: false,
   //         uploadDateTime: new Date(),
-  //         editableControl: new FormControl(""),
   //         formattedUploadDateTime: this.formatDate(new Date()),
   //         status: "pending",
   //         file: file,
@@ -883,69 +899,96 @@ export class ClaimsViewComponent {
   //         documentName: this.saveForm.value.documentName,
   //         documentType: this.saveForm.value.documentType,
   //         createdBy: this.saveForm.value.createdBy,
-  //       });
-  //       this.uploadValidFormat = false;
+  //         documentLabelForm: this.initializeDocumentLabelForm()
+  //       };
+
+  //       this.uploadedFiles.push(newFile);
+
+  //       this.clearSelectedLabel(newFile);
+
   //     } else if (fileExists) {
   //       console.warn('File already uploaded.');
   //     } else {
   //       this.uploadValidFormat = true;
   //     }
   //   }
-
   //   this.updateStatusLabel();
   //   this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
+  //   this.isFilenotSelected = false;
+  //   this.uploadValidFormat = false;
   // }
 
   onFileSelected(event: any): void {
-    const inputElement = event.target;
-    const files = inputElement.files as File[];
-
+    this.resetErrors();
+    const files = event.target.files as File[];
     this.totalFilesCount += files.length;
-    this.isFilenotSelected = false;
+    for (const file of files) {
+      if (!this.allowedFileTypes.includes(file.type)) {
+        this.errors.invalidFormat = true;
+        continue;
+      }
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      this.selectedFile = file;
-
-      const fileExists = this.uploadedFiles.some((uploadedFile) =>
-        uploadedFile.name === file.name && uploadedFile.size === file.size
+      const fileExists = this.uploadedFiles.some(
+        (uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size
       );
 
-      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-        const newFile = {
-          documentId: uuidv4(),
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          label: "Label this document",
-          editableControl: new FormControl(""),
-          isEditing: true,
-          isEdited: false,
-          uploadDateTime: new Date(),
-          formattedUploadDateTime: this.formatDate(new Date()),
-          status: "pending",
-          file: file,
-          policyNumber: this.saveForm.value.policyNumber,
-          documentName: this.saveForm.value.documentName,
-          documentType: this.saveForm.value.documentType,
-          createdBy: this.saveForm.value.createdBy,
-          documentLabelForm: this.initializeDocumentLabelForm()
-        };
-
+      if (!fileExists) {
+        const newFile = this.createNewFileObject(file);
         this.uploadedFiles.push(newFile);
-
         this.clearSelectedLabel(newFile);
-
-      } else if (fileExists) {
-        console.warn('File already uploaded.');
-      } else {
-        this.uploadValidFormat = true;
       }
     }
-    this.updateStatusLabel();
-    this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
+
+    this.validateRequiredDocuments();
+    this.uploadFiles(Array.from(files).filter(file => this.allowedFileTypes.includes(file.type)));
   }
 
+  private createNewFileObject(file: File) {
+    return {
+      documentId: this.generateUUID(),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      label: "Label this document",
+      isEditing: true,
+      isEdited: false,
+      uploadDateTime: new Date(),
+      formattedUploadDateTime: this.formatDate(new Date()),
+      status: "pending",
+      file: file,
+      documentLabelForm: this.initializeDocumentLabelForm()
+    };
+  }
+
+  private validateRequiredDocuments(): { isValid: boolean; message: string } {
+    this.validateAndUpdateErrors();
+      if (this.errors.requiredDocs || this.errors.duplicateDocs) {
+      return {
+        isValid: false,
+        message: this.errors.requiredDocs || this.errors.duplicateDocs
+      };
+    }
+    
+    return { isValid: true, message: '' };
+  }
+
+  private resetErrors(): void {
+    this.errors = {
+      fileNotSelected: false,
+      invalidFormat: false,
+      requiredDocs: '',
+      duplicateDocs: ''
+    };
+  }
+
+  private generateUUID(): string {
+    // Implement your UUID generation logic here
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
   clearSelectedLabel(file: any): void {
     file.documentLabelForm.reset({
       documentLabel: '',
@@ -961,6 +1004,8 @@ export class ClaimsViewComponent {
           customLabelControl.enable();  // Enable the custom label field
         } else {
           customLabelControl.disable(); // Disable it if not 'Others'
+           // Validate documents whenever label changes
+           this.validateAndUpdateErrors();
         }
       });
     }
@@ -981,11 +1026,49 @@ export class ClaimsViewComponent {
       if (file.label !== "Label this document") {
         file.isEditing = false;
         file.isEdited = true;
+           this.validateAndUpdateErrors();
       }
     }
   }
+  private validateAndUpdateErrors(): void {
+    if (this.form.get('claimType')?.value !== 'Reimbursement') {
+      return;
+    }
 
+    const uploadedLabels = this.uploadedFiles
+      .map(file => file.documentLabelForm?.get('documentLabel')?.value)
+      .filter(label => label);
 
+    const labelCounts = uploadedLabels.reduce((acc: { [key: string]: number }, label: string) => {
+      acc[label] = (acc[label] || 0) + 1;
+      return acc;
+    }, {});
+
+    const missingTypes = this.requiredDocumentTypes.filter(
+      type => !labelCounts[type]
+    );
+
+    const duplicateTypes = Object.entries(labelCounts)
+    .filter(([label, count]) => {
+      const countValue = count as number;
+      return countValue > 1 && this.requiredDocumentTypes.includes(label);
+    })
+    .map(([label]) => label);
+
+    if (missingTypes.length > 0) {
+      this.errors.requiredDocs = `Please upload the following required documents: ${missingTypes.join(', ')}`;
+    } else {
+      this.errors.requiredDocs = ''; 
+    }
+
+    if (duplicateTypes.length > 0) {
+      this.errors.duplicateDocs = `Duplicate document types found for: ${duplicateTypes.join(', ')}. Please ensure only one document per type.`;
+    } else {
+      this.errors.duplicateDocs = ''; 
+    }
+
+    this.cdr.detectChanges();
+  }
   uploadFiles(files: File[]): void {
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
@@ -1089,41 +1172,6 @@ export class ClaimsViewComponent {
     );
   }
   ////////////////////file upload input label //////////////////
-  //   startEditing(file: any) {
-  //     file.isEditing = true;
-  //     if (!file.editableControl) {
-  //       file.editableControl = new FormControl(file.label);
-  //     }
-  //     this.editableControl.setValue("");
-  //   }
-
-  //  stopEditing(file: any) {
-  //     if (this.editableControl.value !== this.label) {
-  //       file.label = this.editableControl.value; 
-  //     }
-  //     file.isEditing = false;
-  //     file.isEdited = true;
-  //   }
-
-  // startEditing(file: any) {
-  //   file.isEditing = true;
-  //   const documentLabelControl = this.documentLabelForm.get('documentLabel');
-  //   const customLabelControl = this.documentLabelForm.get('customLabel');
-
-  //   if (documentLabelControl && customLabelControl) {
-  //     // Initialize form with current label
-  //     documentLabelControl.setValue(
-  //       this.documentLabelOptions.includes(file.label) ? file.label : 'Others'
-  //     );
-
-  //     if (documentLabelControl.value === 'Others') {
-  //       customLabelControl.enable();
-  //       customLabelControl.setValue(
-  //         this.documentLabelOptions.includes(file.label) ? '' : file.label
-  //       );
-  //     }
-  //   }
-  // }
   startEditing(file: any) {
     file.isEditing = true;
     const documentLabelControl = file.documentLabelForm.get('documentLabel');
@@ -1150,15 +1198,7 @@ export class ClaimsViewComponent {
     }
   }
 
-  // memberIdChange(event:any){    
-  //   this.selectedMemberName = event.target.value;
-  //   const selectedMember = this.policyMembersList.find(member => member.memberName === this.selectedMemberName);
-  
-  //   if (selectedMember) {
-  //     this.form.get('memberId')?.setValue(selectedMember.memberId);  
-  //   }
-  
-  // }
+
 memberIdChange(event: any): void {
   const memberId = event.target.value;
   const selectedMember = this.memberNames.find(member => member.memberId === memberId);
@@ -1180,8 +1220,8 @@ memberIdChange(event: any): void {
       width: '400px',
       disableClose: true,
       data: {
-        title: 'Claims',
-        id: `Claim Id: ${resp.data.claim_Number}`,
+        title: 'Claim',
+        id: `Claim No: ${resp.data.claim_Number}`,
       },
     });
  
@@ -1190,6 +1230,27 @@ memberIdChange(event: any): void {
     });
   }
   submitRequest(): void {
+    if (this.form.get('claimType')?.value === 'Reimbursement') {
+      if (this.uploadedFiles.length === 0) {
+        this.isFilenotSelected = true;
+        this.errors.fileNotSelected = true;
+        return;
+      }
+
+      const validationResult = this.validateRequiredDocuments();
+      if (!validationResult.isValid) {
+        // this.toast.error({ 
+        //   detail: validationResult.message,
+        //   duration: 5000
+        // });
+        this.errors.requiredDocs = `Please upload the following required documents`;
+        return;
+      }
+    }
+
+
+    this.claimSubmitted = true;
+
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
@@ -1212,10 +1273,10 @@ memberIdChange(event: any): void {
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
       }));
 
-      if (!this.selectedFile) {
-        this.isFilenotSelected = true;
-        return;
-      }
+      // if (!this.selectedFile) {
+      //   this.isFilenotSelected = true;
+      //   return;
+      // }
 
       // if (!saveClaimData.claimedAmount) {
       //   saveClaimData.claimedAmount = 0;
@@ -1235,6 +1296,7 @@ memberIdChange(event: any): void {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
+      
       // const documentsArray = this.uploadedFiles.map((file) => ({
       //   documentId: file.documentId,
       //   documentName: file.name,

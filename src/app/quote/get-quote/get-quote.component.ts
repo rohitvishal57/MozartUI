@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef,  } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -60,7 +60,10 @@ export class GetQuoteComponent implements AfterViewChecked {
     { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
     { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
   ];
-
+  PotingValues = [
+    { id: 'Yes', value: 'Yes', label: 'Yes' },
+    { id: 'No', value: 'No', label: 'No' }
+  ];
   proposerZone: any;
   proposerZoneValue: any = '';
   proposerCity: any;
@@ -177,6 +180,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   ];
   checkGender:boolean=false;
   pageName: string | undefined;
+  formData:any;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
     private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
@@ -189,18 +193,22 @@ export class GetQuoteComponent implements AfterViewChecked {
         }
       });
     });
+    this.loadSelectedDiseases();
     console.log(this.currentDate);
     console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
-    let formData: any;
+    
     if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
-      formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
+      this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
-    console.log(formData, this.relations);
-    if (formData && formData.currentZone) {
-      this.currentZone = formData.currentZone;
+    console.log(this.formData, this.relations);
+    if (this.formData && (this.formData.currentZone || this.formData.zoneValue || this.formData.zone || this.formData.upgradableZones)) {
+      this.currentZone = this.formData.currentZone;
+      this.proposerZoneValue = this.formData.zoneValue;
+      this.proposerZone = this.formData.zone;
+      this.upgradableZones = this.formData.upgradableZones;
     }
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
@@ -219,26 +227,29 @@ export class GetQuoteComponent implements AfterViewChecked {
       memberPolicyType: [this.selectedPlan],
       memberDobProposer: [''],
       memberAgeProposer: [''],
+      isPortability: [null],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
-    this.onPlanTypeChange(this.selectedPlan)
-    if (formData) {
-      this.quoteFormGroup.patchValue(formData);
-      console.log(formData);
-      if (formData.memberPolicyType) {
-        this.onPlanTypeChange(formData.memberPolicyType);
+    if(this.route.url.includes('dashboard')){
+      this.onPlanTypeChange(this.selectedPlan)
+    }
+    if (this.formData) {
+      this.quoteFormGroup.patchValue(this.formData);
+      console.log(this.formData);
+      // if (formData.memberPolicyType) {
+      //   this.onPlanTypeChange(formData.memberPolicyType);
+      // }
+      if (this.formData.upgradableZones) {
+        this.upgradableZones = this.formData.upgradableZones;
       }
-      if (formData.upgradableZones) {
-        this.upgradableZones = formData.upgradableZones;
-      }
-      if (formData.sumInsured) {
-        this.selectedSumInsured = formData.sumInsured;
+      if (this.formData.sumInsured) {
+        this.selectedSumInsured = this.formData.sumInsured;
       }
       // if(formData.proposerGender){
       //   this.onGenderChange();
       // }
-      if (formData.insuredMembers && formData.insuredMemberDetails.length > 0) {
+      if (this.formData.insuredMembers && this.formData.insuredMemberDetails.length > 0) {
         // const currentMember:any = {};
 
         // Add members from `this.relations` in the exact sequence
@@ -262,7 +273,7 @@ export class GetQuoteComponent implements AfterViewChecked {
         console.log(this.relations);
         console.log(this.relationCountMap, this.anotherRelationCountMap);
         this.relations.forEach((item: any) => {
-          Object.entries(formData.insuredMembers).forEach(([memberName, isIncluded], index) => {
+          Object.entries(this.formData.insuredMembers).forEach(([memberName, isIncluded], index) => {
             const mockEvent = { target: { checked: isIncluded } };
             if (item.name == memberName) {
               console.log(item, memberName);
@@ -271,6 +282,15 @@ export class GetQuoteComponent implements AfterViewChecked {
                 currentCount += 1;
                 this.relationCountMap.set(item.id, currentCount);
               }
+              this.formData.insuredMemberDetails.forEach((member:any)=>{
+                if(member.relation == memberName){
+                  item.age= member.memberAge;
+                  item.dob = member.memberdob;
+                  item.gender = member.memberGender;
+                }
+              })
+              console.log(mockEvent,item,this.formData.insuredMemberDetails);
+              
               this.onRelationChange(mockEvent, item);
             }
           });
@@ -340,8 +360,8 @@ export class GetQuoteComponent implements AfterViewChecked {
 
         // Add controls for the currently selected relationships
         const insured: any = [];
-        if (formData.insuredMemberDetails) {
-          const insured = formData.insuredMemberDetails;
+        if (this.formData.insuredMemberDetails) {
+          const insured = this.formData.insuredMemberDetails;
           console.log(insured);
         }
         this.selectedRelationships.forEach((relation: any) => {
@@ -354,15 +374,15 @@ export class GetQuoteComponent implements AfterViewChecked {
             sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
             isChronic: ["No"],
             chronicDiseases: [this.diseaseNames],
-            zone: [this.proposerZone || formData.insuredMemberDetails[0].zone],
-            upgradableZones: [this.upgradableZones || formData.insuredMemberDetails[0].upgradableZones],
+            zone: [this.formData.insuredMemberDetails[0].zone || this.proposerZone],
+            upgradableZones: [this.upgradableZones || this.formData.insuredMemberDetails[0].upgradableZones],
             memberGender: [relation.gender, [Validators.required]],
             memberdob: [relation.dob, [Validators.required]],
             memberRelationCode: [relation.relationCode, [Validators.required]],
             pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
-            city: [this.proposerCity || formData.insuredMemberDetails[0].city],
-            zoneValue: [this.proposerZone],
-            state: [this.proposerState || formData.insuredMemberDetails[0].state]
+            city: [this.formData.insuredMemberDetails[0].city || this.proposerCity],
+            zoneValue: [this.formData.insuredMemberDetails[0].zoneValue || this.proposerZone],
+            state: [this.formData.insuredMemberDetails[0].state || this.proposerState]
           });
           console.log(memberGroup);
           insuredMemberDetailsArray.push(memberGroup);
@@ -480,26 +500,30 @@ export class GetQuoteComponent implements AfterViewChecked {
           else {
             console.log(dobArray[0]);
 
-            const age : any = this.calculateAge(dob);
-            let isValid = true;
-            if(selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')          ){
-              switch (this.selectedPlan) {
-   
-                case 'Family Floater':
-                  const currentDate : any = new Date();
-   
-    // Convert the birth date into a Date object
-    const birthDateObj : any = new Date(selectedRelation.dob);
-   
-    // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
-    // Calculate the difference in milliseconds
-    let daysOld:any
-    if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()){
-      daysOld = this.calculateAgeInDays(selectedRelation.dob);
-    }
+            let age: any = this.calculateAge(dob);
+            const currentDate: any = new Date();
 
-      // Check if age is greater than 25 years or if days are less than 91
-      if (age > 25 || (birthDateObj.getFullYear() < currentDate.getFullYear() && daysOld < 91)) {
+            // Convert the birth date into a Date object
+            const birthDateObj: any = new Date(selectedRelation.dob);
+
+            // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+            // Calculate the difference in milliseconds
+            // let daysOld: any
+            // if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
+            //   daysOld = this.calculateAgeInDays(selectedRelation.dob);
+            // }
+            let isValid = true;
+            if (selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')) {
+              let days:any = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : null : null;
+
+
+              switch (this.selectedPlan) {
+
+                case 'Family Floater':
+
+
+                  // Check if age is greater than 25 years or if days are less than 91
+                  if (age > 25 ||  (days != null && days < 91)) {
                     this.toast.error({
                       detail: "Error",
                       summary: "Member should be less than 25 years and Greater than 91 days",
@@ -507,12 +531,12 @@ export class GetQuoteComponent implements AfterViewChecked {
                     });
                     isValid = false;
                   }
-   
+
                   break;
-  
-                  case 'Multi Individual':
-   
-                  if (age < 4  || age > 25) {
+
+                case 'Multi Individual':
+
+                  if (age < 4 || age > 25) {
                     this.toast.error({
                       detail: "Error",
                       summary: "Member should be less than 25 years and Greater than 4 years",
@@ -520,20 +544,23 @@ export class GetQuoteComponent implements AfterViewChecked {
                     });
                     isValid = false;
                   }
-   
+
                   break;
-                  default:
-                    break;
+                default:
+                  break;
               }
             }
-            else{
-              if (age < 18  || age > 120) {
-                this.toast.error({
-                  detail: "Error",
-                  summary: "Member should be less than 120 years and Greater than 18 years",
-                  duration: 3000
-                });
-                isValid = false;
+            else {
+              if(birthDateObj.getFullYear() <= currentDate.getFullYear()){
+                age = age ? age.toString().includes("days") ? "1" : age : age;
+                if (age < 18 || age > 120) {
+                  this.toast.error({
+                    detail: "Error",
+                    summary: "Member should be less than 120 years and Greater than 18 years",
+                    duration: 3000
+                  });
+                  isValid = false;
+                }
               }
             }
             if (isValid) {
@@ -675,6 +702,10 @@ export class GetQuoteComponent implements AfterViewChecked {
     {
       label: 'Diseases',
       options: []
+    },
+    {
+      label: 'Porting',
+      options: []
     }
   ];
 
@@ -707,7 +738,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.quoteFormGroup.get('upgradableZones')?.setValue(this.upgradableZones);
     this.quoteFormGroup.get('zone')?.setValue(this.upgradedZone);
     this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
-    console.log(this.quoteFormGroup.value);
+    console.log("quoteForm Group",this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
     sessionStorage.setItem("relations", this.encryptionService.encrypt(this.relations));
     console.log(this.quoteFormGroup.get('insuredMemberDetails')?.value.length);
@@ -814,9 +845,16 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log('Slider value changed to:', newValue);
   }
 
+  loadSelectedDiseases() {
+    const storedDiseases = sessionStorage.getItem('selectedDiseases');
+    if (storedDiseases) {
+      this.selectedDiseases = JSON.parse(storedDiseases);
+      this.updateDiseaseNames();  // Update disease names based on stored diseases
+    }
+  }
+
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
-    console.log(selectedValue);
 
     if (event.target.checked) {
       // Add the value to the array if the checkbox is checked and not already present
@@ -827,29 +865,40 @@ export class GetQuoteComponent implements AfterViewChecked {
       // Remove the value from the array if the checkbox is unchecked
       this.selectedDiseases = this.selectedDiseases.filter(disease => disease !== selectedValue);
     }
+
+    // Update sessionStorage and diseaseNames
+    this.saveSelectedDiseases();
+    this.updateDiseaseNames();
     console.log('Selected Diseases:', this.selectedDiseases);
-    // this.saveDataToStorage();
+  }
+  updateDiseaseNames() {
+    if (this.selectedDiseases.length > 0) {
+      this.diseaseNames = this.selectedDiseases.join(', ');  // Join selected diseases as a string
+    } else {
+      this.diseaseNames = 'No Diseases Selected';  // Default message when no diseases are selected
+    }
+  }
+  saveSelectedDiseases() {
+    sessionStorage.setItem('selectedDiseases', JSON.stringify(this.selectedDiseases));
   }
 
   diseaseSelection() {
     this.diseaseNames = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : '';
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
 
-    console.log(insuredMembersArray);
-
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
-      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames != "" ? this.diseaseNames : null);
-      memberGroup.get('isChronic')?.setValue(this.diseaseNames != "" ? "Yes" : "No");
+      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
+      memberGroup.get('isChronic')?.setValue(this.diseaseNames !== "" ? "Yes" : "No");
     });
+
     this.activeDropdown = null;
-    // this.saveDataToStorage();
   }
+
 
   isDiseaseSelected(disease: string): boolean {
     return this.selectedDiseases.includes(disease);
   }
-
   // saveDataToStorage() {
   //   const data = {
   //     selectedOptions: this.selectedOptions,          // Store selected options (array of strings)
@@ -893,10 +942,21 @@ export class GetQuoteComponent implements AfterViewChecked {
 
   onPlanTypeChange(planType: string) {
     this.getrelationsviapolicytype(planType);
+    console.log(this.quoteFormGroup)
     this.selectedPlan = planType;
     this.selectedRelation = "";
     this.selectedRelationships = [];
     this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
+    this.quoteFormGroup.get('zoneValue')?.reset();
+    this.quoteFormGroup.get('proposerPincode')?.reset();
+    this.quoteFormGroup.get('proposerName')?.reset();
+    this.quoteFormGroup.get('proposerGender')?.reset();
+    this.quoteFormGroup.get('mobileNumber')?.reset();
+    (this.quoteFormGroup.get('insuredMemberDetails') as FormArray).clear();
+    Object.keys((this.quoteFormGroup.get('insuredMembers') as FormGroup).controls).forEach(key =>
+      (this.quoteFormGroup.get('insuredMembers') as FormGroup).removeControl(key)
+    );
+    console.log(this.quoteFormGroup)
     // this.relations = JSON.parse(this.anotherRelations);
     // console.log(this.anotherRelationCountMap);
     // this.relationCountMap = new Map(this.anotherRelationCountMap);
@@ -904,6 +964,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.numberOfChild = 0;
     this.addHide = false;
     this.activeDropdown = null;
+    this.checkGender = false;
     //window.scrollTo({ top: 0, behavior: 'smooth' });
     this.getQuoteFocusScroll();
   }
@@ -1006,15 +1067,15 @@ export class GetQuoteComponent implements AfterViewChecked {
           sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
           isChronic: ["No"],
           chronicDiseases: [this.diseaseNames],
-          zone: [this.upgradedZone],
-          upgradableZones: [this.upgradableZones],
+          zone: [this.upgradedZone || this.formData.insuredMemberDetails[0].zone],
+          upgradableZones: [this.upgradableZones || this.formData.insuredMemberDetails[0].upgradableZones],
           memberGender: [relation.gender, [Validators.required]],
           memberdob: [relation.dob, [Validators.required]],
           memberRelationCode: [relation.relationCode, [Validators.required]],
           pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
-          city: [this.proposerCity],
+          city: [this.proposerCity || this.formData.insuredMemberDetails[0].city],
           zoneValue: [this.proposerZoneValue],
-          state: [this.proposerState]
+          state: [this.proposerState || this.formData.insuredMemberDetails[0].state]
         });
 
         console.log(memberGroup.value);
@@ -1104,8 +1165,9 @@ export class GetQuoteComponent implements AfterViewChecked {
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
           this.upgradableZones = upgradableZones
-
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
+
+          console.log("City and State updated in service:", this.proposerCity, this.proposerState);
         } else {
           this.toast.error({
             detail: "WARNING",
@@ -1170,7 +1232,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
   ngAfterViewChecked() {
-    if (this.activeDropdown != 2 && this.scrollTarget) {
+    if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
@@ -1204,4 +1266,9 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     }
   }
+  selectPort(value: string) {
+    this.quoteFormGroup.get('isPortability')?.setValue(value); 
+    this.closeCustomDiv()
+  }
+  
 }

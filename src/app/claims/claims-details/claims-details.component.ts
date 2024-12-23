@@ -18,7 +18,7 @@ export class ClaimsDetailsComponent {
   claimId: string | null = null;
   claimsHistory: any[] = [];
   policyNumber: string | any;
-  claimInfoId: string | any;
+  claimNumber: string | any;
   filesUploaded: any[] = [];
   saveForm!: FormGroup;
   claims: any;
@@ -121,9 +121,10 @@ export class ClaimsDetailsComponent {
 
   ) {
     this.route.queryParams.subscribe((params) => {
+
       this.claimId = this.route.snapshot.paramMap.get("id");
       this.policyNumber = this.route.snapshot.paramMap.get("policyNumber");
-      this.claimInfoId = this.route.snapshot.paramMap.get("claimInfoId");
+      this.claimNumber = this.route.snapshot.paramMap.get("claimInfoId");
     });
   }
 
@@ -135,13 +136,13 @@ export class ClaimsDetailsComponent {
         }
       });
     });
-    this.fetchfileUploads(this.claimInfoId, this.policyNumber)
-    if (this.claimId && this.policyNumber && this.claimInfoId) {
-      this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
+    this.fetchfileUploads(this.claimNumber, this.policyNumber)
+    if (this.claimId && this.policyNumber && this.claimNumber) {
+      this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimNumber);
       this.updateStatusLabel("fileUpload");
     }
-    this.fetchClaimStatus(this.claimInfoId);
-    this.fetchClaimTracker(this.claimInfoId);
+    this.fetchClaimStatus(this.claimNumber);
+    this.fetchClaimTracker(this.claimNumber);
     this.fetchClaimHistory(this.policyNumber);
 
     // this.claimId = this.route.snapshot.paramMap.get('id');
@@ -149,18 +150,16 @@ export class ClaimsDetailsComponent {
     // this.fetchClaimDetails(this.claimId);
     // this.updateStatusLabel();
   }
-  fetchClaimStatus(claimInfoId: string): void {
+  fetchClaimStatus(claimNumber: string): void {
     const claimsReqBody = {
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
     };
  
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
-        this.status = response.data;
-      //  this.statusMessage = response.data.notes;
-        console.log('ststu', this.status, response, this.statusMessage);
-        
-        (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
+        this.status = response?.data;
+        this.statusMessage = response?.data?.notes;        
+        (response?.data?.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
       },
       (error: any) => {
         console.error("Error fetching claim details", error);
@@ -168,14 +167,14 @@ export class ClaimsDetailsComponent {
     );
   }
 
-  fetchClaimTracker(claimInfoId: string): void {
+  fetchClaimTracker(claimNumber: string): void {
     const claimsReqBody = {
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
     };
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data;        
+        this.customeStepperStatuses = response?.data;        
         this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
@@ -189,11 +188,11 @@ export class ClaimsDetailsComponent {
   fetchClaimDetails(
     claimId: string,
     policyNumber: string,
-    claimInfoId: string
+    claimNumber: string
   ): void {
     let claimDetailsReqBody = {
       id: claimId,
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
       policyNumber: policyNumber,
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
@@ -324,11 +323,11 @@ export class ClaimsDetailsComponent {
 //     window.URL.revokeObjectURL(url);
 //   }
   
-fetchfileUploads(claimInfoId: string, policyNumber: string) {
+fetchfileUploads(claimNumber: string, policyNumber: string) {
   let claimsFilesReqBody = {
     "documentId": "",
     "policyNumber": policyNumber,
-    "claimNumber": claimInfoId
+    "claimNumber": claimNumber
   };
 
   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
@@ -467,7 +466,7 @@ downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
       documentType: [this.documentType],
       createdBy: [localStorage.getItem("agentCode")],
       file: ["/D:/Downloads/ABHI_06_Ma"],
-      claimInfoId: this.claimInfoId || "",
+      claimNumber: this.claimNumber || "",
       memberId: "",
       documentId: "",
     });
@@ -534,7 +533,7 @@ uploadFiles(files: File[], section: string): void {
                 documentName: file.name || "",
                 documentType: file.type || "",
                 createdBy: file.createdBy || "",
-                claimInfoId: "",  
+                claimNumber: "",  
                 memberId: "", 
                 documentId: file.documentId, 
             }
@@ -544,7 +543,7 @@ uploadFiles(files: File[], section: string): void {
             formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
             formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
             formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-            formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+            formData.append(`fileDetails[${index}].claimNumber`, metadata.claimNumber);
             formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
             formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
             formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
@@ -629,7 +628,7 @@ convertBytesToKB(bytes: number): string {
   }
 
   fetchClaimHistory(policyNumber: string) {
-    console.log(this.claimInfoId);
+    console.log(this.claimNumber);
     const claimHistoryReqBody = { policyNumber };
 
     this.claimsService.getClaimsHistory(claimHistoryReqBody, policyNumber).subscribe(
@@ -663,7 +662,7 @@ convertBytesToKB(bytes: number): string {
   updateClaim(): void {
     const UpdateClaimReqBody = {
       agentCode: localStorage.getItem('agentCode'),
-      claimNumber: this.claimInfoId,
+      claimNumber: this.claimNumber,
       policyNumber: this.policyNumber,
       documentsArray: this.uploadedFiles.map(file => ({
         documentId: file.documentId,

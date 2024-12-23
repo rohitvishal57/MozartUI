@@ -1,5 +1,5 @@
 <!--Endorsements Start-->
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
   <div class="contentBody bodyColumns-1">
     <div class="bodyColumn body_flex_column">
       <div class="body_flex_row endorsement-title">
@@ -147,8 +147,8 @@
                       <div class="input-block form-floating input-block-renew">
                         <select class="form-select input-selectBox" id="nomineeRelationship" name="nomineeRelationship" formControlName="nomineeRelationship">
                           <option value="" disabled selected>{{"Select Nominee" | translate}}</option>
-                          <option *ngFor="let opt of relationships" [value]="opt">
-                            {{ opt | translate }}
+                          <option *ngFor="let opt of relationships" [value]="opt.value">
+                            {{ opt.name | translate }}
                           </option>
                         </select>
                         <label for="nomineeRelationship">{{"Nominee Relationship" | translate}}</label>
@@ -353,6 +353,7 @@
                 </div>
                 <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
                 <span class="ui-error block-show" *ngIf="showNote"> File format not supported! Please upload .jpg, .png, .jpeg, or .pdf files. </span>
+                <span class="ui-error block-show" *ngIf="fileSizeError">File is too large! Please upload a file smaller than 10MB.</span>
               </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -386,12 +387,12 @@
         <div class="detailsRow">
           <div class="detailsHeading">Enter OTP</div>
           <div class="OTPContainer">
-            <input type="password" name="otp0" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-            <input type="password" name="otp1" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-            <input type="password" name="otp2" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-            <input type="password" name="otp3" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-            <input type="password" name="otp4" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-            <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+            <input type="password" name="otp0" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)" inputmode="numeric">
+            <input type="password" name="otp1" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)" inputmode="numeric">
+            <input type="password" name="otp2" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)" inputmode="numeric">
+            <input type="password" name="otp3" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)" inputmode="numeric">
+            <input type="password" name="otp4" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)" inputmode="numeric">
+            <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)" inputmode="numeric">
           </div>
         </div>
       </div>

@@ -91,7 +91,6 @@ export class ClaimsListViewComponent implements OnInit {
     });
 
     this.fetchData();
-    this.getProducts();
     //this.fetchClaimStatusCounts(this.agentCode);
     this.checkView();
   }
@@ -167,7 +166,6 @@ export class ClaimsListViewComponent implements OnInit {
         console.error("API request was not successful.");
       }
     });
-
   }
 
   toggleFilterDropdown() {
@@ -197,18 +195,18 @@ export class ClaimsListViewComponent implements OnInit {
     })
   }
 
-
   calculateAppliedFiltersCount() {
-    const selectedProductsCount = this.productsList.filter(
-      (product: any) => product.selected).length;
+    // const selectedProductsCount = this.productsList.filter(
+    //   (product: any) => product.selected).length;
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (policyType: any) => policyType.selected).length;
-    let count = selectedProductsCount + selectedPolicyTypesCount;
+    let count = selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
       count++;
     }
     this.appliedFiltersCount = count;
   }
+  
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.fromDate) {
       this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
@@ -231,12 +229,12 @@ export class ClaimsListViewComponent implements OnInit {
     
     console.log("start date taken by request body", this.claimsReqBody.startDate);
     console.log("end date taken by request body", this.claimsReqBody.endDate);
-      const selectedProducts = this.productsList
-      .filter((product: any) => product.selected)
-      .map((product: any) => product.productName);
-    console.log("selectedProducts", selectedProducts);
-    this.claimsReqBody.productVarientName = selectedProducts.join(", ");
-    console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
+    //   const selectedProducts = this.productsList
+    //   .filter((product: any) => product.selected)
+    //   .map((product: any) => product.productName);
+    // console.log("selectedProducts", selectedProducts);
+    // this.claimsReqBody.productVarientName = selectedProducts.join(", ");
+    // console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
   
     const selectedPolicyTypes = this.StaticRequestTypes
       .filter((policyType) => policyType.selected)
@@ -253,6 +251,7 @@ export class ClaimsListViewComponent implements OnInit {
   cancel() {
     this.toggeledropdown = false;
   }
+
   clear() {
     this.productsList.forEach((product: any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
@@ -265,6 +264,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.claimsReqBody.endDate = null;
     this.fetchData();
   }
+  
   onSelectChanges(event: any): void {
     if (this.selected === "") {
       this.claimsReqBody.filterType = "";
@@ -296,6 +296,7 @@ export class ClaimsListViewComponent implements OnInit {
       return 'Search...';
     }
   }
+
   resetFilters(): void {
     this.claimsReqBody.filterType = '';
     //this.claimsReqBody.searchString = [];
@@ -365,12 +366,12 @@ export class ClaimsListViewComponent implements OnInit {
   navigateToViewClaim(row: any) {
     let claimDetailsReqBody = {
       "id": row.id,
-      "claimNumber": row.claimInfoId,
+      "claimNumber": row.claimNumber,
       "policyNumber": row.policyNumber
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
-        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimInfoId}/${row.policyNumber}`]);
+        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimNumber}/${row.policyNumber}`]);
       },
       (error) => {
         console.error('Error fetching claim details', error);

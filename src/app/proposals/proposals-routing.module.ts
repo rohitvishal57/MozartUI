@@ -4,7 +4,7 @@ import { ProposalsListComponent } from './proposals-list/proposals-list.componen
 
 const routes: Routes = [
   {path:"proposalsList",component:ProposalsListComponent}
-];
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

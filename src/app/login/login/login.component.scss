@@ -1,3 +1,6 @@
+body {
+    background: #FFFFFF;
+}
 .login-mainContainer {
     width: 100%;
     min-height: 100vh;
@@ -302,6 +305,7 @@
         left: 0;
         z-index: -1;
         text-align: center;
+        background: #FFFFFF;
         &:before {
             content: '';
             position: absolute;

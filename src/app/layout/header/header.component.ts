@@ -191,7 +191,21 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     link.download = fileNameWithExtension; 
     link.click();
   }
-  
 
+  raiseServiceRequest() {
+    let requestBody: any = {};
+    requestBody.agentCode = this.agentCode;
+
+    this.notificationService.serviceRequest(requestBody).subscribe(
+      (response) => {
+        if (response.isSuccess) {
+          window.location.href = response?.data?.requestURL;
+        }
+      },
+      (error) => {
+        console.log('Failed to Raise request', error);
+      });
+      window.location.href = "https://qmsbot.adityabirlacapital.com/Link_external/#/login?iframeembeded=true&token=%s&url=case";
+  }
 }
 

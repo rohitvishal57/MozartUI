@@ -12,7 +12,7 @@
         <a>ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
       </div>
       <div class="abcHelpLine">
-        <a href="tel:+1800-270-7000"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
+        <a href="javascript:void(0);" onclick="window.location.href = 'tel:+1800-270-7000';"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
             <div class="collapse navbar-collapse" id="supported_NavBar">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="javascript:void(0)" target="_blank">
+                  <a class="nav-link" (click)="raiseServiceRequest()">
                     {{"Service Request" | translate}}
                   </a>
                 </li>

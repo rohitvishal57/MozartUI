@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
@@ -168,7 +168,7 @@
                                                             <th>S.No</th>
                                                             <th>Document Name</th>
                                                             <th>Type</th>
-                                                            <th>Status</th>
+                                                            <!-- <th>Status</th> -->
                                                             <th>Date of Upload</th>
                                                             <th>Download</th>
                                                         </tr>
@@ -178,7 +178,6 @@
                                                             <td>{{ i + 1 }}</td>
                                                             <td>{{ file.name }}</td>
                                                             <td>{{ file.type }}</td>
-                                                            <td></td>
                                                             <td></td>
                                                             <td>
                                                                 <button type="button" id="downloadfile"
@@ -337,7 +336,7 @@
                                         <div class="col-12">
                                             <div class="tracker_claimDetails">
                                                 <div class="main_claimProgressSteps">
-                                                    <div class="submain_claimProgressSteps">
+                                                    <div class="submain_claimProgressSteps" *ngIf="customeStepperStatuses.length > 0">
                                                         <div class="item_claimProgressSteps"
                                                             *ngFor="let status of customeStepperStatuses"
                                                             [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
@@ -357,9 +356,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="item_claimProgressInfo" *ngIf="statusMessage">
-                                                    {{statusMessage}}</div>
-
+                                                <div class="item_claimProgressInfo" *ngIf="statusMessage && customeStepperStatuses.length > 0">{{statusMessage}}</div>
                                                 <div class="item_claimProgressButtons">
                                                     <button type="button" name="claimshistory" id="claimshistory"
                                                         class="btn_iconText" (click)="toggleViewDetails()">

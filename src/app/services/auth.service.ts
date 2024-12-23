@@ -35,12 +35,19 @@ export class AuthService {
     return null;
   }
   
-  getAllowedModules(): string[] {
+  getAllowedModules(): any[] {
     const userData = this.getUserInfo();
     if (userData && Array.isArray(userData.moduleAccessList)) {
       return userData.moduleAccessList
         .filter((module: { allow: boolean }) => module.allow)
-        .map((module: { moduleName: string }) => module.moduleName);
+        .map((module: {moduleName:string,routePath:string,imagePath:string}, index: number) =>{
+          return{
+            id:index+1,
+            displayName:module.moduleName,
+            path:module.routePath,
+            imagePath: module.imagePath
+          };
+        });
     }
     return [];
   }

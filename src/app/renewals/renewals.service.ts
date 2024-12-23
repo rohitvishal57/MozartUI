@@ -64,7 +64,7 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(requestBody: any) {
-    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
+    const getrenewalinfo = this.configService.config.baseUrl1 + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
@@ -131,6 +131,14 @@ export class RenewalsService {
   sharekyclinkApi(reqBody:any){
     const sharekyclink = this.configService.config.baseUrl1 + this.configService.config.sharekyclink;
     return this.httpService.post(sharekyclink, reqBody);
+  }
+  justPayRedirection(reqData:any){
+    const paymentRedirection= this.configService.config.baseUrl1 + this.configService.config.justPayRedirection;
+    return this.httpService.post(paymentRedirection,reqData);
+  }
+  sharePaymentLinkApi(reqData:any){
+    const sharePaymentLink= this.configService.config.baseUrl1 + this.configService.config.sharePaymentLink;
+    return this.httpService.post(sharePaymentLink,reqData);
   }
 
 }

@@ -45,7 +45,7 @@ h6 {
 
 .tableSubMain .table th,
 .tableSubMain .table td {
-	padding: 8px 8px;
+	padding: 8px 6px;
 }
 
 .quickFilterMain {
@@ -247,13 +247,13 @@ h6 {
 	border: 1px solid var(--white-color);
 	width: 100%;
 }
-.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
 	background: var(--primary-red-color) !important;
 	color: white;
 	img{
 		filter: brightness(0) invert(1);
 	}
-  }
+  } */
   .btn_quickFilter {
 	font-size: 11px;
 }   
@@ -268,4 +268,18 @@ h6 {
 }
 .main_productTabs .nav-pills .nav-link {
 	font-size: 14px;
+}
+.siteBody {
+	padding-bottom: 6rem;
+}
+@media (max-width:767px) {
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
+	}
+	.quickFilterLeft .quickFilter {
+		min-width: 420px;
+	}
+	.head_myProposals {
+		gap: 8px;
+	}
 }

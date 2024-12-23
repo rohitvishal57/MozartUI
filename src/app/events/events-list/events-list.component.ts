@@ -7,8 +7,7 @@ import {
   addWeeks,
   subDays,
   subMonths,
-  subWeeks,
-} from "date-fns";
+  subWeeks} from "date-fns";
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { EventsService } from "../events-new/events.service";
@@ -16,6 +15,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { CalendarEvent, CalendarView } from "src/app/interface/events.interface";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+// import * as $ from 'jquery';
+
 
 @Component({
   selector: "app-events-list",
@@ -32,6 +33,20 @@ export class EventsListComponent implements OnInit {
   dayStartHour: any;
   dayEndHour: any;
   selectedEvent: any = null;
+  // currentEventIndex: number = 0;
+  // selectedMonthRecords:any = [];
+  // slickConfig = {
+  //   dots: true,            // Enable dots
+  //   infinite: true,        // Infinite scrolling
+  //   speed: 500,            // Slide speed in milliseconds
+  //   slidesToShow: 1,       // Number of slides to show at a time
+  //   slidesToScroll: 1,     // Number of slides to scroll at a time
+  //   autoplay: true,        // Enable autoplay
+  //   autoplaySpeed: 2000,   // Set autoplay speed (2 seconds)
+  //   arrows: true,          // Show navigation arrows
+  //   centerMode: false      // Set to false if you don't need center mode
+  // };
+
   @ViewChild('eventModal') eventModal: any;
   constructor(private route: Router, private eventsService: EventsService,   private dialog: MatDialog, private languageService: LanguageService,
     private translateService: TranslateService) {}
@@ -50,23 +65,23 @@ export class EventsListComponent implements OnInit {
 
   loadEvents(): void {
     const agentCode = localStorage.getItem("agentCode");
-    let getEventReq = [
+    let getEventReq = 
       {
-        agentCode: agentCode,
-        customerName: "",
-        mobileNumber: "",
-        activityTitle: "",
-        startDate: "",
-        endDate: "",
-        activityType: "",
-        note: "",
-      },
-    ];
+        "agentCode": agentCode,
+        "startDate": null,
+        "endDate": null,
+        "eventType": "",
+        "eventNumber": "",
+        "customerName": "",
+        "mobileNumber": "",
+        "pageNumber": 1,
+        "pageSize": 10
+      }
   
     this.eventsService.getEvents(getEventReq, agentCode).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.events = response.data.map((event: any) => {
+          this.events = response.data.eventList.map((event: any) => {
             // For each event, process all scheduled times
             return event.eventSchedule.map((schedule: any) => {
               const startDateTime = this.parseDateTime(schedule.date, schedule.startTime);
@@ -181,13 +196,72 @@ export class EventsListComponent implements OnInit {
     this.selectedEvent = event.event;
     this.openEventModal();
   }
-
+  // handleEventClick(eventInfo: { event: any }) {
+    // const selectedEvents = this.events.filter(
+    //   (event) =>
+    //     event.start.getDate() === eventInfo.event.start.getDate() &&
+    //     event.start.getMonth() === eventInfo.event.start.getMonth() &&
+    //     event.start.getFullYear() === eventInfo.event.start.getFullYear()
+    // );
+  
+    // if (selectedEvents.length > 0) {
+    //   let selectedIndex = selectedEvents.findIndex(
+    //     (event) => event === eventInfo.event
+    //   );
+    //   selectedIndex = (selectedIndex + 1) % selectedEvents.length;
+    //   this.selectedEvent = selectedEvents[selectedIndex];
+    //   this.openEventModal();
+    // }
+  //}
+  // handleDayClick(eventInfo:any){
+  //   console.log(eventInfo.day.events,'data')
+  //   const selectedEvents = this.events.filter(
+  //     (event) =>
+  //       event.start.getDate() === eventInfo.day.events.start.getDate() &&
+  //       event.start.getMonth() === eventInfo.day.events.start.getMonth() &&
+  //       event.start.getFullYear() === eventInfo.day.events.start.getFullYear()
+  //   );
+  
+  //   if (selectedEvents.length > 0) {
+  //     let selectedIndex = selectedEvents.findIndex(
+  //       (event) => event === eventInfo.event
+  //     );
+  //     selectedIndex = (selectedIndex + 1) % selectedEvents.length;
+  //     this.selectedEvent = selectedEvents[selectedIndex];
+  //     this.openEventModal();
+  //   }
+  // }
+  // addSlide() {
+  //   this.events.push(this.eventModal);
+  // }
+  // removeSlide() {
+  //   this.events.length = this.events.length - 1;
+  // }
+  // slickInit(e: any) {
+  //   console.log('slick initialized');
+  // }
+  // breakpoint(e: any) {
+  //   console.log('breakpoint');
+  // }
+  // afterChange(e: any) {
+  //   console.log('afterChange');
+  // }
+  // beforeChange(e: any) {
+  //   console.log('beforeChange');
+  // }
+  // handleDayClick(eventInfo: any): void {
+  //   let selectedEvents:any = eventInfo.day.events;
+  //   if (selectedEvents.length > 0) {
+  //     this.selectedMonthRecords = selectedEvents;
+  //     console.log( this.selectedMonthRecords,' this.selectedMonthRecords')
+  //     this.openEventModal();
+  //   }
+  // }
   openEventModal(): void {
     this.dialog.open(this.eventModal, {
       width: '350px',
       position: { top: '150px' },
       disableClose: true,
-      data: this.selectedEvent
     });
   }
 
@@ -213,5 +287,8 @@ export class EventsListComponent implements OnInit {
 
   navigateToBirthdays(){
     this.route.navigate(["events/birthdaysList"]);
+  }
+  navigateToEventsList(){
+    this.route.navigate(["events/eventsListView"]);
   }
 }
