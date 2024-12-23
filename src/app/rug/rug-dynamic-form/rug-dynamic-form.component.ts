@@ -490,7 +490,7 @@ export class RugDynamicFormComponent {
       this.yatraService.Getform(reqData).subscribe({
         next: (res: any) => {
           console.log(res);
-          this.form = JSON.parse(res.data.jsonFormData);          
+          this.form = JSON.parse(res.data.jsonFormData);
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);
           this.leadId = this.bbdetails.leadId;
@@ -6958,6 +6958,57 @@ export class RugDynamicFormComponent {
         nomineeMobileNumber: ''
       });
     }
+    
+  }
+  changeD2CNomineeRelation(control: any){
+    console.log(this.d2cDetails.insuredMemberDetails);
+    console.log(this.dynamicFormGroup.get('relationWithProposer')?.value);
+    const relationWithProposer = this.dynamicFormGroup.get('relationWithProposer')?.value?.toLowerCase();
+
+    if (relationWithProposer) {
+      const selectedDetails = this.d2cDetails.insuredMemberDetails.find((member: any) => {
+        // Normalize member.relation
+        let standardizedRelation = member.relation.toLowerCase();
+    
+        // Remove numeric suffixes like "1" from Son1, Daughter1, etc.
+        standardizedRelation = standardizedRelation.replace(/\d+/g, '');
+    
+        // Compare normalized relation with the input value
+        return standardizedRelation === relationWithProposer;
+      });
+    
+      if (selectedDetails) {
+        // Patch values to the form group if a match is found
+        this.dynamicFormGroup.patchValue({
+          firstName: selectedDetails.firstName  + selectedDetails.lastName || '',
+          nomineeDob: selectedDetails.dob || '',
+          nomineeGender: selectedDetails.gender || '',
+          mobileNumber: selectedDetails.mobileNumber || ''
+        });
+      } else {
+        // Clear the form group fields if no match is found
+        this.dynamicFormGroup.patchValue({
+          firstName: '',
+          nomineeDob: '',
+          nomineeGender: '',
+          mobileNumber: ''
+        });
+        console.log("No matching member details found.");
+      }
+    } else {
+      console.log("Relation with proposer is not defined.");
+      // Optionally, clear the form group fields if relationWithProposer is empty
+      this.dynamicFormGroup.patchValue({
+        firstName: '',
+        nomineeDob: '',
+        nomineeGender: '',
+        mobileNumber: ''
+      });
+    }
+    
+  }
+
+  changeBbNomineeDob(){
     
   }
   backToleads() {
