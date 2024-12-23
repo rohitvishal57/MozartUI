@@ -4021,6 +4021,8 @@ export class RugDynamicFormComponent {
             
           // }
 
+        }else{
+          this.toast.warning({ detail: "SUCCESS", summary: res.message, duration: 3000 });
         }
 
       },
