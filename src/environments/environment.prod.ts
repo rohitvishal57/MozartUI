@@ -174,5 +174,6 @@ export const environment = {
   verifyOTP : "api/yatra/declarationvalidateotp",
   sendEmailLink : "api/yatra/emaillink",
   createUpdateAV:"api/TeleSales/CreateUpdateAV",
-  staticForm : "api/yatra/getstaticforms"
+  staticForm : "api/yatra/getstaticforms",
+  getkycstatus : "/api/quote/getkycstatusviaproposalnum"
 };

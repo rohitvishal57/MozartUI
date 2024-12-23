@@ -185,6 +185,7 @@
                                     <option value="" selected>{{"Select an option" | translate}}</option>
                                     <option value="requestId">{{"Claim No." | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                    <option value="memberName">{{"Member Name" | translate}}</option>
                                     <option value="memberId">{{"Member Id" | translate}}</option>
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
 
@@ -218,6 +219,9 @@
                                         *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter
                                         Valid Mobile Number." | translate}}</small>
                                     <small
+                                        *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter
+                                        Valid Member Name." | translate}}</small>
+                                    <small
                                         *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter
                                         Valid Member Id." | translate}}</small>
                                 </span>
@@ -236,6 +240,7 @@
                                     <th scope="col">{{"Policy No." | translate}}</th>
                                     <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Member Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Member Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                     <th scope="col">{{"Status" | translate}}</th>
@@ -251,7 +256,8 @@
                                         <td class="card_insureInfo">{{ row?.claimNumber | translate}}</td>
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
-                                        <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
+                                        <td><span class="text-break-w100">{{row?.mobileNumber}}<br />{{row?.email}}</span></td>
+                                        <td>{{ row?.memberName }}</td>
                                         <td>{{ row?.memberId }}<br/>{{ row?.memberRelation }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
@@ -310,6 +316,10 @@
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Contact Info" | translate}}</div>
                                 <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Member Name" | translate}}</div>
+                                <div class="item_value">{{ gridClaims.memberName | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Member Info" | translate}}</div>
