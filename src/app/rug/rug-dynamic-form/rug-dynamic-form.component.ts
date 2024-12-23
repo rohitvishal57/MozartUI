@@ -3049,41 +3049,41 @@ export class RugDynamicFormComponent {
   onButtonClick(control: any) {
     this.selectedButton = control.name;
     console.log(this.selectedButton);
+    this.dynamicFormGroup.addControl('paymentOption', new FormControl(this.selectedButton));
+    // const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
+    // if (paymentModeControl) {
+    //   paymentModeControl.setValue(this.selectedButton);
+    // }
 
-    const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
-    if (paymentModeControl) {
-      paymentModeControl.setValue(this.selectedButton);
-    }
-
-    if (this.selectedButton !== 'offline') {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          if (controls.name === 'offline' && controls.dependentControls) {
-            controls.dependentControls.forEach((item: any) => {
-              const controlToHide = this.form.formSections
-                .flatMap((sec: any) => sec.formControls)
-                .find((ctrl: any) => ctrl.name === item);
-              if (controlToHide) {
-                controlToHide.visible = false; // Hide dependent controls for offline
-              }
-            });
-          }
-        });
-      });
-    }
+    // if (this.selectedButton !== 'offline') {
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       if (controls.name === 'offline' && controls.dependentControls) {
+    //         controls.dependentControls.forEach((item: any) => {
+    //           const controlToHide = this.form.formSections
+    //             .flatMap((sec: any) => sec.formControls)
+    //             .find((ctrl: any) => ctrl.name === item);
+    //           if (controlToHide) {
+    //             controlToHide.visible = false; // Hide dependent controls for offline
+    //           }
+    //         });
+    //       }
+    //     });
+    //   });
+    // }
 
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
-      const reqData = {
-        agentcode: this.agentCode,
-        proposalNumber: this.proposalNum,
-        paymentMethod: this.selectedButton,
-        source: 'Retail',
-        policyType: 'New Business',
-        policyNumber: '',
-        quoteNumber: '',
-        OrderID: ''
-      };
+      // const reqData = {
+      //   agentcode: this.agentCode,
+      //   proposalNumber: this.proposalNum,
+      //   paymentMethod: this.selectedButton,
+      //   source: 'Retail',
+      //   policyType: 'New Business',
+      //   policyNumber: '',
+      //   quoteNumber: '',
+      //   OrderID: ''
+      // };
 
       // this.yatraService.justPayRedirection(reqData).subscribe({
       //   next: (response: any) => {
@@ -3104,31 +3104,32 @@ export class RugDynamicFormComponent {
     }
 
     // Handle showing dependent controls if any are specified for the clicked button
-    if (control.dependentControls) {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          control.dependentControls.forEach((item: any) => {
-            if (controls.name == item) {
-              controls.visible = true; // Show dependent controls
-            }
-          });
-        });
-      });
-    } else {
-      let list: any = [];
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          if (controls.dependentControls) {
-            list = controls.dependentControls;
-          }
-          list.forEach((item: any) => {
-            if (controls.name == item) {
-              controls.visible = false; // Hide controls if no dependentControls are specified
-            }
-          });
-        });
-      });
-    }
+
+    // if (control.dependentControls) {
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       control.dependentControls.forEach((item: any) => {
+    //         if (controls.name == item) {
+    //           controls.visible = true; // Show dependent controls
+    //         }
+    //       });
+    //     });
+    //   });
+    // } else {
+    //   let list: any = [];
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       if (controls.dependentControls) {
+    //         list = controls.dependentControls;
+    //       }
+    //       list.forEach((item: any) => {
+    //         if (controls.name == item) {
+    //           controls.visible = false; // Hide controls if no dependentControls are specified
+    //         }
+    //       });
+    //     });
+    //   });
+    // }
   }
 
 
@@ -4047,7 +4048,7 @@ export class RugDynamicFormComponent {
           "proposalNum": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber,
           "partnerId": this.partnerId,
           "agentCode": this.agentCode,
-          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
           "productId": this.productId.toString(),
@@ -6536,17 +6537,20 @@ export class RugDynamicFormComponent {
         }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
-        console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
-        this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
+        if (this.formSequence[this.getFormIndexValue()].formName != "Customer Summary") {
+          console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
+          this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
 
-        filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
-        console.log(filterArr);
-        if(this.bbdetails.productCode != "R10"){
-          this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
-        }else{
-          this.bbdetails.sumInsured = filterArr[0].siPlanText;
+          filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
+          console.log(filterArr);
+          if (this.bbdetails.productCode != "R10") {
+            this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
+          } else {
+            this.bbdetails.sumInsured = filterArr[0].siPlanText;
+          }
+
+          this.getBbPremium(filterArr);
         }
-        this.getBbPremium(filterArr);
       },
       error: (err) => {
         console.error(err);
