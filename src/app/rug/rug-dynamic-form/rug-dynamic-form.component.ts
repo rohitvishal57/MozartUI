@@ -2835,6 +2835,15 @@ export class RugDynamicFormComponent {
       console.log(this.formSequence[this.getFormIndexValue()].formName);
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
+        // insuredMembersArray.at(0).get('firstName')?.disable();
+        this.dynamicFormGroup.get('occupation')?.disable();
+        this.dynamicFormGroup.get('sumInsured')?.disable();
+        this.dynamicFormGroup.get('preFix')?.disable();
+        this.dynamicFormGroup.get('proposerGender')?.disable();
+        this.dynamicFormGroup.get('relationWithProposer')?.disable();
+        this.dynamicFormGroup.get('nomineeGender')?.disable();
+        this.dynamicFormGroup.get('accType')?.disable();
+        this.dynamicFormGroup.get('bankAccountType')?.disable();
       }
       }
 
@@ -3643,102 +3652,110 @@ export class RugDynamicFormComponent {
     //   mobileNumber: this.bbdetails.proposerMobileNumber,
     //   email: this.bbdetails.proposerEmailAddress
     // }
-    let reqObjBody = {
-          "leadId": this.leadId,
-          "productName": "Freedom Plus Plan",
-          "mobileNumber": "9550971874",
-          "email": "ajaykrishnasoma@monocept.com"
+    console.log(this.dynamicFormGroup.value);
+    console.log(this.dynamicFormGroup.get('decl2')?.value);
+    console.log(this.dynamicFormGroup.get('decl3')?.value);
+    console.log(this.dynamicFormGroup.valid);
+    if (this.dynamicFormGroup.get('decl2')?.value == true && this.dynamicFormGroup.get('decl3')?.value == true && this.dynamicFormGroup.valid) {
+      let reqObjBody = {
+        "leadId": this.leadId,
+        "productName": "Freedom Plus Plan",
+        "mobileNumber": "9550971874",
+        "email": "ajaykrishnasoma@monocept.com"
       }
-    const dialogRef = this.dialog.open(CaptchaPopupComponent, {
-      width: "500px",
-      autoFocus: false,
-      data: reqObjBody
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-      const dialogRef = this.dialog.open(OtpPopupComponent, {
+      const dialogRef = this.dialog.open(CaptchaPopupComponent, {
         width: "500px",
         autoFocus: false,
-        data: { leadId: this.leadId, message: result.statusMessage, generateOtpReq: reqObjBody}
+        data: reqObjBody
       });
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
-        if (result?.message == "OTP has been validated Successfully.") {
-          const dialogRef = this.dialog.open(PaymentInfoComponent, {
-            width: "500px",
-            autoFocus: false,
-            data: {
-              leadId: this.bbdetails.leadId,
-              customerName: this.bbdetails?.customerFirstName + " " + this.bbdetails?.customerLastName,
-              mobileNumber: this.bbdetails?.proposerMobileNumber,
-              amount: this.bbdetails?.totalPremium
-            }
-          });
-          dialogRef.afterClosed().subscribe((result: any) => {
-            console.log(result);
-            if (this.bbdetails?.paymentMode == 'yes') {
-              if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                this.incrementIndex();
-                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        const dialogRef = this.dialog.open(OtpPopupComponent, {
+          width: "500px",
+          autoFocus: false,
+          data: { leadId: this.leadId, message: result.statusMessage, generateOtpReq: reqObjBody }
+        });
+        dialogRef.afterClosed().subscribe((result: any) => {
+          console.log(result);
+          if (result?.message == "OTP has been validated Successfully.") {
+            const dialogRef = this.dialog.open(PaymentInfoComponent, {
+              width: "500px",
+              autoFocus: false,
+              data: {
+                leadId: this.bbdetails.leadId,
+                customerName: this.bbdetails?.customerFirstName + " " + this.bbdetails?.customerLastName,
+                mobileNumber: this.bbdetails?.proposerMobileNumber,
+                amount: this.bbdetails?.totalPremium
               }
-            }else{
-              console.log(this.bbdetails)
-              // let reqBody = {
-              //   leadId: this.bbdetails?.leadId
-              // }
-              let commonDraftRequest = {
-                "leadId": this.bbdetails?.leadId
-              }
-              this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
-                next: (res: any) => {
-                  let halfQuoteResponse: any;
-                  console.log(res);
-                  halfQuoteResponse = JSON.parse(res.data);
-                  if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
-                    let justpayPayload = { 
-                       "agentcode": this.agentCode,
-                       "proposalNumber": this.bbdetails?.leadId,
-                      //  "paymentMethod": "autoDebit",
-                       "paymentMethod": this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
-                       "source": "RUG",
-                       "policyType": "New Business",
-                       "policyNumber": "", 
-                       "quoteNumber": "",
-                       "OrderId": "",
-                       "Amount": this.bbdetails?.totalPremium,
-                       "FirstName": this.bbdetails?.customerFirstName,
-                       "MiddleName": "",
-                       "LastName": this.bbdetails?.customerLastName,
-                       "Phone": this.bbdetails?.proposerMobileNumber,
-                       "Email": this.bbdetails?.proposerEmailAddress,
-                       "DOB": this.bbdetails?.proposerDob,
-                       "appName": "BRANCHBANKING"
-                              
+            });
+            dialogRef.afterClosed().subscribe((result: any) => {
+              console.log(result);
+              if (this.bbdetails?.paymentMode == 'yes') {
+                if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                  this.incrementIndex();
+                  this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                }
+              } else {
+                console.log(this.bbdetails)
+                // let reqBody = {
+                //   leadId: this.bbdetails?.leadId
+                // }
+                let commonDraftRequest = {
+                  "leadId": this.bbdetails?.leadId
+                }
+                this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
+                  next: (res: any) => {
+                    let halfQuoteResponse: any;
+                    console.log(res);
+                    halfQuoteResponse = JSON.parse(res.data);
+                    if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
+                      this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
+                      let justpayPayload = {
+                        "agentcode": this.agentCode,
+                        "proposalNumber": this.bbdetails?.leadId,
+                        //  "paymentMethod": "autoDebit",
+                        "paymentMethod": this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
+                        "source": "RUG",
+                        "policyType": "New Business",
+                        "policyNumber": "",
+                        "quoteNumber": "",
+                        "OrderId": "",
+                        "Amount": this.bbdetails?.totalPremium,
+                        "FirstName": this.bbdetails?.customerFirstName,
+                        "MiddleName": "",
+                        "LastName": this.bbdetails?.customerLastName,
+                        "Phone": this.bbdetails?.proposerMobileNumber,
+                        "Email": this.bbdetails?.proposerEmailAddress,
+                        "DOB": this.bbdetails?.proposerDob,
+                        "appName": "BRANCHBANKING"
+
                       }
                       console.log(justpayPayload);
-                    this.d2cJustPayRedirection(justpayPayload)
-                    // if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                    //   this.incrementIndex();
-                    //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                      
-                    // }
-          
-                  }else{
-                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                      this.d2cJustPayRedirection(justpayPayload)
+                      // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                      //   this.incrementIndex();
+                      //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
 
+                      // }
+
+                    } else {
+                      this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+
+                    }
+
+                  },
+                  error: (err) => {
+                    console.error(err);
                   }
-          
-                },
-                error: (err) => {
-                  console.error(err);
-                }
-              });
-            }
-          })
-        }
+                });
+              }
+            })
+          }
+        })
       })
-    })
+    } else {
+      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+    }
   }
   ond2cSubmit(){
     if(this.dynamicFormGroup.valid){
