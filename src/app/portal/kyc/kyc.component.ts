@@ -45,6 +45,7 @@ export class KycComponent {
     // this.user='Customer';
     // this.userModule='yatra';
     // this.transactionControl();
+    this.agentCode = localStorage.getItem('agentCode');
     this.redirectFunction();
   }
  
