@@ -110,9 +110,9 @@ export class RenewalJourneyComponent {
           this.rowData = decryptedFormData;
         }        
         console.log(decryptedFormData);
-        if(decryptedFormData.oldPolicyNumber){
+        if(decryptedFormData.policyNumber){
           const renewalInfoRequestBody = {
-            policy_Number: decryptedFormData.oldPolicyNumber
+            policy_Number: decryptedFormData.policyNumber
           };
           const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
