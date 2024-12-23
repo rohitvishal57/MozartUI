@@ -398,7 +398,7 @@ donwloadBrowcher(productName : any){
   productSearch() {
     this.ProductList = this.productsInformation;
     this.ProductList = this.ProductList.filter(product =>
-      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
+      product.productName.toLowerCase().startsWith(this.searchProductName.toLowerCase())
     );
   }
 
