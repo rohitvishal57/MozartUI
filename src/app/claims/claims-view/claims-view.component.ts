@@ -210,7 +210,6 @@ export class ClaimsViewComponent {
     // Format to "MM/dd/yyyy"
      this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
     
-    console.log(this.formattedDate);
     this.documentLabelForm = this.fb.group({
       documentLabel: [''],
       customLabel: ['']
@@ -661,26 +660,24 @@ export class ClaimsViewComponent {
   //   }
   // }
   onCoverNameChange(event: any): void {
-     this.selectedCoverName = event.target.value;
+    this.selectedCoverName = event.target.value;
     const selectedCover = this.coverNames.find(cover => cover.cover_Name === this.selectedCoverName);
-
+    this.billsArray.clear();
     if (selectedCover) {
       this.form.patchValue({
         coverName: selectedCover.cover_Name,
         coverCode: selectedCover.cover_Code
       });
-
+  
       this.selectedCoverCode = selectedCover.cover_Code;
-
-       this.specialCovers = [
-        "AYUSH Treatment",
-        "Day Care Treatments",
-        "In-patient Hospitalization",
-        "Inpatient Hospitalization Treatment",
-        "Mental Illness Hospitalization"
+        this.specialCovers = [
+        "52234108",
+        "52214106",
+        "42214101",
+        "62124111",
       ];
-
-      if (this.specialCovers.includes(this.selectedCoverName)) {
+  
+      if (this.specialCovers.includes(this.selectedCoverCode)) {
         this.showSecondScenario = true;
         this.billsArray.clear();
         this.addBillRow();
@@ -688,8 +685,7 @@ export class ClaimsViewComponent {
       } else {
         this.showFirstScenario = true;
         this.showSecondScenario = false;
-        let coverName = this.form.get('coverName')?.value;
-        this.handleCoverNameValidation(coverName);
+        this.handleCoverNameValidation(this.form.get('coverName')?.value);
       }
     }
   }
@@ -717,7 +713,6 @@ export class ClaimsViewComponent {
     };
     this.claimsService.getStates(statesReqBody).subscribe(
       (info: any) => {
-        console.log("resp", info);
         if (info.isSuccess) {
           this.states = info.data.response;
         } else {
@@ -1160,7 +1155,6 @@ export class ClaimsViewComponent {
           this.totalFilesCount = this.uploadedFiles.length;
           this.updateStatusLabel();
           this.cdr.detectChanges();
-          console.log('Updated uploadedFiles list:', this.uploadedFiles);
         } else {
           console.error('Failed to delete file:', response.message);
         }
