@@ -239,7 +239,7 @@ export class YatraComponent {
 
             decryptedData.currentFormSequence = this.getFormIndexValue().toString();
             await this.yatraService.Getform(decryptedData).subscribe({
-              next: (res: any) => {
+              next: async (res: any) => {
                 console.log(res);
                 this.formSequence = JSON.parse(res.data.formConfig) || [];
                 this.form = JSON.parse(res.data.jsonFormData);
@@ -298,6 +298,22 @@ export class YatraComponent {
                   }
                   if (decryptedData.verifyKyc == true) {
                     this.verifyKYCStatus = true;
+                  }
+                  
+                  if (await this.getFormIndexValue() == 7) {
+                    const req = {
+                      proposalNum: this.proposalNum
+                    };
+                
+                    try {
+                      // Use firstValueFrom to convert the Observable to a Promise
+                      const value: any = await firstValueFrom(this.commonService.getkycstatus(req));
+                      // Now you can update this.verifyKYCStatus with the result
+                      this.verifyKYCStatus = value.data.kycStatus;
+                    } catch (err) {
+                      // Handle any error if the Observable fails
+                      console.error('Error fetching KYC status:', err);
+                    }
                   }
                   sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
@@ -504,7 +520,7 @@ export class YatraComponent {
       }
       await this.commonService.getkycstatus(req).subscribe({
         next: (value: any) => {
-          this.verifyKYCStatus = true
+          this.verifyKYCStatus = value.data.kycStatus;
         },
         error: (err: any) => {
 

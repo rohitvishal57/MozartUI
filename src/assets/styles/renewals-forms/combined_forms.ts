@@ -2980,6 +2980,7 @@ export const combinedForms = {
               "class": "col-12 col-md-6 col-lg-10 thankYou",
               "visibleLabel": false,
               "type": "image",
+              "methodName":"checkKycDetail",
               "images": [
                 {
                   "id": 1,
@@ -3009,45 +3010,45 @@ export const combinedForms = {
             }
           ]
         },
-        // {
-        //   "sectionTitle": "",
-        //   "visible": true,
-        //   "class": "section-title col-md-12 thankyouSection",
-        //   "formControls": [
-        //     // {
-        //     //   "name": "Failed",
-        //     //   "label": "",
-        //     //   "class": "col-12 col-md-6 col-lg-10 thankYou",
-        //     //   "visibleLabel": false,
-        //     //   "type": "image",
-        //     //   "images": [
-        //     //     {
-        //     //       "id": 1,
-        //     //       "src": "assets/Img/icon_success_green_tick.gif",
-        //     //       "alt": "Failed image",
-        //     //       "width": "150",
-        //     //       "height": "150",
-        //     //       "label": "Failed"
-        //     //     }
-        //     //   ]
-        //     // },
-        //     {
-        //       "name": "label1",
-        //       "label": "Sorry! KYC Failed",
-        //       "visibleLabel": true,
-        //       "visible": true,
-        //       "type": "paragraph",
-        //       "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
-        //     },
-        //     // {
-        //     //   "name": "label2",
-        //     //   "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
-        //     //   "visibleLabel": true,
-        //     //   "visible": true,
-        //     //   "type": "paragraph",
-        //     //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
-        //     // }
-        //   ]
-        // }
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            // {
+            //   "name": "Failed",
+            //   "label": "",
+            //   "class": "col-12 col-md-6 col-lg-10 thankYou",
+            //   "visibleLabel": false,
+            //   "type": "image",
+            //   "images": [
+            //     {
+            //       "id": 1,
+            //       "src": "assets/Img/icon_success_green_tick.gif",
+            //       "alt": "Failed image",
+            //       "width": "150",
+            //       "height": "150",
+            //       "label": "Failed"
+            //     }
+            //   ]
+            // },
+            {
+              "name": "label1",
+              "label": "Sorry! KYC Failed",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            // {
+            //   "name": "label2",
+            //   "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+            //   "visibleLabel": true,
+            //   "visible": true,
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            // }
+          ]
+        }
       ]
     }  

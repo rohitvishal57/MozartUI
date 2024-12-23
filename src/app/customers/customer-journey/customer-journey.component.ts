@@ -90,6 +90,7 @@ export class CustomerJourneyComponent {
   proposalNumber!:any;
   rowData:any={};
   isFullQuoteStatus:string='true';
+  verifyKYCStatus: any;
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
@@ -107,8 +108,19 @@ export class CustomerJourneyComponent {
     console.log(this.formData, this.proposalNum, this.policyNumber);
 
     const stateData = history.state;
-    this.rowData = this.encryptionService.decrypt(stateData.formData);
+    if(stateData.formData){
+      this.rowData = this.encryptionService.decrypt(stateData.formData);
+    }
     console.log(stateData,this.rowData);
+    if(this.rowData.kycStatus){
+      if( this.rowData.kycStatus == "True" ){
+        this.verifyKYCStatus = this.rowData.kycStatus === "True" ? true : false;
+      }
+      else{
+        this.verifyKYCStatus = this.rowData.kycStatus;
+      }
+    }
+    console.log(this.verifyKYCStatus);
     if (stateData && Object.keys(stateData).length > 0) {
       if (stateData.formData) {
         console.log(stateData.formData);
@@ -147,7 +159,7 @@ export class CustomerJourneyComponent {
               productId:resdata.productId,
               agentCode: "5100003",
               currentFormSequence:resdata.formSequence,
-              leadId: this.quickQuoteRedirect == false ? '' : resdata.leadNumber,
+              leadId: this.quickQuoteRedirect == false ? '' : resdata.leadId,
               isLead: this.quickQuoteRedirect == false ? false : true,
             };
             
@@ -241,7 +253,7 @@ export class CustomerJourneyComponent {
         receiptID: this.rowData.receiptID,
         customerId: this.rowData.customerId,
         applicationNumber: this.rowData.applicationNumber,
-        status: this.rowData.policyStatus,
+        status: this.rowData.status,
         premiumPaid : this.formData.totalPremium
       };
       let reqData = {
@@ -561,7 +573,7 @@ export class CustomerJourneyComponent {
                 // this.handlePolicyTypeChange(control,control.value);
               }
             }
-            if (control.type == 'button' && control.methodName == "checkKycDetail") {
+            if ((control.type == 'button' || control.type == 'image') && control.methodName == "checkKycDetail") {
               this.resolveMethod(control.methodName, control);
             }
 
@@ -2704,6 +2716,18 @@ export class CustomerJourneyComponent {
 
   onSelectValue(value: String) {
     this.feedbackImpressedValue = value;
+  }
+  checkKycDetail(control: any): void {
+    // const isVisible = this.rowData.kycStatus === true;
+    const isVisible = this.verifyKYCStatus;
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name === control.name) {
+          section.visible = isVisible;
+          this.form.formSections[1].visible = !isVisible;
+        }
+      });
+    });
   }
   
 }
