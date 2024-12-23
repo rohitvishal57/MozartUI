@@ -199,6 +199,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.leadId="";
     this.proposalListRequestBody.proposalStatus="";
     this.getProposalList() ;
+    this.checkView();  
   }
 
   getProposalList() {
