@@ -2993,6 +2993,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .tableNav .pagination {
   gap: 8px;
+  align-items: center;
 }
 
 .tableNav .pagination .page-link {
