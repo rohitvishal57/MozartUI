@@ -1,0 +1,45 @@
+<form [formGroup]="sharecontentForm" style="margin-bottom: 20%;" *ngIf="isHtmlrender">
+    <ng-container *ngFor="let section of sharecontent.formSections">
+        <div *ngIf="section.visible" class="card-body accordionCard"
+            [class]="section.class">
+
+            <!-- <div class="line" style="display: none;"></div> -->
+            <div class="accordionCardHeader" *ngIf="section.visibleLabel == true"
+               >
+                <h3 [innerHTML]="section.sectionTitle | translate" [class]="section.class"></h3>
+                <span class="accordionArrow" ></span>
+            </div>
+            <div class="accordionCardBody">
+                <ng-container *ngFor="let control of section.formControls; index as h">
+                    <div *ngIf="['text', 'email', 'password', 'time'].includes(control.type)" [class]="control.class"
+                  class="typecss" [hidden]="!control.visible">
+                  <div class="input-container">
+                    <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                      [type]="control.type"  [id]="control.name"
+                      [name]="control.name" >
+                    <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                      formControlName="{{ control.name }}" [type]="control.type" [id]="control.name"
+                      [name]="control.name" 
+                       readonly>
+                    <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}
+                      <span *ngIf="control.validators">*</span>
+                      <div class="tooltip-wrapper">
+                        <span class="info-icon" *ngIf="control.toolTipMessage">
+                          <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                        </span>
+                        <span class="tooltip-text tooltip-textidnumber">{{ control.toolTipMessage }}</span>
+                      </div>
+                    </label>
+                  </div>
+                  <!-- <small
+                    *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                    class="text-danger">
+                    {{ getValidationErrors(control) ? (getValidationErrors(control) | translate) : '' }}
+                  </small> -->
+                </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+
+</form>
