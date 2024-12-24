@@ -136,8 +136,15 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
 
     - name: Add VM to known hosts
-      #run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      run: ssh-keyscan -v -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1 || { echo 'ssh-keyscan failed'; exit 1; }
+      run: |
+        mkdir -p ~/.ssh   
+        ssh-keyscan -v -H ${{ secrets.SSH_HOST }} > ssh_keyscan_output.log 2>&1 || { 
+        echo "ssh-keyscan failed. Details:"; 
+        cat ssh_keyscan_output.log; 
+        exit 1; 
+        }  
+    ##run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      #run: ssh-keyscan -v -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1 || { echo 'ssh-keyscan failed'; exit 1; }
 
     # Generate the single version at the workflow level
     # - name: Generate Deployment Version
