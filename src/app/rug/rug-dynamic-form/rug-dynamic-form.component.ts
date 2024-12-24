@@ -2838,6 +2838,15 @@ export class RugDynamicFormComponent {
       console.log(this.formSequence[this.getFormIndexValue()].formName);
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
+        // insuredMembersArray.at(0).get('firstName')?.disable();
+        this.dynamicFormGroup.get('occupation')?.disable();
+        this.dynamicFormGroup.get('sumInsured')?.disable();
+        this.dynamicFormGroup.get('preFix')?.disable();
+        this.dynamicFormGroup.get('proposerGender')?.disable();
+        this.dynamicFormGroup.get('relationWithProposer')?.disable();
+        this.dynamicFormGroup.get('nomineeGender')?.disable();
+        this.dynamicFormGroup.get('accType')?.disable();
+        this.dynamicFormGroup.get('bankAccountType')?.disable();
       }
       }
 
@@ -3066,41 +3075,41 @@ export class RugDynamicFormComponent {
   onButtonClick(control: any) {
     this.selectedButton = control.name;
     console.log(this.selectedButton);
+    this.dynamicFormGroup.addControl('paymentOption', new FormControl(this.selectedButton));
+    // const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
+    // if (paymentModeControl) {
+    //   paymentModeControl.setValue(this.selectedButton);
+    // }
 
-    const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
-    if (paymentModeControl) {
-      paymentModeControl.setValue(this.selectedButton);
-    }
-
-    if (this.selectedButton !== 'offline') {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          if (controls.name === 'offline' && controls.dependentControls) {
-            controls.dependentControls.forEach((item: any) => {
-              const controlToHide = this.form.formSections
-                .flatMap((sec: any) => sec.formControls)
-                .find((ctrl: any) => ctrl.name === item);
-              if (controlToHide) {
-                controlToHide.visible = false; // Hide dependent controls for offline
-              }
-            });
-          }
-        });
-      });
-    }
+    // if (this.selectedButton !== 'offline') {
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       if (controls.name === 'offline' && controls.dependentControls) {
+    //         controls.dependentControls.forEach((item: any) => {
+    //           const controlToHide = this.form.formSections
+    //             .flatMap((sec: any) => sec.formControls)
+    //             .find((ctrl: any) => ctrl.name === item);
+    //           if (controlToHide) {
+    //             controlToHide.visible = false; // Hide dependent controls for offline
+    //           }
+    //         });
+    //       }
+    //     });
+    //   });
+    // }
 
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
-      const reqData = {
-        agentcode: this.agentCode,
-        proposalNumber: this.proposalNum,
-        paymentMethod: this.selectedButton,
-        source: 'Retail',
-        policyType: 'New Business',
-        policyNumber: '',
-        quoteNumber: '',
-        OrderID: ''
-      };
+      // const reqData = {
+      //   agentcode: this.agentCode,
+      //   proposalNumber: this.proposalNum,
+      //   paymentMethod: this.selectedButton,
+      //   source: 'Retail',
+      //   policyType: 'New Business',
+      //   policyNumber: '',
+      //   quoteNumber: '',
+      //   OrderID: ''
+      // };
 
       // this.yatraService.justPayRedirection(reqData).subscribe({
       //   next: (response: any) => {
@@ -3121,31 +3130,32 @@ export class RugDynamicFormComponent {
     }
 
     // Handle showing dependent controls if any are specified for the clicked button
-    if (control.dependentControls) {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          control.dependentControls.forEach((item: any) => {
-            if (controls.name == item) {
-              controls.visible = true; // Show dependent controls
-            }
-          });
-        });
-      });
-    } else {
-      let list: any = [];
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          if (controls.dependentControls) {
-            list = controls.dependentControls;
-          }
-          list.forEach((item: any) => {
-            if (controls.name == item) {
-              controls.visible = false; // Hide controls if no dependentControls are specified
-            }
-          });
-        });
-      });
-    }
+
+    // if (control.dependentControls) {
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       control.dependentControls.forEach((item: any) => {
+    //         if (controls.name == item) {
+    //           controls.visible = true; // Show dependent controls
+    //         }
+    //       });
+    //     });
+    //   });
+    // } else {
+    //   let list: any = [];
+    //   this.form.formSections.forEach((section: any) => {
+    //     section.formControls.forEach((controls: any) => {
+    //       if (controls.dependentControls) {
+    //         list = controls.dependentControls;
+    //       }
+    //       list.forEach((item: any) => {
+    //         if (controls.name == item) {
+    //           controls.visible = false; // Hide controls if no dependentControls are specified
+    //         }
+    //       });
+    //     });
+    //   });
+    // }
   }
 
 
@@ -3483,6 +3493,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3507,6 +3518,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
       if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
         return ele;
@@ -3532,6 +3544,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3550,10 +3563,11 @@ export class RugDynamicFormComponent {
       this.bbdetails.productPlanName = "GHI-5L";
       this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.get('deductibleAmount')?.setValue("500000");
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
           return ele;
@@ -3576,10 +3590,11 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
   
-        this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.get('deductibleAmount')?.setValue("1000000");
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
         this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
         let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
           if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
             return ele;
@@ -3619,12 +3634,19 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
       this.dynamicFormGroup.get('gpPremium')?.setValue(null);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('combiId')?.setValue('8');
     }    
     if(this.bbdetails.productCode == "R03"){
       this.bbdetails.productPlanName = "GHI,GP";
+      console.log(premiumObj);
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GPA" || item.combinationName === "GP"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
       this.dynamicFormGroup.get('combiId')?.setValue('10');
     }
@@ -3653,101 +3675,110 @@ export class RugDynamicFormComponent {
     //   mobileNumber: this.bbdetails.proposerMobileNumber,
     //   email: this.bbdetails.proposerEmailAddress
     // }
-    let reqObjBody = {
-          "leadId": this.leadId,
-          "productName": "Freedom Plus Plan",
-          "mobileNumber": "9550971874",
-          "email": "ajaykrishnasoma@monocept.com"
+    console.log(this.dynamicFormGroup.value);
+    console.log(this.dynamicFormGroup.get('decl2')?.value);
+    console.log(this.dynamicFormGroup.get('decl3')?.value);
+    console.log(this.dynamicFormGroup.valid);
+    if (this.dynamicFormGroup.get('decl2')?.value == true && this.dynamicFormGroup.get('decl3')?.value == true && this.dynamicFormGroup.valid) {
+      let reqObjBody = {
+        "leadId": this.leadId,
+        "productName": "Freedom Plus Plan",
+        "mobileNumber": "9550971874",
+        "email": "ajaykrishnasoma@monocept.com"
       }
-    const dialogRef = this.dialog.open(CaptchaPopupComponent, {
-      width: "500px",
-      autoFocus: false,
-      data: reqObjBody
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-      const dialogRef = this.dialog.open(OtpPopupComponent, {
+      const dialogRef = this.dialog.open(CaptchaPopupComponent, {
         width: "500px",
         autoFocus: false,
-        data: { leadId: this.leadId, message: result.statusMessage, generateOtpReq: reqObjBody}
+        data: reqObjBody
       });
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
-        if (result?.message == "OTP has been validated Successfully.") {
-          const dialogRef = this.dialog.open(PaymentInfoComponent, {
-            width: "500px",
-            autoFocus: false,
-            data: {
-              leadId: this.bbdetails.leadId,
-              customerName: this.bbdetails?.customerFirstName + " " + this.bbdetails?.customerLastName,
-              mobileNumber: this.bbdetails?.proposerMobileNumber,
-              amount: this.bbdetails?.totalPremium
-            }
-          });
-          dialogRef.afterClosed().subscribe((result: any) => {
-            console.log(result);
-            if (this.bbdetails?.paymentMode == 'yes') {
-              if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                this.incrementIndex();
-                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        const dialogRef = this.dialog.open(OtpPopupComponent, {
+          width: "500px",
+          autoFocus: false,
+          data: { leadId: this.leadId, message: result.statusMessage, generateOtpReq: reqObjBody }
+        });
+        dialogRef.afterClosed().subscribe((result: any) => {
+          console.log(result);
+          if (result?.message == "OTP has been validated Successfully.") {
+            const dialogRef = this.dialog.open(PaymentInfoComponent, {
+              width: "500px",
+              autoFocus: false,
+              data: {
+                leadId: this.bbdetails.leadId,
+                customerName: this.bbdetails?.customerFirstName + " " + this.bbdetails?.customerLastName,
+                mobileNumber: this.bbdetails?.proposerMobileNumber,
+                amount: this.bbdetails?.totalPremium
               }
-            }else{
-              console.log(this.bbdetails)
-              // let reqBody = {
-              //   leadId: this.bbdetails?.leadId
-              // }
-              let commonDraftRequest = {
-                "leadId": this.bbdetails?.leadId
-              }
-              this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
-                next: (res: any) => {
-                  let halfQuoteResponse: any;
-                  console.log(res);
-                  halfQuoteResponse = JSON.parse(res.data);
-                  if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
-                    let justpayPayload = { 
-                       "agentcode": this.agentCode,
-                       "proposalNumber": this.bbdetails?.leadId,
-                       "paymentMethod": "autoDebit",
-                       "source": "RUG",
-                       "policyType": "New Business",
-                       "policyNumber": "", 
-                       "quoteNumber": "",
-                       "OrderId": "",
-                       "Amount": this.bbdetails?.totalPremium,
-                       "FirstName": this.bbdetails?.customerFirstName,
-                       "MiddleName": "",
-                       "LastName": this.bbdetails?.customerLastName,
-                       "Phone": this.bbdetails?.proposerMobileNumber,
-                       "Email": this.bbdetails?.proposerEmailAddress,
-                       "DOB": this.bbdetails?.proposerDob,
-                       "appName": "BRANCHBANKING"
-                              
+            });
+            dialogRef.afterClosed().subscribe((result: any) => {
+              console.log(result);
+              if (this.bbdetails?.paymentMode == 'yes') {
+                if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                  this.incrementIndex();
+                  this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                }
+              } else {
+                console.log(this.bbdetails)
+                // let reqBody = {
+                //   leadId: this.bbdetails?.leadId
+                // }
+                let commonDraftRequest = {
+                  "leadId": this.bbdetails?.leadId
+                }
+                this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
+                  next: (res: any) => {
+                    let halfQuoteResponse: any;
+                    console.log(res);
+                    halfQuoteResponse = JSON.parse(res.data);
+                    if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
+                      this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
+                      let justpayPayload = {
+                        "agentcode": this.agentCode,
+                        "proposalNumber": this.bbdetails?.leadId,
+                        //  "paymentMethod": "autoDebit",
+                        "paymentMethod": this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
+                        "source": "RUG",
+                        "policyType": "New Business",
+                        "policyNumber": "",
+                        "quoteNumber": "",
+                        "OrderId": "",
+                        "Amount": this.bbdetails?.totalPremium,
+                        "FirstName": this.bbdetails?.customerFirstName,
+                        "MiddleName": "",
+                        "LastName": this.bbdetails?.customerLastName,
+                        "Phone": this.bbdetails?.proposerMobileNumber,
+                        "Email": this.bbdetails?.proposerEmailAddress,
+                        "DOB": this.bbdetails?.proposerDob,
+                        "appName": "BRANCHBANKING"
+
                       }
                       console.log(justpayPayload);
-                    this.d2cJustPayRedirection(justpayPayload)
-                    // if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                    //   this.incrementIndex();
-                    //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                      
-                    // }
-          
-                  }else{
-                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                      this.d2cJustPayRedirection(justpayPayload)
+                      // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                      //   this.incrementIndex();
+                      //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
 
+                      // }
+
+                    } else {
+                      this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+
+                    }
+
+                  },
+                  error: (err) => {
+                    console.error(err);
                   }
-          
-                },
-                error: (err) => {
-                  console.error(err);
-                }
-              });
-            }
-          })
-        }
+                });
+              }
+            })
+          }
+        })
       })
-    })
+    } else {
+      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+    }
   }
   ond2cSubmit(){
     if(this.dynamicFormGroup.valid){
@@ -4176,6 +4207,8 @@ export class RugDynamicFormComponent {
             
           // }
 
+        }else{
+          this.toast.warning({ detail: "SUCCESS", summary: res.message, duration: 3000 });
         }
 
       },
@@ -4203,7 +4236,7 @@ export class RugDynamicFormComponent {
           "proposalNum": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber,
           "partnerId": this.partnerId,
           "agentCode": this.agentCode,
-          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
           "productId": this.productId.toString(),
@@ -4271,7 +4304,7 @@ export class RugDynamicFormComponent {
                     isPayment: false,
                     groupCode: this.bbdetails.groupCode,
                     productPlanName: this.bbdetails.productPlanName,
-                    productPlanCode: this.bbdetails.productPlanCode,
+                    productPlanCode: this.bbdetails.productPlanCode.toString(),
                     combiId: this.bbdetails.combiId,
                     combiName: null,
                     familyConstructId: this.bbdetails.familyConstructId,
@@ -6692,17 +6725,20 @@ export class RugDynamicFormComponent {
         }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
-        console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
-        this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
+        if (this.formSequence[this.getFormIndexValue()].formName != "Customer Summary") {
+          console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
+          this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
 
-        filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
-        console.log(filterArr);
-        if(this.bbdetails.productCode != "R10"){
-          this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
-        }else{
-          this.bbdetails.sumInsured = filterArr[0].siPlanText;
+          filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
+          console.log(filterArr);
+          if (this.bbdetails.productCode != "R10") {
+            this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
+          } else {
+            this.bbdetails.sumInsured = filterArr[0].siPlanText;
+          }
+
+          this.getBbPremium(filterArr);
         }
-        this.getBbPremium(filterArr);
       },
       error: (err) => {
         console.error(err);
@@ -7056,7 +7092,10 @@ export class RugDynamicFormComponent {
         this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
         this.d2cDetails.productPlanName = "GHI";
         this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
-        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+      this.d2cDetails.productPlanName = "GHI";
+      this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
         this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
@@ -7078,7 +7117,10 @@ export class RugDynamicFormComponent {
         this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
         this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
         this.d2cDetails.productPlanName = "GHI,GPA";
-        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);      this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+      this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+      this.d2cDetails.productPlanName = "GHI,GPA";
+      this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
         this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
@@ -7103,7 +7145,12 @@ export class RugDynamicFormComponent {
         this.d2cDetails.gpaPremium = filteredData[2].premium.toString();
         this.d2cDetails.productPlanName = "GHI,GPA,GCI";
         this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
-        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+      this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+      this.d2cDetails.gciPremium = filteredData[2].premium.toString();
+      this.d2cDetails.productPlanName = "GHI,GPA,GCI";
+      this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
         this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
         this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
@@ -7126,9 +7173,9 @@ export class RugDynamicFormComponent {
         this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
         this.d2cDetails.productPlanName = "GHI-5L";
         this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
-        // this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
-        // this.bbdetails.productPlanName = "GHI-5L";
-        // this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
+        this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+        this.d2cDetails.productPlanName = "GHI-5L";
+        this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
@@ -7150,9 +7197,9 @@ export class RugDynamicFormComponent {
         console.log(filteredData);
         console.log(this.dynamicFormGroup.get('sumInsured')?.value);
         if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
-          // this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
-          // this.bbdetails.productPlanName = "GHI-10L";
-          // this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+          this.d2cDetails.productPlanName = "GHI-10L";
+          this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
           this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
           this.d2cDetails.productPlanName = "GHI-10L";
           this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);

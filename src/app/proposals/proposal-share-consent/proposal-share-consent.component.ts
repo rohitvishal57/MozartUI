@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'jquery';
@@ -16,22 +17,16 @@ export class ProposalShareConsentComponent {
   token : any ;
   proposalNumber : any ;
   sharecontentForm!: FormGroup;
-  sharecontent : any ={};
+  sharecontent!: IForm;
   isHtmlrender:any = false
-  renderer: any;
-  dynamicStyle: any;
-  document: any;
-
-  
-
+  private dynamicStyle!: HTMLLinkElement;
+  formData: any;
 
   constructor(
-    private yatraService: YatraService,private route: ActivatedRoute,private formBuilder: FormBuilder
-  ) { }
+    private yatraService: YatraService, private route: ActivatedRoute, private formBuilder: FormBuilder,
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document){}
 
   ngOnInit(): void {
-
-    
     this.route.queryParams.subscribe(params => {
       this.token = params['token'];
       this.proposalNumber = params['pNum'];
@@ -41,9 +36,6 @@ export class ProposalShareConsentComponent {
     });
     this.getFormInfo();
   }
-
-
-
 
   inItForm() {
     this.sharecontentForm = this.formBuilder.group({});
@@ -69,8 +61,7 @@ export class ProposalShareConsentComponent {
       });
     });
     this.dynamciallyLoadCSS(this.sharecontent);
-    console.log(this.sharecontentForm);
-    
+    console.log(this.sharecontentForm);  
   }
 
   getFormInfo() {
@@ -80,15 +71,13 @@ export class ProposalShareConsentComponent {
       (response: any) => {
         if(response.isSuccess){
           this.sharecontent =JSON.parse(JSON.parse(response.data.formJson) );
+          console.log(this.sharecontent);
           this.inItForm();
-
         }
         console.log(response);
       }, (error) => {
         console.error(error)
-      }
-    );
-
+      });
   }
 
     dynamciallyLoadCSS(form: IForm) {
@@ -102,4 +91,33 @@ export class ProposalShareConsentComponent {
       this.isHtmlrender = true;
     }
 
+    handleAction(methodName: string) {
+      if (methodName) {
+        console.log(`Action triggered for method: ${methodName}`);
+        // Add your custom logic for handling button clicks here.
+      }
+    }
+
+    getLabels(control: any) {
+      let startIdx = control.indexOf('{{');
+      let endIdx = control.indexOf('}}');
+      let string: any;
+      if (startIdx !== -1 && endIdx !== -1) {
+        string = control.slice(startIdx + 2, endIdx).trim();
+      }
+  
+      switch (string) {
+        case 'actName':
+          return control.replace('{{actName}}', this.formData?.accountNumber);
+        case 'emailId':
+          const emailId = this.formData?.emailId;
+          if (emailId) {
+            const anchorTag = `<a href="mailto:${emailId}">${emailId}</a>`;
+            return control.replace('{{emailId}}', anchorTag);
+          }
+          return control; // Fallback if emailId is not available
+        default:
+          return control;
+      }
+    }
 }

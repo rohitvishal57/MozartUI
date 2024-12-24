@@ -27,7 +27,7 @@
     <div class="insurance_optionHUB" #scrollTarget [formGroup]="quoteFormGroup">
       <div class="dropdown-container ">
         <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
-        <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
+        <div class="field_div" [ngClass]="dropdown.label === 'Porting' ? 'porting_getQuote' : ''" *ngFor="let dropdown of dropdownOptions; let i = index">
           <!-- Label -->
           <label class="field_label">{{ dropdown.label | translate }}</label>
           <!-- Button for each dropdown -->
@@ -52,11 +52,11 @@
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
                   {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
-                <ng-container *ngIf="dropdown.label === 'Porting'">
+                <ng-container  *ngIf="dropdown.label === 'Porting'">
                   {{ quoteFormGroup.get('isPortability')?.value ? quoteFormGroup.get('isPortability')?.value : ('Select' | translate) }}
                 </ng-container>
                 
-              </span><img src="assets/Img/down_arrow.svg">
+              </span><img src="assets/Img/icon_getquote_arrow.svg" ><!-- <span class="arrows_porting" *ngIf="dropdown.label === 'Porting'"><img src="assets/Img/icon_getquote_porting_arrow.svg" class="arrows_porting_left"><img src="assets/Img/icon_getquote_porting_arrow.svg" class="arrows_porting_right"></span> -->
             </div>
           </button>
 
@@ -423,18 +423,24 @@
                   </div>
                 </div>
            
-                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Porting'">
+                <div class="overlay_popupMain overlay_dropdown_w220" *ngIf="selectedDropdown === 'Porting'">
                   <div class="close-popup">
                     <button type="button" class="btn-close" aria-label="Close"
                       style="font-size: 14px;" (click)="closeCustomDiv()"></button>
                   </div>
                   <div class="option_policyType">
                     <div class="overlay_body checkbox_disease_scroll">
-                      <div class="input-checkbox-block checkbox_disease">
+                      <div class="input-radio-block input-radiolabel-porting">
+                          <label class="input-radiolabel " *ngFor="let port of PotingValues">
+                            <input type="radio" id="port.id" name="porting" value="port.id" (click)="selectPort(port.value)">
+                            <span>{{ port.label | translate }}</span>
+                          </label>
+                      </div>
+                      <!-- <div class="input-checkbox-block checkbox_disease">
                         <div class="input-checkbox-feild" *ngFor="let port of PotingValues" (click)="selectPort(port.value)">
                           <label [for]="port.id">{{ port.label | translate }}</label>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>  

@@ -172,5 +172,8 @@ export const environment = {
   seriveRequest : "api/auth/GenerateTokenAndSsoUrl",
   sendOTP : "api/yatra/declarationotp",
   verifyOTP : "api/yatra/declarationvalidateotp",
-  sendEmailLink : "api/yatra/emaillink"
+  sendEmailLink : "api/yatra/emaillink",
+  createUpdateAV:"api/TeleSales/CreateUpdateAV",
+  staticForm : "api/yatra/getstaticforms",
+  getkycstatus : "/api/quote/getkycstatusviaproposalnum"
 };

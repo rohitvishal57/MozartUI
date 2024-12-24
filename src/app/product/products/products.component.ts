@@ -381,7 +381,7 @@ donwloadBrowcher(productName : any){
       const leadInformation = response?.data?.leadList[0];
       leadInformation.interestedProductName = productName;
       leadInformation.isUpdate = 1;
-
+      leadInformation.proposalNumber =  this.proposalNum;
       this.leadsService.saveLeadData(leadInformation).subscribe(
         (response) => {
           console.log("Lead has been Successfully Updated", response);
@@ -398,7 +398,7 @@ donwloadBrowcher(productName : any){
   productSearch() {
     this.ProductList = this.productsInformation;
     this.ProductList = this.ProductList.filter(product =>
-      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
+      product.productName.toLowerCase().startsWith(this.searchProductName.toLowerCase())
     );
   }
 

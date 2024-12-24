@@ -229,7 +229,21 @@ export class PaymentComponent {
               console.log('error',error);
             });
         }else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus === 'INITIATED') {
-          const formData = this.paymentDetail;         
+          const formData = {
+            proposalNumber: this.paymentDetail.proposalId || '',
+            policyNumber: this.paymentDetail.oldPolicyNumber || '',
+            policyStatus: this.paymentDetail.policyStatus || '',
+            policyStartDate: this.paymentDetail.policyStartDate || '',
+            policyEndDate: this.paymentDetail.policyEndDate || '',
+            receiptID: this.paymentDetail.receiptNumber || '',
+            customerId: this.paymentDetail.customerId || '',
+            applicationNumber: this.paymentDetail.applicationNumber || '',
+            status: this.paymentDetail.policyStatus || '',
+            productName: this.paymentDetail.productName || '',
+            premiumPaid: this.paymentDetail.premiumPaid || '',
+            isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
+          };
+          // const formData = this.paymentDetail;         
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });   
             this.router.navigate(['renewal/renewalJourney'], {
@@ -330,7 +344,22 @@ export class PaymentComponent {
             console.log('error',error);
           });
       }else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
-        const formData = this.paymentDetail;         
+        const formData = {
+          proposalNumber: this.paymentDetail.proposalId || '',
+          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyStatus: this.paymentDetail.policyStatus || '',
+          policyStartDate: this.paymentDetail.policyStartDate || '',
+          policyEndDate: this.paymentDetail.policyEndDate || '',
+          receiptID: this.paymentDetail.receiptNumber || '',
+          customerId: this.paymentDetail.customerId || '',
+          applicationNumber: this.paymentDetail.applicationNumber || '',
+          status: this.paymentDetail.policyStatus || '',
+          productName: this.paymentDetail.productName || '',
+          premiumPaid: this.paymentDetail.premiumPaid || '',
+          isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
+        };
+        
+        // const formData = this.paymentDetail;         
         if (this.paymentDetail?.isFullQuoteSuccess) {
           this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });   
           this.router.navigate(['renewal/customerPayment'], {
@@ -358,9 +387,23 @@ export class PaymentComponent {
         }
     } else if(this.paymentDetail.paymentStatus == 'INPROGRESS'|| this.paymentDetail?.paymentStatus == 'PENDING'){
       this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+      const formData = {
+        proposalNumber: this.paymentDetail.proposalId || '',
+        policyNumber: this.paymentDetail.oldPolicyNumber || '',
+        policyStatus: this.paymentDetail.policyStatus || '',
+        policyStartDate: this.paymentDetail.policyStartDate || '',
+        policyEndDate: this.paymentDetail.policyEndDate || '',
+        receiptID: this.paymentDetail.receiptNumber || '',
+        customerId: this.paymentDetail.customerId || '',
+        applicationNumber: this.paymentDetail.applicationNumber || '',
+        status: this.paymentDetail.policyStatus || '',
+        productName: this.paymentDetail.productName || '',
+        premiumPaid: this.paymentDetail.premiumPaid || '',
+        isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
+      };
       this.router.navigate(['renewal/customerPayment'], {
         state: {
-          formData: this.encryptionService.encrypt(this.paymentDetail),
+          formData: this.encryptionService.encrypt(formData),
           proposalNum: this.encryptionService.encrypt(""),
           policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
           journeyProcess: this.encryptionService.encrypt(0),

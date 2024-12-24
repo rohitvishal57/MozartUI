@@ -6,6 +6,8 @@ import { ProductDownloadComponent } from "./components/product-download/product-
 import { BbTestPageComponent } from "./bb-test-page/bb-test-page.component";
 import { D2cTestPageComponent } from "./d2c-test-page/d2c-test-page.component";
 
+
+
 const routes: Routes = [
     { path:'', component: RugDynamicFormComponent },
     { path:'web', component: ViewLeadsComponent },
@@ -21,7 +23,10 @@ const routes: Routes = [
     { path:'manage-LOB', component: ProductDownloadComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
     { path:'test-page', component: BbTestPageComponent },
-    { path:'bb-test-page', component: BbTestPageComponent }
+    { path:'bb-test-page', component: BbTestPageComponent },
+  
+    
+   
 ];
 
 @NgModule({

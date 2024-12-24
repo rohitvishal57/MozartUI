@@ -144,7 +144,8 @@ export class ClaimsListViewComponent implements OnInit {
     "pageSize": 10,
     "mobileNumber": "",
     "filterType": "",
-    "memberId": ""
+    "memberId": "",
+    "memberName": ""
   }
 
   fetchData(): void {
@@ -270,6 +271,7 @@ export class ClaimsListViewComponent implements OnInit {
       this.claimsReqBody.filterType = "";
       this.claimsReqBody.policyNumber = "";
       this.claimsReqBody.memberId = "";
+      this.claimsReqBody.memberName = "";
       this.claimsReqBody.requestId = "";
       this.claimsReqBody.mobileNumber = ""
       // this.claimsReqBody.searchString = []
@@ -287,6 +289,8 @@ export class ClaimsListViewComponent implements OnInit {
       return 'Enter Policy Number';
     } else if (this.selected === 'requestId') {
       return 'Enter Claim No.';
+    } else if (this.selected === 'memberName') {
+      return 'Enter Member Name';
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
     } else if (this.selected === 'mobileNumber') {
@@ -328,6 +332,7 @@ export class ClaimsListViewComponent implements OnInit {
     let searchValue = this.searchInputControl.value?.trim();
     if (!searchValue) {
       this.claimsReqBody.memberId = "";
+      this.claimsReqBody.memberName = "";
       this.claimsReqBody.requestId = "";
       this.claimsReqBody.mobileNumber = "";
       this.claimsReqBody.policyNumber = "";
@@ -338,21 +343,31 @@ export class ClaimsListViewComponent implements OnInit {
     if (searchValue && this.searchInputControl.valid) {
       if (this.selected === "policyNumber") {
         this.claimsReqBody.policyNumber = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.mobileNumber = ""
+      }  else if (this.selected === "memberName") {
+        this.claimsReqBody.memberName = searchValue;
+        this.claimsReqBody.memberId = "";
+        this.claimsReqBody.mobileNumber = "";
+        this.claimsReqBody.requestId = "";
+        this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "memberId") {
         this.claimsReqBody.memberId = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.mobileNumber = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "requestId") {
         this.claimsReqBody.requestId = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.mobileNumber = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "mobileNumber") {
         this.claimsReqBody.mobileNumber = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.policyNumber = ""
