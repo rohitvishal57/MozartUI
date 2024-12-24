@@ -2955,6 +2955,7 @@ export class RenewalJourneyComponent {
     this.formIndex = formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
+
   setFormIndexValue(value: number) {
     localStorage.setItem("formIndex", value.toString());
   }
@@ -2964,6 +2965,7 @@ export class RenewalJourneyComponent {
     this.setFormIndexValue(currentIndex + 1);
     console.log("currentIndex", currentIndex);
   }
+  
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);
