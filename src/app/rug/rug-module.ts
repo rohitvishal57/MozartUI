@@ -21,6 +21,7 @@ import { BbTestPageComponent } from './bb-test-page/bb-test-page.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CreateAVComponent } from "./Admin/AV_Upload/create-av/create-av.component";
 import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
+import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -33,7 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         D2cTestPageComponent,
         BbTestPageComponent,
         CreateAVComponent,
-        AVListComponent
+        AVListComponent,
+        BulkUploadComponent
      
     ],
     

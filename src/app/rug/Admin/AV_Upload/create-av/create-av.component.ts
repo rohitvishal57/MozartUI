@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from '../../admin.service';
 import { NgToastService } from 'ng-angular-popup';
+import { endOfDay } from 'date-fns';
 
 
 
@@ -18,6 +19,12 @@ export class CreateAVComponent implements OnInit {
   submitted: boolean = false;
   today: string = '';
   AllManageLOB: any[] = [];
+  isEditMode: boolean = false;
+  allAxisLocations: any[] = []; 
+  allAxisVendors: any[] = [];   
+  filteredVendors: any[] = [];  
+  selectedLocationId:any = ''; 
+  selectedUserId: string | null = null;
 
   center: any[] = ["Noida", "Bengalore", "Hyderabad", "Mumbai", "Kolkata", "Ahemedabad"];
   AxisProcess: any[] = [" Inbound Phone Banking", "Outbound Call Center (OCC)"];
@@ -32,21 +39,59 @@ export class CreateAVComponent implements OnInit {
 
   }
   ngOnInit(): void {
+
+    const navigation = this.router.getCurrentNavigation();
+    const stateData = navigation?.extras.state?.['data'];
+
+    if (stateData) {
+      this.isEditMode = true;
+      this.createAvForm.patchValue(stateData);
+    }
+
     this.inItForm();
+    this.getAllVendorsAndLocation();
     this.getAllLOB();
   }
 
-  getAllLOB() {
-    this.adminService.getAllManageLOB().subscribe((response: any) => {
-      console.log('API Response:', response); 
-      this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
-      console.log('LOB Names:', this.AllManageLOB); 
+  getAllVendorsAndLocation() {
+    this.adminService.getAllAxisLocationAndVenors().subscribe((response: any) => {
+      // Parsing the response
+      const res = JSON.parse(response.data);
+      this.allAxisLocations = res.data.allLocations;
+      this.allAxisVendors = res.data.allVendors;
     });
   }
+ 
+  onLocationChange(selectedLocationId: number) {
+    console.log('Location Changed:', selectedLocationId);  // Check if this is triggered
+    this.filteredVendors = this.allAxisVendors.filter(vendor => 
+      vendor.axisLocationId == selectedLocationId);
+   console.log('vendors', this.filteredVendors);
+  }
+
+  getAllLOB() {
+    this.adminService.getAllManageLOB().subscribe(
+      (response: any) => {
+        response = JSON.parse(response.data);
+        console.log('Full API Response:', response); 
+        if (response?.data?.allManageLobs) {
+          this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
+          console.log('LOB Names:', this.AllManageLOB);
+        } else {
+          console.error('allManageLobs not found or invalid API Response:', response);
+          this.AllManageLOB = []; 
+        }
+      },
+      (error) => {
+        console.error('Error fetching LOB data:', error);
+        this.AllManageLOB = []; 
+      }
+    );
+  }
+  
+  
 
   inItForm() {
-
-    // Initialize userValidations form group
     this.createAvForm = this.formBuilder.group({
       avid: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
       avname: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
@@ -93,12 +138,16 @@ export class CreateAVComponent implements OnInit {
       createdBy: 'admin'
     };
 
-    this.adminService.createUpdateAV(formData).subscribe((response: any) => {
+    this.adminService.createAV(formData).subscribe((response: any) => {
         console.log('create AV successfully:', response);
         this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
       });
     this.router.navigate(['rug/av-list']);
     console.log('Form Submitted:', this.createAvForm.value);
+  }
+
+  updateData() {
+  
   }
   
 

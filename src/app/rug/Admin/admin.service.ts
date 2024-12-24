@@ -14,6 +14,11 @@ export class AdminService {
   constructor(private configService: ConfigService,
       private httpService: HttpService) { }
 
+      getAllAxisLocationAndVenors(){
+        const req = this.configService.config.baseUrl + this.configService.config.getAllLocationAndvendors;
+        return this.httpService.get(req);
+      }
+
       getAllManageLOB(){
         const req = this.configService.config.baseUrl + this.configService.config.getAllManageLob;
         return this.httpService.get(req);
@@ -24,8 +29,11 @@ export class AdminService {
         return this.httpService.get(req);
       }
 
-      createUpdateAV(reqdata : any){
+      createAV(reqdata : any){
         const  createUpdateAV = this.configService.config.baseUrl + this.configService.config.createUpdateAv;
         return this.httpService.post(createUpdateAV,reqdata)
       }
+      
+  
+
 }

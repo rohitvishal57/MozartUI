@@ -27,7 +27,7 @@ export class AVListComponent {
   rows: number = 10;
   totalRecords: number = 0;
 
-  
+
 
   constructor(private http: HttpClient,
     private router: Router,
@@ -50,28 +50,7 @@ export class AVListComponent {
     this.getAllAVs();
   }
 
-  leadsInfoListRequestBody ={
-    "avid":"",
-    "avname":"",
-    "avcenter":"",
-    "axisprocess":"",
-    "status":"",
-    "lefdate":"",
-    "letdate":"",
-    "tlid":"",
-    "tlName":"",
-    "imdCode":"",
-    "axisVendor":"",
-    "axisLob":"",
-    'spcode':"",
-    "createdBy":"",
-    "pageNumber": this.page,
-    "pageSize": this.rows,
-
-  }
   getAllAVs() {
-    this.leadsInfoListRequestBody.pageNumber = this.page;
-    this.leadsInfoListRequestBody.pageSize = this.rows;
     this.adminService.getAllAVs().subscribe((response: any) => {
       const rawData = response.data;
       const parsedData = JSON.parse(rawData);
@@ -91,8 +70,16 @@ export class AVListComponent {
     return date.toISOString().split('T')[0];
   }
 
+  editAV(){
+    
+  }
+
   navigateToCreateAV() {
     this.router.navigate(['rug/create_AV']);
+  }
+
+  navigateToBulkUpload(){
+    this.router.navigate(['rug/bulk_upload']);
   }
 
   toggleAll(event: Event) {
@@ -107,6 +94,6 @@ export class AVListComponent {
     this.first = event.first;
     this.rows = event.rows;
     this.getAllAVs();
-}
+  }
 
 }
