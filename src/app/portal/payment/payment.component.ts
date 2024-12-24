@@ -280,6 +280,17 @@ export class PaymentComponent {
     }
     else if (this.paymentDetail.userType == 'Customer') {
       if (this.businessType == 'NB') {
+        // const formData = {
+        //   proposalNumber: this.paymentDetail.proposalId,
+        //   policyNumber: this.paymentDetail.policyNumber,
+        //   policyStatus: this.paymentDetail.policyStatus,
+        //   policyStartDate: this.paymentDetail.policyStartDate,
+        //   policyEndDate: this.paymentDetail.policyEndDate,
+        //   receiptID: this.paymentDetail.receiptNumber,
+        //   customerId: this.paymentDetail.customerId,
+        //   applicationNumber: this.paymentDetail.applicationNumber,
+        //   status: this.paymentDetail.paymentStatus
+        // };
         const formData = {
           proposalNumber: this.paymentDetail.proposalId,
           policyNumber: this.paymentDetail.policyNumber,
@@ -289,7 +300,8 @@ export class PaymentComponent {
           receiptID: this.paymentDetail.receiptNumber,
           customerId: this.paymentDetail.customerId,
           applicationNumber: this.paymentDetail.applicationNumber,
-          status: this.paymentDetail.paymentStatus
+          status: this.paymentDetail.policyStatus,
+          paymentStatus: this.paymentDetail.paymentStatus
         };
         localStorage.setItem('agentCode', '5100003');
         localStorage.setItem('formIndex', '1');
@@ -390,4 +402,5 @@ export class PaymentComponent {
       }
     }
   }
+
 }

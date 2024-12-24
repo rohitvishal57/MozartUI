@@ -554,9 +554,9 @@ export class YatraComponent {
 
         console.log(this.form, this.formSequence, this.formData);
 
-        if (this.formData.verifyKYC || this.formData.verifyKYC == null) {
-          this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false;
-        }
+        // if (this.formData.verifyKYC || this.formData.verifyKYC == null) {
+        //   this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false;
+        // }
         this.initializeForm();
       },
       error: (err) => {

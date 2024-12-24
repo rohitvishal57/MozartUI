@@ -177,5 +177,5 @@ export const environment = {
   staticForm : "api/yatra/getstaticforms",
   getallAv:"api/v1/GetAllAVs?pageNo=1&noOfRow=50",
   getAllManageLob:"api/v1/GetAllManageLOB",
-  getkycstatus : "/api/quote/getkycstatusviaproposalnum"
+  getkycstatus : "api/quote/getkycstatusviaproposalnum"
 };
