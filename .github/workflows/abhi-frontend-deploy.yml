@@ -41,48 +41,43 @@ jobs:
       with:
         fetch-depth: 10
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.20.3'
+    # - name: Set up Node.js
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: '18.20.3'
 
     
-    - name: Cache Node modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.npm
-          ~/.cache
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    # - name: Cache Node modules
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       ~/.npm
+    #       ~/.cache
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
 
-    - name: Print working directory and list its contents
-      run: |
-        echo "Current working directory is:"
-        pwd  # Print the current working directory
-        echo "Listing the contents of the current directory:"
-        ls -la  # List the contents of the current working directory
-  
+    # - name: Print working directory and list its contents
+    #   run: |
+    #     echo "Current working directory is:"
+    #     pwd  # Print the current working directory
+    #     echo "Listing the contents of the current directory:"
+    #     ls -la  # List the contents of the current working directory
+
     # - name: Install dependencies
     #   run: |
-    #     cd MozartUI-Dev
     #     npm install --legacy-peer-deps
 
-    - name: Install dependencies
-      run: |
-        npm install --legacy-peer-deps
-
-    - name: Clean previous build artifacts
-      run: |
-        rm -rf ./dist/*
+    # - name: Clean previous build artifacts
+    #   run: |
+    #     rm -rf ./dist/*
       
-    - name: Build the project
-      run: |
-        npm run build --prod
+    # - name: Build the project
+    #   run: |
+    #     npm run build --prod
 
-    - name: List Build Artifacts
-      run: ls -la ./dist/
+    # - name: List Build Artifacts
+    #   run: ls -la ./dist/
 
     # - name: List contents in the current directory
     #   run: |
@@ -90,25 +85,25 @@ jobs:
     #     ls -la 
     #     ls -la MozartUI-Dev
       
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./dist/*
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./dist/*
 
-    - name: Debug:List files after downloading artifacts
-      run: ls -l ./dist/
+    # - name: Debug:List files after downloading artifacts
+    #   run: ls -l ./dist/
 
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@v3.0.0
-      with:
-        projectBaseDir: .
-        args: |
-          -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-          -Dsonar.sources=./src
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    # - name: SonarQube Scan
+    #   uses: sonarsource/sonarqube-scan-action@v3.0.0
+    #   with:
+    #     projectBaseDir: .
+    #     args: |
+    #       -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+    #       -Dsonar.sources=./src
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     # - name: Check SonarQube Quality Gate
     #   run: |
@@ -141,117 +136,71 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
 
     - name: Add VM to known hosts
-      run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      #run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      run: ssh-keyscan -v -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1 || { echo 'ssh-keyscan failed'; exit 1; }
 
     # Generate the single version at the workflow level
-    - name: Generate Deployment Version
-      id: version
-      run: |
-        # Generate version using current date and time (IST)
-        #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
-        CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
-        TAGGED_VERSION="v${CURRENT_DATE}"
-        echo "Deployment version: $TAGGED_VERSION"
-        # Set the version as an output
-        echo "::set-output name=version::$TAGGED_VERSION"
-        # Also export it as an environment variable for other steps
-        echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
+    # - name: Generate Deployment Version
+    #   id: version
+    #   run: |
+    #     # Generate version using current date and time (IST)
+    #     #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
+    #     CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
+    #     TAGGED_VERSION="v${CURRENT_DATE}"
+    #     echo "Deployment version: $TAGGED_VERSION"
+    #     # Set the version as an output
+    #     echo "::set-output name=version::$TAGGED_VERSION"
+    #     # Also export it as an environment variable for other steps
+    #     echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
   
-    - name: Debug:Show generated version
-      run: |
-        echo "Generated version: $TAGGED_VERSION"
+    # - name: Debug:Show generated version
+    #   run: |
+    #     echo "Generated version: $TAGGED_VERSION"
   
-    - name: Create deployment directory on VM with version
-      run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; try { if (-Not (Test-Path -Path \$DeployDir)) { Write-Output \"Creating deployment directory: \$DeployDir\"; New-Item -Path \$DeployDir -ItemType Directory; } else { Write-Output \"Deployment directory already exists: \$DeployDir\"; } } catch { Write-Output \"Error while creating deployment directory: \$DeployDir\"; Write-Output \$_.Exception.Message; exit 1; }"
+    # - name: Create deployment directory on VM with version
+    #   run: |
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; try { if (-Not (Test-Path -Path \$DeployDir)) { Write-Output \"Creating deployment directory: \$DeployDir\"; New-Item -Path \$DeployDir -ItemType Directory; } else { Write-Output \"Deployment directory already exists: \$DeployDir\"; } } catch { Write-Output \"Error while creating deployment directory: \$DeployDir\"; Write-Output \$_.Exception.Message; exit 1; }"
 
-    - name: Manage Previous Deployments (Keep Last 3)
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '${{ env.DEPLOY_BASE_DIR }}'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+    # - name: Manage Previous Deployments (Keep Last 3)
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '${{ env.DEPLOY_BASE_DIR }}'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
-    - name: Create directory for artifacts
-      run: mkdir -p ./my-artifacts
+    # - name: Create directory for artifacts
+    #   run: mkdir -p ./my-artifacts
       
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./my-artifacts
+    # - name: Download build artifacts
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./my-artifacts
     
-    - name: Debug:List files after downloading artifacts
-      run: ls -l ./my-artifacts
+    # - name: Debug:List files after downloading artifacts
+    #   run: ls -l ./my-artifacts
 
-    - name: Upload artifact to VM with versioning
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/angular-dev/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
+    # - name: Upload artifact to VM with versioning
+    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/angular-dev/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
   
-    - name: Upload deploy.ps1 to VM
-      run: |
-        scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1
+    # - name: Upload deploy.ps1 to VM
+    #   run: |
+    #     scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1
     
-    - name: Execute frontend_deploy.ps1 script on VM
-      run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
-
-    # - name: Bind SSL Certificate (Optional)
+    # - name: Execute frontend_deploy.ps1 script on VM
     #   run: |
-    #     ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-    #       New-WebBinding -Name '${{ env.SITE_NAME }}' -Protocol 'https' -Port ${{ env.PORT }} `
-    #         -HostHeader '${{ env.BINDING_HOST }}' -CertificateThumbprint '<CERTIFICATE_THUMBPRINT>' `
-    #         -CertificateStoreName 'My'
-    #     "
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
 
-    # - name: Import SSL Certificate and Bind to IIS
+    # - name: Set environment variable based on branch
     #   run: |
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-    #       \$SSLCertPath = 'C:\\Users\\ABHI\\Desktop\\monolensssl2024.pfx';  # Path where the certificate will be stored
-    #       \$SSLCertPassword = '${{ secrets.SSL_CERT_PASSWORD }}';        # Certificate password (store it in secrets)
-    #       \$SiteName = '${{ env.SITE_NAME }}';                    # Website name
-    #       \$WebRoot = '${{ env.WEB_ROOT }}';                      # Web root path
-    #       \$AppPoolName = '${{ env.APP_POOL_NAME }}';             # App pool name
+    #     branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
+    #     environment=${branch_name}
+    #     if [ "$environment" == "main" ]; then
+    #       environment="prod"
+    #     fi
+    #     echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
 
-    #       # 1. Ensure the certificate path exists on the server (optional if it's already pre-stored)
-    #       if (-Not (Test-Path -Path \$SSLCertPath)) {
-    #         Write-Error 'SSL certificate file does not exist at the specified path.';
-    #         exit 1;
-    #       }
-
-    #       # 2. Upload the certificate file
-    #       # Write-Output 'Uploading SSL certificate file...';
-    #       # scp -i ~/.ssh/id_rsa -P 22 ./path-to-your-cert/your-certificate.pfx ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:C:\\certificates\\your-certificate.pfx
-
-    #       # 3. Import the certificate into the local machine store
-    #       Write-Output 'Importing SSL Certificate...';
-    #       \$cert = Import-PfxCertificate -FilePath \$SSLCertPath -CertStoreLocation Cert:\\LocalMachine\\My -Password (ConvertTo-SecureString -String \$SSLCertPassword -AsPlainText -Force);
-
-    #       # 4. Check if the website exists in IIS
-    #       # if (-Not (Get-WebSite -Name \$SiteName -ErrorAction SilentlyContinue)) {
-    #       #   Write-Output 'Creating IIS Website...';
-    #       #   New-WebSite -Name \$SiteName -PhysicalPath \$WebRoot -Port 80 -ApplicationPool \$AppPoolName;
-    #       # }
-
-    #       # 5. Configure SSL Binding
-    #       Write-Output 'Configuring SSL binding...';
-    #       \$CertThumbprint = \$cert.Thumbprint;
-    #       New-WebBinding -Name \$SiteName -Protocol https -Port 443 -CertificateThumbprint \$CertThumbprint -CertificateStoreName My;
-
-    #       # 6. Verify the SSL Binding
-    #       Write-Output 'SSL Binding Complete!';
-    #       Get-WebBinding -Name \$SiteName | Where-Object { \$_.protocol -eq 'https' }
-    #     "
-
-    - name: Set environment variable based on branch
-      run: |
-        branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
-        environment=${branch_name}
-        if [ "$environment" == "main" ]; then
-          environment="prod"
-        fi
-        echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
-
-    - name: Tag the commit
-      if: ${{ success() }}  # Only tag if the workflow is successful
-      run: |
-        TAG="$ENVIRONMENT-$TAGGED_VERSION"
-        echo "Tag: $TAG"  # Debugging the tag value
-        git tag $TAG
-        git push origin $TAG
+    # - name: Tag the commit
+    #   if: ${{ success() }}  # Only tag if the workflow is successful
+    #   run: |
+    #     TAG="$ENVIRONMENT-$TAGGED_VERSION"
+    #     echo "Tag: $TAG"  # Debugging the tag value
+    #     git tag $TAG
+    #     git push origin $TAG
     
