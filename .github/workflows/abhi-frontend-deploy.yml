@@ -21,9 +21,9 @@ on:
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/UnifiedPortal/ABHI"
-  APP_POOL_NAME: "ABHIUP"
-  SITE_NAME: "ABHIUP"
+  WEB_ROOT: "C:/USP/ABHI_DEPLOY"
+  APP_POOL_NAME: "ABHIDEPLOY"
+  SITE_NAME: "ABHIUSP"
   BINDING_HOST: "usp.monocept.ai"
   PORT: 443
 
@@ -189,7 +189,7 @@ jobs:
     
     - name: Execute frontend_deploy.ps1 script on VM
       run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
 
     # - name: Bind SSL Certificate (Optional)
     #   run: |
