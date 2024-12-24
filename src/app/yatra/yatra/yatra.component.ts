@@ -1919,6 +1919,20 @@ export class YatraComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
 
     }
+    if (control.name == 'physicalcopy' && control.type == 'radio'){
+      const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if (control.name == 'decl2') {
+            if (selectedValue === 'Y') {
+              this.dynamicFormGroup.get('decl2')?.setValue(false); 
+            } else if (selectedValue === 'N') {
+              this.dynamicFormGroup.get('decl2')?.setValue(true); 
+            }
+          }
+        })
+      })
+    }
     if (control.name == 'confAccountNumber') {
 
       if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
