@@ -497,6 +497,8 @@ export class RugDynamicFormComponent {
         next: (res: any) => {
           console.log(res);
           this.form = JSON.parse(res.data.jsonFormData);
+         
+        
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);
           this.leadId = this.bbdetails.leadId;
@@ -515,7 +517,7 @@ export class RugDynamicFormComponent {
           
          
           this.initializeForm();
-      this.getFamilyConstruct();
+          this.getFamilyConstruct();
 
         },
         error: (err) => {
@@ -2634,6 +2636,7 @@ export class RugDynamicFormComponent {
     console.log(checkbox.checked, option, controls);
     console.log(this.form.formSections);
     console.log(this.dynamicFormGroup.value);
+    let firstName:any, lastName:any, middleName:any = ''
 
     this.form.formSections.forEach(formsection => {
       formsection.formControls.forEach(formControl => {
@@ -2870,9 +2873,23 @@ export class RugDynamicFormComponent {
           if (insuredMembersArray.value[index].relation = item.relation) {
             console.log(item.name);
             const fullName = item.name;
-            const [firstName, lastName] = fullName.split(' ');
+            const length = fullName.split(' ').length             
+            if(length == 1){
+              firstName = fullName
+              lastName = "."
+            }else if(length == 2){
+              firstName = fullName.split(" ")?.[0]
+              lastName = fullName.split(" ")?.[1]
+            }else if( length == 3){
+                firstName = fullName.split(" ")?.[0]
+                middleName = fullName.split(" ")?.[1]
+                lastName = fullName.split(" ")?.[2]
+            }
+            // const [firstName, lastName] = fullName.split(' ');
             insuredMembersArray.at(index).patchValue({
-              name: firstName,
+              name: item.name,
+              firstName:firstName,
+              middleName:middleName,
               lastName: lastName,
               dob: item.dob,
               gender: item.gender,
@@ -3762,183 +3779,322 @@ export class RugDynamicFormComponent {
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
               this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
-              if(this.getFormIndexValue() == 3){
-                const payloadObject = {
-                  proposerDetails: {
-                    leadId: this.d2cDetails.leadId,
-                    // customerId: this.d2cDetails.customerId,
-                    salutation: this.d2cDetails.proposerGender == 'M' ? "MR" : this.d2cDetails.proposerGender == 'F' ? "MS" : "Mr",
-                    customerName: this.d2cDetails.insuredMemberDetails[0].name,
-                    // customerLastName: this.d2cDetails.customerLastName,
-                    address:this.d2cDetails.proposerAddress,
-                    city:this.d2cDetails.proposerCity,
-                    pinCode: this.d2cDetails.proposerPincode,
-                    state: "GUJARAT",
-                    dob: this.d2cDetails.proposerDob,
-                    gender: this.d2cDetails.proposerGender,
-                    mobileNumber: this.d2cDetails.proposerMobileNumber,
-                    nationality: this.d2cDetails.proposerNationality,
-                    emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
-                    maritalStatus: this.d2cDetails.proposerMaritalStatus,
-                    occupationType: this.d2cDetails.proposerOccupationType,
-                    panNumber: this.d2cDetails.proposerPanNumber,
-                    sumInsured: this.d2cDetails.sumInsured,
-                    premium: this.d2cDetails.totalPremium.toString(),
-                    isMinor: this.d2cDetails.IsMinor,
-                    relationShipWithChild: null,
-                    relationShipWithChildCode: null,
-                    isSubmitted: null,
-                    isPayment: null,              
-                    leadStatus: this.d2cDetails.leadStatus,
-                    quotationNumber: null,
-                    productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03",
-                    productName: null,
-                    occupationName: this.d2cDetails.productPlanName,
-                    productPlanCode: this.d2cDetails.productPlanCode.toString(),
-                    productPlan: null,                  
-                    groupCode: "GRP001",
-                    combiId: this.d2cDetails.combiId,
-                    combiName: this.d2cDetails.planAvailable,
-                    familyConstruct: this.d2cDetails.familyConstruct,
-                    familyConstructId: 1,
-                    ghiPremium: this.d2cDetails.ghiPremium ? this.d2cDetails.ghiPremium : null,
-                    gpaPremium: this.d2cDetails.gpaPremium ? this.d2cDetails.gpaPremium : null,
-                    gciPremium: this.d2cDetails.gciPremium ? this.d2cDetails.gciPremium : null,
-                    deductibleAmount: this.d2cDetails.gciPremiumFiveLakhDeductable ? this.d2cDetails.gciPremiumFiveLakhDeductable : this.d2cDetails.gciPremiumTenLakhDeductable ? this.d2cDetails.gciPremiumTenLakhDeductable : null,
-                    ghiQuoteNumber: null,
-                    gfbQuoteNumber: null,
-                    accountNumber: this.d2cDetails.accountNumber,
-                    ifsc: this.d2cDetails.ifscCode,
-                    accType: this.d2cDetails.accType,
-                    bankName: this.d2cDetails.bankName,
-                    bankAccountType: this.d2cDetails.accountType,
-                    micrCode: this.d2cDetails.micrCode,
-                    branchName: this.d2cDetails.branchName,
-                    // address: this.d2cDetails.proposerAddress,
-                    // city: this.d2cDetails.proposerCity,
-              
-                    // isNRI: this.d2cDetails.proposerIsNri,
-                    // tenure: 1,
-                    // sumInsured: this.d2cDetails.sumInsured,
-                    // premium: this.d2cDetails.totalPremium,
-                    // annualIncome: "",
-                    // axisProductCode: this.d2cDetails.axisProductCode,
-                    // axisProductName: this.d2cDetails.axisProductName,
-                    
-                    // isAxisBankAccount: this.d2cDetails.isAxisBankAccount,
-                    // accountNumber: this.d2cDetails.accountNumber,
-                    // ifscCode: this.d2cDetails.ifscCode,
-                    // branchName: this.d2cDetails.branchName,
-                    // branchSolId: this.d2cDetails.branchSolId,
-                    // amount: "",
-                    // isGoGreen: true,
-                    // bankName: this.d2cDetails.bankName,
-                    // debitType: this.d2cDetails.debitType || "",
-                    // endDate: this.d2cDetails.endDate || "",
-                    // frequencyOfPayment: this.d2cDetails.frequencyOfPayment || "",
-                    // maskedAccountNo: "",
-                    // paymentMode: this.d2cDetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
-                    // startDate: this.d2cDetails.startDate || "",
-                    // idType: this.d2cDetails.idType,
-                    // idValue: this.d2cDetails.idValue,
-                    // occupationType: "",
-                    // occupation: "",
-                    // leadStatus: null,
-                    // productCode: this.d2cDetails.productCode,
-                    // productName: this.d2cDetails.productName,
-                    // isSubmitted: false,
-                    // isPayment: false,
-                    // productPlanName: "GHI,GP",
-                    // productPlanCode: "22",
-                    
-                    // familyConstructId: "1",
-                    // ghiPremium: "15665",
-                    // gpaPremium: null,
-                    // gciPremium: null,
-                    // deductibleAmount: null,
-                    // gpPremium: "1332",
-                    // micrCode: this.d2cDetails.micrCode,
-                    // accType: this.d2cDetails.accType == "primary" ? "Primary" : "Primary",
-                    // bankAccountType: this.d2cDetails.bankAccountType || "saving"
-                  },
-                  insuredDetails: this.d2cDetails.insuredMemberDetails.map((member: any) => ({
-                    leadId: this.d2cDetails.leadId,
-                    name: member.name,
-                    dob: member.dob,
-                    relationName: null,
-                    relationCode: JSON.parse(member.relationshipType)?.id || "",
-                    gender: member.gender,                
-                    height: member.height || 0,
-                    weight: member.weight
-                  })),
-                  nomineeDetails: {
-                    leadId: this.d2cDetails.leadId,
-                    nomineeName: this.d2cDetails.firstName,
-                    nomineeRelation: this.d2cDetails.nomineeRelation,
-                    nomineeRelationCode: "R002",
-                    nomineeDOB: "11-11-1999",
-                    nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
-                    nomineeMobileNumber: this.d2cDetails.mobileNumber,
-                    nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
-                    appointeeDOB: null,
-                    appointeeName: this.d2cDetails.appointeeName || null,
-                    appointeeContactNo: this.d2cDetails.appointeeMobileNumber || null,
-                    relationshipOfAppointeeWithNominee: this.d2cDetails.relationWithNominee || "",
-                    defaultShare: this.d2cDetails.nomineeDefaultShare,
-                  }
-                };
-                console.log(payloadObject);
-                let testObj = {"leadId":"3000886759975308","requestData":"{\"proposerDetails\":{\"leadId\":\"3000886759975308\",\"salutation\":\"MR\",\"customerName\":\"Dfyjemo Person\",\"address\":\"11-BAVA F INSTAL RN IRAJALAWRAP K~ ~RVANPGNAURA\",\"city\":\"AHMEDABAD\",\"pinCode\":\"302019\",\"state\":\"GUJARAT\",\"dob\":\"20-02-1974\",\"gender\":\"M\",\"mobileNumber\":\"9992298551\",\"nationality\":\"IN\",\"emailAddress\":\"LHMUE.SHAH@ARVIND.IN\",\"maritalStatus\":\"Y\",\"occupationType\":\"BUSINESS -HNI\",\"panNumber\":\"ALXPS0000L\",\"sumInsured\":\"5000000\",\"premium\":\"16899\",\"isMinor\":false,\"relationShipWithChild\":null,\"relationShipWithChildCode\":null,\"isSubmitted\":null,\"isPayment\":null,\"leadStatus\":\"INITIAL\",\"quotationNumber\":null,\"productCode\":\"D02\",\"productName\":null,\"occupationName\":null,\"productPlanCode\":\"11\",\"productPlan\":\"GHI\",\"groupCode\":\"GRP001\",\"combiId\":\"1\",\"combiName\":\"GHI\",\"familyConstruct\":\"1A\",\"familyConstructId\":1,\"ghiPremium\":\"16899\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"ghiQuoteNumber\":null,\"gfbQuoteNumber\":null,\"accountNumber\":\"003010100000264\",\"ifsc\":\"hughvgy\",\"accType\":\"secondary\",\"bankName\":\"\",\"bankAccountType\":\"Current\",\"micrCode\":\"\",\"branchName\":\"\"},\"insuredDetails\":[{\"leadId\":\"3000886759975308\",\"name\":\"Dfyjemo Person\",\"dob\":\"20-02-1974\",\"relationName\":null,\"relationCode\":\"R001\",\"gender\":\"M\",\"height\":\"165.10\",\"weight\":\"55\"}],\"nomineeDetails\":{\"leadId\":\"3000886759975308\",\"nomineeName\":\"ughj ugugig\",\"nomineeRelation\":\"spouse\",\"nomineeRelationCode\":\"R002\",\"nomineeDOB\":\"11-11-1999\",\"nomineeGender\":\"Male\",\"nomineeMobileNumber\":\"9887787657\",\"nomineeAddress\":\"jhkhb\",\"appointeeName\":\"\",\"appointeeDOB\":\"\",\"appointeeContactNo\":\"\",\"relationshipOfAppointeeWithNominee\":\"\",\"defaultShare\":\"100\"}}","currentPage":4,"isFinalSubmit":true,"leadStatus":"SUBMITTED"}
-                let commonDraftRequest = {
-                  leadId: this.leadId,
-                  requestData: JSON.stringify(payloadObject),
-                  currentPage: this.getFormIndexValue(),
-                  isFinalSubmit: true,
-                  leadStatus: "SUBMITTED"
-                }
-                this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
-                  next: (res: any) => {
-                    console.log(JSON.parse(res.data));
-                    res = JSON.parse(res.data)
-                    if (res.isSuccess == true && res.statusCode == 200) {
-                      this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
-                      let justpayPayload = { 
-                        "agentcode": this.agentCode,
-                         "proposalNumber": this.leadId,
-                         "paymentMethod": "autoDebit",
-                         "source": "RUG",
-                         "policyType": "New Business",
-                         "policyNumber": "", 
-                         "quoteNumber": "",
-                         "OrderId": "",
-                         "Amount": Number(this.d2cDetails.totalPremium),
-                         "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
-                         "MiddleName": "",
-                         "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
-                         "Phone": this.d2cDetails.proposerMobileNumber,
-                         "Email": "LHME.SHAH@ARVIND.IN",
-                         "DOB": "10/07/1997",                       
-                         "appName":"D2C"
-                                
-                        }
-                      this.d2cJustPayRedirection(justpayPayload)
-                      // if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                      //   this.incrementIndex();
-                      //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                        
-                      // }
-            
+              if(this.productId == 31){
+                if(this.getFormIndexValue() == 3){
+                  const payloadObject = {
+                    proposerDetails: {
+                      leadId: this.d2cDetails.leadId,
+                      // customerId: this.d2cDetails.customerId,
+                      salutation: this.d2cDetails.proposerGender == 'M' ? "MR" : this.d2cDetails.proposerGender == 'F' ? "MS" : "Mr",
+                      customerName: this.d2cDetails.customerName,
+                      // customerLastName: this.d2cDetails.customerLastName,
+                      address:this.d2cDetails.proposerAddress,
+                      city:this.d2cDetails.proposerCity,
+                      pinCode: this.d2cDetails.proposerPincode,
+                      state: "GUJARAT",
+                      dob: this.d2cDetails.proposerDob,
+                      gender: this.d2cDetails.proposerGender,
+                      mobileNumber: this.d2cDetails.proposerMobileNumber,
+                      nationality: this.d2cDetails.proposerNationality,
+                      emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
+                      maritalStatus: this.d2cDetails.proposerMaritalStatus,
+                      occupationType: this.d2cDetails.proposerOccupationType,
+                      panNumber: this.d2cDetails.proposerPanNumber,
+                      sumInsured: this.d2cDetails.sumInsured,
+                      premium: this.d2cDetails.totalPremium.toString(),
+                      isMinor: this.d2cDetails.IsMinor,
+                      relationShipWithChild: null,
+                      relationShipWithChildCode: null,
+                      isSubmitted: null,
+                      isPayment: null,              
+                      leadStatus: this.d2cDetails.leadStatus,
+                      quotationNumber: null,
+                      productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03",
+                      productName: null,
+                      occupationName: this.d2cDetails.productPlanName,
+                      productPlanCode: this.d2cDetails.productPlanCode.toString(),
+                      productPlan: null,                  
+                      groupCode: "CATEGORY 1",
+                      combiId: this.d2cDetails.combiId,
+                      combiName: null,
+                      familyConstruct: this.d2cDetails.familyConstruct,
+                      familyConstructId: Number(this.d2cDetails.familyConstructId),
+                      ghiPremium: this.d2cDetails.ghiPremium ? this.d2cDetails.ghiPremium : null,
+                      gpaPremium: this.d2cDetails.gpaPremium ? this.d2cDetails.gpaPremium : null,
+                      gciPremium: this.d2cDetails.gciPremium ? this.d2cDetails.gciPremium : null,
+                      deductibleAmount: this.d2cDetails.gciPremiumFiveLakhDeductable ? this.d2cDetails.gciPremiumFiveLakhDeductable : this.d2cDetails.gciPremiumTenLakhDeductable ? this.d2cDetails.gciPremiumTenLakhDeductable : null,
+                      ghiQuoteNumber: null,
+                      gfbQuoteNumber: null,
+                      accountNumber: this.d2cDetails.accountNumber,
+                      ifsc: this.d2cDetails.ifscCode,
+                      accType: this.d2cDetails.accType,
+                      bankName: this.d2cDetails.bankName,
+                      bankAccountType: this.d2cDetails.accountType,
+                      micrCode: this.d2cDetails.micrCode,
+                      branchName: this.d2cDetails.branchName,
+                      annualIncome:null            
+                      
+                    },
+                    insuredDetails: [{
+                      leadId:  this.d2cDetails.leadId,
+                      name: this.d2cDetails.childName,
+                      dob: this.d2cDetails.childDob,
+                      relationName: this.d2cDetails.childgender == 'M' ? 'male' : 'female',
+                      relationCode: "R003",
+                      gender: this.d2cDetails.childgender == 'M' ? 'male' : 'female',
+                      height: null,
+                      weight: null,
+                    }],
+                    nomineeDetails: {
+                      leadId: this.d2cDetails.leadId,
+                      nomineeName: this.d2cDetails.firstName,
+                      nomineeRelation: this.d2cDetails.nomineeRelation,
+                      nomineeRelationCode: "R002",
+                      nomineeDOB: "11-11-1999",
+                      nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
+                      nomineeMobileNumber: this.d2cDetails.mobileNumber,
+                      nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
+                      appointeeDOB: null,
+                      appointeeName: this.d2cDetails.appointeeName || null,
+                      appointeeContactNo: this.d2cDetails.appointeeMobileNumber || null,
+                      relationshipOfAppointeeWithNominee: this.d2cDetails.relationWithNominee || "",
+                      defaultShare: this.d2cDetails.nomineeDefaultShare,
                     }
-            
-                  },
-                  error: (err) => {
-                    console.error(err);
+                  };
+                  console.log(payloadObject);
+                  let testObj = {"leadId":"3000886759975308","requestData":"{\"proposerDetails\":{\"leadId\":\"3000886759975308\",\"salutation\":\"MR\",\"customerName\":\"Dfyjemo Person\",\"address\":\"11-BAVA F INSTAL RN IRAJALAWRAP K~ ~RVANPGNAURA\",\"city\":\"AHMEDABAD\",\"pinCode\":\"302019\",\"state\":\"GUJARAT\",\"dob\":\"20-02-1974\",\"gender\":\"M\",\"mobileNumber\":\"9992298551\",\"nationality\":\"IN\",\"emailAddress\":\"LHMUE.SHAH@ARVIND.IN\",\"maritalStatus\":\"Y\",\"occupationType\":\"BUSINESS -HNI\",\"panNumber\":\"ALXPS0000L\",\"sumInsured\":\"5000000\",\"premium\":\"16899\",\"isMinor\":false,\"relationShipWithChild\":null,\"relationShipWithChildCode\":null,\"isSubmitted\":null,\"isPayment\":null,\"leadStatus\":\"INITIAL\",\"quotationNumber\":null,\"productCode\":\"D02\",\"productName\":null,\"occupationName\":null,\"productPlanCode\":\"11\",\"productPlan\":\"GHI\",\"groupCode\":\"GRP001\",\"combiId\":\"1\",\"combiName\":\"GHI\",\"familyConstruct\":\"1A\",\"familyConstructId\":1,\"ghiPremium\":\"16899\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"ghiQuoteNumber\":null,\"gfbQuoteNumber\":null,\"accountNumber\":\"003010100000264\",\"ifsc\":\"hughvgy\",\"accType\":\"secondary\",\"bankName\":\"\",\"bankAccountType\":\"Current\",\"micrCode\":\"\",\"branchName\":\"\"},\"insuredDetails\":[{\"leadId\":\"3000886759975308\",\"name\":\"Dfyjemo Person\",\"dob\":\"20-02-1974\",\"relationName\":null,\"relationCode\":\"R001\",\"gender\":\"M\",\"height\":\"165.10\",\"weight\":\"55\"}],\"nomineeDetails\":{\"leadId\":\"3000886759975308\",\"nomineeName\":\"ughj ugugig\",\"nomineeRelation\":\"spouse\",\"nomineeRelationCode\":\"R002\",\"nomineeDOB\":\"11-11-1999\",\"nomineeGender\":\"Male\",\"nomineeMobileNumber\":\"9887787657\",\"nomineeAddress\":\"jhkhb\",\"appointeeName\":\"\",\"appointeeDOB\":\"\",\"appointeeContactNo\":\"\",\"relationshipOfAppointeeWithNominee\":\"\",\"defaultShare\":\"100\"}}","currentPage":4,"isFinalSubmit":true,"leadStatus":"SUBMITTED"}
+                  let commonDraftRequest = {
+                    leadId: this.leadId,
+                    requestData: JSON.stringify(payloadObject),
+                    currentPage: this.getFormIndexValue(),
+                    isFinalSubmit: true,
+                    leadStatus: "SUBMITTED"
                   }
-                });
+                  this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
+                    next: (res: any) => {
+                      console.log(JSON.parse(res.data));
+                      res = JSON.parse(res.data)
+                      if (res.isSuccess == true && res.statusCode == 200) {
+                        this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+                        let justpayPayload = { 
+                          "agentcode": this.agentCode,
+                           "proposalNumber": this.leadId,
+                           "paymentMethod": "autoDebit",
+                           "source": "RUG",
+                           "policyType": "New Business",
+                           "policyNumber": "", 
+                           "quoteNumber": "",
+                           "OrderId": "",
+                           "Amount": Number(this.d2cDetails.totalPremium),
+                           "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
+                           "MiddleName": "",
+                           "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
+                           "Phone": this.d2cDetails.proposerMobileNumber,
+                           "Email": "LHME.SHAH@ARVIND.IN",
+                           "DOB": "10/07/1997",                       
+                           "appName":"D2C"
+                                  
+                          }
+                        this.d2cJustPayRedirection(justpayPayload)
+                        // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                        //   this.incrementIndex();
+                        //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                          
+                        // }
+              
+                      }
+              
+                    },
+                    error: (err) => {
+                      console.error(err);
+                    }
+                  });
+                }else{
+                  if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                    this.incrementIndex();
+                    this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                  }
+                }
               }else{
-                if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                  this.incrementIndex();
-                  this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+
+                if(this.getFormIndexValue() == 3){
+                  const payloadObject = {
+                    proposerDetails: {
+                      leadId: this.d2cDetails.leadId,
+                      // customerId: this.d2cDetails.customerId,
+                      salutation: this.d2cDetails.proposerGender == 'M' ? "MR" : this.d2cDetails.proposerGender == 'F' ? "MS" : "Mr",
+                      customerName: this.d2cDetails.insuredMemberDetails[0].name,
+                      // customerLastName: this.d2cDetails.customerLastName,
+                      address:this.d2cDetails.proposerAddress,
+                      city:this.d2cDetails.proposerCity,
+                      pinCode: this.d2cDetails.proposerPincode,
+                      state: "GUJARAT",
+                      dob: this.d2cDetails.proposerDob,
+                      gender: this.d2cDetails.proposerGender,
+                      mobileNumber: this.d2cDetails.proposerMobileNumber,
+                      nationality: this.d2cDetails.proposerNationality,
+                      emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
+                      maritalStatus: this.d2cDetails.proposerMaritalStatus,
+                      occupationType: this.d2cDetails.proposerOccupationType,
+                      panNumber: this.d2cDetails.proposerPanNumber,
+                      sumInsured: this.d2cDetails.sumInsured,
+                      premium: this.d2cDetails.totalPremium.toString(),
+                      isMinor: this.d2cDetails.IsMinor,
+                      relationShipWithChild: null,
+                      relationShipWithChildCode: null,
+                      isSubmitted: null,
+                      isPayment: null,              
+                      leadStatus: this.d2cDetails.leadStatus,
+                      quotationNumber: null,
+                      productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03",
+                      productName: null,
+                      occupationName: this.d2cDetails.productPlanName,
+                      productPlanCode: this.d2cDetails.productPlanCode.toString(),
+                      productPlan: null,                  
+                      groupCode: "GRP001",
+                      combiId: this.d2cDetails.combiId,
+                      combiName: this.d2cDetails.planAvailable,
+                      familyConstruct: this.d2cDetails.familyConstruct,
+                      familyConstructId: 1,
+                      ghiPremium: this.d2cDetails.ghiPremium ? this.d2cDetails.ghiPremium : null,
+                      gpaPremium: this.d2cDetails.gpaPremium ? this.d2cDetails.gpaPremium : null,
+                      gciPremium: this.d2cDetails.gciPremium ? this.d2cDetails.gciPremium : null,
+                      deductibleAmount: this.d2cDetails.gciPremiumFiveLakhDeductable ? this.d2cDetails.gciPremiumFiveLakhDeductable : this.d2cDetails.gciPremiumTenLakhDeductable ? this.d2cDetails.gciPremiumTenLakhDeductable : null,
+                      ghiQuoteNumber: null,
+                      gfbQuoteNumber: null,
+                      accountNumber: this.d2cDetails.accountNumber,
+                      ifsc: this.d2cDetails.ifscCode,
+                      accType: this.d2cDetails.accType,
+                      bankName: this.d2cDetails.bankName,
+                      bankAccountType: this.d2cDetails.accountType,
+                      micrCode: this.d2cDetails.micrCode,
+                      branchName: this.d2cDetails.branchName,
+                      // address: this.d2cDetails.proposerAddress,
+                      // city: this.d2cDetails.proposerCity,
+                
+                      // isNRI: this.d2cDetails.proposerIsNri,
+                      // tenure: 1,
+                      // sumInsured: this.d2cDetails.sumInsured,
+                      // premium: this.d2cDetails.totalPremium,
+                      // annualIncome: "",
+                      // axisProductCode: this.d2cDetails.axisProductCode,
+                      // axisProductName: this.d2cDetails.axisProductName,
+                      
+                      // isAxisBankAccount: this.d2cDetails.isAxisBankAccount,
+                      // accountNumber: this.d2cDetails.accountNumber,
+                      // ifscCode: this.d2cDetails.ifscCode,
+                      // branchName: this.d2cDetails.branchName,
+                      // branchSolId: this.d2cDetails.branchSolId,
+                      // amount: "",
+                      // isGoGreen: true,
+                      // bankName: this.d2cDetails.bankName,
+                      // debitType: this.d2cDetails.debitType || "",
+                      // endDate: this.d2cDetails.endDate || "",
+                      // frequencyOfPayment: this.d2cDetails.frequencyOfPayment || "",
+                      // maskedAccountNo: "",
+                      // paymentMode: this.d2cDetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
+                      // startDate: this.d2cDetails.startDate || "",
+                      // idType: this.d2cDetails.idType,
+                      // idValue: this.d2cDetails.idValue,
+                      // occupationType: "",
+                      // occupation: "",
+                      // leadStatus: null,
+                      // productCode: this.d2cDetails.productCode,
+                      // productName: this.d2cDetails.productName,
+                      // isSubmitted: false,
+                      // isPayment: false,
+                      // productPlanName: "GHI,GP",
+                      // productPlanCode: "22",
+                      
+                      // familyConstructId: "1",
+                      // ghiPremium: "15665",
+                      // gpaPremium: null,
+                      // gciPremium: null,
+                      // deductibleAmount: null,
+                      // gpPremium: "1332",
+                      // micrCode: this.d2cDetails.micrCode,
+                      // accType: this.d2cDetails.accType == "primary" ? "Primary" : "Primary",
+                      // bankAccountType: this.d2cDetails.bankAccountType || "saving"
+                    },
+                    insuredDetails: this.d2cDetails.insuredMemberDetails.map((member: any) => ({
+                      leadId: this.d2cDetails.leadId,
+                      name: member.name,
+                      dob: member.dob,
+                      relationName: null,
+                      relationCode: JSON.parse(member.relationshipType)?.id || "",
+                      gender: member.gender,                
+                      height: member.height || 0,
+                      weight: member.weight
+                    })),
+                    nomineeDetails: {
+                      leadId: this.d2cDetails.leadId,
+                      nomineeName: this.d2cDetails.firstName,
+                      nomineeRelation: this.d2cDetails.nomineeRelation,
+                      nomineeRelationCode: "R002",
+                      nomineeDOB: "11-11-1999",
+                      nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
+                      nomineeMobileNumber: this.d2cDetails.mobileNumber,
+                      nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
+                      appointeeDOB: null,
+                      appointeeName: this.d2cDetails.appointeeName || null,
+                      appointeeContactNo: this.d2cDetails.appointeeMobileNumber || null,
+                      relationshipOfAppointeeWithNominee: this.d2cDetails.relationWithNominee || "",
+                      defaultShare: this.d2cDetails.nomineeDefaultShare,
+                    }
+                  };
+                  console.log(payloadObject);
+                  let testObj = {"leadId":"3000886759975308","requestData":"{\"proposerDetails\":{\"leadId\":\"3000886759975308\",\"salutation\":\"MR\",\"customerName\":\"Dfyjemo Person\",\"address\":\"11-BAVA F INSTAL RN IRAJALAWRAP K~ ~RVANPGNAURA\",\"city\":\"AHMEDABAD\",\"pinCode\":\"302019\",\"state\":\"GUJARAT\",\"dob\":\"20-02-1974\",\"gender\":\"M\",\"mobileNumber\":\"9992298551\",\"nationality\":\"IN\",\"emailAddress\":\"LHMUE.SHAH@ARVIND.IN\",\"maritalStatus\":\"Y\",\"occupationType\":\"BUSINESS -HNI\",\"panNumber\":\"ALXPS0000L\",\"sumInsured\":\"5000000\",\"premium\":\"16899\",\"isMinor\":false,\"relationShipWithChild\":null,\"relationShipWithChildCode\":null,\"isSubmitted\":null,\"isPayment\":null,\"leadStatus\":\"INITIAL\",\"quotationNumber\":null,\"productCode\":\"D02\",\"productName\":null,\"occupationName\":null,\"productPlanCode\":\"11\",\"productPlan\":\"GHI\",\"groupCode\":\"GRP001\",\"combiId\":\"1\",\"combiName\":\"GHI\",\"familyConstruct\":\"1A\",\"familyConstructId\":1,\"ghiPremium\":\"16899\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"ghiQuoteNumber\":null,\"gfbQuoteNumber\":null,\"accountNumber\":\"003010100000264\",\"ifsc\":\"hughvgy\",\"accType\":\"secondary\",\"bankName\":\"\",\"bankAccountType\":\"Current\",\"micrCode\":\"\",\"branchName\":\"\"},\"insuredDetails\":[{\"leadId\":\"3000886759975308\",\"name\":\"Dfyjemo Person\",\"dob\":\"20-02-1974\",\"relationName\":null,\"relationCode\":\"R001\",\"gender\":\"M\",\"height\":\"165.10\",\"weight\":\"55\"}],\"nomineeDetails\":{\"leadId\":\"3000886759975308\",\"nomineeName\":\"ughj ugugig\",\"nomineeRelation\":\"spouse\",\"nomineeRelationCode\":\"R002\",\"nomineeDOB\":\"11-11-1999\",\"nomineeGender\":\"Male\",\"nomineeMobileNumber\":\"9887787657\",\"nomineeAddress\":\"jhkhb\",\"appointeeName\":\"\",\"appointeeDOB\":\"\",\"appointeeContactNo\":\"\",\"relationshipOfAppointeeWithNominee\":\"\",\"defaultShare\":\"100\"}}","currentPage":4,"isFinalSubmit":true,"leadStatus":"SUBMITTED"}
+                  let commonDraftRequest = {
+                    leadId: this.leadId,
+                    requestData: JSON.stringify(payloadObject),
+                    currentPage: this.getFormIndexValue(),
+                    isFinalSubmit: true,
+                    leadStatus: "SUBMITTED"
+                  }
+                  this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
+                    next: (res: any) => {
+                      console.log(JSON.parse(res.data));
+                      res = JSON.parse(res.data)
+                      if (res.isSuccess == true && res.statusCode == 200) {
+                        this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+                        let justpayPayload = { 
+                          "agentcode": this.agentCode,
+                           "proposalNumber": this.leadId,
+                           "paymentMethod": "autoDebit",
+                           "source": "RUG",
+                           "policyType": "New Business",
+                           "policyNumber": "", 
+                           "quoteNumber": "",
+                           "OrderId": "",
+                           "Amount": Number(this.d2cDetails.totalPremium),
+                           "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
+                           "MiddleName": "",
+                           "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
+                           "Phone": this.d2cDetails.proposerMobileNumber,
+                           "Email": "LHME.SHAH@ARVIND.IN",
+                           "DOB": "10/07/1997",                       
+                           "appName":"D2C"
+                                  
+                          }
+                        this.d2cJustPayRedirection(justpayPayload)
+                        // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                        //   this.incrementIndex();
+                        //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                          
+                        // }
+              
+                      }
+              
+                    },
+                    error: (err) => {
+                      console.error(err);
+                    }
+                  });
+                }else{
+                  if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                    this.incrementIndex();
+                    this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                  }
                 }
               }
             }
@@ -6600,6 +6756,7 @@ export class RugDynamicFormComponent {
 
         filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
         console.log(filterArr);
+        this.d2cDetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
         if(this.bbdetails.productCode != "R10"){
           this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
         }else{
@@ -6622,23 +6779,7 @@ export class RugDynamicFormComponent {
     //     console.error(err);
     //   }
     // });
-    let obj = {
-      IsMinor: true,
-      SIGroupId: this.productId == 7 ?  1 : this.productId == 8 ?2: "",
-      PlanSID: this.productId == 7 ?  1 : this.productId == 8 ? 11: "" 
-    }
-    this.yatraService.getPremiumData(obj).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        res = JSON.parse(res.data).data
-        this.bbPremiumData = res.premium;
-        console.log(this.bbPremiumData);
 
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
   }
   async changeD2CSumInsured(event: any) {
     console.log(this.sumInsuredData);
@@ -6675,10 +6816,10 @@ export class RugDynamicFormComponent {
     }
     this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
     // this.yatraService.policyDetails.groupCode = filterArr[0].groupCode;
-    this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
+    // this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
     // this.yatraService.policyDetails.productPlanName = "GHI,GP";
     this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
-    if (this.formSequence[0].formName == "Know Your Premium") {
+    if (this.formSequence[0].formName == "Know Your Premium" || this.formSequence[0].formName == "Minor Details") {
       let obj = {
         IsMinor: true,
         SIGroupId: filterArr[0].siGroupId,
@@ -6792,7 +6933,7 @@ export class RugDynamicFormComponent {
           console.log(res);
           res = JSON.parse(res.data).data
           this.bbPremiumData = res.premium;
-          this.calculateBBPremium()
+          this.calculateD2CPremium()
         },
         error: (err) => {
           console.error(err);
@@ -6802,114 +6943,24 @@ export class RugDynamicFormComponent {
   }
 
   calculateD2CPremium() {
-    this.premiumArray = []
-    let memberDob: any;
-    let premiumObj;
-    let memberRelation;
-    let familyConstruct = 1;
-    let selfDob;
-    let spouseDob;
-    let sortedArray: any[] = []
-    const sinsuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-    sinsuredMembersArray.controls.forEach((memberControl: any, i: any) => {
-      const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
-
-      console.log(memberGroup);
-      // memberDob = memberGroup.value.dob
-      memberRelation = memberGroup.value.relation
-      if (memberRelation == "Self") {
-        selfDob = memberGroup.value.dob
-      }
-      if (memberRelation == "Spouse") {
-        familyConstruct = 2
-        spouseDob = memberGroup.value.dob
-      }
-      console.log('member Relationship Type:', memberRelation);
-      console.log('member dob:', memberDob);
-      if (!sortedArray.includes(memberRelation)) {
-        sortedArray.push(memberRelation);
-      } else {
-        console.log(`${memberRelation} is already in the array.`);
-      }
-    });
-    console.log(this.familyConstructsData);
-    console.log(sortedArray);
-    console.log(sortedArray.length);
-    if(sortedArray.length == 1 && sortedArray.includes('Self')){
-      familyConstruct = 1
-    }else if(sortedArray.length == 2 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
-      familyConstruct = 2
-    }else if(sortedArray.length == 2 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
-      familyConstruct = 5
-    }else if(sortedArray.length == 3 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
-      familyConstruct = 6
-    }else if(sortedArray.length == 3 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
-      familyConstruct = 3
-    }else{
-      familyConstruct = 4
-    }
-    console.log(familyConstruct);
-    // this.yatraService.policyDetails.familyConstructId = familyConstruct.toString();
-    let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
-    console.log(filteredFamilyConstruct);
-    // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
-    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
-    console.log(ageRange);
-    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
-    console.log(this.bbPremiumData)
-    this.familyConstruct = familyConstruct;
-    // premiumObj = this.bbPremiumData.filter((ele: any) => {
-    //   return (ele.familyConstructId == this.familyConstruct)
-    // })
-
-
-    this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
-    this.dynamicFormGroup.get('familyConstructId')?.setValue(filteredFamilyConstruct[0].familyConstructID);
-
-    premiumObj = this.bbPremiumData.filter((ele: any) => {
-      return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
-    })
-    let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
-    for(let i = 0; i <= orderOfPremium.length; i++){
-
-      premiumObj.forEach((ele: any) => {
-        if(ele.combinationName == orderOfPremium[i]){
-          this.premiumArray.push(ele)
-        }
-      })
-    }
-    console.log(premiumObj);
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
-      const filteredData = premiumObj.filter(
-        (item: any) => item.combinationName === "GHI"
-      );
-      console.log(filteredData);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+    if(this.productId == 31){
+      // if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+      // const filteredData = premiumObj.filter(
+      //   (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+      // );
+      // console.log(filteredData);
+      this.d2cDetails.ghiPremium = this.bbPremiumData[0].premium.toString();
+      this.d2cDetails.gpaPremium = this.bbPremiumData[1].premium.toString();
+      this.d2cDetails.productPlanName = "GHI,GPA";
+      this.d2cDetails.totalPremium = (this.bbPremiumData[0].premium + this.bbPremiumData[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(this.bbPremiumData[0].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(this.bbPremiumData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (this.bbPremiumData[0].premium + this.bbPremiumData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
-      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
-          return ele;
-        }
-        });
-        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-    }
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
-      const filteredData = premiumObj.filter(
-        (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
-      );
-      console.log(filteredData);
-
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(this.bbPremiumData[0].planSID);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+      this.dynamicFormGroup.get('familyConstruct')?.setValue('1C');
+      this.dynamicFormGroup.get('familyConstructId')?.setValue(7);
       let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
       if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
         return ele;
@@ -6917,80 +6968,217 @@ export class RugDynamicFormComponent {
       });
       this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
       this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-    }
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
-      const filteredData = premiumObj.filter(
-        (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
-      );
-      console.log(filteredData);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-      this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
-      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+    // }
+      // this.bbPremiumData.
+    }else{
+      this.premiumArray = []
+      let memberDob: any;
+      let premiumObj;
+      let memberRelation;
+      let familyConstruct = 1;
+      let selfDob;
+      let spouseDob;
+      let sortedArray: any[] = []
+      const sinsuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      sinsuredMembersArray.controls.forEach((memberControl: any, i: any) => {
+        const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
+  
+        console.log(memberGroup);
+        // memberDob = memberGroup.value.dob
+        memberRelation = memberGroup.value.relation
+        if (memberRelation == "Self") {
+          selfDob = memberGroup.value.dob
+        }
+        if (memberRelation == "Spouse") {
+          familyConstruct = 2
+          spouseDob = memberGroup.value.dob
+        }
+        console.log('member Relationship Type:', memberRelation);
+        console.log('member dob:', memberDob);
+        if (!sortedArray.includes(memberRelation)) {
+          sortedArray.push(memberRelation);
+        } else {
+          console.log(`${memberRelation} is already in the array.`);
+        }
+      });
+      console.log(this.familyConstructsData);
+      console.log(sortedArray);
+      console.log(sortedArray.length);
+      if(sortedArray.length == 1 && sortedArray.includes('Self')){
+        familyConstruct = 1
+      }else if(sortedArray.length == 2 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
+        familyConstruct = 2
+      }else if(sortedArray.length == 2 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
+        familyConstruct = 5
+      }else if(sortedArray.length == 3 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
+        familyConstruct = 6
+      }else if(sortedArray.length == 3 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
+        familyConstruct = 3
+      }else{
+        familyConstruct = 4
+      }
+      console.log(familyConstruct);
+      // this.yatraService.policyDetails.familyConstructId = familyConstruct.toString();
+      let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
+      console.log(filteredFamilyConstruct);
+      // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
+      let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
+      console.log(ageRange);
+      console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
+      console.log(this.bbPremiumData)
+      this.familyConstruct = familyConstruct;
+      // premiumObj = this.bbPremiumData.filter((ele: any) => {
+      //   return (ele.familyConstructId == this.familyConstruct)
+      // })
+  
+  
+      this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
+      this.dynamicFormGroup.get('familyConstructId')?.setValue(filteredFamilyConstruct[0].familyConstructID);
+  
+      premiumObj = this.bbPremiumData.filter((ele: any) => {
+        return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+      })
+      let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
+      for(let i = 0; i <= orderOfPremium.length; i++){
+  
+        premiumObj.forEach((ele: any) => {
+          if(ele.combinationName == orderOfPremium[i]){
+            this.premiumArray.push(ele)
+          }
+        })
+      }
+      console.log(premiumObj);
+      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
+        const filteredData = premiumObj.filter(
+          (item: any) => item.combinationName === "GHI"
+        );
+        console.log(filteredData);
+        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.productPlanName = "GHI";
+        this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+            return ele;
+          }
+          });
+          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+          this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+      }
+      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+        const filteredData = premiumObj.filter(
+          (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+        );
+        console.log(filteredData);
+        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+        this.d2cDetails.productPlanName = "GHI,GPA";
+        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
           return ele;
         }
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
         this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-    }
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
-      const filteredData = premiumObj.filter(
-        (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
-      );
-      console.log(filteredData);
-      // this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
-      // this.bbdetails.productPlanName = "GHI-5L";
-      // this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-      this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
-      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
-          return ele;
-        }
-        });
-        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-
-
-    }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
-      const filteredData = premiumObj.filter(
-        (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
-      );
-      console.log(filteredData);
-      console.log(this.dynamicFormGroup.get('sumInsured')?.value);
-      if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
+      }
+      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
+        const filteredData = premiumObj.filter(
+          (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
+        );
+        console.log(filteredData);
+        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.gciPremium = filteredData[1].premium.toString();
+        this.d2cDetails.gpaPremium = filteredData[2].premium.toString();
+        this.d2cDetails.productPlanName = "GHI,GPA,GCI";
+        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+        this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
+        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+            return ele;
+          }
+          });
+          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+          this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+      }
+      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
+        const filteredData = premiumObj.filter(
+          (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
+        );
+        console.log(filteredData);
+        this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+        this.d2cDetails.productPlanName = "GHI-5L";
+        this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
         // this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
-        // this.bbdetails.productPlanName = "GHI-10L";
+        // this.bbdetails.productPlanName = "GHI-5L";
         // this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-        this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
-  
         this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
         let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
           if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
             return ele;
           }
           });
           this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-      }else{
-        this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
-        this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
-        this.calculateD2CPremium();
+        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+  
+  
+      }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
+        const filteredData = premiumObj.filter(
+          (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
+        );
+        console.log(filteredData);
+        console.log(this.dynamicFormGroup.get('sumInsured')?.value);
+        if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
+          // this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
+          // this.bbdetails.productPlanName = "GHI-10L";
+          // this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+          this.d2cDetails.productPlanName = "GHI-10L";
+          this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+          this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
+    
+          this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+          this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+          let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+            if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+              return ele;
+            }
+            });
+            this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+        }else{
+          this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
+          this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+          this.calculateD2CPremium();
+        }
+        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+  
       }
-      this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-
     }
+    
   }
 
 
