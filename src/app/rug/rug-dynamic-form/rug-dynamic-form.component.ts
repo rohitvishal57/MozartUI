@@ -4226,6 +4226,13 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence);
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
+    console.log(this.dynamicFormGroup.get('decl2')?.value);
+    // console.log(this.dynamicFormGroup.get('decl3')?.value);
+    if(this.getFormIndexValue() == 4 && this.dynamicFormGroup.get('decl2')?.value != true){
+      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+      return;
+    }
+    console.log(this.dynamicFormGroup.valid);
     if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
         if(this.getFormIndexValue() == 3){
