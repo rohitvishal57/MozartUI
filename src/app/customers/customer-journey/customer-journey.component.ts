@@ -187,22 +187,20 @@ export class CustomerJourneyComponent {
           };
           const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
-          this.formData = { ...this.formData, ...response.data };
+          this.formData = { ...this.formData, ...response.data, ...this.rowData };
         }
-        
-        console.log(this.formData);
       }
       if (stateData.formSequence) {
-        // this.formSequence = [];
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
         console.log('formSequence',this.formSequence);
 
       }
-      if (stateData.formIndex) {
-        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
-        localStorage.setItem('formIndex', stateData.formIndex);
-        console.log(stateData.formIndex);
-        
+      try{
+        if (stateData.formIndex) {
+          localStorage.setItem('formIndex', stateData.formIndex);        
+        }
+      }catch (error){
+        console.error(error);
       }
     }
     
@@ -238,11 +236,12 @@ export class CustomerJourneyComponent {
     //     })
     //   })
     // }
-    if(this.getFormIndexValue() == 1){
+    if(this.getFormIndexValue() == 1 && this.rowData.productId && this.rowData.partnerId){
       const rData = {
         "partnerId": this.rowData.partnerId,
         "productId": this.rowData.productId
       }
+      try{
       const res = await firstValueFrom(this.commonService.Getformsequence(rData));
       const Sequence = JSON.parse(res.data.formSequence);
       console.log(this.rowData,this.formData);
@@ -285,6 +284,9 @@ export class CustomerJourneyComponent {
           console.error(err);
         }
       });
+    }catch(error){
+      console.error(error);
+    }
     }
     this.initializeForm();
   }

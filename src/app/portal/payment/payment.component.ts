@@ -8,7 +8,6 @@ import { thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
-import { error } from 'jquery';
 
 @Component({
   selector: 'app-payment',
