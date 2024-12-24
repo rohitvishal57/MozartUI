@@ -558,6 +558,7 @@
                                                 </div>
                                             </th>
                                             <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
+                                            <th scope="col">{{"Action" | translate}}</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
@@ -575,7 +576,14 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                    
+                                    <td>
+
+                                        <div class="btn_groupAction">
+                                            <button type="button" id="edit" name="edit" value="edit"
+                                                title="Edit" class="btn_action btn_editAction"
+                                                (click)="redirectQuote(row)"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button></div>
+                                    </td>
                                         </tr>
                                     </tbody>
                                 </table>
