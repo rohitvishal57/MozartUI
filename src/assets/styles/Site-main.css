@@ -6686,16 +6686,16 @@ position: relative;
   padding: 8px 30px !important;
   background-size: 20px !important;
 }
-.custom_toastStyles .error {
+.custom_toastStyles .error .container-2 p:first-child {
   background: #FFE7E5 url(../Img/icon_lightbulb_red.svg) no-repeat 8px 7px !important;
   border-radius: 16px 16px 0 0 !important;
   padding: 8px 30px !important;
-  background-size: 20px !important;
+  background-size: 12px !important;
 }
-.custom_toastStyles .success {
+.custom_toastStyles .success .container-2 p:first-child {
   background: #E7FCF4 url(../Img/icon_lightbulb_green.svg) no-repeat 8px 7px !important;
   border-radius: 16px 16px 0 0 !important;
   padding: 8px 30px !important;
-  background-size: 20px !important;
+  background-size: 12px !important;
 }
 /*----Toast Custom styles end----*/
