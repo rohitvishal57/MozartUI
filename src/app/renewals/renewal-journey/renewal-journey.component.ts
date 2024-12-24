@@ -2879,7 +2879,8 @@ export class RenewalJourneyComponent {
     return new Promise(async (resolve, reject) => {
       if (this.selectedButton) {
         try {
-          const policyNum = this.proposalNum.replace(/-/g, "");
+          // const policyNum = this.proposalNum.replace(/-/g, "");
+          const policyNum = this.formData.policyNumber.replace(/-/g, "");
           console.log("kjsdajlkda", policyNum);
 
           const formData = new FormData();
@@ -2954,6 +2955,7 @@ export class RenewalJourneyComponent {
     this.formIndex = formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
+
   setFormIndexValue(value: number) {
     localStorage.setItem("formIndex", value.toString());
   }
@@ -2963,6 +2965,7 @@ export class RenewalJourneyComponent {
     this.setFormIndexValue(currentIndex + 1);
     console.log("currentIndex", currentIndex);
   }
+  
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);

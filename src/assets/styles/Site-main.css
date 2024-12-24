@@ -5137,11 +5137,13 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 4px 4px 4px 12px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .download_policyKit h6 {
   font-weight: 400;
   font-size: 14px;
   color: #000000;
+  margin-bottom: 0;
 }
 .download_policyKit .btn_downloadKit{
   border-width: 0;

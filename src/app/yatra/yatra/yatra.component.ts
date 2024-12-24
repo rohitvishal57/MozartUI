@@ -554,9 +554,9 @@ export class YatraComponent {
 
         console.log(this.form, this.formSequence, this.formData);
 
-        if (this.formData.verifyKYC || this.formData.verifyKYC == null) {
-          this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false;
-        }
+        // if (this.formData.verifyKYC || this.formData.verifyKYC == null) {
+        //   this.verifyKYCStatus = this.formData.verifyKYC === true ? true : false;
+        // }
         this.initializeForm();
       },
       error: (err) => {
@@ -6266,7 +6266,7 @@ export class YatraComponent {
           memberDesignation: member?.productMemberDesignation || '',
           memberOccupation: member?.productMemberOccupation || '',
           covers: this.covers[index] || [],
-          productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
+          productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: member?.memberRoomCategory || '',
           pedWaitingPeriod: this.pedWaitingPeriod || ''
         };
@@ -6549,6 +6549,9 @@ export class YatraComponent {
 
             console.log(this.formData.insuredMemberDetails[index], member);
 
+            console.log(controls);
+            
+
             const optionsArray: any[] = [];
             let questionId: any;
             let questionName: any
@@ -6611,26 +6614,38 @@ export class YatraComponent {
                             innerArray.diseaseName = newOption.name;
                           }
                         }
-                        // else {
-                        //     // If optionsArray is empty, set subQuestionCode to an empty string
-                        //     innerArray.subQuestionCode = "";
-                        // }
-                        // Push the innerArray to productQuestionnaire
+                        const filteredInnerArray = innerArray;
+                        // const filteredInnerArray = Object.fromEntries(
+                        //   Object.entries(innerArray).filter(([key, value]) => value !== "")
+                        // );
+                        const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+ 
+                        console.log(innerArray, filteredInnerArray, allValuesEmpty);
+                        if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                          innerArray.parentQuestionCode = questionId;
+                          productQuestionnaire.push(filteredInnerArray);
+                        }
                       }
-                      // else {
-                      //     // If no dName, push the innerArray as is
-                      //     productQuestionnaire.push(innerArray);
-                      // }
-                      const filteredInnerArray = innerArray;
-                      // const filteredInnerArray = Object.fromEntries(
-                      //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                      // );
-                      const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+                      else {
+                        const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+ 
+                        if(!allValuesEmpty){
+                          innerArray.harmfulSubstances = true;
+                          innerArray.parentQuestionCode = questionId;
+                          productQuestionnaire.push(innerArray);
+                        }
 
-                      console.log(innerArray, filteredInnerArray, allValuesEmpty);
-                      if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                        innerArray.parentQuestionCode = questionId;
-                        productQuestionnaire.push(filteredInnerArray);
+                        // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
+                        //   innerArray.harmfulSubstances = false;
+                        // }
+                        // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
+                        //   innerArray.harmfulSubstances = true;
+                        // }
+ 
+                        // console.log(innerArray);
+                       
+ 
+                        // productQuestionnaire.push(innerArray);
                       }
                       // productQuestionnaire.push(filteredInnerArray);
                       console.log(productQuestionnaire);

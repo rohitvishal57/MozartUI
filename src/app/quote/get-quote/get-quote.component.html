@@ -422,25 +422,31 @@
                       (click)="diseaseSelection()">{{"Continue" | translate}}</button>
                   </div>
                 </div>
-           
                 <div class="overlay_popupMain overlay_dropdown_w220" *ngIf="selectedDropdown === 'Porting'">
                   <div class="close-popup">
                     <button type="button" class="btn-close" aria-label="Close"
                       style="font-size: 14px;" (click)="closeCustomDiv()"></button>
                   </div>
                   <div class="option_policyType">
-                    <div class="overlay_body checkbox_disease_scroll">
+                    <div class="input-radio-block raido_policyType">
                       <div class="input-radio-block input-radiolabel-porting">
-                          <label class="input-radiolabel " *ngFor="let port of PotingValues">
-                            <input type="radio" id="port.id" name="porting" value="port.id" (click)="selectPort(port.value)">
-                            <span>{{ port.label | translate }}</span>
-                          </label>
+                      <label class="input-radiolabel">
+                        <input type="radio" name="porting" value="Yes"
+                          (click)="onPortingChange('Yes')"
+                          [checked]="quoteFormGroup.get('isPortability')?.value === 'Yes'">
+                        <span>
+                          <em class="pt-head">{{"Yes" | translate}}</em>
+                        </span>
+                      </label>
+                      <label class="input-radiolabel">
+                        <input type="radio" name="porting" value="No"
+                          (click)="onPortingChange('No')"
+                          [checked]="quoteFormGroup.get('isPortability')?.value === 'No'">
+                        <span>
+                          <em class="pt-head">{{"No" | translate}}</em>
+                        </span>
+                      </label>
                       </div>
-                      <!-- <div class="input-checkbox-block checkbox_disease">
-                        <div class="input-checkbox-feild" *ngFor="let port of PotingValues" (click)="selectPort(port.value)">
-                          <label [for]="port.id">{{ port.label | translate }}</label>
-                        </div>
-                      </div> -->
                     </div>
                   </div>
                 </div>  

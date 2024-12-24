@@ -1033,8 +1033,23 @@ export class RugDynamicFormComponent {
               mobileNumber:this.bbdetails.proposerMobileNumber,
               emailId:this.bbdetails.proposerEmailAddress
             })
+            insuredMembersArray.at(0).get('gender')?.disable();
+            insuredMembersArray.at(0).get('firstName')?.disable();
+            insuredMembersArray.at(0).get('mobileNumber')?.disable();
           });
         }
+        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+          // insuredMembersArray.at(0).get('firstName')?.disable();
+          this.dynamicFormGroup.get('preFix')?.disable();
+          this.dynamicFormGroup.get('customerFirstName')?.disable();
+          this.dynamicFormGroup.get('customerLastName')?.disable();
+          this.dynamicFormGroup.get('proposerGender')?.disable();
+          this.dynamicFormGroup.get('proposerDob')?.disable();
+          this.dynamicFormGroup.get('proposerMobileNumber')?.disable();
+          this.dynamicFormGroup.get('proposerPanNumber')?.disable();
+          this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
+          this.dynamicFormGroup.get('proposerAddress')?.disable();
+      }
       }
 
 
@@ -2844,7 +2859,20 @@ export class RugDynamicFormComponent {
         emailId:this.bbdetails.proposerEmailAddress
       })
       insuredMembersArray.at(0).get('gender')?.disable();
+      insuredMembersArray.at(0).get('firstName')?.disable();
+      insuredMembersArray.at(0).get('mobileNumber')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
+      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+                // insuredMembersArray.at(0).get('firstName')?.disable();
+                this.dynamicFormGroup.get('customerFirstName')?.disable();
+                this.dynamicFormGroup.get('customerLastName')?.disable();
+                this.dynamicFormGroup.get('proposerGender')?.disable();
+                this.dynamicFormGroup.get('proposerDob')?.disable();
+                this.dynamicFormGroup.get('proposerMobileNumber')?.disable();
+                this.dynamicFormGroup.get('proposerPanNumber')?.disable();
+                this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
+                this.dynamicFormGroup.get('proposerAddress')?.disable();
+      }
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
         // insuredMembersArray.at(0).get('firstName')?.disable();
@@ -4235,6 +4263,13 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence);
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
+    console.log(this.dynamicFormGroup.get('decl2')?.value);
+    // console.log(this.dynamicFormGroup.get('decl3')?.value);
+    if(this.getFormIndexValue() == 4 && this.dynamicFormGroup.get('decl2')?.value != true){
+      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+      return;
+    }
+    console.log(this.dynamicFormGroup.valid);
     if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
         if(this.getFormIndexValue() == 3){

@@ -89,10 +89,10 @@
                                                 [attr.maxlength]="selected === 'mobileNumber' ? 10 : null"
                                                 (keypress)="restrictInput($event)" (keyup.enter)="triggerSearch()">
                                             <button type="button" id="filtersearchbtn" name="filtersearchbtn"
-                                                class="btn_text" (click)="triggerSearch()"><img *ngIf="!searchApplied"
-                                                    src="assets/Img/icon_magnify_grey.svg" alt="Search"><img
-                                                    *ngIf="searchApplied" src="assets/Img/icon_search_clear.svg"
-                                                    alt="Clear"></button>
+                                                class="btn_text" (click)="triggerSearch()" *ngIf="!searchApplied"><img 
+                                                    src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
+                                                    <!--SEARCH CLEAR BUTTON-->
+                                                    <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" (click)="triggerSearch()" *ngIf="searchApplied"><img  src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
                                             <span
                                                 *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty"
                                                 class="ui-error ui-error-proposal block-show">
@@ -438,10 +438,10 @@
                                             [attr.maxlength]="selected === 'mobileNumber' ? 10 : null"
                                             (keypress)="restrictInput($event)" (keyup.enter)="quoteTriggerSearch()">
                                         <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text"
-                                            (click)="quoteTriggerSearch()"><img *ngIf="!searchApplied"
-                                                src="assets/Img/icon_magnify_grey.svg" alt="Search"><img
-                                                *ngIf="searchApplied" src="assets/Img/icon_search_clear.svg"
-                                                alt="Clear"></button>
+                                            (click)="quoteTriggerSearch()" *ngIf="!searchApplied"><img 
+                                                src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
+                                                <!--SEARCH CLEAR BUTTON-->
+                                                <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" (click)="triggerSearch()" *ngIf="searchApplied"><img  src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
                                         <span
                                             *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty"
                                             class="ui-error ui-error-proposal block-show">
