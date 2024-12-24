@@ -3269,7 +3269,7 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
                 if (this.dynamicFormGroup.get('occupation')?.value != '')
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(JSON.parse(this.dynamicFormGroup.get('occupation')?.value).value);
+                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
                 console.log(memberupgradableZones);
 
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
@@ -6268,7 +6268,7 @@ export class YatraComponent {
           memberGender: member?.memberGender || '',
           memberPincode: member?.pincode || '',
           preExistingDisease: member?.preExistingDisease || '',
-          memberIndex: member.memberIndex || '',
+          memberIndex: member?.memberIndex || '',
           zone: member?.zone || '',
           zoneValue: member?.zoneValue || '',
           state: member?.state || '',
@@ -6276,7 +6276,7 @@ export class YatraComponent {
           memberType: member?.memberType || '',
           memberSumInsured: member?.sumInsured || '',
           // memberZone: member?.zoneValue || '',
-          memberNatureOfDuty: member?.memberNatureOfDuty || '',
+          memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
           memberDesignation: member?.productMemberDesignation || '',
           memberOccupation: member?.productMemberOccupation || '',
           covers: this.covers[index] || [],

@@ -684,7 +684,7 @@
                                         <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
                                         <ng-container *ngFor="let opt of subControl.options">
-                                          <option [value]="opt.value">{{ opt.name?(opt.name|translate):'' }}
+                                          <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{ opt.name?(opt.name|translate):'' }}
                                           </option>
                                         </ng-container>
                                       </select>
