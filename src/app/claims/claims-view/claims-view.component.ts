@@ -311,8 +311,8 @@ export class ClaimsViewComponent {
       state: ["", Validators.required],
       city: ["", Validators.required],
       hospitalAddress: [""],
-      admissionDate: null,
-      dischargeDate: null,
+      admissionDate: [null],
+      dischargeDate: [null],
       admissionTime: [""],
       dischargeTime: [""],
       ailmentDescription: ["", Validators.required],
@@ -504,55 +504,61 @@ export class ClaimsViewComponent {
 }
 
 
-  onChange(value: string) {
-    this.selectedPolicyNumber = value;
-    if (value == "") {
-      // this.form.get('policyNumber').reset();
-    }
-    this.getPolicyMembers(value);
+onChange(value: string) {
+  this.selectedPolicyNumber = value;
+  if (value == "") {
+    // this.form.get('policyNumber').reset();
   }
-  onInput(event: any): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
+  this.getPolicyMembers(value);
+}
+onInput(event: any): void {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
 
-    if (value.length > 12) {
-      this.form.get('claimedAmount')?.setErrors({ maxlength: true });
-    } else {
-      this.form.get('claimedAmount')?.setErrors(null);
-    }
-    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+  if (value.length > 12) {
+    this.form.get('claimedAmount')?.setErrors({ maxlength: true });
+  } else {
+    this.form.get('claimedAmount')?.setErrors(null);
+  }
+  const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
 
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-
-    const isDigit = /^[0-9]$/.test(event.key);
-    if (!isDigit) {
-      event.preventDefault();
-      return;
-    }
-
-    const currentValue = input.value;
-    if (currentValue === '' && event.key === '0') {
-      event.preventDefault();
-    }
+  if (allowedKeys.includes(event.key)) {
+    return;
   }
 
-  toggleDropdown(open: boolean): void {
-    this.isDropdownOpen = open;
+  const isDigit = /^[0-9]$/.test(event.key);
+  if (!isDigit) {
+    event.preventDefault();
+    return;
   }
 
-  filterPolicyNumbers(value: unknown): void {
-    const query = this.searchText.toLowerCase();
+  const currentValue = input.value;
+  if (currentValue === '' && event.key === '0') {
+    event.preventDefault();
   }
+}
 
-  dateFormat(dateType: "fromDate" | "toDate") {
-    if (dateType === "fromDate" && this.fromDate) {
-      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
-    } else if (dateType === "toDate" && this.toDate) {
-      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
-    }
+toggleDropdown(open: boolean): void {
+  this.isDropdownOpen = open;
+}
+
+filterPolicyNumbers(value: unknown): void {
+  const query = this.searchText.toLowerCase();
+}
+
+dateFormat(dateType: "fromDate" | "toDate") {
+  if (dateType === "fromDate" && this.fromDate) {
+    this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+  } else if (dateType === "toDate" && this.toDate) {
+    this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
   }
+}
+
+validateDate(controlName: string): void {
+  const control = this.form.get(controlName);
+  console.log(control?.value, this.maxDate);
+  control?.value > this.maxDate ? control?.setErrors({ incorrect: true }) : control?.setErrors(null);
+}
 
   // ngAfterViewInit() {
   //   document.addEventListener('click', this.handleClickOutside.bind(this));

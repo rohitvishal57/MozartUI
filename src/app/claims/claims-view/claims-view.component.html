@@ -267,7 +267,6 @@
                                         </select>
                                         <label for="coverName">{{"Cover Name" | translate}}</label>
                                     </div>
-
                                     <input type="hidden" formControlName="coverCode">
                                 </div>
                                 <div *ngIf="showFirstScenario " class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -321,8 +320,13 @@
                                         <input type="date" class="form-control input-textBox"
                                             formControlName="admissionDate" id="admissionDate" name="admissionDate"
                                             placeholder="Date of Admission" [(ngModel)]="fromDate"
-                                            (dateChange)="dateFormat('fromDate')" [max]="maxDate" />
+                                            (dateChange)="dateFormat('fromDate')" (blur)="validateDate('admissionDate')" [max]="maxDate" />
                                         <label for="admissionDate">Date of Admission</label>
+                                        <small
+                                            class="ui-error block-show"
+                                            *ngIf="form.get('admissionDate')?.errors?.['incorrect']">
+                                            Date cannot be in the future
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -347,8 +351,13 @@
                                             <div class="input-block form-floating input-block-renew">
                                                 <input type="date" class="form-control input-textBox"
                                                     formControlName="billDate" id="billDate" name="billDate"
-                                                    [max]="maxDate" />
+                                                    (blur)="validateDate('billDate')" [max]="maxDate" />
                                                 <label for="addnotes">Date</label>
+                                                <small 
+                                                    class="ui-error block-show"
+                                                    *ngIf="form.get('billDate')?.errors?.['incorrect']">
+                                                    Date cannot be in the future
+                                                </small>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
@@ -399,8 +408,13 @@
                                             <input type="date" class="form-control input-textBox"
                                                 formControlName="dischargeDate" id="dischargeDate" name="dischargeDate"
                                                 placeholder="Date of Discharge" [(ngModel)]="toDate"
-                                                (dateChange)="dateFormat('toDate')" [min]="fromDate" [max]="maxDate" />
+                                                (dateChange)="dateFormat('toDate')" (blur)="validateDate('dischargeDate')" [min]="fromDate" [max]="maxDate" />
                                             <label for="dischargeDate">Date of Discharge</label>
+                                            <small 
+                                                class="ui-error block-show"
+                                                *ngIf="form.get('dischargeDate')?.errors?.['incorrect']">
+                                                Date cannot be in the future
+                                            </small>
                                         </div>
                                     </div>
 
