@@ -165,7 +165,6 @@ export class ProposalsListComponent {
   }
 
   onQuotePageChange(event: any) {
-    debugger;
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
@@ -578,6 +577,12 @@ export class ProposalsListComponent {
         console.warn('Unknown action:', event);
     }
   }
+
+   async redirectQuote(quoteInformation : any){
+    console.log(quoteInformation);
+
+  }
+
   async redirect(proposalDetails: any) {
 
     console.log(proposalDetails);
