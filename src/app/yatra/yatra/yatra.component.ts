@@ -294,7 +294,7 @@ export class YatraComponent {
                   }
                   if (decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED') {
                     console.log('PENDING');
-                    this.toast.error({ detail: "ERROR", summary: "Payment is Pending", duration: 3000 });
+                    this.toast.error({ detail: "Error", summary: "Payment is Pending", duration: 3000 });
                   }
                   if (decryptedData.verifyKyc == true) {
                     this.verifyKYCStatus = true;
@@ -1406,7 +1406,7 @@ export class YatraComponent {
                 const errorMessage = "Document upload failed.";
                 console.error(errorMessage, res);
                 this.toast.error({
-                  detail: "ERROR",
+                  detail: "Error",
                   summary: errorMessage,
                   duration: 3000,
                 });
@@ -1435,7 +1435,7 @@ export class YatraComponent {
         }
       } else {
         this.toast.warning({
-          detail: "WARNING",
+          detail: "Warning",
           summary: "Please select Payment Mode.",
           duration: 3000,
         });
@@ -1482,7 +1482,7 @@ export class YatraComponent {
       this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
         next: (response: any) => {
           console.log('File uploaded and policy details fetched:', response);
-          this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
           this.spinner.hide();
 
           this.isPolicyDetailsFetch = true;
@@ -1517,7 +1517,7 @@ export class YatraComponent {
         },
         error: (error) => {
           this.spinner.hide();
-          this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Failed to fetch Policy Details", duration: 3000 });
           console.error('Error fetching Policy details:', error);
         }
       });
@@ -1922,7 +1922,7 @@ export class YatraComponent {
     if (control.name == 'confAccountNumber') {
 
       if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
-        this.toast.error({ detail: "ERROR", summary: 'AccountNumber and Confirm confAccountNumber should be matched', duration: 3000 });
+        this.toast.error({ detail: "Error", summary: 'AccountNumber and Confirm confAccountNumber should be matched', duration: 3000 });
         const idNumberControl = this.dynamicFormGroup.get('confAccountNumber');
         idNumberControl?.setValidators([
           Validators.required
@@ -2159,7 +2159,7 @@ export class YatraComponent {
                   }
                 } else {
                   this.toast.warning({
-                    detail: "WARNING",
+                    detail: "Warning",
                     summary: 'Failed to Fetch Bank Details',
                     duration: 3000
                   });
@@ -2167,7 +2167,7 @@ export class YatraComponent {
               },
               error: (err) => {
                 this.toast.error({
-                  detail: "ERROR",
+                  detail: "Error",
                   summary: 'Failed to Fetch Bank Details',
                   duration: 3000
                 });
@@ -2406,7 +2406,7 @@ export class YatraComponent {
               // this.spinner.hide();
             },
             error: (err: any) => {
-              this.toast.warning({ detail: "WARNING", summary: err, duration: 3000 });
+              this.toast.warning({ detail: "Warning", summary: err, duration: 3000 });
               this.resetDynamicZoneFields(parentControl, index);
             }
           });
@@ -3140,7 +3140,7 @@ export class YatraComponent {
     console.log(checkbox);
 
     if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Cannot select more than 4 childrens", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Cannot select more than 4 childrens", duration: 3000 });
       checkbox.checked = false;
       return;
     }
@@ -3502,12 +3502,12 @@ export class YatraComponent {
               window.location.href = response.data.paymentLink; // Redirect to Juspay Payment URL
             }
           } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
           }
         },
         error: (error) => {
-          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
           console.error('Error generating payment link:', error);
         }
       });
@@ -3584,7 +3584,7 @@ export class YatraComponent {
     this.yatraService.sendEmailLink(requestBody).subscribe(
       (res: any) => {
         if (res.isSuccess) {
-          this.toast.success({ detail: "SUCCESS", summary: "Communication send Successfully", duration: 3000 });
+          this.toast.success({ detail: "Success", summary: "Communication send Successfully", duration: 3000 });
         }
       },
       (error) => {
@@ -3633,7 +3633,7 @@ export class YatraComponent {
             control.visible = false;
 
             this.toast.success({
-              detail: "SUCCESS",
+              detail: "Success",
               summary: `Communication has been sent Successfully`,
               duration: 3000,
             });
@@ -3676,7 +3676,7 @@ export class YatraComponent {
   verifyOTP(control: any) {
     if (!this.otpRequestId) {
       this.toast.warning({
-        detail: "WARNING",
+        detail: "Warning",
         summary: `Please click On Send OTP.`,
         duration: 3000,
       });
@@ -3691,7 +3691,7 @@ export class YatraComponent {
       (res: any) => {
         if (res.isSuccess) {
           this.toast.success({
-            detail: "SUCCESS",
+            detail: "Success",
             summary: `SuccessFully Validated`,
             duration: 3000,
           });
@@ -3727,19 +3727,19 @@ export class YatraComponent {
       this.scrollToFirstInvalidField();
     }
     if (insuredMembers < 2 && policyType == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
     }
     if (this.form.formTitle == 'Total Premium') {
       if (this.dynamicFormGroup.get('deductible')) {
         if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
-          this.toast.warning({ detail: "WARNING", summary: "Deductible Cover is mandatory", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Deductible Cover is mandatory", duration: 3000 });
           return;
         }
       }
     }
     if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
-      this.toast.warning({ detail: "WARNING", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
       return;
     }
     else {
@@ -3972,7 +3972,7 @@ export class YatraComponent {
           }
         });
         if (this.dynamicFormGroup.invalid) {
-          this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
           if (firstInvalidTabIndex !== null) {
             // Navigate to the first invalid tab
             this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -3980,7 +3980,7 @@ export class YatraComponent {
           }
         }
         else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-          this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+          this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
       }
 
     }
@@ -4151,7 +4151,7 @@ export class YatraComponent {
       //     this.dynamicFormGroup.addControl("proposalId", this.fb.control(this.proposalId));
       //     sessionStorage.setItem("quoteId", this.encryptionService.encrypt(this.quoteId));
       //     this.dynamicFormGroup.addControl("quoteId", this.fb.control(this.quoteId));
-      //     this.toast.success({ detail: "SUCCESS", summary: "Lead Created Successfully.", duration: 3000 });
+      //     this.toast.success({ detail: "Success", summary: "Lead Created Successfully.", duration: 3000 });
 
       //   },
       //   error: (err) => {
@@ -4165,7 +4165,7 @@ export class YatraComponent {
         const control = this.dynamicFormGroup.get(field);
         control?.markAsTouched({ onlySelf: true });
       });
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
   }
 
@@ -4838,7 +4838,7 @@ export class YatraComponent {
 
                 // Showing success toast
                 this.toast.success({
-                  detail: "SUCCESS",
+                  detail: "Success",
                   summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
                   duration: 3000,
                 });
@@ -4850,7 +4850,7 @@ export class YatraComponent {
                 console.log(errorMessage);
                 // Showing error toast
                 this.toast.error({
-                  detail: "ERROR",
+                  detail: "Error",
                   summary: errorMessage,
                   duration: 5000,
                 });
@@ -4865,7 +4865,7 @@ export class YatraComponent {
 
               // Showing generic error toast for API failure
               this.toast.error({
-                detail: "ERROR",
+                detail: "Error",
                 summary: "Something went wrong. Please try again.",
                 duration: 3000,
               });
@@ -4879,7 +4879,7 @@ export class YatraComponent {
 
           // Showing error toast for mapping failure
           this.toast.error({
-            detail: "ERROR",
+            detail: "Error",
             summary: "Failed to map form data",
             duration: 3000,
           });
@@ -5863,7 +5863,7 @@ export class YatraComponent {
   closeOverlay(subControl: any, control: any = null) {
     if (subControl.conditionCheck && (this.dynamicFormGroup.get(control.name) as FormGroup).invalid) {
       console.log(subControl);
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
     else {
       this.closePopUp();
@@ -5881,7 +5881,7 @@ export class YatraComponent {
         })
       }
       console.log(this.dynamicFormGroup, dynamicControl);
-      // this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      // this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
     else {
       this.isOverlayVisible = false;
@@ -5943,7 +5943,7 @@ export class YatraComponent {
     const panNumber = this.dynamicFormGroup.get('panNo')?.value;
 
     if (!proposerDOB || !panNumber) {
-      this.toast.warning({ detail: "WARNING", summary: "Both DOB and Pan No are mandatory for KYC", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Both DOB and Pan No are mandatory for KYC", duration: 3000 });
       return;
     }
 
@@ -5963,7 +5963,7 @@ export class YatraComponent {
       next: (response: any) => {
         console.log('KYC details:', response);
         if (response.isSuccess == true) {
-          this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
           // this.spinner.hide();
           console.log(response.data);
 
@@ -6067,7 +6067,7 @@ export class YatraComponent {
           }
         }
         else {
-          this.toast.warning({ detail: "WARNING", summary: "No Record Found", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "No Record Found", duration: 3000 });
         }
         // else {
         //   console.error('Expected response.data to be an object, but received:', response.data);
@@ -6076,13 +6076,13 @@ export class YatraComponent {
       },
       error: (error) => {
         this.spinner.hide();
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Failed to fetch KYC Details", duration: 3000 });
         console.error('Error fetching KYC details:', error);
       }
     });
     // }
     // else {
-    //   this.toast.warning({ detail: "WARNING", summary: "Please fill Pan Card and Date of Birth", duration: 3000 });
+    //   this.toast.warning({ detail: "Warning", summary: "Please fill Pan Card and Date of Birth", duration: 3000 });
     // }
   }
 
@@ -6098,7 +6098,7 @@ export class YatraComponent {
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
         console.log('Policy details:', response);
-        this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+        this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
         this.spinner.hide();
         control.disabled = true;
 
@@ -6136,7 +6136,7 @@ export class YatraComponent {
       },
       error: (error) => {
         this.spinner.hide();
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Failed to fetch Policy Details", duration: 3000 });
         console.error('Error fetching Policy details:', error);
       }
     });
@@ -6215,7 +6215,7 @@ export class YatraComponent {
   copyText(control: any) {
     console.log(control);
     this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
-    this.toast.success({ detail: "SUCCESS", summary: `Text copied to clipboard!`, duration: 3000 });
+    this.toast.success({ detail: "Success", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
 
@@ -6375,7 +6375,7 @@ export class YatraComponent {
             this.formData.applicationNumber = res.data.applicationNumber || null;
 
             this.toast.success({
-              detail: "SUCCESS",
+              detail: "Success",
               summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
               duration: 3000,
             });
@@ -6385,7 +6385,7 @@ export class YatraComponent {
             const errorMessage = res.message || "Full Quote generation failed.";
             console.error(errorMessage);
             this.toast.error({
-              detail: "ERROR",
+              detail: "Error",
               summary: errorMessage,
               duration: 5000,
             });
@@ -6395,7 +6395,7 @@ export class YatraComponent {
         error: (err) => {
           console.error(err);
           this.toast.error({
-            detail: "ERROR",
+            detail: "Error",
             summary: "Something went wrong. Please try again.",
             duration: 3000,
           });
@@ -6417,7 +6417,7 @@ export class YatraComponent {
         this.yatraService.insertFullQuoteJson(req).subscribe({
           next: (res: any) => {
             console.log(res);
-            // this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.`, duration: 3000 });
+            // this.toast.success({ detail: "Success", summary: `Full Quotation Generated Successfully.`, duration: 3000 });
             resolve();
           },
           error: (err) => {
@@ -6426,7 +6426,7 @@ export class YatraComponent {
           }
         });
       }).catch((err) => {
-        this.toast.error({ detail: "ERROR", summary: "Failed to map form data", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Failed to map form data", duration: 3000 });
         reject(err);
       });
     });
@@ -7068,11 +7068,11 @@ export class YatraComponent {
           this.toast.success({ detail: "", summary: response.message, duration: 3000 });
         } else {
           // Handle error, you can show a message if required
-          this.toast.warning({ detail: "WARNING", summary: 'Failed transaction', duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: 'Failed transaction', duration: 3000 });
         }
       },
       error: (err) => {
-        this.toast.error({ detail: "ERROR", summary: 'Failed transaction', duration: 3000 });
+        this.toast.error({ detail: "Error", summary: 'Failed transaction', duration: 3000 });
       }
     });
   }
@@ -7101,7 +7101,7 @@ export class YatraComponent {
         console.log("kycResponseBody", res);
         if (res.data.isShareKyc) {
           this.toast.success({
-            detail: "SUCCESS",
+            detail: "Success",
             summary: res.message,
             duration: 3000,
           });
@@ -7191,12 +7191,12 @@ export class YatraComponent {
               window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
             }
           } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
           }
         },
         error: (error) => {
-          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
           console.error('Error generating payment link:', error);
         }
       });
@@ -7427,11 +7427,11 @@ export class YatraComponent {
     this.yatraService.getHalfQuote(reqData).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
-          this.toast.success({ detail: "SUCCESS", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
           this.onSubmit();
         }
         else {
-          this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
+          this.toast.error({ detail: "Error", summary: response.message, duration: 3000 })
           this.form.formSections.forEach((section: any) => {
             section.formControls.forEach((control: any) => {
               if (control.name === 'next') {
@@ -7442,7 +7442,7 @@ export class YatraComponent {
         }
       },
       error: (err) => {
-        this.toast.error({ detail: "ERROR", summary: 'Failed to generate half Quote', duration: 3000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to generate half Quote', duration: 3000 });
       }
     });
   }

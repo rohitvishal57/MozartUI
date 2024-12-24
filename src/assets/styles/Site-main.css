@@ -738,6 +738,7 @@ button {
   max-height: 80vh;
   flex-direction: column;
   position: relative;
+  padding-bottom: 60px;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_links{
   /* max-height: 400px; */
@@ -748,7 +749,7 @@ button {
     position: absolute; 
     top: 110%;
     top: auto;
-    bottom: 20px;
+    bottom: 0px;
     height: auto;
     background-color: #fff;
 }
@@ -6628,3 +6629,73 @@ position: relative;
   cursor: initial;
 }
 /*----yatra popup end----*/
+
+/*----Toast Custom styles start----*/
+.custom_toastStyles {}
+.custom_toastStyles .ng-toast {
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  font-family: "Anek Latin", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  color: #2e2e2e !important;
+  border: 1px solid #F1F3F6 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0px !important;
+  position: relative;
+}
+.custom_toastStyles .ng-toast button {
+  position: absolute;
+  top: 13px;
+  right: 10px;
+  display: none !important;
+}
+.custom_toastStyles .ng-toast .container-1 {
+  display: none;
+  margin: 0 !important;
+}
+.custom_toastStyles .ng-toast .container-2 {
+  font-family: "Anek Latin", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  width: 100%;
+  margin: 0 !important;
+}
+.custom_toastStyles .ng-toast .container-2 p {
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  color: #2e2e2e !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 16px;
+  padding: 8px 16px !important;
+}
+.custom_toastStyles .ng-toast .container-2 p:first-child {
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-transform: capitalize;
+}
+.custom_toastStyles .ng-toast .container-2 p:last-child {
+}
+.custom_toastStyles .warning .container-2 p:first-child {
+  background: #FFF4D9 url(../Img/icon_lightbulb.svg) no-repeat 8px 7px !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 8px 30px !important;
+  background-size: 20px !important;
+}
+.custom_toastStyles .error {
+  background: #FFE7E5 url(../Img/icon_lightbulb_red.svg) no-repeat 8px 7px !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 8px 30px !important;
+  background-size: 20px !important;
+}
+.custom_toastStyles .success {
+  background: #E7FCF4 url(../Img/icon_lightbulb_green.svg) no-repeat 8px 7px !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 8px 30px !important;
+  background-size: 20px !important;
+}
+/*----Toast Custom styles end----*/
