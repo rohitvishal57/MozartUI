@@ -1024,8 +1024,23 @@ export class RugDynamicFormComponent {
               mobileNumber:this.bbdetails.proposerMobileNumber,
               emailId:this.bbdetails.proposerEmailAddress
             })
+            insuredMembersArray.at(0).get('gender')?.disable();
+            insuredMembersArray.at(0).get('firstName')?.disable();
+            insuredMembersArray.at(0).get('mobileNumber')?.disable();
           });
         }
+        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+          // insuredMembersArray.at(0).get('firstName')?.disable();
+          this.dynamicFormGroup.get('preFix')?.disable();
+          this.dynamicFormGroup.get('customerFirstName')?.disable();
+          this.dynamicFormGroup.get('customerLastName')?.disable();
+          this.dynamicFormGroup.get('proposerGender')?.disable();
+          this.dynamicFormGroup.get('proposerDob')?.disable();
+          this.dynamicFormGroup.get('proposerMobileNumber')?.disable();
+          this.dynamicFormGroup.get('proposerPanNumber')?.disable();
+          this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
+          this.dynamicFormGroup.get('proposerAddress')?.disable();
+      }
       }
 
 
@@ -2835,7 +2850,20 @@ export class RugDynamicFormComponent {
         emailId:this.bbdetails.proposerEmailAddress
       })
       insuredMembersArray.at(0).get('gender')?.disable();
+      insuredMembersArray.at(0).get('firstName')?.disable();
+      insuredMembersArray.at(0).get('mobileNumber')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
+      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+                // insuredMembersArray.at(0).get('firstName')?.disable();
+                this.dynamicFormGroup.get('customerFirstName')?.disable();
+                this.dynamicFormGroup.get('customerLastName')?.disable();
+                this.dynamicFormGroup.get('proposerGender')?.disable();
+                this.dynamicFormGroup.get('proposerDob')?.disable();
+                this.dynamicFormGroup.get('proposerMobileNumber')?.disable();
+                this.dynamicFormGroup.get('proposerPanNumber')?.disable();
+                this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
+                this.dynamicFormGroup.get('proposerAddress')?.disable();
+      }
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
         // insuredMembersArray.at(0).get('firstName')?.disable();
