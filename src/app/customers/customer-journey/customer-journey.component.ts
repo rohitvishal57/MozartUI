@@ -89,6 +89,7 @@ export class CustomerJourneyComponent {
   quickQuoteRedirect!: boolean;
   proposalNumber!:any;
   rowData:any={};
+  lastData:any={};
   isFullQuoteStatus:string='true';
   verifyKYCStatus: any;
 
@@ -110,6 +111,7 @@ export class CustomerJourneyComponent {
     const stateData = history.state;
     if(stateData.formData){
       this.rowData = this.encryptionService.decrypt(stateData.formData);
+      this.lastData = this.encryptionService.decrypt(stateData.formData);
     }
     console.log(stateData,this.rowData);
     if(this.rowData.kycStatus){
@@ -245,16 +247,17 @@ export class CustomerJourneyComponent {
       const Sequence = JSON.parse(res.data.formSequence);
       console.log(this.rowData,this.formData);
       const Data = {
-        proposalNumber: this.rowData.proposalNumber,
-        policyNumber: this.rowData.policyNumber || this.formData.policyNumber,
-        policyStatus: this.rowData.policyStatus,
-        policyStartDate: this.rowData.policyStartDate,
-        policyEndDate: this.rowData.policyEndDate,
-        receiptID: this.rowData.receiptID,
-        customerId: this.rowData.customerId,
-        applicationNumber: this.rowData.applicationNumber,
-        status: this.rowData.status,
-        premiumPaid : this.formData.totalPremium
+        proposalNumber: this.lastData.proposalNumber,
+        policyNumber: this.lastData.policyNumber || this.formData.policyNumber,
+        policyStatus: this.lastData.policyStatus,
+        policyStartDate: this.lastData.policyStartDate,
+        policyEndDate: this.lastData.policyEndDate,
+        receiptID: this.lastData.receiptID,
+        customerId: this.lastData.customerId,
+        applicationNumber: this.lastData.applicationNumber,
+        status: this.lastData.status,
+        premiumPaid : this.formData.totalPremium,
+        paymentStatus : this.lastData.paymentStatus
       };
       let reqData = {
         "proposalNum": this.rowData.proposalNumber,
