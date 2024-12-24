@@ -233,12 +233,12 @@
                                     formControlName="axisLob"
                                     [ngClass]="{ 'is-invalid': createAvForm.get('axisLob')?.invalid && (createAvForm.get('axisLob')?.touched || submitted) }">
                                     <option value="" disabled selected>Select Axis Lob</option>
-                                    <option *ngFor="let opt of AxisVendor" [value]="opt">{{ opt }}</option>
+                                    <option *ngFor="let lob of AllManageLOB" [value]="lob">{{ lob }}</option>
                                 </select>
                                 <label for="axisLob">Axis Lob*</label>
                                 <span class="invalid-feedback" *ngIf="createAvForm.get('axisLob')?.errors">
                                     <span class="ui-error block-show" *ngIf="createAvForm.get('axisLob')?.errors?.['required']">
-                                        Please select Axis Vendor
+                                        Please select Axis Lob
                                     </span>
                                 </span>
                             </div>

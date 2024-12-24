@@ -5,28 +5,39 @@ import { ViewLeadsComponent } from "./components/view-leads/view-leads.component
 import { ProductDownloadComponent } from "./components/product-download/product-download.component";
 import { BbTestPageComponent } from "./bb-test-page/bb-test-page.component";
 import { D2cTestPageComponent } from "./d2c-test-page/d2c-test-page.component";
+import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
+import { CreateAVComponent } from "./Admin/AV_Upload/create-av/create-av.component";
+import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-for-solo-journey/view-for-solo-journey.component";
+import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
+import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
+import { VerificationScriptComponent } from "./Admin/Verification_Script/verification-script/verification-script.component";
+import { ProductDetailsComponent } from "../quote/product-details/product-details.component";
+import { ExtractBaseAndAvMasterComponent } from "./Admin/Extract_Base_Agent_AV_Master/extract-base-and-av-master/extract-base-and-av-master.component";
+import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 
 
 
 const routes: Routes = [
     { path:'', component: RugDynamicFormComponent },
     { path:'web', component: ViewLeadsComponent },
-    { path:'verification-script', component: ViewLeadsComponent },
     { path:'view-checker-leads', component: ViewLeadsComponent },
     { path:'productdownload', component: ProductDownloadComponent },
-    { path:'base-caller-upload', component: ProductDownloadComponent },
-    { path:'av-upload', component: ProductDownloadComponent },
-    { path:'view-for-solo-journey', component: ProductDownloadComponent },
-    { path:'view-unVerified-leads', component: ProductDownloadComponent },
-    { path:'view-for-dual-journey', component: ProductDownloadComponent },
+    { path:'base-caller-upload', component: ProductDownloadComponent }, 
     { path:'extract-base-agent', component: ProductDownloadComponent },
     { path:'manage-LOB', component: ProductDownloadComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
     { path:'test-page', component: BbTestPageComponent },
     { path:'bb-test-page', component: BbTestPageComponent },
-  
+    { path:'av-list', component:AVListComponent},
+    { path:'create_AV', component:CreateAVComponent},
+    { path:'view-for-solo-journey', component:ViewForSoloJourneyComponent},
+    {path:'view-unverified-leads', component:ViewUnverifiedLeadsComponent},
+    {path:'view-for-dual-journey', component:ViewForDualJourneyComponent},
+    {path:'Verification_script', component: VerificationScriptComponent},
+    {path:'product_details', component:ProductDetailsComponent},
+    {path:'extract_base_agent_av_master', component:ExtractBaseAndAvMasterComponent},
+    {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent}
     
-   
 ];
 
 @NgModule({

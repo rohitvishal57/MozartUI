@@ -14,10 +14,66 @@
                        Campaigns
                     </button> -->
                 </div>
-
-                
-                
             </div>
+            <section id="quotes-list" class="tableMain quoteView block-show ">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                <th>SEQ NO</th>
+                                <th>AV ID</th>
+                                <th>AV NAME</th>
+                                <th>CENTER</th>
+                                <th>AXIS PROCESS</th>
+                                <th>STATUS</th>
+                                <th nowrap>LICENSE EXPIRY FROM DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div></th>
+                                <th nowrap>LICENSE EXPIRY TO DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div></th>
+                                <th>AUDIT</th>
+                                <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let av of AllAVs; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <!-- <td><span class="text-break-w200">Sutakar</span></td> -->
+                                    <td>{{av.avId}}</td> 
+                                    <td>{{av.avName}}</td> 
+                                    <td>{{av.center}}</td>
+                                    <td>{{av.axisprocess}}</td>
+                                    <td>{{av.status}}</td>
+                                    <td>{{av.lefdate}}</td>
+                                    <td>{{av.letdate}}</td>
+                                    <td>{{av.status}}</td>
+                                    <td>
+                                        <div class="btn_groupAction lead_btnList justify-content-center">
+                                            <button type="button" id="assignto2" name="assignto2" class="btn_action btn_editAction" title="Assign To"> <img
+                                                    src="assets/Img/icon_profile.svg" /></button>
+                                            <button type="button" id="updatestatus" name="updatestatus" class="btn_action btn_renewalAction"   title="Update Status"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction"  title="Add Notes"><img
+                                                     src="assets/Img/icon_add_notes.svg"></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
         </div>
     </div>
 </main>
