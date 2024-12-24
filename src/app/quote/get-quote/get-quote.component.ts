@@ -60,10 +60,6 @@ export class GetQuoteComponent implements AfterViewChecked {
     { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
     { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
   ];
-  PotingValues = [
-    { id: 'Yes', value: 'Yes', label: 'Yes' },
-    { id: 'No', value: 'No', label: 'No' }
-  ];
   proposerZone: any;
   proposerZoneValue: any = '';
   proposerCity: any;
@@ -1266,9 +1262,8 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     }
   }
-  selectPort(value: string) {
+  onPortingChange(value: string): void {
     this.quoteFormGroup.get('isPortability')?.setValue(value); 
     this.closeCustomDiv()
   }
-  
 }
