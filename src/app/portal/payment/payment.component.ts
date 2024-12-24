@@ -158,7 +158,7 @@ export class PaymentComponent {
             productId: this.paymentDetail.productId,
             formId: "6",
             proposalNum: this.paymentDetail.proposalId,
-            agentCode: "5100003",
+            agentCode: this.paymentDetail.agentCode,
             currentFormSequence: "",
             leadId: this.paymentDetail.leadId,
             policyNumber: this.paymentDetail.policyNumber,
