@@ -5,6 +5,9 @@
 .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
 	width: 48%;
 }
+.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+	width: 23%;
+}
 
 .searchWraperForm {
 	padding: 10px 20px;
@@ -52,9 +55,7 @@ h6 {
 	align-items: center;
 }
 
-// .tableSubMain .table td {
-// 	/*line-height: 10px;*/
-// }
+
 
 .btn_quickFilter {
 	padding: 9px 9px 7px;
@@ -241,13 +242,13 @@ h6 {
 .lead-sub-menu{
 	display: inline-flex !important;
 }
-.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
 	background: var(--primary-red-color) !important;
 	color: white;
 	img{
 		filter: brightness(0) invert(1);
 	}
-  }
+  } */
   .btn_container_leads{
 	display: flex;
     justify-content: end;
@@ -345,13 +346,20 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
-  @media only screen and (max-width: 767px) {
+  
+@media only screen and (max-width: 1024) {
 	.filterWraperForm{
 		padding: 0px;
 	}
 }
-@media only screen and (max-width: 1024) {
+  @media only screen and (max-width: 767px) {
 	.filterWraperForm{
 		padding: 0px;
+	}
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
+	}
+	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+		width: 30%;
 	}
 }

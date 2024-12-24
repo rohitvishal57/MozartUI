@@ -19,6 +19,8 @@ import { SafeUrlPipe } from "./components/product-download/safe-url.pipe";
 import { D2cTestPageComponent } from './d2c-test-page/d2c-test-page.component';
 import { BbTestPageComponent } from './bb-test-page/bb-test-page.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CreateAVComponent } from "./Admin/AV_Upload/create-av/create-av.component";
+import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -30,8 +32,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         SafeUrlPipe,
         D2cTestPageComponent,
         BbTestPageComponent,
+        CreateAVComponent,
+        AVListComponent
      
     ],
+    
     imports: [
         CommonModule,
         PrimeNgModule,
