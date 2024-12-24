@@ -17,7 +17,7 @@ export class CreateAVComponent implements OnInit {
   action: String = '';
   submitted: boolean = false;
   today: string = '';
-  AllManageLOB: string[] = [];
+  AllManageLOB: any[] = [];
 
   center: any[] = ["Noida", "Bengalore", "Hyderabad", "Mumbai", "Kolkata", "Ahemedabad"];
   AxisProcess: any[] = [" Inbound Phone Banking", "Outbound Call Center (OCC)"];
@@ -38,9 +38,9 @@ export class CreateAVComponent implements OnInit {
 
   getAllLOB() {
     this.adminService.getAllManageLOB().subscribe((response: any) => {
-      console.log('API Response:', response); // Check the full API response
+      console.log('API Response:', response); 
       this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
-      console.log('LOB Names:', this.AllManageLOB); // Verify if LOB Names are extracted correctly
+      console.log('LOB Names:', this.AllManageLOB); 
     });
   }
 

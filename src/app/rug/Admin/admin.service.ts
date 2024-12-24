@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminService {
+  getPaginatedAVs(startIndex: number, limit: number) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private configService: ConfigService,
       private httpService: HttpService) { }
