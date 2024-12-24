@@ -94,7 +94,7 @@ export class PaymentComponent {
       businessType: this.businessType || ""
     }
     console.log(orderDetailsReq,"orderId");
-   
+
     await this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       async (res: any) => {
         console.log(res);
@@ -123,9 +123,8 @@ export class PaymentComponent {
               console.error(err);
             });
           }else{
-            this.redirectingFunction()
+            this.redirectingFunction();
           }
-        
       },
       (err) => {
         this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
@@ -197,7 +196,6 @@ export class PaymentComponent {
           }
           else{
             localStorage.setItem("formIndex", "7");
-
           }
           const encodedEncryptedData = this.encryptionService.encrypt(reqData);
     
@@ -207,6 +205,20 @@ export class PaymentComponent {
         }
       }
       else if(this.businessType == 'REN'){
+        const formData = {
+          proposalNumber: this.paymentDetail.proposalId || '',
+          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyStatus: this.paymentDetail.policyStatus || '',
+          policyStartDate: this.paymentDetail.policyStartDate || '',
+          policyEndDate: this.paymentDetail.policyEndDate || '',
+          receiptID: this.paymentDetail.receiptNumber || '',
+          customerId: this.paymentDetail.customerId || '',
+          applicationNumber: this.paymentDetail.applicationNumber || '',
+          status: this.paymentDetail.policyStatus || '',
+          productName: this.paymentDetail.productName || '',
+          premiumPaid: this.paymentDetail.premiumPaid || '',
+          isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
+        };
         if(this.paymentDetail?.paymentMethodType == 'emandate_payment'){
           const reqData = {
             agentcode: this.paymentDetail.agentCode,
@@ -228,22 +240,7 @@ export class PaymentComponent {
             },(error)=>{
               console.log('error',error);
             });
-        }else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus === 'INITIATED') {
-          const formData = {
-            proposalNumber: this.paymentDetail.proposalId || '',
-            policyNumber: this.paymentDetail.oldPolicyNumber || '',
-            policyStatus: this.paymentDetail.policyStatus || '',
-            policyStartDate: this.paymentDetail.policyStartDate || '',
-            policyEndDate: this.paymentDetail.policyEndDate || '',
-            receiptID: this.paymentDetail.receiptNumber || '',
-            customerId: this.paymentDetail.customerId || '',
-            applicationNumber: this.paymentDetail.applicationNumber || '',
-            status: this.paymentDetail.policyStatus || '',
-            productName: this.paymentDetail.productName || '',
-            premiumPaid: this.paymentDetail.premiumPaid || '',
-            isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
-          };
-          // const formData = this.paymentDetail;         
+        }else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus === 'INITIATED') {       
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });   
             this.router.navigate(['renewal/renewalJourney'], {
@@ -269,9 +266,6 @@ export class PaymentComponent {
               },
             });
           }
-        
-          // Navigate to the next route with the encrypted data
-          
         }
          else if(this.paymentDetail?.paymentStatus == 'INPROGRESS'|| this.paymentDetail?.paymentStatus == 'PENDING'){
         this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
@@ -283,7 +277,6 @@ export class PaymentComponent {
         });
       } else{
         this.toast.error({ detail: "", summary: "Payment failed", duration: 5000 });   
-        const formData = this.paymentDetail;         
         this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -322,6 +315,20 @@ export class PaymentComponent {
         }
       });
     }else if(this.businessType == 'REN' || this.paymentDetail.businessType == 'Renewal'){
+      const formData = {
+        proposalNumber: this.paymentDetail.proposalId || '',
+        policyNumber: this.paymentDetail.oldPolicyNumber || '',
+        policyStatus: this.paymentDetail.policyStatus || '',
+        policyStartDate: this.paymentDetail.policyStartDate || '',
+        policyEndDate: this.paymentDetail.policyEndDate || '',
+        receiptID: this.paymentDetail.receiptNumber || '',
+        customerId: this.paymentDetail.customerId || '',
+        applicationNumber: this.paymentDetail.applicationNumber || '',
+        status: this.paymentDetail.policyStatus || '',
+        productName: this.paymentDetail.productName || '',
+        premiumPaid: this.paymentDetail.premiumPaid || '',
+        isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
+      };
       if(this.paymentDetail?.paymentMethodType == 'emandate_payment'){
         const reqData = {
             agentcode: this.paymentDetail.agentCode,
@@ -343,23 +350,7 @@ export class PaymentComponent {
           },(error)=>{
             console.log('error',error);
           });
-      }else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
-        const formData = {
-          proposalNumber: this.paymentDetail.proposalId || '',
-          policyNumber: this.paymentDetail.oldPolicyNumber || '',
-          policyStatus: this.paymentDetail.policyStatus || '',
-          policyStartDate: this.paymentDetail.policyStartDate || '',
-          policyEndDate: this.paymentDetail.policyEndDate || '',
-          receiptID: this.paymentDetail.receiptNumber || '',
-          customerId: this.paymentDetail.customerId || '',
-          applicationNumber: this.paymentDetail.applicationNumber || '',
-          status: this.paymentDetail.policyStatus || '',
-          productName: this.paymentDetail.productName || '',
-          premiumPaid: this.paymentDetail.premiumPaid || '',
-          isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
-        };
-        
-        // const formData = this.paymentDetail;         
+      }else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {        
         if (this.paymentDetail?.isFullQuoteSuccess) {
           this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });   
           this.router.navigate(['renewal/customerPayment'], {
@@ -387,20 +378,6 @@ export class PaymentComponent {
         }
     } else if(this.paymentDetail.paymentStatus == 'INPROGRESS'|| this.paymentDetail?.paymentStatus == 'PENDING'){
       this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
-      const formData = {
-        proposalNumber: this.paymentDetail.proposalId || '',
-        policyNumber: this.paymentDetail.oldPolicyNumber || '',
-        policyStatus: this.paymentDetail.policyStatus || '',
-        policyStartDate: this.paymentDetail.policyStartDate || '',
-        policyEndDate: this.paymentDetail.policyEndDate || '',
-        receiptID: this.paymentDetail.receiptNumber || '',
-        customerId: this.paymentDetail.customerId || '',
-        applicationNumber: this.paymentDetail.applicationNumber || '',
-        status: this.paymentDetail.policyStatus || '',
-        productName: this.paymentDetail.productName || '',
-        premiumPaid: this.paymentDetail.premiumPaid || '',
-        isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false 
-      };
       this.router.navigate(['renewal/customerPayment'], {
         state: {
           formData: this.encryptionService.encrypt(formData),
@@ -411,7 +388,19 @@ export class PaymentComponent {
           formIndex: "0",
         }
       });
-    } 
+    } else{
+      this.toast.error({ detail: "", summary: "Payment failed", duration: 5000 });   
+      this.router.navigate(['renewal/customerPayment'], {
+        state: {
+              formData: this.encryptionService.encrypt(formData),
+              proposalNum: this.encryptionService.encrypt(""),
+              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              journeyProcess: this.encryptionService.encrypt(0),
+              formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+              formIndex: "0",
+            }
+          });
+     }
     }
     }
   }

@@ -2879,7 +2879,8 @@ export class RenewalJourneyComponent {
     return new Promise(async (resolve, reject) => {
       if (this.selectedButton) {
         try {
-          const policyNum = this.proposalNum.replace(/-/g, "");
+          // const policyNum = this.proposalNum.replace(/-/g, "");
+          const policyNum = this.formData.policyNumber.replace(/-/g, "");
           console.log("kjsdajlkda", policyNum);
 
           const formData = new FormData();
