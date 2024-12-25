@@ -138,6 +138,13 @@ export class YatraComponent {
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
 
+  salutationMapping: { [key: string]: string[] } = {
+    M: ['Mrs', 'Miss','Ms','Mx'],
+    F: ['Mr', 'Mx'],
+    O: [] // No restrictions for 'other'
+  };
+  
+
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -1115,6 +1122,8 @@ export class YatraComponent {
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null) {
 
+    console.log(dynamicFormControls);
+    
     let formGroup: any = this.fb.group({})
     dynamicFormControls.forEach((control: IDynamicControl) => {
       if (control.subControls) {
@@ -1162,6 +1171,9 @@ export class YatraComponent {
             this.callMethod(control.getAllOption, control);
           }
         }
+        else if(control.type == 'select' && control.methodName){
+          this.resolveMethod(control.methodName,control,index);
+         }
 
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
@@ -7629,5 +7641,19 @@ export class YatraComponent {
     this.getPremiumAmount();
     control.disabled = true;
   }
+
+  updateSalutationsBasedOnGender(control : any,index : any): void {
+    console.log(control,index,this.formData);
+    const memberGender = this.formData.insuredMemberDetails[index-1].memberGender;
+    const disabledSalutations = this.salutationMapping[memberGender] || [];
+    
+    control.options = control.options.map((option:any) => ({
+      ...option,
+      disabled: disabledSalutations.includes(option.name)
+    }));
+    console.log(this.form);
+    
+  }
+  
 }
 
