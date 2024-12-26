@@ -22,6 +22,7 @@ export class PaymentComponent {
   paymentDetail: any;
   businessType: any;
   userType!: string;
+  agentCode:any;
 
   constructor(private route: ActivatedRoute,
     private renewalService: RenewalsService,
@@ -50,7 +51,8 @@ export class PaymentComponent {
             const formData = {
               policyNumber: this.route.snapshot.queryParams['pNo'],
             };
-            localStorage.setItem('agentCode', '5100003');
+            this.agentCode = localStorage.getItem('agentCode');
+            localStorage.setItem('agentCode', this.agentCode);
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -62,7 +64,7 @@ export class PaymentComponent {
             const formData = {
               proposalNumber: this.route.snapshot.queryParams['pNo'],
             };
-            localStorage.setItem('agentCode', '5100003');
+            // localStorage.setItem('agentCode', '5100003');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -170,12 +172,19 @@ export class PaymentComponent {
             applicationNumber: this.paymentDetail.applicationNumber,
             paymentStatus: this.paymentDetail.paymentStatus,
           }
-          if (this.paymentDetail.paymentStatus == 'SUCCESS' && this.paymentDetail.isFullQuoteSuccess == true) {
-            localStorage.setItem("formIndex", "8");
+          if (this.paymentDetail.paymentStatus == 'SUCCESS') {
+            if(this.paymentDetail?.isFullQuoteSuccess){
+              this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+              localStorage.setItem("formIndex", "8");
+            }
+            else{
+              this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
+              localStorage.setItem("formIndex", "7");
+            }
           }
           else {
             localStorage.setItem("formIndex", "7");
-            this.toast.error({ detail: "Error", summary: this.paymentDetail.paymentStatus || "payment Failed", duration: 5000 });
+            this.toast.error({ detail: "Error", summary: 'payment '+this.paymentDetail.paymentStatus || " Failed", duration: 5000 });
           }
           const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
@@ -316,18 +325,34 @@ export class PaymentComponent {
               console.error('Error generating payment link:', error);
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
-          localStorage.setItem('agentCode', '5100003');
-          localStorage.setItem('formIndex', '1');
-          this.router.navigate(['yatra/customerPayment'], {
-            state: {
-              formData: this.encryptionService.encrypt(formData),
-              formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-              formIndex: "1",
-            }
-          });
+          if (this.paymentDetail?.isFullQuoteSuccess) {
+            this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+            // localStorage.setItem('agentCode', '5100003');
+            localStorage.setItem('formIndex', '1');
+            this.router.navigate(['yatra/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "1",
+              }
+            });
+          }
+          else{
+            this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
+            // localStorage.setItem('agentCode', '5100003');
+            localStorage.setItem('formIndex', '1');
+            this.router.navigate(['yatra/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "0",
+              }
+            });
+          }
+          
         } else{
           if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
-            this.toast.success({ detail: "SUCCESS", summary: "payment Pending", duration: 5000 });
+            this.toast.success({ detail: "SUCCESS", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
           }else {
             this.toast.error({ detail: "Error", summary: "Payment failed", duration: 5000 });
           }
