@@ -214,7 +214,7 @@ export class RugDynamicFormComponent {
             let reqObj = {
               "leadId": this.leadId
             }
-            this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
+            this.rugService.getBBPolicyInfoByLeadId(reqObj).subscribe({
               next: (res: any) => {
                 console.log(res);
                 res = JSON.parse(res.data).data
@@ -1051,7 +1051,7 @@ export class RugDynamicFormComponent {
           let reqObj = {
             "leadId": this.leadId
           }
-          this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
+          this.rugService.getBBPolicyInfoByLeadId(reqObj).subscribe({
             next: (res: any) => {
               console.log(res);
               res = JSON.parse(res.data).data
@@ -4163,7 +4163,7 @@ export class RugDynamicFormComponent {
                 let commonDraftRequest = {
                   "leadId": this.bbdetails?.leadId
                 }
-                this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
+                this.rugService.bbHalfQuote(commonDraftRequest).subscribe({
                   next: (res: any) => {
                     let halfQuoteResponse: any;
                     console.log(res);

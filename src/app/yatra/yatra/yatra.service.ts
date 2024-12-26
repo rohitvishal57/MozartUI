@@ -146,10 +146,6 @@ export class YatraService {
     const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getSumInsuredDetails;
     return this.httpService.post(suminsuredDetails, reqData);
   }
-  getBBPolicyInfoByLeadId(reqData: any) {
-    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/rug/GetBBPolicyInfoByLeadId";
-    return this.httpService.post(suminsuredDetails, reqData);
-  }
   getd2cPolicyInfoByLeadId(reqData: any) {
     const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getd2cPolicyInfoByLeadId;
     return this.httpService.post(suminsuredDetails, reqData);
@@ -177,10 +173,6 @@ export class YatraService {
   saveD2CCommonDraft(reqData: any) {
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft";
     return this.httpService.post(saveCommonDraftData, reqData);
-  }
-  bbHalfQuote(reqData: any) {
-    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/rug/HalfQuote";
-    return this.httpService.post(halfQuoteData, reqData);
   }
   d2cJustpayRedirection(reqData: any) {
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/yatra/JusPayPaymentRedirectRUG";

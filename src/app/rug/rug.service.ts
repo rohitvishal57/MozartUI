@@ -43,4 +43,12 @@ export class RugService {
       const policyInfoByLeadIdData = this.configService.config.baseUrl1 + this.configService.config.getTSPolicyInfoByLeadId;
       return this.httpService.post(policyInfoByLeadIdData,reqData);
     }
+    getBBPolicyInfoByLeadId(reqData: any) {
+      const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getBBPolicyInfoByLeadId;
+      return this.httpService.post(suminsuredDetails, reqData);
+    }
+    bbHalfQuote(reqData: any) {
+      const halfQuoteData = this.configService.config.baseUrl1 + this.configService.config.bbHalfQuote;
+      return this.httpService.post(halfQuoteData, reqData);
+    }
 }
