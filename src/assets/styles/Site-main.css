@@ -6650,7 +6650,6 @@ position: relative;
   position: absolute;
   top: 13px;
   right: 10px;
-  display: none !important;
 }
 .custom_toastStyles .ng-toast .container-1 {
   display: none;
