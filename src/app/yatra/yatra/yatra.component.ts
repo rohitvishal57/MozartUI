@@ -7424,7 +7424,7 @@ export class YatraComponent {
 
   getCityStateByPin() {
     const reqData = {
-      "pincode": this.formData.proposerPincode
+      "pincode": this.formData.proposerPincode.toString()
     }
     this.commonService.getPinCodeByCity(reqData).subscribe(res => {
       if (res.isSuccess && res.data) {
