@@ -221,11 +221,11 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];
         } else {
-          this.toast.error({ detail: "", summary: response.message || "Failed to get Renewals List.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to get Renewals List.", duration: 3000 });
         }
       },
       (error) => {
-        this.toast.error({ detail: "", summary: "Error while generating Renewal List.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 3000 });
       }
     );
   }
@@ -256,7 +256,7 @@ export class RenewalListComponent {
         this.productsList = res.data;
       },
       error: (err) => {
-        this.toast.error({ detail: "", summary: "Failed to get products list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get products list.", duration: 2000 });
       }
     })
   }
@@ -387,7 +387,7 @@ export class RenewalListComponent {
   }
   downloadPolicyKit() {
     if (!this.selectedDocument) {
-      this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
+      this.toast.error({ detail: "Error", summary: "Please select a document to download.", duration: 3000 });
       return;
     }
     const downloadPolicyKitRequestBody = {
@@ -424,12 +424,12 @@ export class RenewalListComponent {
             window.open(fileURL, "_blank");
           }
         } else {
-          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: response.message || "No file found to download.", duration: 3000 });
         }
       },
       (error: any) => {
         console.error("Download Policy Kit Error:", error);
-        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while downloading Policy Kit.", duration: 3000 });
       }
     );
   }
@@ -467,7 +467,7 @@ export class RenewalListComponent {
               console.log("search Response", searchResponse);
               if (searchResponse && searchResponse[0]?.error?.length > 0) {
                 const errorMessages ="No documents are available to download."
-                this.toast.warning({ detail: "", summary: errorMessages, duration: 3000 });
+                this.toast.warning({ detail: "Warning", summary: errorMessages, duration: 3000 });
                 return;
               }
               else {
@@ -476,12 +476,12 @@ export class RenewalListComponent {
                 this.downloadPolicyKit()
               }
             } else {
-              this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+              this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
             }
           },
           (error: any) => {
             console.error("Search document error", error);
-            this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+            this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
           }
         );
         break;
@@ -516,13 +516,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.data.message || "Renewal notice shared successfully.", duration: 1500 });
+              this.toast.success({ detail: "success", summary: response.data.message || "Renewal notice shared successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: response.data.message || "Failed to send renewal notice.", duration: 1500 });
+              this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send renewal notice.", duration: 1500 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "", summary: "Error while sending renewal notice.", duration: 1500 });
+            this.toast.error({ detail: "Error", summary: "Error while sending renewal notice.", duration: 1500 });
           }
         );
         break;
@@ -565,13 +565,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.data.message || "SMS sent successfully.", duration: 3000 });
+              this.toast.success({ detail: "success", summary: response.data.message || "SMS sent successfully.", duration: 3000 });
             } else {
-              this.toast.error({ detail: "", summary: response.data.message || "Failed to send SMS.", duration: 3000 });
+              this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send SMS.", duration: 3000 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "", summary: "Error while sending SMS.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: "Error while sending SMS.", duration: 3000 });
           }
         );
         break;
@@ -583,13 +583,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.data.message || "WhatsApp message sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "success", summary: response.data.message || "WhatsApp message sent successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: response.data.message || "Failed to send Whasapp message.", duration: 1500 });
+              this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send Whasapp message.", duration: 1500 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "", summary: "Error while sending WhatsApp message.", duration: 1500 });
+            this.toast.error({ detail: "Error", summary: "Error while sending WhatsApp message.", duration: 1500 });
           }
         );
         break;
@@ -1710,7 +1710,7 @@ export class RenewalListComponent {
         },
         (err) => {
           console.error("Error from renewal re-direction API:", err);
-          this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Error from re-direction", duration: 3000 });
         }
       );
     } else if (action === 'withoutmodify') {
@@ -1741,12 +1741,12 @@ export class RenewalListComponent {
               },
             });
           } else {
-            this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
           }
         },
         (err) => {
           console.error("Error from getRenewalInfo API:", err);
-          this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
         }
       );
     }

@@ -286,15 +286,17 @@ export class LoginComponent implements OnInit {
             if(this.menuItems.length>0){
               this.currentRoute=this.menuItems[0].routePath;
             }
-            // if(res.data.agentCode === "467896"){
-            //   this.router.navigate(['rug'])
-            // }else if(res.data.agentCode === "467895"){
-            //   this.router.navigate(['rug/av-upload'])
-            // }else if(res.data.agentCode === "467894"){
-            //   this.router.navigate(['rug/base-caller-upload'])
-            // }else{
+            if(res.data.agentCode === "467896"){
+              this.router.navigate(['products'])
+            }else if(res.data.agentCode === "467897"){
+              this.router.navigate(['products'])
+            }else if(res.data.agentCode === "467895"){
+              this.router.navigate(['rug/av-upload'])
+            }else if(res.data.agentCode === "467894"){
+              this.router.navigate(['rug/base-caller-upload'])
+            }else{
               res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate([this.currentRoute||'dashboard']);
-            //}
+            }
           } else {
             this.errorMessage = res.message;
             res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;

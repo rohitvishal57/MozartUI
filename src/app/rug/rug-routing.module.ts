@@ -15,6 +15,7 @@ import { ProductDetailsComponent } from "../quote/product-details/product-detail
 import { ExtractBaseAndAvMasterComponent } from "./Admin/Extract_Base_Agent_AV_Master/extract-base-and-av-master/extract-base-and-av-master.component";
 import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
+import { AuditComponent } from "./Admin/AV_Upload/audit/audit.component";
 
 
 
@@ -32,6 +33,8 @@ const routes: Routes = [
     { path:'av-list', component:AVListComponent},
     { path:'bulk_upload', component:BulkUploadComponent},
     { path:'create_AV', component:CreateAVComponent},
+    { path:'update_AV/:avId', component:CreateAVComponent},
+    {path:'audit', component:AuditComponent},
     { path:'view-for-solo-journey', component:ViewForSoloJourneyComponent},
     {path:'view-unverified-leads', component:ViewUnverifiedLeadsComponent},
     {path:'view-for-dual-journey', component:ViewForDualJourneyComponent},

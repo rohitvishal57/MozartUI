@@ -12,25 +12,25 @@ import { Router } from '@angular/router';
   styleUrls: ['./bulk-upload.component.scss']
 })
 export class BulkUploadComponent {
- bulkUploadForm!: FormGroup
+  bulkUploadForm!: FormGroup
   submitted: boolean = false;
   campListData: any[] = [];
   showNote: boolean = false;
   isFilenotSelected: boolean | any;
   selctedFileName: string = '';
-  fileExt : string = '';
-  fileSize : string ='';
+  fileExt: string = '';
+  fileSize: string = '';
   selectedFile: any;
   AgentCode: string = '';
-  uploadedFiles : boolean = false;
-  fileList : any[] =[];
-  isContinueButtonDisabled : boolean = true;
- 
-  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private adminService: AdminService,   private languageService: LanguageService,
-    private translateService: TranslateService,   private router: Router  ){
+  uploadedFiles: boolean = false;
+  fileList: any[] = [];
+  isContinueButtonDisabled: boolean = true;
+
+  constructor(private formBuilder: FormBuilder, private toast: NgToastService, private adminService: AdminService, private languageService: LanguageService,
+    private translateService: TranslateService, private router: Router) {
 
   }
-  ngOnInit(){
+  ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -44,10 +44,10 @@ export class BulkUploadComponent {
       this.AgentCode = storedAgentCode;
     }
     this.bulkUploadForm = this.formBuilder.group({
-      selectedcampId:['']
+      selectedcampId: ['']
     })
   }
- 
+
 
   newfile(e: any) {
     this.showNote = false;
@@ -61,7 +61,7 @@ export class BulkUploadComponent {
         if (isDuplicateFile) {
           this.toast.warning({ detail: "", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
           return;
-        } 
+        }
         this.selectedFile = files[i];
         if (!this.selectedFile) {
           return;
@@ -71,15 +71,15 @@ export class BulkUploadComponent {
           this.selctedFileName = this.selectedFile.name;
           this.fileSize = this.selectedFile.size;
           const fileWithFileExt = {
-            file: files[i],                 
-            fileExt : this.fileExt           
+            file: files[i],
+            fileExt: this.fileExt
           };
           this.fileList.push(fileWithFileExt);
-          this.isContinueButtonDisabled= false;
-          console.log('fileList',this.fileList);
-        }else{
+          this.isContinueButtonDisabled = false;
+          console.log('fileList', this.fileList);
+        } else {
           this.showNote = true;
-        } 
+        }
       }
       e.target.value = '';
     }
@@ -92,77 +92,76 @@ export class BulkUploadComponent {
   }
   campSelected(campid: any) {
 
+  }
+  continueFileUpload() {
+    this.submitted = true;
+
+    if (!this.selectedFile) {
+      this.isFilenotSelected = true;
+      return;
     }
-    continueFileUpload() {
-      this.submitted = true;
+    let file = this.selectedFile;
+    let fileExt = file.name.replace(/^.*\./, '');
+    const data = new FormData();
 
-      if (!this.selectedFile) {
-        this.isFilenotSelected = true;
-        return;
-      }
-      let file = this.selectedFile;
-      let fileExt = file.name.replace(/^.*\./, '');
-      const data = new FormData();
-      
-      console.log(this.campListData,this.bulkUploadForm.get('selectedcampId')?.value,'this.selectedcampId')
-  
-      if (fileExt == 'xlsx' || fileExt == 'csv'||fileExt==='xls') {
-       if (fileExt == 'xlsx' || fileExt == 'csv'|| fileExt==='xls') {
+    console.log(this.campListData, this.bulkUploadForm.get('selectedcampId')?.value, 'this.selectedcampId')
 
-        for(let i=0;i<this.fileList.length;i++){
+    if (fileExt == 'xlsx' || fileExt == 'csv' || fileExt === 'xls') {
+      if (fileExt == 'xlsx' || fileExt == 'csv' || fileExt === 'xls') {
+
+        for (let i = 0; i < this.fileList.length; i++) {
           data.append('FormFile', this.fileList[i].file)
         }
-   
-          data.append('CampaignNumber', "6536575")
-          data.append('CampaignName', "casdasda")
-          data.append('AgentCode', this.AgentCode)
-          data.append('requestid',"8757458")
-         
+        data.append('UploadedBy', 'teleadmin1')
+        data.append('IsBaseCallerUpload', 'false')
+        data.append('IsAVUpload', 'true')
+        data.append('IsDoUpload', 'false')
+
+      }
+
+      this.adminService.UploadBulk(data).subscribe(
+        (response: any) => {
+          console.log(response.data);
+          if (response.data) {
+            if (response.isSuccess) {
+              window.open(response.data.url, '_blank');
+              this.toast.success({ detail: "", summary: response.data.status, duration: 5000 });
+            } else {
+              this.toast.error({ detail: "", summary: response.message, duration: 5000 });
+            }
+          }
+          else { console.error("API request was not successful."); }
+        },
+        (error: any) => {
+          console.error("Error from getRenewalsList API:", error);
         }
+      );
+    }
+    this.fileList = [];
+    this.selctedFileName = '';
+  }
+  downloadurl() {
 
-        // this.leadsService.uploadfile(data).subscribe(
-        //   (response: any) => { 
-        //     console.log(response.data);
-        //     if (response.data) {
-        //       if(response.isSuccess){              
-        //         window.open(response.data.url, '_blank');
-        //         this.toast.success({ detail: "", summary:response.data.status, duration: 5000 });
-        //       }else{
-        //         this.toast.error({ detail: "", summary:response.message, duration: 5000 });
-        //       }
-        //     } 
-        //     else {console.error("API request was not successful.");}
-        //   },
-        //   (error: any) => {
-        //     console.error("Error from getRenewalsList API:", error);
-        //   }
-        // );
-      } 
-      this.fileList = [];
-      this.selctedFileName ='';
-    }
-    downloadurl(){
-     
-    }
-    private saveBlobAsFile(blob: Blob, fileName: string): void {
-      // saveAs(blob, fileName);
-    }
-  onSubmit(){
+  }
+  private saveBlobAsFile(blob: Blob, fileName: string): void {
+    // saveAs(blob, fileName);
+  }
+  onSubmit() {
 
   }
 
-  backToAvList(){
+  backToAvList() {
     this.router.navigate(['rug/av-list'], {
-  });
-}
-
-removeFile(fileInfo: any) {
-  this.fileList = this.fileList.filter((item: any) => {
-    return item.file.name !== fileInfo.file.name
-  });
-
-  if(this.selctedFileName == fileInfo.file.name){
-    this.selctedFileName='';
+    });
   }
-}
+
+  removeFile(fileInfo: any) {
+    this.fileList = this.fileList.filter((item: any) => {
+      return item.file.name !== fileInfo.file.name
+    });
+
+    if (this.selctedFileName == fileInfo.file.name) {
+      this.selctedFileName = '';
+    }
+  }
 }

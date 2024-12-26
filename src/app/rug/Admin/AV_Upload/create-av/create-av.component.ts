@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '../../admin.service';
 import { NgToastService } from 'ng-angular-popup';
-import { endOfDay } from 'date-fns';
 
 
 
@@ -19,43 +18,64 @@ export class CreateAVComponent implements OnInit {
   submitted: boolean = false;
   today: string = '';
   AllManageLOB: any[] = [];
-  isEditMode: boolean = false;
+  PatchAllAv:any;
+  joy:any;
   allAxisLocations: any[] = []; 
   allAxisVendors: any[] = [];   
   filteredVendors: any[] = [];  
   selectedLocationId:any = ''; 
-  selectedUserId: string | null = null;
-
-  center: any[] = ["Noida", "Bengalore", "Hyderabad", "Mumbai", "Kolkata", "Ahemedabad"];
   AxisProcess: any[] = [" Inbound Phone Banking", "Outbound Call Center (OCC)"];
-  AxisVendor: any[] = ["ALTRUIST", "CONNEQT", "HGS", "COGENT", "GENPACT", "ONROLL"];
-  AxisLob: any[] = ["OCC Priority", "OCC Burgundy", "OCC CLCM", "OCC NDRM", "OCC CASA Domestic", "OCC NRI Acq",
-    "AFF", "BGY", "Credit Cards", "FASTag", "PRI", "Retail Assets", "Retail Banking",
-    "testocc"
-  ];
+  selectedUserId: any | null = null;
+  isUpdate: boolean = false;
 
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private adminService: AdminService, private toast: NgToastService) {
-
+  constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private adminService: AdminService, private toast: NgToastService) {
+    
   }
   ngOnInit(): void {
-
-    const navigation = this.router.getCurrentNavigation();
-    const stateData = navigation?.extras.state?.['data'];
-
-    if (stateData) {
-      this.isEditMode = true;
-      this.createAvForm.patchValue(stateData);
-    }
-
     this.inItForm();
+    this.route.paramMap.subscribe(params => {
+      this.selectedUserId = params.get('avId');
+      console.log('Selected User ID:', this.selectedUserId);
+      if (this.selectedUserId) {
+        this.getAllAVs();
+      }
+    });
+    this.isUpdate = !!this.route.snapshot.paramMap.get('avId');
     this.getAllVendorsAndLocation();
     this.getAllLOB();
   }
 
+  getAllAVs(){
+    const endPoint = "getallAv/" + this.selectedUserId;
+    this.adminService.getAllAVs(endPoint).subscribe((response: any) => {  
+      this.joy = JSON.parse(response.data);
+      this.PatchAllAv = this.joy.data.allAvDetails.filter((res:any) => 
+        res.avId == this.selectedUserId);
+      console.log('Joy',this.joy)
+      console.log("pathValue", this.PatchAllAv)
+      if (response) {
+        this.createAvForm.patchValue({
+          avid: this.PatchAllAv[0].avId,
+          avname: this.PatchAllAv[0].avName,
+          spcode: this.PatchAllAv[0].spCode,
+          avcenter: this.PatchAllAv[0].center,
+          axisprocess: this.PatchAllAv[0].axisProcess,
+          lefdate: this.PatchAllAv[0].licenseExpiryFromDate,
+          letdate: this.PatchAllAv[0].licenseExpiryToDate,
+          tlid: this.PatchAllAv[0].tlid,
+          tlName: this.PatchAllAv[0].tlName,
+          imdCode: this.PatchAllAv[0].imdCode,
+          axisVendor: this.PatchAllAv[0].axisVendor,
+          axisLob: this.PatchAllAv[0].axisLob,
+        });
+        this.createAvForm.updateValueAndValidity();
+      }
+    })
+  }
+
   getAllVendorsAndLocation() {
     this.adminService.getAllAxisLocationAndVenors().subscribe((response: any) => {
-      // Parsing the response
       const res = JSON.parse(response.data);
       this.allAxisLocations = res.data.allLocations;
       this.allAxisVendors = res.data.allVendors;
@@ -63,7 +83,7 @@ export class CreateAVComponent implements OnInit {
   }
  
   onLocationChange(selectedLocationId: number) {
-    console.log('Location Changed:', selectedLocationId);  // Check if this is triggered
+    console.log('Location Changed:', selectedLocationId);  
     this.filteredVendors = this.allAxisVendors.filter(vendor => 
       vendor.axisLocationId == selectedLocationId);
    console.log('vendors', this.filteredVendors);
@@ -89,8 +109,6 @@ export class CreateAVComponent implements OnInit {
     );
   }
   
-  
-
   inItForm() {
     this.createAvForm = this.formBuilder.group({
       avid: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
@@ -140,14 +158,10 @@ export class CreateAVComponent implements OnInit {
 
     this.adminService.createAV(formData).subscribe((response: any) => {
         console.log('create AV successfully:', response);
-        this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
+        this.toast.success({ detail: "SUCCESS", summary: "Successful..", duration: 3000 })
       });
     this.router.navigate(['rug/av-list']);
     console.log('Form Submitted:', this.createAvForm.value);
-  }
-
-  updateData() {
-  
   }
   
 

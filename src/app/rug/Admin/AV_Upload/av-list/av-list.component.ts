@@ -8,6 +8,8 @@ import { ExcelExportService } from 'src/app/services/excel-export.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../admin.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AuditComponent } from '../audit/audit.component';
 
 
 @Component({
@@ -26,7 +28,7 @@ export class AVListComponent {
   first: number = 0;
   rows: number = 10;
   totalRecords: number = 0;
-
+  displayedAVs: any[] = [];
 
 
   constructor(private http: HttpClient,
@@ -36,10 +38,10 @@ export class AVListComponent {
     private claimsService: ClaimsViewService,
     private languageService: LanguageService,
     private excelExportService: ExcelExportService,
-    private translateService: TranslateService, private adminService: AdminService) { }
+    private translateService: TranslateService, private adminService: AdminService, private dialog: MatDialog,) { }
 
+    
   ngOnInit() {
-
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -62,24 +64,58 @@ export class AVListComponent {
         letdate: this.formatDate(item.licenseExpiryToDate),
       })).reverse();
       console.log('All AV Data (Latest First):', this.AllAVs);
+      this.totalRecords = this.AllAVs.length;
+      this.updateDisplayedData();
     });
   }
 
+  updateDisplayedData(): void {
+    const startIndex = this.first;
+    const endIndex = this.first + this.rows;
+    this.displayedAVs = this.AllAVs.slice(startIndex, endIndex);
+  }
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
 
-  editAV(){
-    
+  updateAV(AvId: any) {
+    this.router.navigate(['/rug/updateAV'], {
+    });
+  }
+
+  deleteUser(index: number) {
+    const id = this.AllAVs[index].avId;
+    const reqData: any = {
+      avId: id,
+      deletedBy: "teleadmin1"
+    };
+    this.adminService.deleteav(reqData).subscribe((el: any) => {
+      this.AllAVs.splice(index, 1);
+      console.log('DeleteData', el)
+      window.location.reload();
+    },
+      (error: any) => {
+      })
   }
 
   navigateToCreateAV() {
     this.router.navigate(['rug/create_AV']);
   }
 
-  navigateToBulkUpload(){
+  navigateToBulkUpload() {
     this.router.navigate(['rug/bulk_upload']);
+  }
+
+  audit(index: any) {
+    let value = this.AllAVs[index]
+    const dialogRef = this.dialog.open(AuditComponent, {
+      width: "1000px",
+      autoFocus: false,
+      data: {
+        value: value
+      }
+    })
   }
 
   toggleAll(event: Event) {
@@ -89,11 +125,11 @@ export class AVListComponent {
   selectAllAssigneLeadDialog() {
 
   }
-
+  
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
     this.getAllAVs();
   }
-
 }

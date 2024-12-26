@@ -300,39 +300,39 @@ export class DashboardComponent {
         break;
       case 'Customer':
         this.newCustomerList = widget.map((item: any, index: any) => {
-          return { main: 'Customer', name: item, order: index + 1 };
+          return { main: 'Customer', name: item, subOrder: index + 1 };
         });
         console.log(this.newCustomerList)
         break;
       case 'Renewal':
         this.newRenewalList = widget.map((item: any, index: any) => {
-          return { main: 'Renewal', name: item, order: index + 1 };
+          return { main: 'Renewal', name: item, subOrder: index + 1 };
         });
         console.log(this.newRenewalList)
         break;
       case 'Business':
         this.newBusinessList = widget.map((item: any, index: any) => {
-          return { main: 'Business', name: item, order: index + 1 };
+          return { main: 'Business', name: item, subOrder: index + 1 };
         });
         console.log(this.newBusinessList)
         break;
       case 'QuickAction':
         this.newQuickActionList = widget.map((item: any, index: any) => {
-          return { main: 'QuickAction', name: item, order: index + 1 };
+          return { main: 'QuickAction', name: item, subOrder: index + 1 };
         });
         console.log(this.newQuickActionList)
         break;
 
       case 'Performance':
         this.newPerformanceList = widget.map((item: any, index: any) => {
-          return { main: 'Performance', name: item, order: index + 1 };
+          return { main: 'Performance', name: item, subOrder: index + 1 };
         });
         console.log(this.newPerformanceList)
         break;
 
       case 'Wellness':
         this.newWellnessList = widget.map((item: any, index: any) => {
-          return { main: 'Wellness', name: item, order: index + 1 };
+          return { main: 'Wellness', name: item, subOrder: index + 1 };
         });
         console.log(this.newWellnessList)
         break;
@@ -1330,6 +1330,7 @@ export class DashboardComponent {
 
     this.dashboardService.submitPreferenceData(obj).subscribe((response: any) => {
       console.log('Data submitted successfully', response);
+      this.ngOnInit();
     });
   }
 

@@ -407,6 +407,7 @@
     }
     .quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
+        margin-bottom: 1rem;
         /* min-width: 520px; */
     }
     .quickFilterMain.cv_bodyItems_policyInfo .quickFilterLeft .quickFilter {

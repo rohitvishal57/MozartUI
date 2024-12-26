@@ -195,6 +195,29 @@ h6 {
 	float: left;
 }
 
+.btn_audit {
+    background: #606c76;
+    border:1px solid #606c76;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: Lato-bold, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #fff;
+    display: flex;
+    gap:10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.btn_audit:hover{
+    border:1px solid #c7222a;
+    background: #FFFFFF;
+    color: #c7222a;
+}
+
 .filterWraperForm {
 	padding: 15px 24px;
 }

@@ -49,7 +49,7 @@ export class BbTestPageComponent implements OnInit{
   postd2CResirection(){
     const data = new FormData();
     data.append('data', this.encryptedString.trim())
-    this.http.post<any>('https://upuat.adityabirlahealth.com/api/v1/', data)
+    this.http.post<any>('https://usp.monocept.ai/api/v1/', data)
       .subscribe(response => {
         console.log(response);
         response = JSON.parse(response.data)
