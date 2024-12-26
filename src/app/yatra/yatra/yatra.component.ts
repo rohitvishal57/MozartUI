@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, NgZone, Renderer2, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
@@ -12,13 +12,11 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { LoadingService } from 'src/app/services/loading.service';
 import { LanguageService } from 'src/app/services/language.service';
-declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
-import { error } from 'jquery';
 
 @Component({
   selector: 'app-yatra',
@@ -124,8 +122,6 @@ export class YatraComponent {
   saveData: any = {};
   covers: any[][] = [];
   pedWaitingPeriod: any;
-  documentId: any;
-
   tooltipMessage: string = '';
   currentLanguage = 'en';
   pennyDropVerficationDetails: any;
@@ -139,11 +135,12 @@ export class YatraComponent {
   otpRequestId: string = "";
 
   salutationMapping: { [key: string]: string[] } = {
-    M: ['Mrs', 'Miss','Ms','Mx'],
+    M: ['Mrs', 'Miss', 'Ms', 'Mx'],
     F: ['Mr', 'Mx'],
     O: [] // No restrictions for 'other'
   };
-  
+  pennyDropVerficationByOCRDetails: any;
+  uploadInfo: { name: any; data: any; }[] | null = null;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -306,12 +303,12 @@ export class YatraComponent {
                   if (decryptedData.verifyKyc == true) {
                     this.verifyKYCStatus = true;
                   }
-                  
+
                   if (await this.getFormIndexValue() == 7) {
                     const req = {
                       proposalNum: this.proposalNum
                     };
-                
+
                     try {
                       // Use firstValueFrom to convert the Observable to a Promise
                       const value: any = await firstValueFrom(this.commonService.getkycstatus(req));
@@ -1123,7 +1120,7 @@ export class YatraComponent {
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null) {
 
     console.log(dynamicFormControls);
-    
+
     let formGroup: any = this.fb.group({})
     dynamicFormControls.forEach((control: IDynamicControl) => {
       if (control.subControls) {
@@ -1171,9 +1168,9 @@ export class YatraComponent {
             this.callMethod(control.getAllOption, control);
           }
         }
-        else if(control.type == 'select' && control.methodName){
-          this.resolveMethod(control.methodName,control,index);
-         }
+        else if (control.type == 'select' && control.methodName) {
+          this.resolveMethod(control.methodName, control, index);
+        }
 
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
@@ -1388,69 +1385,69 @@ export class YatraComponent {
     }
   }
 
-  uploadSelectedDocument(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      if (this.selectedButton) {
-        try {
-          const policyNum = this.proposalNum.replace(/-/g, "");
-          const formData = new FormData();
-          formData.append("Files", this.selectedFile);
-          formData.append("UniqueNumber", policyNum);
-          this.commonService.uploadDocument(formData).subscribe(
-            async (res: any) => {
-              if (res.isSuccess) {
-                console.log("response after success", res);
-                console.log("unique id", res.data.uploadResponse[0].globalId);
-                this.documentId = res.data.uploadResponse[0].globalId;
+  // uploadSelectedDocument(): Promise<void> {
+  //   return new Promise(async (resolve, reject) => {
+  //     if (this.selectedButton) {
+  //       try {
+  //         const policyNum = this.proposalNum.replace(/-/g, "");
+  //         const formData = new FormData();
+  //         formData.append("Files", this.selectedFile);
+  //         formData.append("UniqueNumber", policyNum);
+  //         this.commonService.uploadDocument(formData).subscribe(
+  //           async (res: any) => {
+  //             if (res.isSuccess) {
+  //               console.log("response after success", res);
+  //               console.log("unique id", res.data.uploadResponse[0].globalId);
+  //               this.documentId = res.data.uploadResponse[0].globalId;
 
-                try {
-                  // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                  await this.getFullQuoteViaOfflinePayment();
-                  resolve(); // Resolve the promise once everything completes
-                } catch (error) {
-                  console.error("Error in full quote generation:", error);
-                  reject(error); // Reject the promise to prevent further flow
-                }
-              } else {
-                const errorMessage = "Document upload failed.";
-                console.error(errorMessage, res);
-                this.toast.error({
-                  detail: "Error",
-                  summary: errorMessage,
-                  duration: 3000,
-                });
-                reject(new Error(errorMessage));
-              }
+  //               try {
+  //                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+  //                 await this.getFullQuoteViaOfflinePayment();
+  //                 resolve(); // Resolve the promise once everything completes
+  //               } catch (error) {
+  //                 console.error("Error in full quote generation:", error);
+  //                 reject(error); // Reject the promise to prevent further flow
+  //               }
+  //             } else {
+  //               const errorMessage = "Document upload failed.";
+  //               console.error(errorMessage, res);
+  //               this.toast.error({
+  //                 detail: "Error",
+  //                 summary: errorMessage,
+  //                 duration: 3000,
+  //               });
+  //               reject(new Error(errorMessage));
+  //             }
 
-            },
-            (err) => {
-              console.error("Error during upload:", err);
-              this.toast.error({
-                detail: "Error",
-                summary: err.message || "Document upload failed.",
-                duration: 1500,
-              });
-              reject(err); // Reject the promise on upload error
-            }
-          );
-        } catch (error) {
-          console.error("Error preparing upload:", error);
-          this.toast.error({
-            detail: "Error",
-            summary: "An unexpected error occurred while preparing the upload.",
-            duration: 3000,
-          });
-          reject(error); // Reject the promise on preparation error
-        }
-      } else {
-        this.toast.warning({
-          detail: "Warning",
-          summary: "Please select Payment Mode.",
-          duration: 3000,
-        });
-      }
-    });
-  }
+  //           },
+  //           (err) => {
+  //             console.error("Error during upload:", err);
+  //             this.toast.error({
+  //               detail: "Error",
+  //               summary: err.message || "Document upload failed.",
+  //               duration: 1500,
+  //             });
+  //             reject(err); // Reject the promise on upload error
+  //           }
+  //         );
+  //       } catch (error) {
+  //         console.error("Error preparing upload:", error);
+  //         this.toast.error({
+  //           detail: "Error",
+  //           summary: "An unexpected error occurred while preparing the upload.",
+  //           duration: 3000,
+  //         });
+  //         reject(error); // Reject the promise on preparation error
+  //       }
+  //     } else {
+  //       this.toast.warning({
+  //         detail: "Warning",
+  //         summary: "Please select Payment Mode.",
+  //         duration: 3000,
+  //       });
+  //     }
+  //   });
+  // }
 
   scrollToFirstInvalidField() {
     const findInvalidControlId = (controls: { [key: string]: any }): string | null => {
@@ -1928,15 +1925,15 @@ export class YatraComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
 
     }
-    if (control.name == 'physicalcopy' && control.type == 'radio'){
+    if (control.name == 'physicalcopy' && control.type == 'radio') {
       const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'decl2') {
             if (selectedValue === 'Y') {
-              this.dynamicFormGroup.get('decl2')?.setValue(false); 
+              this.dynamicFormGroup.get('decl2')?.setValue(false);
             } else if (selectedValue === 'N') {
-              this.dynamicFormGroup.get('decl2')?.setValue(true); 
+              this.dynamicFormGroup.get('decl2')?.setValue(true);
             }
           }
         })
@@ -3476,11 +3473,11 @@ export class YatraComponent {
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for offline
                 const formControl = this.dynamicFormGroup.get(controlToHide.name);
-              if (formControl) {
-                formControl.disable();
-                formControl.clearValidators();
-                formControl.updateValueAndValidity();
-              }
+                if (formControl) {
+                  formControl.disable();
+                  formControl.clearValidators();
+                  formControl.updateValueAndValidity();
+                }
               }
             });
           }
@@ -3497,11 +3494,11 @@ export class YatraComponent {
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for other buttons
                 const formControl = this.dynamicFormGroup.get(controlToHide.name);
-              if (formControl) {
-                formControl.disable();
-                formControl.clearValidators();
-                formControl.updateValueAndValidity();
-              }
+                if (formControl) {
+                  formControl.disable();
+                  formControl.clearValidators();
+                  formControl.updateValueAndValidity();
+                }
               }
             });
           }
@@ -6373,7 +6370,7 @@ export class YatraComponent {
     return mappedData;
   }
 
-  async getFullQuoteViaOfflinePayment(): Promise<void> {
+  async getFullQuoteViaOfflinePayment(documentId: any): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = this.dynamicFormGroup.getRawValue();
       const formData = {
@@ -6390,7 +6387,7 @@ export class YatraComponent {
         micrNo: (this.formData?.micrCode || '').toString(),
         instrumentType: (this.formData.paymentOption || '').toString(),
         source: "Retail".toString(),
-        documentId: (this.documentId || '').toString(),
+        documentId: (documentId || '').toString(),
         proposalNum: this.proposalNum.toString(),
         productName: this.formData.productName || ''
       };
@@ -6585,7 +6582,7 @@ export class YatraComponent {
             console.log(this.formData.insuredMemberDetails[index], member);
 
             console.log(controls);
-            
+
 
             const optionsArray: any[] = [];
             let questionId: any;
@@ -6654,7 +6651,7 @@ export class YatraComponent {
                         //   Object.entries(innerArray).filter(([key, value]) => value !== "")
                         // );
                         const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
- 
+
                         console.log(innerArray, filteredInnerArray, allValuesEmpty);
                         if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
                           innerArray.parentQuestionCode = questionId;
@@ -6663,8 +6660,8 @@ export class YatraComponent {
                       }
                       else {
                         const allValuesEmpty = Object.values(innerArray).every(value => value === "");
- 
-                        if(!allValuesEmpty){
+
+                        if (!allValuesEmpty) {
                           innerArray.harmfulSubstances = true;
                           innerArray.parentQuestionCode = questionId;
                           productQuestionnaire.push(innerArray);
@@ -6676,10 +6673,10 @@ export class YatraComponent {
                         // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
                         //   innerArray.harmfulSubstances = true;
                         // }
- 
+
                         // console.log(innerArray);
-                       
- 
+
+
                         // productQuestionnaire.push(innerArray);
                       }
                       // productQuestionnaire.push(filteredInnerArray);
@@ -7654,17 +7651,17 @@ export class YatraComponent {
     control.disabled = true;
   }
 
-  updateSalutationsBasedOnGender(control : any,index : any): void {
-    console.log(control,index,this.formData);
-    const memberGender = this.formData.insuredMemberDetails[index-1].memberGender;
+  updateSalutationsBasedOnGender(control: any, index: any): void {
+    console.log(control, index, this.formData);
+    const memberGender = this.formData.insuredMemberDetails[index - 1].memberGender;
     const disabledSalutations = this.salutationMapping[memberGender] || [];
-    
-    control.options = control.options.map((option:any) => ({
+
+    control.options = control.options.map((option: any) => ({
       ...option,
       disabled: disabledSalutations.includes(option.name)
     }));
     console.log(this.form);
-    
+
   }
 
   restrictKeyPress(event: KeyboardEvent): void {
@@ -7674,7 +7671,170 @@ export class YatraComponent {
       event.preventDefault();
     }
   }
-  
-  
-}
 
+  onClearFileSelected(event: any) {
+    if (event && event.fileInput) {
+      event.fileInput.value = '';
+    }
+  }
+
+  insertDocByIdwithProof(arr: any) {
+    const reqData = {
+      "proposalNum": this.proposalNum,
+      "documentData": arr.reduce((acc: any, item: any) => {
+        acc[item.name.replace('Document', "")] = item.data;
+        return acc;
+      }, {})
+    }
+    console.log(reqData);
+    this.yatraService.insertproposerDocumentById(reqData).subscribe({
+      next: (response: any) => {
+        if (response.isSuccess && response.data) {
+          this.toast.success({ detail: "SUCCESS", summary: response.message + response.data.applicationNumber, duration: 3000 });
+        }
+        else {
+          this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
+        }
+      },
+      error: (err) => {
+        this.toast.error({ detail: "ERROR", summary: 'Failed to insert Document', duration: 3000 });
+      }
+    });
+  }
+
+  convertFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        // The result will be the base64 encoded file
+        resolve(reader.result as string); // Resolve the promise with the base64 string
+      };
+
+      reader.onerror = (error) => {
+        reject(error); // Reject the promise in case of error
+      };
+
+      // Read the file as a data URL (base64)
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async onUploadFile(event: any, control: any) {
+    const formData = new FormData();
+    const base64File = await this.convertFileToBase64(event[0]);
+
+    const policyNum = this.proposalNum.replace(/-/g, "");
+    formData.append("Files", event[0]);
+    formData.append("UniqueNumber", policyNum);
+
+    let obj: any
+    let newObj: any = {};
+    switch (control) {
+      case 'neftStatementUpload':
+        obj = {
+          "name": "Manjunath S",
+          "byteArray": base64File.replace("data:application/pdf;base64,", "")
+
+        }
+        this.yatraService.pennyDropVerficationByOCR(obj).subscribe(
+          async (response: any) => {
+            if (response.isSuccess) {
+              this.pennyDropVerficationByOCRDetails = response.data;
+              this.dynamicFormGroup.get('accountHolderName')?.setValue(response.data.bankAccountVerification.accountName);
+              this.dynamicFormGroup.get('accountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
+              this.dynamicFormGroup.get('confAccountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
+              this.dynamicFormGroup.get('ifscCode')?.setValue(response.data.bankAccountVerification.ifsc);
+              this.toast.success({ detail: "", summary: response.message, duration: 3000 });
+            } else {
+              this.toast.error({
+                detail: "ERROR",
+                summary: response.message,
+                duration: 3000,
+              });
+            }
+          },
+          (err) => {
+            console.error("Error during upload:", err);
+            this.toast.error({
+              detail: "Error",
+              summary: err.message || "Document upload failed.",
+              duration: 1500,
+            });
+          }
+        );
+        break;
+
+      case 'documentProofUpload':
+        this.commonService.uploadDocument(formData).subscribe(
+          async (res: any) => {
+            if (res.isSuccess) {
+              // this.documentId = res.data.uploadResponse[0].globalId;
+              // this.uploadInfo.push({
+              //   name : control,
+              //   data : res.data.uploadResponse[0]
+              // })
+              try {
+                // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+                await this.getFullQuoteViaOfflinePayment(res.data.uploadResponse[0].globalId);
+              } catch (error) {
+                console.error("Error in full quote generation:", error);
+              }
+
+              // this.toast.success({ detail: "", summary: res.message, duration: 3000 });
+            } else {
+              this.toast.error({
+                detail: "ERROR",
+                summary: res.message,
+                duration: 3000,
+              });
+            }
+
+          },
+          (err) => {
+            console.error("Error during upload:", err);
+            this.toast.error({
+              detail: "Error",
+              summary: err.message || "Document upload failed.",
+              duration: 1500,
+            });
+          }
+        );
+        break;
+
+      default:
+        this.commonService.uploadDocument(formData).subscribe(
+          async (res: any) => {
+            if (res.isSuccess) {
+              // this.documentId = res.data.uploadResponse[0].globalId;
+              let arr = [];
+              arr.push({
+                "name": control,
+                "data": res.data.uploadResponse[0].globalId
+              });
+
+              this.insertDocByIdwithProof(arr)
+
+              this.toast.success({ detail: "", summary: res.message, duration: 3000 });
+            } else {
+              this.toast.error({
+                detail: "ERROR",
+                summary: res.message,
+                duration: 3000,
+              });
+            }
+
+          },
+          (err) => {
+            console.error("Error during upload:", err);
+            this.toast.error({
+              detail: "Error",
+              summary: err.message || "Document upload failed.",
+              duration: 1500,
+            });
+          }
+        );
+        break;
+    }
+  }
+}

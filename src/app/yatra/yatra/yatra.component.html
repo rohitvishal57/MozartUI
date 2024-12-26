@@ -337,7 +337,22 @@
 
                 <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
-                  <div class="custom-file-upload">
+                  <div class="section-file-uploads">
+                    <app-file-upload
+                    formControlName="{{ control.name }}"
+                    [dataInputs] = "control"
+                    (emitFilesList)="onUploadFile($event, control.name)">
+                  </app-file-upload>
+                  </div>
+                  
+                  <small
+                    *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
+                    class="text-danger">
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG,PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
+                    {{ getValidationErrors(control)}}
+                  </small>
+                  <!-- <div class="custom-file-upload">
                     <label *ngIf="control.visibleLabel == true">{{control.label?(control.label | translate):'' }} <span
                         *ngIf="control.validators">*</span></label>
                     <div class="file-input-container">
@@ -353,17 +368,15 @@
                       translate}}</div>
                   </div>
                   <div *ngIf="this.dynamicFormGroup.value[control.name]" style="margin-top: 5px;">
-                    <!-- selected file: {{ selectedFile.name }} -->
                     {{ this.dynamicFormGroup.value[control.name]?.split('\\').pop() }}
                   </div>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                     class="text-danger">
-                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG,
-                    PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG,PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
-                  </small>
+                  </small> -->
                 </div>
 
                 <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">

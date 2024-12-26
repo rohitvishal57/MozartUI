@@ -1,0 +1,17 @@
+<div class="custom-file-upload">
+        <div class="file-input-container">
+            <div class="file-upload-btn">Click here to Upload
+                <input type="file" [multiple]="multiple" #myFileInput class="field_fileUpload" id="Image{{dataInputs.name}}" name="{{dataInputs.name}}"
+                (change)="onSelectFilebase($event)" [disabled]="dataInputs?.disabled" >
+                <div class="uploadfile-location" *ngFor="let op of fileUploadname; let i = index">
+                    <span class="uploadfile_Info"> {{ op.name ? op.name : 'file location' }}</span>
+                    <span class="uploadfile_delete" (click)="clearFile(i)">
+                        <img src="./assets/Img/icon_delete_red2.svg">
+                    </span>
+                </div>
+            </div>
+            
+        <div class="fileUploadInfo">{{"File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed" |
+            translate}}</div>
+        </div>
+</div>
