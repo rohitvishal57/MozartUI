@@ -2936,6 +2936,9 @@ margin: 0;
 .left-nav-mobileMain{
     width: 100%;
 }
+.main-container .right-panel .file-upload-btn{
+    width: 100%;
+}
 }
 .main-container .right-panel .next-btn:focus,
     .main-container .right-panel .add-btn:focus,
