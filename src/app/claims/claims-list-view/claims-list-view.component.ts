@@ -254,12 +254,12 @@ export class ClaimsListViewComponent implements OnInit {
   }
 
   clear() {
-    this.productsList.forEach((product: any) => (product.selected = false));
+    // this.productsList.forEach((product: any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    this.claimsReqBody.productVarientName = "";
+    //this.claimsReqBody.productVarientName = "";
     this.claimsReqBody.requestType = "";
     this.claimsReqBody.startDate = null;
     this.claimsReqBody.endDate = null;
