@@ -51,8 +51,9 @@ export class PaymentComponent {
             const formData = {
               policyNumber: this.route.snapshot.queryParams['pNo'],
             };
-            this.agentCode = localStorage.getItem('agentCode');
-            localStorage.setItem('agentCode', this.agentCode);
+            this.agentCode = this.route.snapshot.queryParams['agentCode'] || '5100003';
+            localStorage.setItem('agentCode', this.agentCode );
+            // localStorage.setItem('agentCode', this.agentCode);
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -194,6 +195,7 @@ export class PaymentComponent {
         }
       }
       else if (this.businessType == 'REN') {
+        localStorage.setItem('agentCode', this.paymentDetail.agentCode);
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
           policyNumber: this.paymentDetail.oldPolicyNumber || '',
@@ -249,14 +251,9 @@ export class PaymentComponent {
             });
           } else {
             this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
-            this.router.navigate(['renewal/renewalJourney'], {
+            this.router.navigate(['renewal/renewalList'], {
               state: {
-                formData: this.encryptionService.encrypt(formData),
-                proposalNum: this.encryptionService.encrypt(""),
                 policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
-                journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([payment, thankYou]),
-                formIndex: "0",
               },
             });
           }

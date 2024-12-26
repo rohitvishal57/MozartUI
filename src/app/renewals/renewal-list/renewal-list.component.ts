@@ -1698,8 +1698,8 @@ export class RenewalListComponent {
     if (action === "withmodify") {
       const payload = {
         policyNumber: proposerDetail.policyNumber, // Policy number
-        mobileNumber: proposerDetail.proposerMobileNumber, // Mobile number
-        dateOfBirth: "", // Date of birth
+        mobileNumber: proposerDetail.proposerMobileNumber || "", // Mobile number
+        dateOfBirth: proposerDetail.proposerDateOfBirth || "", // Date of birth
       };
   
       // Call cpRedirectionApi

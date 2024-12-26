@@ -16,6 +16,7 @@ export interface RenewalList {
     policyStartDate?:string,
     modification: string;
     proposerEmail:string;
+    proposerDateOfBirth:string;
   }
 
   export const validationConfig: { [key: string]: ValidatorFn[] } = {
