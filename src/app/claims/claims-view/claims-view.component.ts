@@ -9,17 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { EndorsementsRequestsService } from 'src/app/endorsements/endorsements-requests/endorsements-requests.service';
-import { CoverDetail } from 'src/app/interface/claims.interface';
+import { CoverDetail, UploadErrors } from 'src/app/interface/claims.interface';
 import { debounceTime, Subject } from 'rxjs';
 import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-
-interface UploadErrors {
-  fileNotSelected: boolean;
-  invalidFormat: boolean;
-  requiredDocs: string;
-  duplicateDocs: string;
-}
 @Component({
   selector: "app-claims-view",
   templateUrl: "./claims-view.component.html",
@@ -1326,7 +1319,7 @@ memberIdChange(event: any): void {
               this.openModal(response);
             } else {
               this.toast.error({
-                detail: 'ERROR',
+                detail: 'Error',
                 summary: response.data.message,
                 duration: 0,
                 sticky: true
@@ -1335,7 +1328,7 @@ memberIdChange(event: any): void {
             }
           //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
-            this.toast.error({ detail: "No response from Jarvis.",
+            this.toast.error({  detail: 'Error', summary: "No response from Jarvis.",
               duration:0, 
               sticky: true
             });
@@ -1344,14 +1337,15 @@ memberIdChange(event: any): void {
         },
         (_error: any) => {
           this.toast.error({
-            detail: "Error occurred during claims submission",
+            detail: 'Error',
+            summary: "Error occurred during claims submission",
             duration:0, 
             sticky: true
           });
         }
       );
     } else {
-      this.toast.error({ detail: "Please fill in the required form fields." });
+      this.toast.error({ detail: "Warning", summary: "Please fill in the required form fields." });
     }
   }
 }
