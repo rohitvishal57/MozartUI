@@ -1093,7 +1093,7 @@ export class RugDynamicFormComponent {
           nomineeGender: this.bbdetails.nomineeGender,
           appointeeName: this.bbdetails.appointeeName,
           appointeeMobileNumber: this.bbdetails.appointeeMobileNumber,
-          appointeeDob: this.bbdetails.appointeeDOB,
+          appointeeDob: this.bbdetails.appointeeDob,
           relationWithNominee: this.bbdetails.relationWithNominee,
         })
         console.log(this.bbdetails.totalPremium);
@@ -1108,13 +1108,15 @@ export class RugDynamicFormComponent {
           accountNo:this.bbdetails.accountNumber,
           micrCode:this.bbdetails.micrCode,
           branchName:this.bbdetails.branchName,
-          startDate: formattedDate
+          startDate: formattedDate,
+          consentDeclare: true
         })
         if (this.bbdetails?.ifscCode && this.bbdetails.ifscCode.trim() !== "") {
           console.log("IFSC Code is valid:", this.bbdetails.ifscCode);
           this.getBankDetailsByIfsc();
       }
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
+        this.dynamicFormGroup.get('consentDeclare')?.disable();
       }
       if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
@@ -4810,10 +4812,35 @@ export class RugDynamicFormComponent {
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
       this.dynamicFormGroup.patchValue({
+        consentDeclare: true,
         frequencyOfPayment: 'As and when presented',
         startDate: formattedDate,
         endDate: "Untill Cancelled",
         debitType: "Maximum Amount"
+      })
+      this.dynamicFormGroup.get('consentDeclare')?.disable();
+      this.form.formSections.forEach((section: IFormSections) => {
+        section.formControls.forEach((control: IFormControl) => {
+          if(control.name == "consentDeclare"){
+            if (control.class) {
+              control.label = "Consent To Auto Renew"
+              control.class = "col-md-12 acceptTermsCheck";
+          }
+        }else{}
+        })
+      })
+
+    }else{
+      this.form.formSections.forEach((section: IFormSections) => {
+        section.formControls.forEach((control: IFormControl) => {
+          if(control.name == "consentDeclare"){
+            console.log(control);
+              // control.visible = false;
+              // control.visibleLabel = false;
+              control.class = "line-container";
+              control.label = ""
+          }
+        })
       })
     }
   }
