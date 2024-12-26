@@ -82,9 +82,9 @@ export class KycComponent {
             console.log(requset);
 
             await this.yatraService.Getform(requset).subscribe({
-              next: async (res: any) => {
-                console.log(res);
-                this.form = JSON.parse(res.data.jsonFormData);
+              next: async (res1: any) => {
+                console.log(res1);
+                this.form = JSON.parse(res1.data.jsonFormData);
                 console.log(this.form);
                 const requestData = {
                   "proposalNum": kycData.proposalNumber,
@@ -104,8 +104,8 @@ export class KycComponent {
                 console.log(requestData);
 
                 await this.yatraService.Insertorupdateformdata(requestData).subscribe({
-                  next: (res: any) => {
-                    console.log(res);
+                  next: (res2: any) => {
+                    console.log(res2);
                     // Call getFormDataFromFormSequence only after insert/update is complete
                     if (kycData.kycStatus == "True") {
                       // const renewalInfoRequestBody = {
@@ -126,7 +126,7 @@ export class KycComponent {
                       }
                       // localStorage.setItem("formIndex", kycData.formSequence.toString());
                       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
-
+                      this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
                       this.router.navigate(['yatra'], {
                         queryParams: { data: encodedEncryptedData }
                       });
@@ -137,12 +137,11 @@ export class KycComponent {
                       const reqData = {
                         partnerId: kycData.partnerId,
                         productId: kycData.productId,
-                        formId: "5",
+                        formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
                         proposalNum: kycData.proposalNumber,
-                        agentCode: "5000013",
-                        currentFormSequence: "7",
+                        agentCode: this.agentCode,
+                        currentFormSequence:  this.getFormIndexValue().toString(),
                         leadId: this.quickQuoteRedirect == false ? '' : kycData.leadId,
-                        isLead: this.quickQuoteRedirect == false ? false : true,
                         verifyKyc: false
                       }
                       localStorage.setItem("formIndex", "7");
@@ -151,7 +150,7 @@ export class KycComponent {
                       this.router.navigate(['yatra'], {
                         queryParams: { data: encodedEncryptedData }
                       });
-                      this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
+                      this.toast.error({ detail: 'Error', summary: "Failed to do kyc.", duration: 3000 });
                     }
                   },
                   error: (err) => {
@@ -284,6 +283,12 @@ export class KycComponent {
           async (res: any) => {
             console.log(res);
             const kycData = res.data;
+            if(kycData.kycStatus == "True"){
+              this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
+            }
+            else{
+              this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
+            }
             this.router.navigate(['yatra/customerKyc'], {
               state: {
                 formData: this.encryptionService.encrypt(kycData),

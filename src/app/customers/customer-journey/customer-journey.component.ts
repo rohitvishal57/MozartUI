@@ -119,7 +119,7 @@ export class CustomerJourneyComponent {
         this.verifyKYCStatus = this.rowData.kycStatus === "True" ? true : false;
       }
       else{
-        this.verifyKYCStatus = this.rowData.kycStatus;
+        this.verifyKYCStatus = this.rowData.kycStatus === "False" ? false : true;
       }
     }
     console.log(this.verifyKYCStatus);
