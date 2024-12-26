@@ -3475,6 +3475,12 @@ export class YatraComponent {
                 .find((ctrl: any) => ctrl.name === item);
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for offline
+                const formControl = this.dynamicFormGroup.get(controlToHide.name);
+              if (formControl) {
+                formControl.disable();
+                formControl.clearValidators();
+                formControl.updateValueAndValidity();
+              }
               }
             });
           }
@@ -3490,6 +3496,12 @@ export class YatraComponent {
                 .find((ctrl: any) => ctrl.name === item);
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for other buttons
+                const formControl = this.dynamicFormGroup.get(controlToHide.name);
+              if (formControl) {
+                formControl.disable();
+                formControl.clearValidators();
+                formControl.updateValueAndValidity();
+              }
               }
             });
           }
@@ -7654,6 +7666,15 @@ export class YatraComponent {
     console.log(this.form);
     
   }
+
+  restrictKeyPress(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+    // Allow only numeric digits (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+  
   
 }
 

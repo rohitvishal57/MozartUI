@@ -1848,6 +1848,7 @@ body {
     background: url(../../../assets/Img/icon_select_downarrow.svg) no-repeat center;
     background-size: 12px;
     cursor: pointer;
+    transform: rotate(180deg);
 }
 
 .accordionCard .accordionCardBody {
@@ -1860,7 +1861,7 @@ body {
 }
 
 .accordionCard .accordionCardHeader .accordionArrow.rotated {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
     transition: transform 0.3s ease;
 }
 

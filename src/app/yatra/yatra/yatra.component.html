@@ -107,7 +107,7 @@
                   <div class="input-container">
                     <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
                       [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}" [id]="control.name"
-                      [name]="control.name" (change)="onInputChange($event, control)">
+                      [name]="control.name" (change)="onInputChange($event, control)" (keypress)="control.restrictKeyPress ? restrictKeyPress($event) : null">
                     <input *ngIf="control.disabled" class="inputField_Text_disabled"
                       formControlName="{{ control.name }}" [type]="control.type" [id]="control.name"
                       [name]="control.name" [ngClass]="{'disabled-has-value': hasAnyValue(control)}"

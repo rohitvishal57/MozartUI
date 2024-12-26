@@ -46,4 +46,9 @@ export interface ClaimData {
         gender: string;
         relation: string;
       }
-  
+  export interface UploadErrors {
+        fileNotSelected: boolean;
+        invalidFormat: boolean;
+        requiredDocs: string;
+        duplicateDocs: string;
+      }

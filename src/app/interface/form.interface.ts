@@ -53,6 +53,7 @@ export interface IFormControl {
   options?: IOptions[];
   idProperty?: any;
   nameProperty?: any;
+  restrictKeyPress?: boolean;
   class?: string;
   cssClass?: string;
   showBorder?: boolean;
