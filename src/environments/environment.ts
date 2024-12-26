@@ -179,5 +179,12 @@ export const environment = {
   getAllManageLob:"api/v1/GetAllManageLOB",
   getkycstatus : "api/quote/getkycstatusviaproposalnum",
   fetchPennyVerificationByOCR: "api/yatra/pennydropverificationviaocr",
-  getInsertproposerdocumentid: "api/yatra/insertproposerdocumentid"
+  getInsertproposerdocumentid: "api/yatra/insertproposerdocumentid",
+  getPincodeDetails:"api/rug/GetPincodeDetails",
+  tsCreateLead: "api/v1/SaveLeadDetails",
+  getAllDispositions: "api/v1/GetAllDisposition?appName=telesales",
+  getAllSubDispositions:'api/v1/GetAllSubDisposition',
+  saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
+  postTSHalfQuote:"api/v1/PostHalfQuote",
+  getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId"
 };

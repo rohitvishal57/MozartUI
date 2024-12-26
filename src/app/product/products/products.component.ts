@@ -239,7 +239,7 @@ export class ProductsComponent implements OnInit {
       //   });
       // }
    
-        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
+        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897")) {
           if(this.agentCode == "467898"){
             let reqObj = {
               "leadId": this.leadId,
@@ -269,9 +269,18 @@ export class ProductsComponent implements OnInit {
               }
             });
           }else{
-            this.router.navigate(['rug'], {
-               state: { productData: productData, formSequence: this.formSequence }
-            });
+            if(this.agentCode == "467896" || this.agentCode == "467897"){
+              this.router.navigate(['rug'], {
+                state: { productData: productData, formSequence: this.formSequence, productCode: item.productCode, productName: item.productName }
+             });
+            }
+            else{
+                this.router.navigate(['rug'], {
+              state: { productData: productData, formSequence: this.formSequence }
+           });
+
+            }
+
 
           }
         }else{
