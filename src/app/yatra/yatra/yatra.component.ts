@@ -7438,7 +7438,7 @@ export class YatraComponent {
 
   getCityStateByPinByCorressponding() {
     const reqData = {
-      "pincode": this.dynamicFormGroup.get('correspondentPincode')?.value
+      "pincode": this.dynamicFormGroup.get('correspondentPincode')?.value.toString()
     }
     this.commonService.getPinCodeByCity(reqData).subscribe(res => {
       if (res.isSuccess && res.data) {
