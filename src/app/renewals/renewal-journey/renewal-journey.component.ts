@@ -2996,7 +2996,7 @@ export class RenewalJourneyComponent {
       console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
-          if (res.isSuccess) {
+          if (res.isSuccess && res.data.isFullQuoteSuccess) {
             this.formData.status = res.data.status || null;
             this.formData.policyStartDate = res.data.policyStartDate || null;
             this.formData.policyEndDate = res.data.policyEndDate || null;
@@ -3014,7 +3014,7 @@ export class RenewalJourneyComponent {
 
           }
           else {
-            this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: "Payment and policy issuance failed", duration: 5000 });
           }
         },
         (err) => {
