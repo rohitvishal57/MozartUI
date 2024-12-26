@@ -7460,18 +7460,18 @@ export class YatraComponent {
       next: (response: any) => {
         if (response.isSuccess && response.data) {
           this.toast.success({ detail: "Success", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
-          this.onSubmit();
         }
         else {
           this.toast.error({ detail: "Error", summary: response.message, duration: 3000 })
-          this.form.formSections.forEach((section: any) => {
-            section.formControls.forEach((control: any) => {
-              if (control.name === 'next') {
-                control.disabled = true;
-              }
-            })
-          });
+          // this.form.formSections.forEach((section: any) => {
+          //   section.formControls.forEach((control: any) => {
+          //     if (control.name === 'next') {
+          //       control.disabled = true;
+          //     }
+          //   })
+          // });
         }
+        this.onSubmit();
       },
       error: (err) => {
         this.toast.error({ detail: "Error", summary: 'Failed to generate half Quote', duration: 3000 });
