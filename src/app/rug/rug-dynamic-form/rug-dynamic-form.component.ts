@@ -4065,7 +4065,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     }
-    if(this.tsDetails.productCode == "R10"){
+    if(this.tsDetails.productCode == "T04"){
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GPA" || item.combinationName === "GCI"
       );
@@ -7584,10 +7584,21 @@ console.log(control);
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
         res = JSON.parse(res.data).data
-        res.productSIDetails.map((item: any) => {
-          item.value = item.siPlanValue.split('.')[0],
-            item.name = item.siPlanValue.split('.')[0]
-        })
+        // res.productSIDetails.map((item: any) => {
+        //   item.value = item.siPlanValue.split('.')[0],
+        //     item.name = item.siPlanValue.split('.')[0]
+        // })
+        if(this.bbdetails.productCode != "T04"){
+          res.productSIDetails.map((item: any) => {
+            item.value = item.siPlanValue.split('.')[0],
+              item.name = item.siPlanValue.split('.')[0]
+          })
+        }else{
+          res.productSIDetails.map((item: any) => {
+            item.value = item.siPlanValue.split('.')[0],
+              item.name = item.siPlanText
+          })
+        }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
         console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
@@ -7848,10 +7859,21 @@ console.log(control);
       await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
         next: (res: any) => {
           res = JSON.parse(res.data).data
-          res.productSIDetails.map((item: any) => {
-            item.value = item.siPlanValue.split('.')[0],
-              item.name = item.siPlanValue.split('.')[0]
-          })
+          // res.productSIDetails.map((item: any) => {
+          //   item.value = item.siPlanValue.split('.')[0],
+          //     item.name = item.siPlanValue.split('.')[0]
+          // })
+          if(this.bbdetails.productCode != "T04"){
+            res.productSIDetails.map((item: any) => {
+              item.value = item.siPlanValue.split('.')[0],
+                item.name = item.siPlanValue.split('.')[0]
+            })
+          }else{
+            res.productSIDetails.map((item: any) => {
+              item.value = item.siPlanValue.split('.')[0],
+                item.name = item.siPlanText
+            })
+          }
           this.sumInsuredData = res.productSIDetails;
           filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
           console.log(filterArr);
