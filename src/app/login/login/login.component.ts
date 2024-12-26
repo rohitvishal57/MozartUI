@@ -291,7 +291,7 @@ export class LoginComponent implements OnInit {
             }else if(res.data.agentCode === "467897"){
               this.router.navigate(['products'])
             }else if(res.data.agentCode === "467895"){
-              this.router.navigate(['rug/av-upload'])
+              this.router.navigate(['rug/av-list'])
             }else if(res.data.agentCode === "467894"){
               this.router.navigate(['rug/base-caller-upload'])
             }else{
