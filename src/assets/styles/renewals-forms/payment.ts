@@ -372,18 +372,18 @@ export const payment={
             },
             {
               "validatorName": "pattern",
-              "pattern": "^(?:[-_]*\\d){6}[-_]*$",
+              "pattern": "^[0-9_-]{6}$",
               "message": "Only 6 digits are allowed, including optional - or _."
             },
             {
               "validatorName": "maxlength",
               "maxLength": 6,
-              "message": "Maximum length is 8 characters."
+              "message": "Invalid number maximum length is 6 characters."
             },
             {
               "validatorName": "minlength",
               "minLength": 6,
-              "message": "Minimum length is 6 characters."
+              "message": "Invalid number minimum length is 6 characters."
             }
           ]
         },
