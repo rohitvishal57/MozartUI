@@ -7666,6 +7666,15 @@ export class YatraComponent {
     console.log(this.form);
     
   }
+
+  restrictKeyPress(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+    // Allow only numeric digits (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+  
   
 }
 
