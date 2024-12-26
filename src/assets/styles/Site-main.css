@@ -6698,3 +6698,8 @@ position: relative;
   background-size: 12px !important;
 }
 /*----Toast Custom styles end----*/
+@media (max-width:767px) {
+  .quoteComparisonWraper .qc_itemSubMain .qc_item{
+    margin-bottom: 1.5rem;
+  }
+}
