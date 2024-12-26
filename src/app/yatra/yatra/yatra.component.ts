@@ -1342,48 +1342,48 @@ export class YatraComponent {
     return formControl ? formControl.value : null;
   }
 
-  triggerFileInput(controlName: string) {
-    console.log("getting called");
+  // triggerFileInput(controlName: string) {
+  //   console.log("getting called");
 
-    const fileInputControl = this.document.getElementById(controlName);
-    fileInputControl?.click();
-  }
+  //   const fileInputControl = this.document.getElementById(controlName);
+  //   fileInputControl?.click();
+  // }
 
-  onFileSelected(inputName: string, event: any) {
-    const file = event.target.files[0];
-    console.log(file);
+  // onFileSelected(inputName: string, event: any) {
+  //   const file = event.target.files[0];
+  //   console.log(file);
 
-    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
-    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-    const control = this.dynamicFormGroup.get(inputName);
-    console.log(control);
-    if (file) {
-      // Clear previous errors
-      control?.setErrors(null);
+  //   const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+  //   const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+  //   const control = this.dynamicFormGroup.get(inputName);
+  //   console.log(control);
+  //   if (file) {
+  //     // Clear previous errors
+  //     control?.setErrors(null);
 
-      // Validate file type
-      if (!allowedFileTypes.includes(file.type)) {
-        console.log(allowedFileTypes);
-        control?.setErrors({ fileType: true });
-      }
+  //     // Validate file type
+  //     if (!allowedFileTypes.includes(file.type)) {
+  //       console.log(allowedFileTypes);
+  //       control?.setErrors({ fileType: true });
+  //     }
 
-      // Validate file size
-      if (file.size > maxSizeInBytes) {
-        control?.setErrors({ fileSize: true });
-      }
+  //     // Validate file size
+  //     if (file.size > maxSizeInBytes) {
+  //       control?.setErrors({ fileSize: true });
+  //     }
 
-      // If no errors, proceed to set the selected file
-      if (!control?.errors) {
-        this.selectedFile = file;
-        control?.setValue(file.name);
-      } else {
-        control?.markAsTouched();
-        this.selectedFile = null;
-      }
+  //     // If no errors, proceed to set the selected file
+  //     if (!control?.errors) {
+  //       this.selectedFile = file;
+  //       control?.setValue(file.name);
+  //     } else {
+  //       control?.markAsTouched();
+  //       this.selectedFile = null;
+  //     }
 
 
-    }
-  }
+  //   }
+  // }
 
   // uploadSelectedDocument(): Promise<void> {
   //   return new Promise(async (resolve, reject) => {
@@ -7721,20 +7721,34 @@ export class YatraComponent {
   }
 
   async onUploadFile(event: any, control: any) {
+    if (event[0]) {
+      // Clear previous errors
+      // this.dynamicFormGroup?.controls[control.name].setErrors(null);
+      console.log(this.dynamicFormGroup);
+      
+
+      // If no errors, proceed to set the selected file
+      if (this.dynamicFormGroup?.get(control.name)) {
+        this.selectedFile = event[0];
+        this.dynamicFormGroup?.get(control.name)?.setValue(event[0].name);
+      } else {
+        this.dynamicFormGroup?.get(control.name)?.markAsTouched();
+        this.selectedFile = null;
+      }
+    }
+
     const formData = new FormData();
     const base64File = await this.convertFileToBase64(event[0]);
-
     const policyNum = this.proposalNum.replace(/-/g, "");
     formData.append("Files", event[0]);
     formData.append("UniqueNumber", policyNum);
 
     let obj: any
-    let newObj: any = {};
-    switch (control) {
+    switch (control.name) {
       case 'neftStatementUpload':
         obj = {
-          "name": "Manjunath S",
-          "byteArray": base64File.replace("data:application/pdf;base64,", "")
+          "name": this.dynamicFormGroup?.controls['accountHolderName'].value,
+          "byteArray": base64File.split(',')[1]
 
         }
         this.yatraService.pennyDropVerficationByOCR(obj).subscribe(
@@ -7809,7 +7823,7 @@ export class YatraComponent {
               // this.documentId = res.data.uploadResponse[0].globalId;
               let arr = [];
               arr.push({
-                "name": control,
+                "name": control?.name,
                 "data": res.data.uploadResponse[0].globalId
               });
 
