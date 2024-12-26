@@ -151,7 +151,7 @@ export class KycComponent {
                       this.router.navigate(['yatra'], {
                         queryParams: { data: encodedEncryptedData }
                       });
-                      this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+                      this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
                     }
                   },
                   error: (err) => {
@@ -210,7 +210,7 @@ export class KycComponent {
             // }
           },
           (err) => {
-            this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
             console.log("error is coming from fullquote api");
           }
         );
@@ -245,13 +245,13 @@ export class KycComponent {
                 });
               } catch (err) {
                 console.error("Error from getRenewalInfo API:", err);
-                this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+                this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
               }
             } else if (res.data.kycStatus == "false") {
               this.agentCode = localStorage.getItem('agentCode');
               const renewalInfoRequestBody = { policy_Number: res.data.policyNumber };
               const resInfo: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-              this.toast.error({ detail: "UNSUCCESS", summary: "KYC UNSUCCESS", duration: 5000 });
+              this.toast.error({ detail: "Error", summary: "KYC UNSUCCESS", duration: 5000 });
               this.router.navigate(['renewal/renewalJourney'], {
                 state: {
                   formData: this.encryptionService.encrypt(resInfo.data),
@@ -266,7 +266,7 @@ export class KycComponent {
             }
           },
           (err) => {
-            this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
             console.log("error is coming from fullquote api");
           }
         );
@@ -293,7 +293,7 @@ export class KycComponent {
             });
           },
           (err) => {
-            this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
             console.log("error is coming from fullquote api");
           }
         );
@@ -316,7 +316,7 @@ export class KycComponent {
             });
           },
           (err) => {
-            this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
             console.log("error is coming from fullquote api");
           }
         );

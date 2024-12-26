@@ -8,15 +8,10 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { combinedForms, thankYou, renewals_summary } from 'src/assets/styles/renewals-forms/combined_forms';
-import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
-import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
+import { thankYou} from 'src/assets/styles/renewals-forms/combined_forms';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
-import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
 import { RenewalsService } from '../renewals.service';
-import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
-import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
 import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
@@ -59,7 +54,7 @@ export class RenewalJourneyComponent {
   selectedFile: any;
   documentId: any;
   agentCode: any;
-  rowData:any;
+  rowData: any;
   formSequence: any[] = [payment, thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
@@ -83,10 +78,10 @@ export class RenewalJourneyComponent {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
-  isFeedBackModalVisible: Boolean = false; 
+  isFeedBackModalVisible: Boolean = false;
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) {}
- 
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard) { }
+
   async ngOnInit() {
     this.showHtmlContent = false;
 
@@ -103,28 +98,28 @@ export class RenewalJourneyComponent {
 
       // Decrypt and assign each piece of data if present
       if (stateData.formData) {
-        console.log(stateData.formData,"formData");
-        
+        console.log(stateData.formData, "formData");
+
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
         if ('isFullQuoteSuccess' in decryptedFormData) {
           this.rowData = decryptedFormData;
-        }        
+        }
         console.log(decryptedFormData);
-        if(decryptedFormData.policyNumber){
+        if (decryptedFormData.policyNumber) {
           const renewalInfoRequestBody = {
             policy_Number: decryptedFormData.policyNumber
           };
-          const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+          const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
 
           this.formData = { ...this.formData, ...response.data };
         }
-        
+
         this.formData = { ...this.formData, ...decryptedFormData };
         console.log(this.formData);
 
         // if (decryptedFormData.errorObject.errorMessage) {
         //   console.log("testing");
-          
+
         //   this.toast.warning({detail: "SUCCESS",summary:decryptedFormData.errorObject.errorMessage || "payment",duration: 5000});
         // }
 
@@ -143,7 +138,7 @@ export class RenewalJourneyComponent {
         // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
         localStorage.setItem('formIndex', stateData.formIndex);
         console.log(stateData.formIndex);
-        
+
       }
 
       if (stateData.proposalNum) {
@@ -158,16 +153,16 @@ export class RenewalJourneyComponent {
       //     console.error(error);
       //   }
       // }
-      try{
+      try {
         if (stateData.policyNumber) {
           this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
           console.log(this.policyNumber);
-      }
-      }catch (error){
-          console.error(error);
+        }
+      } catch (error) {
+        console.error(error);
 
       }
-     
+
       // if (stateData.paymentStatus) {
       //     const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
       //     if(paymentStatus == "SUCCESS"){
@@ -638,7 +633,7 @@ export class RenewalJourneyComponent {
     if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
       this.isFeedBackModalVisible = true;
     }
-    
+
   }
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null) {
@@ -2955,7 +2950,6 @@ export class RenewalJourneyComponent {
     this.formIndex = formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
-
   setFormIndexValue(value: number) {
     localStorage.setItem("formIndex", value.toString());
   }
@@ -2965,7 +2959,6 @@ export class RenewalJourneyComponent {
     this.setFormIndexValue(currentIndex + 1);
     console.log("currentIndex", currentIndex);
   }
-  
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);
@@ -3644,14 +3637,14 @@ export class RenewalJourneyComponent {
   }
 
   sendPaymentLink(control: any) {
-    console.log("inside sendPaymentLink",control);
-    const sendPaymentRequestBody={
+    console.log("inside sendPaymentLink", control);
+    const sendPaymentRequestBody = {
       firstName: this.formData?.firstName,
       lastName: this.formData?.lastName,
       agentcode: this.agentCode,
       emailId: "saisatya@monocept.com",
       productName: this.formData?.productName,
-      businessType:"REN",
+      businessType: "REN",
       pNumber: this.formData?.policyNumber,
       productCode: this.formData?.productCode,
       premiumAmount: this.formData?.totalPremium,
@@ -3659,11 +3652,11 @@ export class RenewalJourneyComponent {
     };
     this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
       next: (response: any) => {
-        console.log("sharePaymentLinkApi",response);
+        console.log("sharePaymentLinkApi", response);
         if (response.data) {
-          this.toast.success({detail: "SUCCESS",summary: response.data.message ||"Link has been sent successfully",duration: 3000});
-            this.changeMainFormDependentControls(control.dependentControls, true);
-            this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+          this.toast.success({ detail: "SUCCESS", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
+          this.changeMainFormDependentControls(control.dependentControls, true);
+          this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
         } else {
           this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
         }
@@ -3672,28 +3665,14 @@ export class RenewalJourneyComponent {
         this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
       }
     });
-    
-
-    // this.router.navigate(['renewal/customerRenewalJourney'], {
-    //   state: {
-    //     formData: this.encryptionService.encrypt(this.formData),
-    //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
-    //     policyNumber: this.encryptionService.encrypt(this.policyNumber),
-    //     journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-    //     formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-    //     formIndex:"0"
-    //   }
-    // });
   }
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-      if ( this.rowData != null &&!this.rowData.isFullQuoteSuccess) {
-        this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
-        return;
-      }
-    
-    // Handle the Juspay redirection for buttons other than Offline
+    if (this.rowData != null && !this.rowData.isFullQuoteSuccess) {
+      this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed. Please wait some time.", duration: 5000 });
+      return;
+    }
     if (this.selectedButton !== 'offline') {
       const reqData = {
         agentcode: this.agentCode,
@@ -3704,7 +3683,7 @@ export class RenewalJourneyComponent {
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
         ProductName: this.formData.productName,
-        userType:"Agent",
+        userType: "Agent",
       };
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
@@ -3714,10 +3693,9 @@ export class RenewalJourneyComponent {
             if (this.selectedButton == 'sendLinkButton') {
               console.log(response);
               this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-              // res = response.data.paymentURL;
             }
             else {
-              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+              window.location.href = response.data.paymentURL;
             }
           } else {
             this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
@@ -3729,18 +3707,9 @@ export class RenewalJourneyComponent {
           console.error('Error generating payment link:', error);
         }
       });
-
-      // this.router.navigate(['/renewal/paymentstatus'],{
-      //   queryParams: {
-      //     orderid: 'UP_241209_ef1cf656',
-      //     token: 'aa59deee594c4c90abd5737929d0302e'
-      //     // ,
-      //     // agentCode: '500013'
-      //   }
-      // });
-
     }
   }
+
   checkKycDetail(control: any): void {
     const isVisible = !(this.formData.isKycCompleted);
     // const isVisible=true;
@@ -3758,11 +3727,11 @@ export class RenewalJourneyComponent {
     const kycRequestBody = {
       policyNumber: this.policyNumber,
       fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", 
+      panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No", 
+      pepCheck: "No",
       businessType: "REN",
-      userType:"Agent"
+      userType: "Agent"
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
       (res: any) => {
@@ -3777,33 +3746,27 @@ export class RenewalJourneyComponent {
 
   shareKycURL(control: any) {
     console.log(control);
-    
+
     const kycRequestBody = {
-      policyNumber: this.policyNumber, 
+      policyNumber: this.policyNumber,
       proposerNumber: "",
       fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", 
+      panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No",
       businessType: "REN",
-      emailId:this.formData.emailId,
-      agentCode:this.agentCode,
-      MobileNumber:this.formData.mobileNumber,
-      ProductName:this.formData.productName,
-      ProductCode:this.formData.productCode
+      emailId: this.formData.emailId,
+      agentCode: this.agentCode,
+      MobileNumber: this.formData.mobileNumber,
+      ProductName: this.formData.productName,
+      ProductCode: this.formData.productCode
     };
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
-        console.log("kycResponseBody", res);
-        // this.toast.success({
-        //   detail: "SUCCESS",
-        //   summary: res.message,
-        //   duration: 3000,
-        // });
-        if(res.data.isShareKyc){
-          this.toast.success({detail: "SUCCESS",summary: "Link has been sent successfully",duration: 3000});
+        if (res.data.isShareKyc) {
+          this.toast.success({ detail: "SUCCESS", summary: "Link has been sent successfully", duration: 3000 });
         }
-        this.changeMainFormDependentControls(control.dependentControls,true);
+        this.changeMainFormDependentControls(control.dependentControls, true);
         this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
@@ -3904,5 +3867,5 @@ export class RenewalJourneyComponent {
   onSelectValue(value: String) {
     this.feedbackImpressedValue = value;
   }
-  
+
 }

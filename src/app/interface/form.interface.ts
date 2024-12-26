@@ -239,4 +239,5 @@ export interface IOptions {
   class?: string;
   selected?: boolean;
   dependentControls?: any[];
+  disabled: boolean;
 }
