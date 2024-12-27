@@ -36,6 +36,8 @@ export class ProductComparisonComponent {
   }
 
   ngOnInit(): void {
+    
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     const savedItems = sessionStorage.getItem('compareItems');
     if (savedItems) {
       this.comparisonItems = JSON.parse(savedItems);
