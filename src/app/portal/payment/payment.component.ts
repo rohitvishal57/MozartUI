@@ -38,6 +38,10 @@ export class PaymentComponent {
       if (params['token']) {
         localStorage.setItem('token', params['token']);
       }
+      if(params['agentCode']){
+        this.agentCode = params['agentCode'];
+        localStorage.setItem('agentCode', this.agentCode);
+      }
       this.orderId = params['orderId'] ? params['orderId'] : "";
       if (this.orderId) {
         this.getOrderDetails();
@@ -51,9 +55,6 @@ export class PaymentComponent {
             const formData = {
               policyNumber: this.route.snapshot.queryParams['pNo'],
             };
-            this.agentCode = this.route.snapshot.queryParams['agentCode'] || '5100003';
-            localStorage.setItem('agentCode', this.agentCode );
-            // localStorage.setItem('agentCode', this.agentCode);
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -65,7 +66,6 @@ export class PaymentComponent {
             const formData = {
               proposalNumber: this.route.snapshot.queryParams['pNo'],
             };
-            // localStorage.setItem('agentCode', '5100003');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -90,6 +90,7 @@ export class PaymentComponent {
     await this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
       async (res: any) => {
         console.log(res);
+        localStorage.setItem('agentCode', res.data.agentCode);
         if (res.data.businessType == 'Renewal') {
           this.businessType = 'REN'
           this.userType = res.data.userType
@@ -324,7 +325,6 @@ export class PaymentComponent {
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
-            // localStorage.setItem('agentCode', '5100003');
             localStorage.setItem('formIndex', '1');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
@@ -336,7 +336,6 @@ export class PaymentComponent {
           }
           else{
             this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
-            // localStorage.setItem('agentCode', '5100003');
             localStorage.setItem('formIndex', '1');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
