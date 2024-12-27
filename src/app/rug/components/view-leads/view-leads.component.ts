@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RugService } from '../../rug.service';
@@ -24,6 +24,7 @@ export class ViewLeadsComponent implements OnInit {
   viewLeadForm!: FormGroup;
   loading = false;
   agentCode: any
+  searchInputControl = new FormControl("");
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -63,15 +64,19 @@ export class ViewLeadsComponent implements OnInit {
       "isUnverifiedLead": false,
       "isDualJourney": false,
       "isViewLead": false,
-      "isViewCheckerLead": true
+      "isViewCheckerLead": true,
+      "pageNumber": this.page,
+      "pageSize": this.rows
     }
     this.loading = true;
     this.rugService.getAllLeads(this.reqBody).subscribe({
       next: (res: any) => {
         console.log(res);
         res = JSON.parse(res.data).data
-        this.totalRecords = res.allLeads.length;
-        this.allLeads = res.allLeads
+        console.log(res);
+
+        this.totalRecords = res.leadDetails.length;
+        this.allLeads = res.leadDetails
         console.log(res);
         this.updateDisplayedData();
       },
@@ -90,6 +95,18 @@ export class ViewLeadsComponent implements OnInit {
     //       console.log(error);
     //       this.loading = false;
     //     });
+  }
+  applySearch() {
+    if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim();
+    // if (this.selected === "leadId") {
+    //     this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
+    // }
+      this.first = 0;
+      this.page = 1;
+    this.getAllLeads();
+    }
+    
   }
   actionLead(lead: any){
     console.log(lead);
@@ -216,10 +233,10 @@ export class ViewLeadsComponent implements OnInit {
   
     }
     onPageChange(event: any) {
-      // this.first = event.first;
-      // this.rows = event.rows;
-      // this.page = Math.floor(this.first / this.rows) + 1;
-      // this.getAllAVs();
+      this.first = event.first;
+      this.rows = event.rows;
+      this.page = Math.floor(this.first / this.rows) + 1;
+      this.getAllLeads();
     }
 
     disableButton(lead: any) {
