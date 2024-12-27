@@ -2899,7 +2899,7 @@ export class RugDynamicFormComponent {
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
           }
           if(this.isD2C == true && controls.name == 'insuredMembers' && this.isFormLoaded == true){
-            // this.calculateD2CPremium();
+            this.calculateD2CPremium();
           }
           if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
             this.calculateBBPremium();
