@@ -11,7 +11,7 @@
 
         </div>
   
-        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="eventForm" >
           <section class="white_container">
             <div class="row mb-3">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -42,7 +42,7 @@
                 </div> -->
   
                   <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
-                  *ngIf="eventForm.get('eventType')?.value === 'proposal' || eventForm.get('eventType')?.value === 'Leads'">
+                  *ngIf="eventForm.get('eventType')?.value === 'Proposals' || eventForm.get('eventType')?.value === 'lead'">
                   <div class="input-block form-floating input-block-renew">
                     <input type="text" 
                            class="form-control input-textBox" 
@@ -50,7 +50,7 @@
                            formControlName="eventNumber" 
                            placeholder="">
                     <label for="eventNumber">
-                      {{ (eventForm.get('eventType')?.value === 'proposal' ? 'Proposal Number' : 'Lead Number') | translate }}
+                      {{ (eventForm.get('eventType')?.value === 'Proposals' ? 'Proposal Number' : 'Lead Number') | translate }}
                     </label>
                   </div>
                 </div>
@@ -59,15 +59,16 @@
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
                   <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName" 
-                         placeholder="" pattern="^[A-Za-z\\s]+$">
+                         placeholder="">
                   <label for="customerName">{{"Customer Name" | translate}}</label>
                   <div *ngIf="eventForm.get('customerName')?.invalid && (eventForm.get('customerName')?.dirty || eventForm.get('customerName')?.touched)">
                     <div class="text-danger" *ngIf="eventForm.get('customerName')?.errors?.['required']">
-                      {{"Customer name is required" | translate}}
+                      {{"Customer name is required" | translate}} 
+
                     </div>
-                    <div class="text-danger" *ngIf="eventForm.get('customerName')?.errors?.['pattern']">
-                      {{"Customer name should contain only letters and spaces" | translate}}
-                    </div>
+                    <span>                    
+                      <small *ngIf="eventForm.get('customerName')?.hasError('pattern')">Customer name can only contain letters and spaces.</small>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -163,7 +164,7 @@
             </div>
   
             <div class="d-flex justify-content-end">
-              <button type="submit" class="btn_red" >
+              <button type="submit" class="btn_red" (click)="onSubmit()">
                 {{"Update" | translate}}
               </button>
             </div>

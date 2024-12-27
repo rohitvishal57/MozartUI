@@ -15,8 +15,8 @@ export class EventsEditViewComponent implements OnInit {
   isSubmitting: boolean = false;
   
   eventTypes = [
-    { value: 'Leads', label: 'Lead Number' },
-    { value: 'proposal', label: 'Proposal Number' },
+    { value: 'lead', label: 'Lead Number' },
+    { value: 'Proposals', label: 'Proposal Number' },
     { value: 'others', label: 'others' }
   ];
   activityTypes = [
@@ -47,7 +47,6 @@ export class EventsEditViewComponent implements OnInit {
     private eventsService: EventsService
   ) {
     this.initializeForm();
-      // Get ID from either route params or query params
   this.route.params.subscribe(params => {
     if (params['id']) {
       this.eventId = params['id'];
@@ -58,7 +57,6 @@ export class EventsEditViewComponent implements OnInit {
     if (params['id']) {
       this.eventId = params['id'];
     }
-    // Rest of your queryParams handling...
   });
 
   }
@@ -67,11 +65,11 @@ export class EventsEditViewComponent implements OnInit {
       id: [],
       eventType: ['', Validators.required],
       eventNumber: [''],
-      customerName: ['', Validators.required],
+      customerName: ['', [Validators.pattern("^\\s*[a-zA-Z]+(\\s+[a-zA-Z]+)*\\s{0,100}$")]],
       mobileNumber: ['', Validators.required],
-      leadNumber: [''],
+      // leadNumber: [''],
       other: [''],
-      proposalNumber: [''],
+      // proposalNumber: [''],
       activityTitle: ['', Validators.required],
       activityType: ['', Validators.required],
       startDate: ['', Validators.required],
@@ -82,7 +80,6 @@ export class EventsEditViewComponent implements OnInit {
       agentCode: ['']
     });
   
-    // Subscribe to queryParams to patch the form
     this.route.queryParams.subscribe(params => {
       this.eventId = params['id'];
       const eventType = params['eventType'];
@@ -97,10 +94,9 @@ export class EventsEditViewComponent implements OnInit {
       const endTime = params['endTime'];
       const note = params['note'];
   
-      // Patch form values from queryParams
       this.eventForm.patchValue({
         eventType: eventType,
-        eventNumber: (eventType === 'Leads' || eventType === 'proposal') ? eventNumber : '',
+        eventNumber: (eventType === 'lead' || eventType === 'Proposals') ? eventNumber : '',
         customerName: customerName,
         mobileNumber: mobileNumber,
         activityTitle: activityTitle,
@@ -125,11 +121,10 @@ export class EventsEditViewComponent implements OnInit {
   });
 }
 
-// Method to set validators for eventNumber based on eventType
 setEventNumberValidators(eventType: string) {
   const eventNumberControl = this.eventForm.get('eventNumber');
 
-  if (eventType === 'Leads' || eventType === 'proposal') {
+  if (eventType === 'lead' || eventType === 'Proposals') {
     eventNumberControl?.setValidators(Validators.required);
   } else {
     eventNumberControl?.clearValidators();  // Optionally clear validator if not needed
@@ -145,51 +140,6 @@ setEventNumberValidators(eventType: string) {
     });
   }
 
-  // loadEventDetails() {
-  //   const reqBody = {
-  //     id: this.eventId
-  //   };
-
-  //   this.eventsService.eventListById(reqBody).subscribe({
-  //     next: (response: any) => {
-  //       if (response.isSuccess && response.data) {
-  //         let eventType = 'other';
-  //         let eventNumber = '';
-          
-  //         if (response.data. eventType = 'Leads') {
-  //           eventNumber = response.data.leadNumber;
-  //         } else if (response.data.proposalNumber) {
-  //           eventType = 'proposal';
-  //           eventNumber = response.data.proposalNumber;
-  //         }
-  //         const startDate = this.formatDate(response.data.startDate);
-  //         const endDate = this.formatDate(response.data.endDate);
-          
-  //         // Format times to remove seconds
-  //         const startTime = response.data.startTime.substring(0, 5);
-  //         const endTime = response.data.endTime.substring(0, 5);
-
-  //         this.eventForm.patchValue({
-  //           eventType: eventType,
-  //           customerName: response.data.customerName,
-  //           mobileNumber: response.data.mobileNumber,
-  //           activityTitle: response.data.activityTitle,
-  //           activityType: response.data.activityType,
-  //           startDate: startDate,
-  //           startTime: startTime,
-  //           endTime: endTime,
-  //           endDate: endDate,
-  //           note: response.data.note,
-  //           agentCode: response.data.agentCode
-  //         });
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error loading event details', error);
-  //       // Add error notification here
-  //     }
-  //   });
-  // }
   loadEventDetails() {
     const reqBody = {
       id: this.eventId
@@ -198,17 +148,15 @@ setEventNumberValidators(eventType: string) {
     this.eventsService.eventListById(reqBody).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
-          let eventType = 'others';  // Changed default to match your eventTypes array
+          console.log(response, 'resp');
+          
+          let eventType = 'others';
           let eventNumber = '';
           
-          // Fix the comparison operator
-          if (response.data.eventType === 'Leads') {  // Changed = to ===
-            eventNumber = response.data.leadNumber;
-            eventType = 'Leads';
-          } else if (response.data.proposalNumber) {
-            eventType = 'proposal';
-            eventNumber = response.data.proposalNumber;
-          }
+          if (response.data.eventType == 'lead' || response.data.eventType == 'Proposals') { 
+            eventNumber = response.data.eventNumber;
+            eventType = response.data.eventType
+         }
           
           const startDate = this.formatDate(response.data.startDate);
           const endDate = this.formatDate(response.data.endDate);
@@ -246,27 +194,6 @@ setEventNumberValidators(eventType: string) {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
-
-  // toggleEdit() {
-  //   this.isEditing = !this.isEditing;
-  //   if (this.isEditing) {
-  //     this.enableForm();
-  //   } else {
-  //     this.disableForm();
-  //   }
-  // }
-
-  // enableForm() {
-  //   Object.keys(this.eventForm.controls).forEach(key => {
-  //     this.eventForm.get(key)?.enable();
-  //   });
-  // }
-
-  // disableForm() {
-  //   Object.keys(this.eventForm.controls).forEach(key => {
-  //     this.eventForm.get(key)?.disable();
-  //   });
-  // }
 
   navigateToListEvent() {
     this.router.navigate(['/events/eventsListView']);
@@ -309,17 +236,17 @@ setEventNumberValidators(eventType: string) {
         ...this.eventForm.value,
         startTime,
         endTime,
-        eventSchedule  // add the generated schedule here
+        eventSchedule  
       };
       const formData = this.eventForm.value;
       const updateData = {
-        id: this.eventId, // This will now have the correct ID from the route params
+        id: this.eventId,
         agentCode: formData.agentCode || '',
         eventType: formData.evenType,
         customerName: formData.customerName,
         mobileNumber: formData.mobileNumber,
-        leadNumber: formData.leadNumber,
-        proposalNumber: formData.proposalNumber,
+        // leadNumber: formData.leadNumber,
+        // proposalNumber: formData.proposalNumber,
         activityTitle: formData.activityTitle,
         startDate: formData.startDate,
         endDate: formData.endDate,
@@ -330,11 +257,11 @@ setEventNumberValidators(eventType: string) {
       };
   
       // Handle event number based on event type
-      if (formData.eventType === 'Leads') {
-        updateData['leadNumber'] = formData.eventNumber;
-      } else if (formData.eventType === 'proposal') {
-        updateData['proposalNumber'] = formData.eventNumber;
-      }
+      // if (formData.eventType === 'lead') {
+      //   updateData['leadNumber'] = formData.eventNumber;
+      // } else if (formData.eventType === 'proposals') {
+      //   updateData['proposalNumber'] = formData.eventNumber;
+      // }
   
       this.eventsService.saveEvent(payload).subscribe({
         next: (response: any) => {
