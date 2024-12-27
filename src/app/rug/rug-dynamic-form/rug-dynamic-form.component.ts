@@ -951,6 +951,26 @@ export class RugDynamicFormComponent {
       console.log(this.dynamicFormGroup, this.formData);
       console.log(this.formSequence);
       console.log(this.formSequence[this.getFormIndexValue()].formId);
+      console.log(this.getFormIndexValue());
+      if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Confirmation" && this.agentCode == "467897"){
+        console.log(this.form);
+        console.log(this.tsDetails);
+        this.isCustomerJourney = true;
+        this.form.formSections.forEach((section: any) => {
+          console.log(section);
+          if (section.sectionTitle == "Confirmation") {
+            section.formControls.forEach((formControl: any) => {
+              if(formControl.name == "label1"){
+                formControl.visible = false;
+              }
+              if(formControl.name == "label2"){
+                formControl.visible = true;
+              }
+            })
+          }
+        });
+
+      }
       if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
         console.log(this.form);
         console.log(this.bbdetails.paymentMode);
@@ -4947,10 +4967,9 @@ export class RugDynamicFormComponent {
     console.log(this.nomineeRelations);
     // if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4 || this.getFormIndexValue() == 5 || this.getFormIndexValue() == 6){
-        if(this.getFormIndexValue() == 3){
-          this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
-          // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
-        }
+        // if(this.getFormIndexValue() == 3){
+        //   this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
+        // }
         let reqData = {
           "proposalNum": (this.tsDetails.leadId != null || this.tsDetails.leadId != "") ? this.tsDetails.leadId : this.dynamicFormGroup.value.leadNumber,
           "partnerId": this.partnerId,
@@ -4976,7 +4995,7 @@ export class RugDynamicFormComponent {
               console.log(this.tsDetails);
               console.log(this.getFormIndexValue());
               console.log(this.nomineeRelations);
-              if(this.getFormIndexValue() == 6){
+              if(this.getFormIndexValue() == 6 || (this.getFormIndexValue() == 5 && this.agentCode == "467897")){
               let nomineeRelationCode = this.filterRelationByName(this.tsDetails.relationWithProposer);
                 const payloadObject = {
                     agentDetails: {
@@ -5100,7 +5119,7 @@ export class RugDynamicFormComponent {
                 let commonDraftRequest = {
                   leadId: this.tsDetails.leadId,
                   requestData: JSON.stringify(payloadObject),
-                  isFinalSubmit: true,
+                  isFinalSubmit: this.agentCode != "467897" ? true : false,
                   leadStatus: "SUBMITTED"
                 }
                 this.rugService.saveTsCommonDraft(commonDraftRequest).subscribe({
@@ -5109,9 +5128,17 @@ export class RugDynamicFormComponent {
                     let responseData = JSON.parse(res.data);
                     if (responseData.isSuccess == true && responseData.statusCode == 200) {
                       this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
-                      if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                        this.incrementIndex();
-                        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                      if(this.getFormIndexValue() == 5 && this.agentCode == "467897"){
+                        if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                          this.incrementIndex();
+                          this.incrementIndex();
+                          this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                        }
+                      }else{
+                        if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                          this.incrementIndex();
+                          this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                        }
                       }
                     }else{
                       this.toast.warning({ detail: "WARNING", summary: responseData.message, duration: 3000 });
@@ -7565,7 +7592,9 @@ this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
           item.value = item.dispositionId,
             item.name = item.dispositionName
         })
-        control.options = res.allDisposition;
+        // this.dispositionOptions = this.agentCode == "467896" ? res.allDisposition.filter((item:any)=>item.dispositionId!=9) : res.allDisposition.filter((item:any)=>item.dispositionId!=6);
+
+        control.options = this.agentCode == "467896" ? res.allDisposition.filter((item:any)=>item.dispositionId!=9) : res.allDisposition.filter((item:any)=>item.dispositionId!=6);
       },
       error: (err) => {
         console.error(err);
