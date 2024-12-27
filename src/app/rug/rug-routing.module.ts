@@ -16,13 +16,14 @@ import { ExtractBaseAndAvMasterComponent } from "./Admin/Extract_Base_Agent_AV_M
 import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
 import { AuditComponent } from "./Admin/AV_Upload/audit/audit.component";
+import { ViewMakerCheckerLeadsComponent } from "./components/view-maker-checker-leads/view-maker-checker-leads.component";
 
 
 
 const routes: Routes = [
     { path:'', component: RugDynamicFormComponent },
-    { path:'web', component: ViewLeadsComponent },
-    { path:'view-checker-leads', component: ViewLeadsComponent },
+    { path:'view-leads', component: ViewLeadsComponent },
+    { path:'view-checker-leads', component: ViewMakerCheckerLeadsComponent },
     { path:'productdownload', component: ProductDownloadComponent },
     { path:'base-caller-upload', component: ProductDownloadComponent }, 
     { path:'extract-base-agent', component: ProductDownloadComponent },
@@ -38,7 +39,7 @@ const routes: Routes = [
     { path:'view-for-solo-journey', component:ViewForSoloJourneyComponent},
     {path:'view-unverified-leads', component:ViewUnverifiedLeadsComponent},
     {path:'view-for-dual-journey', component:ViewForDualJourneyComponent},
-    {path:'Verification_script', component: VerificationScriptComponent},
+    {path:'verification_script', component: VerificationScriptComponent},
     {path:'product_details', component:ProductDetailsComponent},
     {path:'extract_base_agent_av_master', component:ExtractBaseAndAvMasterComponent},
     {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent}
