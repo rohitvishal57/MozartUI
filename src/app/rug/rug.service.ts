@@ -28,7 +28,7 @@ export class RugService {
       return this.httpService.post(getSubDispositions,reqData)
     }
     getDataPincodeDetails(reqData:any){
-      const  getPincodeDetails = this.configService.config.baseUrl1 + this.configService.config.getPincodeDetails;
+      const  getPincodeDetails = this.configService.config.baseUrl + this.configService.config.getPincodeDetails;
       return this.httpService.post(getPincodeDetails,reqData)
     }
     saveTsCommonDraft(reqData:any){

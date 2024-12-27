@@ -184,10 +184,14 @@ export const environment = {
   getAllManageLOB: "api/v1/GetAllManageLOB",
   getPincodeDetails:"api/rug/GetPincodeDetails",
   tsCreateLead: "api/v1/SaveLeadDetails",
-  getAllDispositions: "api/v1/getAllDispositions?appName=TELESALES",
-  getAllSubDispositions:'api/v1/GetAllSubDisposition',
+  getAllDispositions: "api/rug/getAllDisposition?appName=TELESALES",
+  getAllSubDispositions:'api/rug/GetAllSubDisposition',
   saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
   postTSHalfQuote:"api/v1/PostHalfQuote",
   getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
-  bbHalfQuote: "api/rug/HalfQuote"
+  bbHalfQuote: "api/rug/HalfQuote",
+  getAllLocationAndvendors:"api/v1/GetAllVendorsAndLocations",
+  updateAv:"api/v1/CreateUpdateAV",
+  deleteAV:"api/v1/DeleteAV",
+  bulkUpload:"api/v1/BulkUpload"
 };

@@ -7539,11 +7539,26 @@ export class RugDynamicFormComponent {
     });
   }
   changePincode(control: any){
-console.log(control);
+console.log(control.name);//"proposerPincode"
+let pincodeObj = {
+  pinCode: this.dynamicFormGroup.get('proposerPincode')?.value
+}
+this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
+  next: (res: any) => {
+    res = JSON.parse(res.data).data
+    console.log(res)
+    this.dynamicFormGroup.get('proposerCity')?.setValue(res.pincodeDetails.city);
+    this.dynamicFormGroup.get('proposerState')?.setValue(res.pincodeDetails.state);
+  },
+  error: (err) => {
+    console.error(err);
+  }
+});
   }
   getAllDisposition(control: any){
     this.rugService.getDispositions().subscribe({
       next: (res: any) => {
+        console.log(res)
         res = JSON.parse(res.data).data
         console.log(res)
         res.allDisposition.map((item: any) => {
@@ -7576,9 +7591,11 @@ console.log(control);
           console.log(control.name);
           if(control.name == "subDisposition"){
             control.options = res.allSubDisposition;
+            this.dynamicFormGroup.get('subDisposition')?.setValue(res.allSubDisposition[0].value);
           }
           })
         })
+
       },
       error: (err) => {
         console.error(err);
