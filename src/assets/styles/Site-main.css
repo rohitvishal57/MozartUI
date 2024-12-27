@@ -6434,7 +6434,19 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 20px;
 }
 /* Optional: Additional styles for visual complexity */
-
+.common_searchWraper .field_searchMain select.filterSearch,
+.leads_searchWraper .field_searchMain select.filterSearch {
+  -webkit-appearance: none; /* Removes default styling for iOS */
+    appearance: none; /* Removes default styling for other browsers */
+  background: var(--site-body-bg) url(/assets/Img/down_arrow.svg) no-repeat 96% 50%;
+}
+.sumInsured_selectMain .input-filed-white select.input-textBox,
+.sumInsured_selectMain .input-block select.input-textBox {
+  -webkit-appearance: none; /* Removes default styling for iOS */
+    appearance: none; /* Removes default styling for other browsers */
+  background: var(--white-color) url(/assets/Img/down_arrow.svg) no-repeat 96% 50% !important;
+  padding: 12px 16px !important;
+}
 /*----New styles added 13-nov-24 end----*/
 
 
@@ -6698,8 +6710,3 @@ position: relative;
   background-size: 12px !important;
 }
 /*----Toast Custom styles end----*/
-@media (max-width:767px) {
-  .quoteComparisonWraper .qc_itemSubMain .qc_item{
-    margin-bottom: 1.5rem;
-  }
-}

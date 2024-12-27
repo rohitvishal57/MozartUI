@@ -603,6 +603,12 @@
     .siteSidenav .sidenavMenu.sidenavMenu_logout {
         width: auto;
     }
+    .quoteComparisonWraper .qc_itemSubMain .qc_item{
+        margin-bottom: 1.5rem;
+      }
+    .col-daterange {
+        min-width: 100%;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
