@@ -193,5 +193,6 @@ export const environment = {
   getAllLocationAndvendors:"api/v1/GetAllVendorsAndLocations",
   updateAv:"api/v1/CreateUpdateAV",
   deleteAV:"api/v1/DeleteAV",
-  bulkUpload:"api/v1/BulkUpload"
+  bulkUpload:"api/v1/BulkUpload",
+  GetLeads: "api/rug/GetLeads"
 };

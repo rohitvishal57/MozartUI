@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { RugService } from '../../rug.service';
 // import { ApiService } from 'src/app/core/services/api.service';
 // import { AuditPopupComponent } from 'src/app/shared/components/audit-popup/audit-popup.component';
 // import { SuccessPopupComponent } from 'src/app/shared/components/success-popup/success-popup.component';
@@ -22,11 +23,13 @@ export class ViewLeadsComponent implements OnInit {
   filteredArray: any;
   viewLeadForm!: FormGroup;
   loading = false;
+  agentCode: any
   constructor(
     private router: Router,
     private dialog: MatDialog,
     // private apiService: ApiService,
     private formBuilder: FormBuilder,
+    private rugService: RugService
   ) { }
   currentPage = 1;
   itemsPerPage = 10;
@@ -40,12 +43,12 @@ export class ViewLeadsComponent implements OnInit {
   }
   getAllLeads() {
     // const endpoint='/TeleSales/GetLeads?pageNo=1&noOfRow=10'
-    if (localStorage.getItem("currentUser") !== null) {
-      this.localStorageData = localStorage.getItem("currentUser");
-      this.loginData = JSON.parse(this.localStorageData);
-    }
+    // if (localStorage.getItem("currentUser") !== null) {
+      this.agentCode = localStorage.getItem("agentCode");
+      // this.loginData = JSON.parse(this.localStorageData);
+    
     this.reqBody = {
-      "userId": this.loginData.userName,
+      "userId": this.agentCode,
       "isSoloJourney": false,
       "isUnverifiedLead": false,
       "isDualJourney": false,
@@ -53,6 +56,16 @@ export class ViewLeadsComponent implements OnInit {
       "isViewCheckerLead": false
     }
     this.loading = true;
+    this.rugService.getAllLeads(this.reqBody).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        res = JSON.parse(res.data).data
+        console.log(res);
+      },
+      error: (err:any) => {
+        console.error(err);
+      }
+    });
     // this.apiService.postCall(environment.ENDPOINTS.GetLeads, this.reqBody)
     //   .subscribe(
     //     response => {
