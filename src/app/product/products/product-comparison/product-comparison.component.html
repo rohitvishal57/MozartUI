@@ -55,11 +55,13 @@
                             <div class="qc_info qc_info_grey">
                                 <h6>Optional Covers</h6>
                                 <ul class="tick_round">
-                                    <li *ngFor="let feature of comparisonItem1.productFeatures">
-                                        <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
+                                    <ng-container *ngFor="let feature of comparisonItem1.productFeatures">
+                                    <li *ngIf="feature.categoryName === 'Optional Covers'">
+                                        <div class="tick_round_div" >
                                             <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
                                         </div>
                                     </li>
+                                </ng-container>
                                 </ul>
                             </div>
                             <div class="qc_info qc_infoCover">
@@ -123,11 +125,13 @@
                             <div class="qc_info qc_info_grey">
                                 <h6>Optional Covers</h6>
                                 <ul class="tick_round">
-                                    <li *ngFor="let feature of comparisonItem2.productFeatures">
-                                        <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
+                                    <ng-container *ngFor="let feature of comparisonItem2.productFeatures">
+                                    <li *ngIf="feature.categoryName === 'Optional Covers'">
+                                        <div class="tick_round_div" >
                                             <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
                                         </div>
                                     </li>
+                                </ng-container>
                                 </ul>
                             </div>
                             <div class="qc_info qc_infoCover">
@@ -193,11 +197,13 @@
                             <div class="qc_info qc_info_grey">
                                 <h6>Optional Covers</h6>
                                 <ul class="tick_round">
-                                    <li *ngFor="let feature of comparisonItem3.productFeatures">
-                                        <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
+                                <ng-container *ngFor="let feature of comparisonItem3.productFeatures">
+                                    <li *ngIf="feature.categoryName === 'Optional Covers'">
+                                        <div class="tick_round_div" >
                                             <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
                                         </div>
                                     </li>
+                                </ng-container>
                                 </ul>
                             </div>
                             <div class="qc_info qc_infoCover">
