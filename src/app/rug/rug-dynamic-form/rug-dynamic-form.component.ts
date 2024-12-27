@@ -301,9 +301,11 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       } else {
+
         this.leadId = localStorage.getItem('leadId');
         this.formSequence = history.state.formSequence;
-        console.log(this.formSequence);
+        console.log(this.leadId);
+
         if (history.state.productData.productId)
           this.productId = history.state.productData.productId;
         if (history.state.productData.partnerId)
@@ -331,6 +333,8 @@ export class RugDynamicFormComponent {
       if (localStorage.getItem('agentCode')){
         this.agentCode = localStorage.getItem('agentCode');
       }
+
+
       if(this.agentCode != "467898"){
         this.isD2C = false;
       }else if(this.agentCode == "467898"){
@@ -338,7 +342,21 @@ export class RugDynamicFormComponent {
       }
       if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
-    this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+      if(this.leadId != null && (this.agentCode == "467896" || this.agentCode == "467897")){
+
+        const reqData = {
+          partnerId: this.partnerId,
+          productId: this.productId,
+        };
+        const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
+        this.formSequence = JSON.parse(res.data.formSequence);
+        localStorage.setItem("formIndex", "1");
+ 
+        this.getFormDataFromFormSequence(this.formSequence[1].formId);
+      }else{
+
+        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+      }
       }
     });
     
