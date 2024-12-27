@@ -982,6 +982,30 @@ export class RugDynamicFormComponent {
 
       // Iterate over bbdetails keys to patch the form
       if(this.productId == 7 || this.productId == 8 || this.productId == 31 || this.productId == 30){
+
+        if(this.policyDetails){
+          this.filteredPolicies = this.policyDetails.policyDetails.filter(
+            (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
+          );
+          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetails.proposerDetails.premium)
+
+          if(this.filteredPolicies.length == 2){
+            this.d2cDetails = this.filteredPolicies[0]
+            this.d2cDetails.certificateNumber = this.d2cDetails.certificateNumber + '\n' + this.filteredPolicies[1].certificateNumber
+            this.d2cDetails.productName = this.d2cDetails.productName + '\n' + this.filteredPolicies[1].productName
+          }else{
+            this.d2cDetails = this.filteredPolicies[0]
+          }
+        //   this.policyDetails.policyDetails.forEach((item:any)=>{
+        //     Object.keys(item).forEach((key) => {
+        //         // Check if the control exists and update its value
+        //         if (this.dynamicFormGroup.contains(key)) {
+        //           this.dynamicFormGroup.get(key)?.setValue(item[key]);
+        //         }
+              
+        //     });
+        // })
+        }
         Object.keys(this.d2cDetails).forEach((key) => {
           if (key !== 'insuredMemberDetails') {
             // Check if the control exists and update its value
@@ -990,18 +1014,7 @@ export class RugDynamicFormComponent {
             }
           }
         });
-        if(this.policyDetails){
-          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetails.proposerDetails.premium)
-          this.policyDetails.policyDetails.forEach((item:any)=>{
-            Object.keys(item).forEach((key) => {
-                // Check if the control exists and update its value
-                if (this.dynamicFormGroup.contains(key)) {
-                  this.dynamicFormGroup.get(key)?.setValue(item[key]);
-                }
-              
-            });
-        })
-        }
+       
         
         if(this.getFormIndexValue() == 0){
           this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
