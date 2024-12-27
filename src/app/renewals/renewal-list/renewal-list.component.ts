@@ -1695,11 +1695,20 @@ export class RenewalListComponent {
     const formIndex = action === 'withmodify' ? '0' : '2';
     localStorage.setItem('formIndex', formIndex);
   
+    const formatDate = (date: string): string => {
+      if (!date) return "";
+      const parsedDate = new Date(date);
+      const day = String(parsedDate.getDate()).padStart(2, '0');
+      const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const year = parsedDate.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+ 
     if (action === "withmodify") {
       const payload = {
         policyNumber: proposerDetail.policyNumber, // Policy number
-        mobileNumber: proposerDetail.proposerMobileNumber || "", // Mobile number
-        dateOfBirth: proposerDetail.proposerDateOfBirth || "", // Date of birth
+        dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""), // Format date of birth as dd/MM/yyyy
+        mobileNumber: "", // Mobile number
       };
   
       // Call cpRedirectionApi

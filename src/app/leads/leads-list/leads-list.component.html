@@ -184,7 +184,7 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td align="center">
+                                    <td align="center" class="icon_allAssignLead_td">
                                         <div class="input-checkbox-feild input-checkbox-noSpace">
                                             <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
                                             <label for={{i}}></label>

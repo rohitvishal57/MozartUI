@@ -106,7 +106,7 @@ export class CustomerJourneyComponent {
       this.agentCode = localStorage.getItem('agentCode');
     }
 
-    console.log(this.formData, this.proposalNum, this.policyNumber);
+    console.log(this.agentCode,this.formData, this.proposalNum, this.policyNumber);
 
     const stateData = history.state;
     if(stateData.formData){
@@ -146,7 +146,7 @@ export class CustomerJourneyComponent {
             email: "",
             leadId: "",
             proposalStatus: "",
-            agentCode: "5100003"
+            agentCode: this.agentCode
           };
           let resdata : any = {};
           try {
@@ -159,7 +159,7 @@ export class CustomerJourneyComponent {
               formId:resdata.formId,
               partnerId:resdata.partnerId,
               productId:resdata.productId,
-              agentCode: "5100003",
+              agentCode: this.agentCode,
               currentFormSequence:resdata.formSequence,
               leadId: this.quickQuoteRedirect == false ? '' : resdata.leadId,
               isLead: this.quickQuoteRedirect == false ? false : true,
@@ -261,7 +261,7 @@ export class CustomerJourneyComponent {
       let reqData = {
         "proposalNum": this.rowData.proposalNumber,
         "partnerId": this.rowData.partnerId,
-        "agentCode": "5100003",
+        "agentCode": this.agentCode,
         "formData": JSON.stringify(Data),
         "formName": Sequence[Sequence.length - 1].formName,
         "formConfig": JSON.stringify(Sequence),
