@@ -6434,7 +6434,10 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 20px;
 }
 /* Optional: Additional styles for visual complexity */
-
+.col-daterange {
+  -webkit-appearance: none; /* Removes default styling for iOS */
+    appearance: none; /* Removes default styling for other browsers */
+}
 /*----New styles added 13-nov-24 end----*/
 
 
@@ -6698,8 +6701,3 @@ position: relative;
   background-size: 12px !important;
 }
 /*----Toast Custom styles end----*/
-@media (max-width:767px) {
-  .quoteComparisonWraper .qc_itemSubMain .qc_item{
-    margin-bottom: 1.5rem;
-  }
-}
