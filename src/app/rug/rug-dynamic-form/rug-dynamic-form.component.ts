@@ -30,7 +30,8 @@ export class RugDynamicFormComponent {
   fb = inject(FormBuilder)
   dynamicFormGroup: FormGroup = this.fb.group({});
   private dynamicStyle!: HTMLLinkElement;
-
+  dispositionList: any;
+  subDispositionList: any;
   insurancetypecode: any;
   productid: any;
   verticalCode: any;
@@ -306,6 +307,8 @@ export class RugDynamicFormComponent {
         this.formSequence = history.state.formSequence;
         console.log(this.leadId);
 
+        console.log(this.formSequence);
+        console.log(history.state.productData);
         if (history.state.productData.productId)
           this.productId = history.state.productData.productId;
         if (history.state.productData.partnerId)
@@ -4989,6 +4992,7 @@ export class RugDynamicFormComponent {
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
     console.log(this.nomineeRelations);
+    let filteredDispositionData: any;
     // if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4 || this.getFormIndexValue() == 5 || this.getFormIndexValue() == 6){
         // if(this.getFormIndexValue() == 3){
@@ -5021,6 +5025,84 @@ export class RugDynamicFormComponent {
               console.log(this.nomineeRelations);
               if(this.getFormIndexValue() == 6 || (this.getFormIndexValue() == 5 && this.agentCode == "467897")){
               let nomineeRelationCode = this.filterRelationByName(this.tsDetails.relationWithProposer);
+              console.log(this.subDispositionList);
+              console.log(this.dispositionList);
+              if(this.dispositionList != undefined){
+                filteredDispositionData = this.dispositionList.filter(
+                  (item: any) => {
+                    if(this.getFormIndexValue() == 5){
+                      if(item.dispositionId == this.dynamicFormGroup.get('disposition')?.value){
+                        console.log(item);
+                        return item;
+                      }
+                      if(item.dispositionId == this.tsDetails.disposition){
+                        console.log(item);
+                        return item;
+                      }
+                    }else{
+                      if(item.dispositionId == this.tsDetails.disposition){
+                        console.log(item);
+                        return item;
+                      }
+                    }
+                  }
+                );
+              }else{
+                this.rugService.getDispositions().subscribe({
+                  next: (res: any) => {
+                    console.log(res)
+                    res = JSON.parse(res.data).data
+                    console.log(res);
+                    this.dispositionList = res.allDisposition;
+                    filteredDispositionData = this.dispositionList.filter(
+                      (item: any) => {
+                        if(this.getFormIndexValue() == 5){
+                          if(item.dispositionId == this.dynamicFormGroup.get('disposition')?.value){
+                            console.log(item);
+                            return item;
+                          }
+                          if(item.dispositionId == this.tsDetails.disposition){
+                            console.log(item);
+                            return item;
+                          }
+                        }else{
+                          if(item.dispositionId == this.tsDetails.disposition){
+                            console.log(item);
+                            return item;
+                          }
+                        }
+                      }
+                    );            
+                  },
+                  error: (err) => {
+                    console.error(err);
+                  }
+                });
+              }
+
+              console.log(this.dynamicFormGroup.get('subDisposition')?.value);
+              const filteredSubDispositionData = this.subDispositionList.filter(
+                (item: any) => {
+                  if(this.getFormIndexValue() == 5){
+                    if(item.subDispositionId == this.dynamicFormGroup.get('subDisposition')?.value){
+                      console.log(item);
+                      return item;
+                    }
+                    if(item.subDispositionId == this.tsDetails.subDisposition){
+                      console.log(item);
+                      return item;
+                    }
+                  }else{
+                    if(item.subDispositionId == this.tsDetails.subDisposition){
+                      console.log(item);
+                      return item;
+                    }
+                  }
+                }
+
+              );
+              console.log(this.dispositionList);
+
                 const payloadObject = {
                     agentDetails: {
                       axisProcess: this.tsDetails.axisProcess,
@@ -5086,8 +5168,8 @@ export class RugDynamicFormComponent {
                       preferredContactDate: this.tsDetails.preferredContactDate,
                       preferredContactTime: this.tsDetails.preferredContactTime,
                       avRemark: this.tsDetails.avRemark,
-                      disposition: "Payment Pending",
-                      subDisposition: "PG link triggered",
+                      disposition: filteredDispositionData[0].dispositionName,
+                      subDisposition: filteredSubDispositionData[0].subDispositionName,
                       allHealthDeclaration: [],
                       accountNumber: this.tsDetails.accountNumber,
                       ifscCode: this.tsDetails.ifscCode,
@@ -5325,7 +5407,22 @@ export class RugDynamicFormComponent {
     }
   }
   filterRelationByName(relationName: string) {
-    return this.nomineeRelations.filter((relation: any) => relation.relationName === relationName);
+    if(this.nomineeRelations != undefined){
+      return this.nomineeRelations.filter((relation: any) => relation.relationName === relationName);
+    }else{
+      this.yatraService.getRelations().subscribe({
+        next: (response: any) => {
+          response = JSON.parse(response.data).data;
+          this.nomineeRelations = response;
+          console.log(this.nomineeRelations);
+          this.nomineeRelations = this.nomineeRelations.relationShipModels;
+          return this.nomineeRelations.filter((relation: any) => relation.relationName === relationName);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    }
   }
   mergeArrays(firstArray: any[], insuredDetails: any[]): void {
     console.log(firstArray);
@@ -7611,14 +7708,17 @@ this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
       next: (res: any) => {
         console.log(res)
         res = JSON.parse(res.data).data
-        console.log(res)
+        console.log(res);
+        this.dispositionList = res.allDisposition;
         res.allDisposition.map((item: any) => {
           item.value = item.dispositionId,
             item.name = item.dispositionName
         })
         // this.dispositionOptions = this.agentCode == "467896" ? res.allDisposition.filter((item:any)=>item.dispositionId!=9) : res.allDisposition.filter((item:any)=>item.dispositionId!=6);
 
-        control.options = this.agentCode == "467896" ? res.allDisposition.filter((item:any)=>item.dispositionId!=9) : res.allDisposition.filter((item:any)=>item.dispositionId!=6);
+        // control.options = this.agentCode == "467896" ? res.allDisposition.filter((item:any)=>item.dispositionId!=9) : res.allDisposition.filter((item:any)=>item.dispositionId!=6);
+        control.options = res.allDisposition;
+
       },
       error: (err) => {
         console.error(err);
@@ -7635,6 +7735,7 @@ this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
       next: (res: any) => {
         res = JSON.parse(res.data).data
         console.log(res)
+        this.subDispositionList = res.allSubDisposition;
         res.allSubDisposition.map((item: any) => {
           item.value = item.subDispositionId,
             item.name = item.subDispositionName
