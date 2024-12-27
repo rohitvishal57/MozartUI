@@ -12,6 +12,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SideNavbarComponent {
   isExpanded = false;
   isActive = false;
+  isSideNavVisible = true
+  formIndex:any
 
   sideMenuList = [
     { id: 1, displayName: 'Dashboard', path: 'dashboard', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
@@ -38,7 +40,17 @@ export class SideNavbarComponent {
   ) { }
 
   ngOnInit(): void {
-    this.agentCode = localStorage.getItem('agentCode')
+    this.agentCode = localStorage.getItem('agentCode');
+    this.formIndex = localStorage.getItem('formIndex');
+    if(this.agentCode == '467896' && this.formIndex >= 8){
+      this.isSideNavVisible = false
+    }else if(this.agentCode == '467899'){
+      this.isSideNavVisible = false
+    }else if(this.agentCode == '467898'){
+      this.isSideNavVisible = false
+    }else{
+      this.isSideNavVisible = true
+    }
     console.log(this.agentCode)
     // if(this.agentCode == "467896"){
     //   this.sideMenuList = [
