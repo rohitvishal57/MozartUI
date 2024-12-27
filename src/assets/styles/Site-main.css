@@ -6447,6 +6447,15 @@ input[type=number]::-webkit-outer-spin-button {
   background: var(--white-color) url(/assets/Img/down_arrow.svg) no-repeat 96% 50% !important;
   padding: 12px 16px !important;
 }
+.icon_leads_check .input-checkbox-feild .input-check:checked + label:after,
+.table .input-checkbox-feild .input-check:checked + label:after {
+  bottom: auto;
+  top:1px ;
+}
+.icon_allAssignLead .input-checkbox-feild .input-check + label,
+.icon_allAssignLead_td .input-checkbox-feild .input-check + label {
+  position: initial;
+}
 /*----New styles added 13-nov-24 end----*/
 
 
@@ -6598,7 +6607,7 @@ position: relative;
   background: #ffffff;
 }
 .popupModalMain.yatra-modal .input-container {
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 .margin_selectMember {
   margin: 0 0 15px;
