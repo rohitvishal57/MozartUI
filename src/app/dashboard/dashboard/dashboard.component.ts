@@ -206,6 +206,13 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    this.performanceCard = [];
+    this.tabsInfo = [];
+    this.otherSection = [];
+    this.quickActionDetails = [];
+    this.renewalDetail = [];
+    this.otherSection = [];
+    this.dhaSection = [];
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -1330,7 +1337,7 @@ export class DashboardComponent {
 
     this.dashboardService.submitPreferenceData(obj).subscribe((response: any) => {
       console.log('Data submitted successfully', response);
-      this.ngOnInit();
+      // this.ngOnInit();
     });
   }
 
