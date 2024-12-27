@@ -179,6 +179,10 @@ export const environment = {
   getAllManageLob:"api/v1/GetAllManageLOB",
   getkycstatus : "api/quote/getkycstatusviaproposalnum",
   getAllLocationAndvendors:"api/v1/GetAllVendorsAndLocations",
+  tsCreateLead: "api/v1/SaveLeadDetails",
+  getAllDispositions: "api/v1/getAllDispositions?appName=TELESALES",
+  getAllSubDispositions:'api/v1/GetAllSubDisposition',
+  saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
   updateAv:"api/v1/CreateUpdateAV",
   deleteAV:"api/v1/DeleteAV",
   bulkUpload:"api/v1/BulkUpload"

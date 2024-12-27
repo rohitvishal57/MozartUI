@@ -20,15 +20,15 @@ export class RugService {
       return this.httpService.get(getAllManageLOB);
     }
     getDispositions(){
-      const  getAllDispositions = this.configService.config.baseUrl + this.configService.config.getAllDispositions;
+      const  getAllDispositions = this.configService.config.baseUrl1 + this.configService.config.getAllDispositions;
       return this.httpService.get(getAllDispositions);
     }
     getAllSubDispositions(reqData:any){
-      const  getSubDispositions = this.configService.config.baseUrl + this.configService.config.getAllSubDispositions;
+      const  getSubDispositions = this.configService.config.baseUrl1 + this.configService.config.getAllSubDispositions;
       return this.httpService.post(getSubDispositions,reqData)
     }
     getDataPincodeDetails(reqData:any){
-      const  getPincodeDetails = this.configService.config.baseUrl + this.configService.config.getPincodeDetails;
+      const  getPincodeDetails = this.configService.config.baseUrl1 + this.configService.config.getPincodeDetails;
       return this.httpService.post(getPincodeDetails,reqData)
     }
     saveTsCommonDraft(reqData:any){
