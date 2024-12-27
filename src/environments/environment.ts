@@ -193,13 +193,5 @@ export const environment = {
   getAllLocationAndvendors:"api/v1/GetAllVendorsAndLocations",
   updateAv:"api/v1/CreateUpdateAV",
   deleteAV:"api/v1/DeleteAV",
-  bulkUpload:"api/v1/BulkUpload",
-  fetchPennyVerificationByOCR: "api/yatra/pennydropverificationviaocr",
-  getInsertproposerdocumentid: "api/yatra/insertproposerdocumentid",
-  sCreateLead: "api/v1/SaveLeadDetails",
-  getAllManageLOB: "api/v1/GetAllManageLOB",
-  getPincodeDetails:"api/rug/GetPincodeDetails",
-  postTSHalfQuote:"api/v1/PostHalfQuote",
-  getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
-  bbHalfQuote: "api/rug/HalfQuote"
+  bulkUpload:"api/v1/BulkUpload"
 };
