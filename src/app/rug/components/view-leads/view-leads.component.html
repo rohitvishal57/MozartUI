@@ -85,11 +85,11 @@
                                         <td class="text-center" nowrap>{{item.policyIssuanceDate}}</td>
                                         <td class="text-center" nowrap>{{item.remark}}</td>
                                         <td class="text-center" nowrap>
-                                            <button type="button" class="btn_reassign " [disabled]="item.status === 'Payment Done'" (click)="actionLead(item)">Action</button> 
-                                            <button type="button"  class="btn_audit " [disabled]="item.buttonDisabled || item.status === 'Payment Done'" (click)="backToDo(item)">Back To Do</button>
+                                            <button type="button" class="btn btn-danger " [disabled]="item.status === 'Payment Done'" (click)="actionLead(item)">Action</button> 
+                                            <button type="button"  class="btn btn-danger " [disabled]="item.buttonDisabled || item.status === 'Payment Done'" (click)="backToDo(item)">Back To Do</button>
                                         </td>
                                         <td class="text-center" nowrap>
-                                            <button type="button" class="btn_audit jsOpenPopup" (click)="auditLead(item)" aria-label="modal-audit">Audit</button>
+                                            <button type="button" class="btn btn-danger jsOpenPopup" (click)="auditLead(item)" aria-label="modal-audit">Audit</button>
                                         </td>
                                         <td class="text-center" nowrap>
                                         </td>

@@ -2770,6 +2770,16 @@ export const combinedForms = {
               "class": "col-md-3",
               "visible": true,
               "disabled": true
+            },
+            {
+              "name": "downloadWithParagraph",
+              "label": "Share the Insurance Policy Kit with your customer",
+              "visibleLabel": true,
+              "type": "paragraphWithBtns",
+              "value": "",
+              "class": "col-12 col-md-12 mt-3",
+              "visible": true,
+              "disabled": true
             }
           ]
         },

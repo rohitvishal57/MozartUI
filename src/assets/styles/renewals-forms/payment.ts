@@ -48,6 +48,16 @@ export const payment={
           // ]
         },
         {
+          "name": "skipKyc",
+          "label": "Skip KYC",
+          "value": "",
+          "type": "button",
+          "class": "send-link-btn send-btn",
+          "disabled": false,
+          "visible": true,
+          "methodName": "skipKycURL"
+        },
+        {
           "name": "kycCopyLink",
           "label": "KYC Link",
           "visibleLabel": true,
