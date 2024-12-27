@@ -85,7 +85,6 @@ export class YatraComponent {
   showPopup: boolean = false;
   showDoneButton = true;
   changesMade: boolean = false;
-
   partnerId: any
   productId: any
   pastDate = new Date(1900, 0, 1).toISOString().split('T')[0];
@@ -7140,6 +7139,29 @@ export class YatraComponent {
         }
         this.changeMainFormDependentControls(control.dependentControls, true);
         this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  skipKycURL(control:any){
+    const skipKycRequestBody = {
+      proposalOrPolicyNumber: "",
+      businessType:""
+    };
+    this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
+      (res: any) => {
+        console.log("skipKycResponseBody", res);
+        if (res.data.kycStatus) {
+          this.toast.success({
+            detail: "Success",
+            summary: res.message,
+            duration: 3000,
+          });
+          this.verifyKYCStatus = res.data.kycStatus;
+          this.checkKycDetail(control);
+        }
       },
       (err) => {
         console.log(err);

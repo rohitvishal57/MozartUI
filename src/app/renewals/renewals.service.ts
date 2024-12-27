@@ -132,6 +132,10 @@ export class RenewalsService {
     const sharekyclink = this.configService.config.baseUrl1 + this.configService.config.sharekyclink;
     return this.httpService.post(sharekyclink, reqBody);
   }
+  skipKycLinkApi(reqBody:any){
+    const skipkyclink = this.configService.config.baseUrl1 + this.configService.config.skipkyclink;
+    return this.httpService.post(skipkyclink, reqBody);
+  }
   justPayRedirection(reqData:any){
     const paymentRedirection= this.configService.config.baseUrl1 + this.configService.config.justPayRedirection;
     return this.httpService.post(paymentRedirection,reqData);

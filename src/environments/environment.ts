@@ -18,6 +18,7 @@ export const environment = {
   updateMemberDetails: "api/renewal/UpdateMemberDetails",
   kycUpdate: "api/renewal/kycUpdate",
   sharekyclink: "api/quote/sharekyclink",
+  skipkyclink: "api/quote/forcedkycupdate",
   getPaymentDetails: "api/yatra/getpaymentdetails",
   getDetailsForKyc: "api/quote/getkycdetails",
   fullQuote: "api/yatra/offlinePayment",
