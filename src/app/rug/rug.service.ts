@@ -55,4 +55,8 @@ export class RugService {
       const halfQuoteData = this.configService.config.baseUrl1 + this.configService.config.GetLeads;
       return this.httpService.post(halfQuoteData, reqData);
     }
+    getMasterData() {
+      const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getMasterData;
+      return this.httpService.get(getProposerOccupation);
+    }
 }

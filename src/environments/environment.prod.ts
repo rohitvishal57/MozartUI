@@ -194,5 +194,6 @@ export const environment = {
   postTSHalfQuote:"api/v1/PostHalfQuote",
   getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
   bbHalfQuote: "api/rug/HalfQuote",  
-  GetLeads: "api/rug/GetLeads"
+  GetLeads: "api/rug/GetLeads",
+  getMasterData:"api/rug/GetMasterDetails"
 };

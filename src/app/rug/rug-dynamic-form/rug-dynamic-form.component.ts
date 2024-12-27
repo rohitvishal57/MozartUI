@@ -1715,13 +1715,19 @@ export class RugDynamicFormComponent {
     });
   }
   getBBoccupation(control: any) {
-    this.yatraService.getProposerOccupation().subscribe({
+    this.rugService.getMasterData().subscribe({
       next: (res: any) => {
+        let occupationList;
         console.log(res);
-        control.options = res?.data;
+        occupationList = JSON.parse(res?.data).data.occupation;
+        occupationList.map((item: any) => {
+          item.name = item.occupationName;
+          item.value = item.occupationName;
+      })
+        control.options = occupationList;
       },
       error: (err: any) => {
-        console.error(err);
+      console.error(err)
       }
     });
   }

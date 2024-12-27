@@ -55,7 +55,8 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/rug/getAllDisposition?appName=TELESALES',
     'https://upuat.adityabirlahealth.com/api/rug/GetAllSubDisposition',
     'https://usp.monocept.ai/api/rug/GetPincodeDetails',
-    'https://upuat.adityabirlahealth.com/api/rug/GetLeads'
+    'https://upuat.adityabirlahealth.com/api/rug/GetLeads',
+    'https://usp.monocept.ai/api/rug/GetMasterDetails'
   ];
   
 
