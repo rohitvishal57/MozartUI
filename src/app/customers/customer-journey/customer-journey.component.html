@@ -142,6 +142,20 @@
                                     </small>
                                 </div>
 
+                                <div *ngIf="control.type === 'paragraphWithBtns'" [class]="control.class" [hidden]="!control.visible">
+                                  <div class="download_policyKit">
+                                    <div class="info_policyKit">
+                                      <h6 [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></h6>
+                                    </div>
+                                    <div class="button_policyKit">
+                                      <button type="button" (click)="onClickDownloadFromConfirmation()" id="btn_downloadkit"
+                                        name="btn_downloadkit" class="btn_downloadKit" title="Download Kit">Download Kit <img
+                                          src="./assets/Img/icon_download_kit_blue.svg"></button>
+                
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <!--type phonenumber-->
                                 <div *ngIf="control.type==='phonenumber'" [class]="control.class" class="typecss">
                                     <div class="input-container">

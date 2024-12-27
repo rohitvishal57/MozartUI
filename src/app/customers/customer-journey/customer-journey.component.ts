@@ -15,6 +15,7 @@ import { customer_payment } from 'src/assets/styles/renewals-forms/customer_paym
 import { Clipboard } from '@angular/cdk/clipboard';
 import { error } from 'jquery';
 import { ProposalsService } from 'src/app/proposals/proposals.service';
+import { CustomersService } from '../customers.service';
 
 @Component({
   selector: 'app-customer-journey',
@@ -92,11 +93,13 @@ export class CustomerJourneyComponent {
   lastData:any={};
   isFullQuoteStatus:string='true';
   verifyKYCStatus: any;
+  retrievedDocuments: any;
+
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
     public commonService: CommonService, private renewalService: RenewalsService, private router: Router, 
-    private clipboard: Clipboard,    private proposalService: ProposalsService,
+    private clipboard: Clipboard,    private proposalService: ProposalsService,private customerService: CustomersService
     ) {}
  
 
@@ -2733,6 +2736,121 @@ export class CustomerJourneyComponent {
         }
       });
     });
+  }
+
+  onClickDownloadFromConfirmation() {
+    this.onSearchDocumentFromConfirmation();
+    if (this.retrievedDocuments) {
+      const downloadPolicyKitRequestBody = {
+        agentCode: this.agentCode,
+        referenceId: this.agentCode,
+        eventName: "Download policy kit request from customers",
+        proposalNumber: this.policyNumber,
+        downloadRequest: [
+          {
+            omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
+            fileName: this.retrievedDocuments[0].fileName,
+          },
+        ],
+        sourceSystemName: "",
+        identifier: "",
+      };
+      this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+        (response: any) => {
+          if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+            const file = response.data.downloadResponse[0];
+            if (file.byteArray && file.fileName) {
+              const byteArray = new Uint8Array(
+                atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+              );
+              const blob = new Blob([byteArray], { type: "application/pdf" });
+              const fileURL = window.URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = fileURL;
+              link.download = file.fileName;
+              document.body.appendChild(link)
+              link.click();
+              document.body.removeChild(link)
+              window.open(fileURL, "_blank");
+            }
+          } else {
+            this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+          }
+        },
+        (error: any) => {
+          console.error("Download Policy Kit Error:", error);
+          this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+        }
+      );
+    }
+
+  }
+
+  onSearchDocumentFromConfirmation() {
+    const searchDocumentRequestBody = {
+      referenceId: this.agentCode,
+      searchRequest: [
+        {
+          categoryID: "",
+          description: "",
+          dataClassParam: [
+            {
+              docSearchParamId: "2",
+              value: this.policyNumber
+            },
+            {
+              docSearchParamId: "15",
+              value: "PS_04",
+            },
+          ],
+        },
+      ],
+      agentCode: this.agentCode,
+      eventName: "Search policy kit request from customers",
+      sourceSystemName: "",
+      searchOperator: "AND",
+    };
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          const searchResponse = response.data.searchResponse;
+          this.retrievedDocuments = searchResponse;
+          if (searchResponse && searchResponse[0]?.error?.length > 0) {
+            this.toast.success({ detail: "", summary: "No documents are available to download.", duration: 2000 });
+            return;
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+        }
+      },
+      (error: any) => {
+        console.error("Search document error", error);
+        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+      }
+    );
+  }
+
+  getLabels(control: any) {
+    let startIdx = control.indexOf('{{');
+    let endIdx = control.indexOf('}}');
+    let string: any;
+    if (startIdx !== -1 && endIdx !== -1) {
+      string = control.slice(startIdx + 2, endIdx).trim();
+    }
+
+    switch (string) {
+      case 'actName':
+        return control.replace('{{actName}}', this.formData?.accountNumber);
+      case 'emailId':
+        const emailId = this.formData?.emailId;
+        if (emailId) {
+          const anchorTag = `<a href="mailto:${emailId}">${emailId}</a>`;
+          return control.replace('{{emailId}}', anchorTag);
+        }
+        return control;
+      default:
+        return control;
+    }
   }
   
 }
