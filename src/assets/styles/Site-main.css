@@ -2225,6 +2225,7 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 16px;
   color: #5a5a5a;
   margin-bottom: 15px;
+  text-transform: uppercase;
 }
 
 .quoteComparisonWraper .qc_item .qc_info.qc_info_grey {
