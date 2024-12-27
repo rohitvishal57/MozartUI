@@ -193,9 +193,5 @@ export const environment = {
   saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
   postTSHalfQuote:"api/v1/PostHalfQuote",
   getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
-  bbHalfQuote: "api/rug/HalfQuote",
-  getAllLocationAndvendors:"api/v1/GetAllVendorsAndLocations",
-  updateAv:"api/v1/CreateUpdateAV",
-  deleteAV:"api/v1/DeleteAV",
-  bulkUpload:"api/v1/BulkUpload"
+  bbHalfQuote: "api/rug/HalfQuote"
 };
