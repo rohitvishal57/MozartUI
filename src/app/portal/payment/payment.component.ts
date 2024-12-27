@@ -38,8 +38,8 @@ export class PaymentComponent {
       if (params['token']) {
         localStorage.setItem('token', params['token']);
       }
-      if(params['agentCode']){
-        this.agentCode = params['agentCode'];
+      if(params['agentcode']){
+        this.agentCode = params['agentcode'];
         localStorage.setItem('agentCode', this.agentCode);
       }
       this.orderId = params['orderId'] ? params['orderId'] : "";
@@ -196,7 +196,7 @@ export class PaymentComponent {
         }
       }
       else if (this.businessType == 'REN') {
-        localStorage.setItem('agentCode', this.paymentDetail.agentCode);
+        // localStorage.setItem('agentCode', this.paymentDetail.agentCode);
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
           policyNumber: this.paymentDetail.oldPolicyNumber || '',
@@ -296,7 +296,7 @@ export class PaymentComponent {
           status: this.paymentDetail.policyStatus,
           paymentStatus: this.paymentDetail.paymentStatus
         };
-        localStorage.setItem('agentCode', '5100003');
+        // localStorage.setItem('agentCode', this.agentCode);
         if (this.paymentDetail?.paymentMethodType == 'emandate_payment') {
           const reqData = {
             agentcode: this.paymentDetail.agentCode,
@@ -352,7 +352,7 @@ export class PaymentComponent {
           }else {
             this.toast.error({ detail: "Error", summary: "Payment failed", duration: 5000 });
           }
-          localStorage.setItem('agentCode', '5100003');
+          // localStorage.setItem('agentCode', this.agentCode);
           // localStorage.setItem('formIndex', '1');
           this.router.navigate(['yatra/customerPayment'], {
             state: {
