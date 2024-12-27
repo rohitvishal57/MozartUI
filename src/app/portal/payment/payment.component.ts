@@ -4,7 +4,7 @@ import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { NgToastService } from 'ng-angular-popup';
 import { LoadingService } from 'src/app/services/loading.service';
-import { thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
+import { thankYou, thankYouFQFailed, thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
@@ -340,28 +340,31 @@ export class PaymentComponent {
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formSequence: this.encryptionService.encrypt([thankYouFQFailed]),
                 formIndex: "0",
               }
             });
           }
           
-        } else{
-          if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
+        } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
             this.toast.success({ detail: "SUCCESS", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
-          }else {
+            this.router.navigate(['yatra/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([thankYouPending]),
+                formIndex: "0",
+              }
+            });
+        } else {
             this.toast.error({ detail: "Error", summary: "Payment failed", duration: 5000 });
-          }
-          // localStorage.setItem('agentCode', this.agentCode);
-          // localStorage.setItem('formIndex', '1');
-          this.router.navigate(['yatra/customerPayment'], {
-            state: {
-              formData: this.encryptionService.encrypt(formData),
-              formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-              formIndex: "0",
-            }
-          });
-        } 
+            this.router.navigate(['yatra/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "0",
+              }
+            });
+        }
       } else if (this.businessType == 'REN' || this.paymentDetail.businessType == 'Renewal') {
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
@@ -412,24 +415,26 @@ export class PaymentComponent {
               },
             });
           } else {
-            this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
+            this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance pending.", duration: 5000 });
             this.router.navigate(['renewal/customerPayment'], {
               state: {
-                formData: this.encryptionService.encrypt(formData),
-                proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
-                journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formSequence: this.encryptionService.encrypt([thankYouFQFailed]),
                 formIndex: "0",
               },
             });
           }
-        } else{
-          if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
+        } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
            this.toast.success({ detail: "SUCCESS", summary: `${'payment '+ this.paymentDetail.paymentStatus}` , duration: 5000 });
+           this.router.navigate(['renewal/customerPayment'], {
+            state: {
+              formData: this.encryptionService.encrypt(formData),
+              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              formSequence: this.encryptionService.encrypt([thankYouPending]),
+              formIndex: "0",
+            }
+          });
          } else {
            this.toast.error({ detail: "Error", summary: "Payment failed", duration: 5000 });
-         }
            this.router.navigate(['renewal/customerPayment'], {
              state: {
                formData: this.encryptionService.encrypt(formData),
@@ -440,7 +445,7 @@ export class PaymentComponent {
                formIndex: "0",
              }
            });
-        }
+          }
       }
     }
   }

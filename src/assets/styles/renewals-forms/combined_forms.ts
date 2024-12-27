@@ -3052,3 +3052,102 @@ export const combinedForms = {
         }
       ]
     }  
+    export const thankYouPending = {
+      "formTitle": "thankYou",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Payment pending; please wait for processing",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        }
+      ]
+    }
+    export const thankYouFQFailed = {
+      "formTitle": "thankYou",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Payment completed successfully; policy issuance pending",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        }
+      ]
+    }
+    
