@@ -311,7 +311,12 @@ export class KycComponent {
         this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
           async (res: any) => {
             const kycData = res.data;
-            this.toast.success({ detail: "SUCCESS", summary: "KYC SUCCESS", duration: 5000 });
+            if(kycData.kycStatus == "True"){
+              this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
+            }
+            else{
+              this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 5000 });
+            }
             this.router.navigate(['renewal/customerKyc'], {
               state: {
                 formData: this.encryptionService.encrypt(kycData),
