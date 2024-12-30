@@ -22,7 +22,7 @@
               </div>
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" 
-            *ngIf="saveEvent.get('eventType')?.value === 'proposals' || 
+            *ngIf="saveEvent.get('eventType')?.value === 'Proposals' || 
                    saveEvent.get('eventType')?.value === 'lead'">
          <div class="input-block form-floating input-block-renew">
            <input 
@@ -34,15 +34,15 @@
              placeholder="" 
            />
            <label for="eventNumber">
-             {{ (saveEvent.get('eventType')?.value === 'proposals' ? 
+             {{ (saveEvent.get('eventType')?.value === 'Proposals' ? 
                  'Proposal Number' : 'Lead Number') | translate }}
            </label>
          </div>
          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onReferenceNumberSelect($event.option.value)">
            <mat-option *ngFor="let item of filteredReferenceList" 
-                       [value]="saveEvent.get('eventType')?.value === 'proposals' ? 
+                       [value]="saveEvent.get('eventType')?.value === 'Proposals' ? 
                                 item.proposalNum : item.leadNumber">
-             {{ saveEvent.get('eventType')?.value === 'proposals' ? 
+             {{ saveEvent.get('eventType')?.value === 'Proposals' ? 
                  item.proposalNum : item.leadNumber }}
            </mat-option>
          </mat-autocomplete>
@@ -164,7 +164,7 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
             <div class="input-block form-floating input-block-renew">
               <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="" pattern="^[A-Za-z0-9\s.,!?;:()-]*$">
-              <label for="note" class="form-label">{{"Note" | translate}}</label>
+              <label for="note" class="form-label">{{"Note" | translate}}<span class="text-danger">*</span></label>
               <div *ngIf="saveEvent.get('note')?.invalid && (saveEvent.get('note')?.dirty || saveEvent.get('note')?.touched)">
                 <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['required']">
                   {{"Note is required." | translate}}
