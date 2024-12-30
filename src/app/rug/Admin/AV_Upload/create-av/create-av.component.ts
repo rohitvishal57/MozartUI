@@ -24,10 +24,12 @@ export class CreateAVComponent implements OnInit {
   allAxisVendors: any[] = [];   
   filteredVendors: any[] = [];  
   selectedLocationId:any = ''; 
+  selectedLocation:any;
   AxisProcess: any[] = [" Inbound Phone Banking", "Outbound Call Center (OCC)"];
   selectedUserId: any | null = null;
   isUpdate: boolean = false;
-
+  filteredAxisVendors: any;
+  dataToModify!:any
 
   constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private adminService: AdminService, private toast: NgToastService) {
     
@@ -67,11 +69,14 @@ export class CreateAVComponent implements OnInit {
           tlName: this.PatchAllAv[0].tlName,
           imdCode: this.PatchAllAv[0].imdCode,
           axisVendor: this.PatchAllAv[0].axisVendor,
-          axisLob: this.PatchAllAv[0].axisLob,
+          axislob: this.PatchAllAv[0].axisLob
         });
         this.createAvForm.updateValueAndValidity();
       }
+      let selectedLocationId=this.allAxisLocations?.filter((location:any) => location.location==this.selectedLocation)[0].axisLocationId;
+      this.filteredAxisVendors=this.allAxisVendors?.filter((vendor:any)=>vendor.axisLocationId==selectedLocationId);
     })
+    
   }
 
   getAllVendorsAndLocation() {
@@ -82,11 +87,16 @@ export class CreateAVComponent implements OnInit {
     });
   }
  
-  onLocationChange(selectedLocationId: number) {
-    console.log('Location Changed:', selectedLocationId);  
-    this.filteredVendors = this.allAxisVendors.filter(vendor => 
-      vendor.axisLocationId == selectedLocationId);
-   console.log('vendors', this.filteredVendors);
+  onLocationChange(event:any) {
+    let selectedValue: any;
+  if(typeof(event) === "object"){
+    selectedValue = event.target.value;
+  }else{
+    selectedValue = event
+  }
+  let selectedLocation=selectedValue;
+  let selectedLocationId=this.allAxisLocations?.filter((location:any) => location.location==selectedLocation)[0].axisLocationId;
+  this.filteredAxisVendors=this.allAxisVendors?.filter((vendor:any)=>vendor.axisLocationId==selectedLocationId);
   }
 
   getAllLOB() {
@@ -122,7 +132,7 @@ export class CreateAVComponent implements OnInit {
       tlName: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
       imdCode: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
       axisVendor: ['', Validators.required],
-      axisLob: ['', Validators.required]
+      axislob: ['', Validators.required]
     });
   }
 
@@ -151,7 +161,7 @@ export class CreateAVComponent implements OnInit {
       tlName: this.createAvForm.value.tlName,
       imdCode: this.createAvForm.value.imdCode,
       axisVendor: this.createAvForm.value.axisVendor,
-      axisLob: this.createAvForm.value.axisLob,
+      axisLob: this.createAvForm.value.axislob,
       spCode: this.createAvForm.value.spcode,
       createdBy: 'admin'
     };

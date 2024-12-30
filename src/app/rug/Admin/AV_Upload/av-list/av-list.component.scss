@@ -292,8 +292,9 @@ h6 {
 	  gap:8px;
 	  margin-right: 5px;
 	  .filterSearch {
-		width: 160px;
+		width: 200px;
 		height: auto;
+		margin-left: 73rem;
 		padding: 9px 35px 9px 16px;
 		&:focus {
 		  border-width: 0 !important;
@@ -369,6 +370,7 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
+  
   
 @media only screen and (max-width: 1024) {
 	.filterWraperForm{

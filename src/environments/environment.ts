@@ -196,5 +196,6 @@ export const environment = {
   deleteAV:"api/v1/DeleteAV",
   bulkUpload:"api/v1/BulkUpload",
   GetLeads: "api/rug/GetLeads",
-  getMasterData:"api/rug/GetMasterDetails"
+  getMasterData:"api/rug/GetMasterDetails",
+ 
 };

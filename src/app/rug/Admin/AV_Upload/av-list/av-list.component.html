@@ -17,6 +17,20 @@
                     </button> -->
                 </div>
             </div>
+
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    [(ngModel)]="searchTerm" (input)="onInput($event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="quotes-list" class="tableMain quoteView block-show">
                 <div class="tableSubMain">
                     <div class="table-responsive">
@@ -29,8 +43,10 @@
                                     <th>CENTER</th>
                                     <th>AXIS PROCESS</th>
                                     <th>STATUS</th>
-                                    <th nowrap>LICENSE EXPIRY FROM DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div></th>
-                                    <th nowrap>LICENSE EXPIRY TO DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div></th>
+                                    <th nowrap>LICENSE EXPIRY FROM DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div>
+                                    </th>
+                                    <th nowrap>LICENSE EXPIRY TO DATE<div><small>{{"(yyyy-mm-dd)"}}</small></div>
+                                    </th>
                                     <th>AUDIT</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -45,12 +61,17 @@
                                     <td>{{av.status}}</td>
                                     <td>{{av.lefdate}}</td>
                                     <td>{{av.letdate}}</td>
-                                    <td><button type="button" (click)="audit(i)" class="btn_audit jsOpenPopup" aria-label="modal-audit">Audit</button></td>
+                                    <td><button type="button" (click)="audit(i)" class="btn_audit jsOpenPopup"
+                                            aria-label="modal-audit">Audit</button></td>
                                     <td>
                                         <div class="btn_groupAction lead_btnList justify-content-center">
-                                            <button type="button" id="updatestatus" name="updatestatus" class="btn_action btn_renewalAction" [routerLink]="['update_AV',av.avId]" title="Update Status"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction" (click)="deleteUser(i)" title="Add Notes"><img src="/assets/Img/delete.svg"></button>
-                                            <button type="button" id="assignto2" name="assignto2" class="btn_action btn_editAction" title="Assign To"><img src="assets/Img/icon_profile.svg" /></button>
+                                            <button type="button" id="updatestatus" name="updatestatus"
+                                                class="btn_action btn_renewalAction"
+                                                [routerLink]="['update_AV',av.avId]" title="Update Status"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="addnote" name="addnote"
+                                                class="btn_action btn_renewalAction" (click)="deleteUser(i)"
+                                                title="Add Notes"><img src="/assets/Img/delete.svg"></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -58,23 +79,25 @@
                         </table>
                     </div>
                 </div>
-            
                 <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
                                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </section>
-            
+
         </div>
     </div>
 </main>

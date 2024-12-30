@@ -12,12 +12,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuditComponent } from '../audit/audit.component';
 
 
+
 @Component({
   selector: 'app-av-list',
   templateUrl: './av-list.component.html',
   styleUrls: ['./av-list.component.scss']
 })
 export class AVListComponent {
+[x: string]: any;
 
   viewClaims: boolean = false;
   selected: string = '';
@@ -29,8 +31,9 @@ export class AVListComponent {
   rows: number = 10;
   totalRecords: number = 0;
   displayedAVs: any[] = [];
-
-
+  searchTerm: string = '';
+  filterAllAvs = [...this.AllAVs];
+  
   constructor(private http: HttpClient,
     private router: Router,
     private commonService: CommonService,
@@ -39,8 +42,7 @@ export class AVListComponent {
     private languageService: LanguageService,
     private excelExportService: ExcelExportService,
     private translateService: TranslateService, private adminService: AdminService, private dialog: MatDialog,) { }
-
-    
+ 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -50,6 +52,19 @@ export class AVListComponent {
       });
     });
     this.getAllAVs();
+  }
+
+  onInput(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.displayedAVs = this.AllAVs.filter((option: any) =>
+      option?.center?.toLowerCase().includes(this.searchTerm) ||
+      option?.avId?.toLowerCase().includes(this.searchTerm) ||
+      option?.avName?.toLowerCase().includes(this.searchTerm) ||
+      option?.lefdate?.toLowerCase().includes(this.searchTerm) ||
+      option?.letdate?.toLowerCase().includes(this.searchTerm) ||
+      option?.status?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisprocess?.toLowerCase().includes(this.searchTerm)
+    );
   }
 
   getAllAVs() {
@@ -62,7 +77,7 @@ export class AVListComponent {
         axisprocess: item.axisProcess || 'Not Specified',
         lefdate: this.formatDate(item.licenseExpiryFromDate),
         letdate: this.formatDate(item.licenseExpiryToDate),
-      })).reverse();
+      }));
       console.log('All AV Data (Latest First):', this.AllAVs);
       this.totalRecords = this.AllAVs.length;
       this.updateDisplayedData();

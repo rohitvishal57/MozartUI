@@ -29,7 +29,6 @@ export class AdminService {
     return this.httpService.get(req);
   }
 
-
   createAV(reqdata: any) {
     const createUpdateAV = this.configService.config.baseUrl + this.configService.config.createUpdateAv;
     return this.httpService.post(createUpdateAV, reqdata)
@@ -40,15 +39,18 @@ export class AdminService {
   return this.httpService.put(updateAV, reqdata)
   }
 
-
  deleteav(reqData:string){
   const deleteav = this.configService.config.baseUrl + this.configService.config.deleteAV;
   return this.httpService.post(deleteav, reqData);
  }
 
- 
  UploadBulk(reqdata: any) {
   const BulkUpload = this.configService.config.baseUrl + this.configService.config.bulkUpload;
   return this.httpService.post(BulkUpload, reqdata)
+}
+
+changePass(reqData: any){
+  const changepassword = this.configService.config.baseUrl + this.configService.config.changePassword;
+  return this.httpService.post(changepassword, reqData)
 }
 }
