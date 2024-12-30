@@ -197,5 +197,6 @@ export const environment = {
   bulkUpload:"api/v1/BulkUpload",
   GetLeads: "api/rug/GetLeads",
   getMasterData:"api/rug/GetMasterDetails",
-  getBaseCaller:"api/rug/GetAllBaseCallers"
+  getBaseCaller:"api/rug/GetAllBaseCallers",
+  getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
 };
