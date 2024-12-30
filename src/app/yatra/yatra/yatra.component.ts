@@ -339,6 +339,9 @@ export class YatraComponent {
                 }
                 console.log(this.form, this.formSequence, this.formData, this.quickQuoteRedirect);
                 // this.initializeRequiredData();
+                if(this.getFormIndexValue() == 8){
+                  this.modifyThankYouJson();
+                }
                 this.initializeForm();
               },
               error: (err) => {
@@ -557,7 +560,9 @@ export class YatraComponent {
         };
 
         console.log(this.form, this.formSequence, this.formData);
-
+        if(this.getFormIndexValue() == 8){
+          this.modifyThankYouJson();
+        }
         this.initializeForm();
       },
       error: (err) => {
@@ -7874,5 +7879,63 @@ export class YatraComponent {
         );
         break;
     }
+  }
+  async modifyThankYouJson(){
+    console.log(this.form);
+    const reqData = {
+      proposalNumber:this.proposalNum
+    }
+    await this.yatraService.getpaymentdetailsbyproposalno(reqData).subscribe({
+      next: async (res: any) => {
+        console.log(res);
+        if(res.data.paymentStatus == 'SUCCESS' && res.data.isfullQuoteResponse){
+          this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
+          this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
+          this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
+          this.formData.quoteValidToDate = res.data.fullQuoteResponse.policyEndDate || null;
+          this.formData.ReceiptNumber = res.data.fullQuoteResponse.receiptNumber || null;
+          this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
+          this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
+        }
+        const data = res.data;
+        const status =
+          data.paymentStatus === 'SUCCESS' && data.isfullQuoteResponse ? [true, false, false] :
+            data.paymentStatus === 'SUCCESS' && !data.isfullQuoteResponse ? [false, false, true] :
+              data.paymentStatus === 'PENDING' && !data.isfullQuoteResponse ? [false, true, false] :
+                [false, false, false]; // Default case
+
+        console.log(status);
+        // const status:any[] = [true,false,false];
+        this.form.formSections.forEach((formSection: any, i: any) => {
+          formSection.formControls.forEach((formControl: any) => {
+            if (formControl.idProperty == true || formControl.idProperty == false) {
+              if (formControl.name == 'labelA') {
+                formControl.visible = status[0];
+              }
+              else if (formControl.name == 'labelB') {
+                formControl.visible = status[1];
+                this.form.formSections[i + 1].visible = status[0];
+                this.form.formSections[i + 2].visible = status[0];
+                this.form.formSections[i + 3].visible = status[0];
+                this.form.formSections[i + 4].visible = status[0];
+              }
+              else if (formControl.name == 'labelC') {
+                formControl.visible = status[2];
+                this.form.formSections[i + 1].visible = status[0];
+                this.form.formSections[i + 2].visible = status[0];
+                this.form.formSections[i + 3].visible = status[0];
+                this.form.formSections[i + 4].visible = status[0];
+              }
+            }
+            // else{
+            //   formControl.visible = false
+            // }
+          });
+        });
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });   
   }
 }

@@ -106,6 +106,7 @@ export class PaymentComponent {
           }
           await this.renewalService.getPaymentDetails(orderDetailsReq).subscribe(
             (res: any) => {
+              console.log(res);
               this.paymentDetail = res.data;
               this.paymentDetail.paymentMethodType = 'enach_payment';
               this.redirectingFunction();
@@ -157,34 +158,52 @@ export class PaymentComponent {
           });
         }
         else {
-          const reqData = {
-            partnerId: this.paymentDetail.partnerId,
-            productId: this.paymentDetail.productId,
-            formId: "6",
-            proposalNum: this.paymentDetail.proposalId,
-            agentCode: this.paymentDetail.agentCode,
-            currentFormSequence: "",
-            leadId: this.paymentDetail.leadId,
-            policyNumber: this.paymentDetail.policyNumber,
-            policyStatus: this.paymentDetail.policyStatus,
-            policyStartDate: this.paymentDetail.policyStartDate,
-            policyEndDate: this.paymentDetail.policyEndDate,
-            ReceiptNumber: this.paymentDetail.receiptNumber,
-            customerId: this.paymentDetail.customerId,
-            applicationNumber: this.paymentDetail.applicationNumber,
-            paymentStatus: this.paymentDetail.paymentStatus,
-          }
-          if (this.paymentDetail.paymentStatus == 'SUCCESS') {
-            if(this.paymentDetail?.isFullQuoteSuccess){
+          let reqData:any;
+          if (this.paymentDetail.paymentStatus == 'SUCCESS' || this.paymentDetail.paymentStatus == 'PENDING') {
+            reqData = {
+              partnerId: this.paymentDetail.partnerId,
+              productId: this.paymentDetail.productId,
+              formId: "6",
+              proposalNum: this.paymentDetail.proposalId,
+              agentCode: this.paymentDetail.agentCode,
+              currentFormSequence: "8",
+              leadId: this.paymentDetail.leadId,
+              policyNumber: this.paymentDetail.policyNumber,
+              policyStatus: this.paymentDetail.policyStatus,
+              policyStartDate: this.paymentDetail.policyStartDate,
+              policyEndDate: this.paymentDetail.policyEndDate,
+              ReceiptNumber: this.paymentDetail.receiptNumber,
+              customerId: this.paymentDetail.customerId,
+              applicationNumber: this.paymentDetail.applicationNumber,
+              paymentStatus: this.paymentDetail.paymentStatus,
+            }
+            // if(this.paymentDetail?.isFullQuoteSuccess){
               this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
               localStorage.setItem("formIndex", "8");
-            }
-            else{
-              this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
-              localStorage.setItem("formIndex", "7");
-            }
+            // }
+            // else{
+            //   this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
+            //   localStorage.setItem("formIndex", "7");
+            // }
           }
           else {
+            reqData = {
+              partnerId: this.paymentDetail.partnerId,
+              productId: this.paymentDetail.productId,
+              formId: "5",
+              proposalNum: this.paymentDetail.proposalId,
+              agentCode: this.paymentDetail.agentCode,
+              currentFormSequence: "7",
+              leadId: this.paymentDetail.leadId,
+              policyNumber: this.paymentDetail.policyNumber,
+              policyStatus: this.paymentDetail.policyStatus,
+              policyStartDate: this.paymentDetail.policyStartDate,
+              policyEndDate: this.paymentDetail.policyEndDate,
+              ReceiptNumber: this.paymentDetail.receiptNumber,
+              customerId: this.paymentDetail.customerId,
+              applicationNumber: this.paymentDetail.applicationNumber,
+              paymentStatus: this.paymentDetail.paymentStatus,
+            }
             localStorage.setItem("formIndex", "7");
             this.toast.error({ detail: "Error", summary: 'payment '+this.paymentDetail.paymentStatus || " Failed", duration: 5000 });
           }

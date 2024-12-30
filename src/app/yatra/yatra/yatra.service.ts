@@ -232,6 +232,9 @@ export class YatraService {
     const staticFormURL = this.configService.config.baseUrl + this.configService.config.staticForm;
     return this.httpService.post(staticFormURL,reqData);
   }
-
+  getpaymentdetailsbyproposalno(reqData:any){
+    const getpaymentdetailsbyproposalno = this.configService.config.baseUrl + this.configService.config.getpaymentdetailsbyproposalno;
+    return this.httpService.post(getpaymentdetailsbyproposalno,reqData);
+  }
 
 }
