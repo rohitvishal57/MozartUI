@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventsService } from '../events-new/events.service';
-
+import { Subject } from 'rxjs';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { ReferenceData, ApiResponse } from "src/app/interface/events.interface";
 @Component({
   selector: 'app-events-edit-view',
   templateUrl: './events-edit-view.component.html',
@@ -13,6 +15,13 @@ export class EventsEditViewComponent implements OnInit {
   eventForm!: FormGroup;
   eventId!: string;
   isSubmitting: boolean = false;
+  isLoading = false;
+  showNameMobile = true;
+  filteredReferenceList: ReferenceData[] = [];
+  referenceList: ReferenceData[] = [];
+  private referenceSearchSubject = new Subject<string>();
+  agentCode = localStorage.getItem('agentCode');
+  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
   
   eventTypes = [
     { value: 'lead', label: 'Lead Number' },
@@ -67,9 +76,9 @@ export class EventsEditViewComponent implements OnInit {
       eventNumber: [''],
       customerName: ['', [Validators.pattern("^\\s*[a-zA-Z]+(\\s+[a-zA-Z]+)*\\s{0,100}$")]],
       mobileNumber: ['', Validators.required],
-      // leadNumber: [''],
+      leadNumber: [''],
       other: [''],
-      // proposalNumber: [''],
+      proposalNumber: [''],
       activityTitle: ['', Validators.required],
       activityType: ['', Validators.required],
       startDate: ['', Validators.required],
@@ -116,23 +125,45 @@ export class EventsEditViewComponent implements OnInit {
   });
 
   // Listen for changes in eventType and apply validators dynamically
-  this.eventForm.get('eventType')?.valueChanges.subscribe(eventType => {
-    this.setEventNumberValidators(eventType);
-  });
-}
+  // this.eventForm.get('eventType')?.valueChanges.subscribe(eventType => {
+  //   this.setEventNumberValidators(eventType);
+  // });
+  this.eventForm.get('eventType')?.valueChanges.subscribe(type => {
+    this.eventForm.get('eventNumber')?.reset();
+    this.eventForm.get('customerName')?.reset();
+    this.eventForm.get('mobileNumber')?.reset();
 
+    switch(type) {
+      case 'Proposals':
+        this.showNameMobile = true;
+        this.fetchReferenceData('Proposals');
+        break;
+      case 'lead':
+        this.showNameMobile = true;
+        this.fetchReferenceData('lead');
+        break;
+      case 'others':
+        this.showNameMobile = false;
+        this.referenceList = [];
+        break;
+    }
+})
+  }
+onEventTypeChange(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  this.setEventNumberValidators(select.value);
+}
 setEventNumberValidators(eventType: string) {
   const eventNumberControl = this.eventForm.get('eventNumber');
 
   if (eventType === 'lead' || eventType === 'Proposals') {
     eventNumberControl?.setValidators(Validators.required);
   } else {
-    eventNumberControl?.clearValidators();  // Optionally clear validator if not needed
+    eventNumberControl?.clearValidators();
   }
 
   eventNumberControl?.updateValueAndValidity();
 }
-
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.eventId = params['id'];
@@ -148,14 +179,16 @@ setEventNumberValidators(eventType: string) {
     this.eventsService.eventListById(reqBody).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
-          console.log(response, 'resp');
-          
-          let eventType = 'others';
+          const eventType = response.data.eventType;
+          this.eventForm.patchValue({
+          eventType: eventType
+        });
+
           let eventNumber = '';
           
           if (response.data.eventType == 'lead' || response.data.eventType == 'Proposals') { 
             eventNumber = response.data.eventNumber;
-            eventType = response.data.eventType
+            //eventType = response.data.eventType
          }
           
           const startDate = this.formatDate(response.data.startDate);
@@ -186,6 +219,80 @@ setEventNumberValidators(eventType: string) {
       error: (error) => {
         console.error('Error loading event details', error);
       }
+    });
+  }
+  fetchReferenceData(type: string) {
+    this.referenceList = [];
+  
+    const params = {
+      agentCode: this.agentCode
+    };
+  
+    if (type === 'Proposals') {
+      this.eventsService.getEventProposals(params).subscribe(
+        response => {
+          this.handleReferenceDataResponse(response);
+        },
+        error => {
+          this.handleReferenceDataError(error);
+        }
+      );
+    } else if (type === 'lead') {
+      this.eventsService.getEventLeads(params).subscribe(
+        response => {
+          this.handleReferenceDataResponse(response);
+        },
+        error => {
+          this.handleReferenceDataError(error);
+        }
+      );
+    }
+  }
+  
+  private handleReferenceDataResponse(response: ApiResponse) {
+    if (response.isSuccess && response.data) {
+      this.referenceList = response.data;
+      this.filteredReferenceList = [...this.referenceList];
+      
+      // If we have an eventNumber, select the matching reference
+      const currentEventNumber = this.eventForm.get('eventNumber')?.value;
+      if (currentEventNumber) {
+        this.onReferenceNumberSelect(currentEventNumber);
+      }
+    } else {
+      console.error('Error fetching data', response.message);
+    }
+  }
+  
+  private handleReferenceDataError(error: any) {
+    console.error('Error fetching data', error);
+  }
+  
+  onReferenceNumberSelect(selectedNumber?: string) {
+    const eventNumber = selectedNumber || this.eventForm.get('eventNumber')?.value;    
+    const eventType = this.eventForm.get('eventType')?.value;
+  
+    const selectedReference = this.referenceList.find(item => 
+      eventType === 'Proposals' 
+        ? item.proposalNum === eventNumber
+        : item.leadNumber === eventNumber
+    );
+  
+    if (selectedReference) {
+      this.eventForm.patchValue({
+        customerName: selectedReference.name,
+        mobileNumber: selectedReference.phoneNumber
+      });
+    }
+  }
+  
+  filterReferenceList(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+    const eventType = this.eventForm.get('eventType')?.value;
+  
+    this.filteredReferenceList = this.referenceList.filter(item => {
+      const eventNumber = eventType === 'Proposals' ? item.proposalNum : item.leadNumber;
+      return eventNumber?.toLowerCase().includes(searchTerm);
     });
   }
 
@@ -245,8 +352,8 @@ setEventNumberValidators(eventType: string) {
         eventType: formData.evenType,
         customerName: formData.customerName,
         mobileNumber: formData.mobileNumber,
-        // leadNumber: formData.leadNumber,
-        // proposalNumber: formData.proposalNumber,
+        leadNumber: formData.leadNumber,
+        proposalNumber: formData.proposalNumber,
         activityTitle: formData.activityTitle,
         startDate: formData.startDate,
         endDate: formData.endDate,
@@ -257,11 +364,11 @@ setEventNumberValidators(eventType: string) {
       };
   
       // Handle event number based on event type
-      // if (formData.eventType === 'lead') {
-      //   updateData['leadNumber'] = formData.eventNumber;
-      // } else if (formData.eventType === 'proposals') {
-      //   updateData['proposalNumber'] = formData.eventNumber;
-      // }
+      if (formData.eventType === 'lead') {
+        updateData['leadNumber'] = formData.eventNumber;
+      } else if (formData.eventType === 'proposals') {
+        updateData['proposalNumber'] = formData.eventNumber;
+      }
   
       this.eventsService.saveEvent(payload).subscribe({
         next: (response: any) => {
