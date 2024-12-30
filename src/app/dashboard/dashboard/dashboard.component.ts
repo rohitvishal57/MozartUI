@@ -206,6 +206,7 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     this.performanceCard = [];
     this.tabsInfo = [];
     this.otherSection = [];

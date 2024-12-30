@@ -42,6 +42,7 @@ export class MyPerformaceComponent {
     private translateService: TranslateService,private formBuilder: FormBuilder,private toast: NgToastService
   ) { }
   ngOnInit(): void {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     const currentYear = new Date().getFullYear();
     this.years = [currentYear, currentYear - 1]
     this.inItForm();

@@ -609,6 +609,9 @@
     .col-daterange {
         min-width: 100%;
     }
+    .col-daterange input[type="date"] {
+        min-width: 95%;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {

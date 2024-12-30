@@ -65,6 +65,7 @@ export class QuoteProductsComponent implements OnInit {
     private productService: ProductsService, private quoteservices: QuoteService
   ) { }
   ngOnInit(): void {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {

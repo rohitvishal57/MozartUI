@@ -661,6 +661,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.activeDropdown = index;
     }
     console.log(this.selectedRelation, this.selectedPlan);
+    this.shouldScroll = true;  // Set the flag to true
   }
 
   showDropdowns() {
@@ -1227,14 +1228,17 @@ export class GetQuoteComponent implements AfterViewChecked {
 
   //GET QUOTE FOCUS CODE
   @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
+  shouldScroll: boolean = false; // Flag to trigger the scroll logic
   ngAfterViewChecked() {
-    if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
+    if (this.scrollTarget && this.scrollTarget.nativeElement && this.shouldScroll) {
+    //if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
       // Option 2: Scroll to a specific position on the page
       // window.scrollTo(0, this.scrollTarget.nativeElement.offsetTop);
       //window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+
       const currentUrl = window.location.href;
       this.pageName = currentUrl.split('/').pop(); // Get last part of the URL
       //console.log('Full URL:', currentUrl);
@@ -1245,6 +1249,8 @@ export class GetQuoteComponent implements AfterViewChecked {
       }else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
+      // Reset the flag to prevent it from scrolling multiple times
+      this.shouldScroll = false;
     }
   }
   //GET QUOTE FOCUS CODE FUNCTION
@@ -1262,7 +1268,8 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     }
   }
-  onPortingChange(value: string): void {
+
+   onPortingChange(value: string): void {
     this.quoteFormGroup.get('isPortability')?.setValue(value); 
     this.closeCustomDiv()
   }
