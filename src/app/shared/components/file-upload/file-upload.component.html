@@ -1,6 +1,6 @@
 <div class="custom-file-upload">
         <div class="file-input-container">
-            <div class="file-upload-btn">Click here to Upload
+            <div class="file-upload-btn"><label>Click here to Upload</label>
                 <input type="file" aria-label="Upload your file" [multiple]="multiple" #myFileInput class="field_fileUpload" [id]="id" [name]="name"
                 (change)="onSelectFilebase($event)" [disabled]="dataInputs?.disabled" >
                 <div class="uploadfile-location" *ngFor="let op of fileUploadname; let i = index">
