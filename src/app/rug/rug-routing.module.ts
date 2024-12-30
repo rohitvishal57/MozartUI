@@ -17,6 +17,9 @@ import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View
 import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
 import { AuditComponent } from "./Admin/AV_Upload/audit/audit.component";
 import { ViewMakerCheckerLeadsComponent } from "./components/view-maker-checker-leads/view-maker-checker-leads.component";
+import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
+import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
+import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
 
 
 
@@ -31,6 +34,9 @@ const routes: Routes = [
     { path:'policy-view-details', component: ProductDownloadComponent },
     { path:'test-page', component: BbTestPageComponent },
     { path:'bb-test-page', component: BbTestPageComponent },
+    {path:'basecaller',component:BasecallerListComponent},
+    {path:'upload_basecaller',component:BulkUploadBasecallerComponent},
+    {path:'create_baseCaller',component:CreateBasecallerComponent},
     { path:'av-list', component:AVListComponent},
     { path:'bulk_upload', component:BulkUploadComponent},
     { path:'create_AV', component:CreateAVComponent},

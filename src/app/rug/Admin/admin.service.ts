@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
 import { Observable } from 'rxjs';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -53,4 +54,15 @@ changePass(reqData: any){
   const changepassword = this.configService.config.baseUrl + this.configService.config.changePassword;
   return this.httpService.post(changepassword, reqData)
 }
+
+  getAllBaseCaller(pageNo:number,noOfRecords:number){
+    const headers = new HttpHeaders({
+      'accept': '*/*'  
+    });
+    const params = new HttpParams()
+      .set('pageNo', pageNo.toString())
+      .set('noOfRow', noOfRecords.toString());
+    const getBaseCaller=this.configService.config.baseUrl+this.configService.config.getBaseCaller;
+    return this.httpService.get(getBaseCaller,{ headers, params })
+  }
 }

@@ -64,7 +64,8 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetPincodeDetails',
     'https://upuat.adityabirlahealth.com/api/rug/GetLeads',
     'https://usp.monocept.ai/api/rug/GetMasterDetails',
-    'https://usp.monocept.ai/api/rug/GetLeads'
+    'https://usp.monocept.ai/api/rug/GetLeads',
+    'https://usp.monocept.ai/api/rug/GetAllBaseCallers'
   ];
 
   intercept(

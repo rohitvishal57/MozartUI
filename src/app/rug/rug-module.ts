@@ -24,6 +24,9 @@ import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
 import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
 import { ViewMakerCheckerLeadsComponent } from './components/view-maker-checker-leads/view-maker-checker-leads.component';
 import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-for-solo-journey/view-for-solo-journey.component";
+import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
+import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
+import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,9 +42,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         AVListComponent,
         BulkUploadComponent,
         ViewMakerCheckerLeadsComponent,
-        ViewForSoloJourneyComponent
- 
-     
+        ViewForSoloJourneyComponent,
+        CreateBasecallerComponent,
+        BulkUploadBasecallerComponent,
+        BasecallerListComponent
     ],
     
     imports: [

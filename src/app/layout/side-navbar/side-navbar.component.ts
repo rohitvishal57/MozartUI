@@ -78,20 +78,20 @@ export class SideNavbarComponent {
     
       // ];
     // }
-    if(this.agentCode == "467895"){
-      this.sideMenuList = [
-        { id: 1, displayName: 'AV Upload', path: 'rug/av_list', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-        { id: 2, displayName: 'View For Solo Journey', path: 'rug/create_AV', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-        { id: 3, displayName: 'View UnVerified Leads', path: 'rug/view-unVerified-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-        { id: 4, displayName: 'View For Dual Journey', path: 'rug/view-for-dual-journey', imagePath: 'assets/Img/icon_products.svg' },        
-        { id: 5, displayName: 'Verification Script', path: 'rug/verification-script', imagePath: 'assets/Img/icon_products.svg' },
-        { id: 6, displayName: 'Product Details', path: 'rug/productdownload', imagePath: 'assets/Img/icon_paper_grey.svg' },
-        { id: 7, displayName: 'Extract Base Agent & AV Master', path: 'rug/extract-base-agent', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
-        { id: 8, displayName: 'Manage LOB', path: 'rug/manage-LOB', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
-        { id: 9, displayName: 'Proposal/Policy View Details', path: 'rug/policy-view-details', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    // if(this.agentCode == "467895"){
+    //   this.sideMenuList = [
+    //     { id: 1, displayName: 'AV Upload', path: 'rug/av_list', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+    //     { id: 2, displayName: 'View For Solo Journey', path: 'rug/create_AV', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+    //     { id: 3, displayName: 'View UnVerified Leads', path: 'rug/view-unVerified-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+    //     { id: 4, displayName: 'View For Dual Journey', path: 'rug/view-for-dual-journey', imagePath: 'assets/Img/icon_products.svg' },        
+    //     { id: 5, displayName: 'Verification Script', path: 'rug/verification-script', imagePath: 'assets/Img/icon_products.svg' },
+    //     { id: 6, displayName: 'Product Details', path: 'rug/productdownload', imagePath: 'assets/Img/icon_paper_grey.svg' },
+    //     { id: 7, displayName: 'Extract Base Agent & AV Master', path: 'rug/extract-base-agent', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    //     { id: 8, displayName: 'Manage LOB', path: 'rug/manage-LOB', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    //     { id: 9, displayName: 'Proposal/Policy View Details', path: 'rug/policy-view-details', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
     
-      ];
-    }
+    //   ];
+    // }
     // Fetch allowed pages from AuthService
     const allowedPages = this.authService.getAllowedModules();
     
