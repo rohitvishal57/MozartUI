@@ -140,6 +140,7 @@ export class YatraComponent {
   };
   pennyDropVerficationByOCRDetails: any;
   uploadInfo: { name: any; data: any; }[] | null = null;
+  fullQuoteDocRelated: any;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -6386,7 +6387,7 @@ export class YatraComponent {
         micrNo: (this.formData?.micrCode || '').toString(),
         instrumentType: (this.formData.paymentOption || '').toString(),
         source: "Retail".toString(),
-        documentId: (documentId || '').toString(),
+        documentId: (this.fullQuoteDocRelated || '').toString(),
         proposalNum: this.proposalNum.toString(),
         productName: this.formData.productName || ''
       };
@@ -7147,8 +7148,8 @@ export class YatraComponent {
   }
   skipKycURL(control:any){
     const skipKycRequestBody = {
-      proposalOrPolicyNumber: "",
-      businessType:""
+      proposalOrPolicyNumber: this.proposalNum,
+      businessType:"NB"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
       (res: any) => {
@@ -7805,19 +7806,20 @@ export class YatraComponent {
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
             if (res.isSuccess) {
+              this.fullQuoteDocRelated = res.data.uploadResponse[0].globalId
               // this.documentId = res.data.uploadResponse[0].globalId;
               // this.uploadInfo.push({
               //   name : control,
               //   data : res.data.uploadResponse[0]
               // })
-              try {
-                // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                await this.getFullQuoteViaOfflinePayment(res.data.uploadResponse[0].globalId);
-              } catch (error) {
-                console.error("Error in full quote generation:", error);
-              }
+              // try {
+              //   // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+              //   await this.getFullQuoteViaOfflinePayment(res.data.uploadResponse[0].globalId);
+              // } catch (error) {
+              //   console.error("Error in full quote generation:", error);
+              // }
 
-              // this.toast.success({ detail: "", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "", summary: res.message, duration: 3000 });
             } else {
               this.toast.error({
                 detail: "ERROR",
