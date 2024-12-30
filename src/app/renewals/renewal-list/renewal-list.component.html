@@ -52,13 +52,13 @@
                                     <div class="fw_formRow">
                                         <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
                                                     <label for="startdate">{{"Select Start Date" | translate}}</label>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">{{"Select End Date" | translate}}</label>

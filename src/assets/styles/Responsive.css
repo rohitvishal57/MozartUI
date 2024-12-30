@@ -612,6 +612,19 @@
     .col-daterange input[type="date"] {
         min-width: 95%;
     }
+    input[type="date"]{
+        position: relative;
+        /* appearance: none;
+        -webkit-appearance:none; */
+    }
+    /* input[type="date"]::after{
+        content: "";
+        background:url(/assets/Img/icon_calendar_grey.svg) no-repeat;
+        position: absolute;
+        right: 0;
+        top: 0;
+        pointer-events: none;
+    } */
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {

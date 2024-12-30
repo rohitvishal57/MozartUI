@@ -90,14 +90,14 @@
                                     <div class="fw_formRow">
                                         <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (change)="formatDate('startDate')">
                                                     <label for="startdate">{{"Start Date" | translate}}</label>
                                                     <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">{{"End Date" | translate}}</label>
