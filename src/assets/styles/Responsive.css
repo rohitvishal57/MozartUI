@@ -625,6 +625,24 @@
         top: 0;
         pointer-events: none;
     } */
+    .custom_toastStyles .toast-top-right.active,
+    .custom_toastStyles .toast-top-right {
+        right: auto !important;
+        left: 10% !important;
+        top: 45% !important;
+    }
+}
+@media (max-width:540px){
+    .custom_toastStyles .toast-top-right {
+        right: auto !important;
+        left: 27% !important;
+        top: 45% !important;
+    }
+    .custom_toastStyles .toast-top-right.active {
+        right: auto !important;
+        left: 18% !important;
+        top: 45% !important;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
@@ -636,6 +654,12 @@
     }
     .siteHeader .logoMain .logoMainLeft {
         padding: 3px 5px 3px 4px;
+    }
+    .custom_toastStyles .toast-top-right.active,
+    .custom_toastStyles .toast-top-right {
+        right: auto !important;
+        left: 5% !important;
+        top: 45% !important;
     }
 }
 
