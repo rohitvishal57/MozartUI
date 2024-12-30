@@ -13,6 +13,8 @@ export class CreateBasecallerComponent implements OnInit{
   createBaseCallerForm!:FormGroup;
   isUpdate: boolean = false;
   selectedBaseCallerId:any|null=null;
+  submitted: boolean = false;
+
   constructor(private formBuilder: FormBuilder,
     private adminService: AdminService, 
     private toast: NgToastService,
@@ -47,5 +49,9 @@ export class CreateBasecallerComponent implements OnInit{
         recruitedMonitoringManager: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
         imdCode: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]]
       });
+    }
+
+    onSubmit(): void {
+      this.submitted = true;
     }
 }
