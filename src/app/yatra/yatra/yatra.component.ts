@@ -2737,13 +2737,30 @@ export class YatraComponent {
                     newValidators.push(rule);
                   }
 
-                  // Assign the new validators array to the control
+                  const formControlInstance = this.dynamicFormGroup.get(control.name);
+                  console.log(formControlInstance)
                   control.validators = newValidators;
+                  console.log(control.validators);
+                  if (formControlInstance) {
+                    const validators = newValidators
+                      .map(val => {
+                        if (val.validatorName === 'pattern' && val.pattern) {
+                          return Validators.pattern(val.pattern);
+                        }
+                        if (val.validatorName === 'required') {
+                          return Validators.required;
+                        }
+                        return null;
+                      })
+                      .filter((v): v is ValidatorFn => v !== null); 
+
+                    formControlInstance.setValidators(validators);
+                    formControlInstance.updateValueAndValidity();
+                  }
                 }
               }
             });
           }
-
           console.log(formControl);
         }
       });
@@ -5214,10 +5231,10 @@ export class YatraComponent {
                 if (addOnDetail.addOnSumInsured) {
                   addOnSumInsured = addOnDetail.addOnSumInsured;
                 }
-                if (addOnData.addOnId === 'PA' && addOnDetail.occupation) {
+                if (coverName.includes('Personal Accident') && addOnDetail.occupation) {
                   member.occupationCode = JSON.parse(addOnDetail.occupation).value;
                 }
-                if (addOnData.addOnId === 'PA' && addOnDetail.occupationRisk) {
+                if (coverName.includes('Personal Accident') && addOnDetail.occupationRisk) {
                   member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
                 }
               });
@@ -6300,8 +6317,8 @@ export class YatraComponent {
           memberSumInsured: member?.sumInsured || '',
           // memberZone: member?.zoneValue || '',
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
-          memberDesignation: member?.productMemberDesignation || '',
-          memberOccupation: member?.productMemberOccupation || '',
+          memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
+          memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
           covers: this.covers[index] || [],
           productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: member?.memberRoomCategory || '',
@@ -6470,8 +6487,6 @@ export class YatraComponent {
   }
 
   jsonParse(string: any, extract: any) {
-    console.log(string);
-
     const value = JSON.parse(string);
     return value[extract];
   }
@@ -7151,10 +7166,10 @@ export class YatraComponent {
       }
     );
   }
-  skipKycURL(control:any){
+  skipKycURL(control: any) {
     const skipKycRequestBody = {
       proposalOrPolicyNumber: this.proposalNum,
-      businessType:"NB"
+      businessType: "NB"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
       (res: any) => {
@@ -7753,7 +7768,7 @@ export class YatraComponent {
       // Clear previous errors
       // this.dynamicFormGroup?.controls[control.name].setErrors(null);
       console.log(this.dynamicFormGroup);
-      
+
 
       // If no errors, proceed to set the selected file
       if (this.dynamicFormGroup?.get(control.name)) {
