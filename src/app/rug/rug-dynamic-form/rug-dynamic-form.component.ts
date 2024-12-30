@@ -7687,21 +7687,25 @@ export class RugDynamicFormComponent {
     });
   }
   changePincode(control: any){
-console.log(control.name);//"proposerPincode"
-let pincodeObj = {
-  pinCode: this.dynamicFormGroup.get('proposerPincode')?.value
-}
-this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
-  next: (res: any) => {
-    res = JSON.parse(res.data).data
-    console.log(res)
-    this.dynamicFormGroup.get('proposerCity')?.setValue(res.pincodeDetails.city);
-    this.dynamicFormGroup.get('proposerState')?.setValue(res.pincodeDetails.state);
-  },
-  error: (err) => {
-    console.error(err);
-  }
-});
+    console.log(control.name);//"proposerPincode"
+    let pincodeObj = {
+      pinCode: this.bbdetails.proposerPincode
+    }
+    if(this.dynamicFormGroup.get('proposerPincode')?.value){
+      pincodeObj.pinCode = this.dynamicFormGroup.get('proposerPincode')?.value
+    }
+
+    this.rugService.getDataPincodeDetails(pincodeObj).subscribe({
+      next: (res: any) => {
+        res = JSON.parse(res.data).data
+        console.log(res)
+        this.dynamicFormGroup.get('proposerCity')?.setValue(res.pincodeDetails.city);
+        this.dynamicFormGroup.get('proposerState')?.setValue(res.pincodeDetails.state);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
   getAllDisposition(control: any){
     this.rugService.getDispositions().subscribe({
