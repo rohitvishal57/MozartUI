@@ -1,7 +1,7 @@
 <div class="custom-file-upload">
         <div class="file-input-container">
             <div class="file-upload-btn">Click here to Upload
-                <input type="file" [multiple]="multiple" #myFileInput class="field_fileUpload" id="Image{{dataInputs.name}}" name="{{dataInputs.name}}"
+                <input type="file" [multiple]="multiple" #myFileInput class="field_fileUpload" [id]="id" [name]="name"
                 (change)="onSelectFilebase($event)" [disabled]="dataInputs?.disabled" >
                 <div class="uploadfile-location" *ngFor="let op of fileUploadname; let i = index">
                     <span class="uploadfile_Info"> {{ op.name ? op.name : 'file location' }}</span>

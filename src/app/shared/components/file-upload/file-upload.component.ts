@@ -18,6 +18,8 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   @ViewChild('myFileInput') myFileInput: any;
   @Input() multiple = false;
+  @Input() id = '';
+  @Input() name = '';
   @Input() dataInputs : any;
   @Input() fileExtension = ['pdf','jpg', 'png','jpeg'];
   @Input() fileUploadMessage: string = '';
