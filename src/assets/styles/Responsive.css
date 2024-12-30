@@ -632,7 +632,7 @@
         top: 45% !important;
     }
 }
-@media (max-width:540px){
+@media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-top-right {
         right: auto !important;
         left: 27% !important;
@@ -662,4 +662,11 @@
         top: 45% !important;
     }
 }
-
+@media (max-width:375px){
+    .custom_toastStyles .toast-top-right.active,
+    .custom_toastStyles .toast-top-right {
+        right: auto !important;
+        left: 3% !important;
+        top: 45% !important;
+    }
+}
