@@ -2878,6 +2878,10 @@ export class RenewalJourneyComponent {
     return new Promise(async (resolve, reject) => {
       if (this.selectedButton) {
         try {
+          if (this.formData.chequeDate && this.formData.chequeDate !== this.currentDate) {
+            this.toast.warning({ detail: "WARNING", summary: "Invalid chequeDate", duration: 3000 });
+            return;
+          }
           // const policyNum = this.proposalNum.replace(/-/g, "");
           const policyNum = this.formData.policyNumber.replace(/-/g, "");
           console.log("kjsdajlkda", policyNum);
@@ -3673,10 +3677,10 @@ export class RenewalJourneyComponent {
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-    if (this.rowData != null && !this.rowData.isFullQuoteSuccess) {
-      this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed. Please wait some time.", duration: 5000 });
-      return;
-    }
+    // if (this.rowData != null && !this.rowData.isFullQuoteSuccess) {
+    //   this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed. Please wait some time.", duration: 5000 });
+    //   return;
+    // }
     if (this.selectedButton !== 'offline') {
       const reqData = {
         agentcode: this.agentCode,

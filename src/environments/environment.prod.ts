@@ -17,6 +17,7 @@ export const environment = {
   getSubquotes: "api/renewal/getsubquotes",
   updateMemberDetails: "api/renewal/UpdateMemberDetails",
   kycUpdate: "api/renewal/kycUpdate",
+  getpaymentstatus: "api/yatra/getpaymentstatus",
   skipkyclink: "api/quote/forcedkycupdate",
   sharekyclink: "api/quote/sharekyclink",
   getPaymentDetails: "api/yatra/getpaymentdetails",

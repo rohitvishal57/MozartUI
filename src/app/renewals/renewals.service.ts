@@ -144,5 +144,9 @@ export class RenewalsService {
     const sharePaymentLink= this.configService.config.baseUrl1 + this.configService.config.sharePaymentLink;
     return this.httpService.post(sharePaymentLink,reqData);
   }
+  getpaymentstatusApi(reqData:any){
+    const getpaymentstatus= this.configService.config.baseUrl1 + this.configService.config.getpaymentstatus;
+    return this.httpService.post(getpaymentstatus,reqData);
+  }
 
 }

@@ -12,6 +12,7 @@ import { searchValidationConfig } from 'src/app/interface/common-validation.inte
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CustomersService } from 'src/app/customers/customers.service';
+import { thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
 
 @Component({
   selector: 'app-renewal-list',
@@ -1685,17 +1686,31 @@ export class RenewalListComponent {
 
 
   async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
-    console.log(proposerDetail);
-  
-    // Await the proposal number
-    await this.getProposalNum();
-    console.log(this.proposalNum, action);
-  
+    await this.getProposalNum();    
+    // const paymentStatusRequestBody = {
+    //   proposalOrPolicyNumber: proposerDetail.policyNumber
+    // };
+    // this.renewalService.getpaymentstatusApi(paymentStatusRequestBody).subscribe(
+    //   (res: any) => {
+    //    console.log(res.data);
+    //    this.router.navigate(['renewal/renewalJourney'], {
+    //      state: {
+    //        formSequence: this.encryptionService.encrypt([thankYouPending]),
+    //        formIndex: "0", 
+    //      },
+    //    });
+    //   },
+    //   (err) => {
+    //     console.error("Error from getpaymentstatus API:", err);
+    //     this.toast.error({ detail: "Error", summary: "Error while getting renewal payment status.", duration: 3000 });
+    //   }
+    // );
+
     // Set form index based on the action
     const formIndex = action === 'withmodify' ? '0' : '2';
     localStorage.setItem('formIndex', formIndex);
   
-    const formatDate = (date: string): string => {
+    const formatDate = (date: string): string => {  
       if (!date) return "";
       const parsedDate = new Date(date);
       const day = String(parsedDate.getDate()).padStart(2, '0');
@@ -1730,7 +1745,7 @@ export class RenewalListComponent {
       // Call getRenewalInfoApi
       this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
         (res: any) => {
-          if (res.data && Object.keys(res.data).length > 0) {
+          if (res.statusCode == 200 && res.isSuccess == true && Object.keys(res.data).length > 0) {
             // Prepare data for state
             const formData = this.encryptionService.encrypt(res.data);
             const proposalNum = this.encryptionService.encrypt(this.proposalNum);
@@ -1746,11 +1761,12 @@ export class RenewalListComponent {
                 proposalNum: proposalNum,
                 policyNumber: policyNumber,
                 journeyProcess: journeyProcess,
-                formIndex: "0", // Include formIndex in state
+                // formSequence: this.encryptionService.encrypt([thankYouPending]),
+                formIndex: "0", 
               },
             });
           } else {
-            this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: res.message || "Error while getting renewal Information.", duration: 3000 });
           }
         },
         (err) => {
