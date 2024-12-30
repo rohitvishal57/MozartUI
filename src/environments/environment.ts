@@ -17,7 +17,6 @@ export const environment = {
   getSubquotes: "api/renewal/getsubquotes",
   updateMemberDetails: "api/renewal/UpdateMemberDetails",
   kycUpdate: "api/renewal/kycUpdate",
-  getpaymentstatus: "api/yatra/getpaymentstatus",
   sharekyclink: "api/quote/sharekyclink",
   skipkyclink: "api/quote/forcedkycupdate",
   getPaymentDetails: "api/yatra/getpaymentdetails",
@@ -198,7 +197,5 @@ export const environment = {
   bulkUpload:"api/v1/BulkUpload",
   GetLeads: "api/rug/GetLeads",
   getMasterData:"api/rug/GetMasterDetails",
-  getBaseCaller:"api/rug/GetAllBaseCallers",  
-  d2cAxisRedirection: "api/v1/",
-  getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
+  getBaseCaller:"api/rug/GetAllBaseCallers"
 };
