@@ -198,5 +198,6 @@ export const environment = {
   bbHalfQuote: "api/rug/HalfQuote",  
   GetLeads: "api/rug/GetLeads",
   getMasterData:"api/rug/GetMasterDetails",
-  getBaseCaller:"api/rug/GetAllBaseCallers"
+  getBaseCaller:"api/rug/GetAllBaseCallers",
+  d2cAxisRedirection: "api/v1/"
 };
