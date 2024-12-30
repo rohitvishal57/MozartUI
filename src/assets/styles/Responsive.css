@@ -614,17 +614,22 @@
     }
     input[type="date"]{
         position: relative;
-        /* appearance: none;
-        -webkit-appearance:none; */
+        /* display: inline-block; */
     }
     /* input[type="date"]::after{
-        content: "";
-        background:url(/assets/Img/icon_calendar_grey.svg) no-repeat;
+        content: '';
         position: absolute;
-        right: 0;
-        top: 0;
-        pointer-events: none;
-    } */
+        top: 50%;
+        right: 10px; 
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        background-image: url('/src/assets/Img/date.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        pointer-events: none; 
+        
+    }  */
     .custom_toastStyles .toast-top-right.active,
     .custom_toastStyles .toast-top-right {
         right: auto !important;
