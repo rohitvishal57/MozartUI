@@ -2114,8 +2114,8 @@ body {
 }
 
 .main-container .right-panel .thankYou .img1Popup {
-    width: 110px !important;
-    height: 110px !important;
+    width: 100px !important;
+    height: 100px !important;
     margin: 0 !important;
 }
 
@@ -3169,6 +3169,19 @@ margin: 0;
 }
 .main-container .right-panel .typecss_proposalNumber .boldtext_input{
     width: 180px;
+}
+.accordionCard.thankyouSection .accordionCardBody {
+    padding: 16px 16px 15px !important;
+}
+.main-container .right-panel .thankyouSection .thankYou {
+    margin: 0 !important;
+}
+.main-container .right-panel .thankyouSection .section-paragraph1 {
+    margin-bottom: 5px;
+}
+.main-container .right-panel .thankyouSection .section-paragraph2, 
+.main-container .right-panel .thankyouSection .section-paragraph1 p {
+    margin-bottom: 0px;
 }
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
