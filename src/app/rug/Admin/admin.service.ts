@@ -65,4 +65,10 @@ changePass(reqData: any){
     const getBaseCaller=this.configService.config.baseUrl+this.configService.config.getBaseCaller;
     return this.httpService.get(getBaseCaller,{ headers, params })
   }
+
+getLead(reqdata: any) {
+  const getlead = this.configService.config.baseUrl + this.configService.config.getLeads;
+  return this.httpService.post(getlead, reqdata)
+}
+
 }
