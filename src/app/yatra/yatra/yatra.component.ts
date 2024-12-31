@@ -10994,13 +10994,16 @@ export class YatraComponent {
           this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
           this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
         }
+        if(res.data.errorMessage){
+          this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
+        }
         const data = res.data;
         const status =
           (data.paymentStatus === 'SUCCESS' || data.paymentStatus === 'INTIATED') && data.isFullQuoteSuccess
             ? [true, false, false]
             : (data.paymentStatus === 'SUCCESS' || data.paymentStatus === 'INTIATED') && !data.isFullQuoteSuccess
               ? [false, false, true]
-              : data.paymentStatus === 'PENDING' && data.isFullQuoteSuccess
+              : data.paymentStatus === 'PENDING'
                 ? [false, true, false]
                 : [false, false, false]; // Default case
   
