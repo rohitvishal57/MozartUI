@@ -1598,6 +1598,12 @@ export class YatraComponent {
     this.expandedCardIndex = this.expandedCardIndex === index ? null : index;
   }
 
+  // toggleHr(subControl: any): boolean {
+  //   debugger
+  //   subControl.visible ! = subControl.visible;
+  //   return subControl.visible
+  // }
+
   isContentVisible(index: number): boolean {
     return this.expandedCardIndex === index;
   }
