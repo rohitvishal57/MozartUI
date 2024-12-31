@@ -425,3 +425,8 @@
 .btn_grid:hover {
   background-color: #C7222A;; /* Darken color on hover */
 }
+@media (max-width: 767px) {
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+}

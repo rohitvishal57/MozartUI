@@ -149,7 +149,7 @@
     .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
         width: 46%;
     }
-    .btn_red, .btn_white, .btn_pink {
+    .btn_red, .btn_white, .btn_pink, .btn_white_cancel {
         border-radius: 60px;
     }
     .tableNav .pageCountMain {
@@ -218,7 +218,7 @@
 }
 @media (max-width:1024px) {
     .siteSidenav .sidenavMenu.sidenavMenu_logout {
-        width: auto;
+        width: 200px;
     }
 }
 @media (max-width:991px) {

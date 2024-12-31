@@ -535,4 +535,9 @@
     line-height: 13px;
     color: var(--text-black-76);
 }
+@media (max-width: 767px) {
+    .siteBody {
+        padding-bottom: 27rem;
+    }
+}
   

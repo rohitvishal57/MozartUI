@@ -98,5 +98,9 @@
   ::ng-deep .mat-mdc-option .mat-pseudo-checkbox {
     display: none;
   }
-  
+  @media (max-width: 767px) {
+    .siteBody {
+        padding-bottom: 6rem;
+    }
+  }
   /*----MAT Select Custom styles end----*/

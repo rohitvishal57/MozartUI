@@ -95,6 +95,10 @@ border-radius: 17px;
 //     background: rgb(255, 255, 255);
 //     background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(242, 243, 246, 0.1) 100%);
 // }
-
+@media (max-width: 767px) {
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+}
 /*---Common css end---*/
 
