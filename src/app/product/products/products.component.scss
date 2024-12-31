@@ -535,9 +535,17 @@
     line-height: 13px;
     color: var(--text-black-76);
 }
+@media (max-width: 820px) {
+    .cardViewMain .cardViewWraper .cardViewItem {
+        width: 48%;
+    }
+}
 @media (max-width: 767px) {
     .siteBody {
         padding-bottom: 27rem;
+    }
+    .cardViewMain .cardViewWraper .cardViewItem {
+        width: 100%;
     }
 }
   
