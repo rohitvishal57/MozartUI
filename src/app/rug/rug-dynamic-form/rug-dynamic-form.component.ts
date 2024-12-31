@@ -3063,6 +3063,17 @@ export class RugDynamicFormComponent {
       }
       if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         this.dynamicFormGroup.get('insuredMembers')?.disable();
+        console.log(insuredMembersArray);
+        if (insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length) {
+          this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
+            // const selfResult = this.centimetersToFeetAndInches(item.height);
+
+            if (insuredMembersArray.value[index].relation = item.relation) {
+              insuredMembersArray.at(index).get('relation')?.disable();
+              insuredMembersArray.at(index).get('gender')?.disable();
+            }
+          })
+        }
         // insuredMembersArray.at(0).get('firstName')?.disable();
         this.dynamicFormGroup.get('occupation')?.disable();
         this.dynamicFormGroup.get('sumInsured')?.disable();
