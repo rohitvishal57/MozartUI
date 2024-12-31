@@ -6473,7 +6473,8 @@ export class YatraComponent {
           covers: this.covers[index] || [],
           productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: member?.memberRoomCategory || '',
-          pedWaitingPeriod: this.pedWaitingPeriod || ''
+          pedWaitingPeriod: this.pedWaitingPeriod || '',
+          deductibleAmount:member?.deductibleAmount || ''
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',

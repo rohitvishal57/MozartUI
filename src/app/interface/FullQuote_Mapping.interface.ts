@@ -71,6 +71,7 @@ export interface IFullQuoteMapping {
     appointeeMobileNumber:string
     appointeeRelationCode:string
     lrFlag:string
+    deductibleAmount:string
 }
 
 export interface InsuredMemberDetail {
