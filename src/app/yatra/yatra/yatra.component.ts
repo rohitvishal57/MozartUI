@@ -7390,7 +7390,7 @@ export class YatraComponent {
         source: 'Retail',
         policyType: 'NB',
         policyNumber: '',
-        quoteNumber: this.formData.quoteId,
+        quoteNumber: this.formData.quoteId || "",
         productName: this.formData.productName,
         userType: 'Agent'
       };
@@ -7560,7 +7560,7 @@ export class YatraComponent {
               });
           }
 
-          if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
+          if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INITIATED') {
             this.incrementIndex();
             this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId)
           } else if (res.data.paymentStatus == 'INPROGRESS' || res.data.paymentStatus == 'PENDING') {
@@ -8049,7 +8049,7 @@ export class YatraComponent {
     await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
       .then((res: any) => {
         console.log(res);
-        if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INTIATED') && res.data.isFullQuoteSuccess) {
+        if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
           this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
           this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
           this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
@@ -8063,11 +8063,11 @@ export class YatraComponent {
         }
         const data = res.data;
         const status =
-          (data.paymentStatus === 'SUCCESS' || data.paymentStatus === 'INTIATED') && data.isFullQuoteSuccess
+          (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && data.isFullQuoteSuccess
             ? [true, false, false]
-            : (data.paymentStatus === 'SUCCESS' || data.paymentStatus === 'INTIATED') && !data.isFullQuoteSuccess
+            : (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && !data.isFullQuoteSuccess
               ? [false, false, true]
-              : data.paymentStatus === 'PENDING'
+              : data.paymentStatus.toUpperCase() === 'PENDING'
                 ? [false, true, false]
                 : [false, false, false]; // Default case
   
