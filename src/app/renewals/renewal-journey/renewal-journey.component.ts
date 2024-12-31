@@ -82,6 +82,7 @@ export class RenewalJourneyComponent {
   isFeedBackModalVisible: Boolean = false;
   retrievedDocuments: any;
   verifyKYCStatus:boolean = false;
+  isFullQuote:boolean=true;
 
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
@@ -517,7 +518,7 @@ export class RenewalJourneyComponent {
             //   });
             //   this.renewalFormGroup.addControl(control.name, controlGroup);
             // }
-            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary','paragraph'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -3005,6 +3006,7 @@ export class RenewalJourneyComponent {
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
           if (res.isSuccess && res.data.isFullQuoteSuccess) {
+            this.isFullQuote = res.data.isFullQuoteSuccess;
             this.formData.status = res.data.status || null;
             this.formData.policyStartDate = res.data.policyStartDate || null;
             this.formData.policyEndDate = res.data.policyEndDate || null;
@@ -3736,6 +3738,21 @@ export class RenewalJourneyComponent {
     });
   }
 
+  checkPaymentStatus(control: any): void {
+    if(!this.isFullQuote || this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
+      this.form.formSections.forEach((section, sectionIndex) => {
+        if (sectionIndex === 0) {
+          section.formControls.forEach((formControl: IFormControl) => {
+            if (formControl.name === "label1") formControl.label = this.rowData.paymentMessage
+            else if(formControl.name == "backToRenewalList") formControl.visible=true
+          });
+        } else {
+          section.visible = false;
+        }
+      });
+   }
+  }
+
   initiateKycURL() {
     const kycRequestBody = {
       policyNumber: this.policyNumber,
@@ -3786,6 +3803,14 @@ export class RenewalJourneyComponent {
         console.log(err);
       }
     );
+  }
+
+  backToRenewalList(){
+    this.router.navigate(['renewal/renewalList'], {
+      state: {
+        formData: this.encryptionService.encrypt(this.policyNumber),
+      }
+    });
   }
 
   getDate(dateType: any): string {
