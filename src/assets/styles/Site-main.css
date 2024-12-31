@@ -2069,6 +2069,9 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--black-color);
   margin: 0;
 }
+.pageHeading_align-items-center {
+  align-items: center;
+}
 /*Body end*/
 
 

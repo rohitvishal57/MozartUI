@@ -94,7 +94,7 @@ export class CustomerJourneyComponent {
   isFullQuoteStatus:string='true';
   verifyKYCStatus: any;
   retrievedDocuments: any;
-
+  isFullQuote:boolean=true;
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
@@ -543,7 +543,7 @@ export class CustomerJourneyComponent {
               })
             }
 
-            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary','paragraph'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -2851,6 +2851,20 @@ export class CustomerJourneyComponent {
       default:
         return control;
     }
+  }
+
+  checkPaymentStatus(control: any): void {
+    if(!this.isFullQuote || this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
+      this.form.formSections.forEach((section, sectionIndex) => {
+        if (sectionIndex === 0) {
+          section.formControls.forEach((formControl: IFormControl) => {
+            if (formControl.name === "label1") formControl.label = this.rowData.paymentMessage
+          });
+        } else {
+          section.visible = false;
+        }
+      });
+   }
   }
   
 }

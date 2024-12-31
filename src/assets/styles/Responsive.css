@@ -349,7 +349,7 @@
     }
     .quickFilterMain {
         flex-direction: column-reverse;
-        gap:24px;
+        gap:12px;
         padding: 16px 18px;
         align-items: flex-start !important;
     }

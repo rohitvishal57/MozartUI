@@ -1688,7 +1688,8 @@ export class RenewalListComponent {
   async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
     await this.getProposalNum();    
     // const paymentStatusRequestBody = {
-    //   proposalOrPolicyNumber: proposerDetail.policyNumber
+    //   proposalOrPolicyNumber: proposerDetail.policyNumber,
+    //   businessType: "REN"
     // };
     // this.renewalService.getpaymentstatusApi(paymentStatusRequestBody).subscribe(
     //   (res: any) => {
@@ -1721,12 +1722,10 @@ export class RenewalListComponent {
  
     if (action === "withmodify") {
       const payload = {
-        policyNumber: proposerDetail.policyNumber, // Policy number
-        dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""), // Format date of birth as dd/MM/yyyy
-        mobileNumber: "", // Mobile number
+        policyNumber: proposerDetail.policyNumber,
+        dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""),
+        mobileNumber: "", 
       };
-  
-      // Call cpRedirectionApi
       this.renewalService.cpRedirectionApi(payload).subscribe(
         (res: any) => {
           const encryptedUrl = res.data;
@@ -1740,21 +1739,14 @@ export class RenewalListComponent {
     } else if (action === 'withoutmodify') {
       const renewalInfoRequestBody = {
         policy_Number: proposerDetail.policyNumber,
-      };
-  
-      // Call getRenewalInfoApi
+      };  
       this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
         (res: any) => {
           if (res.statusCode == 200 && res.isSuccess == true && Object.keys(res.data).length > 0) {
-            // Prepare data for state
             const formData = this.encryptionService.encrypt(res.data);
             const proposalNum = this.encryptionService.encrypt(this.proposalNum);
             const policyNumber = this.encryptionService.encrypt(proposerDetail.policyNumber);
             const journeyProcess = this.encryptionService.encrypt(0);
-  
-            console.log(formData, proposalNum);
-  
-            // Navigate with state
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: formData,

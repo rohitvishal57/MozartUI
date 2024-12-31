@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  baseUrl: "https://upuat.adityabirlahealth.com/",
+  baseUrl: "https://usp.monocept.ai/",
   baseUrl1: "https://upuat.adityabirlahealth.com/",
   axisBaseUrl: "https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api",
   getRenewalList: "api/renewal/getrenewallist",
@@ -199,4 +199,6 @@ export const environment = {
   getMasterData:"api/rug/GetMasterDetails",
   getBaseCaller:"api/rug/GetAllBaseCallers",
   getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
+  getLeads:"api/v1/GetLeads"
+ 
 };

@@ -27,6 +27,8 @@ import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-
 import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
 import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
 import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
+import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
+import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,7 +47,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         ViewForSoloJourneyComponent,
         CreateBasecallerComponent,
         BulkUploadBasecallerComponent,
-        BasecallerListComponent
+        BasecallerListComponent,
+        ViewUnverifiedLeadsComponent,
+        ViewForDualJourneyComponent
+ 
+     
     ],
     
     imports: [
