@@ -3765,7 +3765,6 @@ export class RenewalJourneyComponent {
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
       (res: any) => {
-        console.log("kycRequestBody", res);
         window.open(res.data.kycUrl, '_blank');
       },
       (err) => {
@@ -3775,8 +3774,6 @@ export class RenewalJourneyComponent {
   }
 
   shareKycURL(control: any) {
-    console.log(control);
-
     const kycRequestBody = {
       policyNumber: this.policyNumber,
       proposerNumber: "",

@@ -2705,7 +2705,7 @@ export const combinedForms = {
               "name": "backToRenewalList",
               "label": "Back To Renewal List",
               "type": "button",
-              "class": "col-12 col-md-6 col-lg-4 debitButton",
+              "class": "debitButton col-12 col-md-6 col-lg-4 col-d6",
               "visible": false,
               "methodName": "backToRenewalList"
             },
