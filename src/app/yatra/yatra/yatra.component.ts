@@ -549,7 +549,2944 @@ export class YatraComponent {
       next: async (res: any) => {
         console.log(res);
         this.formSequence = JSON.parse(res.data.formConfig) || [];
-        this.form = JSON.parse(res.data.jsonFormData);
+        if (JSON.parse(res.data.jsonFormData).formTitle == 'Insurance Details') {
+          // this.form = {
+          //   "formTitle": "Insurance Details",
+          //   "saveBtnTitle": "Proceed",
+          //   "prevBtnTitle": "Back",
+          //   "resetBtnTitle": "",
+          //   "themeFile": "ABHI.css",
+          //   "formSections": [
+          //     {
+          //       "sectionTitle": "Select Insured Member",
+          //       "visible": true,
+          //       "class": "section-title",
+          //       "formControls": [
+          //         {
+          //             "name": "checkForPortability",
+          //             "label": "Portability Check",
+          //             "visibleLabel": false,
+          //             "class": "col-12 col-md-6 col-lg-3",
+          //             "disabled": true,
+          //             "type": "text",
+          //             "visible": false,
+          //             "value": "",
+          //             "methodName": "checkForPortability"
+
+          //         },
+          //         {
+          //           "name": "insuredMemberDetails",
+          //           "label": "Insured",
+          //           "visibleLabel": true,
+          //           "class": "col-12 col-md-12 col-lg-12",
+          //           "visible": false,
+          //           "value": 1,
+          //           "placeholder": "",
+          //           "type": "tabview",
+          //           "dynamicControls": [
+          //             [
+          //               {
+          //                 "name": "memberType",
+          //                 "label": "Member Type",
+          //                 "visibleLabel": false,
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "disabled": true,
+          //                 "type": "select",
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "methodName": "memberDetailsOption",
+          //                 "options": []
+          //               },
+          //               {
+          //                 "name": "relation",
+          //                 "label": "Relation",
+          //                 "disabled": false,
+          //                 "visibleLabel": false,
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "type": "text",
+          //                 "visible": false,
+          //                 "value": ""
+          //               },
+          //               {
+          //                 "name": "relationshipType",
+          //                 "visibleLabel": false,
+          //                 "label": "Relationship Type",
+          //                 "value": "",
+          //                 "methodName": "getAllRelationship",
+          //                 "class": "col-md-2 acceptTermsCheck",
+          //                 "type": "select",
+          //                 "visible": false,
+          //                 "selectCheckboxOptions": [
+          //                   {
+          //                     "label": "Self",
+          //                     "value": "self",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Spouse",
+          //                     "value": "spouse",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Father",
+          //                     "value": "father",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Mother",
+          //                     "value": "mother",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Daughter",
+          //                     "value": "daughter1",
+          //                     "button": true
+          //                   },
+          //                   {
+          //                     "label": "Son",
+          //                     "value": "son1",
+          //                     "button": true
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberAge",
+          //                 "label": "Age",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "visible": false,
+          //                 "class": "col-12 col-md-6 col-lg-2"
+          //               },
+          //               {
+          //                 "name": "memberGender",
+          //                 "label": "Gender",
+          //                 "visibleLabel": false,
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "visible": false,
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "options": [
+          //                   {
+          //                     "id": 1,
+          //                     "name": "Male",
+          //                     "value": "M"
+          //                   },
+          //                   {
+          //                     "id": 2,
+          //                     "name": "Female",
+          //                     "value": "F"
+          //                   },
+          //                   {
+          //                     "id": 3,
+          //                     "name": "Others",
+          //                     "value": "O"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "pincode",
+          //                 "label": "Pincode",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "preExistingDisease",
+          //                 "label": "Pre Existing Disease?",
+          //                 "visibleLabel": false,
+          //                 "type": "radio",
+          //                 "visible": false,
+          //                 "class": "radio-button",
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "yes",
+          //                     "label": "Yes",
+          //                     "value": "yes",
+          //                     "selected": false
+          //                   },
+          //                   {
+          //                     "name": "no",
+          //                     "label": "No",
+          //                     "value": "no",
+          //                     "selected": true
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberIndex",
+          //                 "label": "Member Index",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "zone",
+          //                 "label": "Zone",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visibleLabel": false,
+          //                 "disabled": true,
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "state",
+          //                 "label": "State",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visibleLabel": false,
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "memberRoomCategory",
+          //                 "label": "Room Category",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "UPTOSI",
+          //                 "class": "",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "Personal Details",
+          //                 "visibleLabel": true,
+          //                 "label": "Personal Details",
+          //                 "class": "col-12 col-md-6 col-lg-12",
+          //                 "type": "paragraph",
+          //                 "visible": true
+          //               },
+          //               {
+          //                 "name": "preFix",
+          //                 "label": "Salutation",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "type": "select",
+          //                 "options": [
+          //                   {
+          //                     "value": "Mr",
+          //                     "name": "Mr"
+          //                   },
+          //                   {
+          //                     "value": "Mrs",
+          //                     "name": "Mrs"
+          //                   },
+          //                   {
+          //                     "value": "Ms",
+          //                     "name": "Ms"
+          //                   },
+          //                   {
+          //                     "value": "Dr",
+          //                     "name": "Dr"
+          //                   },
+          //                   {
+          //                     "value": "Mx",
+          //                     "name": "Mx"
+          //                   },
+          //                   {
+          //                     "value": "Miss",
+          //                     "name": "Miss"
+          //                   },
+          //                   {
+          //                     "value": "Others",
+          //                     "name": "Others"
+          //                   }
+          //                 ],
+          //                 "class": "col-12 col-md-6 col-lg-3"
+          //               },
+          //               {
+          //                 "name": "firstName",
+          //                 "label": "First Name",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "First Name is required"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z ]*$",
+          //                     "message": "Name should contain only alphabets"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "middleName",
+          //                 "label": "Middle Name",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3"
+          //               },
+          //               {
+          //                 "name": "lastName",
+          //                 "label": "Last Name",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Last Name is required"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z ]*$",
+          //                     "message": "Name should contain only alphabets"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "height",
+          //                 "label": "Enter Height ft",
+          //                 "visibleLabel": true,
+          //                 "type": "number",
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Height(ft) is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[1-9]$",
+          //                     "message": "Only values between 1-9 are allowed."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "heightInches",
+          //                 "label": "Enter Height in",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "number",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Height(Inch) is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(?:[0-9]|1[0-1])$",
+          //                     "message": "Only values between 0-11 are allowed."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "weight",
+          //                 "label": "Weight(In Kgs)",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "number",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Weight is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(1[0-4][0-9]|150|[1-9][0-9]?)$",
+          //                     "message": "Weight must be between 1 and 150."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberdob",
+          //                 "label": "Date of Birth",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "date",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "disabled": true
+          //               },
+          //               {
+          //                 "name": "emailId",
+          //                 "label": "Email Address",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "email",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Email Id is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
+          //                     "message": "Email Id is not valid"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "city",
+          //                 "label": "City Of Residence",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "disabled": true,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "mobileNumber",
+          //                 "label": "Mobile Number",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "phonenumber",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Mobile No is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[6-9]\\d{9}$",
+          //                     "message": "Mobile No is not valid"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberDesignation",
+          //                 "label": "Designation",
+          //                 "visibleLabel": true,
+          //                 "type": "select",
+          //                 "visible": true,
+          //                 "getAllOption": "getAllProposerOccupation",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Designation Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberNatureWork",
+          //                 "label": "Nature of Work",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "getAllOption": "getNatureOfDuty",
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Nature Of Work is Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberOccupation",
+          //                 "label": "Occupation",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "getAllOption": "getInsuredOccupation",
+          //                 "type": "select",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Occupation is Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "abhaNumber",
+          //                 "label": "ABHA Number",
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "maxLength": 17,
+          //                 "minLength": 17,
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "\\d{2}-\\d{4}-\\d{4}-\\d{4}$",
+          //                     "message": "ABHA Number is not valid. Format should be NN-NNNN-NNNN-NNNN."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "abhaMailId",
+          //                 "label": "ABHA Address",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "maxLength": 50,
+          //                 "minLength": 4,
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z0-9]+@abdm$",
+          //                     "message": "Valid ABHA Address (Example:- abc@abdm)"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "isOccupationAvailable",
+          //                 "label": "Whether Occupation requires significant manual labour/hazardous activities/handling hazardous material/explosives or working at height/with high voltage or maintenance of law and order?(Yes/No) (mandatory if Personal Accident Benefit is opted)*",
+          //                 "visibleLabel": true,
+          //                 "class": "radio-button",
+          //                 "value": "N",
+          //                 "visible": true,
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "N",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true
+          //                   },
+          //                   {
+          //                     "name": "Y",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false
+          //                   }
+          //                 ],
+          //                 "type": "radio"
+          //               },
+          //               {
+          //                 "name": "covers",
+          //                 "label": "Add On Covers",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "",
+          //                 "visible": false
+          //               }
+          //             ]
+          //           ]
+          //         },
+          //         {
+          //           "name": "insuredMemberDetails",
+          //           "label": "Insured",
+          //           "visibleLabel": true,
+          //           "class": "col-12 col-md-12 col-lg-12",
+          //           "visible": false,
+          //           "value": 1,
+          //           "placeholder": "",
+          //           "type": "tabview",
+          //           "dynamicControls": [
+          //             [
+          //               {
+          //                 "name": "memberType",
+          //                 "label": "Member Type",
+          //                 "visibleLabel": false,
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "disabled": true,
+          //                 "type": "select",
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "methodName": "memberDetailsOption",
+          //                 "options": []
+          //               },
+          //               {
+          //                 "name": "relation",
+          //                 "label": "Relation",
+          //                 "disabled": false,
+          //                 "visibleLabel": false,
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "type": "text",
+          //                 "visible": false,
+          //                 "value": ""
+          //               },
+          //               {
+          //                 "name": "relationshipType",
+          //                 "visibleLabel": false,
+          //                 "label": "Relationship Type",
+          //                 "value": "",
+          //                 "methodName": "getAllRelationship",
+          //                 "class": "col-md-2 acceptTermsCheck",
+          //                 "type": "select",
+          //                 "visible": false,
+          //                 "selectCheckboxOptions": [
+          //                   {
+          //                     "label": "Self",
+          //                     "value": "self",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Spouse",
+          //                     "value": "spouse",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Father",
+          //                     "value": "father",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Mother",
+          //                     "value": "mother",
+          //                     "button": false
+          //                   },
+          //                   {
+          //                     "label": "Daughter",
+          //                     "value": "daughter1",
+          //                     "button": true
+          //                   },
+          //                   {
+          //                     "label": "Son",
+          //                     "value": "son1",
+          //                     "button": true
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberAge",
+          //                 "label": "Age",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "visible": false,
+          //                 "class": "col-12 col-md-6 col-lg-2"
+          //               },
+          //               {
+          //                 "name": "memberGender",
+          //                 "label": "Gender",
+          //                 "visibleLabel": false,
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "visible": false,
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "options": [
+          //                   {
+          //                     "id": 1,
+          //                     "name": "Male",
+          //                     "value": "M"
+          //                   },
+          //                   {
+          //                     "id": 2,
+          //                     "name": "Female",
+          //                     "value": "F"
+          //                   },
+          //                   {
+          //                     "id": 3,
+          //                     "name": "Others",
+          //                     "value": "O"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "pincode",
+          //                 "label": "Pincode",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "preExistingDisease",
+          //                 "label": "Pre Existing Disease?",
+          //                 "visibleLabel": false,
+          //                 "type": "radio",
+          //                 "visible": false,
+          //                 "class": "radio-button",
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "yes",
+          //                     "label": "Yes",
+          //                     "value": "yes",
+          //                     "selected": false
+          //                   },
+          //                   {
+          //                     "name": "no",
+          //                     "label": "No",
+          //                     "value": "no",
+          //                     "selected": true
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberIndex",
+          //                 "label": "Member Index",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "zone",
+          //                 "label": "Zone",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visibleLabel": false,
+          //                 "disabled": true,
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "state",
+          //                 "label": "State",
+          //                 "class": "col-12 col-md-6 col-lg-2",
+          //                 "visibleLabel": false,
+          //                 "visible": false,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "memberRoomCategory",
+          //                 "label": "Room Category",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "UPTOSI",
+          //                 "class": "",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "Personal Details",
+          //                 "visibleLabel": true,
+          //                 "label": "Personal Details",
+          //                 "class": "col-12 col-md-6 col-lg-12",
+          //                 "type": "paragraph",
+          //                 "visible": true
+          //               },
+          //               {
+          //                 "name": "preFix",
+          //                 "label": "Salutation",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "type": "select",
+          //                 "options": [
+          //                   {
+          //                     "value": "Mr",
+          //                     "name": "Mr"
+          //                   },
+          //                   {
+          //                     "value": "Mrs",
+          //                     "name": "Mrs"
+          //                   },
+          //                   {
+          //                     "value": "Ms",
+          //                     "name": "Ms"
+          //                   },
+          //                   {
+          //                     "value": "Dr",
+          //                     "name": "Dr"
+          //                   },
+          //                   {
+          //                     "value": "Mx",
+          //                     "name": "Mx"
+          //                   },
+          //                   {
+          //                     "value": "Miss",
+          //                     "name": "Miss"
+          //                   },
+          //                   {
+          //                     "value": "Others",
+          //                     "name": "Others"
+          //                   }
+          //                 ],
+          //                 "class": "col-12 col-md-6 col-lg-3"
+          //               },
+          //               {
+          //                 "name": "firstName",
+          //                 "label": "First Name",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "First Name is required"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z ]*$",
+          //                     "message": "Name should contain only alphabets"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "middleName",
+          //                 "label": "Middle Name",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3"
+          //               },
+          //               {
+          //                 "name": "lastName",
+          //                 "label": "Last Name",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Last Name is required"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z ]*$",
+          //                     "message": "Name should contain only alphabets"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "height",
+          //                 "label": "Enter Height ft",
+          //                 "visibleLabel": true,
+          //                 "type": "number",
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Height(ft) is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[1-9]$",
+          //                     "message": "Only values between 1-9 are allowed."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "heightInches",
+          //                 "label": "Enter Height in",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "number",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Height(Inch) is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(?:[0-9]|1[0-1])$",
+          //                     "message": "Only values between 0-11 are allowed."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "weight",
+          //                 "label": "Weight(In Kgs)",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "number",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Weight is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(1[0-4][0-9]|150|[1-9][0-9]?)$",
+          //                     "message": "Weight must be between 1 and 150."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "memberdob",
+          //                 "label": "Date of Birth",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "date",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "disabled": true
+          //               },
+          //               {
+          //                 "name": "emailId",
+          //                 "label": "Email Address",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "email",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Email Id is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
+          //                     "message": "Email Id is not valid"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "city",
+          //                 "label": "City Of Residence",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "disabled": true,
+          //                 "value": "",
+          //                 "type": "text"
+          //               },
+          //               {
+          //                 "name": "mobileNumber",
+          //                 "label": "Mobile Number",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "phonenumber",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Mobile No is required field"
+          //                   },
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[6-9]\\d{9}$",
+          //                     "message": "Mobile No is not valid"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberDesignation",
+          //                 "label": "Designation",
+          //                 "visibleLabel": true,
+          //                 "type": "select",
+          //                 "visible": true,
+          //                 "getAllOption": "getAllProposerOccupation",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Designation Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberNatureWork",
+          //                 "label": "Nature of Work",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "getAllOption": "getNatureOfDuty",
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Nature Of Work is Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "productMemberOccupation",
+          //                 "label": "Occupation",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "getAllOption": "getInsuredOccupation",
+          //                 "type": "select",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "value": "",
+          //                 "options": [],
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Occupation is Required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "abhaNumber",
+          //                 "label": "ABHA Number",
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "maxLength": 17,
+          //                 "minLength": 17,
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "\\d{2}-\\d{4}-\\d{4}-\\d{4}$",
+          //                     "message": "ABHA Number is not valid. Format should be NN-NNNN-NNNN-NNNN."
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "abhaMailId",
+          //                 "label": "ABHA Address",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "maxLength": 50,
+          //                 "minLength": 4,
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "pattern",
+          //                     "pattern": "^[a-zA-Z0-9]+@abdm$",
+          //                     "message": "Valid ABHA Address (Example:- abc@abdm)"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "isOccupationAvailable",
+          //                 "label": "Whether Occupation requires significant manual labour/hazardous activities/handling hazardous material/explosives or working at height/with high voltage or maintenance of law and order?(Yes/No) (mandatory if Personal Accident Benefit is opted)*",
+          //                 "visibleLabel": true,
+          //                 "class": "radio-button",
+          //                 "value": "N",
+          //                 "visible": true,
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "N",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true
+          //                   },
+          //                   {
+          //                     "name": "Y",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false
+          //                   }
+          //                 ],
+          //                 "type": "radio"
+          //               },
+          //               {
+          //                 "name": "covers",
+          //                 "label": "Add On Covers",
+          //                 "visibleLabel": false,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "",
+          //                 "visible": false
+          //               },
+          //               {
+          //                 "name": "portabilityDetails",
+          //                 "label": "Portability Details of User",
+          //                 "type": "paragraph",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "class": "col-12 col-md-6 col-lg-4 addMember"
+          //               },
+          //               {
+          //                 "name": "horizontalLine",
+          //                 "type": "line",
+          //                 "visible": true,
+          //                 "class": "custom-line",
+          //                 "label": '',
+          //                 "visibleLabel": false
+          //               },
+          //               {
+          //                 "name": "portingReason",
+          //                 "label": "Reason for porting",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "type": "select",
+          //                 "options": [
+          //                   {
+          //                     "value": "Service problem",
+          //                     "name": "Service problem"
+          //                   },
+          //                   {
+          //                     "value": "Price is better",
+          //                     "name": "Price is better"
+          //                   },
+          //                   {
+          //                     "value": "Product is not suitable",
+          //                     "name": "Product is not suitable"
+          //                   },
+          //                   {
+          //                     "value": "Dissatisfied with existing insurer",
+          //                     "name": "Dissatisfied with existing insurer"
+          //                   },
+          //                   {
+          //                     "value": "Claim not handled properly",
+          //                     "name": "Claim not handled properly"
+          //                   },
+          //                   {
+          //                     "value": "Policy servicing by current insurer is not good",
+          //                     "name": "Policy servicing by current insurer is not good"
+          //                   },
+          //                   {
+          //                     "value": "Premium rates with existing insurer is high/costly",
+          //                     "name": "Premium rates with existing insurer is high/costly"
+          //                   },
+          //                   {
+          //                     "value": "Wider coverage available with new insurer",
+          //                     "name": "Wider coverage available with new insurer"
+          //                   },
+          //                   {
+          //                     "value": "Wrong repudiation of claims by current insurer",
+          //                     "name": "Wrong repudiation of claims by current insurer"
+          //                   },
+          //                   {
+          //                     "value": "Wrong deductions in claims/Claims settled for less amounts",
+          //                     "name": "Wrong deductions in claims/Claims settled for less amounts"
+          //                   },
+          //                   {
+          //                     "value": "Delay in claim settlements",
+          //                     "name": "Delay in claim settlements"
+          //                   },
+          //                   {
+          //                     "value": "Delay in policy issuance",
+          //                     "name": "Delay in policy issuance"
+          //                   },
+          //                   {
+          //                     "value": "Renewal notices not received",
+          //                     "name": "Renewal notices not received"
+          //                   },
+          //                   {
+          //                     "value": "Existing agent not providing service",
+          //                     "name": "Existing agent not providing service"
+          //                   },
+          //                   {
+          //                     "value": "Any Other",
+          //                     "name": "Any Other"
+          //                   }
+          //                 ],
+          //                 "class": "col-12 col-md-6 col-lg-4"
+          //               },
+          //               {
+          //                 "name": "currentPolicy",
+          //                 "label": "Current Policy*",
+          //                 "type": "paragraph",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "class": "col-12 col-md-6 col-lg-4 addMember"
+          //               },
+          //               {
+          //                 "name": "horizontalLine",
+          //                 "type": "line",
+          //                 "visible": true,
+          //                 "class": "custom-line",
+          //                 "label": '',
+          //                 "visibleLabel": false
+          //               },
+          //               {
+          //                 "name": "isActivFitOrArgoya",
+          //                 "label": "Porting ABHI or Other Insurance company Activ Fit and Argoya Sanjevani Policy",
+          //                 "visibleLabel": true,
+          //                 "class": "radio-button",
+          //                 "value": "N",
+          //                 "visible": true,
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "N",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true
+          //                   },
+          //                   {
+          //                     "name": "Y",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false
+          //                   }
+          //                 ],
+          //                 "type": "radio"
+          //               },
+          //               {
+          //                 "name": "previousProductName",
+          //                 "label": "Product Name of Previous Policy",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-6",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Previous product name is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousPolicyType",
+          //                 "label": "Previous Policy Type",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-6",
+          //                 "options": [
+          //                   {
+          //                     "name": "Group",
+          //                     "value": "Group"
+          //                   },
+          //                   {
+          //                     "name": "Retail",
+          //                     "value": "Retail"
+          //                   }
+          //                 ],
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Previous Policy Type is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "selectYear",
+          //                 "label": "Select Year",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "methodName": "setPreviousPolicyYears",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "options": [],
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Year is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousPolicyNum",
+          //                 "label": "Policy Number",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Policy Number is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "nameOfInsurer",
+          //                 "label": "Name of Insurer",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "select",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-6",
+          //                 "options": [
+          //                   {
+          //                     "name": "Aditya Birla Health Insurance Co. Ltd.",
+          //                     "value": "Aditya Birla Health Insurance Co. Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Care Health Insurance Ltd. (formerly known as Religare Health Insurance Co. Ltd.)",
+          //                     "value": "Care Health Insurance Ltd. (formerly known as Religare Health Insurance Co. Ltd.)"
+          //                   },
+          //                   {
+          //                     "name": "Galaxy Health and Allied Insurance Co. Ltd.",
+          //                     "value": "Galaxy Health and Allied Insurance Co. Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Narayana Health Insurance Ltd.",
+          //                     "value": "Narayana Health Insurance Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Niva Bupa Health Insurance Co. Ltd.",
+          //                     "value": "Niva Bupa Health Insurance Co. Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Star Health & Allied Insurance Co. Ltd.",
+          //                     "value": "Star Health & Allied Insurance Co. Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Acko General Insurance Limited",
+          //                     "value": "Acko General Insurance Limited"
+          //                   },
+          //                   {
+          //                     "name": "Agriculture Insurance Company of India Limited",
+          //                     "value": "Agriculture Insurance Company of India Limited"
+          //                   },
+          //                   {
+          //                     "name": "Bajaj Allianz General Insurance Company Limited",
+          //                     "value": "Bajaj Allianz General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Cholamandalam MS General Insurance Company Limited",
+          //                     "value": "Cholamandalam MS General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "ECGC Limited",
+          //                     "value": "ECGC Limited"
+          //                   },
+          //                   {
+          //                     "name": "Future Generali India Insurance Company Limited",
+          //                     "value": "Future Generali India Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Go Digit General Insurance Limited",
+          //                     "value": "Go Digit General Insurance Limited"
+          //                   },
+          //                   {
+          //                     "name": "HDFC ERGO General Insurance Company Limited",
+          //                     "value": "HDFC ERGO General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "IFFCO TOKIO General Insurance Company Limited",
+          //                     "value": "IFFCO TOKIO General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Kotak Mahindra General Insurance Company Limited",
+          //                     "value": "Kotak Mahindra General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Kshema General Insurance Limited",
+          //                     "value": "Kshema General Insurance Limited"
+          //                   },
+          //                   {
+          //                     "name": "Liberty General Insurance Limited",
+          //                     "value": "Liberty General Insurance Limited"
+          //                   },
+          //                   {
+          //                     "name": "Magma HDI General Insurance Company Limited",
+          //                     "value": "Magma HDI General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "National Insurance Company Limited",
+          //                     "value": "National Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Navi General Insurance Limited",
+          //                     "value": "Navi General Insurance Limited"
+          //                   },
+          //                   {
+          //                     "name": "Raheja QBE General Insurance Co. Ltd.",
+          //                     "value": "Raheja QBE General Insurance Co. Ltd."
+          //                   },
+          //                   {
+          //                     "name": "Reliance General Insurance Company Limited",
+          //                     "value": "Reliance General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Royal Sundaram General Insurance Company Limited",
+          //                     "value": "Royal Sundaram General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "SBI General Insurance Company Limited",
+          //                     "value": "SBI General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Shriram General Insurance Company Limited",
+          //                     "value": "Shriram General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Tata AIG General Insurance Company Limited",
+          //                     "value": "Tata AIG General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "The New India Assurance Company Limited",
+          //                     "value": "The New India Assurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "The Oriental Insurance Company Limited",
+          //                     "value": "The Oriental Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "United India Insurance Company Limited",
+          //                     "value": "United India Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Universal Sompo General Insurance Company Limited",
+          //                     "value": "Universal Sompo General Insurance Company Limited"
+          //                   },
+          //                   {
+          //                     "name": "Zuno General Insurance Ltd. (formerly known as Edelweiss General Insurance Company Limited)",
+          //                     "value": "Zuno General Insurance Ltd. (formerly known as Edelweiss General Insurance Company Limited)"
+          //                   }
+          //                 ],
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Name of Insurer is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousSumInsured",
+          //                 "label": "Sum Insured",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Previous Sum Insured is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "cumulativeBonus",
+          //                 "label": "Cumulative Bonus (Optional)",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Cumulative Bonus is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousPolicyStartDate",
+          //                 "label": "Policy Start Date",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "date",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Policy Start Date is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousPolicyEndDate",
+          //                 "label": "Policy End Date",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "date",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Policy End Date is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousPolicyVarient",
+          //                 "label": "Previous Policy Varient",
+          //                 "visibleLabel": true,
+          //                 "visible": true,
+          //                 "value": "",
+          //                 "type": "select",
+          //                 "options": [
+          //                   {
+          //                     "value": "Individual",
+          //                     "name": "Multi Individual"
+          //                   },
+          //                   {
+          //                     "value": "Family Floater",
+          //                     "name": "Family Floater"
+          //                   }
+          //                 ],
+          //                 "class": "col-12 col-md-6 col-lg-6"
+          //               },
+          //               {
+          //                 "name": "inceptionDate",
+          //                 "label": "Inception Date",
+          //                 "visible": true,
+          //                 "visibleLabel": true,
+          //                 "type": "date",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-4",
+          //                 "validators": [
+          //                   {
+          //                     "validatorName": "required",
+          //                     "required": true,
+          //                     "message": "Inception Date is required"
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "breakTime",
+          //                 "label": "Any Break in time",
+          //                 "visibleLabel": true,
+          //                 "type": "radio",
+          //                 "value": "",
+          //                 "visible": true,
+          //                 "class": "radio-button",
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "yes",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false
+          //                   },
+          //                   {
+          //                     "name": "no",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "previousClaims",
+          //                 "label": "Any Claim in Previous Policy?",
+          //                 "visibleLabel": true,
+          //                 "onChangeMethod": "changeMainFormDependentControls",
+          //                 "type": "radio",
+          //                 "value": "",
+          //                 "visible": true,
+          //                 "class": "radio-button",
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "yes",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false,
+          //                     "dependentControls": [
+          //                       {
+          //                         "name": "infoAboutPreviousClaims",
+          //                         "visibility": true
+          //                       },
+          //                       {
+          //                         "name": "noOfPreviousClaim",
+          //                         "visibility": true
+          //                       }
+          //                     ]
+          //                   },
+          //                   {
+          //                     "name": "no",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true,
+          //                     "dependentControls": [
+          //                       {
+          //                         "name": "infoAboutPreviousClaims",
+          //                         "visibility": false
+          //                       },
+          //                       {
+          //                         "name": "noOfPreviousClaim",
+          //                         "visibility": false
+          //                       }
+          //                     ]
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "infoAboutPreviousClaims",
+          //                 "label": "Additional Information",
+          //                 "visible": false,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-6"
+          //               },
+          //               {
+          //                 "name": "noOfPreviousClaim",
+          //                 "label": "No of Claims",
+          //                 "visible": false,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-3"
+          //               },
+          //               {
+          //                 "name": "previousRiders",
+          //                 "label": "Any Add-ons/Riders in Previous Policy?",
+          //                 "visibleLabel": true,
+          //                 "onChangeMethod": "changeMainFormDependentControls",
+          //                 "type": "radio",
+          //                 "value": "",
+          //                 "visible": true,
+          //                 "class": "radio-button",
+          //                 "radioOptions": [
+          //                   {
+          //                     "name": "yes",
+          //                     "label": "Yes",
+          //                     "value": "Y",
+          //                     "selected": false,
+          //                     "dependentControls": [
+          //                       {
+          //                         "name": "infoAboutPreviousRider",
+          //                         "visibility": true
+          //                       }
+          //                     ]
+          //                   },
+          //                   {
+          //                     "name": "no",
+          //                     "label": "No",
+          //                     "value": "N",
+          //                     "selected": true,
+          //                     "dependentControls": [
+          //                       {
+          //                         "name": "infoAboutPreviousRider",
+          //                         "visibility": false
+          //                       }
+          //                     ]
+          //                   }
+          //                 ]
+          //               },
+          //               {
+          //                 "name": "infoAboutPreviousRider",
+          //                 "label": "Additional Information",
+          //                 "visible": false,
+          //                 "visibleLabel": true,
+          //                 "type": "text",
+          //                 "value": "",
+          //                 "class": "col-12 col-md-6 col-lg-6"
+          //               }
+          //             ]
+          //           ]
+          //         }
+          //       ]
+          //     },
+          //     {
+          //       "sectionTitle": "Bottom Section",
+          //       "visible": true,
+          //       "class": "section-title bottom-section-axis",
+          //       "formControls": [
+          //         {
+          //           "name": "plandetails",
+          //           "label": "Plan Details",
+          //           "visibleLabel": true,
+          //           "type": "summary",
+          //           "value": "",
+          //           "class": "col-md-12",
+          //           "visible": true,
+          //           "disabled": true
+          //         },
+          //         {
+          //           "name": "productName",
+          //           "label": "Product Name",
+          //           "visibleLabel": false,
+          //           "visible": true,
+          //           "disabled": true,
+          //           "type": "boldtext",
+          //           "class": "col-12 col-md-6 col-lg-3 bottom-product",
+          //           "value": "",
+          //           "text": "Aditya Birla Health Insurance"
+          //         },
+          //         {
+          //           "name": "totalPremium",
+          //           "label": "Total Premium/Incl tax",
+          //           "visibleLabel": true,
+          //           "visible": true,
+          //           "type": "boldtext",
+          //           "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+          //           "value": "",
+          //           "disabled": true
+          //         },
+          //         {
+          //           "name": "proposalNumber",
+          //           "label": "Proposal Number",
+          //           "visibleLabel": true,
+          //           "visible": true,
+          //           "type": "boldtext",
+          //           "class": "col-12 col-md-6 col-lg-3",
+          //           "value": "",
+          //           "disabled": true
+          //         },
+          //         {
+          //           "name": "next",
+          //           "label": "Next",
+          //           "visibleLabel": false,
+          //           "visible": true,
+          //           "type": "button",
+          //           "class": "col-12 col-md-6 col-lg-2 next-btn",
+          //           "methodName": "onSubmit"
+          //         },
+          //         {
+          //           "name": "back",
+          //           "label": "Back",
+          //           "visibleLabel": false,
+          //           "visible": true,
+          //           "type": "button",
+          //           "class": "col-12 col-md-6 col-lg-2 back-btn",
+          //           "methodName": "onPrevious"
+          //         }
+          //       ]
+          //     }
+          //   ]
+          // }
+          this.form = {
+            "formTitle": "Insurance Details",
+            "saveBtnTitle": "Proceed",
+            "prevBtnTitle": "Back",
+            "resetBtnTitle": "",
+            "themeFile": "ABHI.css",
+            "formSections": [
+              {
+                "sectionTitle": "Select Insured Member",
+                "visible": true,
+                "class": "section-title",
+                "formControls": [
+                  {
+                    "name": "checkForPortability",
+                    "label": "Portability Check",
+                    "visibleLabel": false,
+                    "class": "col-12 col-md-6 col-lg-3",
+                    "disabled": true,
+                    "type": "text",
+                    "visible": false,
+                    "value": "",
+                    "methodName": "checkForPortability"
+                  },
+                  {
+                    "name": "insuredMemberDetails",
+                    "label": "Insured",
+                    "visibleLabel": true,
+                    "class": "col-12 col-md-12 col-lg-12",
+                    "visible": true,
+                    "value": 1,
+                    "placeholder": "",
+                    "type": "tabview",
+                    "dynamicControls": [
+                      [
+                        {
+                          "name": "memberType",
+                          "label": "Member Type",
+                          "visibleLabel": false,
+                          "class": "col-12 col-md-6 col-lg-3",
+                          "disabled": true,
+                          "type": "select",
+                          "visible": false,
+                          "value": "",
+                          "methodName": "memberDetailsOption",
+                          "options": []
+                        },
+                        {
+                          "name": "relation",
+                          "label": "Relation",
+                          "disabled": false,
+                          "visibleLabel": false,
+                          "class": "col-12 col-md-6 col-lg-3",
+                          "type": "text",
+                          "visible": false,
+                          "value": ""
+                        },
+                        {
+                          "name": "relationshipType",
+                          "visibleLabel": false,
+                          "label": "Relationship Type",
+                          "value": "",
+                          "methodName": "getAllRelationship",
+                          "class": "col-md-2 acceptTermsCheck",
+                          "type": "select",
+                          "visible": false,
+                          "selectCheckboxOptions": [
+                            {
+                              "label": "Self",
+                              "value": "self",
+                              "button": false
+                            },
+                            {
+                              "label": "Spouse",
+                              "value": "spouse",
+                              "button": false
+                            },
+                            {
+                              "label": "Father",
+                              "value": "father",
+                              "button": false
+                            },
+                            {
+                              "label": "Mother",
+                              "value": "mother",
+                              "button": false
+                            },
+                            {
+                              "label": "Daughter",
+                              "value": "daughter1",
+                              "button": true
+                            },
+                            {
+                              "label": "Son",
+                              "value": "son1",
+                              "button": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "memberAge",
+                          "label": "Age",
+                          "visibleLabel": false,
+                          "type": "text",
+                          "value": "",
+                          "visible": false,
+                          "class": "col-12 col-md-6 col-lg-2"
+                        },
+                        {
+                          "name": "memberGender",
+                          "label": "Gender",
+                          "visibleLabel": false,
+                          "type": "select",
+                          "value": "",
+                          "visible": false,
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "options": [
+                            {
+                              "id": 1,
+                              "name": "Male",
+                              "value": "M"
+                            },
+                            {
+                              "id": 2,
+                              "name": "Female",
+                              "value": "F"
+                            },
+                            {
+                              "id": 3,
+                              "name": "Others",
+                              "value": "O"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "pincode",
+                          "label": "Pincode",
+                          "visibleLabel": false,
+                          "type": "text",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-2",
+                          "visible": false
+                        },
+                        {
+                          "name": "preExistingDisease",
+                          "label": "Pre Existing Disease?",
+                          "visibleLabel": false,
+                          "type": "radio",
+                          "visible": false,
+                          "class": "radio-button",
+                          "radioOptions": [
+                            {
+                              "name": "yes",
+                              "label": "Yes",
+                              "value": "yes",
+                              "selected": false
+                            },
+                            {
+                              "name": "no",
+                              "label": "No",
+                              "value": "no",
+                              "selected": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "memberIndex",
+                          "label": "Member Index",
+                          "visibleLabel": false,
+                          "type": "text",
+                          "value": "",
+                          "class": "",
+                          "visible": false
+                        },
+                        {
+                          "name": "zone",
+                          "label": "Zone",
+                          "class": "col-12 col-md-6 col-lg-2",
+                          "visibleLabel": false,
+                          "disabled": true,
+                          "visible": false,
+                          "value": "",
+                          "type": "text"
+                        },
+                        {
+                          "name": "state",
+                          "label": "State",
+                          "class": "col-12 col-md-6 col-lg-2",
+                          "visibleLabel": false,
+                          "visible": false,
+                          "value": "",
+                          "type": "text"
+                        },
+                        {
+                          "name": "memberRoomCategory",
+                          "label": "Room Category",
+                          "visibleLabel": false,
+                          "type": "text",
+                          "value": "UPTOSI",
+                          "class": "",
+                          "visible": false
+                        },
+                        {
+                          "name": "Personal Details",
+                          "visibleLabel": true,
+                          "label": "Personal Details",
+                          "class": "col-12 col-md-6 col-lg-12",
+                          "type": "paragraph",
+                          "visible": true
+                        },
+                        {
+                          "name": "preFix",
+                          "label": "Salutation",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "value": "",
+                          "type": "select",
+                          "options": [
+                            {
+                              "value": "Mr",
+                              "name": "Mr"
+                            },
+                            {
+                              "value": "Mrs",
+                              "name": "Mrs"
+                            },
+                            {
+                              "value": "Ms",
+                              "name": "Ms"
+                            },
+                            {
+                              "value": "Dr",
+                              "name": "Dr"
+                            },
+                            {
+                              "value": "Mx",
+                              "name": "Mx"
+                            },
+                            {
+                              "value": "Miss",
+                              "name": "Miss"
+                            },
+                            {
+                              "value": "Others",
+                              "name": "Others"
+                            }
+                          ],
+                          "class": "col-12 col-md-6 col-lg-3"
+                        },
+                        {
+                          "name": "firstName",
+                          "label": "First Name",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "type": "text",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-3",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "First Name is required"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^[a-zA-Z ]*$",
+                              "message": "Name should contain only alphabets"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "middleName",
+                          "label": "Middle Name",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "type": "text",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-3"
+                        },
+                        {
+                          "name": "lastName",
+                          "label": "Last Name",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "type": "text",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-3",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Last Name is required"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^[a-zA-Z ]*$",
+                              "message": "Name should contain only alphabets"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "height",
+                          "label": "Enter Height ft",
+                          "visibleLabel": true,
+                          "type": "number",
+                          "visible": true,
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Height(ft) is required field"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^[1-9]$",
+                              "message": "Only values between 1-9 are allowed."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "heightInches",
+                          "label": "Enter Height in",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "type": "number",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Height(Inch) is required field"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^(?:[0-9]|1[0-1])$",
+                              "message": "Only values between 0-11 are allowed."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "weight",
+                          "label": "Weight(In Kgs)",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "type": "number",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Weight is required field"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^(1[0-4][0-9]|150|[1-9][0-9]?)$",
+                              "message": "Weight must be between 1 and 150."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "memberdob",
+                          "label": "Date of Birth",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "type": "date",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "disabled": true
+                        },
+                        {
+                          "name": "emailId",
+                          "label": "Email Address",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "type": "email",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Email Id is required field"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
+                              "message": "Email Id is not valid"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "city",
+                          "label": "City Of Residence",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "disabled": true,
+                          "value": "",
+                          "type": "text"
+                        },
+                        {
+                          "name": "mobileNumber",
+                          "label": "Mobile Number",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "type": "phonenumber",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Mobile No is required field"
+                            },
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^[6-9]\\d{9}$",
+                              "message": "Mobile No is not valid"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "productMemberDesignation",
+                          "label": "Designation",
+                          "visibleLabel": true,
+                          "type": "select",
+                          "visible": true,
+                          "getAllOption": "getAllProposerOccupation",
+                          "value": "",
+                          "options": [],
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Designation Required"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "productMemberNatureWork",
+                          "label": "Nature of Work",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "getAllOption": "getNatureOfDuty",
+                          "type": "select",
+                          "value": "",
+                          "options": [],
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Nature Of Work is Required"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "productMemberOccupation",
+                          "label": "Occupation",
+                          "visible": true,
+                          "visibleLabel": true,
+                          "getAllOption": "getInsuredOccupation",
+                          "type": "select",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "value": "",
+                          "options": [],
+                          "validators": [
+                            {
+                              "validatorName": "required",
+                              "required": true,
+                              "message": "Occupation is Required"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "abhaNumber",
+                          "label": "ABHA Number",
+                          "visibleLabel": true,
+                          "type": "text",
+                          "visible": true,
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "maxLength": 17,
+                          "minLength": 17,
+                          "validators": [
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "\\d{2}-\\d{4}-\\d{4}-\\d{4}$",
+                              "message": "ABHA Number is not valid. Format should be NN-NNNN-NNNN-NNNN."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "abhaMailId",
+                          "label": "ABHA Address",
+                          "visibleLabel": true,
+                          "visible": true,
+                          "type": "text",
+                          "value": "",
+                          "class": "col-12 col-md-6 col-lg-4",
+                          "maxLength": 50,
+                          "minLength": 4,
+                          "validators": [
+                            {
+                              "validatorName": "pattern",
+                              "pattern": "^[a-zA-Z0-9]+@abdm$",
+                              "message": "Valid ABHA Address (Example:- abc@abdm)"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "isOccupationAvailable",
+                          "label": "Whether Occupation requires significant manual labour/hazardous activities/handling hazardous material/explosives or working at height/with high voltage or maintenance of law and order?(Yes/No) (mandatory if Personal Accident Benefit is opted)*",
+                          "visibleLabel": true,
+                          "class": "radio-button",
+                          "value": "N",
+                          "visible": true,
+                          "radioOptions": [
+                            {
+                              "name": "N",
+                              "label": "No",
+                              "value": "N",
+                              "selected": true
+                            },
+                            {
+                              "name": "Y",
+                              "label": "Yes",
+                              "value": "Y",
+                              "selected": false
+                            }
+                          ],
+                          "type": "radio"
+                        },
+                        {
+                          "name": "covers",
+                          "label": "Add On Covers",
+                          "visibleLabel": false,
+                          "type": "text",
+                          "value": "",
+                          "class": "",
+                          "visible": false
+                        },
+                        {
+                          "name": "previousPolicyDetails",
+                          "label": "Previous Policy Details",
+                          "type": "portabilityInfo",
+                          "visibleLabel": false,
+                          "value": "",
+                          "visible": false,
+                          "innerControls": [
+                            {
+                              "name": "portabilityDetails",
+                              "label": "Portability Details of User",
+                              "type": "paragraph",
+                              "visibleLabel": true,
+                              "visible": true,
+                              "class": "col-12 col-md-6 col-lg-4 addMember"
+                            },
+                            {
+                              "name": "horizontalLine",
+                              "type": "line",
+                              "visible": true,
+                              "class": "custom-line",
+                              "label": '',
+                              "visibleLabel": false
+                            },
+                            {
+                              "name": "portingReason",
+                              "label": "Reason for porting",
+                              "visibleLabel": true,
+                              "visible": true,
+                              "value": "",
+                              "type": "select",
+                              "options": [
+                                {
+                                  "value": "Service problem",
+                                  "name": "Service problem"
+                                },
+                                {
+                                  "value": "Price is better",
+                                  "name": "Price is better"
+                                },
+                                {
+                                  "value": "Product is not suitable",
+                                  "name": "Product is not suitable"
+                                },
+                                {
+                                  "value": "Dissatisfied with existing insurer",
+                                  "name": "Dissatisfied with existing insurer"
+                                },
+                                {
+                                  "value": "Claim not handled properly",
+                                  "name": "Claim not handled properly"
+                                },
+                                {
+                                  "value": "Policy servicing by current insurer is not good",
+                                  "name": "Policy servicing by current insurer is not good"
+                                },
+                                {
+                                  "value": "Premium rates with existing insurer is high/costly",
+                                  "name": "Premium rates with existing insurer is high/costly"
+                                },
+                                {
+                                  "value": "Wider coverage available with new insurer",
+                                  "name": "Wider coverage available with new insurer"
+                                },
+                                {
+                                  "value": "Wrong repudiation of claims by current insurer",
+                                  "name": "Wrong repudiation of claims by current insurer"
+                                },
+                                {
+                                  "value": "Wrong deductions in claims/Claims settled for less amounts",
+                                  "name": "Wrong deductions in claims/Claims settled for less amounts"
+                                },
+                                {
+                                  "value": "Delay in claim settlements",
+                                  "name": "Delay in claim settlements"
+                                },
+                                {
+                                  "value": "Delay in policy issuance",
+                                  "name": "Delay in policy issuance"
+                                },
+                                {
+                                  "value": "Renewal notices not received",
+                                  "name": "Renewal notices not received"
+                                },
+                                {
+                                  "value": "Existing agent not providing service",
+                                  "name": "Existing agent not providing service"
+                                },
+                                {
+                                  "value": "Any Other",
+                                  "name": "Any Other"
+                                }
+                              ],
+                              "class": "col-12 col-md-6 col-lg-4"
+                            },
+                            {
+                              "name": "currentPolicy",
+                              "label": "Current Policy*",
+                              "type": "paragraph",
+                              "visibleLabel": true,
+                              "visible": true,
+                              "class": "col-12 col-md-6 col-lg-4 addMember"
+                            },
+                            {
+                              "name": "horizontalLine",
+                              "type": "line",
+                              "visible": true,
+                              "class": "custom-line",
+                              "label": '',
+                              "visibleLabel": false
+                            },
+                            {
+                              "name": "isActivFitOrArgoya",
+                              "label": "Porting ABHI or Other Insurance company Activ Fit and Argoya Sanjevani Policy",
+                              "visibleLabel": true,
+                              "class": "radio-button",
+                              "value": "N",
+                              "visible": true,
+                              "radioOptions": [
+                                {
+                                  "name": "N",
+                                  "label": "No",
+                                  "value": "N",
+                                  "selected": true
+                                },
+                                {
+                                  "name": "Y",
+                                  "label": "Yes",
+                                  "value": "Y",
+                                  "selected": false
+                                }
+                              ],
+                              "type": "radio"
+                            },
+                            {
+                              "name": "previousProductName",
+                              "label": "Product Name of Previous Policy",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-6",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Previous product name is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousPolicyType",
+                              "label": "Previous Policy Type",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "select",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-6",
+                              "options": [
+                                {
+                                  "name": "Group",
+                                  "value": "Group"
+                                },
+                                {
+                                  "name": "Retail",
+                                  "value": "Retail"
+                                }
+                              ],
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Previous Policy Type is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "selectYear",
+                              "label": "Select Year",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "select",
+                              "value": "",
+                              "methodName": "setPreviousPolicyYears",
+                              "class": "col-12 col-md-6 col-lg-3",
+                              "options": [],
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Year is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousPolicyNum",
+                              "label": "Policy Number",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Policy Number is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "nameOfInsurer",
+                              "label": "Name of Insurer",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "select",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-6",
+                              "options": [
+                                {
+                                  "name": "Aditya Birla Health Insurance Co. Ltd.",
+                                  "value": "Aditya Birla Health Insurance Co. Ltd."
+                                },
+                                {
+                                  "name": "Care Health Insurance Ltd. (formerly known as Religare Health Insurance Co. Ltd.)",
+                                  "value": "Care Health Insurance Ltd. (formerly known as Religare Health Insurance Co. Ltd.)"
+                                },
+                                {
+                                  "name": "Galaxy Health and Allied Insurance Co. Ltd.",
+                                  "value": "Galaxy Health and Allied Insurance Co. Ltd."
+                                },
+                                {
+                                  "name": "Narayana Health Insurance Ltd.",
+                                  "value": "Narayana Health Insurance Ltd."
+                                },
+                                {
+                                  "name": "Niva Bupa Health Insurance Co. Ltd.",
+                                  "value": "Niva Bupa Health Insurance Co. Ltd."
+                                },
+                                {
+                                  "name": "Star Health & Allied Insurance Co. Ltd.",
+                                  "value": "Star Health & Allied Insurance Co. Ltd."
+                                },
+                                {
+                                  "name": "Acko General Insurance Limited",
+                                  "value": "Acko General Insurance Limited"
+                                },
+                                {
+                                  "name": "Agriculture Insurance Company of India Limited",
+                                  "value": "Agriculture Insurance Company of India Limited"
+                                },
+                                {
+                                  "name": "Bajaj Allianz General Insurance Company Limited",
+                                  "value": "Bajaj Allianz General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Cholamandalam MS General Insurance Company Limited",
+                                  "value": "Cholamandalam MS General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "ECGC Limited",
+                                  "value": "ECGC Limited"
+                                },
+                                {
+                                  "name": "Future Generali India Insurance Company Limited",
+                                  "value": "Future Generali India Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Go Digit General Insurance Limited",
+                                  "value": "Go Digit General Insurance Limited"
+                                },
+                                {
+                                  "name": "HDFC ERGO General Insurance Company Limited",
+                                  "value": "HDFC ERGO General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "IFFCO TOKIO General Insurance Company Limited",
+                                  "value": "IFFCO TOKIO General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Kotak Mahindra General Insurance Company Limited",
+                                  "value": "Kotak Mahindra General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Kshema General Insurance Limited",
+                                  "value": "Kshema General Insurance Limited"
+                                },
+                                {
+                                  "name": "Liberty General Insurance Limited",
+                                  "value": "Liberty General Insurance Limited"
+                                },
+                                {
+                                  "name": "Magma HDI General Insurance Company Limited",
+                                  "value": "Magma HDI General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "National Insurance Company Limited",
+                                  "value": "National Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Navi General Insurance Limited",
+                                  "value": "Navi General Insurance Limited"
+                                },
+                                {
+                                  "name": "Raheja QBE General Insurance Co. Ltd.",
+                                  "value": "Raheja QBE General Insurance Co. Ltd."
+                                },
+                                {
+                                  "name": "Reliance General Insurance Company Limited",
+                                  "value": "Reliance General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Royal Sundaram General Insurance Company Limited",
+                                  "value": "Royal Sundaram General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "SBI General Insurance Company Limited",
+                                  "value": "SBI General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Shriram General Insurance Company Limited",
+                                  "value": "Shriram General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Tata AIG General Insurance Company Limited",
+                                  "value": "Tata AIG General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "The New India Assurance Company Limited",
+                                  "value": "The New India Assurance Company Limited"
+                                },
+                                {
+                                  "name": "The Oriental Insurance Company Limited",
+                                  "value": "The Oriental Insurance Company Limited"
+                                },
+                                {
+                                  "name": "United India Insurance Company Limited",
+                                  "value": "United India Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Universal Sompo General Insurance Company Limited",
+                                  "value": "Universal Sompo General Insurance Company Limited"
+                                },
+                                {
+                                  "name": "Zuno General Insurance Ltd. (formerly known as Edelweiss General Insurance Company Limited)",
+                                  "value": "Zuno General Insurance Ltd. (formerly known as Edelweiss General Insurance Company Limited)"
+                                }
+                              ],
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Name of Insurer is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousSumInsured",
+                              "label": "Sum Insured",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Previous Sum Insured is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "cumulativeBonus",
+                              "label": "Cumulative Bonus (Optional)",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3"
+                            },
+                            {
+                              "name": "previousPolicyStartDate",
+                              "label": "Policy Start Date",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "date",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Policy Start Date is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousPolicyEndDate",
+                              "label": "Policy End Date",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "date",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Policy End Date is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousPolicyVarient",
+                              "label": "Previous Policy Varient",
+                              "visibleLabel": true,
+                              "visible": true,
+                              "value": "",
+                              "type": "select",
+                              "options": [
+                                {
+                                  "value": "Individual",
+                                  "name": "Multi Individual"
+                                },
+                                {
+                                  "value": "Family Floater",
+                                  "name": "Family Floater"
+                                }
+                              ],
+                              "class": "col-12 col-md-6 col-lg-6"
+                            },
+                            {
+                              "name": "inceptionDate",
+                              "label": "Inception Date",
+                              "visible": true,
+                              "visibleLabel": true,
+                              "type": "date",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-4",
+                              "validators": [
+                                {
+                                  "validatorName": "required",
+                                  "required": true,
+                                  "message": "Inception Date is required"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "breakTime",
+                              "label": "Any Break in time",
+                              "visibleLabel": true,
+                              "type": "radio",
+                              "value": "",
+                              "visible": true,
+                              "class": "radio-button",
+                              "radioOptions": [
+                                {
+                                  "name": "yes",
+                                  "label": "Yes",
+                                  "value": "Y",
+                                  "selected": false
+                                },
+                                {
+                                  "name": "no",
+                                  "label": "No",
+                                  "value": "N",
+                                  "selected": true
+                                }
+                              ]
+                            },
+                            {
+                              "name": "previousClaims",
+                              "label": "Any Claim in Previous Policy?",
+                              "visibleLabel": true,
+                              "onChangeMethod": "changeMainFormDependentControls",
+                              "type": "radio",
+                              "value": "",
+                              "visible": true,
+                              "class": "radio-button",
+                              "radioOptions": [
+                                {
+                                  "name": "yes",
+                                  "label": "Yes",
+                                  "value": "Y",
+                                  "selected": false,
+                                  "dependentControls": [
+                                    {
+                                      "name": "infoAboutPreviousClaims",
+                                      "visibility": true
+                                    },
+                                    {
+                                      "name": "noOfPreviousClaim",
+                                      "visibility": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "no",
+                                  "label": "No",
+                                  "value": "N",
+                                  "selected": true,
+                                  "dependentControls": [
+                                    {
+                                      "name": "infoAboutPreviousClaims",
+                                      "visibility": false
+                                    },
+                                    {
+                                      "name": "noOfPreviousClaim",
+                                      "visibility": false
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "infoAboutPreviousClaims",
+                              "label": "Additional Information",
+                              "visible": false,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-6"
+                            },
+                            {
+                              "name": "noOfPreviousClaim",
+                              "label": "No of Claims",
+                              "visible": false,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-3"
+                            },
+                            {
+                              "name": "previousRiders",
+                              "label": "Any Add-ons/Riders in Previous Policy?",
+                              "visibleLabel": true,
+                              "onChangeMethod": "changeMainFormDependentControls",
+                              "type": "radio",
+                              "value": "",
+                              "visible": true,
+                              "class": "radio-button",
+                              "radioOptions": [
+                                {
+                                  "name": "yes",
+                                  "label": "Yes",
+                                  "value": "Y",
+                                  "selected": false,
+                                  "dependentControls": [
+                                    {
+                                      "name": "infoAboutPreviousRider",
+                                      "visibility": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "no",
+                                  "label": "No",
+                                  "value": "N",
+                                  "selected": true,
+                                  "dependentControls": [
+                                    {
+                                      "name": "infoAboutPreviousRider",
+                                      "visibility": false
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "infoAboutPreviousRider",
+                              "label": "Additional Information",
+                              "visible": false,
+                              "visibleLabel": true,
+                              "type": "text",
+                              "value": "",
+                              "class": "col-12 col-md-6 col-lg-6"
+                            },
+                            {
+                              "name": "updateForAll",
+                              "label": "Duplicate for other members",
+                              "visibleLabel": true,
+                              "visible": true,
+                              "type": "button",
+                              "class": "col-12 col-md-6 col-lg-2 duplicate-btn",
+                              "methodName": "duplicateForAllMembers"
+                            }
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                ]
+              },
+              {
+                "sectionTitle": "Bottom Section",
+                "visible": true,
+                "class": "section-title bottom-section-axis",
+                "formControls": [
+                  {
+                    "name": "plandetails",
+                    "label": "Plan Details",
+                    "visibleLabel": true,
+                    "type": "summary",
+                    "value": "",
+                    "class": "col-md-12",
+                    "visible": true,
+                    "disabled": true
+                  },
+                  {
+                    "name": "productName",
+                    "label": "Product Name",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "disabled": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3 bottom-product",
+                    "value": "",
+                    "text": "Aditya Birla Health Insurance"
+                  },
+                  {
+                    "name": "totalPremium",
+                    "label": "Total Premium/Incl tax",
+                    "visibleLabel": true,
+                    "visible": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+                    "value": "",
+                    "disabled": true
+                  },
+                  {
+                    "name": "proposalNumber",
+                    "label": "Proposal Number",
+                    "visibleLabel": true,
+                    "visible": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3",
+                    "value": "",
+                    "disabled": true
+                  },
+                  {
+                    "name": "next",
+                    "label": "Next",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "type": "button",
+                    "class": "col-12 col-md-6 col-lg-2 next-btn",
+                    "methodName": "onSubmit"
+                  },
+                  {
+                    "name": "back",
+                    "label": "Back",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "type": "button",
+                    "class": "col-12 col-md-6 col-lg-2 back-btn",
+                    "methodName": "onPrevious"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+        else {
+          this.form = JSON.parse(res.data.jsonFormData);
+        }
+
+
         console.log(this.formData);
 
         this.formData = {
@@ -658,6 +3595,8 @@ export class YatraComponent {
               for (let i = 1; i < control.dynamicControls.length; i++) {
                 tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i, control));
               }
+              console.log(tempFormArray);
+
               this.dynamicFormGroup.addControl(control.name, tempFormArray);
             }
           }
@@ -1133,6 +4072,10 @@ export class YatraComponent {
         // }
         formGroup.addControl(control.name, tempFormArray);
       }
+      else if (control.innerControls && control.visible == true) {
+        let innerGroup = this.initializeDynamicFormControls(control.innerControls);
+        formGroup.addControl(control.name, innerGroup);
+      }
       else {
         let controlValidators: any = [];
         if (control.validators && control.visible == true) {
@@ -1197,6 +4140,8 @@ export class YatraComponent {
       }
 
     })
+    console.log(formGroup);
+
 
     return formGroup;
   }
@@ -1237,6 +4182,11 @@ export class YatraComponent {
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
         .controls[innerControl.name].get(control.name) : this.dynamicFormGroup.get(innerSubControl.name);
     }
+    else if (innerControl != null && parentControl != null && index != null && subControl == null) {
+      myFormControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
+      console.log(myFormControl);
+
+    }
     else if (subControl != null && index != null) {
       myFormControl = parentControl != null && index != null ? ((this.dynamicFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(control.name)
         : this.dynamicFormGroup.get(control.name);
@@ -1245,32 +4195,43 @@ export class YatraComponent {
       myFormControl = parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.dynamicFormGroup.get(control.name)
     }
     let errorMessage = ''
-    control.validators?.forEach((val) => {
-      if (myFormControl?.hasError(val.validatorName as string)) {
-        if (control.name == 'insuredMembers' && val.validatorName == 'required') {
-          if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
-            errorMessage = val.message as string + 'one'
-          }
-          else {
-            errorMessage = val.message as string + 'two'
-          }
-        }
-        else
+    if (innerControl != null && parentControl != null && index != null && subControl == null) {
+      innerControl.validators?.forEach((val: any) => {
+        if (myFormControl?.hasError(val.validatorName as string)) {
           errorMessage = val.message as string
-      }
-    })
+          console.log(errorMessage);
+
+        }
+      })
+    }
+    else {
+      control.validators?.forEach((val) => {
+        if (myFormControl?.hasError(val.validatorName as string)) {
+          if (control.name == 'insuredMembers' && val.validatorName == 'required') {
+            if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
+              errorMessage = val.message as string + 'one'
+            }
+            else {
+              errorMessage = val.message as string + 'two'
+            }
+          }
+          else
+            errorMessage = val.message as string
+        }
+      })
+    }
     return errorMessage;
   }
 
   checkValidations(
     control: IFormControl | IDynamicControl,
-    parentControl: IFormControl | null = null,
+    parentControl: IFormControl | IDynamicControl | ISubControl | null = null,
     index: number | null = null, subControl: any | null = null,
     innerControl: any | null = null,
     innerSubControl: any | null = null
   ): boolean {
     // console.log(control, parentControl, index, subControl, innerControl, innerSubControl);
-    let myControl: AbstractControl | null;
+    let myControl: AbstractControl | null | undefined;
     if (innerControl != null && innerSubControl != null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormGroup;
@@ -1278,6 +4239,9 @@ export class YatraComponent {
       const parentArray3 = parentArray2.controls[index] as FormGroup;
 
       myControl = parentArray3.controls[innerControl.name].get(innerSubControl.name);
+    }
+    else if (innerControl != null && parentControl != null && index != null) {
+      myControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
     }
     else if (subControl != null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
@@ -1319,9 +4283,37 @@ export class YatraComponent {
     }
   }
 
-  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
-    return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+  // hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | IDynamicControl | ISubControl | null = null, index: number | null = null,innerControl: any= null): boolean {
+  //   return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+  // }
+
+  hasAnyValue(
+    control: IFormControl | IDynamicControl,
+    parentControl: IFormControl | IDynamicControl | ISubControl | null = null,
+    index: number | null = null,
+    innerControl: any = null
+  ): boolean {
+    if (parentControl != null && index != null) {
+      const parentFormArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      const childControl = parentFormArray.controls[index].get(control.name);
+
+      // If innerControl is not null, check its value
+      if (innerControl != null) {
+        return !!childControl?.get(innerControl.name)?.value;
+      }
+
+      return !!childControl?.value;
+    }
+
+    // For controls outside FormArray, check for innerControl if provided
+    const mainControl = this.dynamicFormGroup.get(control.name);
+    if (innerControl != null) {
+      return !!mainControl?.get(innerControl.name)?.value;
+    }
+
+    return !!mainControl?.value;
   }
+
   hasInnerValue(control: any, parentControl: any | null = null, innerControl: any | null = null, index: any | null = null) {
     const formControl = parentControl != null && index != null ?
       ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value
@@ -2027,21 +5019,45 @@ export class YatraComponent {
     if (control.onChangeMethod) {
 
       if (control.type === 'radio') {
-        const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+        console.log(this.dynamicFormGroup);
+        let selectedValue = '';
+        if (parentControl == null)
+          selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+        else if (parentControl != null && index != null) {
+          if (subControl == null && innerControl != null) {
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
+          }
+          else
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+        }
         console.log(selectedValue);
 
-        eventValue = selectedValue === 'yes' ? true : false;
+        eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
 
+        let selectedOption;
         // Find the selected option by value
-        const selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+        if (innerControl != null) {
+          selectedOption = innerControl.radioOptions.find((option: any) => option.value === selectedValue);
+        }
+        else {
+          selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+        }
 
         // Check if the control or the selected option has dependentControls
         const dependent = control.dependentControls
           ? control.dependentControls
           : selectedOption?.dependentControls ?? control;
 
-        // Call the resolveMethod with the found dependent controls
-        this.resolveMethod(control.onChangeMethod, dependent, eventValue);
+        console.log(dependent);
+
+
+        if (parentControl != null && index != null) {
+          this.resolveMethod(control.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index);
+        }
+        else {
+          // Call the resolveMethod with the found dependent controls
+          this.resolveMethod(control.onChangeMethod, dependent, eventValue);
+        }
       }
       // else {
       //   // If not a radio control, just resolve using the control
@@ -2077,6 +5093,49 @@ export class YatraComponent {
         }
       } else {
         this.resolveMethod(control.onChangeMethod, control, eventValue);
+      }
+    }
+    else if (innerControl != null && innerControl.onChangeMethod) {
+      if (innerControl.type === 'radio') {
+        console.log(this.dynamicFormGroup);
+        let selectedValue = '';
+        if (parentControl == null)
+          selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+        else if (parentControl != null && index != null) {
+          if (subControl == null && innerControl != null) {
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
+          }
+          else
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+        }
+        console.log(selectedValue);
+
+        eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
+
+        let selectedOption;
+        // Find the selected option by value
+        if (innerControl != null) {
+          selectedOption = innerControl.radioOptions.find((option: any) => option.value === selectedValue);
+        }
+        else {
+          selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+        }
+
+        // Check if the control or the selected option has dependentControls
+        const dependent = control.dependentControls
+          ? control.dependentControls
+          : selectedOption?.dependentControls ?? control;
+
+        console.log(dependent);
+
+
+        if (parentControl != null && index != null) {
+          this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index,innerControl.name);
+        }
+        else {
+          // Call the resolveMethod with the found dependent controls
+          this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue);
+        }
       }
     }
 
@@ -4002,6 +7061,7 @@ export class YatraComponent {
             })
           })
         }
+
         Object.keys(this.dynamicFormGroup.controls).forEach(field => {
           const control = this.dynamicFormGroup.get(field);
           if (control instanceof FormArray) {
@@ -4009,7 +7069,14 @@ export class YatraComponent {
               if (arrayControl instanceof FormGroup) {
                 Object.keys(arrayControl.controls).forEach(nestedField => {
                   const nestedControl = arrayControl.get(nestedField);
-                  nestedControl?.markAsTouched({ onlySelf: true });
+                  if (nestedControl instanceof FormGroup) {
+                    Object.keys(nestedControl.controls).forEach((innerField) => {
+                      const innerControl = nestedControl.get(innerField);
+                      innerControl?.markAsTouched({ onlySelf: true });
+                    })
+                  }
+                  else
+                    nestedControl?.markAsTouched({ onlySelf: true });
                 });
               } else {
                 arrayControl?.markAsTouched({ onlySelf: true });
@@ -4017,6 +7084,8 @@ export class YatraComponent {
             });
           }
           else if (control instanceof FormGroup) {
+            console.log(control);
+
             control?.markAsDirty({ onlySelf: true });
           }
           else {
@@ -4045,7 +7114,7 @@ export class YatraComponent {
     controlIndex: number | null = null,
     innerControl: any = null
   ) {
-    console.log(dependentControlNames, visibility, controlName, parentControlName, innerControl);
+    console.log(dependentControlNames, visibility, controlName, parentControlName, innerControl, controlIndex);
 
     const tempIndex = this.activeMemberTabIndex;
     setTimeout(() => {
@@ -4127,6 +7196,18 @@ export class YatraComponent {
                       }
                     })
                     // console.log(subControl.innerSubControls[controlIndex],this.dynamicFormGroup); 
+                  }
+                })
+              }
+              else if (control.name == parentControlName && control.dynamicControls && controlIndex != null) {
+                const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+                targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+                  if (dynamicControl.name == controlName && dynamicControl.innerControls) {
+                    dynamicControl.innerControls.forEach((innerArrayControl: any) => {
+                      if (innerArrayControl.name == innerControl) {
+                        innerArrayControl.visible = visibility;
+                      }
+                    })
                   }
                 })
               }
@@ -7951,4 +11032,101 @@ export class YatraComponent {
         console.log(err);
       });
   }
+
+  setPreviousPolicyYears(control: any) {
+    const currentYear = new Date().getFullYear();
+    const yearOptions = [
+      {
+        value: `${currentYear - 1}-${currentYear}`,
+        name: `${currentYear - 1}-${currentYear}`
+      },
+      {
+        value: `${currentYear}-${currentYear + 1}`,
+        name: `${currentYear}-${currentYear + 1}`
+      }
+    ];
+
+    control.options = yearOptions;
+  }
+
+  checkForPortability(control: any) {
+    let isPortability = false;
+    if (this.formData['typeOfBusiness'] == 'NB' || this.formData['typeOfBusiness'] == 'New Business') {
+      isPortability = false;
+    }
+    else {
+      isPortability = true;
+    }
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any, index: any) => {
+        if (formControl.name == 'insuredMemberDetails') {
+          if (this.formData[formControl.name]) {
+            console.log(formControl.dynamicControls[0], this.formData.planType);
+            if (this.formData[formControl.name]) {
+              formControl.value = this.formData[formControl.name].length;
+            }
+            formControl.dynamicControls[0].forEach((dynamicControl: any) => {
+              if (dynamicControl.innerControls) {
+                dynamicControl.visible = isPortability;
+              }
+            })
+            console.log(formControl.value);
+            formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
+            this.formData[formControl.name].forEach((member: any, index: number) => {
+              let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+              console.log(tempDynamicControl);
+              formControl.dynamicControls.push(tempDynamicControl)
+              formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
+                if (innerControl.name == 'relation') {
+                  innerControl.value = member.relation
+                }
+                if (innerControl.name == 'covers') {
+                  innerControl.value = this.covers[index];
+                }
+                if (innerControl.name == 'zoneValue') {
+                  innerControl.options = member.upgradableZones;
+                }
+
+                if (
+                  this.formData['ckycNo'] &&
+                  member.relation === 'Self' &&
+                  ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
+                ) {
+                  innerControl.disabled = true; // Disable the control
+                }
+              })
+            })
+          }
+        }
+      })
+    })
+  }
+
+  duplicateForAllMembers(innerControl: any, control: any, parentControl: any, index: number) {
+    console.log(innerControl, control, parentControl, index);
+  
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const currentGroup = formArray.controls[index] as FormGroup;
+  
+    // Get the value of the control in the current group
+    const currentValues = currentGroup.get(control.name)?.value;
+  
+    // Traverse all other indices in the FormArray
+    formArray.controls.forEach((group, idx) => {
+      if (idx !== index) {
+        const otherGroup = group as FormGroup;
+  
+        // Update each key in the other group
+        Object.keys(currentValues).forEach(key => {
+          if (otherGroup.get(control.name)?.get(key)) {
+            otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
+          }
+        });
+      }
+    });
+  
+    console.log('Updated all other insuredMemberDetails!');
+  }
+  
 }

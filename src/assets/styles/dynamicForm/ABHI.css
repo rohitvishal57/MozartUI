@@ -1118,6 +1118,15 @@ body {
     color: #ffe2dc;
     float: right;
 }
+.main-container .right-panel .duplicate-btn{
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0px 24px;
+    color: #ffe2dc;
+}
 .main-container .right-panel .add-btn {
     background-color: #c72229;
     padding: 1%;
@@ -1597,6 +1606,7 @@ body {
 }
 
 .main-container .right-panel .next-btn,
+.main-container .right-panel .duplicate-btn,
 .main-container .right-panel .add-btn,
 .main-container .right-panel .back-btn,
 .main-container .right-panel .field-btn {
@@ -1975,6 +1985,21 @@ body {
 }
 
 .main-container .right-panel .next-btn {
+    background-color: #c72229;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    margin: 0px 0 0 5px;
+    font-family: Anek Latin;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+}
+
+.main-container .right-panel .duplicate-btn {
     background-color: #c72229;
     padding: 10px 24px;
     border: none;
@@ -2806,6 +2831,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
@@ -2816,6 +2842,7 @@ margin: 0;
 @media (max-width:768px) {
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
@@ -2912,6 +2939,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {

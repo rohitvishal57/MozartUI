@@ -1,7 +1,7 @@
 export interface IForm {
-  value(arg0: string, value: any): unknown;
-  valid: any;
-  get(field: any): unknown;
+  value?(arg0: string, value: any): unknown;
+  valid?: any;
+  get?(field: any): unknown;
   formTitle: string;
   saveBtnTitle?: string;
   saveBtnFunction?: string;
@@ -94,6 +94,7 @@ export interface IFormControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  minLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
 }
@@ -126,6 +127,8 @@ export interface ISubControl {
   maxLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
+  onChangeMethod?: string;
+  methodName?: string;
 }
 
 export interface ITab {
@@ -150,6 +153,7 @@ export interface IRadioOption {
   selected?: boolean;
   year?: string;
   discount?: string;
+  dependentControls?: any[];
 }
 
 export interface ISelectCheckboxOption {
@@ -216,12 +220,15 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
+  innerControls?: ISubControl[];
   image?:IImage;
   tabs?:ITab[];
+  onChangeMethod?: string;
   getAllOption?: string;
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  minLength?: any;
 }
 export interface IValidator {
   validatorName?: string;
@@ -240,5 +247,5 @@ export interface IOptions {
   class?: string;
   selected?: boolean;
   dependentControls?: any[];
-  disabled: boolean;
+  disabled?: boolean;
 }
