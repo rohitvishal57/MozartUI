@@ -6,6 +6,9 @@
                     {{ isUpdate ? 'UPDATE AV' : 'CREATE AV' }}
                 </h2>
             </div>
+
+            
+
             <form [formGroup]="createAvForm" (ngSubmit)="onSubmit()">
                 <section class="white_container mb-3">
                     <div class="row">
@@ -82,8 +85,6 @@
                                     id="avcenter" 
                                     name="avcenter" 
                                     formControlName="avcenter"  
-                                  
-                                    (change)="onLocationChange($event)"
                                     [ngClass]="{ 'is-invalid': createAvForm.get('avcenter')?.invalid && (createAvForm.get('avcenter')?.touched || submitted) }">
                                     <option value="" disabled selectedLocationId>Select Center</option> 
                                     <option *ngFor="let opt of allAxisLocations" [value]="opt.location">{{ opt.location }}</option>
