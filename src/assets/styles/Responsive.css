@@ -643,6 +643,17 @@
         left: 10% !important;
         top: 45% !important;
     }
+    .p-paginator {
+        padding: 0;
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page, 
+    .p-paginator .p-paginator-first, 
+    .p-paginator .p-paginator-prev, 
+    .p-paginator .p-paginator-next, 
+    .p-paginator .p-paginator-last {
+        width: 30px !important;
+        height: 30px !important;
+    }
 }
 @media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-container {
