@@ -2683,6 +2683,7 @@ export const combinedForms = {
               "visibleLabel": true,
               "visible": true,
               "type": "paragraph",
+              "methodName": "checkPaymentStatus",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
             },
             {
@@ -2692,7 +2693,29 @@ export const combinedForms = {
               "visible": true,
               "type": "paragraph",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
-            }
+            },
+            // {
+            //   "name": "backToRenewalList",
+            //   "label": "",
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
+            //   "visible": false,
+            // },
+            {
+              "name": "backToRenewalList",
+              "label": "Back To Renewal List",
+              "type": "button",
+              "class": "col-12 col-md-6 col-lg-4 debitButton",
+              "visible": false,
+              "methodName": "backToRenewalList"
+            },
+            // {
+            //   "name": "backToRenewalList",
+            //   "label": "",
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
+            //   "visible": false,
+            // }
           ]
         },
         {

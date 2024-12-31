@@ -1,4 +1,4 @@
-export const payment={
+export const payment = {
   "formTitle": "Payment",
   "saveBtnTitle": "Next",
   "prevBtnTitle": "Back",
@@ -42,7 +42,7 @@ export const payment={
           "disabled": false,
           "visible": true,
           "methodName": "initiateKycURL",
-          "onChangeMethod":"",
+          "onChangeMethod": "",
           // "dependentControls": [
           //   "copyLink"
           // ]
@@ -68,7 +68,7 @@ export const payment={
           "visible": false
         }
       ],
-    }, 
+    },
     {
       "sectionTitle": "Share Payment Link",
       "visible": true,
@@ -148,8 +148,8 @@ export const payment={
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
-          {
-            "name": "autoDebit",
+        {
+          "name": "autoDebit",
           "label": "Auto Debit",
           "visibleLabel": false,
           "visible": true,
@@ -378,22 +378,22 @@ export const payment={
             {
               "validatorName": "required",
               "required": true,
-              "message": "Enter 6 Digits Cheque Number it is required field."
+              "message": "Enter 6 Digits Cheque Number it is a required field."
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[0-9_-]{6}$",
-              "message": "Only 6 digits are allowed, including optional - or _."
+              "pattern": "^(?!000000$|999999$)[0-9_-]{6}$",
+              "message": "Only 6 digits are allowed, including optional - or _, excluding 000000 and 999999."
             },
             {
               "validatorName": "maxlength",
               "maxLength": 6,
-              "message": "Invalid number maximum length is 6 characters."
+              "message": "Invalid number, maximum length is 6 characters."
             },
             {
               "validatorName": "minlength",
               "minLength": 6,
-              "message": "Invalid number minimum length is 6 characters."
+              "message": "Invalid number, minimum length is 6 characters."
             }
           ]
         },
@@ -678,13 +678,13 @@ export const payment={
           "onClickMethod": "uploadSelectedDocument"
         },
         {
-            "name": "nextOnline",
-            "label": "Next",
-            "visibleLabel": false,
-            "visible": false,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "redirectToJustPay"
+          "name": "nextOnline",
+          "label": "Next",
+          "visibleLabel": false,
+          "visible": false,
+          "type": "button",
+          "class": "col-12 col-md-6 col-lg-2 next-btn",
+          "methodName": "redirectToJustPay"
         },
         {
           "name": "back",
