@@ -3338,8 +3338,9 @@ export class YatraComponent {
                 this.quickQuoteRedirect == false;
               }
               let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              tempControl[1].value = option.value;
               tempControl[0].value = JSON.stringify(option);
+              tempControl[1].value = option.value;
+              tempControl[2].value = option.memberRelationCode;
               if (this.isQuote || this.quickQuoteRedirect) {
                 tempControl.forEach((temp) => {
                   if (temp.name == 'zoneValue') {
@@ -4768,16 +4769,6 @@ export class YatraComponent {
           member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
           member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
-          // Set memberRelationCode based on a predefined mapping, if it doesn't already exist
-          if (!member.hasOwnProperty('memberRelationCode')) {
-            const relationCodeMap: { [key: string]: number } = {
-              'Self': 24,
-              'Spouse': 22,
-              'Son': 23,
-              'Daughter': 19
-            };
-            member['memberRelationCode'] = relationCodeMap[member.relation] ?? null;
-          }
         });
 
 
@@ -6442,7 +6433,7 @@ export class YatraComponent {
       insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
         return {
           relation: member?.relation || '',
-          memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
+          memberRelationCode: this.jsonParse(member.relationshipType, 'id') || '',
           memberSalutation: member?.preFix || '',
           firstName: member?.firstName || '',
           middleName: member?.middleName || '',
