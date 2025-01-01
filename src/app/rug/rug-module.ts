@@ -29,6 +29,8 @@ import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-up
 import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
 import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
 import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
+import { ReassignpopupComponent } from "./Admin/View_For_Solo_Journey/reassignpopup/reassignpopup.component";
+import { AuditpopupComponent } from "./components/auditpopup/auditpopup.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -49,8 +51,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         BulkUploadBasecallerComponent,
         BasecallerListComponent,
         ViewUnverifiedLeadsComponent,
-        ViewForDualJourneyComponent
- 
+        ViewForDualJourneyComponent,
+        ReassignpopupComponent,
+        AuditpopupComponent
      
     ],
     

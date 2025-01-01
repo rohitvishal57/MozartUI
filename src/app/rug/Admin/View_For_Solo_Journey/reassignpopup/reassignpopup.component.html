@@ -1,1 +1,30 @@
-<p>reassignpopup works!</p>
+<div class="popup-modal " id="modal-reAssign">
+    <div class="popup-modal-dialog">
+       
+      <div class="popup-modal-content">
+        <div class="popup-modal-header">
+           <h5 class="popup-modal-title">Select Agent</h5>
+          <button type="button" class="popup-btn-close jsClosePopup" data-bs-dismiss="modal-selfDetails" aria-label="modal-reAssign" (click)="close()"></button>
+        </div>
+        <div class="popup-modal-body">
+          <div class="row ">
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6" >
+                  <div class="input-block ">
+                      <label for="">Select Agent</label>
+                      <select name="agent-assign" class="input-selectBox" [(ngModel)]="selectedAvId">
+                          <option value="">Select Agent</option> 
+                           <option *ngFor="let agent of agentData" [value]="agent.avId">{{agent.avName}}</option>
+                      </select>
+                      <span class="ui-error">Please select Agent </span>
+                  </div>
+              </div>
+          </div>
+          
+        </div>
+        <div class="popup-modal-footer justify-content-center">
+          <button type="button" class="btn_Default btn_red btn_save btn_width_f jsClosePopup" (click)="close()" aria-label="modal-reAssign">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -50,10 +50,6 @@ export class AdminService {
   return this.httpService.post(BulkUpload, reqdata)
 }
 
-changePass(reqData: any){
-  const changepassword = this.configService.config.baseUrl + this.configService.config.changePassword;
-  return this.httpService.post(changepassword, reqData)
-}
 
   getAllBaseCaller(pageNo:number,noOfRecords:number){
     const headers = new HttpHeaders({
@@ -69,6 +65,16 @@ changePass(reqData: any){
 getLead(reqdata: any) {
   const getlead = this.configService.config.baseUrl + this.configService.config.getLeads;
   return this.httpService.post(getlead, reqdata)
+}
+
+assignToAv(reqdata: any){
+  const assignToAV = this.configService.config.baseUrl + this.configService.config.assignToAv;
+  return this.httpService.post(assignToAV, reqdata)
+}
+
+getAllAudit(reqdata:any){
+  const getAllaudit = this.configService.config.baseUrl + this.configService.config.getAllAudit;
+  return this.httpService.post(getAllaudit, reqdata)
 }
 
 }

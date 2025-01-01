@@ -200,5 +200,4 @@ export const environment = {
   getBaseCaller:"api/rug/GetAllBaseCallers",
   getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
   getLeads:"api/v1/GetLeads"
-
 };

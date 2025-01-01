@@ -1,0 +1,59 @@
+.popup-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    padding: 48px 32px;
+    outline: 0;
+}
+.popup-modal-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 0px solid #dee2e6;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+}
+.input-block .input-selectBox {
+    font-family: Lato-Regular, sans-serif;
+    font-weight: 400;
+    color: #282828;
+    font-size: 14px;
+    line-height: 20px;
+    position: relative;
+    border: 1px solid #E2E2E2;
+    padding: 8px !important;
+    height: 44px;
+    border-radius: 4px !important;
+    width: 100%;
+    margin-bottom: 0px;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+.popup-modal-header .popup-modal-title {
+    font-family: Lato-Bold, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #282828;
+    margin-bottom: 0;
+    line-height: 26px;
+}
+.popup-btn-close {
+    box-sizing: content-box;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: #000;
+    background: url(/assets/Img/close.svg) no-repeat;
+    border: 0;
+    border-radius: 0;
+    z-index: 1;
+}

@@ -5,6 +5,8 @@ import { AuditComponent } from '../../AV_Upload/audit/audit.component';
 import { AdminService } from '../../admin.service';
 import { ReassignpopupComponent } from '../reassignpopup/reassignpopup.component';
 import { ExcelServiceService } from 'src/app/services/excel-service.service';
+import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
+import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
 
 @Component({
   selector: 'app-view-for-solo-journey',
@@ -52,11 +54,11 @@ export class ViewForSoloJourneyComponent implements OnInit {
 
   getSoloJourneyDetails(): void {
     const reqdata = {
-      userId: '467896',
+      userId: '467895',
       isSoloJourney: true,
       isUnverifiedLead: false,
       isDualJourney: false,
-      isViewLead: true,
+      isViewLead: false,
       isViewCheckerLead: false,
       pageNumber: this.page,
       pageSize: this.rows
@@ -65,6 +67,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
     this.adminService.getLead(reqdata).subscribe((res: any) => {
       const response = JSON.parse(res.data);
       this.getAllLeads = response.data.allLeads;
+      console.log('getAllLeads', this.getAllLeads)
       console.log(this.getAllLeads.length)
       this.totalRecords = this.getAllLeads.length;
       this.updateDisplayedData();
@@ -88,7 +91,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getSoloJourneyDetails();
   }
- 
+
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
@@ -103,72 +106,94 @@ export class ViewForSoloJourneyComponent implements OnInit {
   }
 
   auditLead(lead: any) {
-    // let reqObj = {
-    //   "leadId": lead.refNo,
-    // }
-    // this.apiService.postCall(environment.ENDPOINTS.GET_ALL_AUDIT, reqObj)
-    //   .subscribe(
-    //     response => {
-    //       const dialogRef = this.dialog.open(AuditPopupComponent, {
-    //         width: "500px",
-    //         autoFocus: false,
-    //         data: response.allAudit
-    //       });
-    //       dialogRef.afterClosed().subscribe((result: any) => {
-    //         console.log(result);
-    //       })
-    //       // this.leadsArray = response.allLeads
-    //     },
-    //     error => {
-    //       console.log(error);
-    //       // this.loading = false;
-    //     });
+    let reqObj = {
+      "leadId": lead.refNo,
+    }
+    this.adminService.getAllAudit(reqObj).subscribe((response:any) => {
+          const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+            width: "500px",
+            autoFocus: false,
+            data: response.allAudit
+          });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            console.log(result);
+          })
+          // this.leadsArray = response.allLeads
+        },
+        (error:any) => {
+          console.log(error);
+          // this.loading = false;
+        });
   }
 
- ReassignAgent(leadNo: string) {
+  ReassignAgent() {
     interface Element {
       avName: string;
       avId: string;
-      // You can add more properties here if needed
     }
+  
     let AVdata: Element[] = [];
-    this.getAllLeads.forEach((element: any) => {
-      if (AVdata.findIndex(item => item.avId == element.avid) == -1 && element.avid != '') {
+    this.displayedLeads.forEach((element: any) => {
+      if (AVdata.findIndex(item => item.avId === element.avid) === -1 && element.avid !== '') {
         AVdata.push({
           avName: element.avName,
           avId: element.avid
         });
       }
     });
+  
+    console.log('AVdata:', AVdata); 
+    const dialogRef = this.matdialogue.open(ReassignpopupComponent, {
+      data: {
+        AVData: AVdata
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe(async (data: any) => {
+      console.log('Dialog closed with data:', data); 
+  
+      if (data) { 
+        let request = {
+          avId: data 
+        };
+  
+        console.log('Reassign request:', request); 
+  
+        this.adminService.assignToAv(request).subscribe((response:any) => {
+              console.log('API Response:', response);
+              if (response.isSuccess && response.statusCode === 200) {
+                const dialogRef = this.dialog.open(SuccessModalComponent, {
+                  width: "2000px",
+                  autoFocus: false,
+                  data: "Successfully Reassigned"
+                });
+                dialogRef.afterClosed().subscribe((result: any) => {
+                  console.log(result);
+                });
+              }
+            },
+            (error: any) => {
+              console.error('API Error:', error);
+            });
+      }
+    });
   }
+  
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
   }
 
   exportToxl() {
-    if (this.getAllLeads.length > this.itemsPerPage) {
-      this.excelService.exportAsExcelFile(this.filteredArray.slice(0, this.itemsPerPage), 'solo');
-      console.log('export', this.itemsPerPage)
+    if (this.displayedLeads.length > this.itemsPerPage){
+      this.excelService.exportAsExcelFile(this.displayedLeads.slice(0, this.itemsPerPage), 'solo');
+      console.log('export', this.itemsPerPage);
     } else {
-      this.excelService.exportAsExcelFile(this.filteredArray, 'solo')
+      this.excelService.exportAsExcelFile(this.displayedLeads, 'solo');
     }
   }
-  
+
   clearFilter() {
     this.soloJourneyForm.reset();
   }
-
-  audit(index: any) {
-    // let value = this.displayedLeads[index]
-    // const dialogRef = this.dialog.open(AuditComponent, {
-    //   width: "1000px",
-    //   autoFocus: false,
-    //   data: {
-    //     value: value
-    //   }
-    // })
-  }
-
-
 
 }

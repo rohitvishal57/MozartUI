@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-reassignpopup',
@@ -6,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./reassignpopup.component.scss']
 })
 export class ReassignpopupComponent {
-
+  agentData: any
+  selectedAvId:any
+    constructor(  private dialogRef: MatDialogRef<ReassignpopupComponent>,
+      @Inject(MAT_DIALOG_DATA) private data: any){
+    }
+    ngOnInit() {
+      this.agentData = this.data.AVData;
+    }
+    closeIcon(){
+      this.dialogRef.close();
+    }
+    close(){
+      this.dialogRef.close(this.selectedAvId);
+    }
 }

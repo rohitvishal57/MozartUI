@@ -18,14 +18,14 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="mobileno"
                                                         name="mobileno" placeholder="Mobile Number"
-                                                        formControlName="mobileno" type="number">
+                                                        formControlName="mobileno" type="number" (input)="onInput($event)">
                                                     <label for="mobileno">Enter Mobile Number</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="leadid" name="leadid"
-                                                        placeholder="Lead Id" formControlName="leadid" type="text">
+                                                        placeholder="Lead Id" formControlName="leadid" type="text" (input)="onInput($event)">
                                                     <label for="leadid">Enter Lead Id</label>
 
                                                 </div>
@@ -34,7 +34,7 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="policyno"
                                                         name="policyno" placeholder="Policy Number"
-                                                        formControlName="policyno" type="text">
+                                                        formControlName="policyno" type="text" (input)="onInput($event)">
                                                     <label for="policyno">Enter Policy No</label>
 
                                                 </div>
@@ -42,7 +42,7 @@
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <select class="form-select input-selectBox" id="location"
-                                                        name="location" formControlName="location">
+                                                        name="location" formControlName="location" (input)="onInput($event)">
                                                         <option value="" disabled>Select Center
                                                         </option>
                                                         <option *ngFor="let location of Location" [value]="location">
@@ -55,7 +55,7 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="lgdate" name="lgdate"
                                                         placeholder="License Expiry From Date *"
-                                                        formControlName="lgdate" type="date" [max]="today">
+                                                        formControlName="lgdate" type="date" [max]="today" (input)="onInput($event)">
                                                     <label for="lgdate">Enter Lead Generation Date</label>
 
                                                 </div>
@@ -64,14 +64,14 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="pidate" name="pidate"
                                                         placeholder="License Expiry To Date *" formControlName="pidate"
-                                                        type="date" [max]="today">
+                                                        type="date" [max]="today" (input)="onInput($event)">
                                                     <label for="pidate">Enter Policy Insurance Date</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <select class="form-select input-selectBox" id="axisprocess"
-                                                        name="axisprocess" formControlName="axisprocess">
+                                                        name="axisprocess" formControlName="axisprocess" (input)="onInput($event)">
                                                         <option value="" disabled>Select Axis Process</option>
                                                         <option *ngFor="let axisprocess of AxisProcess"
                                                             [value]="axisprocess">{{ axisprocess}}</option>
@@ -90,14 +90,28 @@
                                         </div>
                                     </section>
                                 </form>
-                                <hr>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+           
             <section id="quotes-list" class="tableMain quoteView block-show">
                 <div class="tableSubMain">
+                    <section class="quickFilterMain">
+                        <div class="quickFilterRight">
+                            <div class="body_flex_row leads_searchWraper">
+                                <div class="field_searchMain">
+                                    <div class="filterFieldGroup">
+                                        <button type="submit" id="save" name="save" (click)="clearFilter()"
+                                        class="btn_red"><img src="/assets/Img/exporticon.svg" alt=""> Export </button>
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                            [(ngModel)]="searchTerm" (input)="onInput($event)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <div class="table-responsive">
                         <table class="table table-borderless table-search">
                             <thead>
@@ -127,22 +141,30 @@
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                                <tr *ngFor="let av of displayedAVs; let i = index">
-                                    <td>{{(first + i + 1)}}</td>
-                                    <td>{{av.avId}}</td>
-                                    <td>{{av.avName}}</td>
-                                    <td>{{av.center}}</td>
-                                    <td>{{av.axisprocess}}</td>
-                                    <td>{{av.status}}</td>
-                                    <td>{{av.lefdate}}</td>
-                                    <td>{{av.letdate}}</td>
-                                    <td><button type="button" (click)="audit(i)" class="btn_audit jsOpenPopup"
-                                            aria-label="modal-audit">Audit</button></td>
-                                    <td>
-                                        <div class="btn_groupAction lead_btnList justify-content-center">
-                                           
-                                        </div>
-                                    </td>
+                                <tr *ngFor="let leads of displayedLeads; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{leads.refNo}}</td>
+                                    <td>{{leads.customerName}}</td>
+                                    <td>{{leads.imdCode}}</td>
+                                    <td>{{leads.axisProcess}}</td>
+                                    <td>{{leads.proposalNo}}</td>
+                                    <td>{{leads.planName}}</td>
+                                    <td>{{leads.netPremium}}</td>
+                                    <td>{{leads.status}}</td>
+                                    <td>{{leads.leadGenerationDate}}</td>
+                                    <td>{{leads.customerId}}</td> 
+                                    <td>{{leads.policyNumber}}</td>    
+                                    <td>{{leads.policyIssuanceDate}}</td>
+                                    <td>{{leads.disposition}}</td>
+                                    <td>{{leads.subDisposition}}</td>
+                                    <td>{{leads.remark}}</td>
+                                    <td>{{leads.avname}}</td>
+                                    <td>{{leads.avId}}</td>
+                                    <td>{{leads.latestModifiedDateTime}}</td>
+                                    <td>{{leads.axisCenter}}</td>
+                                    <td><button type="button" class="btn_reassign jsOpenPopup" aria-label="modal-reAssign" (click)="ReassignAgent(item.refNo)" >Re Assign</button></td>
+                                    <td><button type="button" (click)="auditLead(item)" class="btn_audit jsOpenPopup"
+                                        aria-label="modal-audit">Audit</button></td>   
                                 </tr>
                             </tbody>
                         </table>
@@ -164,7 +186,7 @@
                             </li>
                         </ul>
                     </nav>
-                </div>
+                </div>                  
             </section>
         </div>
     </div>
