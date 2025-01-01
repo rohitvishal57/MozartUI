@@ -200,5 +200,8 @@ export const environment = {
   getBaseCaller:"api/rug/GetAllBaseCallers",
   getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
   getLeads:"api/v1/GetLeads",
-  d2cAxisRedirection: "api/v1/"
+  assignToAv:"api/rug/AssignToAV",
+  getAllAudit:"api/rug/GetAllAudit",
+  d2cAxisRedirection: "api/v1/",
+  getpaymentdetailsbypolicyno: "api/yatra/getpaymentdetailsbypolicyno",
 };
