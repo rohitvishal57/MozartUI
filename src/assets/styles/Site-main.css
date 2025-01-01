@@ -120,7 +120,7 @@ table {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
   height: 8px;
 }
 
