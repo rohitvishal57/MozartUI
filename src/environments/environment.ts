@@ -37,6 +37,7 @@ export const environment = {
   updatestatus: "api/yatra/updatestatus",
   getduplicateLead: "api/yatra/getduplicateLead",
   getPaymentStatus: "api/yatra/paymentstatus",
+  getpaymentdetailsbypolicyno: "api/yatra/getpaymentdetailsbypolicyno",
   assineLead: "api/yatra/LeadAssigne",
   getMyReportingUsers: "api/yatra/getmyreportingusers",
   fetchActivityType: "api/yatra/fetchactivitytype",

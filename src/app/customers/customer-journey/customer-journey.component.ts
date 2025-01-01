@@ -2620,7 +2620,7 @@ export class CustomerJourneyComponent {
               window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
             }
           } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
           }
         },

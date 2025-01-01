@@ -12,7 +12,7 @@ import { searchValidationConfig } from 'src/app/interface/common-validation.inte
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CustomersService } from 'src/app/customers/customers.service';
-import { thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
+import { thankYou, thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
 
 @Component({
   selector: 'app-renewal-list',
@@ -1688,18 +1688,66 @@ export class RenewalListComponent {
   async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
     await this.getProposalNum();    
     // const paymentStatusRequestBody = {
-    //   proposalOrPolicyNumber: proposerDetail.policyNumber,
-    //   businessType: "REN"
+    //   policyNumber: proposerDetail.policyNumber,
     // };
-    // this.renewalService.getpaymentstatusApi(paymentStatusRequestBody).subscribe(
+    // this.renewalService.getpaymentdetailsbypolicynoApi(paymentStatusRequestBody).subscribe(
     //   (res: any) => {
-    //    console.log(res.data);
-    //    this.router.navigate(['renewal/renewalJourney'], {
-    //      state: {
-    //        formSequence: this.encryptionService.encrypt([thankYouPending]),
-    //        formIndex: "0", 
-    //      },
-    //    });
+    //     const paymentDetail = res.data;
+    //     if(!paymentDetail || Object.keys(paymentDetail).length === 0){
+    //       return
+    //     }
+    //     const formData = {
+    //       proposalNumber: paymentDetail.proposalId || '',
+    //       policyNumber: paymentDetail.oldPolicyNumber || '',
+    //       policyStatus: paymentDetail.policyStatus || '',
+    //       policyStartDate: paymentDetail.policyStartDate || '',
+    //       policyEndDate: paymentDetail.policyEndDate || '',
+    //       receiptID: paymentDetail.receiptNumber || '',
+    //       customerId: paymentDetail.customerId || '',
+    //       applicationNumber: paymentDetail.applicationNumber || '',
+    //       status: paymentDetail.policyStatus || '',
+    //       productName: paymentDetail.productName || '',
+    //       premiumPaid: paymentDetail.premiumPaid || '',
+    //       isFullQuoteSuccess: paymentDetail.isFullQuoteSuccess || false,
+    //       paymentMessage :"",
+    //       paymentStatus :paymentDetail?.paymentStatus
+    //     };
+    //   if (paymentDetail?.paymentStatus === 'SUCCESS' || paymentDetail?.paymentStatus === 'INITIATED') {
+    //             if (paymentDetail?.isFullQuoteSuccess) {
+    //               if(res.data.errorMessage)this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
+    //               this.router.navigate(['renewal/renewalJourney'], {
+    //                 state: {
+    //                   formData: this.encryptionService.encrypt(formData),
+    //                   proposalNum: this.encryptionService.encrypt(""),
+    //                   policyNumber: this.encryptionService.encrypt(paymentDetail.oldPolicyNumber),
+    //                   journeyProcess: this.encryptionService.encrypt(0),
+    //                   formIndex: "1",
+    //                 },
+    //               });
+    //             } else {
+    //               if(res.data.errorMessage)this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
+    //               formData.paymentMessage = "Payment completed successfully; policy issuance pending";
+    //               this.router.navigate(['renewal/renewalJourney'], {
+    //                 state: {
+    //                   formData: this.encryptionService.encrypt(formData),
+    //                   policyNumber: this.encryptionService.encrypt(paymentDetail.oldPolicyNumber),
+    //                   formIndex: "1",
+    //                 },
+    //               });
+    //             }
+    //           }
+    //           else if (paymentDetail?.paymentStatus == 'INPROGRESS' || paymentDetail?.paymentStatus == 'PENDING') {
+    //             formData.paymentMessage = "Payment pending; please wait for processing";
+    //             this.toast.warning({ detail: "warning", summary: "payment Pending", duration: 5000 });
+    //             this.router.navigate(['renewal/renewalJourney'], {
+    //               state: {
+    //                 formData: this.encryptionService.encrypt(formData),
+    //                 policyNumber: this.encryptionService.encrypt(paymentDetail.oldPolicyNumber),
+    //                 paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
+    //                 formIndex: "1",
+    //               }
+    //             });
+    //           }
     //   },
     //   (err) => {
     //     console.error("Error from getpaymentstatus API:", err);

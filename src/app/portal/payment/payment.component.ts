@@ -250,7 +250,7 @@ export class PaymentComponent {
                 window.location.href = response.data.paymentURL;
               }
               else {
-                this.toast.error({ detail: "Error", summary: "Invalid payment link received", duration: 3000 });
+                this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
                 console.error('Invalid payment link received:', response);
               }
             }, (error) => {
@@ -424,8 +424,12 @@ export class PaymentComponent {
             (response: any) => {
               if (response?.isSuccess) {
                 window.location.href = response.data.paymentURL;
+              } else {
+                this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
+                console.error('Invalid payment link received:', response);
               }
             }, (error) => {
+              this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
               console.log('error', error);
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
