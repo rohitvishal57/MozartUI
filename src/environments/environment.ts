@@ -202,5 +202,6 @@ export const environment = {
   getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
   getLeads:"api/v1/GetLeads",
   assignToAv:"api/rug/AssignToAV",
-  getAllAudit:"api/rug/GetAllAudit"
+  getAllAudit:"api/rug/GetAllAudit",
+  d2cAxisRedirection: "api/v1/"
 };

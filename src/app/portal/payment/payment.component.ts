@@ -178,7 +178,7 @@ export class PaymentComponent {
               paymentStatus: this.paymentDetail.paymentStatus,
             }
             // if(this.paymentDetail?.isFullQuoteSuccess){
-              this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+              this.toast.success({ detail: "SUCCESS", summary: 'payment '+this.paymentDetail.paymentStatus, duration: 5000 });
               localStorage.setItem("formIndex", "8");
             // }
             // else{

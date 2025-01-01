@@ -8053,6 +8053,9 @@ export class YatraComponent {
                 this.form.formSections[i + 4].visible = status[0];
               } else if (formControl.name === 'labelC') {
                 formControl.visible = status[2];
+                if(res.data.errorMessage){
+                  formControl.label = res.data.errorMessage;
+                }
                 this.form.formSections[i + 1].visible = status[0];
                 this.form.formSections[i + 2].visible = status[0];
                 this.form.formSections[i + 3].visible = status[0];

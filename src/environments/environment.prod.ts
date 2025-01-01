@@ -199,5 +199,6 @@ export const environment = {
   getMasterData:"api/rug/GetMasterDetails",
   getBaseCaller:"api/rug/GetAllBaseCallers",
   getpaymentdetailsbyproposalno: "api/yatra/getpaymentdetailsbyproposalno",
-  getLeads:"api/v1/GetLeads"
+  getLeads:"api/v1/GetLeads",
+  d2cAxisRedirection: "api/v1/"
 };
