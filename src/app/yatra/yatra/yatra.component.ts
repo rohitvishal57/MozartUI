@@ -5337,6 +5337,9 @@ export class YatraComponent {
                 if (addOnDetail.addOnSumInsured) {
                   addOnSumInsured = addOnDetail.addOnSumInsured;
                 }
+                else if(addOnDetail.roomType){
+                  addOnSumInsured = addOnDetail.roomType;
+                }
                 if (coverName.includes('Personal Accident') && addOnDetail.occupation) {
                   member.occupationCode = JSON.parse(addOnDetail.occupation).value;
                 }
