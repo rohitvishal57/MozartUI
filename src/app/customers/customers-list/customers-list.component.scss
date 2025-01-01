@@ -411,7 +411,9 @@ header h3 {
 	font-weight: 500;
   }
 
-
+  .data-item h6 {
+	display: block;
+  }
 @media (max-width:767px) {
 	.filterWraperForm{
 		padding: 0px;
