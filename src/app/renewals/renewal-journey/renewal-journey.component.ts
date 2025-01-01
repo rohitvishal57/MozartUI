@@ -89,112 +89,47 @@ export class RenewalJourneyComponent {
 
   async ngOnInit() {
     this.showHtmlContent = false;
-
     // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
     }
-
     // Extract data from history state
     const stateData = history.state;
-
     if (stateData && Object.keys(stateData).length > 0) {
-      console.log('State Data:', stateData);
-
       // Decrypt and assign each piece of data if present
       if (stateData.formData) {
-        console.log(stateData.formData, "formData");
-
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
         if ('isFullQuoteSuccess' in decryptedFormData) {
           this.rowData = decryptedFormData;
         }
-        console.log(decryptedFormData);
         if (decryptedFormData.policyNumber) {
           const renewalInfoRequestBody = {
             policy_Number: decryptedFormData.policyNumber
           };
           const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-
-          this.formData = { ...this.formData, ...response.data };
+          this.formData = { ...this.formData, ...response.data,...decryptedFormData };
         }
-
         this.formData = { ...this.formData, ...decryptedFormData };
-        console.log(this.formData);
-
-        // if (decryptedFormData.errorObject.errorMessage) {
-        //   console.log("testing");
-
-        //   this.toast.warning({detail: "SUCCESS",summary:decryptedFormData.errorObject.errorMessage || "payment",duration: 5000});
-        // }
-
       }
       if (stateData.formSequence) {
-        // this.formSequence = [];
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
-        console.log(this.formSequence);
-
       }
       if (stateData.journeyProcess) {
         this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-        console.log(this.journeyProcess);
       }
       if (stateData.formIndex) {
-        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
         localStorage.setItem('formIndex', stateData.formIndex);
-        console.log(stateData.formIndex);
-
       }
-
       if (stateData.proposalNum) {
         this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-        console.log(this.proposalNum);
       }
-      // else{
-      //   try {
-      //     const res = await firstValueFrom(this.commonService.getProposalNumber());
-      //     this.proposalNum = res.data.proposalNumber;
-      //   } catch (error) {
-      //     console.error(error);
-      //   }
-      // }
       try {
         if (stateData.policyNumber) {
           this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-          console.log(this.policyNumber);
         }
       } catch (error) {
         console.error(error);
-
       }
-
-      // if (stateData.paymentStatus) {
-      //     const paymentStatus = this.encryptionService.decrypt(stateData.paymentStatus);
-      //     if(paymentStatus == "SUCCESS"){
-      //       this.toast.success({detail: "SUCCESS",summary: "payment SUCCESS",duration: 5000});
-      //     }else if(paymentStatus == "INTIATED"){
-      //       this.toast.success({detail: "SUCCESS",summary: "payment INTIATED",duration: 5000});
-      //     }
-      // }
-      // if (stateData.kycStatus) {
-      //   const kycStatus = this.encryptionService.decrypt(stateData.kycStatus);
-      //   if(kycStatus){
-      //     this.toast.success({detail: "SUCCESS",summary: "KYC SUCCESS",duration: 5000});
-      //   }else if(!kycStatus){
-      //     this.toast.error({detail: "FAILED",summary: "KYC FAILED",duration: 5000});
-      //   }
-      // }
-
-      // Set formSequence if provided in state; otherwise, use default
-      // else {
-      //   console.log('inside else');
-
-      //   this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
-      // }
-
-      // Set formIndex in localStorage if present in state
-
-      // Process insuredMemberDetails if present in the formData
       if (this.formData?.insuredMemberDetails?.length > 0) {
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
           if (member.covers) {
@@ -205,19 +140,14 @@ export class RenewalJourneyComponent {
           }
         });
       }
-
-      console.log('Covers:', this.covers);
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
       this.formSequence = [payment, thankYou];
     }
-
     console.log(this.formData, this.proposalNum, this.policyNumber);
-
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
-
     this.customerFeedbackForm = this.fb.group({
       message: [''],
       rating: [null, Validators.required], // Add rating to the form

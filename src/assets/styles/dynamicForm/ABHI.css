@@ -3228,3 +3228,14 @@ margin: 0;
         width: 90%;
     }
 }
+.main-container .right-panel .backToRen{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    height: 46px;
+    font-size: 14px;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
