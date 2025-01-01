@@ -489,21 +489,23 @@ body {
 }
 
 .main-container .right-panel .incrementbtn {
-    background-color: rgb(205, 9, 9);
+    background-color: #c72229;
     border: none;
     color: white;
     font-size: 16px;
     margin-left: auto;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 16px;
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    width: 22px;
 }
 
 .main-container .right-panel .incrementbtn:hover {
-    color: #ff4d4d;
+    color: #c72229;
+    background: #FFE7E5;
 }
 
 .main-container .right-panel .section-title {
