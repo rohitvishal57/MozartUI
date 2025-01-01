@@ -3451,42 +3451,6 @@ export class YatraComponent {
             }
 
           }
-          // else if (checkbox.checked == false) {
-
-          //   if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-          //     if (option.value.includes('Son') || option.value.includes('Daughter')) {
-          //       this.kidCount--;
-          //     }
-          //     let index = formControl.dynamicControls?.findIndex((element: any) =>
-          //       element[1].value == option.value);
-          //     if (index !== undefined && index !== -1) {
-          //       formControl.dynamicControls?.splice(index, 1);
-          //       let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-          //       formArr.removeAt(index - 1);
-          //       if (formArr.length == 0) {
-          //         formsection.visible = false;
-          //       }
-          //       Object.keys(this.formData).forEach(key => {
-          //         if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-          //           delete this.formData[key];
-          //         }
-          //         if (key.includes(option.value)) {
-          //           delete this.formData[key]
-          //         }
-          //       });
-          //     }
-          //     console.log(this.formData);
-          //     this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
-          //   }
-          //   // else if(formControl){
-          //   //   Object.keys(this.formData).forEach(key => {
-          //   //     if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-          //   //       delete this.formData[key];
-          //   //     }
-          //   //   });
-          //   // }
-
-          // }
           else if (checkbox.checked == false) {
             if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
               if (option.value.includes('Son') || option.value.includes('Daughter')) {
@@ -6431,6 +6395,7 @@ export class YatraComponent {
       policyType: formData?.memberPolicyType || '',
       businessType: formData?.typeOfBusiness || '',
       insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
+        const rrtoCover = (this.covers[index] || []).find((cover: any) => cover.coverId === 'RRTO');
         return {
           relation: member?.relation || '',
           memberRelationCode: this.jsonParse(member.relationshipType, 'id') || '',
@@ -6457,15 +6422,14 @@ export class YatraComponent {
           city: member?.city || '',
           memberType: member?.memberType || '',
           memberSumInsured: member?.sumInsured || '',
-          // memberZone: member?.zoneValue || '',
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
           memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
           memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
           covers: this.covers[index] || [],
           productQuestionnaire: member?.productQuestionnaire,
-          memberRoomCategory: member?.memberRoomCategory || '',
+          memberRoomCategory: rrtoCover ? rrtoCover.value : member?.memberRoomCategory || '',
           pedWaitingPeriod: this.pedWaitingPeriod || '',
-          deductibleAmount:member?.deductibleAmount || ''
+          deductibleAmount: member?.deductibleAmount || '',
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
