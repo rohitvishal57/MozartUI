@@ -161,7 +161,7 @@ isSameDate(date1: Date, date2: Date): boolean {
 
   loadBirthdayData(): void {
     const payload = {
-      agentCode: '5100003',
+      agentCode: localStorage.getItem('agentCode'),
       startDate: this.startDate,
       endDate: this.endDate
     };

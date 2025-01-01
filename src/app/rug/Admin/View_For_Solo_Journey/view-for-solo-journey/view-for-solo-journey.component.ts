@@ -5,8 +5,8 @@ import { AuditComponent } from '../../AV_Upload/audit/audit.component';
 import { AdminService } from '../../admin.service';
 import { ReassignpopupComponent } from '../reassignpopup/reassignpopup.component';
 import { ExcelServiceService } from 'src/app/services/excel-service.service';
-import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 
 @Component({
   selector: 'app-view-for-solo-journey',
@@ -162,7 +162,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
         this.adminService.assignToAv(request).subscribe((response:any) => {
               console.log('API Response:', response);
               if (response.isSuccess && response.statusCode === 200) {
-                const dialogRef = this.dialog.open(SuccessModalComponent, {
+                const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
                   width: "2000px",
                   autoFocus: false,
                   data: "Successfully Reassigned"

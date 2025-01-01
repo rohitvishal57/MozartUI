@@ -1,0 +1,20 @@
+<div class="modal-content" [ngClass]="data.type">
+    <div class="modal-icon">
+      <img
+        [src]="data.type === 'success' ? 'assets/Img/success-icon.png' : 'assets/Img/error-icon.png'"
+        [alt]="data.type === 'success' ? 'Success Icon' : 'Error Icon'"
+      />
+    </div>
+    <h2>
+      {{ data.type === 'success' ? 'Congratulations! Your ' + data.title + ' Request was created Successfully' : 'Error' }}
+    </h2>
+    <p>{{ data.type && data.message }}</p>
+    <button
+      id="continue"
+      name="continue"
+      [ngClass]="data.type"
+      (click)="onClose()"
+    >
+      {{ data.type === 'success' ? 'Continue' : 'I Understand' }}
+    </button>
+  </div>

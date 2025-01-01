@@ -10,8 +10,8 @@ import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
-import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -225,10 +225,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policiesListData = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.getActivityType();
+        } else {
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
       });
   }
 
@@ -284,10 +287,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policyMembersList = resp?.data?.policyMembersList
           this.getMemberIdList(this.policyMembersList)
+        } else {
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
     });
   }
 
@@ -659,12 +665,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                       this.backToEndorsment();
                     }
                   }, (error: any) => {
-                    console.log(error);
-                    this.toast.error({
-                      detail: 'ERROR',
-                      summary: "Some Other Error Happened!",
-                      duration: 5000,
-                    });
+                    this.openErrorModal(error);
                   });
               }
             }
@@ -673,16 +674,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
             }
           }
           else {
-            this.toast.error({
-              detail: 'ERROR',
-              summary: resp.message,
-              duration: 5000,
-            });
-            this.backToEndorsment();
+            this.openErrorModal(resp?.message);
           }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
         this.selctedFileName = "";
       });
   }
@@ -692,17 +689,29 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   openModal(resp: any) {
-    const dialogRef = this.dialog.open(SuccessModalComponent, {
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       width: '400px',
       disableClose: true,
-      data: { 
+      data: {
+        type: 'success', 
         title: 'Endorsement',
-        id: `Endorsement No: ${resp.data.response.caseId}`
+        message: `Endorsement No: ${resp.data.response.caseId}`
       },
     });
 
     dialogRef.afterClosed().subscribe(() => {
         this.backToEndorsment();
+    });
+  }
+
+  openErrorModal(msg: string){
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+      width: '400px',
+      disableClose: true,
+      data: {
+        type: 'error',
+        message: msg
+      },
     });
   }
 
@@ -785,21 +794,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
         else {
           this.sendOtptDisabled = false;
-          this.toast.error({
-            detail: 'ERROR',
-            summary: resp.message,
-            duration: 5000
-          });
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
         this.sendOtptDisabled = false;
-        this.toast.error({
-          detail: 'ERROR',
-          summary: "Something went wrong! Please try again later.",
-          duration: 5000
-        });
+        this.openErrorModal(err);
       });
   }
 
@@ -862,20 +863,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
           }
           else {
-            this.toast.error({
-              detail: 'ERROR',
-              summary: resp.message,
-              duration: 5000
-            });
+            this.openErrorModal(resp?.message);
           }
         },
         (err) => {
-          console.log(err);
-          this.toast.error({
-            detail: 'ERROR',
-            summary: "Something went wrong! Please try again later.",
-            duration: 5000
-          });
+          this.openErrorModal(err);
         });
     }
   }

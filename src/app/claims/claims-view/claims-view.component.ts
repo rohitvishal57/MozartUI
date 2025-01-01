@@ -1,18 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClaimData } from 'src/app/interface/claims.interface';
 import { DatePipe, formatDate } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
-import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { EndorsementsRequestsService } from 'src/app/endorsements/endorsements-requests/endorsements-requests.service';
 import { CoverDetail, UploadErrors } from 'src/app/interface/claims.interface';
 import { debounceTime, Subject } from 'rxjs';
-import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 @Component({
   selector: "app-claims-view",
   templateUrl: "./claims-view.component.html",
@@ -46,7 +44,7 @@ export class ClaimsViewComponent {
     requiredDocs: '',
     duplicateDocs: ''
   };
-  
+
   // uploadedFiles: File[] = [];
   form!: FormGroup;
   activePolicyNumbers: string[] = [];
@@ -65,7 +63,7 @@ export class ClaimsViewComponent {
   uploadDateTime: Date | null = null;
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
-  selectedMember:any;
+  selectedMember: any;
   uploadedFilesCount = 0;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
@@ -73,7 +71,7 @@ export class ClaimsViewComponent {
   namesVariable: any;
   documentType: any;
   response: any;
-  selectedMemberName:any;
+  selectedMemberName: any;
   uploadedFile: any;
   agentCode: any;
   selectMemberData: any = {};
@@ -98,14 +96,14 @@ export class ClaimsViewComponent {
   isFocused: boolean = false;
   selectedFile: any;
   fromDate: any;
-  hospitalId:any;
+  hospitalId: any;
   toDate: any;
   claimSubmitted: boolean = false;
   maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
   MemberIdList: any;
-  policiesListData:any
+  policiesListData: any
   coverNames: CoverDetail[] = [];
   selectedCoverCode: string = '';
   policyNoChangeSubject = new Subject<string>();
@@ -160,8 +158,8 @@ export class ClaimsViewComponent {
   documentId: any;
   filteredPolicyList: any[] = [];
   hospitalCode: any;
-  selectedHospitalObj: any ;
-  formattedDate:any
+  selectedHospitalObj: any;
+  formattedDate: any
 
   constructor(
     private fb: FormBuilder,
@@ -174,7 +172,7 @@ export class ClaimsViewComponent {
     private languageService: LanguageService,
     private translateService: TranslateService,
     private _router: Router,
-    private dialog : MatDialog
+    private dialog: MatDialog
   ) {
     this.billsForm = this.fb.group({
       billsArray: this.fb.array([]),
@@ -199,10 +197,10 @@ export class ClaimsViewComponent {
     const month = currentDate.getMonth() + 1;  // getMonth() is zero-based, so add 1
     const day = currentDate.getDate();
     const year = currentDate.getFullYear();
-    
+
     // Format to "MM/dd/yyyy"
-     this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
-    
+    this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+
     this.documentLabelForm = this.fb.group({
       documentLabel: [''],
       customLabel: ['']
@@ -235,8 +233,8 @@ export class ClaimsViewComponent {
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
-      const policyNumberControl = this.form.get('policyNumber');
-      
+    const policyNumberControl = this.form.get('policyNumber');
+
     this.form.get('claimType')?.valueChanges.subscribe(claimType => {
       this.onClaimTypeChange(claimType);
     });
@@ -279,8 +277,8 @@ export class ClaimsViewComponent {
       policyNumber: ["", [Validators.required, Validators.pattern("^[0-9]+-[0-9]+-[0-9]+-[0-9]+$"), Validators.minLength(16), Validators.maxLength(16)]],
       proposalNumber: [""],
       memberName: [""],
-      memberId:[""],
-      memberRelation:[""],
+      memberId: [""],
+      memberRelation: [""],
       productName: [""],
       fullName: [""],
       claimStatus: [""],
@@ -297,7 +295,7 @@ export class ClaimsViewComponent {
       coPayAmount: [""],
       reasonForCoPay: [""],
       coverName: [""],
-      raisedBy:[""],
+      raisedBy: [""],
       AgentCode: localStorage.getItem("agentCode"),
       claimType: ["", Validators.required],
       notes: [""],
@@ -321,12 +319,12 @@ export class ClaimsViewComponent {
       ]),
       documentsArray: this.fb.array([
         this.fb.group({
-            documentId: [""],
-            documentName: [""],
-            status: [""],
-            labelName: [""]
-          }),
-        ]),
+          documentId: [""],
+          documentName: [""],
+          status: [""],
+          labelName: [""]
+        }),
+      ]),
     });
     this.form.get('coverName')?.valueChanges.subscribe(coverName => {
       const selectedCover = this.coverNames.find(cover => cover.cover_Name === coverName);
@@ -392,7 +390,7 @@ export class ClaimsViewComponent {
     const uniqueValues = new Set(data.map(item => item[key]));
     return Array.from(uniqueValues).filter(value => value != null);
   }
-  
+
   getProposalDetails(): void {
     let data = {
       AgentCode: localStorage.getItem("agentCode")
@@ -466,7 +464,7 @@ export class ClaimsViewComponent {
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policyMembersList = resp.data.policyMembersList
-          this.getMemberIdList(this.policyMembersList)                
+          this.getMemberIdList(this.policyMembersList)
         }
       },
       (err) => {
@@ -482,7 +480,7 @@ export class ClaimsViewComponent {
     this.memberNames = membersList;
   }
   filterList(event: any): void {
-    const input = (event.target as HTMLInputElement).value.trim(); 
+    const input = (event.target as HTMLInputElement).value.trim();
     this.form.patchValue({
       "memberName": "",
     });
@@ -491,67 +489,67 @@ export class ClaimsViewComponent {
       item.policyNumber.includes(input)
     );
 
-    if(input.length >=16) {
+    if (input.length >= 16) {
       this.policyNoChangeSubject.next(input);
     }
-}
-
-
-onChange(value: string) {
-  this.selectedPolicyNumber = value;
-  if (value == "") {
-    // this.form.get('policyNumber').reset();
-  }
-  this.getPolicyMembers(value);
-}
-onInput(event: any): void {
-  const input = event.target as HTMLInputElement;
-  const value = input.value;
-
-  if (value.length > 12) {
-    this.form.get('claimedAmount')?.setErrors({ maxlength: true });
-  } else {
-    this.form.get('claimedAmount')?.setErrors(null);
-  }
-  const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-
-  if (allowedKeys.includes(event.key)) {
-    return;
   }
 
-  const isDigit = /^[0-9]$/.test(event.key);
-  if (!isDigit) {
-    event.preventDefault();
-    return;
+
+  onChange(value: string) {
+    this.selectedPolicyNumber = value;
+    if (value == "") {
+      // this.form.get('policyNumber').reset();
+    }
+    this.getPolicyMembers(value);
+  }
+  onInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (value.length > 12) {
+      this.form.get('claimedAmount')?.setErrors({ maxlength: true });
+    } else {
+      this.form.get('claimedAmount')?.setErrors(null);
+    }
+    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    const isDigit = /^[0-9]$/.test(event.key);
+    if (!isDigit) {
+      event.preventDefault();
+      return;
+    }
+
+    const currentValue = input.value;
+    if (currentValue === '' && event.key === '0') {
+      event.preventDefault();
+    }
   }
 
-  const currentValue = input.value;
-  if (currentValue === '' && event.key === '0') {
-    event.preventDefault();
+  toggleDropdown(open: boolean): void {
+    this.isDropdownOpen = open;
   }
-}
 
-toggleDropdown(open: boolean): void {
-  this.isDropdownOpen = open;
-}
-
-filterPolicyNumbers(value: unknown): void {
-  const query = this.searchText.toLowerCase();
-}
-
-dateFormat(dateType: "fromDate" | "toDate") {
-  if (dateType === "fromDate" && this.fromDate) {
-    this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
-  } else if (dateType === "toDate" && this.toDate) {
-    this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+  filterPolicyNumbers(value: unknown): void {
+    const query = this.searchText.toLowerCase();
   }
-}
 
-validateDate(controlName: string): void {
-  const control = this.form.get(controlName);
-  console.log(control?.value, this.maxDate);
-  control?.value > this.maxDate ? control?.setErrors({ incorrect: true }) : control?.setErrors(null);
-}
+  dateFormat(dateType: "fromDate" | "toDate") {
+    if (dateType === "fromDate" && this.fromDate) {
+      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    } else if (dateType === "toDate" && this.toDate) {
+      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    }
+  }
+
+  validateDate(controlName: string): void {
+    const control = this.form.get(controlName);
+    console.log(control?.value, this.maxDate);
+    control?.value > this.maxDate ? control?.setErrors({ incorrect: true }) : control?.setErrors(null);
+  }
 
   // ngAfterViewInit() {
   //   document.addEventListener('click', this.handleClickOutside.bind(this));
@@ -579,9 +577,9 @@ validateDate(controlName: string): void {
       "dischargeDate": "",
       "admissionDate": ""
     });
-  
+
     const selectedType = event.target.value;
-    
+
     if (selectedType === "Cashless") {
       // Clear file upload validators for Cashless
       this.form.get('isFileUploadRequired')?.clearValidators();
@@ -589,7 +587,7 @@ validateDate(controlName: string): void {
       this.showReimbursementFields = false;
       this.isFilenotSelected = false;
       this.showCashlessFields = true;
-      
+
       this.form.patchValue({
         coverName: "Hospitalization",
       });
@@ -600,7 +598,7 @@ validateDate(controlName: string): void {
       this.showCashlessFields = false;
       this.showReimbursementFields = true;
       this.isFilenotSelected = false;
-      
+
       this.form.patchValue({
         coverName: "",
       });
@@ -609,10 +607,10 @@ validateDate(controlName: string): void {
       this.showReimbursementFields = false;
     }
   }
-  
+
 
   fetchCoverNames(value: string): void {
-     const coverReqBody =  {
+    const coverReqBody = {
       "memberId": value,
       "policyNumber": this.form.value.policyNumber,
       "familyID": "",
@@ -667,15 +665,15 @@ validateDate(controlName: string): void {
         coverName: selectedCover.cover_Name,
         coverCode: selectedCover.cover_Code
       });
-  
+
       this.selectedCoverCode = selectedCover.cover_Code;
-        this.specialCovers = [
+      this.specialCovers = [
         "52234108",
         "52214106",
         "42214101",
         "62124111",
       ];
-  
+
       if (this.specialCovers.includes(this.selectedCoverCode)) {
         this.showSecondScenario = true;
         this.billsArray.clear();
@@ -763,7 +761,7 @@ validateDate(controlName: string): void {
     this.form.patchValue({
       "hospitalName": "",
       "hospitalAddress": "",
-      "hospitalId": "" 
+      "hospitalId": ""
     })
     if (this.selectedCity !== null) {
       this.fetchHospitals();
@@ -778,7 +776,7 @@ validateDate(controlName: string): void {
       city: cityNameArr[0]?.cityName,
       state: stateNameArr[0]?.stateName
     };
-  
+
     this.claimsService.getHospitalsByCities(hospitalsReqBody).subscribe(
       (response: any) => {
         if (response?.isSuccess && response?.data?.partyLists) {
@@ -786,12 +784,12 @@ validateDate(controlName: string): void {
             const nameDetail = partyList.partydetails.find((detail: any) => detail.name === 'Party Name');
             const partyCodeDetail = partyList.partydetails.find((detail: any) => detail.name === 'Party Code');
             const AddressDetail = partyList.partydetails.find((detail: any) => detail.name === 'Address Line 1')
-            
+
             return {
               hospitalName: nameDetail ? nameDetail.value : '',
               hospitalId: partyCodeDetail ? partyCodeDetail.value : '',
-            //  hospitalCode: partyCodeDetail ? partyCodeDetail.value : '',
-              hospitalAddress: AddressDetail ? AddressDetail.value: ''
+              //  hospitalCode: partyCodeDetail ? partyCodeDetail.value : '',
+              hospitalAddress: AddressDetail ? AddressDetail.value : ''
               //address: this.extractAddress(partyList.partydetails)
             };
           });
@@ -811,16 +809,16 @@ validateDate(controlName: string): void {
     this.selectedHospital = event.target.value;
     if (this.selectedHospital) {
       this.selectedHospitalObj = this.hospitals.find(h => h.hospitalId === this.selectedHospital);
-      
+
       if (this.selectedHospitalObj) {
         this.hospitalAddress = this.selectedHospitalObj.hospitalAddress;
         this.hospitalId = this.selectedHospitalObj.hospitalId;
-        this.hospitalCode = this.selectedHospitalObj.hospitalCode;      
+        this.hospitalCode = this.selectedHospitalObj.hospitalCode;
       } else {
         this.hospitalAddress = '';
         this.hospitalId = '';
       }
-  
+
       this.form.patchValue({
         hospitalAddress: this.hospitalAddress,
         hospitalId: this.hospitalId
@@ -855,7 +853,7 @@ validateDate(controlName: string): void {
       });
   }
   //-------------- Method to handle file upload------------------//
-  
+
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
@@ -956,13 +954,13 @@ validateDate(controlName: string): void {
 
   private validateRequiredDocuments(): { isValid: boolean; message: string } {
     this.validateAndUpdateErrors();
-      if (this.errors.requiredDocs || this.errors.duplicateDocs) {
+    if (this.errors.requiredDocs || this.errors.duplicateDocs) {
       return {
         isValid: false,
         message: this.errors.requiredDocs || this.errors.duplicateDocs
       };
     }
-    
+
     return { isValid: true, message: '' };
   }
 
@@ -977,7 +975,7 @@ validateDate(controlName: string): void {
 
   private generateUUID(): string {
     // Implement your UUID generation logic here
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       const r = Math.random() * 16 | 0;
       const v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -998,8 +996,8 @@ validateDate(controlName: string): void {
           customLabelControl.enable();  // Enable the custom label field
         } else {
           customLabelControl.disable(); // Disable it if not 'Others'
-           // Validate documents whenever label changes
-           this.validateAndUpdateErrors();
+          // Validate documents whenever label changes
+          this.validateAndUpdateErrors();
         }
       });
     }
@@ -1020,7 +1018,7 @@ validateDate(controlName: string): void {
       if (file.label !== "Label this document") {
         file.isEditing = false;
         file.isEdited = true;
-           this.validateAndUpdateErrors();
+        this.validateAndUpdateErrors();
       }
     }
   }
@@ -1043,22 +1041,22 @@ validateDate(controlName: string): void {
     );
 
     const duplicateTypes = Object.entries(labelCounts)
-    .filter(([label, count]) => {
-      const countValue = count as number;
-      return countValue > 1 && this.requiredDocumentTypes.includes(label);
-    })
-    .map(([label]) => label);
+      .filter(([label, count]) => {
+        const countValue = count as number;
+        return countValue > 1 && this.requiredDocumentTypes.includes(label);
+      })
+      .map(([label]) => label);
 
     if (missingTypes.length > 0) {
       this.errors.requiredDocs = `Please upload the following required documents: ${missingTypes.join(', ')}`;
     } else {
-      this.errors.requiredDocs = ''; 
+      this.errors.requiredDocs = '';
     }
 
     if (duplicateTypes.length > 0) {
       this.errors.duplicateDocs = `Duplicate document types found for: ${duplicateTypes.join(', ')}. Please ensure only one document per type.`;
     } else {
-      this.errors.duplicateDocs = ''; 
+      this.errors.duplicateDocs = '';
     }
     this.cdr.detectChanges();
   }
@@ -1191,15 +1189,15 @@ validateDate(controlName: string): void {
   }
 
 
-memberIdChange(event: any): void {
-  const memberId = event.target.value;
-  const selectedMember = this.memberNames.find(member => member.memberId === memberId);
-  if (selectedMember) {
-    this.form.get('memberName')?.setValue(selectedMember.memberName);
-  }
-  this.fetchCoverNames(memberId);
+  memberIdChange(event: any): void {
+    const memberId = event.target.value;
+    const selectedMember = this.memberNames.find(member => member.memberId === memberId);
+    if (selectedMember) {
+      this.form.get('memberName')?.setValue(selectedMember.memberName);
+    }
+    this.fetchCoverNames(memberId);
 
-}
+  }
 
   ///////current date and time
   formatUploadDateTime() {
@@ -1208,15 +1206,16 @@ memberIdChange(event: any): void {
     }
   }
   openModal(resp: any) {
-    const dialogRef = this.dialog.open(SuccessModalComponent, {
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       width: '400px',
       disableClose: true,
       data: {
+        type: 'success',
         title: 'Claim',
-        id: `Claim No: ${resp.data.claim_Number}`,
+        message: `Claim No: ${resp.data.claim_Number}`,
       },
     });
- 
+
     dialogRef.afterClosed().subscribe(() => {
       this.navigateToListClaim();
     });
@@ -1246,16 +1245,16 @@ memberIdChange(event: any): void {
       saveClaimData.admissionTime = saveClaimData.admissionTime ? saveClaimData.admissionTime : "6:00";
       saveClaimData.dischargeTime = saveClaimData.dischargeTime ? saveClaimData.dischargeTime : "7:00";
 
-     saveClaimData.memberId = this.form.get('memberId')?.value;  
-     saveClaimData.memberName = this.form.get('memberName')?.value;
-     saveClaimData.hospitalCode = this.selectedHospital;
-     saveClaimData.hospitalName =this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-     const coverNames = this.form.get('coverName')?.value;
-     const coverCode = this.form.get('coverCode')?.value;
-     if (coverNames && coverCode) {
-       saveClaimData.coverName = coverNames;
-       saveClaimData.coverCode = coverCode;
-     }
+      saveClaimData.memberId = this.form.get('memberId')?.value;
+      saveClaimData.memberName = this.form.get('memberName')?.value;
+      saveClaimData.hospitalCode = this.selectedHospital;
+      saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+      const coverNames = this.form.get('coverName')?.value;
+      const coverCode = this.form.get('coverCode')?.value;
+      if (coverNames && coverCode) {
+        saveClaimData.coverName = coverNames;
+        saveClaimData.coverCode = coverCode;
+      }
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
@@ -1284,7 +1283,7 @@ memberIdChange(event: any): void {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
-      
+
       // const documentsArray = this.uploadedFiles.map((file) => ({
       //   documentId: file.documentId,
       //   documentName: file.name,
@@ -1294,15 +1293,15 @@ memberIdChange(event: any): void {
       const documentsArray = this.uploadedFiles.map((file) => {
         const documentLabelControl = file.documentLabelForm.get('documentLabel');
         const customLabelControl = file.documentLabelForm.get('customLabel');
-        
+
         let labelName = file.label;
-        
+
         if (documentLabelControl && customLabelControl && documentLabelControl.value === 'Others') {
           labelName = customLabelControl.value || 'Others';
         } else if (documentLabelControl) {
           labelName = documentLabelControl.value || file.label;
         }
-      
+
         return {
           documentId: file.documentId,
           documentName: file.name,
@@ -1315,7 +1314,7 @@ memberIdChange(event: any): void {
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-            if(response.data.claim_Number !== ""){
+            if (response.data.claim_Number !== "") {
               this.openModal(response);
             } else {
               this.toast.error({
@@ -1326,10 +1325,11 @@ memberIdChange(event: any): void {
               });
               // this.toast.error({ response.data.message: "Failed to submit claims" });
             }
-          //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
+            //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
-            this.toast.error({  detail: 'Error', summary: "No response from Jarvis.",
-              duration:0, 
+            this.toast.error({
+              detail: 'Error', summary: "No response from Jarvis.",
+              duration: 0,
               sticky: true
             });
           }
@@ -1339,7 +1339,7 @@ memberIdChange(event: any): void {
           this.toast.error({
             detail: 'Error',
             summary: "Error occurred during claims submission",
-            duration:0, 
+            duration: 0,
             sticky: true
           });
         }
@@ -1349,6 +1349,3 @@ memberIdChange(event: any): void {
     }
   }
 }
-
-
-
