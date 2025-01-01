@@ -1,0 +1,44 @@
+<div class="popup-modal active" id="modal-audit">
+    <div class="popup-modal-dialog popup-modal-dialog-audit">
+        <button type="button" (click)="closeDialog()" class="mobile-popup-btn-close jsClosePopup"  aria-label="modal-audit"></button>
+      <div class="popup-modal-content">
+        <div class="popup-modal-header">
+           <h5 class="popup-modal-title">Audit</h5>
+          <button type="button" (click)="closeDialog()"  class="popup-btn-close jsClosePopup" data-bs-dismiss="modal-selfDetails" aria-label="modal-audit"></button>
+        </div>
+        <div class="popup-modal-body">
+          <div class="main-container">
+              <div class="table-container">
+                  <table class="commontable">
+                      <thead>
+                          <tr>
+                              <th>Seq No</th>
+                              <th>DISPOSITION</th>
+                              <th>SUB-DISPOSITION</th>
+                              <th>DATE-TIME</th>
+                              <th>AGENT</th>
+                              <th>REMARKS</th>
+                              <th>AGENT TYPE</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let item of auditValue; let i = index">
+                              <td class="text-center">{{i + 1}}</td>
+                              <td class="text-center">{{item.disposition}}</td>
+                              <td class="text-center">{{item.subDisposition}}</td>
+                              <td class="text-center">{{item.loggedDate}}</td>
+                              <td class="text-center">{{item.agent}}</td>
+                              <td class="text-center">{{item.remarks}}</td>
+                              <td class="text-center">{{item.agentType}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+            </div>
+        </div>
+        <div class="popup-modal-footer justify-content-center hideBlock">
+          <button type="button" class="btn_Default btn_red btn_save btn_width_f jsClosePopup" aria-label="modal-audit">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
