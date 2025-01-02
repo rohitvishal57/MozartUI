@@ -1469,7 +1469,21 @@ h4 {
     padding: 0;
   }
 }
-
+@media (min-width:768px) and (max-width:1024px) {
+  .dropdown-container {
+    flex-wrap: wrap;
+  }
+  .dropdown-container .field_div {
+    width: 45%;
+  }
+  .dropdownContent {
+    right: 0;
+  }
+  .dropdownContent .overlay_popupMain {
+    left: auto;
+    right: 0;
+  }
+}
 @media (max-width:767px) {
   .overlay_popupMain.overlay_dropdown_w518 {
     width: 100%;
