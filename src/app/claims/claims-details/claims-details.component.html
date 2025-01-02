@@ -155,14 +155,16 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div>
-                                            <strong>{{"View Uploads:" | translate}}</strong>
-                                            <div *ngIf="noFilesFound" class="no-files-message">
-                                               {{" No documents have been uploaded yet." | translate}}
+                                        <div class="uploadDocument_head body_flex_column gap-2">
+                                            <h4 class="m-0">{{"View Uploads:" | translate}}</h4>
+                                            <div *ngIf="noFilesFound" class="tipInfo_org m-0">
+                                               <span class="body_flex_row">{{" No documents have been uploaded yet." | translate}}</span>
                                             </div>
-                                            <div class="viewDocument_listMain"
+                                            <div class="viewDocument_listMain tableMain quoteView"
                                                 *ngIf="!noFilesFound && fileUploads.length > 0">
-                                                <table class="table table-striped">
+                                                <div class="tableSubMain">
+                                                    <div class="table-responsive">
+                                                <table class="table table-borderless table-search">
                                                     <thead>
                                                         <tr>
                                                             <th>S.No</th>
@@ -179,10 +181,10 @@
                                                             <td>{{ file.name }}</td>
                                                             <td>{{ file.type }}</td>
                                                             <td></td>
-                                                            <td>
+                                                            <td align="center">
                                                                 <button type="button" id="downloadfile"
                                                                     name="downloadfile"
-                                                                    class="btn_iconGrey btn_cardDownload"
+                                                                    class="btn_action btn_renewalAction"
                                                                     (click)="downloadFile(file)"><img
                                                                         src="../../../../../assets/Img/icon_download_grey.svg"></button>
                                                                 <!-- <button class="btn btn-primary" (click)="downloadFile(file)">Download</button> -->
@@ -190,6 +192,8 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="uploadDocument_main" >
