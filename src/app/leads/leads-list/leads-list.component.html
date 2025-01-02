@@ -353,11 +353,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalCount > 0">
+                <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
                                     [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
