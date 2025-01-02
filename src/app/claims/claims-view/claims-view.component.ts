@@ -131,27 +131,6 @@ export class ClaimsViewComponent {
     'Claim form'
   ];
   documentLabelForm!: FormGroup;
-
-  // coverNames = [
-  //   "AYUSH Treatment",
-  //   "Domiciliary Hospitalization",
-  //   "Day Care Treatments",
-  //   "Home Health Care",
-  //   "HIV / AIDS and STD Cover",
-  //   "Health AssessmentTM",
-  //   "HealthReturnsTM",
-  //   "In-patient Hospitalization",
-  //   "Mental Illness Hospitalization",
-  //   "Modern Procedures/Treatments",
-  //   "Obesity Treatment",
-  //   "Organ Donor Expenses",
-  //   "Post-Hospitalization Expenses",
-  //   "Pre-Hospitalization Expenses",
-  //   "Road Ambulance Cover (per hospitalization)",
-  //   "Super Reload",
-  //   "Claim Protect (Non-Medical Expense Waiver)",
-  //   "Super Credit (increases irrespective of claim)",
-  // ];
   billGroup: any;
   billsForm!: FormGroup;
   claimInfoId: any;
@@ -414,27 +393,6 @@ export class ClaimsViewComponent {
     });
   }
 
-  // handleDropdownChange(value: string): void {
-  //      this.form.patchValue({
-  //     "memberName": "",
-  //   });
-  //   const selectedPolicyNumber = value;
-  //   this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
-  //     if (!policyValue) {
-  //       this.form.get('memberName')?.setValue('');
-  //       this.memberNames = [];
-  //     }
-  //   });
-  //   const filteredMembers = this.policyNumbers.filter(
-  //     (item: any) => item.policyNumber === selectedPolicyNumber
-  //   );
-  //   //this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-  //   this.form.get("memberName")?.setValue("");
-  //   this.cdr.markForCheck();
-  //   this.getPolicyMembers(value)
-  //   this.fetchCoverNames()
-
-  // }
   handleDropdownChange(value: string): void {
     this.form.patchValue({
       "memberId": value,
@@ -444,16 +402,23 @@ export class ClaimsViewComponent {
       if (!policyValue) {
         this.form.get('memberId')?.setValue('');
         this.memberNames = [];
+        this.form.get('policyNumber')?.setErrors(null);
       }
     });
     const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
+    if (!filteredMembers || filteredMembers.length === 0) {      // If no members are found
+      this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    } else {
+      this.form.get('policyNumber')?.setErrors(null);
+    }
     this.form.get("memberId")?.setValue("");
     this.cdr.markForCheck();
     this.getPolicyMembers(value)
     this.fetchCoverNames(value)
   }
+
   getPolicyMembers(value: string) {
     const membersReq = {
       "AgentCode": localStorage.getItem("agentCode"),
@@ -491,6 +456,11 @@ export class ClaimsViewComponent {
 
     if (input.length >= 16) {
       this.policyNoChangeSubject.next(input);
+    }
+    if (!this.filteredPolicyList || this.filteredPolicyList.length === 0) {      // If no members are found
+      this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    } else {
+      this.form.get('policyNumber')?.setErrors(null);
     }
   }
 
@@ -1319,7 +1289,7 @@ export class ClaimsViewComponent {
             } else {
               this.toast.error({
                 detail: 'Error',
-                summary: response.data.message,
+                summary: response.data.message !== ""? response.data.message: "No response from Jarvis.",
                 duration: 0,
                 sticky: true
               });

@@ -32,6 +32,7 @@
                                         *ngIf="form.get('policyNumber')?.hasError('minlength') || form.get('policyNumber')?.hasError('maxlength')">
                                         {{"Policy Number must be 16 characters long." | translate}}
                                     </small>
+                                    
                                 </div>
                             </div>
                             <mat-autocomplete #auto="matAutocomplete"
@@ -61,6 +62,10 @@
                                 <small class="ui-error block-show"
                                     *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
                                     {{"Member name is required." | translate}}
+                                </small>
+                                <small class="ui-error block-show"
+                                        *ngIf="form.get('policyNumber')?.hasError('noMemberDetails')">
+                                        {{"No member details found for this policy." | translate}}
                                 </small>
                             </div>
                         </div>
