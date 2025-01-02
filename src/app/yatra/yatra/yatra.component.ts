@@ -7578,7 +7578,6 @@ export class YatraComponent {
   }
 
   duplicateForAllMembers(innerControl: any, control: any, parentControl: any, index: number) {
-    if (parentControl != '') {
       const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       const currentGroup = formArray.controls[index] as FormGroup;
 
@@ -7598,26 +7597,6 @@ export class YatraComponent {
           });
         }
       });
-    }
-    else {
-      let arr = ['isActivFitOrArgoya', 'nameOfInsurer', 'previousPolicyNum', 'previousPolicyName', 'previousSumInsured', 'previousPolicyStartDate', 'previousPolicyEndDate', 'previousClaims'];
-      const formArray = this.dynamicFormGroup.get(control.name) as FormArray;
-      const currentGroup = formArray.controls[index] as FormGroup;
-
-      // Traverse all other indices in the FormArray
-      formArray.controls.forEach((group, idx) => {
-        if (idx !== index) {
-          const otherGroup = group as FormGroup;
-
-          // Update each key in the other group
-          arr.forEach(key => {
-            if (otherGroup.get(key)) {
-              otherGroup.get(key)?.setValue(currentGroup.get(key)?.value);
-            }
-          });
-        }
-      });
-    }
   }
 
   getKeys(obj: any): string[] {
