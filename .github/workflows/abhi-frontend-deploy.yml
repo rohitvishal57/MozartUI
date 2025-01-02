@@ -182,6 +182,7 @@ jobs:
     
     # - name: Debug:List files after downloading artifacts
     #   run: ls -l ./my-artifacts
+    
 
     - name: Upload artifact to VM with versioning
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/angular-dev/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
