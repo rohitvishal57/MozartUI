@@ -178,7 +178,7 @@ export class PaymentComponent {
               paymentStatus: this.paymentDetail.paymentStatus,
             }
             // if(this.paymentDetail?.isFullQuoteSuccess){
-              this.toast.success({ detail: "SUCCESS", summary: 'payment '+this.paymentDetail.paymentStatus, duration: 5000 });
+              this.toast.success({ detail: "Success", summary: 'payment '+this.paymentDetail.paymentStatus, duration: 5000 });
               localStorage.setItem("formIndex", "8");
             // }
             // else{
@@ -250,7 +250,7 @@ export class PaymentComponent {
                 window.location.href = response.data.paymentURL;
               }
               else {
-                this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
+                this.toast.warning({ detail: "Warning", summary: response.message || "Invalid payment link received", duration: 3000 });
                 console.error('Invalid payment link received:', response);
               }
             }, (error) => {
@@ -259,7 +259,7 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus === 'INITIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+            this.toast.success({ detail: "Success", summary: "Payment successful", duration: 5000 });
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -284,7 +284,7 @@ export class PaymentComponent {
         }
         else if (this.paymentDetail?.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
           formData.paymentMessage = "Payment pending; please wait for processing";
-          this.toast.warning({ detail: "warning", summary: "payment Pending", duration: 5000 });
+          this.toast.warning({ detail: "Warning", summary: "payment Pending", duration: 5000 });
           this.router.navigate(['renewal/renewalJourney'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
@@ -349,7 +349,7 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+            this.toast.success({ detail: "Success", summary: "Payment successful", duration: 5000 });
             localStorage.setItem('formIndex', '1');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
@@ -372,7 +372,7 @@ export class PaymentComponent {
           }
           
         } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
-            this.toast.success({ detail: "SUCCESS", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
+            this.toast.success({ detail: "Success", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -425,7 +425,7 @@ export class PaymentComponent {
               if (response?.isSuccess) {
                 window.location.href = response.data.paymentURL;
               } else {
-                this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
+                this.toast.warning({ detail: "Warning", summary: response.message || "Invalid payment link received", duration: 3000 });
                 console.error('Invalid payment link received:', response);
               }
             }, (error) => {
@@ -434,7 +434,7 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+            this.toast.success({ detail: "Success", summary: "Payment successful", duration: 5000 });
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -458,7 +458,7 @@ export class PaymentComponent {
             });
           }
         } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
-           this.toast.success({ detail: "SUCCESS", summary: `${'payment '+ this.paymentDetail.paymentStatus}` , duration: 5000 });
+           this.toast.success({ detail: "Success", summary: `${'payment '+ this.paymentDetail.paymentStatus}` , duration: 5000 });
            formData.paymentMessage = "Payment pending; please wait for processing";
            this.router.navigate(['renewal/customerPayment'], {
             state: {

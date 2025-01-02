@@ -23,12 +23,12 @@ export class ProductsService {
   addToCompare(item: any, compareItems : any) {
     const MAX_COMPARE_ITEMS = 3; 
     if (compareItems.length >= MAX_COMPARE_ITEMS) {
-      this.toast.error({ detail:"",summary: 'Only three products can be added to compare!' ,duration:5000});
+      this.toast.error({ detail:"Error",summary: 'Only three products can be added to compare!' ,duration:5000});
       return 0;
     }
     const isAlreadyPresent = compareItems.some((existingItem :any) => existingItem.productName === item.productName);
     if (isAlreadyPresent) {
-      this.toast.warning({ detail: "", summary: 'This product has already been added for comparison. Please choose another product. ', duration: 5000 });
+      this.toast.warning({ detail: "Warning", summary: 'This product has already been added for comparison. Please choose another product. ', duration: 5000 });
       return 0;
     }
     return item.productId;

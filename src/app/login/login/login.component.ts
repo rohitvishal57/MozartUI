@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200' && res.data.requestId !== null) {
           localStorage.setItem("requestId", res?.data.requestId);
-          this.toast.success({ detail: "SUCCESS", summary: `Sent OTP again to ${this.maskedUserCode}`, duration: 5000 });
+          this.toast.success({ detail: "Success", summary: `Sent OTP again to ${this.maskedUserCode}`, duration: 5000 });
           this.startTimer();
         } else {
           this.errorMessage = res.message;
@@ -205,7 +205,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err => {
         console.log(err);
-        this.toast.error({ detail: "ERROR", summary: err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary: err, duration: 5000 });
         this.refreshCaptcha();
       })
     });
@@ -225,7 +225,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (err => {
-        this.toast.error({ detail: "ERROR", summary: err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary: err, duration: 5000 });
         this.refreshCaptcha();
       })
     });
@@ -243,7 +243,7 @@ export class LoginComponent implements OnInit {
       },
       error: ((err:any) => {
         console.log(err);
-        this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary:err, duration: 5000 });
         this.refreshCaptcha();
       })
     })

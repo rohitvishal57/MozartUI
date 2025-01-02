@@ -297,7 +297,7 @@ export class QuoteProductsComponent implements OnInit {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
   async insertorupdateagentcartdetails(item: any) {
@@ -480,7 +480,10 @@ export class QuoteProductsComponent implements OnInit {
         this.compareItems.push(res.data);
       },
       error: (err) => {
-        this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
+        this.toast.error({
+          detail: 'Error',
+          summary: 'Failed to Add Product for Comparison'
+        });
         console.error(err);
       }
     });

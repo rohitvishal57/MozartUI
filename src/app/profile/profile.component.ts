@@ -155,14 +155,14 @@ export class ProfileComponent implements OnInit {
     this.profileService.updatePreferredLanguage(reqData).subscribe({
       next: (response: any) => {
         console.log('Language preference updated successfully:', response);
-        this.toast.success({ detail: 'SUCCESS', summary: response.message, duration: 3000 });
+        this.toast.success({ detail: 'Success', summary: response.message, duration: 3000 });
         const userData = localStorage.getItem('userData');
         if (userData) {
           const parsedUserData = JSON.parse(userData);
           parsedUserData.preferredLanguage = this.selectedLanguage;
           localStorage.setItem('userData', JSON.stringify(parsedUserData));
         }
-        this.toast.success({ detail: "SUCCESS", summary: "Success", duration: 3000 })
+        this.toast.success({ detail: "Success", summary: "Success", duration: 3000 })
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
@@ -200,7 +200,7 @@ export class ProfileComponent implements OnInit {
       navigator.clipboard.writeText(urlText).then(
         () => {
           console.log('URL copied to clipboard:', urlText);
-          this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
+          this.toast.success({ detail: "Success", summary: "URL copied to clipboard!", duration: 3000 })
         },
         (error) => {
           console.error('Failed to copy URL:', error);
@@ -316,7 +316,7 @@ export class ProfileComponent implements OnInit {
           window.open(res.data.redirectUrl, "_self");
         } else {
           this.toast.error({
-            detail: 'ERROR',
+            detail: 'Error',
             summary: res.message,
             duration: 5000,
           });

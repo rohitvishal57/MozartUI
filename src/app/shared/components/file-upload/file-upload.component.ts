@@ -91,7 +91,7 @@ export class FileUploadComponent implements ControlValueAccessor {
     for (let f = 0; f < data.length; f++) {
       if (this.fileExtension.length && !this.fileExtension.includes(this.getFileExtension(data[f].name).toLowerCase())) {
         this.toast.error({
-          detail: "ERROR",
+          detail: "Error",
           summary: 'Please upload ' + [...this.fileExtension] + 'only',
           duration: 3000,
         });
@@ -100,7 +100,7 @@ export class FileUploadComponent implements ControlValueAccessor {
       }
       if (Math.round((data[f].size / 1024)) > 2048) {
         this.toast.error({
-          detail: "ERROR",
+          detail: "Error",
           summary: 'The maximum supported file size 2 MB',
           duration: 3000,
         });

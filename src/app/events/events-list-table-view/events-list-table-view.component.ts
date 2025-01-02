@@ -220,9 +220,15 @@ export class EventsListTableViewComponent implements OnInit {
           if (index) {
             this.events.splice(index, 1);
           }
-          this.toast.success({ detail: "Row Deleted successfully" });
+          this.toast.success({
+            detail: 'Success',
+            summary: "Row Deleted successfully"
+          });
         } else {
-          this.toast.error({ detail: "Error occurred while deleting" });
+          this.toast.error({
+            detail: 'Error',
+            summary: "Error occurred while deleting"
+          });
         }
       }
     });

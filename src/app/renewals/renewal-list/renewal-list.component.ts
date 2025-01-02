@@ -526,7 +526,7 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "success", summary: response.data.message || "SMS sent successfully.", duration: 3000 });
+              this.toast.success({ detail: "Success", summary: response.data.message || "SMS sent successfully.", duration: 3000 });
             } else {
               this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send SMS.", duration: 3000 });
             }
@@ -544,7 +544,7 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "success", summary: response.data.message || "WhatsApp message sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "Success", summary: response.data.message || "WhatsApp message sent successfully.", duration: 1500 });
             } else {
               this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send Whasapp message.", duration: 1500 });
             }
@@ -614,7 +614,7 @@ export class RenewalListComponent {
               }
               else if (paymentDetail?.paymentStatus.toUpperCase() == 'INPROGRESS' || paymentDetail?.paymentStatus.toUpperCase() == 'PENDING') {
                 formData.paymentMessage = "Payment pending; please wait for processing";
-                this.toast.warning({ detail: "warning", summary: "payment Pending", duration: 5000 });
+                this.toast.warning({ detail: "Warning", summary: "payment Pending", duration: 5000 });
                 this.router.navigate(['renewal/renewalJourney'], {
                   state: {
                     formData: this.encryptionService.encrypt(formData),

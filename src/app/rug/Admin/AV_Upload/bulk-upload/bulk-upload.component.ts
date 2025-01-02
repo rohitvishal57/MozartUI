@@ -91,7 +91,7 @@ export class BulkUploadComponent {
         if (response.isSuccess) {
           window.open(response.data.url, '_blank');
           this.toast.success({
-            detail: "SUCCESS",
+            detail: "Success",
             summary: "File uploaded successfully!",
             duration: 3000,
           });
@@ -100,7 +100,7 @@ export class BulkUploadComponent {
       (error: any) => {
         console.error("Error from API:", error);
         this.toast.error({
-          detail: "ERROR",
+          detail: "Error",
           summary: "An error occurred while uploading. Please try again.",
           duration: 5000,
         });

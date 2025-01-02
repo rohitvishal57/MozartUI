@@ -124,7 +124,7 @@ export class CustomersListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "", summary: "Failed to get customers list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get customers list.", duration: 2000 });
       }
     );
   }
@@ -148,7 +148,7 @@ export class CustomersListComponent {
         console.log("product list",this.productsList)
       },
       error: (err) => {
-        this.toast.error({ detail: "", summary: "Failed to get products list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get products list.", duration: 2000 });
       }
     })
   }
@@ -338,13 +338,13 @@ toggleMoreInfo(index: number): void {
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "", summary: response.data.message, duration: 2000 });
+          this.toast.success({ detail: "Success", summary: response.data.message, duration: 2000 });
         } else {
-          this.toast.error({ detail: "", summary: response.data.message || "Failed to send customer data.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.data.message || "Failed to send customer data.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "", summary: "Error while sending customer data.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while sending customer data.", duration: 2000 });
       }
     );
   }
@@ -385,18 +385,18 @@ toggleMoreInfo(index: number): void {
           this.errorMessages = '';
           this.documents = searchResponse;
         } else {
-          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
         console.error("Search document error", error);
-        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
       }
     );
   }
   downloadPolicyKit() {
     if (!this.selectedDocument) {
-      this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
+      this.toast.error({ detail: "Error", summary: "Please select a document to download.", duration: 3000 });
       return;
     }  
     const downloadPolicyKitRequestBody = {
@@ -432,12 +432,12 @@ toggleMoreInfo(index: number): void {
             window.open(fileURL, "_blank");
           }
         } else {
-          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: response.message || "No file found to download.", duration: 3000 });
         }
       },
       (error: any) => {
         console.error("Download Policy Kit Error:", error);
-        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while downloading Policy Kit.", duration: 3000 });
       }
     );
   }
@@ -476,7 +476,7 @@ getCustomerBasicDetails() {
           this.customerBasicDetails = res.data; 
           this.commonInfo=res.data;
         } else {
-          this.toast.error({ detail: "", summary: res.message || "Failed to get customer Basic Details.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: res.message || "Failed to get customer Basic Details.", duration: 2000 });
           this.customerBasicDetails = null;
         }
       },
@@ -494,12 +494,12 @@ getCustomerBasicDetails() {
           this.customerInsuredDetails = res.data;  
           this.commonInfo=res.data;         
         } else {
-          this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
           this.customerInsuredDetails = []        
         }
       },
       (err: any) => {
-        this.toast.error({ detail: "", summary: "Error while getting customer Insured Members Details.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while getting customer Insured Members Details.", duration: 3000 });
         this.customerInsuredDetails = []      
       }
     );
@@ -520,11 +520,11 @@ getCustomerBasicDetails() {
         } else {
           console.log("length",this.customerClaimDetails);
 
-          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Claims Details.", duration: 3000 });
+          // this.toast.warning({ detail: "Warning", summary: res.message || "Failed to get customer Claims Details.", duration: 3000 });
           this.customerClaimDetails = []        }
       },
       (err: any) => {
-        this.toast.error({ detail: "", summary: "Error while getting customer Claims Details.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while getting customer Claims Details.", duration: 3000 });
         this.customerClaimDetails = []      }
     );
   }
@@ -539,19 +539,19 @@ getCustomerBasicDetails() {
                    
         } else {
           console.log(this.customerEndorsementDetails);
-          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Service Details.", duration: 3000 });
+          // this.toast.warning({ detail: "Warning", summary: res.message || "Failed to get customer Service Details.", duration: 3000 });
           this.customerEndorsementDetails = []        
         }
       },
       (err: any) => {
-        this.toast.error({ detail: "", summary: "Error while getting customer Service Details.", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Error while getting customer Service Details.", duration: 3000 });
         this.customerEndorsementDetails = []      
       }
     );
   }
   fetchDetails(type: string) {
     if (!this.policyNumber) {
-      this.toast.warning({ detail: "", summary: "PolicyNumber is required.", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "PolicyNumber is required.", duration: 2000 });
       return;
     }
   this.selectedFilter=type

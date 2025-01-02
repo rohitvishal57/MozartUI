@@ -1572,7 +1572,7 @@ export class RugDynamicFormComponent {
       this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
         next: (response: any) => {
           console.log('File uploaded and policy details fetched:', response);
-          this.toast.success({ detail: "SUCCESS", summary: "Policy document uploaded and processed successfully.", duration: 3000 });
+          this.toast.success({ detail: "Success", summary: "Policy document uploaded and processed successfully.", duration: 3000 });
           
 
           this.isPolicyDetailsFetch = true;
@@ -1607,7 +1607,7 @@ export class RugDynamicFormComponent {
         },
         error: (error) => {
           
-          this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Failed to fetch Policy Details", duration: 3000 });
           console.error('Error fetching Policy details:', error);
         }
       });
@@ -2073,11 +2073,11 @@ export class RugDynamicFormComponent {
               this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
             } else {
               // Handle error, you can show a message if required
-              this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+              this.toast.warning({ detail: "Warning", summary: 'Failed to Fetch Bank Details', duration: 3000 });
             }
           },
           error: (err) => {
-            this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+            this.toast.error({ detail: "Error", summary: 'Failed to Fetch Bank Details', duration: 3000 });
           }
         });
       }
@@ -2269,11 +2269,11 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
         } else {
           // Handle error, you can show a message if required
-          this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: 'Failed to Fetch Bank Details', duration: 3000 });
         }
       },
       error: (err) => {
-        this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to Fetch Bank Details', duration: 3000 });
       }
     });
   }
@@ -3333,12 +3333,12 @@ export class RugDynamicFormComponent {
   //       if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
   //         window.location.href = response.paymentURL;
   //       } else {
-  //         this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+  //         this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
   //         console.error('Invalid payment link received:', response);
   //       }
   //     },
   //     error: (error) => {
-  //       this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+  //       this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
   //       console.error('Error generating payment link:', error);
   //     }
   //   });
@@ -3419,12 +3419,12 @@ export class RugDynamicFormComponent {
       //     if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
       //       window.location.href = response.paymentURL; // Redirect to Juspay Payment URL
       //     } else {
-      //       this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+      //       this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
       //       console.error('Invalid payment link received:', response);
       //     }
       //   },
       //   error: (error) => {
-      //     this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+      //     this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
       //     console.error('Error generating payment link:', error);
       //   }
       // });
@@ -3530,7 +3530,7 @@ export class RugDynamicFormComponent {
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
 
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
     }
     else {
@@ -3632,7 +3632,7 @@ export class RugDynamicFormComponent {
         console.log(reqData);
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
-            // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+            // this.toast.success({ detail: "Success", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
             this.leadnumber = res.data;
           },
@@ -3697,9 +3697,9 @@ export class RugDynamicFormComponent {
           }
         });
         if (this.dynamicFormGroup.invalid)
-          this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+          this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
         else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-          this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+          this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
       }
 
     }
@@ -3905,7 +3905,7 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
       }else{
         this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
-        this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please select Sum Insured as 1CR", duration: 3000 });
         this.calculateBBPremium();
       }
       this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
@@ -4150,7 +4150,7 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
       }else{
         this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
-        this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please select Sum Insured as 1CR", duration: 3000 });
         this.calculateBBPremium();
       }
       this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
@@ -4272,7 +4272,7 @@ export class RugDynamicFormComponent {
                     console.log(res);
                     halfQuoteResponse = JSON.parse(res.data);
                     if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
-                      this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: halfQuoteResponse.message, duration: 3000 });
                       let justpayPayload = {
                         "agentcode": this.agentCode,
                         "proposalNumber": this.bbdetails?.leadId,
@@ -4302,7 +4302,7 @@ export class RugDynamicFormComponent {
                       // }
 
                     } else {
-                      this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
 
                     }
 
@@ -4317,7 +4317,7 @@ export class RugDynamicFormComponent {
         })
       })
     } else {
-      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
     }
   }
   ond2cSubmit(){
@@ -4345,11 +4345,11 @@ export class RugDynamicFormComponent {
         console.log(reqData);
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
-            // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+            // this.toast.success({ detail: "Success", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
-              this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.productId == 31){
                 if(this.getFormIndexValue() == 3){
                   const payloadObject = {
@@ -4446,7 +4446,7 @@ export class RugDynamicFormComponent {
                       console.log(JSON.parse(res.data));
                       res = JSON.parse(res.data)
                       if (res.isSuccess == true && res.statusCode == 200) {
-                        this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+                        this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
                         let justpayPayload = { 
                           "agentcode": this.agentCode,
                            "proposalNumber": this.leadId,
@@ -4627,7 +4627,7 @@ export class RugDynamicFormComponent {
                       console.log(JSON.parse(res.data));
                       res = JSON.parse(res.data)
                       if (res.isSuccess == true && res.statusCode == 200) {
-                        this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+                        this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
                         let justpayPayload = { 
                           "agentcode": this.agentCode,
                            "proposalNumber": this.leadId,
@@ -4716,7 +4716,7 @@ export class RugDynamicFormComponent {
         }
       });
       if (this.dynamicFormGroup.invalid) {
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
         if (firstInvalidTabIndex !== null) {
           // Navigate to the first invalid tab
           this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -4724,7 +4724,7 @@ export class RugDynamicFormComponent {
         }
       }
       else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+        this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
     }
     // if (this.getFormIndexValue() < this.formSequence.length - 1) {
     //   this.incrementIndex();
@@ -4739,7 +4739,7 @@ export class RugDynamicFormComponent {
       next: (res: any) => {
         console.log(res);
         if (res.isSuccess == true && res.statusCode == 200) {
-          this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
           window.location.href = res.data.paymentURL
           // if (this.getFormIndexValue() < this.formSequence.length - 1) {
           //   this.incrementIndex();
@@ -4748,7 +4748,7 @@ export class RugDynamicFormComponent {
           // }
 
         }else{
-          this.toast.warning({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: res.message, duration: 3000 });
         }
 
       },
@@ -4769,7 +4769,7 @@ export class RugDynamicFormComponent {
     console.log(this.dynamicFormGroup.get('decl2')?.value);
     // console.log(this.dynamicFormGroup.get('decl3')?.value);
     if(this.getFormIndexValue() == 4 && this.dynamicFormGroup.get('decl2')?.value != true){
-      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
       return;
     }
     console.log(this.dynamicFormGroup.valid);
@@ -4800,7 +4800,7 @@ export class RugDynamicFormComponent {
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
-              this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.getFormIndexValue() == 4){
                 const payloadObject = {
                   proposerDetails: {
@@ -4916,13 +4916,13 @@ export class RugDynamicFormComponent {
                     console.log(res);
                     let responseData = JSON.parse(res.data);
                     if (responseData.isSuccess == true && responseData.statusCode == 200) {
-                      this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: responseData.message, duration: 3000 });
                       if (this.getFormIndexValue() < this.formSequence.length - 1) {
                         this.incrementIndex();
                         this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                       }
                     }else{
-                      this.toast.warning({ detail: "WARNING", summary: responseData.message, duration: 3000 });
+                      this.toast.warning({ detail: "Warning", summary: responseData.message, duration: 3000 });
   
                     }
                   },
@@ -4959,7 +4959,7 @@ export class RugDynamicFormComponent {
           next: (res: any) => {
             console.log(res);
             if (res.isSuccess == true && res.statusCode == 200) {
-              this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
               if (this.getFormIndexValue() < this.formSequence.length - 1) {
                 this.incrementIndex();
                 this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -5015,7 +5015,7 @@ export class RugDynamicFormComponent {
         }
       });
       if (this.dynamicFormGroup.invalid) {
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
         if (firstInvalidTabIndex !== null) {
           // Navigate to the first invalid tab
           this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -5023,7 +5023,7 @@ export class RugDynamicFormComponent {
         }
       }
       else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+        this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
     }
   }
 
@@ -5062,7 +5062,7 @@ export class RugDynamicFormComponent {
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
-              this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               console.log(this.tsDetails);
               console.log(this.getFormIndexValue());
               console.log(this.nomineeRelations);
@@ -5276,7 +5276,7 @@ export class RugDynamicFormComponent {
                     console.log(res);
                     let responseData = JSON.parse(res.data);
                     if (responseData.isSuccess == true && responseData.statusCode == 200) {
-                      this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: responseData.message, duration: 3000 });
                       if(this.getFormIndexValue() == 5 && this.agentCode == "467897"){
                         if (this.getFormIndexValue() < this.formSequence.length - 1) {
                           this.incrementIndex();
@@ -5290,7 +5290,7 @@ export class RugDynamicFormComponent {
                         }
                       }
                     }else{
-                      this.toast.warning({ detail: "WARNING", summary: responseData.message, duration: 3000 });
+                      this.toast.warning({ detail: "Warning", summary: responseData.message, duration: 3000 });
   
                     }
                   },
@@ -5327,7 +5327,7 @@ export class RugDynamicFormComponent {
       //     next: (res: any) => {
       //       console.log(res);
       //       if (res.isSuccess == true && res.statusCode == 200) {
-      //         this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+      //         this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
       //         if (this.getFormIndexValue() < this.formSequence.length - 1) {
       //           this.incrementIndex();
       //           this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -5383,7 +5383,7 @@ export class RugDynamicFormComponent {
         }
       });
       if (this.dynamicFormGroup.invalid) {
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
         if (firstInvalidTabIndex !== null) {
           // Navigate to the first invalid tab
           this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -5391,7 +5391,7 @@ export class RugDynamicFormComponent {
         }
       }
       else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+        this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
     }
   }
   onTsCustomerSubmit(){
@@ -5406,7 +5406,7 @@ export class RugDynamicFormComponent {
           console.log(res);
           halfQuoteResponse = JSON.parse(res.data);
           if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
-            this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: halfQuoteResponse.message, duration: 3000 });
             let justpayPayload = {
               "agentcode": this.agentCode,
               "proposalNumber": this.tsDetails?.leadId,
@@ -5436,7 +5436,7 @@ export class RugDynamicFormComponent {
             // }
 
           } else {
-            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
 
           }
 
@@ -5446,7 +5446,7 @@ export class RugDynamicFormComponent {
         }
       });
     }else {
-      this.toast.warning({ detail: "WARNING", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
     }
   }
   filterRelationByName(relationName: string) {
@@ -5821,7 +5821,7 @@ export class RugDynamicFormComponent {
       //     this.dynamicFormGroup.addControl("proposalId", this.fb.control(this.proposalId));
       //     sessionStorage.setItem("quoteId", this.encryptionService.encrypt(this.quoteId));
       //     this.dynamicFormGroup.addControl("quoteId", this.fb.control(this.quoteId));
-      //     this.toast.success({ detail: "SUCCESS", summary: "Lead Created Successfully.", duration: 3000 });
+      //     this.toast.success({ detail: "Success", summary: "Lead Created Successfully.", duration: 3000 });
 
       //   },
       //   error: (err) => {
@@ -5835,7 +5835,7 @@ export class RugDynamicFormComponent {
         const control = this.dynamicFormGroup.get(field);
         control?.markAsTouched({ onlySelf: true });
       });
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
   }
 
@@ -6320,7 +6320,7 @@ export class RugDynamicFormComponent {
 
   //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
   //       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-  //       this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
+  //       this.toast.success({ detail: "Success", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
   //       
   //       },
   //       error: (err) => {
@@ -6394,20 +6394,19 @@ export class RugDynamicFormComponent {
 
             this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-            this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully. ${this.customerId}`, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: `Full Quotation Generated Successfully. ${this.customerId}`, duration: 3000 });
             
             resolve(); // Resolving the promise once the API call completes
           },
           error: (err) => {
             
             console.error(err);
-            this.toast.error({ detail: "ERROR", summary: "Something went wrong. Please try again.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: "Something went wrong. Please try again.", duration: 3000 });
             reject(err); // Rejecting the promise if there is an error
           }
         });
-      }).catch((err) => {
-        
-        this.toast.error({ detail: "ERROR", summary: "Failed to map form data", duration: 3000 });
+      }).catch((err) => { 
+        this.toast.error({ detail: "Error", summary: "Failed to map form data", duration: 3000 });
         reject(err);
       });
     });
@@ -7223,7 +7222,7 @@ export class RugDynamicFormComponent {
       next: (response: any) => {
         console.log('KYC details:', response);
         if (response.isSuccess == true) {
-          this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
+          this.toast.success({ detail: "Success", summary: "KYC Details Fetched Successfully", duration: 3000 });
           
           control.disabled = true;
           if (typeof response.data === 'object' && response.data !== null) {
@@ -7251,7 +7250,7 @@ export class RugDynamicFormComponent {
           }
         }
         else {
-          this.toast.warning({ detail: "WARNING", summary: "No Record Found", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "No Record Found", duration: 3000 });
         }
         // else {
         //   console.error('Expected response.data to be an object, but received:', response.data);
@@ -7260,7 +7259,7 @@ export class RugDynamicFormComponent {
       },
       error: (error) => {
         
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Failed to fetch KYC Details", duration: 3000 });
         console.error('Error fetching KYC details:', error);
       }
     });
@@ -7278,7 +7277,7 @@ export class RugDynamicFormComponent {
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
         console.log('Policy details:', response);
-        this.toast.success({ detail: "SUCCESS", summary: "Policy Details Fetched Successfully", duration: 3000 });
+        this.toast.success({ detail: "Success", summary: "Policy Details Fetched Successfully", duration: 3000 });
         
         control.disabled = true;
 
@@ -7316,7 +7315,7 @@ export class RugDynamicFormComponent {
       },
       error: (error) => {
         
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Failed to fetch Policy Details", duration: 3000 });
         console.error('Error fetching Policy details:', error);
       }
     });
@@ -7551,9 +7550,9 @@ export class RugDynamicFormComponent {
     // reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
     reqData.customerId = "";
     this.yatraService.submitFeedback(reqData).subscribe((response) => {
-      this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+      this.toast.success({ detail: 'Success', summary: 'Feedback submitted successfully! Thank you for your input.' });
     }, (error) => {
-      this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+      this.toast.error({ detail: 'Error', summary: 'Failed to submit feedback. Please try again later.' });
     });
     // this.customerFeedbackModule.hide();
   }
@@ -8432,7 +8431,7 @@ export class RugDynamicFormComponent {
             this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
         }else{
           this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
-          this.toast.warning({ detail: "WARNING", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Please select Sum Insured as 1CR", duration: 3000 });
           this.calculateD2CPremium();
         }
         this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
@@ -8600,7 +8599,7 @@ export class RugDynamicFormComponent {
               this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
             }
           }else{
-            this.toast.warning({ detail: "WARNING", summary: res.message, duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: res.message, duration: 3000 });
           }
 
           // res = JSON.parse(res.data).data
@@ -8650,7 +8649,7 @@ export class RugDynamicFormComponent {
       }
     });
     if (this.dynamicFormGroup.invalid) {
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
       if (firstInvalidTabIndex !== null) {
         // Navigate to the first invalid tab
         this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -8658,7 +8657,7 @@ export class RugDynamicFormComponent {
       }
     }
     else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-      this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+      this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
   }
   }
 }

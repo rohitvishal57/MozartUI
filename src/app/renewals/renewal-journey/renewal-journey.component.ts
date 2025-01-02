@@ -1308,7 +1308,7 @@ export class RenewalJourneyComponent {
         }
       });
       if (this.renewalFormGroup.invalid) {
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
         // if (firstInvalidTabIndex !== null) {
         //   // Navigate to the first invalid tab
         //   this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -1594,7 +1594,7 @@ export class RenewalJourneyComponent {
     // console.log(checkbox);
     // this.kidCount >= 4 &&
     if (checkbox.checked && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Cannot select more than 4 childrens", duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: "Cannot select more than 4 childrens", duration: 3000 });
       checkbox.checked = false;
       return;
     }
@@ -2399,7 +2399,7 @@ export class RenewalJourneyComponent {
   closeOverlay(subControl: any, control: any = null) {
     if (subControl.conditionCheck && (this.renewalFormGroup.get(control.name) as FormGroup).invalid) {
       console.log(subControl);
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
     else {
       this.closePopUp();
@@ -2417,7 +2417,7 @@ export class RenewalJourneyComponent {
         })
       }
       console.log(this.renewalFormGroup, dynamicControl);
-      // this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      // this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
     else {
       this.isOverlayVisible = false;
@@ -2810,7 +2810,7 @@ export class RenewalJourneyComponent {
       if (this.selectedButton) {
         try {
           if (this.formData.chequeDate && this.formData.chequeDate !== this.currentDate) {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid chequeDate", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: "Invalid chequeDate", duration: 3000 });
             return;
           }
           // const policyNum = this.proposalNum.replace(/-/g, "");
@@ -2846,7 +2846,7 @@ export class RenewalJourneyComponent {
                 const errorMessage = "Document upload failed.";
                 console.error(errorMessage, res);
                 this.toast.error({
-                  detail: "ERROR",
+                  detail: "Error",
                   summary: errorMessage,
                   duration: 3000,
                 });
@@ -2875,7 +2875,7 @@ export class RenewalJourneyComponent {
         }
       } else {
         this.toast.warning({
-          detail: "WARNING",
+          detail: "Warning",
           summary: "Please select Payment Mode.",
           duration: 3000,
         });
@@ -2958,7 +2958,7 @@ export class RenewalJourneyComponent {
           }
         },
         (err) => {
-          this.toast.error({ detail: '', summary: 'Failed to do offline payment.', duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: 'Failed to do offline payment.', duration: 3000 });
           console.log("error is coming from fullquote api");
         })
     });
@@ -3497,7 +3497,7 @@ export class RenewalJourneyComponent {
 
                 // Showing success toast
                 this.toast.success({
-                  detail: "SUCCESS",
+                  detail: "Success",
                   summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
                   duration: 3000,
                 });
@@ -3509,7 +3509,7 @@ export class RenewalJourneyComponent {
                 console.log(errorMessage);
                 // Showing error toast
                 this.toast.error({
-                  detail: "ERROR",
+                  detail: "Error",
                   summary: errorMessage,
                   duration: 5000,
                 });
@@ -3524,7 +3524,7 @@ export class RenewalJourneyComponent {
 
               // Showing generic error toast for API failure
               this.toast.error({
-                detail: "ERROR",
+                detail: "Error",
                 summary: "Something went wrong. Please try again.",
                 duration: 3000,
               });
@@ -3538,7 +3538,7 @@ export class RenewalJourneyComponent {
 
           // Showing error toast for mapping failure
           this.toast.error({
-            detail: "ERROR",
+            detail: "Error",
             summary: "Failed to map form data",
             duration: 3000,
           });
@@ -3594,15 +3594,15 @@ export class RenewalJourneyComponent {
       next: (response: any) => {
         console.log("sharePaymentLinkApi", response);
         if (response.data) {
-          this.toast.success({ detail: "SUCCESS", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
+          this.toast.success({ detail: "Success", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
           this.changeMainFormDependentControls(control.dependentControls, true);
           this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
         } else {
-          this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
         }
       },
       error: (error) => {
-        this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+        this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
       }
     });
   }
@@ -3638,12 +3638,12 @@ export class RenewalJourneyComponent {
               window.location.href = response.data.paymentURL;
             }
           } else {
-            this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: response.message || "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
           }
         },
         error: (error) => {
-          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
           console.error('Error generating payment link:', error);
         }
       });
@@ -3721,7 +3721,7 @@ export class RenewalJourneyComponent {
     this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
       (res: any) => {
         if (res.data.isShareKyc) {
-          this.toast.success({ detail: "SUCCESS", summary: "Link has been sent successfully", duration: 3000 });
+          this.toast.success({ detail: "Success", summary: "Link has been sent successfully", duration: 3000 });
         }
         this.changeMainFormDependentControls(control.dependentControls, true);
         this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
@@ -3766,7 +3766,7 @@ export class RenewalJourneyComponent {
   copyText(control: any) {
     console.log(control);
     this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
-    this.toast.success({ detail: "SUCCESS", summary: `Text copied to clipboard!`, duration: 3000 });
+    this.toast.success({ detail: "Success", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
 
@@ -3791,9 +3791,9 @@ export class RenewalJourneyComponent {
     reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
     reqData.customerId = "";
     // this.yatraService.submitFeedback(reqData).subscribe((response) => {
-    //   this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+    //   this.toast.success({ detail: 'Success', summary: 'Feedback submitted successfully! Thank you for your input.' });
     // }, (error) => {
-    //   this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+    //   this.toast.error({ detail: 'Error', summary: 'Failed to submit feedback. Please try again later.' });
     // });
     // this.customerFeedbackModule.hide();
     this.isFeedBackModalVisible = false;
@@ -3869,12 +3869,12 @@ export class RenewalJourneyComponent {
               window.open(fileURL, "_blank");
             }
           } else {
-            this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: response.message || "No file found to download.", duration: 3000 });
           }
         },
         (error: any) => {
           console.error("Download Policy Kit Error:", error);
-          this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Error while downloading Policy Kit.", duration: 3000 });
         }
       );
     }
@@ -3911,16 +3911,16 @@ export class RenewalJourneyComponent {
           const searchResponse = response.data.searchResponse;
           this.retrievedDocuments = searchResponse;
           if (searchResponse && searchResponse[0]?.error?.length > 0) {
-            this.toast.success({ detail: "", summary: "No documents are available to download.", duration: 2000 });
+            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 2000 });
             return;
           }
         } else {
-          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
         console.error("Search document error", error);
-        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
       }
     );
   }

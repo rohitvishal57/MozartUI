@@ -2620,7 +2620,7 @@ export class YatraComponent {
         event.target.value = '';
         control.value = null;
         this.dynamicFormGroup.get(control.name)?.setValue(null);
-        this.toast.warning({ detail: "", summary: "Invalid date format.", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Invalid date format.", duration: 3000 });
         return;
       }
       if (inputDate > currentDate) {
@@ -2628,7 +2628,7 @@ export class YatraComponent {
         event.target.value = '';
         control.value = null;
         this.dynamicFormGroup.get(control.name)?.setValue(null);
-        this.toast.warning({ detail: "", summary: "Date cannot be in the future.", duration: 3000 });
+        this.toast.warning({ detail: "Warning", summary: "Date cannot be in the future.", duration: 3000 });
       }
     }
 
@@ -6639,9 +6639,9 @@ export class YatraComponent {
     reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
     reqData.customerId = "";
     this.yatraService.submitFeedback(reqData).subscribe((response) => {
-      this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+      this.toast.success({ detail: 'Success', summary: 'Feedback submitted successfully! Thank you for your input.' });
     }, (error) => {
-      this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+      this.toast.error({ detail: 'Error', summary: 'Failed to submit feedback. Please try again later.' });
     });
     // this.customerFeedbackModule.hide();
     this.isFeedBackModalVisible = false;
@@ -7240,7 +7240,7 @@ export class YatraComponent {
       next: (response: any) => {
         if (response.isSuccess && response.data) {
           this.pennyDropVerficationDetails = response.data;
-          this.toast.success({ detail: "", summary: response.message, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
         } else {
           // Handle error, you can show a message if required
           this.toast.warning({ detail: "Warning", summary: 'Failed transaction', duration: 3000 });
@@ -7493,15 +7493,15 @@ export class YatraComponent {
           // },
           // (err) => {
           //   console.error("Error from getRenewalInfo API:", err);
-          //   this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          //   this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
           // }
           // );      
         } else {
-          this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
         }
       },
       (err) => {
-        this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+        this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
         console.log("error is coming from fullquote api");
       }
     );
@@ -7559,11 +7559,11 @@ export class YatraComponent {
             // });
           }
         } else {
-          this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
         }
       },
       (err) => {
-        this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
+        this.toast.error({ detail: 'Error', summary: 'Failed to do online payment.', duration: 3000 });
         console.log("error is coming from fullquote api");
       }
     );
@@ -7681,12 +7681,12 @@ export class YatraComponent {
               window.open(fileURL, "_blank");
             }
           } else {
-            this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+            this.toast.error({ detail: "Error", summary: response.message || "No file found to download.", duration: 3000 });
           }
         },
         (error: any) => {
           console.error("Download Policy Kit Error:", error);
-          this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: "Error while downloading Policy Kit.", duration: 3000 });
         }
       );
     }
@@ -7723,16 +7723,16 @@ export class YatraComponent {
           const searchResponse = response.data.searchResponse;
           this.retrievedDocuments = searchResponse;
           if (searchResponse && searchResponse[0]?.error?.length > 0) {
-            this.toast.success({ detail: "", summary: "No documents are available to download.", duration: 2000 });
+            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 2000 });
             return;
           }
         } else {
-          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
         console.error("Search document error", error);
-        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
       }
     );
   }
@@ -7856,14 +7856,14 @@ export class YatraComponent {
     this.yatraService.insertproposerDocumentById(reqData).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
-          this.toast.success({ detail: "SUCCESS", summary: response.message + response.data.applicationNumber, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: response.message + response.data.applicationNumber, duration: 3000 });
         }
         else {
-          this.toast.error({ detail: "ERROR", summary: response.message, duration: 3000 })
+          this.toast.error({ detail: "Error", summary: response.message, duration: 3000 })
         }
       },
       error: (err) => {
-        this.toast.error({ detail: "ERROR", summary: 'Failed to insert Document', duration: 3000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to insert Document', duration: 3000 });
       }
     });
   }
@@ -7925,10 +7925,10 @@ export class YatraComponent {
               this.dynamicFormGroup.get('accountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
               this.dynamicFormGroup.get('confAccountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
               this.dynamicFormGroup.get('ifscCode')?.setValue(response.data.bankAccountVerification.ifsc);
-              this.toast.success({ detail: "", summary: response.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
             } else {
               this.toast.error({
-                detail: "ERROR",
+                detail: "Error",
                 summary: response.message,
                 duration: 3000,
               });
@@ -7962,10 +7962,10 @@ export class YatraComponent {
               //   console.error("Error in full quote generation:", error);
               // }
 
-              this.toast.success({ detail: "", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
             } else {
               this.toast.error({
-                detail: "ERROR",
+                detail: "Error",
                 summary: res.message,
                 duration: 3000,
               });
@@ -7996,10 +7996,10 @@ export class YatraComponent {
 
               this.insertDocByIdwithProof(arr)
 
-              this.toast.success({ detail: "", summary: res.message, duration: 3000 });
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
             } else {
               this.toast.error({
-                detail: "ERROR",
+                detail: "Error",
                 summary: res.message,
                 duration: 3000,
               });

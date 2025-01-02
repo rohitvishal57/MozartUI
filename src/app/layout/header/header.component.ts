@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   logOut() {
-    this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });
+    this.toast.success({ detail: "Success", summary: "Agent Logout successfully!!", duration: 2000 });
     this.loginService.signOut();
     this.router.navigate(['']);
   }
@@ -153,7 +153,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.notificationService.markAllNotification(this.agentCode).subscribe(
       (response) => {
         if (response?.isSuccess) {
-          this.toast.success({ detail: "", summary: 'Successfully marked all notifications as read.', duration: 5000 });
+          this.toast.success({ detail: "Success", summary: 'Successfully marked all notifications as read.', duration: 5000 });
           this.notificationInfo();
           this.showNotifications = false;
         }

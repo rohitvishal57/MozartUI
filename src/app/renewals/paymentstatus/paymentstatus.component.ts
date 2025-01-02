@@ -70,7 +70,7 @@ export class PaymentstatusComponent {
                   console.log('error',error);
                 });
             }else if (res.data.paymentStatus == 'SUCCESS' || res.data.paymentStatus == 'INTIATED') {
-                this.toast.success({detail: "SUCCESS",summary: "payment completed Successfully",duration: 5000});
+                this.toast.success({detail: "Success",summary: "payment completed Successfully",duration: 5000});
                 // const formData = {
                 //   productName: res.data.productName,
                 //   ...res.data.orderDetails,
@@ -88,7 +88,7 @@ export class PaymentstatusComponent {
                   }
                 });
           } else if(res.data.paymentStatus == 'INPROGRESS'|| res.data.paymentStatus == 'PENDING'){
-            this.toast.success({detail: "SUCCESS",summary: "payment Pending",duration: 5000});
+            this.toast.success({detail: "Success",summary: "payment Pending",duration: 5000});
             this.router.navigate(['renewal/renewalList'], {
               state: {
                 paymentStatus: this.encryptionService.encrypt(res.data.paymentStatus),
@@ -114,16 +114,16 @@ export class PaymentstatusComponent {
               },
               (err) => {
                 console.error("Error from getRenewalInfo API:", err);
-                this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+                this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
               }
             );   
           } 
         } else {
-          this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
         }
       },
       (err) => {
-        this.toast.error({ detail: '', summary: 'Failed to do online payment.', duration: 3000 });
+        this.toast.error({ detail: 'Error', summary: 'Failed to do online payment.', duration: 3000 });
         console.log("error is coming from fullquote api");
       }
     );

@@ -219,7 +219,7 @@ export class ProposalsListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "", summary: "Failed to get proposals list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get proposals list.", duration: 2000 });
       }
     );
   }
@@ -261,7 +261,7 @@ export class ProposalsListComponent {
            this.totalRecords = response.data[this.filterType];
         }
       }, (error) => {
-        this.toast.error({ detail: "", summary: "Failed to get quote list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get quote list.", duration: 2000 });
       });
   }
 
@@ -302,7 +302,7 @@ export class ProposalsListComponent {
         this.productsList = res.data
       },
       error: (err) => {
-        this.toast.error({ detail: "", summary: "Failed to get Product Names.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get Product Names.", duration: 2000 });
       }
     })
   }
@@ -648,7 +648,7 @@ export class ProposalsListComponent {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
 
@@ -692,7 +692,7 @@ export class ProposalsListComponent {
           try{
              blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
           }catch(exception){
-            this.toast.error({ detail: "", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+            this.toast.error({ detail: "Error", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
           }
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -702,7 +702,7 @@ export class ProposalsListComponent {
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
-          this.toast.success({ detail: "", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
+          this.toast.success({ detail: "Success", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
         }
       },(error)=>{
         console.log('failed to generate PDF ',error);

@@ -651,14 +651,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
                     }
                     else if (Respevent?.message) {
                       this.toast.error({
-                        detail: 'ERROR',
+                        detail: 'Error',
                         summary: Respevent.message,
                         duration: 5000,
                       });
                       this.backToEndorsment();
                     }  else if (Respevent == null || Respevent?.message == undefined) {
                       this.toast.error({
-                        detail: 'ERROR',
+                        detail: 'Error',
                         summary: "File upload was not successfull. Try again later!",
                         duration: 5000,
                       });
@@ -819,7 +819,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (resp: any) => {
           if (resp && resp?.statusCode == "200" && resp?.isSuccess) {
             this.toast.success({
-              detail: 'SUCCESS',
+              detail: 'Success',
               summary: resp.message,
               duration: 5000
             });

@@ -153,7 +153,7 @@ export class SideNavbarComponent {
   
   // Handle user logout
   logOut(): void {
-    this.toast.success({ detail: 'SUCCESS', summary: 'Agent Logout successfully!!', duration: 2000 });
+    this.toast.success({ detail: 'Success', summary: 'Agent Logout successfully!!', duration: 2000 });
     this.loginService.signOut();
     this.router.navigate(['']);
   }

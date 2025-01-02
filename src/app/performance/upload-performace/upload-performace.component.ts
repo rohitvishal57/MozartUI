@@ -56,7 +56,10 @@ export class UploadPerformaceComponent implements OnInit{
             console.log(response);
             if (response) {
               console.log(response);
-              this.toast.success({ detail: response.statusName });
+              this.toast.success({
+                detail: 'Success',
+                summary: response.statusName,
+              });
             } 
             else {console.error("API request was not successful.");}
           },

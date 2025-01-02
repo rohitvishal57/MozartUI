@@ -81,7 +81,7 @@ export class StatusValidationComponent implements OnInit {
   navigateToLogin(message: string) {
     this.router.navigate(['']);
     this.toast.error({
-      detail: 'ERROR',
+      detail: 'Error',
       summary: message,
       duration: 5000,
     });

@@ -72,7 +72,7 @@ export class SendOtpViaComponent implements OnInit{
           error: (err => {
             console.log(err);
             this.dialogRef.close({data: err, status:'Failure'});
-            this.toast.error({ detail: "ERROR", summary:err, duration:5000 });
+            this.toast.error({ detail: "Error", summary:err, duration:5000 });
           })
         })
   }

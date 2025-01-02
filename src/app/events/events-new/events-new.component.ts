@@ -139,7 +139,10 @@ export class EventsNewComponent implements OnInit {
       this.eventsService.saveEvent(payload).subscribe(
         (response:any) => {
           if (response.isSuccess) {
-            this.toast.success({ detail: "Event Created successfully" });
+            this.toast.success({
+              detail: 'Success',
+              summary: "Event Created successfully"
+            });
             this.route.navigate(["events/eventsList"]);          
           } else {
             console.error('Failed to save event:', response.message);

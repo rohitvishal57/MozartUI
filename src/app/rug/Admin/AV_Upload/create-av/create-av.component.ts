@@ -168,7 +168,7 @@ export class CreateAVComponent implements OnInit {
 
     this.adminService.createAV(formData).subscribe((response: any) => {
         console.log('create AV successfully:', response);
-        this.toast.success({ detail: "SUCCESS", summary: "Successful..", duration: 3000 })
+        this.toast.success({ detail: "Success", summary: "Successful..", duration: 3000 })
       });
     this.router.navigate(['rug/av-list']);
     console.log('Form Submitted:', this.createAvForm.value);

@@ -29,7 +29,7 @@ export class D2cTestPageComponent implements OnInit{
          window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
@@ -63,7 +63,7 @@ export class D2cTestPageComponent implements OnInit{
          window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
@@ -77,7 +77,7 @@ export class D2cTestPageComponent implements OnInit{
         //  window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here

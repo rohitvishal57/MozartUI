@@ -126,7 +126,7 @@ export class KycComponent {
                       }
                       // localStorage.setItem("formIndex", kycData.formSequence.toString());
                       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
-                      this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
+                      this.toast.success({ detail: "Success", summary: "KYC Success", duration: 5000 });
                       this.router.navigate(['yatra'], {
                         queryParams: { data: encodedEncryptedData }
                       });
@@ -205,7 +205,7 @@ export class KycComponent {
             //   this.router.navigate(['yatra'], {
             //     queryParams: { data: encodedEncryptedData }
             //   });
-            //   this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+            //   this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
             // }
           },
           (err) => {
@@ -230,7 +230,7 @@ export class KycComponent {
                   ...resInfo.data,
                   isKycCompleted: Boolean(res.data.kycStatus),
                 };
-                this.toast.success({ detail: "SUCCESS", summary: "KYC SUCCESS", duration: 5000 });
+                this.toast.success({ detail: "Success", summary: "KYC SUCCESS", duration: 5000 });
                 this.router.navigate(['renewal/renewalJourney'], {
                   state: {
                     formData: this.encryptionService.encrypt(updatedData),
@@ -284,7 +284,7 @@ export class KycComponent {
             console.log(res);
             const kycData = res.data;
             if(kycData.kycStatus == "True"){
-              this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
+              this.toast.success({ detail: "Success", summary: "KYC Success", duration: 5000 });
             }
             else{
               this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
@@ -312,7 +312,7 @@ export class KycComponent {
           async (res: any) => {
             const kycData = res.data;
             if(kycData.kycStatus == "True"){
-              this.toast.success({ detail: "SUCCESS", summary: "KYC Success", duration: 5000 });
+              this.toast.success({ detail: "Success", summary: "KYC Success", duration: 5000 });
             }
             else{
               this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 5000 });

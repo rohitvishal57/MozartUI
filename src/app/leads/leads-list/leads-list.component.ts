@@ -459,11 +459,10 @@ export class LeadsListComponent {
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
         if (response.message == "Success") {
-
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: "", summary: 'Leads has been successfully assigned.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Leads has been successfully assigned.', duration: 5000 });
           } else {
-            this.toast.success({ detail: "", summary: 'Lead has been successfully assigned.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Lead has been successfully assigned.', duration: 5000 });
           }
           this.filterQuotes('all','totalRecords');
         }
@@ -520,7 +519,7 @@ export class LeadsListComponent {
 
     if (this.startDate > new Date().toISOString().split('T')[0]) {
       this.startDate = ''; 
-      this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
+      this.toast.warning({ detail: "Warning", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
 
   }
@@ -567,7 +566,7 @@ export class LeadsListComponent {
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
             localStorage.setItem("formIndex", lead.formSequence);
           } catch (err) {
-            this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+            this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
           }
           const reqData = {
             partnerId : interestedProductItem.partnerId,
@@ -669,7 +668,7 @@ export class LeadsListComponent {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
+      this.toast.success({ detail: "Success", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
 
      }
      },

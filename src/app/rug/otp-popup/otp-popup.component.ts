@@ -128,7 +128,7 @@ export class OtpPopupComponent implements OnInit{
     const userCaptcha = this.form.get('captchaInput')?.value;
     this.submitted = true;
     if (userCaptcha === this.captchaText) {
-      this.toast.success({ detail: "SUCCESS", summary: 'CAPTCHA validated successfully', duration: 3000 });
+      this.toast.success({ detail: "Success", summary: 'CAPTCHA validated successfully', duration: 3000 });
       // this.result = 'CAPTCHA validated successfully';
       this.isCaptchaValidated=true;
       this.submitted = false;
@@ -137,7 +137,7 @@ export class OtpPopupComponent implements OnInit{
       // this.result = 'Invalid CAPTCHA, please try again';
       // this.submitted = false;
       this.isCaptchaValidated=false;
-      this.toast.warning({ detail: "SUCCESS", summary: 'Invalid CAPTCHA, please try again', duration: 3000 });
+      this.toast.warning({ detail: "Warning", summary: 'Invalid CAPTCHA, please try again', duration: 3000 });
 
       this.reloadCaptcha();
     }
@@ -150,7 +150,7 @@ export class OtpPopupComponent implements OnInit{
           console.log(this.otpResponse);
 
           if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
-            this.toast.success({ detail: "SUCCESS", summary: this.otpResponse.message, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: this.otpResponse.message, duration: 3000 });
           }
         },
         error: (error) => {
@@ -171,7 +171,7 @@ export class OtpPopupComponent implements OnInit{
         console.log(this.otpValidateResponse);
 
         if (this.otpValidateResponse.statusCode == 200 && this.otpValidateResponse.isSuccess == true) {
-          this.toast.success({ detail: "SUCCESS", summary: this.otpValidateResponse.message, duration: 3000 });
+          this.toast.success({ detail: "Success", summary: this.otpValidateResponse.message, duration: 3000 });
           this.dialogRef.close(this.otpValidateResponse);
         }
       },

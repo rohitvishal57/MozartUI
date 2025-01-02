@@ -243,13 +243,13 @@ export class RenewalDynamicFormComponent implements OnInit {
                   this.renewalInfo.response.policyData[0].Members.push(this.form.value);
                   const newMemberIndex =this.renewalInfo.response.policyData[0].Members.length - 1;
                   this.referenceNumber = res.data.referenceNumber;
-                  this.toast.success({detail: "",summary: "New Member Added Successfully.",duration: 2000,});
+                  this.toast.success({detail: "Success",summary: "New Member Added Successfully.",duration: 2000,});
                 } else {
-                  this.toast.error({detail: "",summary: "Failed to Add New Member.",duration: 1500,});
+                  this.toast.error({detail: "Error",summary: "Failed to Add New Member.",duration: 2000,});
                 }
               },
               (err) => {
-                this.toast.error({detail: "",summary: "Failed to Add New Member.",duration: 1500,});
+                this.toast.error({detail: "Error",summary: "Failed to Add New Member.",duration: 2000,});
               }
             );
           this.formId = 5001;
@@ -281,13 +281,13 @@ export class RenewalDynamicFormComponent implements OnInit {
                   }
                 });
                 this.referenceNumber = res.data.referenceNumber;
-                this.toast.success({detail: "",summary: "Address Updated Successfully.",duration: 2000,});
+                this.toast.success({detail: "Success",summary: "Address Updated Successfully.",duration: 2000,});
               } else {
-                this.toast.error({detail: "",summary: "Failed to Update Address.",duration: 1500});
+                this.toast.error({detail: "Error",summary: "Failed to Update Address.",duration: 1500});
               }
             },
             (err) => {
-              this.toast.error({detail: "",summary: "Failed to Update Address.",duration: 1500});
+              this.toast.error({detail: "Error",summary: "Failed to Update Address.",duration: 1500});
             }
           );
           this.formId = 5001;
@@ -310,13 +310,13 @@ export class RenewalDynamicFormComponent implements OnInit {
                   }
                 });
                 this.referenceNumber = res.data.referenceNumber;
-                this.toast.success({detail: "",summary: "Nominee Updated Successfully.",duration: 2000,});
+                this.toast.success({detail: "Success",summary: "Nominee Updated Successfully.",duration: 2000,});
               } else {
-                this.toast.error({ detail: "",summary: "Failed to Update Nominee Details.",duration: 1500});
+                this.toast.error({ detail: "Error",summary: "Failed to Update Nominee Details.",duration: 1500});
               }
             },
             (err) => {
-              this.toast.error({ detail: "",summary: "Failed to Update Nominee Details.",duration: 1500});
+              this.toast.error({ detail: "Error",summary: "Failed to Update Nominee Details.",duration: 1500});
             }
           );
           this.formId = 5001;
@@ -345,13 +345,13 @@ export class RenewalDynamicFormComponent implements OnInit {
                 }
               });
               this.referenceNumber = res.data.referenceNumber;
-              this.toast.success({detail: "",summary: "Bank Details Updated Successfully.",duration: 2000,});
+              this.toast.success({detail: "Success",summary: "Bank Details Updated Successfully.",duration: 2000});
             } else {
-              this.toast.error({detail: "",summary: "Failed to Update Bank Details.",duration: 1500});
+              this.toast.error({detail: "Error",summary: "Failed to Update Bank Details.",duration: 2000});
             }
           },
           (err) => {
-            this.toast.error({detail: "",summary: "Failed to Update Bank Details.",duration: 1500});
+            this.toast.error({detail: "Error",summary: "Failed to Update Bank Details.",duration: 2000});
           }
         );} else {
           this.form.markAllAsTouched();
@@ -566,7 +566,7 @@ getproductdetailsandfeatures() {
           }
         },
         error: (error: any) => {
-          this.toast.error({detail: "",summary: "Failed to payment.",duration: 3000});
+          this.toast.error({detail: "Error",summary: "Failed to payment.",duration: 3000});
         },
       });
     }
@@ -733,7 +733,7 @@ getproductdetailsandfeatures() {
     else if(this.activeSection== 'kyc'){
       // this.setSection('payment')
       if(this.kycData==undefined){
-        this.toast.error({detail: "",summary: "Please complete the kyc",duration: 3000});
+        this.toast.error({detail: "Error",summary: "Please complete the kyc",duration: 3000});
       }
       else{
         this.setSection('payment')
@@ -771,11 +771,11 @@ getproductdetailsandfeatures() {
             this.isFeedBackModalVisible = true;
           }
           else{
-            this.toast.error({ detail: '',summary:res.message || "Failed to do Payment",duration: 3000});
+            this.toast.error({ detail: 'Error',summary:res.message || "Failed to do Payment",duration: 3000});
           }
         },
         (err)=>{
-          this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+          this.toast.error({ detail: 'Error',summary: 'Failed to do offline payment.',duration: 3000});
           console.log("error is coming from fullquote api");
       })
     }
@@ -798,7 +798,7 @@ getproductdetailsandfeatures() {
   handleKyc(action: any) {
     this.kycDetailsSubmitted = true;
     if (this.kycFormGroup.invalid) {
-      this.toast.error({detail: "",summary: "Please enter valid KYC details.",duration: 3000,});
+      this.toast.error({detail: "Error",summary: "Please enter valid KYC details.",duration: 3000,});
     } else {
       const reqData = this.kycFormGroup.value;
       this.yatraService.GetKycDetails(reqData).subscribe(
@@ -817,16 +817,16 @@ getproductdetailsandfeatures() {
               }
             );
             this.actionKyc = action;
-            this.toast.success({detail: "",summary: "KYC Details Fetched Successfully.",duration: 2000,});
+            this.toast.success({detail: "Success",summary: "KYC Details Fetched Successfully.",duration: 2000,});
           } else if (response.isSuccess === false) {
-            this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
+            this.toast.error({detail: "Error",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
             this.getkycURL();
           }
           console.log("responsec body", response.isSuccess);
         },
         (error: any) => {
           this.getkycURL();
-          this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
+          this.toast.error({detail: "Error",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
         }
       );
     }
@@ -872,10 +872,16 @@ getproductdetailsandfeatures() {
     reqData.customerId = "";
     this.yatraService.submitFeedback(reqData).subscribe(
       (response) => {
-        this.toast.success({ detail: "Feedback submitted successfully! Thank you for your input.", });
+        this.toast.success({
+          detail: 'Success',
+          summary: 'Feedback submitted successfully! Thank you for your input.'
+        });
       },
       (error) => {
-        this.toast.error({ detail: "Failed to submit feedback. Please try again later.",});
+        this.toast.error({
+          detail: 'Error',
+          summary: 'Failed to submit feedback. Please try again later.'
+        });
       }
     );
     this.isFeedBackModalVisible = false;
@@ -907,7 +913,7 @@ getproductdetailsandfeatures() {
         }
       },
       (err) => {
-        this.toast.error({ detail: "", summary: err.message, duration: 1500 });
+        this.toast.error({ detail: "Error", summary: err.message, duration: 1500 });
       }
     );
   }

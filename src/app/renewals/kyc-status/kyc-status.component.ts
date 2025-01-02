@@ -85,15 +85,15 @@ export class KycStatusComponent {
               },
               (err) => {
                 console.error("Error from getRenewalInfo API:", err);
-                this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+                this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
               }
             );      
           } else {
-            this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
           }
         },
         (err) => {
-          this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
           console.log("error is coming from fullquote api");
         }
       );

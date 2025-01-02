@@ -150,15 +150,15 @@ export class MyPerformaceComponent {
           if(commissionDetails.fileName && commissionDetails.omniDocIndex){
             this.downloadStatement(commissionDetails.omniDocIndex, commissionDetails.fileName);
           }else{
-            this.toast.warning({ detail: "", summary: 'There are no commission statements to download.', duration: 2000 }); 
+            this.toast.warning({ detail: "Warning", summary: 'There are no commission statements to download.', duration: 2000 }); 
           }
         }else{
-          this.toast.warning({ detail: "", summary: 'Failed to fetch commission statement.', duration: 2000 });
+          this.toast.warning({ detail: "Warning", summary: 'Failed to fetch commission statement.', duration: 2000 });
         }
       },
       (error) => {
         console.log('Failed to fetch commission statement', error);
-        this.toast.error({ detail: "", summary: 'Failed to fetch commission statement.', duration: 2000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to fetch commission statement.', duration: 2000 });
       });
   }
 
@@ -183,16 +183,16 @@ export class MyPerformaceComponent {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-            this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
+            this.toast.success({ detail: "Success", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
           }else{
-            this.toast.warning({ detail: "", summary: 'Failed to download commission statement.', duration: 2000 });
+            this.toast.warning({ detail: "Warning", summary: 'Failed to download commission statement.', duration: 2000 });
           }
         }catch(error){
           console.log('errror download pdf',error);
         }
       }, (error) => {
         console.log('Failed to download commission statement', error);
-        this.toast.error({ detail: "", summary: 'Failed to download commission statement.', duration: 2000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to download commission statement.', duration: 2000 });
       });
 
   }

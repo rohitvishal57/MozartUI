@@ -425,7 +425,7 @@ export class GetQuoteComponent implements AfterViewChecked {
             else if (this.numberOfChild == 4) {
               // relation.value = false;
               event.target.checked = false; // Uncheck the checkbox in the DOM
-              this.toast.warning({ detail: "Error", summary: "Already 4 Child are Added.", duration: 2000 });
+              this.toast.warning({ detail: "Warning", summary: "Already 4 Child are Added.", duration: 2000 });
             }
             else {
               this.numberOfChild += 1;
@@ -435,7 +435,7 @@ export class GetQuoteComponent implements AfterViewChecked {
             // else {
             //   relation.value = false;
             //   event.target.checked = false; // Uncheck the checkbox in the DOM
-            //   this.toast.warning({detail: "Error",summary: "Already 4 Child are Added.",duration: 2000});
+            //   this.toast.warning({detail: "Warning",summary: "Already 4 Child are Added.",duration: 2000});
             // }
           }
           else {
@@ -1135,7 +1135,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
     if (!isValidPincode) {
       this.toast.error({
-        detail: "WARNING",
+        detail: "Error",
         summary: "Invalid pincode. Please enter a valid 6-digit pincode.",
         duration: 3000
       });
@@ -1167,7 +1167,7 @@ export class GetQuoteComponent implements AfterViewChecked {
           console.log("City and State updated in service:", this.proposerCity, this.proposerState);
         } else {
           this.toast.error({
-            detail: "WARNING",
+            detail: "Error",
             summary: res.message,
             duration: 3000
           });
@@ -1177,7 +1177,7 @@ export class GetQuoteComponent implements AfterViewChecked {
         console.error(err);
         const errorMessage = err?.error?.message || "An unexpected error occurred. Please try again.";
         this.toast.error({
-          detail: "WARNING",
+          detail: "Error",
           summary: errorMessage,
           duration: 3000
         });
