@@ -666,9 +666,13 @@ export class ProposalsListComponent {
     }
   }
   maskEmail(email: any): string {
+    if(email){ 
     const [localPart, domain] = email.split('@');
     const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
     return `${maskedLocal}@${domain}`;
+    }else{
+      return "";
+    }
   }
   
   maskMobileNumber(mobileNumber: any): string {
