@@ -140,8 +140,6 @@ export class HeaderComponent implements OnInit ,OnDestroy {
         this.notifications = response?.data;
         this.unReadNotificaitons =  this.notifications.filter(notification => notification?.isRead === false);
         this.notificationCount = this.unReadNotificaitons.length;
-        console.log('notifications',this.notifications)
-
       }
     },
     error => {
