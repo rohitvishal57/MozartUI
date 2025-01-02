@@ -1477,7 +1477,7 @@
                   </div>
                 </div>
                 <div *ngIf="control.type === 'questionnaire'" [class]="control.class"
-                  class="typecss checkboxes col-md-6 multi-premium-optional-cover-gry-box" style="position: relative;">
+                  class="typecss checkboxes col-md-6 questionnaire_space multi-premium-optional-cover-gry-box" style="position: relative;">
                   <div class="row">
                     <ng-container [formGroupName]="control.name">
                       <!-- <ng-container *ngFor="let allSubForm of control.subControls;index as i">
@@ -1493,13 +1493,24 @@
                           </span>
                         </label>
                       </div>
-                      <div class="col-lg-8">
-                        <div class="health-lifestyle-selct-btn" style="display: flex;">
-
-                          <input type="button" (click)="onCheckboxChange($event,'',control)" style="margin-left: 10px;"
-                            name="select" id="select" [value]="'SELECT' | translate" class="add-btn" />
+                      <div class="row">
+                        <div class="col-12 col-lg-12">
+                          <div class="selectedMembers_Quiestions"> 
+                            <div class="health-lifestyle-selct-btn">
+                              <input type="button" (click)="onCheckboxChange($event,'',control)" 
+                                name="select" id="select" [value]="'SELECT' | translate" class="add-btn" />
+                            </div>
+                            <div class="list_selectedMembers">
+                              <div *ngFor="let key of getKeys(control.name)" class="individualMember">
+                                <div *ngIf="isBooleanTrue(control.name,key)">
+                                  {{ formatKey(key) }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      
                       <div class="backdrop" *ngIf="isOverlayVisible"></div>
 
                       <!-- Popup Overlay -->

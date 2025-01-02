@@ -3185,6 +3185,29 @@ margin: 0;
 .main-container .right-panel .thankyouSection .section-paragraph1 p {
     margin-bottom: 0px;
 }
+
+/*---Questions: selected members css start---*/
+.questionnaire_space {
+    padding-bottom: 10px !important;
+    margin-top: 0 !important;
+}
+.questionnaire_space .typecss {
+    padding-bottom: 10px !important;
+}
+.selectedMembers_Quiestions, .list_selectedMembers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.selectedMembers_Quiestions {
+    padding: 0 10px;
+    gap: 25px;
+}
+.list_selectedMembers {
+    font-weight: 600;
+    font-size: 14px;
+}
+/*---Questions: selected members css start---*/
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
         display: flex;

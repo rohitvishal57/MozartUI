@@ -8178,5 +8178,17 @@ export class YatraComponent {
   
     console.log('Updated all other insuredMemberDetails!');
   }
-  
+
+  getKeys(obj: any): string[] {
+    const formGroupValue = (this.dynamicFormGroup.get(obj) as FormGroup)?.value;
+    return formGroupValue ? Object.keys(formGroupValue) : [];
+  }  
+  isBooleanTrue(control: any, key: any): boolean {
+    const formGroupValue = (this.dynamicFormGroup.get(control) as FormGroup)?.value;
+    return typeof formGroupValue?.[key] === 'boolean' && formGroupValue[key] === true;
+  }  
+  formatKey(key: string): string {
+    return key.charAt(0).toUpperCase() + key.slice(1); // Capitalize the first letter
+  }
+    
 }

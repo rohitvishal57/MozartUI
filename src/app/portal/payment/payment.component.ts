@@ -319,6 +319,7 @@ export class PaymentComponent {
           customerId: this.paymentDetail.customerId,
           applicationNumber: this.paymentDetail.applicationNumber,
           status: this.paymentDetail.policyStatus,
+          paymentMessage:"",
           paymentStatus: this.paymentDetail.paymentStatus
         };
         // localStorage.setItem('agentCode', this.agentCode);
@@ -349,8 +350,8 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "Success", summary: "Payment successful", duration: 5000 });
-            localStorage.setItem('formIndex', '1');
+            this.toast.success({ detail: "SUCCESS", summary: "Payment successful", duration: 5000 });
+            // localStorage.setItem('formIndex', '1');
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -361,22 +362,24 @@ export class PaymentComponent {
           }
           else{
             this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
-            localStorage.setItem('formIndex', '1');
+            // localStorage.setItem('formIndex', '1');
+            formData.paymentMessage = "Payment completed successfully; policy issuance pending";
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                formSequence: this.encryptionService.encrypt([thankYouFQFailed]),
+                formSequence: this.encryptionService.encrypt([thankYou]),
                 formIndex: "0",
               }
             });
           }
           
         } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
-            this.toast.success({ detail: "Success", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
+            this.toast.success({ detail: "SUCCESS", summary: "payment "+ this.paymentDetail.paymentStatus, duration: 5000 });
+            formData.paymentMessage = "Payment pending; please wait for processing";
             this.router.navigate(['yatra/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                formSequence: this.encryptionService.encrypt([thankYouPending]),
+                formSequence: this.encryptionService.encrypt([thankYou]),
                 formIndex: "0",
               }
             });
