@@ -727,13 +727,6 @@
                                       (getValidationErrors(subControl,control,i-1)| translate) : ''}}
                                     </small>
                                   </div>
-
-                                  <div *ngIf="subControl.type === 'line' && subControl.visible === true"
-                                    [class]="subControl.class">
-                                    <hr />
-                                  </div>
-
-
                                   <div *ngIf="subControl.type ==='radio'" class="radio-buttons"
                                     style="font-size: 12px; font-weight: 600;">
                                     <label class="inputField_Label" *ngIf="subControl.visibleLabel==true"

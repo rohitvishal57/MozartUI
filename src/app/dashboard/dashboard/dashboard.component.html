@@ -259,7 +259,7 @@
             <!-- performance -->
             <div cdkDrag [cdkDragDisabled]="!isDesktopView" class="contentBody dashboard_contentContainer"
               *ngIf="section.widgetName == 'Performance'">
-              <div class="performance-overview">
+              <div class="performance-overview" *ngIf="performanceCard.length">
                 <div class="body_flex_row justify-content-between align-items-center">
                   <h2>{{"Performance Overview" | translate}}</h2>
                   <div class="filter_performanceOverview">
