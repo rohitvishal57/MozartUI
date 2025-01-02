@@ -40,17 +40,15 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.currentLanguage = lang;
+      this.agentCode = localStorage.getItem('agentCode');
+      this.notificationInfo();
       this.translateService.use(lang).subscribe({
         error: () => {
           this.translateService.use('en'); // Fallback to English if translation file is missing
         }
       });
     });
-    
     this.currentLanguage = this.getLanguage();
-    this.agentCode = localStorage.getItem('agentCode') 
-    this.notificationInfo();
-
   }
 
   
