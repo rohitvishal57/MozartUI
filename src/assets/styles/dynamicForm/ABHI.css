@@ -258,7 +258,8 @@ body {
     pointer-events: none;
     background-color: #f2f3f6;
     padding: 0 5px;
-    padding-right: 35px;
+    /* padding-right: 35px; */
+    padding-right: 20px;
 }
 
 .main-container .right-panel .boldtext_input:focus {
@@ -1144,12 +1145,16 @@ body {
 }
 .main-container .right-panel .field-btn {
     background-color: #c72229;
-    padding: 10px 31px;
+    padding: 10px 21px;
     border: none;
     border-radius: 14px;
     width: auto;
-    margin: 0px 24px;
+    margin: 0px;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 14px;
+    font-weight: 500;
     color: #ffe2dc;
+    border-width: 0 !important;
 }
 .main-container .right-panel .send-btn {
     background-color: #c72229;
@@ -2189,10 +2194,10 @@ a:not([href]) {
 .main-container .right-panel .custom-line {
     position: relative;
     font-family: "Anek Latin", sans-serif !important;
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     line-height: 19.8px;
-    color: #797979;
+    color: #2e2e2e;
     margin: 0;
 } 
 .main-container .right-panel .custom-line.custom-line-or:before{
