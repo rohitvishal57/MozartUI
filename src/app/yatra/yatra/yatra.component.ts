@@ -7197,17 +7197,30 @@ export class YatraComponent {
     })
   }
 
-  parseName(fullName: any) {
+  parseName(fullName:any) {
     const nameParts = fullName.value.trim().split(/\s+/);
-    let firstName = nameParts[0];
-    let middleName = nameParts.length > 2 ? nameParts[1] : ''; // If there's a middle name
-    let lastName = nameParts[nameParts.length - 1];  // Last part is always the last name
+    let firstName = '';
+    let middleName = '';
+    let lastName = '';
+  
+    if (nameParts.length === 1) {
+      firstName = nameParts[0]; // Assign the single name to `firstName`
+    } else if (nameParts.length === 2) {
+      firstName = nameParts[0];
+      lastName = nameParts[1];
+    } else if (nameParts.length > 2) {
+      firstName = nameParts[0];
+      middleName = nameParts.slice(1, -1).join(' '); // Join all middle parts
+      lastName = nameParts[nameParts.length - 1];
+    }
+  
     return {
       firstName,
       middleName,
-      lastName
+      lastName,
     };
   }
+ 
 
   pennyDrop(control: any, dataObj?: any) {
     if (control.dependentControls.includes("pennyBtn")) {
