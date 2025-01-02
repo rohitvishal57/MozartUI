@@ -41,21 +41,21 @@ jobs:
       with:
         fetch-depth: 10
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.20.3'
+    # - name: Set up Node.js
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: '18.20.3'
 
     
-    - name: Cache Node modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.npm
-          ~/.cache
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    # - name: Cache Node modules
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       ~/.npm
+    #       ~/.cache
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
 
     # - name: Print working directory and list its contents
     #   run: |
@@ -64,17 +64,17 @@ jobs:
     #     echo "Listing the contents of the current directory:"
     #     ls -la  # List the contents of the current working directory
 
-    - name: Install dependencies
-      run: |
-        npm install --legacy-peer-deps
+    # - name: Install dependencies
+    #   run: |
+    #     npm install --legacy-peer-deps
 
     # - name: Clean previous build artifacts
     #   run: |
     #     rm -rf ./dist/*
       
-    - name: Build the project
-      run: |
-        npm run build --prod
+    # - name: Build the project
+    #   run: |
+    #     npm run build --prod
 
     # - name: List Build Artifacts
     #   run: ls -la ./dist/
@@ -85,11 +85,11 @@ jobs:
     #     ls -la 
     #     ls -la MozartUI-Dev
       
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./dist/*
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./dist/*
 
     # - name: Debug:List files after downloading artifacts
     #   run: ls -l ./dist/
@@ -147,67 +147,67 @@ jobs:
       #run: ssh-keyscan -v -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1 || { echo 'ssh-keyscan failed'; exit 1; }
 
     # Generate the single version at the workflow level
-    - name: Generate Deployment Version
-      id: version
-      run: |
-        # Generate version using current date and time (IST)
-        #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
-        CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
-        TAGGED_VERSION="v${CURRENT_DATE}"
-        echo "Deployment version: $TAGGED_VERSION"
-        # Set the version as an output
-        echo "::set-output name=version::$TAGGED_VERSION"
-        # Also export it as an environment variable for other steps
-        echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
+    # - name: Generate Deployment Version
+    #   id: version
+    #   run: |
+    #     # Generate version using current date and time (IST)
+    #     #CURRENT_DATE=$(date -d 'TZ="Asia/Kolkata" now' +"%Y%m%d-%H%M%S")
+    #     CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
+    #     TAGGED_VERSION="v${CURRENT_DATE}"
+    #     echo "Deployment version: $TAGGED_VERSION"
+    #     # Set the version as an output
+    #     echo "::set-output name=version::$TAGGED_VERSION"
+    #     # Also export it as an environment variable for other steps
+    #     echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
   
     # - name: Debug:Show generated version
     #   run: |
     #     echo "Generated version: $TAGGED_VERSION"
   
-    - name: Create deployment directory on VM with version
-      run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; try { if (-Not (Test-Path -Path \$DeployDir)) { Write-Output \"Creating deployment directory: \$DeployDir\"; New-Item -Path \$DeployDir -ItemType Directory; } else { Write-Output \"Deployment directory already exists: \$DeployDir\"; } } catch { Write-Output \"Error while creating deployment directory: \$DeployDir\"; Write-Output \$_.Exception.Message; exit 1; }"
+    # - name: Create deployment directory on VM with version
+    #   run: |
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; try { if (-Not (Test-Path -Path \$DeployDir)) { Write-Output \"Creating deployment directory: \$DeployDir\"; New-Item -Path \$DeployDir -ItemType Directory; } else { Write-Output \"Deployment directory already exists: \$DeployDir\"; } } catch { Write-Output \"Error while creating deployment directory: \$DeployDir\"; Write-Output \$_.Exception.Message; exit 1; }"
 
-    - name: Manage Previous Deployments (Keep Last 3)
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '${{ env.DEPLOY_BASE_DIR }}'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+    # - name: Manage Previous Deployments (Keep Last 3)
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '${{ env.DEPLOY_BASE_DIR }}'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
-    - name: Create directory for artifacts
-      run: mkdir -p ./my-artifacts
+    # - name: Create directory for artifacts
+    #   run: mkdir -p ./my-artifacts
       
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: angular-artifacts
-        path: ./my-artifacts
+    # - name: Download build artifacts
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: angular-artifacts
+    #     path: ./my-artifacts
     
     # - name: Debug:List files after downloading artifacts
     #   run: ls -l ./my-artifacts
 
-    - name: Upload artifact to VM with versioning
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/angular-dev/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
+    # - name: Upload artifact to VM with versioning
+    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/angular-dev/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$TAGGED_VERSION/
   
-    - name: Upload deploy.ps1 to VM
-      run: |
-        scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1
+    # - name: Upload deploy.ps1 to VM
+    #   run: |
+    #     scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_deploy.ps1
     
-    - name: Execute frontend_deploy.ps1 script on VM
-      run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
+    # - name: Execute frontend_deploy.ps1 script on VM
+    #   run: |
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion ${{ env.TAGGED_VERSION }} -Port ${{env.PORT}} -BindingHost ${{env.BINDING_HOST}} -PfxPass ${{ secrets.SSL_CERT_PASSWORD }}"
 
-    - name: Set environment variable based on branch
-      run: |
-        branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
-        environment=${branch_name}
-        if [ "$environment" == "main" ]; then
-          environment="prod"
-        fi
-        echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+    # - name: Set environment variable based on branch
+    #   run: |
+    #     branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
+    #     environment=${branch_name}
+    #     if [ "$environment" == "main" ]; then
+    #       environment="prod"
+    #     fi
+    #     echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
 
-    - name: Tag the commit
-      if: ${{ success() }}  # Only tag if the workflow is successful
-      run: |
-        TAG="$ENVIRONMENT-$TAGGED_VERSION"
-        echo "Tag: $TAG"  # Debugging the tag value
-        git tag $TAG
-        git push origin $TAG
+    # - name: Tag the commit
+    #   if: ${{ success() }}  # Only tag if the workflow is successful
+    #   run: |
+    #     TAG="$ENVIRONMENT-$TAGGED_VERSION"
+    #     echo "Tag: $TAG"  # Debugging the tag value
+    #     git tag $TAG
+    #     git push origin $TAG
     
