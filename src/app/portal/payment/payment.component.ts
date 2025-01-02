@@ -257,7 +257,7 @@ export class PaymentComponent {
               this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
               console.log('error', error);
             });
-        } else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus === 'INITIATED') {
+        } else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus?.startsWith('IN')) {
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "Success", summary: "Payment successful", duration: 5000 });
             this.router.navigate(['renewal/renewalJourney'], {
