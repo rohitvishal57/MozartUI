@@ -351,8 +351,7 @@
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                     class="text-danger">
-                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only
-                    PNG,JPG,JPEG,PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG,PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
                   </small>
@@ -636,7 +635,7 @@
                                         formControlName="{{ subControl.name }}" [name]="subControl.name"
                                         [id]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
-                                        (change)="onInputChange($event, subControl)">
+                                        (change)="onInputChange($event, subControl,control,i)">
                                       <!-- <input class="inputField_Text"
                                         *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type === 'date'"
                                         formControlName="{{ subControl.name }}" [name]="subControl.name" [id]="subControl.name"
@@ -837,7 +836,7 @@
                                     </div>
                                   </div>
                                   <input *ngIf="subControl.type==='button' && subControl.visible == true" type="button"
-                                  (click)="callMethod(subControl.methodName,subControl)" [disabled]="subControl.disabled"
+                                  (click)="resolveMethod(subControl.methodName,subControl, control, '' ,i-1)" [disabled]="subControl.disabled"
                                   [ngClass]="[subControl.class, getButtonClass(subControl)]" [name]="subControl.name" [id]="subControl.name"
                                   value="{{ subControl.label ? (subControl.label | translate) : '' }}">
 
