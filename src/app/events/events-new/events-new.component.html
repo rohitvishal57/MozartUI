@@ -36,7 +36,7 @@
            <label for="eventNumber">
              {{ (saveEvent.get('eventType')?.value === 'Proposals' ? 
                  'Proposal Number' : 'Lead Number') | translate }}
-           </label>
+                 <span class="text-danger">*</span> </label>
          </div>
          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onReferenceNumberSelect($event.option.value)">
            <mat-option *ngFor="let item of filteredReferenceList" 
@@ -51,7 +51,7 @@
               <div class="input-block form-floating input-block-renew">
                 <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName"
                   placeholder="" pattern="^[A-Za-z\s]+$">
-                <label for="customerName">{{"Customer Name" | translate}}</label>
+                <label for="customerName">{{"Customer Name" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="saveEvent.get('customerName')?.invalid && (saveEvent.get('customerName')?.dirty || saveEvent.get('customerName')?.touched)">
                   <div class="text-danger" *ngIf="saveEvent.get('customerName')?.errors?.['required']">
                     {{"Customer name is required" | translate}}
