@@ -1469,21 +1469,6 @@ h4 {
     padding: 0;
   }
 }
-@media (min-width:768px) and (max-width:1024px) {
-  .dropdown-container {
-    flex-wrap: wrap;
-  }
-  .dropdown-container .field_div {
-    width: 45%;
-  }
-  .dropdownContent {
-    right: 0;
-  }
-  .dropdownContent .overlay_popupMain {
-    left: auto;
-    right: 0;
-  }
-}
 @media (max-width:767px) {
   .overlay_popupMain.overlay_dropdown_w518 {
     width: 100%;
@@ -1537,5 +1522,22 @@ h4 {
   appearance: none;
   background: var(--white-color) url(/assets/Img/down_arrow.svg) no-repeat 96% 50% !important;
   padding: 12px 16px !important;
+}
+
+@media (min-width:768px) and (max-width:1024px) {
+  .dropdown-container {
+    flex-wrap: wrap;
+  }
+  .dropdown-container .field_div {
+    width: 45%;
+    flex: none;
+  }
+  .dropdownContent {
+    right: 0;
+  }
+  .dropdownContent .overlay_popupMain {
+    left: auto;
+    right: 0;
+  }
 }
 /*Custom overlay dropdown end*/
