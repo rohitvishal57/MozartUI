@@ -77,4 +77,10 @@ getAllAudit(reqdata:any){
   return this.httpService.post(getAllaudit, reqdata)
 }
 
+
+AssignBackToDo(reqdata:any){
+  const assignBacktoDo = this.configService.config.baseUrl + this.configService.config.assignBackToDo;
+  return this.httpService.post(assignBacktoDo, reqdata)
+}
+
 }

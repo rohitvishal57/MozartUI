@@ -62,7 +62,10 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetMasterDetails',
     'https://usp.monocept.ai/api/rug/GetLeads',
     'https://upuat.adityabirlahealth.com/api/rug/GetMasterDetails',
-    'https://upuat.adityabirlahealth.com/api/rug/GetPincodeDetails'
+    'https://upuat.adityabirlahealth.com/api/rug/GetPincodeDetails',
+    'https://usp.monocept.ai/api/rug/AssignToAV',
+    'https://usp.monocept.ai/api/rug/GetAllAudit',
+    'https://usp.monocept.ai/api/rug/AssignBackToDo'
   ];
   
 

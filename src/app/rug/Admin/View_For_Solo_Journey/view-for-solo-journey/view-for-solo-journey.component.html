@@ -26,7 +26,7 @@
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="leadid" name="leadid"
-                                                        placeholder="Lead Id" formControlName="leadid" type="text"
+                                                        placeholder="Lead Id" formControlName="leadid" type="number"
                                                         (input)="onInput($event)">
                                                     <label for="leadid">Enter Lead Id</label>
 
@@ -36,7 +36,7 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" id="policyno"
                                                         name="policyno" placeholder="Policy Number"
-                                                        formControlName="policyno" type="text"
+                                                        formControlName="policyno" type="number"
                                                         (input)="onInput($event)">
                                                     <label for="policyno">Enter Policy No</label>
 
@@ -112,7 +112,7 @@
                                             class="btn_red"><img src="/assets/Img/exporticon.svg" alt=""
                                                 (click)="exportToxl()"> Export </button>
                                         <input class="filterSearch" id="filterSearch" name="filterSearch"
-                                            placeholder="Filter" [(ngModel)]="searchTerm" (input)="onInput($event)">
+                                            placeholder="Filter" (input)="onInput($event)">
                                     </div>
                                 </div>
                             </div>
