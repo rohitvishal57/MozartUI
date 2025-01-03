@@ -595,6 +595,9 @@
                                       class="popup-checkbox-label"><span *ngIf="subControl.validators">*</span></label>
                                   </div>
                                 </div>
+                                <div *ngIf="subControl.type === 'line' && subControl.visible === true" [class]="subControl.class">
+                                  <hr />
+                                </div>
                               </ng-container>
                             </ng-container>
                           </div>
