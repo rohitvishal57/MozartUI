@@ -7732,7 +7732,7 @@ export class RugDynamicFormComponent {
           console.log(this.nomineeRelations);
           this.nomineeRelations = this.nomineeRelations.relationShipModels;
           this.nomineeRelations.map((item: any) => {
-              item.name = item.relationName;
+              item.name = item.relationName.charAt(0).toUpperCase() + item.relationName.slice(1);
               item.value = item.relationName;
           })
           control.options = this.nomineeRelations;
