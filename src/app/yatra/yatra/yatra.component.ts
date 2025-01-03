@@ -17,6 +17,7 @@ import { LeadsService } from 'src/app/leads/leads.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
+import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
 
 @Component({
   selector: 'app-yatra',
@@ -7597,6 +7598,25 @@ export class YatraComponent {
           });
         }
       });
+      // this.onClickReq(parentControl.value[index + 1]);
+  }
+
+  onClickReq(obj: any, title? : any) {
+    const obj1: any = {
+      template: SharedModalComponent,
+      data: {
+        header: title == null || title == undefined ? 'Duplicate Policy Details' : title,
+        description: obj.relation,
+        no: 'Close',
+        yes : 'Done',
+        buttonClass: 'Active-btn',
+      }
+    }
+    this.commonService.openDialog(obj1, (res: any) => {
+      if (res) {
+
+      }
+    });
   }
 
   getKeys(obj: any): string[] {
