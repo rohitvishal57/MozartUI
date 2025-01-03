@@ -23,10 +23,10 @@
                             <div class="cardViewItem" *ngFor="let item of ProductList">
                                 <header>
                                     <div class="body_flex_row">
-                                        <img src="assets/logo/activeOne.svg">
+                                        <img *ngIf="item.partnerId !== 14 && item.partnerId !== 45" src="assets/logo/activeOne.svg">
                                         <h6>{{ item.productName?(item.productName | translate): ''}}</h6>
                                     </div>
-                                    <button type="button" id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload" title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img  src="./assets/Img/icon_download_grey.svg" ></button>
+                                    <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload" title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img  src="./assets/Img/icon_download_grey.svg" ></button>
                                 </header>
                                 <div class="cardViewBody">
                                     <p>{{item.productDescription | translate}}</p>
@@ -37,8 +37,8 @@
                                             <img src="assets/Img/trolley1.svg" alt="">
                                             {{"Buy Now" | translate}}
                                         </button>
-                                        <button type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">{{"View details" | translate}}</button>
-                                        <button type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompareProducts(item)">
+                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">{{"View details" | translate}}</button>
+                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompareProducts(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                            {{"Add to Compare" | translate}}
                                         </button>

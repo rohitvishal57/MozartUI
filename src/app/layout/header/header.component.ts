@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core'; // Import TranslateServi
 import { NotificationService } from 'src/app/notifications/notification.service';
 import { error } from 'jquery';
 import HeaderInformation from '../headerInfo';
+import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +31,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
-    ,public headerInformation : HeaderInformation
+    ,public headerInformation : HeaderInformation,private configService: ConfigService
   ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
@@ -162,11 +163,12 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   routeNotification(notification: any) {
-  this.notificationService.markNotification(notification.id).subscribe(
+   this.notificationService.markNotification(notification.id).subscribe(
     (response)=>{
       if (response?.isSuccess) {
-      //  this.closePopup();
-        this.router.navigate([notification.redirectionURL]);
+       const redirectionURL =  this.configService.config.baseUrl + notification.redirectionURL;
+        window.location.href = redirectionURL;
+
         this.notificationInfo();
       }
     },
