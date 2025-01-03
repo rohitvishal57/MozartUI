@@ -14,7 +14,7 @@ export class SideNavbarComponent {
   isActive = false;
   isSideNavVisible = true
   formIndex:any
-
+  docUrl = 'assets/verificationscript.doc';
   sideMenuList = [
     { id: 1, displayName: 'Dashboard', path: 'dashboard', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
     { id: 2, displayName: 'Products', path: 'products', imagePath: 'assets/Img/icon_products.svg' },
@@ -114,10 +114,18 @@ export class SideNavbarComponent {
   // Handle route redirection
   redirect(route: string): void {
     if (route) {
+      console.log(route);
+      if(route == "rug/verification_script"){
+        const link = document.createElement('a');
+        link.href = this.docUrl;
+        link.download = 'verificationscript.doc';
+        link.click();
+      }else{
       // this.closeSidebar();
       console.log(this.loginService.getValue());
       // this.loginService.toggleSidebar(!this.loginService.getValue());
       this.router.navigate([route]);
+      }
     }
   }
 

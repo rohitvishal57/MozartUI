@@ -5401,8 +5401,9 @@ export class RugDynamicFormComponent {
     }
   }
   onTsCustomerSubmit(){
-    console.log()
-    if (this.dynamicFormGroup.get('decl2')?.value == true && this.dynamicFormGroup.get('decl3')?.value == true) {
+    console.log(this.dynamicFormGroup.get('decl2')?.value);
+    console.log(this.dynamicFormGroup.get('decl3')?.value);
+    if (this.dynamicFormGroup.get('decl2')?.value == true) {
       let commonDraftRequest = {
         "leadId": this.tsDetails?.leadId
       }

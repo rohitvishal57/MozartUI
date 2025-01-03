@@ -11,7 +11,6 @@ import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-
 import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
 import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
 import { VerificationScriptComponent } from "./Admin/Verification_Script/verification-script/verification-script.component";
-import { ProductDetailsComponent } from "../quote/product-details/product-details.component";
 import { ExtractBaseAndAvMasterComponent } from "./Admin/Extract_Base_Agent_AV_Master/extract-base-and-av-master/extract-base-and-av-master.component";
 import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
@@ -20,6 +19,7 @@ import { ViewMakerCheckerLeadsComponent } from "./components/view-maker-checker-
 import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
 import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
 import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
+import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
 
 
 
