@@ -7,6 +7,7 @@ import { ExcelServiceService } from 'src/app/services/excel-service.service';
 import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
 import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-unverified-leads',
@@ -32,7 +33,7 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
    AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
    dialog: any;
    item: any;
-   constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog) {
+   constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog, private router:Router) {
  
    }
    ngOnInit(): void {
@@ -104,16 +105,24 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
     );
   }
  
+  actionLead(lead: any){
+    let ecrytpedLeadID = lead.leadNo;
+    let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
+    this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId
+  ]);
+}
+
   backToDo(lead:any){
     let reqObj={
-      "leadId":lead.leadNo
+      "leadId": lead.leadNo
     }
     this.adminService.AssignBackToDo(reqObj).subscribe((response:any)=>{
-      console.log('SuccessPopUp',response)
-        const dialogRef=this.dialog.open(SuccesspopupComponent,{
+      let res = JSON.parse(response.data)
+      console.log('SuccessPopUp',res)
+        const dialogRef=this.matdialogue.open(SuccesspopupComponent,{
           width: "500px",
           autoFocus: false,
-          data: response.statusMessage  
+          data: res.message
         });
         dialogRef.afterClosed().subscribe((result:any)=>{
           console.log(result)
@@ -180,17 +189,4 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
    clearFilter() {
      this.soloJourneyForm.reset();
    }
- 
-   audit(index: any) {
-     // let value = this.displayedLeads[index]
-     // const dialogRef = this.dialog.open(AuditComponent, {
-     //   width: "1000px",
-     //   autoFocus: false,
-     //   data: {
-     //     value: value
-     //   }
-     // })
-   }
-
-
 }

@@ -109,12 +109,10 @@
                             <div class="body_flex_row leads_searchWraper">
                                 <div class="field_searchMain">
                                     <div class="filterFieldGroup">
-                                        <button type="submit" id="save" name="save" (click)="clearFilter()"
-                                            class="btn_red"><img src="/assets/Img/exporticon.svg" alt=""> Export
-                                        </button>
                                         <input class="filterSearch" id="filterSearch" name="filterSearch"
                                             placeholder="Filter" (input)="onInput($event)">
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -164,7 +162,7 @@
                                     <td>{{leads.status}}</td>
                                     <td>{{leads.issuanceDateTime}}</td>
                                     <td>{{leads.remark}}</td>
-                                    <td nowrap><button type="button" [disabled]="leads.status === 'Payment Done'" class="btn_reassign">Action</button><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="backToDo(leads)" class="btn_reassign">Back To Do</button>
+                                    <td nowrap><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="actionLead(leads)" class="btn_reassign">Action</button><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="backToDo(leads)" class="btn_reassign">Back To Do</button>
                                     </td>
                                     <td><button type="button" class="btn_audit jsOpenPopup" aria-label="modal-audit" (click)="auditLead(leads)" >Audit</button>
                                 </td>

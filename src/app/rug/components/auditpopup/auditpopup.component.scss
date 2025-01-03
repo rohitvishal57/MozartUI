@@ -11,16 +11,24 @@
     padding: 48px 32px;
     outline: 0;
 }
+
 .popup-modal-header {
     display: flex;
     flex-shrink: 0;
-    align-items: center;
-    justify-content: space-between;
+    align-items: end;
+    justify-content: end;
     padding: 0;
     border-bottom: 0px solid #dee2e6;
     border-top-left-radius: calc(0.3rem - 1px);
     border-top-right-radius: calc(0.3rem - 1px);
 }
+
+div.popup-modal-header {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
 .popup-modal-header .popup-modal-title {
     font-family: Lato-Bold, sans-serif;
     font-size: 20px;
@@ -29,6 +37,7 @@
     margin-bottom: 0;
     line-height: 26px;
 }
+
 .popup-btn-close {
     box-sizing: content-box;
     width: 40px;
