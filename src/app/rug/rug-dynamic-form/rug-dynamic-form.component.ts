@@ -1194,7 +1194,9 @@ export class RugDynamicFormComponent {
             insuredMembersArray.at(0).get('firstName')?.disable();
             insuredMembersArray.at(0).get('mobileNumber')?.disable();
             insuredMembersArray.at(index).get('relation')?.disable();
-            insuredMembersArray.at(index).get('gender')?.disable();
+            // insuredMembersArray.at(index).get('gender')?.disable();
+        item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
+
           });
         }
         if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
@@ -3100,7 +3102,7 @@ export class RugDynamicFormComponent {
           });
         }
         insuredMembersArray.at(index).get('relation')?.disable();
-        insuredMembersArray.at(index).get('gender')?.disable();
+        item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
       });
       insuredMembersArray.at(0).patchValue({
         mobileNumber:this.bbdetails.proposerMobileNumber,
