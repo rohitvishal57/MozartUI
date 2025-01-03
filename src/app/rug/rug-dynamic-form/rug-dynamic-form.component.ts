@@ -127,6 +127,7 @@ export class RugDynamicFormComponent {
   familyConstructsData: any;
   isD2C: boolean = true;
   isBB: boolean = true;
+  isTS: boolean = true;
   paramLeadId: any;
   policyDetails: any;
   filteredPolicies: any;
@@ -170,11 +171,18 @@ export class RugDynamicFormComponent {
           console.log(this.formSequence);
           if(this.agentCode != "467898" && this.agentCode == "467899"){
             this.isD2C = false;
+            this.isTS = false;
             this.isBB = true;
           }else if(this.agentCode == "467898"){
             this.isD2C = true;
             this.isBB = false;
+            this.isTS = false
+          }else if(this.agentCode == "467896" || this.agentCode =="467897"){
+            this.isD2C = false;
+            this.isBB = false;
+            this.isTS = true
           }
+          
           console.log(this.formSequence[this.getFormIndexValue()].formName)
           console.log(this.paramLeadId.CurrentIndex)
           if(this.paramLeadId.CurrentIndex == 4 && this.formSequence[this.getFormIndexValue()].formName == "Policy Details"){
@@ -344,10 +352,16 @@ export class RugDynamicFormComponent {
 
       if(this.agentCode != "467898" && this.agentCode == "467899"){
         this.isD2C = false;
+        this.isTS = false;
         this.isBB = true;
       }else if(this.agentCode == "467898"){
         this.isD2C = true;
         this.isBB = false;
+        this.isTS = false
+      }else if(this.agentCode == "467896" || this.agentCode =="467897"){
+        this.isD2C = false;
+        this.isBB = false;
+        this.isTS = true
       }
       if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
@@ -990,7 +1004,7 @@ export class RugDynamicFormComponent {
               if(formControl.name == "label1"){
                 formControl.visible = false;
               }
-              if(formControl.name == "label2"){
+              if(formControl.name == "label3"){
                 formControl.visible = true;
               }
             })
@@ -2947,9 +2961,18 @@ export class RugDynamicFormComponent {
               (insuredMembersFormGroup.controls as unknown as any[]).forEach((control: any, index : any) => {
                 console.log(control.get('relation').value);
                 if(control.get('relation').value == "Spouse"){
-                  control.get('gender').setValue("F")
+                  console.log(this.bbdetails);
+                  if(this.isBB || this.isTS){
+                    if(this.bbdetails.proposerGender == "M"){
+                      control.get('gender').setValue("F")
+                    }else{
+                      control.get('gender').setValue("M")
+                    }
+                  }else{
+                    control.get('gender').setValue("F")
+                  }
                   control.get('relation').disable();
-                  control.get('gender').disable();
+                  // control.get('gender').disable();
                 }
                 if(control.get('relation').value == "Son1" || control.get('relation').value == "Son2"){
                   control.get('gender').setValue("M")
@@ -3765,7 +3788,7 @@ export class RugDynamicFormComponent {
     console.log(filteredFamilyConstruct);
     this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
-    let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
+    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
     console.log(ageRange);
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
     console.log(this.bbPremiumData)
@@ -5042,7 +5065,7 @@ export class RugDynamicFormComponent {
     console.log(this.getFormIndexValue());
     console.log(this.nomineeRelations);
     let filteredDispositionData: any;
-    // if(this.dynamicFormGroup.valid){
+    if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4 || this.getFormIndexValue() == 5 || this.getFormIndexValue() == 6){
         // if(this.getFormIndexValue() == 3){
         //   this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
@@ -5348,6 +5371,7 @@ export class RugDynamicFormComponent {
       //     }
       //   });
       // }
+      }
     }
     else {
       console.log('Form is invalid', this.dynamicFormGroup);
