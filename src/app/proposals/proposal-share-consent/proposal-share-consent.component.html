@@ -54,6 +54,10 @@
                   </ng-template>
                   <p *ngIf="control.value" [innerHTML]="control.value"></p>
                 </div>
+                <input *ngIf="control.type==='button' && control.visible == true" type="button"
+                (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
+                [ngClass]="[control.class, getButtonClass(control)]" [name]="control.name" [id]="control.name"
+                value="{{ control.label ? (control.label | translate) : '' }}">
               </ng-container>
             </div>
           </div>

@@ -3,7 +3,8 @@ import { Component, Inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'jquery';
-import { IForm, IValidator } from 'src/app/interface/form.interface';
+import { NgToastService } from 'ng-angular-popup';
+import { IForm, IFormControl, IValidator } from 'src/app/interface/form.interface';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
@@ -21,10 +22,11 @@ export class ProposalShareConsentComponent {
   isHtmlrender:any = false
   private dynamicStyle!: HTMLLinkElement;
   formData: any;
+  selectedButton: any;
 
   constructor(
     private yatraService: YatraService, private route: ActivatedRoute, private formBuilder: FormBuilder,
-    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document){}
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,private toast: NgToastService){}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -120,4 +122,38 @@ export class ProposalShareConsentComponent {
           return control;
       }
     }
+  async callMethod(methodName: string, control: any, section?: any) {
+
+    if (control.otherControlName && section != undefined) {
+      let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
+      const method = (this as any)[methodName];
+      if (method && typeof method === 'function') {
+        await (this as any)[methodName](otherControl)
+      } else {
+        console.error(`Method ${methodName} not found`);
+      }
+    }
+    else if (control && methodName) {
+      await (this as any)[methodName](control)
+    }
+  }
+  getButtonClass(control: any): string {
+    return this.selectedButton === control.name ? 'active-button' : '';
+  }
+  onConfirmClick(control: any) {
+    console.log(control);
+    let requestBody: any = {};
+    requestBody.proposalNumber = this.proposalNumber;
+
+    this.yatraService.confirmproposer(requestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess) {
+          this.toast.success({ detail: "Success", summary: "Constent Successfully Done", duration: 3000 });
+          control.visible = false;
+        }
+      },
+      (error) => {
+        console.error(error);
+      });
+  }
 }

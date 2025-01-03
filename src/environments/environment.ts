@@ -204,5 +204,7 @@ export const environment = {
   assignToAv:"api/rug/AssignToAV",
   getAllAudit:"api/rug/GetAllAudit",
   d2cAxisRedirection: "api/v1/",
-  assignBackToDo:"api/rug/AssignBackToDo"
+  assignBackToDo:"api/rug/AssignBackToDo",
+  verifylink:"api/yatra/verifylink",
+  confirmproposer:"api/yatra/confirmproposer"
 };

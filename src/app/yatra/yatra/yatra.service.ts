@@ -237,4 +237,12 @@ export class YatraService {
     return this.httpService.post(getpaymentdetailsbyproposalno,reqData);
   }
 
+  getVerifylink(reqData:any){
+    const getVerifylink = this.configService.config.baseUrl + this.configService.config.verifylink;
+    return this.httpService.post(getVerifylink,reqData);
+  }
+  confirmproposer(reqData:any){
+    const confirmproposer = this.configService.config.baseUrl + this.configService.config.confirmproposer;
+    return this.httpService.post(confirmproposer,reqData);
+  }
 }

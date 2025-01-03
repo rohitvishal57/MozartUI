@@ -133,6 +133,7 @@ export class YatraComponent {
   patternErrorMessage: string = "";
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
+  requestId:string="";
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -239,6 +240,7 @@ export class YatraComponent {
                 this.formSequence = JSON.parse(res.data.formConfig) || [];
                 this.form = JSON.parse(res.data.jsonFormData);
                 this.formData = JSON.parse(res.data.formData);
+                console.log(this.form,this.formData,this.productId,this.partnerId);
                 if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
                   this.quickQuoteRedirect = false;
                 }
@@ -541,6 +543,7 @@ export class YatraComponent {
   }
 
   async initializeForm() {
+    console.log(this.form,this.formData,this.productId,this.partnerId);
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
@@ -3481,6 +3484,7 @@ export class YatraComponent {
     this.yatraService.sendEmailLink(requestBody).subscribe(
       (res: any) => {
         if (res.isSuccess) {
+          this.requestId = res.data.requestId;
           this.toast.success({ detail: "Success", summary: "Communication send Successfully", duration: 3000 });
         }
       },
@@ -3516,6 +3520,7 @@ export class YatraComponent {
   }
 
   onOtpClick(control: any) {
+    console.log(this.formData);
     let sendOTPReqeustBody: any = {};
     sendOTPReqeustBody.emailId = this.formData.mobileNumber,
       sendOTPReqeustBody.mobileNumber =
@@ -3585,12 +3590,59 @@ export class YatraComponent {
     verifyRequest.mobileNumber = this.formData.mobileNumber;
     verifyRequest.eMailId = this.formData.emailId;
     this.yatraService.verifyOTP(verifyRequest).subscribe(
-      (res: any) => {
+      async (res: any) => {
         if (res.isSuccess) {
           this.toast.success({
             detail: "Success",
             summary: `SuccessFully Validated`,
             duration: 3000,
+          });
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((controls: any) => {
+              if (controls.dependentControls) {
+                controls.dependentControls.forEach((item: any) => {
+                  const controlToHide = section.formControls.find((c: any) => c.name === item);
+                  if (controlToHide) {
+                    controlToHide.visible = false; // Hide all dependent controls initially
+                  }
+                });
+              }
+              if(controls.name == "next"){
+                controls.visible = true;
+              }
+            });
+          });
+          let reqData = {
+            "proposalNum": this?.formData?.proposalNumber,
+            "partnerId": this.partnerId,
+            "agentCode": this.agentCode,
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+            "formName": this.formSequence[this.getFormIndexValue()].formName,
+            "formConfig": JSON.stringify(this.formSequence),
+            "productId": this.productId.toString(),
+            "formId": this.formSequence[this.getFormIndexValue()].formId,
+            "jsonForm": JSON.stringify(this.form),
+            "formSequence": this.getFormIndexValue(),
+            "leadNumber": this.leadnumber,
+            "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+          };
+          console.log(reqData);
+          await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+            next: (res: any) => {
+              this.leadnumber = res.data;
+  
+              // Call getFormDataFromFormSequence only after insert/update is completed
+  
+              if (this.isQuote) {
+                this.isQuote = false;
+                sessionStorage.setItem("isQuote", this.isQuote.toString());
+              }
+  
+              this.quickQuoteRedirect = false;
+            },
+            error: (err) => {
+              console.error(err);
+            }
           });
         }
       },
@@ -3598,18 +3650,7 @@ export class YatraComponent {
         console.log("err", error);
       });
 
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((controls: any) => {
-        if (controls.dependentControls) {
-          controls.dependentControls.forEach((item: any) => {
-            const controlToHide = section.formControls.find((c: any) => c.name === item);
-            if (controlToHide) {
-              controlToHide.visible = false; // Hide all dependent controls initially
-            }
-          });
-        }
-      });
-    });
+    
   }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
@@ -7642,5 +7683,115 @@ export class YatraComponent {
     }
 
   }
+  onVerifyClick(control: any) {
+    debugger;
 
+    // let requestBody: any = {};
+    // requestBody.emailId = this.formData.emailId;
+    // requestBody.mobileNumber = this.formData.mobileNumber;
+    // requestBody.name = this.formData.proposerName;
+    // requestBody.agentCode = this.agentCode;
+    // requestBody.proposalNumber = this.formData.proposalNumber;
+    // requestBody.premiumAmount = this.formData.totalPremium;
+    // requestBody.productName = this.formData.productName;
+
+    // this.yatraService.sendEmailLink(requestBody).subscribe(
+    //   (res: any) => {
+    //     if (res.isSuccess) {
+    //       this.requestId = res.data.requestId;
+    //       this.toast.success({ detail: "Success", summary: "Communication send Successfully", duration: 3000 });
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //   });
+    let requestBody: any = {};
+    requestBody.proposalNumber = this.formData.proposalNumber;
+
+    this.yatraService.getVerifylink(requestBody).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.isSuccess && res.data.isConfirm == 1) {
+          // this.requestId = res.data.requestId;
+          this.toast.success({ detail: "Success", summary: "Verification done Successfully", duration: 3000 });
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((controls: any) => {
+              if (controls.dependentControls) {
+                controls.dependentControls.forEach((item: any) => {
+                  const controlToHide = section.formControls.find((c: any) => c.name === item);
+                  if (controlToHide) {
+                    controlToHide.visible = false; // Hide all dependent controls initially
+                  }
+                });
+              }
+            });
+          });
+      
+          // Show the dependent controls for the currently clicked button
+          if (control.dependentControls) {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                control.dependentControls.forEach((item: any) => {
+                  if (controls.name === item) {
+                    controls.visible = true; // Show the dependent controls for this button
+                  }
+                });
+              });
+            });
+          }
+          let reqData = {
+            "proposalNum": this?.formData?.proposalNumber,
+            "partnerId": this.partnerId,
+            "agentCode": this.agentCode,
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+            "formName": this.formSequence[this.getFormIndexValue()].formName,
+            "formConfig": JSON.stringify(this.formSequence),
+            "productId": this.productId.toString(),
+            "formId": this.formSequence[this.getFormIndexValue()].formId,
+            "jsonForm": JSON.stringify(this.form),
+            "formSequence": this.getFormIndexValue(),
+            "leadNumber": this.leadnumber,
+            "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+          };
+          console.log(reqData);
+          await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+            next: (res: any) => {
+              this.leadnumber = res.data;
+  
+              // Call getFormDataFromFormSequence only after insert/update is completed
+  
+              if (this.isQuote) {
+                this.isQuote = false;
+                sessionStorage.setItem("isQuote", this.isQuote.toString());
+              }
+  
+              this.quickQuoteRedirect = false;
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        }
+        else{
+          this.toast.error({ detail: "Error", summary: "Fail to Verify, Please try again", duration: 3000 });
+        }
+      },
+      (error) => {
+        console.error(error);
+      });
+
+    // this.form.formSections.forEach((section: any) => {
+    //   section.formControls.forEach((controls: any) => {
+    //     if (controls.dependentControls) {
+    //       controls.dependentControls.forEach((item: any) => {
+    //         const controlToHide = section.formControls.find((c: any) => c.name === item);
+    //         if (controlToHide) {
+    //           controlToHide.visible = false; // Hide all dependent controls initially
+    //         }
+    //       });
+    //     }
+    //   });
+    // });
+   
+  }
 }
