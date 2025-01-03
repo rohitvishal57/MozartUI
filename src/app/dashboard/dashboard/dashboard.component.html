@@ -288,7 +288,7 @@
                     (cdkDropListDropped)="dropPerformance($event)">
                     <ng-container *ngFor="let perform of performanceCard">
                       <ng-container [ngSwitch]="perform.type">
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -297,7 +297,7 @@
                           <div class="card-tip" *ngIf="perform.description"><img
                               [src]="perform.subIcon">{{perform.description | translate}}</div>
                         </div>
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -308,7 +308,7 @@
                             <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                           </div>
                         </div>
-                        <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -318,7 +318,7 @@
                               src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
                           </div>
                         </div>
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -370,7 +370,7 @@
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Leads'">
-                               <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -378,7 +378,7 @@
                                </div>
                              </div>
                              <div *ngSwitchCase="'Proposals'">
-                               <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -439,7 +439,7 @@
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                               <div *ngSwitchCase="'Renewal'">
-                                <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -488,7 +488,7 @@
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Customer'">
-                               <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -497,7 +497,7 @@
                              </div>
                             
                              <div *ngSwitchCase="'Claims'">
-                               <div class="leads_item leads_open" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
