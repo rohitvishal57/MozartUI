@@ -7737,6 +7737,7 @@ export class RugDynamicFormComponent {
               item.name = item.relationName.charAt(0).toUpperCase() + item.relationName.slice(1);
               item.value = item.relationName;
           })
+          this.nomineeRelations = this.nomineeRelations.sort((a: any, b: any) => a.name.localeCompare(b.name))
           control.options = this.nomineeRelations;
         },
         error: (error) => {
