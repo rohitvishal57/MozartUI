@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuditComponent } from '../../AV_Upload/audit/audit.component';
 import { AdminService } from '../../admin.service';
 import { ExcelServiceService } from 'src/app/services/excel-service.service';
+import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
+import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
 
 @Component({
   selector: 'app-view-unverified-leads',
@@ -51,14 +54,14 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
  
    getSoloJourneyDetails(): void {
      const reqdata = {
-       userId: 'teleadmin1',
-       isSoloJourney: true,
-       isUnverifiedLead: false,
-       isDualJourney: false,
-       isViewLead: false,
-       isViewCheckerLead: false,
-       pageNumber: this.page,
-       pageSize: this.rows
+      userId: '467895',
+      isSoloJourney: false,
+      isUnverifiedLead: true,
+      isDualJourney: false,
+      isViewLead: false,
+      isViewCheckerLead: false,
+      pageNumber: this.page,
+      pageSize: this.rows
      };
 
      this.adminService.getLead(reqdata).subscribe((res: any) => {
@@ -89,40 +92,61 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
    }
   
    onInput(event: any) {
-     this.searchTerm = event.target.value.toLowerCase();
-     this.displayedLeads = this.getAllLeads.filter((option: any) =>
-       option?.imdCode?.toLowerCase().includes(this.searchTerm) ||
-       option?.axisProcess?.toLowerCase().includes(this.searchTerm) ||
-       option?.customerName?.toLowerCase().includes(this.searchTerm) ||
-       option?.location?.toLowerCase().includes(this.searchTerm) ||
-       option?.lgdate?.toLowerCase().includes(this.searchTerm) ||
-       option?.pidate?.toLowerCase().includes(this.searchTerm) ||
-       option?.axisprocess?.toLowerCase().includes(this.searchTerm)
-     );
-   }
+    this.searchTerm = event.target.value.toLowerCase();
+    this.displayedLeads = this.getAllLeads.filter((option: any) =>
+      option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.refNo?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisLocation?.toLowerCase().includes(this.searchTerm) ||
+      option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisProcess?.toLowerCase().includes(this.searchTerm)
+    );
+  }
  
-   auditLead(lead: any) {
-     // let reqObj = {
-     //   "leadId": lead.refNo,
-     // }
-     // this.apiService.postCall(environment.ENDPOINTS.GET_ALL_AUDIT, reqObj)
-     //   .subscribe(
-     //     response => {
-     //       const dialogRef = this.dialog.open(AuditPopupComponent, {
-     //         width: "500px",
-     //         autoFocus: false,
-     //         data: response.allAudit
-     //       });
-     //       dialogRef.afterClosed().subscribe((result: any) => {
-     //         console.log(result);
-     //       })
-     //       // this.leadsArray = response.allLeads
-     //     },
-     //     error => {
-     //       console.log(error);
-     //       // this.loading = false;
-     //     });
-   }
+  backToDo(lead:any){
+    let reqObj={
+      "leadId":lead.leadNo
+    }
+    this.adminService.AssignBackToDo(reqObj).subscribe((response:any)=>{
+      console.log('SuccessPopUp',response)
+        const dialogRef=this.dialog.open(SuccesspopupComponent,{
+          width: "500px",
+          autoFocus: false,
+          data: response.statusMessage  
+        });
+        dialogRef.afterClosed().subscribe((result:any)=>{
+          console.log(result)
+        });
+      },
+      error=>{
+        console.log(error);
+      });
+
+  }
+
+  auditLead(lead: any) {
+    let reqObj = {
+      leadId: lead.leadNo // Use leadId for the request
+    };
+  
+    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {      
+      let res = JSON.parse(response.data);
+      console.log(res.allAudit)
+      const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+        width: "1000px",
+        autoFocus: false,
+        data: res.data.allAudit
+      });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            console.log(result);
+          });
+        },
+        error => {
+          console.error("API Error:", error);
+        }
+      );
+  }
  
   ReassignAgent(leadNo: string) {
      interface Element {

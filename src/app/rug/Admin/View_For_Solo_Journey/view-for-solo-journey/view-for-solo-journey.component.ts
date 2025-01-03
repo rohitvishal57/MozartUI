@@ -6,7 +6,6 @@ import { AdminService } from '../../admin.service';
 import { ReassignpopupComponent } from '../reassignpopup/reassignpopup.component';
 import { ExcelServiceService } from 'src/app/services/excel-service.service';
 import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
-import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 
 @Component({
   selector: 'app-view-for-solo-journey',
@@ -66,7 +65,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
 
     this.adminService.getLead(reqdata).subscribe((res: any) => {
       const response = JSON.parse(res.data);
-      this.getAllLeads = response.data.allLeads;
+      this.getAllLeads = response.data.leadDetails;
       console.log('getAllLeads', this.getAllLeads)
       console.log(this.getAllLeads.length)
       this.totalRecords = this.getAllLeads.length;
@@ -95,13 +94,13 @@ export class ViewForSoloJourneyComponent implements OnInit {
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
-      option?.imdCode?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisProcess?.toLowerCase().includes(this.searchTerm) ||
-      option?.customerName?.toLowerCase().includes(this.searchTerm) ||
-      option?.location?.toLowerCase().includes(this.searchTerm) ||
-      option?.lgdate?.toLowerCase().includes(this.searchTerm) ||
-      option?.pidate?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisprocess?.toLowerCase().includes(this.searchTerm)
+      option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.refNo?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisLocation?.toLowerCase().includes(this.searchTerm) ||
+      option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisProcess?.toLowerCase().includes(this.searchTerm)
     );
   }
 
@@ -109,82 +108,92 @@ export class ViewForSoloJourneyComponent implements OnInit {
     let reqObj = {
       "leadId": lead.refNo,
     }
-    this.adminService.getAllAudit(reqObj).subscribe((response:any) => {
-          const dialogRef = this.matdialogue.open(AuditpopupComponent, {
-            width: "500px",
-            autoFocus: false,
-            data: response.allAudit
-          });
-          dialogRef.afterClosed().subscribe((result: any) => {
-            console.log(result);
-          })
-          // this.leadsArray = response.allLeads
-        },
-        (error:any) => {
-          console.log(error);
-          // this.loading = false;
-        });
+    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
+      let res = JSON.parse(response.data);
+      const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+        width: "1000px",
+        autoFocus: false,
+        data: res.data.allAudit
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+      })
+      // this.leadsArray = response.allLeads
+    },
+      (error: any) => {
+        console.log(error);
+        // this.loading = false;
+      });
   }
 
   ReassignAgent() {
-    interface Element {
-      avName: string;
-      avId: string;
-    }
-  
-    let AVdata: Element[] = [];
+    let AVdata: any = [];
     this.displayedLeads.forEach((element: any) => {
-      if (AVdata.findIndex(item => item.avId === element.avid) === -1 && element.avid !== '') {
+      if (AVdata.findIndex((item: any) => item.avId === element.avid) === -1 && element.avid !== '') {
         AVdata.push({
           avName: element.avName,
           avId: element.avid
         });
       }
     });
-  
-    console.log('AVdata:', AVdata); 
+
+    console.log('AVdata:', AVdata);
     const dialogRef = this.matdialogue.open(ReassignpopupComponent, {
       data: {
         AVData: AVdata
       }
     });
-  
+
     dialogRef.afterClosed().subscribe(async (data: any) => {
-      console.log('Dialog closed with data:', data); 
-  
-      if (data) { 
+      console.log('Dialog closed with data:', data);
+
+      if (data) {
+        // Extract the leadId from the allLeads array
+        const selectedLead = this.getAllLeads.find((lead: any) => lead.avid === data);
+        const leadId = selectedLead ? selectedLead.refNo : null;
+
+        if (!leadId) {
+          console.error('Lead ID not found for the selected AVID');
+          return;
+        }
+
         let request = {
-          avId: data 
+          leadId: String(leadId), // Ensure leadId is a string
+          avId: String(data)      // Ensure avId is a string
         };
-  
-        console.log('Reassign request:', request); 
-  
-        this.adminService.assignToAv(request).subscribe((response:any) => {
-              console.log('API Response:', response);
-              if (response.isSuccess && response.statusCode === 200) {
-                const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
-                  width: "2000px",
-                  autoFocus: false,
-                  data: "Successfully Reassigned"
-                });
-                dialogRef.afterClosed().subscribe((result: any) => {
-                  console.log(result);
-                });
-              }
-            },
-            (error: any) => {
-              console.error('API Error:', error);
-            });
+
+        console.log('Request payload:', JSON.stringify(request));
+
+        this.adminService.assignToAv(request).subscribe(
+          (response: any) => {
+            console.log('API Response:', response);
+            if (response.isSuccess && response.statusCode === 200) {
+              const dialogRef = this.dialog.open(ReassignpopupComponent, {
+                width: "2000px",
+                autoFocus: false,
+                data: "Successfully Reassigned"
+              });
+              dialogRef.afterClosed().subscribe((result: any) => {
+                console.log(result);
+              });
+            }
+          },
+          (error: any) => {
+            console.error('API Error:', error);
+            console.error('Error Details:', error.error); 
+          }
+        );
       }
     });
   }
-  
+
+
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
   }
 
   exportToxl() {
-    if (this.displayedLeads.length > this.itemsPerPage){
+    if (this.displayedLeads.length > this.itemsPerPage) {
       this.excelService.exportAsExcelFile(this.displayedLeads.slice(0, this.itemsPerPage), 'solo');
       console.log('export', this.itemsPerPage);
     } else {

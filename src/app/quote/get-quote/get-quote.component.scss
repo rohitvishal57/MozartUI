@@ -1506,6 +1506,12 @@ h4 {
   }
 }
 
+@media (max-width:360px) {
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy2 {
+    top: 142px;
+  }
+}
+
 .close-popup{
   padding-left: 94%;
   margin-top: -9px;

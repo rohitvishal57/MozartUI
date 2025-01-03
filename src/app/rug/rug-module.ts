@@ -31,6 +31,7 @@ import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view
 import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
 import { ReassignpopupComponent } from "./Admin/View_For_Solo_Journey/reassignpopup/reassignpopup.component";
 import { AuditpopupComponent } from "./components/auditpopup/auditpopup.component";
+import { SuccesspopupComponent } from "./components/successpopup/successpopup.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -53,7 +54,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         ViewUnverifiedLeadsComponent,
         ViewForDualJourneyComponent,
         ReassignpopupComponent,
-        AuditpopupComponent
+        AuditpopupComponent,
+        SuccesspopupComponent
      
     ],
     

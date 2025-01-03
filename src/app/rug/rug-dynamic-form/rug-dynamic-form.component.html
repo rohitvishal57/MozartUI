@@ -288,9 +288,9 @@
                 </div>
 
                 <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
-                  <p *ngIf="!isD2C" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
-                  <p *ngIf="control.value && !isD2C" [innerHTML]="control.value"></p>
-                  <div *ngIf="isD2C" [ngClass]="{'form-box declarationBox':  isD2C && control.name === 'd2cDeclarationLabel1' }">
+                  <p *ngIf="!isD2C && !isBB" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                  <p *ngIf="control.value && !isD2C && !isBB" [innerHTML]="control.value"></p>
+                  <div *ngIf="isD2C || isBB" [ngClass]="{'form-box declarationBox':  (isD2C || isBB) && control.name === 'd2cDeclarationLabel1' }">
                     <div class="row">
                       <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9" *ngIf="control.name === 'd2cDeclarationLabel1'">
                         <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
@@ -301,11 +301,11 @@
                       <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 text-center">
                         <div *ngIf="control.name === 'd2cDeclarationLabel1'" class="input-radio-block toggle-checkbox toggle-declaration">
                           <label class="input-radiolabel  labelflex-auto">
-                            <input type="radio" name="declaration" value="yes" id="declaration-yes">
+                            <input type="radio" name="isDeclarationSelected" [formControl]="isDeclarationSelected" value="yes" id="declaration-yes">
                             <span>YES</span>
                           </label>
                             <label class="input-radiolabel labelflex-auto">
-                                <input type="radio" name="declaration" value="no" id="declaration-no" checked="">
+                                <input type="radio" name="isDeclarationSelected" [formControl]="isDeclarationSelected" value="no" id="declaration-no" checked="">
                                 <span>NO</span>
                             </label>
                         </div>

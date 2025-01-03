@@ -126,12 +126,14 @@ export class RugDynamicFormComponent {
   bbPremiumData: any;
   familyConstructsData: any;
   isD2C: boolean = true;
+  isBB: boolean = true;
   paramLeadId: any;
   policyDetails: any;
   filteredPolicies: any;
   premiumArray:any = [];
   D2CproductCode:any
   premiumObj:any;
+  isDeclarationSelected = new FormControl('no');
   constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -166,10 +168,12 @@ export class RugDynamicFormComponent {
           console.log(res);
           this.formSequence = JSON.parse(res.data.formSequence);
           console.log(this.formSequence);
-          if(this.agentCode != "467898"){
+          if(this.agentCode != "467898" && this.agentCode == "467899"){
             this.isD2C = false;
+            this.isBB = true;
           }else if(this.agentCode == "467898"){
             this.isD2C = true;
+            this.isBB = false;
           }
           console.log(this.formSequence[this.getFormIndexValue()].formName)
           console.log(this.paramLeadId.CurrentIndex)
@@ -338,10 +342,12 @@ export class RugDynamicFormComponent {
       }
 
 
-      if(this.agentCode != "467898"){
+      if(this.agentCode != "467898" && this.agentCode == "467899"){
         this.isD2C = false;
+        this.isBB = true;
       }else if(this.agentCode == "467898"){
         this.isD2C = true;
+        this.isBB = false;
       }
       if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
@@ -4768,8 +4774,8 @@ export class RugDynamicFormComponent {
     console.log(this.getFormIndexValue());
     console.log(this.dynamicFormGroup.get('decl2')?.value);
     // console.log(this.dynamicFormGroup.get('decl3')?.value);
-    if(this.getFormIndexValue() == 4 && this.dynamicFormGroup.get('decl2')?.value != true){
-      this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+    if(this.getFormIndexValue() == 4 && this.isDeclarationSelected.value != "no"){
+      this.toast.warning({ detail: "Warning", summary: "Basis the information provided this proposal cannot be processed.", duration: 3000 });
       return;
     }
     console.log(this.dynamicFormGroup.valid);
