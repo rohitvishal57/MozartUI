@@ -690,8 +690,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
   
   openModal(resp: any) {
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
-      width: '400px',
+      //width: '400px',
       disableClose: true,
+      panelClass:"messageModal-mat",
       data: {
         type: 'success', 
         title: 'Endorsement',
@@ -706,8 +707,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   openErrorModal(msg: string){
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
-      width: '400px',
+      //width: '400px',
       disableClose: true,
+      panelClass:"messageModal-mat",
       data: {
         type: 'error',
         message: msg

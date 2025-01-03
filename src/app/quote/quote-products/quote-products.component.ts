@@ -11,13 +11,14 @@ import { LoadingService } from "src/app/services/loading.service";
 import { LanguageService } from "src/app/services/language.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ProductsService } from "src/app/product/products/products.service";
+import HeaderInformation from "src/app/layout/headerInfo";
 
 
 @Component({
   selector: 'app-quote-products',
   templateUrl: './quote-products.component.html',
   styleUrls: ['./quote-products.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService, HeaderInformation]
 })
 export class QuoteProductsComponent implements OnInit {
   stylesList: any[] = [];
@@ -62,7 +63,7 @@ export class QuoteProductsComponent implements OnInit {
     private service: CommonService, private encryptionService: EncryptionService, private spinner: LoadingService,
     private confirmationService: ConfirmationService, private aesEncryptService: AesEncryptionService, private languageService: LanguageService,
     private translateService: TranslateService,
-    private productService: ProductsService, private quoteservices: QuoteService
+    private productService: ProductsService, private quoteservices: QuoteService, public headerInformation : HeaderInformation
   ) { }
   ngOnInit(): void {
     window.scrollTo(0, 0); // Scroll to top when the component is initialized
@@ -492,5 +493,27 @@ export class QuoteProductsComponent implements OnInit {
   backToProducts(){
     this.router.navigate(['/dashboard'], {
     });
+  }
+
+  donwloadBrowcher(productName : any){
+    const downloadBrowcherProduct = this.headerInformation.downloadBrowcher.find((element: any) =>
+      element.productName.includes(productName));
+    
+      if (downloadBrowcherProduct) {
+        const URL = downloadBrowcherProduct.browcherURL;
+        const link = document.createElement('a');
+        link.href = URL;
+        link.download = URL.split('/').pop() || 'download.pdf';     
+      // First, try downloading by clicking the link
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+   
+      window.open(URL, '_blank');  // Open in a new tab for Chrome
+        
+      } else {
+        console.error('Invalid or missing URL.');
+      }
+   
   }
 }
