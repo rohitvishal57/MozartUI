@@ -2092,7 +2092,7 @@ export class YatraComponent {
                     value: response.data.bankName,
                     name: response.data.bankName
                   };
-                  this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                  this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
                   this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
 
                   if (response.data.bankCode) {
