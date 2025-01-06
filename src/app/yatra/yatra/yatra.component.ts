@@ -1126,7 +1126,19 @@ export class YatraComponent {
           this.resolveMethod(control.methodName, control, index);
         }
 
-        
+        if (control.type == 'select' && control.value === "") {
+          if(control.name == 'nationality'){
+            console.log(control);
+          }
+          // Set control value if any option is selected
+          if (control.options && control.options.length > 0) {
+            control.options.forEach((option: IOptions) => {
+              if (option.selected) {
+                control.value = option.id ? this.stringifyObject(option) : option.value;
+              }
+            });
+          }
+        }
 
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
