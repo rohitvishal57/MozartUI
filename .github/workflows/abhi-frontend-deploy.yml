@@ -146,7 +146,7 @@ jobs:
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       #run: ssh-keyscan -v -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1 || { echo 'ssh-keyscan failed'; exit 1; }
 
-    Generate the single version at the workflow level
+      #Generate the single version at the workflow level
     - name: Generate Deployment Version
       id: version
       run: |
