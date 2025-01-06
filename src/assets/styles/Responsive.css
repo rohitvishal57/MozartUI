@@ -214,7 +214,9 @@
     .raido_policyTenure {
         flex-direction: column !important;
     }
-
+    .infoMsgModal .icon_infoMsg, .messageModal .icon_infoMsg {
+        left: 45%;
+    }
 }
 @media (max-width:1024px) {
     .siteSidenav .sidenavMenu.sidenavMenu_logout {
@@ -381,6 +383,9 @@
 @media (max-width:768px) {
     .checkbox_renew_optionalCoverages {
         padding: 7px;
+    }
+    .infoMsgModal .icon_infoMsg, .messageModal .icon_infoMsg {
+        left: 43%;
     }
 }
 @media (max-width:767px) {
@@ -656,6 +661,17 @@
     .p-paginator .p-paginator-last {
         width: 30px !important;
         height: 30px !important;
+    }
+    .messageModal-mat {
+        max-width: 100vw !important;
+        width: 90%;
+    }
+    .infoMsgModal .modal-dialog, .messageModal .modal-content {
+        max-width: 100%;
+        min-width: 100%;
+    }
+    .infoMsgModal .icon_infoMsg, .messageModal .icon_infoMsg {
+        left: 37%;
     }
 }
 @media (min-width:539px) and (max-width:540px){

@@ -4628,6 +4628,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .infoMsgModal .modal-dialog, .messageModal .modal-content {
   max-width: 350px;
+  min-width: 350px;
 }
 .infoMsgModal .modal-content, .messageModal .modal-content {
   padding: 0;
