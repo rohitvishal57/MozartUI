@@ -189,7 +189,7 @@ jobs:
   
     - name: Upload deploy.ps1 to VM
       run: |
-        scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1
+        scp -i ~/.ssh/id_rsa -P 22 ./scripts/frontend_updated_deploy.ps1 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{env.DEPLOY_BASE_DIR}}/frontend_updated_deploy.ps1
     
     - name: Execute frontend_deploy.ps1 script on VM
       run: |
