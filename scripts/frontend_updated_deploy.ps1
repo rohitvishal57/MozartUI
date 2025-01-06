@@ -59,21 +59,31 @@ function Set-HTTPSBinding {
         Write-Output "Certificate imported successfully with Thumbprint: $certThumbprint"
 
         # Remove HTTP Binding
-        if (Get-WebBinding -Name $SiteName -Protocol "http" -Port 80 -ErrorAction SilentlyContinue) {
-            Write-Output "Removing default HTTP binding."
-            Remove-WebBinding -Name $SiteName -Protocol "http"
-        }
+$httpBinding = Get-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost -ErrorAction SilentlyContinue
+if ($httpBinding) {
+    Write-Output "Removing default HTTP binding."
+    Remove-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost
+} else {
+    Write-Output "No HTTP binding found for removal."
+}
 
-        # Add HTTPS Binding
-        Write-Output "Adding HTTPS binding on port 443."
-        if (-not (Get-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost -ErrorAction SilentlyContinue)) {
-            New-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost
-        }
+# Add HTTPS Binding
+Write-Output "Adding HTTPS binding on port 443."
+$httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost -ErrorAction SilentlyContinue
+if (-not $httpsBinding) {
+    New-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost
+} else {
+    Write-Output "HTTPS binding already exists for $BindingHost on port 443."
+}
 
-        # Assign SSL Certificate
-        Get-WebBinding -Name $SiteName -Protocol "https" | ForEach-Object {
-            $_.AddSslCertificate($certThumbprint, "My")
-        }
+# Assign SSL Certificate
+$bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https" | Where-Object { $_.bindingInformation -like "*:443:$BindingHost" }
+if ($bindingInfo) {
+    $bindingInfo.AddSslCertificate($certThumbprint, "My")
+    Write-Output "Successfully assigned SSL certificate to HTTPS binding."
+} else {
+    Write-Output "Failed to find HTTPS binding to assign SSL certificate."
+}
         Write-Output "Successfully configured HTTPS binding for: $SiteName"
     } catch {
         Write-Output "Error configuring HTTPS binding for: $SiteName"
@@ -83,7 +93,7 @@ function Set-HTTPSBinding {
 }
 
 # Ensure App Pool Exists
-Test-AppPool -AppPoolName $AppPoolName
+Test-AppPoolName -AppPoolName $AppPoolName
 
 # Stop IIS Website Before Updating
 try {
