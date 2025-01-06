@@ -25,7 +25,7 @@ env:
   APP_POOL_NAME: "ABHIDEPLOY"
   SITE_NAME: "ABHIUSP"
   BINDING_HOST: "usp.monocept.ai"
-  PORT: 443
+  PORT: 8443
 
 permissions:
   contents: write 
@@ -203,6 +203,7 @@ jobs:
           environment="prod"
         fi
         echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+        echo "Environment is set to $environment"
 
     - name: Tag the commit
       if: ${{ success() }}  # Only tag if the workflow is successful
