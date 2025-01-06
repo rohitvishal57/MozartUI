@@ -135,7 +135,7 @@ try {
 Update-IISWebsite -SiteName $SiteName -WebRoot $WebRoot -BindingHost $BindingHost -AppPoolName $AppPoolName
 
 # Configure HTTPS Binding
-$pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx"
+$pfxPath = "C:\Users\ABHI\Desktop\monolensssl2024.pfx"
 $securePassword = ConvertTo-SecureString -String $PfxPass -AsPlainText -Force
 Set-HTTPSBinding -SiteName $SiteName -BindingHost $BindingHost -PfxPath $pfxPath -SecurePassword $securePassword
 
