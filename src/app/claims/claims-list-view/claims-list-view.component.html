@@ -240,7 +240,7 @@
                                     <th scope="col">{{"Policy No." | translate}}</th>
                                     <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Member Name" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Raised By" | translate}}</th>
                                     <th scope="col" nowrap>{{"Member Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                     <th scope="col">{{"Status" | translate}}</th>
@@ -257,8 +257,8 @@
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                         <td><span class="text-break-w100">{{row?.mobileNumber}}<br />{{row?.email}}</span></td>
-                                        <td>{{ row?.memberName }}</td>
-                                        <td>{{ row?.memberId }}<br/>{{ row?.memberRelation }}</td>
+                                        <td>{{ designationName }}</td>
+                                        <td>{{ row?.memberName }}<br/>{{ row?.memberRelation }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                         <td>{{ row?.reportedDateTime | datepipe }}</td>
@@ -318,12 +318,12 @@
                                 <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Member Name" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.memberName | translate}}</div>
+                                <div class="item_lable">{{"Raised By" | translate}}</div>
+                                <div class="item_value">{{ designationName | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Member Info" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.memberId | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
+                                <div class="item_value">{{ gridClaims.memberName | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Claim Type" | translate}}</div>
