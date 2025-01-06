@@ -166,9 +166,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
    this.notificationService.markNotification(notification.id).subscribe(
     (response)=>{
       if (response?.isSuccess) {
-       const redirectionURL =  this.configService.config.baseUrl + notification.redirectionURL;
+        const redirectionURL =  window.location.origin + "/"+ notification.redirectionURL;
         window.location.href = redirectionURL;
-
         this.notificationInfo();
       }
     },
