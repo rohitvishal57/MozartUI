@@ -238,8 +238,6 @@ export class ProposalsListComponent {
     this.page =1;
     this.first = 0;
     this.rows = 10;
-    this.quoteListRequestBody.pageNumber = this.page;
-    this.quoteListRequestBody.pageSize = this.rows;
     this.quoteListRequestBody.productVarientName= "";
     this.quoteListRequestBody.startDate = null;
     this.quoteListRequestBody.endDate = null;
@@ -249,6 +247,8 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.quoteId = "";
   this.checkView();  
   }
+  this.quoteListRequestBody.pageNumber = this.page;
+  this.quoteListRequestBody.pageSize = this.rows;
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
       (response) => {
