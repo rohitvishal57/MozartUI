@@ -59,7 +59,7 @@ function Set-HTTPSBinding {
         Write-Output "Certificate imported successfully with Thumbprint: $certThumbprint"
 
         # Remove HTTP Binding
-        if (Get-WebBinding -Name $SiteName -Protocol "http" -ErrorAction SilentlyContinue) {
+        if (Get-WebBinding -Name $SiteName -Protocol "http" -Port 80 -ErrorAction SilentlyContinue) {
             Write-Output "Removing default HTTP binding."
             Remove-WebBinding -Name $SiteName -Protocol "http"
         }

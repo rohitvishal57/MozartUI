@@ -93,7 +93,7 @@ try {
 }
 
 # Path to the PFX certificate file
-$pfxPath = "C:\Users\mozart\Desktop\monolensssl2024.pfx" 
+$pfxPath = "C:\Users\ABHI\Desktop\monolensssl2024.pfx" 
 
 # Validate the file path
 if (-not (Test-Path $pfxPath)) {
