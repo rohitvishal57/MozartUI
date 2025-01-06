@@ -1893,10 +1893,7 @@ export class YatraComponent {
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
-    if(benefitControl.name == 'medicalExpenses'){
-      debugger
-      benefitControl.value == eventValue
-    }
+    
     if (control.name == 'physicalcopy' && control.type == 'radio') {
       const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
       this.form.formSections.forEach((section: any) => {
