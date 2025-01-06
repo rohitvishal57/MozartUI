@@ -90,7 +90,11 @@
                                                 <h4>{{"Claim Details" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">{{"Raised On:" | translate}}</span>
+                                                        <span class="label">{{"Raised By:" | translate}}</span>
+                                                        <span class="value">{{designationName}}</span>
+                                                    </li>
+                                                    <li>
+                                                       <span class="label">{{"Raised On:" | translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>

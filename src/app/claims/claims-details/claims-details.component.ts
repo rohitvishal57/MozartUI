@@ -22,6 +22,7 @@ export class ClaimsDetailsComponent {
   filesUploaded: any[] = [];
   saveForm!: FormGroup;
   claims: any;
+  designationName: string | any;
   @Input() label: string = "Label this document";
   files: { name: string; label: string }[] = [];
   editableControl: FormControl = new FormControl("");
@@ -129,6 +130,10 @@ export class ClaimsDetailsComponent {
   }
 
   ngOnInit() {
+    this.designationName = localStorage.getItem('designation')
+    if(this.designationName === 'DIRECT'){
+      this.designationName = 'Agent'
+    }
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -308,21 +313,6 @@ export class ClaimsDetailsComponent {
 //     return new Blob([byteArray], { type: fileType });
 //   }
   
-//   downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
-//     if (!file.fileBlob) {
-//       console.error("File blob is not available for download.");
-//       return;
-//     }
-//     const url = window.URL.createObjectURL(file.fileBlob);
-//     const anchor = document.createElement('a');
-//     anchor.href = url;
-//     anchor.download = file.name;
-//     document.body.appendChild(anchor);
-//     anchor.click();
-//     document.body.removeChild(anchor);
-//     window.URL.revokeObjectURL(url);
-//   }
-  
 fetchfileUploads(claimNumber: string, policyNumber: string) {
   let claimsFilesReqBody = {
     "documentId": "",
@@ -360,7 +350,6 @@ fetchfileUploads(claimNumber: string, policyNumber: string) {
 
 
 convertBase64ToBlob(base64: string, fileType: string): Blob {
-  // Remove data URI prefix if it's present (e.g., "data:application/pdf;base64,")
   const base64Data = base64.startsWith('data:') ? base64.split(',')[1] : base64;
 
   // Convert the base64 string to a byte array
@@ -382,9 +371,9 @@ getMimeType(documentType: string): string {
     case 'Pdf':
       return 'application/pdf';
     case 'Image':
-      return 'image/png';  // Example, adjust based on your document types
+      return 'image/png';  
     default:
-      return 'application/octet-stream'; // fallback MIME type
+      return 'application/octet-stream'; 
   }
 }
 

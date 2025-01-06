@@ -116,6 +116,7 @@ export interface ISubControl {
   innerSubControls?: ISubControl[];
   displayOnly?: boolean;
   coreControls?: ISubControl[];
+  extraBenefitsControls?: ISubControl[];
   bigFont?: boolean;
   dependentControls?: string[];
   getAllOption?: string;

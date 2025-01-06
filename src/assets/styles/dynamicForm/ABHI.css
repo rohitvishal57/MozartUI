@@ -3213,6 +3213,9 @@ margin: 0;
     font-size: 14px;
 }
 /*---Questions: selected members css start---*/
+.input-checkbox-feild .input-check:checked + label:after {
+    bottom: 6px;
+}
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
         display: flex;
