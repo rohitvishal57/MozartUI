@@ -1528,7 +1528,6 @@ export class YatraComponent {
   }
 
   // toggleHr(subControl: any): boolean {
-  //   debugger
   //   subControl.visible ! = subControl.visible;
   //   return subControl.visible
   // }
@@ -3533,8 +3532,6 @@ export class YatraComponent {
 
 
   onEmailClick(control: any) {
-    debugger;
-
     let requestBody: any = {};
     requestBody.emailId = this.formData.emailId;
     requestBody.mobileNumber = this.formData.mobileNumber;
@@ -7749,7 +7746,6 @@ export class YatraComponent {
 
   }
   onVerifyClick(control: any) {
-    debugger;
 
     // let requestBody: any = {};
     // requestBody.emailId = this.formData.emailId;
