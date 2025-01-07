@@ -21,13 +21,7 @@
                                                                 <img src="../../assets/images/img_profile.png" />
                                                             </div>
                                                             <div>
-                                                                <!-- My Hierarachy/ Escalation matrics/ Support
-                                                                <button type="submit" id="save" name="save"
-                                                                    class="btn_red"
-                                                                    style="padding: 1px 16px;">{{"L1"}}</button>
-                                                                <button type="submit" id="save" name="save"
-                                                                    class="btn_red"
-                                                                    style="padding: 1px 16px;">{{"L2"}}</button> -->
+                                                    
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
@@ -224,3 +218,250 @@
         </div>
     </div>
 </main>
+
+<!-- <main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading">
+                 {{"My Profile" | translate}}
+                </h2>
+            </div>
+
+            <div class="main_productTabs">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-profile" type="button" role="tab" aria-controls="tab-profile"
+                            aria-selected="true" >{{"Profile Info"| translate}}</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-Performance-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-Performance" type="button" role="tab" aria-controls="tab-quotes"
+                            aria-selected="false" >{{"Performance" | translate}}</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-Escalation-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-Escalation" type="button" role="tab" aria-controls="tab-quotes"
+                            aria-selected="false" >{{"Escalation Matrix" | translate}}</button>
+                    </li>
+                </ul>
+            </div>
+
+            <section class="white_container white_container_shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="tab-profile" role="tabpanel"
+                                aria-labelledby="tab-profile-tab">
+
+                                <main class="performBody">
+                                    <div class="contentBody bodyColumns-1">
+                                        <div class="bodyColumn body_flex_column">
+                                            <section class="white_container mobilePad_container">
+                                                <div class="row mb-5 qrCode_mr_0">
+                                                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                        <div class="userProfilePic">
+                                                            <img src="../../assets/images/img_profile.png" />
+                                                        </div>
+                                                        <div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                        <div class="profile_changePassword">
+                                                            <button type="button" id="profile_changePassword" name="profile_changePassword" class="btn_profile_changePassword" (click)="handlePassword()">
+                                                                                <span><img src="./assets/Img/icon_changePassword.svg"></span> Change/Reset Password
+                                                                            </button>
+                                                        </div>
+                                                        <div class="language-selector" tabindex="0">
+                                                            <label for="" class="lbl_preferredLang">{{'Preferred Language' | translate}}:</label>
+                                                            <div class="d-flex selectedLanguage-wrapper">
+                                                                <select class="dropdown" [(ngModel)]="selectedLanguage">
+                                                                                <option value="English">English</option>
+                                                                                <option value="Hindi">हिंदी</option>
+                                                                                <option value="Telugu">తెలుగు</option>
+                                                                            </select>
+                                                                <button class="btn btn-danger btn_slectedLang"
+                                                                                (click)="updatePreferredLanguage()">{{"Save" | translate}}</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-12 col-md-10 col-lg-6 col-xl-6">
+                                                        <div class="userProfile_qrCode">
+                                                            <div class="img_qrCode" *ngIf="profileQRCode">
+                                                                <img [src]="qrCodeImage" />
+                                                            </div>
+                                                            <div class="qrCode_agentInfo">
+                                                                <h5>Your Agent Code</h5>
+                                                                <h6>Copy or scan your Agent Code/QR here.</h6>
+                                                                <div class="copy_qrCode">
+                                                                    <div class="copy_qrCode_url">
+                                                                        <span id="qrCodeUrl" *ngIf="profileLink">
+                                                                                          {{ profileLink }}
+                                                                                          </span>
+                                                                    </div>
+                                                                    <div class="btn_group_qrCode">
+                                                                        <button type="button" id="btn-copy-content"
+                                                                                            name="btn-copy-content"
+                                                                                            title="Copy" (click)="copyToClipboard()"><img
+                                                                                                src="../../assets/Img/icon_content_copy.svg"></button>
+                                                                        <button type="button" id="btn-link-content"
+                                                                                            name="btn-link-content"
+                                                                                            title="Link" (click)="openLink()"><img src="../../assets/Img/icon_link_share.svg"></button>
+                                                                        <button type="button" id="btn-link-content" class="shareIcon"
+                                                                                            name="btn-link-content" (click)="openEmail()"
+                                                                                            title="Share"><img src="../../assets/Img/icon_profile_share.svg"></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 "
+                                                        *ngFor="let pr of profileDetails">
+                                                        <div class="main_userDetails">
+                                                            <div class="info_userDetails">
+                                                                <div class="img_userProfile">
+                                                                    <img
+                                                                                        src="../../assets/images/{{pr.icon}}.png" />
+                                                                </div>
+                                                                <div class="details_userProfile">
+                                                                    <label>{{pr.heading | translate}}</label>
+                                                                    <h6><span title={{pr.value}}>{{pr.value}}</span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                            <div class="edit_userDetails"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </main>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab-Performance" role="tabpanel"
+                                aria-labelledby="tab-Performance-tab">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="claims_member_info">
+                                            <h4>{{"Annual Club Performance" | translate}}</h4>
+                                            <ul class="list-detailsInfo">
+                                                <li>
+                                                    <span class="label">{{"Code" | translate}} :</span>
+                                                    <span class="value membername">{{
+                                                    agentPerformanceData?.annualClubPermormance?.agentCode ||
+                                                    'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Name" | translate}}:</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.agentName ||
+                                                    'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span
+                                                    class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}}
+                                                    {{"Annual Club Status" | translate}} :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.annualClubStatus1
+                                                    || 'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span
+                                                    class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubGWPFY}}
+                                                    {{"Annual Club GWP (Weighted) as on" | translate}} {{
+                                                    agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
+                                                    | date:'d MMM\'yy'}} :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.annualClubGWP
+                                                    || 'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"NOP Persistency" | translate}} % :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.nopPersistency
+                                                    || 'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span
+                                                    class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}}
+                                                    {{"Annual Club Status" | translate}} :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.annualClubStatus2
+                                                    || 'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Next Club" | translate}} :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.nextClub ||
+                                                    'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Shortall for Next level" | translate}}
+                                                    :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.shortallForNextLevel
+                                                    || 'N/A' }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Loss Ratio" | translate}} :</span>
+                                                    <span class="value">{{
+                                                    agentPerformanceData?.annualClubPermormance?.lossRatio ||
+                                                    'N/A' }}</span>
+                                                </li>
+                                            </ul>
+                                            <div class="claims_member_info-gradient"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane fade" id="tab-Escalation" role="tabpanel"
+                            aria-labelledby="tab-Escalation-tab">
+                            <div class="card flex justify-content-center lAccordian">
+                                <p *ngIf="showmsg" class="no-data-message"> We regret to inform you that no
+                                    escalation matrix details are available at this time.</p>
+                                <div class="row" *ngIf="!showmsg">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6"
+                                        *ngFor="let EDetails of EcalatinDetails">
+                                        <div class="claims_member_info">
+                                            <h4 id="lbl_lebel"><span>{{EDetails.level}}</span></h4>
+                                            <ul class="list-detailsInfo">
+                                                <li>
+                                                    <span class="label">{{"First Name" | translate}} :</span>
+                                                    <span class="value membername">{{EDetails.firstName}}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Last Name" | translate}} :</span>
+                                                    <span class="value">{{EDetails.lastName}}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Email Id" | translate}} :</span>
+                                                    <span class="value">{{EDetails.emailId}}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">{{"Mobile Number" | translate}} :</span>
+                                                    <span class="value">{{EDetails.mobileNumber}}</span>
+                                                </li>
+
+                                            </ul>
+                                            <div class="claims_member_info-gradient"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main> -->
