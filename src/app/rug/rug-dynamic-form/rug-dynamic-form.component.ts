@@ -2928,7 +2928,7 @@ export class RugDynamicFormComponent {
                       }
                     if (parsedValue.value === option.value) {
                       element.forEach((control: any) => {
-                        if (control.name == 'dob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'name' || control.name == 'lastName' || control.name == 'relation' || control.name == 'gender') {
+                        if (control.name == 'dob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'name' || control.name == 'lastName' || control.name == 'relation' || control.name == 'gender') {
                           control.disabled = true
                         }
                       })
@@ -3006,7 +3006,7 @@ export class RugDynamicFormComponent {
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
           }
           if(this.isD2C == true && controls.name == 'insuredMembers' && this.isFormLoaded == true){
-            this.calculateD2CPremium();
+            // this.calculateD2CPremium();
           }
           if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
             // this.calculateBBPremium();
@@ -3043,7 +3043,7 @@ export class RugDynamicFormComponent {
           //     }
           //   });
           // }
-          if(this.isD2C == true && controls.name == 'insuredMembers' && this.isFormLoaded == true){
+          if((this.isD2C == true && controls.name == 'insuredMembers') && this.isFormLoaded == true){
             this.calculateD2CPremium();
           }
           if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
@@ -4360,9 +4360,9 @@ export class RugDynamicFormComponent {
         // }
         let reqData = {
           "proposalNum": this.leadId,
-          "partnerId": this.partnerId,
+          "partnerId": this.partnerId,  
           "agentCode": this.agentCode,        
-          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
           "productId": this.productId.toString(),
@@ -7994,6 +7994,10 @@ export class RugDynamicFormComponent {
 
   }
   async changeD2CSumInsured(event: any) {
+    if(this.productId == '8'){
+
+      this.updatePlansBasedOnSumInsured();
+    }
     console.log(this.sumInsuredData);
     console.log(this.dynamicFormGroup.value.sumInsured);
     let filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
@@ -8693,5 +8697,37 @@ export class RugDynamicFormComponent {
     else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
       this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
   }
+  }
+
+
+
+  updatePlansBasedOnSumInsured(sumInsured: number = 500000): void {
+    sumInsured = this.dynamicFormGroup.get('sumInsured')?.value
+    if (sumInsured == 7500000 || sumInsured == 10000000) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'planAvailable' && controls.radioOptions) {
+            controls.radioOptions.forEach((option: any) => {
+              if (option.value === 'GHI-10L') {
+                option.visible = true; // Show 'GHI-10L' plan if sumInsured is 7500000
+              }
+            });
+          }
+        });
+      });
+    } else {
+      // Hide the 'GHI-10L' plan if sumInsured is not 7500000
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'planAvailable' && controls.radioOptions) {
+            controls.radioOptions.forEach((option: any) => {
+              if (option.value === 'GHI-10L') {
+                option.visible = false; // Hide 'GHI-10L' plan for other sumInsured values
+              }
+            });
+          }
+        });
+      });
+    }
   }
 }

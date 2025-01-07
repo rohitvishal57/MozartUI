@@ -155,10 +155,11 @@ export interface IRadioOption {
   year?: string;
   discount?: string;
   dependentControls?: any[];
+  visible:boolean
 }
 
 export interface ISelectCheckboxOption {
-  label?: string;
+  label?: string;   
   value: string;
   button?: boolean;
   imagePath?: string;
