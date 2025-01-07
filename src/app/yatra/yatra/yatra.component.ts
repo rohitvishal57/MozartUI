@@ -692,6 +692,9 @@ export class YatraComponent {
               this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
             }
             else {
+              if ((control.name == 'chronicCare' || control.name == 'chronicManagement') && this.formData['isChronicCare'] == 'N') {
+                control.visible = false;
+              }
               control.subControls.forEach((subControl: ISubControl) => {
                 if (subControl.name == 'addOnCover' && control.name == 'deductible') {
                   subControl.value = true;
@@ -980,7 +983,7 @@ export class YatraComponent {
             formGroup.addControl(control.name, new FormArray([]));
           }
         }
-        if(control.extraBenefitsControls){
+        if (control.extraBenefitsControls) {
           let tempFormArray = this.fb.array([]);
           for (let i = 0; i < control.extraBenefitsControls.length; i++) {
             tempFormArray.push(this.initializeDynamicFormControls(control.extraBenefitsControls[i], i, control));
@@ -1055,13 +1058,13 @@ export class YatraComponent {
           // tempFormArray.push(formGroup);
           tempFormArray.push(this.initializeSubControls(subControls.extraBenefitsControls[i], null, subControls))
 
-        }      
+        }
         formGroup.addControl(subControls.name, tempFormArray);
       }
-      
-      
+
+
       else
-      formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
+        formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
       // return new FormControl(subControls.value,controlValidators);
     }
 
@@ -1127,9 +1130,6 @@ export class YatraComponent {
         }
 
         if (control.type == 'select' && control.value === "") {
-          if(control.name == 'nationality'){
-            console.log(control);
-          }
           // Set control value if any option is selected
           if (control.options && control.options.length > 0) {
             control.options.forEach((option: IOptions) => {
@@ -1347,8 +1347,8 @@ export class YatraComponent {
     // formControl?.markAsTouched();
     return formControl ? formControl.value : null;
   }
-  hasSubInnerValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null,indexj: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null,benefitControl: any | null = null) {
-   console.log("hasSubInnerValue",control,parentControl,subControl,index,innerControl,innerSubControl,benefitControl,this.dynamicFormGroup,subControl.coreControls[index].name);
+  hasSubInnerValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, indexj: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, benefitControl: any | null = null) {
+    console.log("hasSubInnerValue", control, parentControl, subControl, index, innerControl, innerSubControl, benefitControl, this.dynamicFormGroup, subControl.coreControls[index].name);
     const formControl = parentControl != null && index != null
       ? ((((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
@@ -1589,6 +1589,8 @@ export class YatraComponent {
 
   async callMethod(methodName: string, control: any, section?: any) {
 
+    console.log(methodName);
+    
     if (control.otherControlName && section != undefined) {
       let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
       const method = (this as any)[methodName];
@@ -1899,13 +1901,13 @@ export class YatraComponent {
 
 
 
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null,benefitControl: any = null) {
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     this.changesMade = true;
     let eventValue = event.target.value;
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
-    
+
     if (control.name == 'physicalcopy' && control.type == 'radio') {
       const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
       this.form.formSections.forEach((section: any) => {
@@ -1920,7 +1922,7 @@ export class YatraComponent {
         })
       })
     }
-  
+
     if (parentControl?.name === "wellnessCoach") {
       let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.value;
       console.log("member details", memberDetails)
@@ -1928,7 +1930,7 @@ export class YatraComponent {
       let areAllSelected = Object.keys(memberDetails).every(
         key => memberDetails[key][0].memberCheckbox === true
       );
-    
+
       if (areAllSelected) {
         // Deselect all checkboxes
         Object.keys(memberDetails).forEach(key => {
@@ -1942,8 +1944,8 @@ export class YatraComponent {
       }
       this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.setValue(memberDetails);
     }
-     
-      
+
+
     if (control.name == 'confAccountNumber') {
 
       if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
@@ -2600,6 +2602,9 @@ export class YatraComponent {
 
     // Filter out undefined and null arguments
     let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
+
+    console.log(methodName);
+    
 
     // Specific logic for handling certain method names
     if (methodName === 'addOrRemoveAdditionalInsuredMember') {
@@ -3746,8 +3751,8 @@ export class YatraComponent {
   }
   async onSubmit() {
     this.changesMade = false;
-    console.log("dynamic form group",this.formData);
-    
+    console.log("dynamic form group", this.formData);
+
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
     const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
     const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
@@ -5729,12 +5734,12 @@ export class YatraComponent {
 
   closeOverlay(subControl: any, control: any = null) {
     if (subControl.conditionCheck && (this.dynamicFormGroup.get(control.name) as FormGroup).invalid) {
-      console.log("sub control",subControl);
+      console.log("sub control", subControl);
       this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
     else {
       console.log("pop up closed");
-      
+
       this.closePopUp();
       subControl.visible = false;
     }
@@ -6046,6 +6051,8 @@ export class YatraComponent {
 
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
+    console.log(formData, this.covers);
+
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
     const mappedData: Partial<IFullQuoteMapping> = {
@@ -6059,6 +6066,50 @@ export class YatraComponent {
       businessType: formData?.typeOfBusiness || '',
       insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
         const rrtoCover = (this.covers[index] || []).find((cover: any) => cover.coverId === 'RRTO');
+        const chrhSptCover = (this.covers[index] || []).find((cover: any) => cover.coverId === 'CHRHSPT');
+        console.log(chrhSptCover);
+        let chronicDiseases = "";
+        if (chrhSptCover) {
+          const productQuestionnaire = JSON.parse(member?.productQuestionnaire);
+          const chronicCare = formData?.chronicCare;
+          if (chronicCare && chronicCare.addOnDetails) {
+            const addOnMemberDetails = chronicCare.addOnDetails[member?.relation];
+            if (Array.isArray(addOnMemberDetails)) {
+              // Loop through addOnMemberDetails
+              addOnMemberDetails.forEach((detail) => {
+                // Check if the key includes "question" and the object is not empty
+                Object.keys(detail).forEach((key) => {
+                  if (
+                    key.includes("Question") &&
+                    detail[key] &&
+                    typeof detail[key] === "object" &&
+                    Object.keys(detail[key]).length > 0
+                  ) {
+                    // Push the valid question object into productQuestionnaire
+                    productQuestionnaire.push(detail[key]);
+                    Object.keys(detail[key]).forEach((key2)=>{
+                      if(key2 == 'diseaseCode'){
+                        chronicDiseases += chronicDiseases == ""
+                        ? `${detail[key][key2]}` 
+                        : `,${detail[key][key2]}`;
+                      }
+                    })
+                  }
+                  if(key.includes("obesityValue")){
+                    Object.keys(detail[key]).forEach((key2)=>{
+                      if(key2 == 'diseaseCode'){
+                        chronicDiseases += chronicDiseases == ""
+                        ? `${detail[key][key2]}` 
+                        : `,${detail[key][key2]}`;
+                      }
+                    })
+                  }
+                });
+              });
+            }
+          }
+          member.productQuestionnaire = JSON.stringify(productQuestionnaire);
+        }
         return {
           relation: member?.relation || '',
           memberRelationCode: this.jsonParse(member.relationshipType, 'id') || '',
@@ -6092,6 +6143,7 @@ export class YatraComponent {
           productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: rrtoCover ? rrtoCover.value : member?.memberRoomCategory || '',
           pedWaitingPeriod: this.pedWaitingPeriod || '',
+          chronicDisease: chronicDiseases || '',
           deductibleAmount: member?.deductibleAmount || '',
         };
       }) || [],
