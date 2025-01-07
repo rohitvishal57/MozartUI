@@ -581,7 +581,22 @@ button {
   width: 14px;
   height: 14px;
 }
-
+.abcSolution {
+  position: relative;
+}
+.abcSolution .dropdown-toggle::after {
+  display: none;
+}
+.abcSolution .mainMenu_abcSolution{
+  width: 80vw;
+  background: #fff;
+  box-shadow: 0 20px 48px #00000029;
+  border-radius: 10px;
+  border-width: 0 !important;
+  position: absolute;
+  inset: 0 0 auto auto !important;
+  transform: translateY(30px);
+}
 .siteHeader .logoMain {
   width: 100%;
   border-bottom: 0.1rem solid #EBEBEC;
