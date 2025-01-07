@@ -1,284 +1,549 @@
 <main class="siteBody siteBody_padding">
-    <div class="contentBody bodyColumns-1">
+   <div class="contentBody bodyColumns-1">
        <div class="bodyColumn body_flex_column">
-          <div class="body_flex_row justify-content-between">
-             <h2 class="icon_withHeading">{{"My Performance" | translate}}</h2>
-          </div>
-          <section class="white_container white_container_shadow">
-             <div class="row">
-                <div class="col-12 ">
-                   <div class="claims_matTabs_container">
-                      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs"
-                         (selectedTabChange)="onTabChanged($event)">
-                         <mat-tab [label ]="'Performance' | translate">
-                            <div class="row">
-                               <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                  <div class="claims_member_info">
-                                     <h4>{{"Annual Club Performance" | translate}}</h4>
-                                     <ul class="list-detailsInfo">
+           <div class="body_flex_row justify-content-between">
+               <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->{{"My Performance" | translate}}</h2>
+           </div>
+           <section class="white_container white_container_shadow">
+               <div class="row">
+                   <div class="col-12 ">
+                       <div class="claims_matTabs_container">
+                           <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs"
+                               (selectedTabChange)="onTabChanged($event)">
+                               <mat-tab [label]="'Performance' | translate">
+                                   <div class="row">
+                                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                           <div class="claims_member_info">
+                                               <h4>{{"Annual Club Performance" | translate}}</h4>
+                                               <ul class="list-detailsInfo">
+                                                   <li>
+                                                       <span class="label">{{"Code" | translate}} :</span>
+                                                       <span class="value membername">{{ agentPerformanceData?.annualClubPermormance?.agentCode || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Name" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.agentName || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}} {{"Annual Club Status" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus1 || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubGWPFY}} 
+                                                           {{"Annual Club GWP (Weighted) as on" | translate}} {{ agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
+                                                               | date:'d MMM\'yy'}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubGWP || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"NOP Persistency" | translate}} % :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nopPersistency || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}} {{"Annual Club Status" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus2 || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Next Club" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nextClub || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Shortall for Next level" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.shortallForNextLevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Loss Ratio" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                   </li>
+                                               </ul>
+                                               <div class="claims_member_info-gradient"></div>
+                                           </div>
+                                       </div>
+                                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                           <div class="claims_member_info">
+                                               <div class="body_flex_row justify-content-between">
+                                                   <h4>{{"Campaign Performance" | translate}}</h4>
+                                                   <div class="btn_groupAction btn_campaignPerformance">
+                                                       <button type="button" id="monthly" name="monthly" value="monthly"
+                                                           class="btn_grid mobile-hide jsBtnClickQuote"
+                                                           [ngClass]="{'active': docType === 'Monthly'}"
+                                                           aria-label="quotes-list" (click)="toggleView('Monthly')">{{"Monthly" | translate}}</button>
+                                                       <button type="button" id="quaterly" name="quaterly" value="quaterly"
+                                                           class="btn_grid mobile-hide jsBtnClickQuote"
+                                                           [ngClass]="{'active': docType === 'Quaterly'}"
+                                                           aria-label="quotes-card" (click)="toggleView('Quaterly')">{{"Quarterly" | translate}}</button>
+                                                   </div>
+                                               </div>
+                                               <ul class="list-detailsInfo">
+                                                   <li *ngIf="docType == 'Monthly'">
+                                                       <span class="label">{{"GWP(Weighted) as on" | translate}} {{ (agentPerformanceData?.campaignPermormance?.weightedAsOn | date:'d MMM\'yy') || 'N/A' }}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubGWP || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"GWP(Weighted) as on" | translate}} {{ (agentPerformanceData?.campaignPermormance?.quaterlyClubGWPDate | date:'d MMM\'yy') || 'N/A' }}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyClubGWP || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Monthly'">
+                                                       <span class="label">{{"Status" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubStatus || 'N/A'}}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Monthly'">
+                                                       <span class="label">{{"Next level" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextLevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Monthly'">
+                                                       <span class="label">{{"Shortall for Next level" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.shortallForNextLevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"Status" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.status || 'N/A'}}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"Next level" | translate}} :</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyNextLevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"Shortall for Next level" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyShortForNextLevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"RFB Business" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfBbusiness || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"RFB Payout" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbPayout || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"RFB Next Level" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbNextlevel || 'N/A' }}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"Next Level Earning" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextlevelearning || 'N/A'}}</span>
+                                                   </li>
+                                                   <li *ngIf="docType == 'Quaterly'">
+                                                       <span class="label">{{"Loss Ratio" | translate}}:</span>
+                                                       <span class="value">{{ agentPerformanceData?.campaignPermormance?.lossRatio || 'N/A' }}</span>
+                                                   </li>
+                                               </ul>
+                                               <div class="claims_member_info-gradient"></div>
+                                           </div>
+                                       </div>
+                                       <h4><b>Detailed View</b></h4>
+                                       <section id="quotes-list" class="tableMain user-quoteView block-show mt-3"
+                                           *ngIf="selectedView == 'list'">
+                                           <div class="tableSubMain">
+                                               <div class="table-responsive">
+                                                   <table class="table table-borderless table-search">
+                                                       <thead>
+                                                           <tr>
+                                                               <th class="head_quoteType" nowrap>Agent Code</th>
+                                                               <th nowrap>Proposal ID</th>
+                                                               <th nowrap>Proposal Substatus</th>
+                                                               <th nowrap>Client ID</th>
+                                                               <th nowrap>Insured Name</th>
+                                                               <th nowrap>Business Type</th>
+                                                               <th nowrap>Policy Start Date</th>
+                                                               <th nowrap>Policy End Date</th>
+                                                               <th nowrap>Policy Number</th>
+                                                               <th nowrap>Product Name</th>
+                                                               <th nowrap>Policy Variant</th>
+                                                               <th nowrap>Plan Type</th>
+                                                               <th nowrap>Plan Variant</th>
+                                                               <th nowrap>Portability</th>
+                                                               <th nowrap>Net Premium</th>
+                                                               <th nowrap>Sum Insured</th>
+                                                               <th nowrap>Inwarded Date</th>
+                                                               <th nowrap>Issue Date</th>
+                                                               <th nowrap>PR Date</th>
+                                                               <th nowrap>Port%</th>
+                                                               <th nowrap>Super%</th>
+                                                               <th nowrap>CI/CS/PA/ASP/Credit%</th>
+                                                               <th nowrap>SI Credit%</th>
+                                                               <th nowrap>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
+                                                               </th>
+                                                           </tr>
+                                                       </thead>
+                                                       <tbody class="table-group-divider">
+                                                           <tr class="base_quoteRow" *ngFor="let row of detailedList; let i = index">
+                                                               <td class="base_quote">{{row.agentCode}}</td>
+                                                               <td>{{row.proposalID}}</td>
+                                                               <td>{{row.proposalSubStatus}}</td>
+                                                               <td>{{row.clientID}}</td>
+                                                               <td>{{row.insuredName}}</td>
+                                                               <td>{{row.businessType}}</td>
+                                                               <td>{{row.policyStartDate}}</td>
+                                                               <td>{{row.policyEndDate}}</td>
+                                                               <td>{{row.policyNumber}}</td>
+                                                               <td>{{row.productName}}</td>
+                                                               <td>{{row.policyVariant}}</td>
+                                                               <td>{{row.planType}}</td>
+                                                               <td>{{row.planVariant}}</td>
+                                                               <td>{{row.planVariant}}</td>
+                                                               <td>{{row.netPremium}}</td>
+                                                               <td>{{row.sumInsured}}</td>
+                                                               <td>{{row.inwardedDate}}</td>
+                                                               <td>{{row.issueDate}}</td>
+                                                               <td>{{row.prDate}}</td>
+                                                               <td>{{row.portPercent}}</td>
+                                                               <td>{{row.superPercent}}</td>
+                                                               <td>{{row.cI_CS_PA_ASPCreditPercent}}</td>
+                                                               <td>{{row.siCreditPercent}}</td>
+                                                               <td>{{row.weightedNetPremium}}</td>
+                                                           </tr>
+                                                       </tbody>
+                                                   </table>
+                                               </div>
+                                           </div> 
+                                           </section>
+                                   </div>
+                               </mat-tab>
+
+                               <!-- <mat-tab [label]="'Detailed View' | translate">
+                                   <div class="row">
+                                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let row of detailedList; let i = index">
+                                           <div class="claims_member_info">
+                                               <h4>{{"Performance Detailed View" | translate}}</h4>
+                                               <ul class="list-detailsInfo">
+                                                   <li>
+                                                       <span class="label">{{"Agent Code" | translate}}:</span>
+                                                       <span class="value membername">{{ row.agentCode || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Proposal ID" | translate}}:</span>
+                                                       <span class="value">{{ row.proposalID || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Proposal Sub-status" | translate}}:</span>
+                                                       <span class="value">{{ row.proposalSubStatus || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Client ID" | translate}}:</span>
+                                                       <span class="value">{{ row.clientID || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Insured Name" | translate}}:</span>
+                                                       <span class="value">{{ row.insuredName || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Business Type" | translate}}:</span>
+                                                       <span class="value">{{ row.businessType || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Policy Start Date" | translate}}:</span>
+                                                       <span class="value">{{ row.policyStartDate || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Policy End Date" | translate}}:</span>
+                                                       <span class="value">{{ row.policyEndDate || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Policy Number" | translate}}:</span>
+                                                       <span class="value">{{ row.policyNumber || 'N/A' }}</span>
+                                                   </li>
+                                         <li>
+                                                       <span class="label">{{"Product Name" | translate}}:</span>
+                                                       <span class="value">{{ row.productName || 'N/A' }}</span>
+                                                   </li>   <li>
+                                                       <span class="label">{{"Policy Variant" | translate}}:</span>
+                                                       <span class="value">{{ row.policyVariant || 'N/A' }}</span>
+                                                   </li>   <li>
+                                                       <span class="label">{{"Plan Type" | translate}}:</span>
+                                                       <span class="value">{{ row.planType || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"Plan Variant" | translate}}:</span>
+                                                       <span class="value">{{ row.planVariant || 'N/A' }}</span>
+                                                   </li>                                                                    
+                                      <li>
+                                                       <span class="label">{{"Portability" | translate}}:</span>
+                                                       <span class="value">{{ row.planVariant || 'N/A' }}</span>
+                                                   </li>
                                         <li>
-                                           <span class="label">{{"Code" | translate}}:</span>
-                                           <span class="value membername">{{ agentPerformanceData?.annualClubPermormance?.agentCode || 'N/A' }}</span>
-                                        </li>
+                                                       <span class="label">{{"Net Premium" | translate}}:</span>
+                                                       <span class="value">{{ row.netPremium|| 'N/A' }}</span>
+                                                   </li>
                                         <li>
-                                           <span class="label">{{"Name" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.agentName || 'N/A' }}</span>
-                                        </li>
+                                                       <span class="label">{{"Sum Insured" | translate}}:</span>
+                                                       <span class="value">{{ row.sumInsured|| 'N/A' }}</span>
+                                                   </li>
                                         <li>
-                                           <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}} {{"Annual Club Status" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus1 || 'N/A' }}</span>
-                                        </li>
+                                                       <span class="label">{{"Inwarded Date" | translate}}:</span>
+                                                       <span class="value">{{ row.inwardedDate || 'N/A' }}</span>
+                                                   </li>
                                         <li>
-                                           <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubGWPFY}} 
-                                           {{"Annual Club GWP (Weighted) as on" | translate}} {
-                                           { agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
-                                           | date:'d MMM\'yy'
-                                           }
-                                           } :</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubGWP || 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                           <span class="label">{{"NOP Persistency" | translate}} % :</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nopPersistency || 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                           <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}} {{"Annual Club Status" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus2 || 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                           <span class="label">{{"Next Club" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nextClub || 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                           <span class="label">{{"Shortall for Next level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.shortallForNextLevel || 'N/A' }}</span>
-                                        </li>
-                                        <li>
-                                           <span class="label">{{"Loss Ratio" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
-                                        </li>
-                                     </ul>
-                                     <div class="claims_member_info-gradient"></div>
-                                  </div>
-                               </div>
-                               <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                  <div class="claims_member_info">
-                                     <div class="body_flex_row justify-content-between">
-                                        <h4>{{"Campaign Performance" | translate}}</h4>
-                                        <div class="btn_groupAction btn_campaignPerformance">
-                                           <button type="button" id="monthly" name="monthly" value="monthly"
-                                           class="btn_grid mobile-hide jsBtnClickQuote"
-                                           [ngClass
-                                           ]="{'active': docType === 'Monthly'}"
-                                           aria-label="quotes-list" (click)="toggleView('Monthly')">{{"Monthly" | translate}}</button>
-                                           <button type="button" id="quaterly" name="quaterly" value="quaterly"
-                                           class="btn_grid mobile-hide jsBtnClickQuote"
-                                           [ngClass
-                                           ]="{'active': docType === 'Quaterly'}"
-                                           aria-label="quotes-card" (click)="toggleView('Quaterly')">{{"Quarterly" | translate}}</button>
-                                        </div>
-                                     </div>
-                                     <ul class="list-detailsInfo">
-                                        <li *ngIf="docType == 'Monthly'">
-                                           <span class="label">{{"GWP(Weighted) as on" | translate}} {
-                                           { (agentPerformanceData?.campaignPermormance?.weightedAsOn | date:'d MMM\'yy') || 'N/A'
-                                           }
-                                           }:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubGWP || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"GWP(Weighted) as on" | translate}} {
-                                           { (agentPerformanceData?.campaignPermormance?.quaterlyClubGWPDate | date:'d MMM\'yy') || 'N/A'
-                                           }
-                                           }:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyClubGWP || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Monthly'">
-                                           <span class="label">{{"Status" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubStatus || 'N/A'}}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Monthly'">
-                                           <span class="label">{{"Next level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextLevel || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Monthly'">
-                                           <span class="label">{{"Shortall for Next level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.shortallForNextLevel || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"Status" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.status || 'N/A'}}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"Next level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyNextLevel || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"Shortall for Next level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyShortForNextLevel || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"RFB Business" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfBbusiness || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"RFB Payout" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbPayout || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"RFB Next Level" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbNextlevel || 'N/A' }}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"Next Level Earning" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextlevelearning || 'N/A'}}</span>
-                                        </li>
-                                        <li *ngIf="docType == 'Quaterly'">
-                                           <span class="label">{{"Loss Ratio" | translate}}:</span>
-                                           <span class="value">{{ agentPerformanceData?.campaignPermormance?.lossRatio || 'N/A' }}</span>
-                                        </li>
-                                     </ul>
-                                     <div class="claims_member_info-gradient"></div>
-                                  </div>
-                               </div>
-                               <h4><b>Detailed View</b></h4>
-                               <section id="quotes-list" class="tableMain user-quoteView block-show mt-3"
-                                  *ngIf="selectedView == 'list'">
-                                  <div class="tableSubMain">
-                                     <div class="table-responsive">
-                                        <table class="table table-borderless table-search">
-                                           <thead>
-                                              <tr>
-                                                 <th class="head_quoteType" nowrap>Agent Code</th>
-                                                 <th nowrap>Proposal ID</th>
-                                                 <th nowrap>Proposal Substatus</th>
-                                                 <th nowrap>Client ID</th>
-                                                 <th nowrap>Insured Name</th>
-                                                 <th nowrap>Business Type</th>
-                                                 <th nowrap>Policy Start Date</th>
-                                                 <th nowrap>Policy End Date</th>
-                                                 <th nowrap>Policy Number</th>
-                                                 <th nowrap>Product Name</th>
-                                                 <th nowrap>Policy Variant</th>
-                                                 <th nowrap>Plan Type</th>
-                                                 <th nowrap>Plan Variant</th>
-                                                 <th nowrap>Portability</th>
-                                                 <th nowrap>Net Premium</th>
-                                                 <th nowrap>Sum Insured</th>
-                                                 <th nowrap>Inwarded Date</th>
-                                                 <th nowrap>Issue Date</th>
-                                                 <th nowrap>PR Date</th>
-                                                 <th nowrap>Port%</th>
-                                                 <th nowrap>Super%</th>
-                                                 <th nowrap>CI/CS/PA/ASP/Credit%</th>
-                                                 <th nowrap>SI Credit%</th>
-                                                 <th nowrap>Weighted Net Premium of Annual Club Apr 16
-                                                    2024 6: 17PM
-                                                 </th>
-                                              </tr>
-                                           </thead>
-                                           <tbody class="table-group-divider">
-                                              <tr class="base_quoteRow"
-                                                 *ngFor="let row of detailedList; let i = index">
-                                                 <td class="base_quote">{{row.agentCode}}</td>
-                                                 <td>{{row.proposalID}}</td>
-                                                 <td>{{row.proposalSubStatus}}</td>
-                                                 <td>{{row.clientID}}</td>
-                                                 <td>{{row.insuredName}}</td>
-                                                 <td>{{row.businessType}}</td>
-                                                 <td>{{row.policyStartDate}}</td>
-                                                 <td>{{row.policyEndDate}}</td>
-                                                 <td>{{row.policyNumber}}</td>
-                                                 <td>{{row.productName}}</td>
-                                                 <td>{{row.policyVariant}}</td>
-                                                 <td>{{row.planType}}</td>
-                                                 <td>{{row.planVariant}}</td>
-                                                 <td>{{row.planVariant}}</td>
-                                                 <td>{{row.netPremium}}</td>
-                                                 <td>{{row.sumInsured}}</td>
-                                                 <td>{{row.inwardedDate}}</td>
-                                                 <td>{{row.issueDate}}</td>
-                                                 <td>{{row.prDate}}</td>
-                                                 <td>{{row.portPercent}}</td>
-                                                 <td>{{row.superPercent}}</td>
-                                                 <td>{{row.cI_CS_PA_ASPCreditPercent}}</td>
-                                                 <td>{{row.siCreditPercent}}</td>
-                                                 <td>{{row.weightedNetPremium}}</td>
-                                              </tr>
-                                           </tbody>
-                                        </table>
-                                     </div>
-                                  </div>
-                               </section>
-                            </div>
-                         </mat-tab>
-                         <mat-tab label="Commission">
-                            <div class="body_flex_column gap-32">
-                               <form (ngSubmit)="fetchCommissionStatement()" [formGroup ]="commissionForm">
-                               <section class="white_container p-0">
-                                  <div class="row">
-                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                        <div class="tipInfo_org"><img src="./assets/Img/icon_lightbulb.svg">Commission statement download is currently available from April’21 cycle. We are
-                                           working on previous download statement and will be available soon.
-                                        </div>
-                                     </div>
-                                  </div>
-                                  <div class="row mt-4">
-                                     <div class="col-12 mb-4">
-                                        <h4>My Statements</h4>
-                                     </div>
-                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                           <select class="form-select input-selectBox" id="commissonYear" name="commissonYear"  formControlName="year" >
-                                              <option value="" disabled selected>{{"Select Year" }}</option>
-                                              <option *ngFor="let year of years" [value
-                                              ]="year">
-                                              {{ year }}
-                                              </option>
-                                           </select>
-                                           <label for="year">{{"Year"}}</label>
-                                        </div>
-                                     </div>
-                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                           <select class="form-select input-selectBox" id="commissonMonth" name="commissonMonth" formControlName="month">
-                                              <option value="" disabled selected>{{"Select Month" }}</option>
-                                              <option *ngFor="let month of months" [value
-                                              ]="month">
-                                              {{ month }}
-                                              </option>
-                                           </select>
-                                           <label for="month">{{"Month"}}</label>
-                                        </div>
-                                     </div>
-                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                           <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
-                                              <option value="" disabled selected>{{"Select Cycle" }}</option>
-                                              <option *ngFor="let cycle of cycles" [value
-                                              ]="cycle.value">
-                                              {{ cycle.name }}
-                                              </option>
-                                           </select>
-                                           <label for="cycle">{{"Cycle"}}</label>
-                                        </div>
-                                     </div>
-                                     <div class="row mt-4">
-                                        <div class="col-12">
-                                           <button type="submit" id="save" name="save" class="btn_red">{{" Download Statement"}}</button>
-                                        </div>
-                                     </div>
-                                  </div>
-                               </section>
-                               </form>
-                            </div>
-                         </mat-tab>
-                      </mat-tab-group>
+                                                       <span class="label">{{"Issue Date" | translate}}:</span>
+                                                       <span class="value">{{ row.issueDate || 'N/A' }}</span>
+                                                   </li>  <li>
+                                                       <span class="label">{{"PR Date" | translate}}:</span>
+                                                       <span class="value">{{ row.prDate || 'N/A' }}</span>
+                                                   </li>
+                                       <li>
+                                                       <span class="label">{{"Port" | translate}}%:</span>
+                                                       <span class="value">{{ row.portPercent || 'N/A' }}</span>
+                                                   </li>
+                                       <li>
+                                                       <span class="label">{{"Super" | translate}}%:</span>
+                                                       <span class="value">{{ row.superPercent || 'N/A' }}</span>
+                                                   </li>
+                                      <li>
+                                                       <span class="label">{{"CI/CS/PA/ASP/Credit" | translate}}%:</span>
+                                                       <span class="value">{{ row.cI_CS_PA_ASPCreditPercent || 'N/A' }}</span>
+                                                   </li>
+                                                   <li>
+                                                       <span class="label">{{"SI Credit" | translate}}%:</span>
+                                                       <span class="value">{{ row.siCreditPercent || 'N/A' }}</span>
+                                                   </li>
+                                      <li>
+                                                       <span class="label">{{"Weighted Net Premium of Annual Club Apr 16 2024 6:17PM" | translate}}:</span>
+                                                       <span class="value">{{ row.weightedNetPremium || 'N/A' }}</span>
+                                                   </li>
+                                               </ul>
+                                               <div class="claims_member_info-gradient"></div>
+                                           </div>
+                                       </div>                              
+                                   </div>
+                               </mat-tab> -->
+
+
+
+                               <!-- <mat-tab label="Detailed View">
+                                   <div class="body_flex_column gap-32">
+                                       <section id="quotes-list" class="tableMain quoteView block-show "
+                                           *ngIf="selectedView == 'list'">
+                                           <div class="tableSubMain">
+                                               <div class="table-responsive">
+                                                   <table class="table table-borderless table-search">
+                                                       <thead>
+                                                           <tr>
+                                                               <th>Agent Code</th>
+                                                               <th>Proposal ID</th>
+                                                               <th>Proposal Substatus</th>
+                                                               <th>Client ID</th>
+                                                               <th>Insured Name</th>
+                                                               <th>Business Type</th>
+                                                               <th>Policy Start Date</th>
+                                                               <th>Policy End Date</th>
+                                                               <th>Policy Number</th>
+                                                               <th>Product Name</th>
+                                                               <th>Policy Variant</th>
+                                                               <th>Plan Type</th>
+                                                               <th>Plan Variant</th>
+                                                               <th>Portability</th>
+                                                               <th>Net Premium</th>
+                                                               <th>Sum Insured</th>
+                                                               <th>Inwarded Date</th>
+                                                               <th>Issue Date</th>
+                                                               <th>PR Date</th>
+                                                               <th>Port%</th>
+                                                               <th>Super%</th>
+                                                               <th>CI/CS/PA/ASP/Credit%</th>
+                                                               <th>SI Credit%</th>
+                                                               <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
+                                                               </th>
+                                                           </tr>
+                                                       </thead>
+                                                       <tbody class="table-group-divider">
+                                                           <tr *ngFor="let row of detailedList; let i = index">
+                                                               <td>{{row.agentCode}}</td>
+                                                               <td>{{row.proposalID}}</td>
+                                                               <td>{{row.proposalSubStatus}}</td>
+                                                               <td>{{row.clientID}}</td>
+                                                               <td>{{row.insuredName}}</td>
+                                                               <td>{{row.businessType}}</td>
+                                                               <td>{{row.policyStartDate}}</td>
+                                                               <td>{{row.policyEndDate}}</td>
+                                                               <td>{{row.policyNumber}}</td>
+                                                               <td>{{row.productName}}</td>
+                                                               <td>{{row.policyVariant}}</td>
+                                                               <td>{{row.planType}}</td>
+                                                               <td>{{row.planVariant}}</td>
+                                                               <td>{{row.planVariant}}</td>
+                                                               <td>{{row.netPremium}}</td>
+                                                               <td>{{row.sumInsured}}</td>
+                                                               <td>{{row.inwardedDate}}</td>
+                                                               <td>{{row.issueDate}}</td>
+                                                               <td>{{row.prDate}}</td>
+                                                               <td>{{row.portPercent}}</td>
+                                                               <td>{{row.superPercent}}</td>
+                                                               <td>{{row.cI_CS_PA_ASPCreditPercent}}</td>
+                                                               <td>{{row.siCreditPercent}}</td>
+                                                               <td>{{row.weightedNetPremium}}</td>
+                                                           </tr>
+                                                       </tbody>
+                                                   </table>
+                                               </div>
+                                           </div> 
+                                           </section>
+                                           </div>
+                                       </mat-tab> -->
+
+                                       <mat-tab label="Commission">
+                                           <div class="body_flex_column gap-32">
+                                               <form (ngSubmit)="fetchCommissionStatement()" [formGroup]="commissionForm">
+
+                                                   <section class="white_container p-0">
+                                                       <div class="row">
+                                                           <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                               <div class="tipInfo_org"><img src="./assets/Img/icon_lightbulb.svg">Commission statement download is currently available from April’21 cycle. We are
+                                                                   working on previous download statement and will be available soon.</div>
+                                                               
+                                                           </div>
+                                                       </div>
+                                                       <div class="row mt-4">
+                                                           <div class="col-12 mb-4">
+                                                               <h4>My Statements</h4>
+                                                           </div>
+                                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                               <div class="input-block form-floating input-block-renew">
+                                                                   <select class="form-select input-selectBox" id="commissonYear" name="commissonYear"  formControlName="year" >
+                                                                   <option value="" disabled selected>{{"Select Year" }}</option>
+                                                                   <option *ngFor="let year of years" [value]="year">
+                                                                       {{ year }}
+                                                                   </option>
+                                                               </select>
+                                                                   <label for="year">{{"Year"}}</label>
+                                                               </div>
+                                                           </div>
+                                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                               <div class="input-block form-floating input-block-renew">
+                                                                   <select class="form-select input-selectBox" id="commissonMonth" name="commissonMonth" formControlName="month">
+                                                                   <option value="" disabled selected>{{"Select Month" }}</option>
+                                                                   <option *ngFor="let month of months" [value]="month">
+                                                                       {{ month }}
+                                                                   </option>
+                                                               </select>
+                                                                   <label for="month">{{"Month"}}</label>
+                                                               </div>
+                                                           </div>
+                                       
+                                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                               <div class="input-block form-floating input-block-renew">
+                                                                   <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
+                                                                   <option value="" disabled selected>{{"Select Cycle" }}</option>
+                                                                   <option *ngFor="let cycle of cycles" [value]="cycle.value">
+                                                                       {{ cycle.name }}
+                                                                   </option>
+                                                               </select>
+                                                                   <label for="cycle">{{"Cycle"}}</label>
+                                                               </div>
+                                                           </div>
+                                                           <div class="row mt-4" >
+                                                               <div class="col-12">
+                                                                   <button type="submit" id="save" name="save" class="btn_red">{{" Download Statement"}}</button>
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                               </section>
+                                           </form>
+                                       
+                                       
+                                               </div>
+                                               </mat-tab>
+
+                                           <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                                               <nav>
+                                                   <ul class="pagination">
+                                                       <li class="page-item">
+                                                           <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                                               [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                                               class="custom-paginator my-paginator">
+                                                           </p-paginator>
+                                                       </li>
+                                                       <li class="pageCountMain">
+                                                           <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
+                                                               ? countsList.totalRecords : first + rows}}</span> of <span
+                                                               class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                                       </li>
+                                                   </ul>
+                                               </nav>
+                                           </div> -->
+                                       <!-- </section>
+                                       <section id="quotes-card" class="cardViewMain quoteView mobile-block"
+                                           *ngIf="selectedView == 'grid'">
+                                           <div class="cardViewWraper">
+                                               <div class="cardViewItem" *ngFor="let row of detailedList; let i = index">
+                                                   <header>
+                                                       <div class="card_insureInfo">
+                                                           <h6>
+                                                               <div class="insureName">{{ row.firstName }} {{
+                                                                   row.middleName }} {{ row.lastName }}
+                                                               </div>
+                                                           </h6>
+                                                           <div class="item_productName">{{ row.interestedInPlan }}</div>
+                                                       </div> -->
+                                                       <!-- <div class="card_btnGroup">
+                                                           <div class="btn_groupAction">
+                                                               <button type="button" value="Assign to" title="Assign to" 
+                                                                   class="btn_action btn_editAction"><img
+                                                                       src="assets/Img/icon_profile.svg"></button>
+                                                               <button type="button" value="Update Status" title="Update Status" 
+                                                                   class="btn_action btn_renewalAction"><img
+                                                                       src="assets/Img/icon_edit_grey.svg"></button>
+                                                               <button type="button" value="Add Notes" title="Add Notes" 
+                                                                   class="btn_action btn_renewalAction"><img
+                                                                       src="assets/Img/icon_add_notes.svg"></button>
+                                                           </div>
+                                                       </div> -->
+                                                   <!-- </header>
+                                                   <div class="cardViewBody">
+                                                       <div class="cv_bodyItems cv_bodyItems_45">
+                                                           <div class="item_lable">Phone Number</div>
+                                                           <div class="item_value">{{ row.phoneNumber }}</div>
+                                                       </div>
+                                                       <div class="cv_bodyItems cv_bodyItems_45">
+                                                           <div class="item_lable">Email</div>
+                                                           <div class="item_value">{{ row.email }}</div>
+                                                       </div>
+                                                       <div class="cv_bodyItems cv_bodyItems_45">
+                                                           <div class="item_lable">Campaign Name</div>
+                                                           <div class="item_value">{{ row.campaignName}}</div>
+                                                       </div>
+                                                       <div class="cv_bodyItems cv_bodyItems_45">
+                                                           <div class="item_lable">Campaign Number</div>
+                                                           <div class="item_value">{{ row.campaignNumber }}</div>
+                                                       </div>
+                                                       <div class="cv_bodyItems cv_bodyItems_45">
+                                                           <div class="item_lable">Lead ID</div>
+                                                           <div class="item_value">{{ row.leadNumber }}</div>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div> -->
+                                           <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                                               <nav>
+                                                   <ul class="pagination">
+                                                       <li class="page-item">
+                                                           <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                                               [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                                               class="custom-paginator my-paginator">
+                                                           </p-paginator>
+                                                       </li>
+                                                       <li class="pageCountMain">
+                                                           <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
+                                                               ? countsList.totalRecords : first + rows}}</span> of <span
+                                                               class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                                       </li>
+                                                   </ul>
+                                               </nav>
+                                           </div> -->
+                                       <!-- </section> -->
+                                       <!-- <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+                                           <div class="cardViewWraper">
+                                               <div class="no_dataFound">
+                                                   <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                                   <p>No data found</p>
+                                               </div>
+                                           </div>
+                                       </section> -->
+                                   <!-- </div>
+                               </mat-tab> -->
+                           </mat-tab-group>
+                       </div>
                    </div>
-                </div>
-             </div>
-          </section>
+               </div>
+           </section>
        </div>
-    </div>
- </main>
- 
+   </div>
+</main>
