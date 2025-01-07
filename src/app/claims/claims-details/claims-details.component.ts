@@ -100,6 +100,7 @@ export class ClaimsDetailsComponent {
   fileUploads: { 
     name: string,
     type: string,
+    createdDateTime: string,
     base64: string,
     fileBlob?: Blob,
     documentId: string;
@@ -324,10 +325,11 @@ fetchfileUploads(claimNumber: string, policyNumber: string) {
     (response: any) => {
       if (response.isSuccess) {
         if (response.data.length > 0) {
-          this.noFilesFound = false;
-          this.fileUploads = response.data.map((file: any) => ({
+            this.noFilesFound = false;
+            this.fileUploads = response.data.map((file: any) => ({
             name: file.documentName,  
             type: file.documentType, 
+            createdDateTime: file.createdDateTime,
             base64: file.base64Document,
             fileBlob: this.convertBase64ToBlob(file.base64Document, this.getMimeType(file.colour)),
             documentId: file.documentId  
