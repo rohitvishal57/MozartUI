@@ -6803,3 +6803,135 @@ position: relative;
   background-size: 12px !important;
 }
 /*----Toast Custom styles end----*/
+/*---Tooltip start---*/
+.main_toolTip {
+  display: inline-block;
+  position: relative;
+  margin-left: 5px;
+}
+.main_toolTip em img {
+  width: 14px;
+  height: 14px;
+}
+.main_content_tooltip {
+  display: none;
+  width: 240px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0px 8px 16px 0px #00000057, 0px -4px 12px 0px #C6C5EDA3;
+  font-weight: 400;
+  font-size: 14px;
+  color: #2E2E2E;
+  position: absolute;
+  top: 24px;
+  left: -11px;
+  text-align: center;
+}
+.main_content_tooltip:before{
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid #ffffff;
+}
+.main_content_tooltip h6 {
+  font-weight: 600;
+  margin:0 0 5px !important;
+}
+.main_content_tooltip p{
+  padding: 0;
+  margin: 0;
+}
+.main_toolTip:hover .main_content_tooltip {
+  display: block;
+}
+.main_toolTip.dark_toolTip .main_content_tooltip {
+  color: #F1F3F6;
+  background: rgba(50, 50, 50, 0.7);
+  box-shadow: 0px 8px 16px 0px #00000057, 0px -4px 12px 0px #C6C5EDA3;
+
+}
+.main_toolTip.dark_toolTip .main_content_tooltip:before {
+  top: -12px;
+  border-bottom: 12px solid rgba(50, 50, 50, 0.7);
+}
+.main_toolTip.dark_toolTip .main_content_tooltip h6,
+.main_toolTip.dark_toolTip .main_content_tooltip p {
+  color: #F1F3F6;
+}
+.md_Size_toolTip .main_content_tooltip {
+  width: 160px;
+}
+.sm_Size_toolTip .main_content_tooltip {
+  width: 120px;
+}
+.toolTip_topCenter .main_content_tooltip {
+  left: -114px;
+}
+.toolTip_topCenter.md_Size_toolTip .main_content_tooltip,
+.toolTip_bottomCenter.md_Size_toolTip .main_content_tooltip{
+  left: -77px;
+}
+.toolTip_topCenter.sm_Size_toolTip .main_content_tooltip,
+.toolTip_bottomCenter.sm_Size_toolTip .main_content_tooltip{
+  left: -58px;
+}
+.toolTip_topCenter .main_content_tooltip:before{
+  left: 48%;
+}
+.toolTip_topRight .main_content_tooltip {
+  left: auto;
+  right: -11px;
+}
+.toolTip_topRight .main_content_tooltip:before{
+  left: auto;
+  right: 12px;
+}
+.toolTip_bottomLeft .main_content_tooltip {
+  left: -11px;
+  top: auto;
+  bottom: 28px;
+}
+.toolTip_bottomLeft .main_content_tooltip:before{
+  left: 12px;
+  top: auto;
+  bottom: -10px;
+  transform: rotate(180deg);
+}
+.toolTip_bottomCenter .main_content_tooltip {
+  left: -114px;
+  top: auto;
+  bottom: 28px;
+}
+.toolTip_bottomCenter .main_content_tooltip:before{
+  left: 48%;
+  top: auto;
+  bottom: -10px;
+  transform: rotate(180deg);
+}
+.toolTip_bottomRight .main_content_tooltip {
+  left: auto;
+  right: -11px;
+  top: auto;
+  bottom: 28px;
+}
+
+.toolTip_bottomRight .main_content_tooltip:before{
+  left: auto;
+  right: 12px;
+  top: auto;
+  bottom: -10px;
+  transform: rotate(180deg);
+}
+.toolTip_bottomLeft.dark_toolTip .main_content_tooltip:before,
+.toolTip_bottomRight.dark_toolTip .main_content_tooltip:before,
+.toolTip_bottomCenter.dark_toolTip .main_content_tooltip:before{
+  top: auto;
+  bottom: -12px;
+}
+/*---Tooltip end---*/

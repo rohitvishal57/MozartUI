@@ -155,7 +155,21 @@
     width: 14px;
     height: 14px;
 }
-
+.main_toolTip:hover .main_content_tooltip {
+  display: initial;
+  visibility: visible;
+  opacity: 1;
+}
+.main_toolTip .main_content_tooltip {
+    display: initial;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .input-container:has(.main_toolTip .main_content_tooltip:not(:empty)):hover .main_toolTip .main_content_tooltip {
+    display: initial;
+    visibility: visible;
+    opacity: 1;
+}
 @media (max-width:767px) {
     .health-lifestyle-selct-btn #select{
         left: 0;
