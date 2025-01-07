@@ -4084,7 +4084,7 @@ export class RugDynamicFormComponent {
     console.log(filteredFamilyConstruct);
     this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
-    let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
+    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
     console.log(ageRange);
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
     console.log(this.bbPremiumData)
