@@ -365,7 +365,7 @@ export class RugDynamicFormComponent {
       }
       if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
-      if(this.leadId != null && (this.agentCode == "467896" || this.agentCode == "467897")){
+      if(this.leadId != null && (this.agentCode == "467896" || this.agentCode == "467897" || this.agentCode == "467895")){
 
         const reqData = {
           partnerId: this.partnerId,

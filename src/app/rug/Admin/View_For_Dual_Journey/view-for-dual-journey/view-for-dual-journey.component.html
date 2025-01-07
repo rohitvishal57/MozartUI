@@ -103,8 +103,8 @@
                             <div class="body_flex_row leads_searchWraper">
                                 <div class="field_searchMain">
                                     <div class="filterFieldGroup">
-                                        <button type="submit" id="save" name="save" (click)="clearFilter()"
-                                        class="btn_red"><img src="/assets/Img/exporticon.svg" alt=""> Export </button>
+                                        <button type="submit" id="save" name="save"
+                                        class="btn_red"><img src="/assets/Img/exporticon.svg" alt="" (click)="exportToxl()"> Export </button>
                                         <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
                                             [(ngModel)]="searchTerm" (input)="onInput($event)">
                                     </div>
@@ -136,7 +136,7 @@
                                     <th nowrap>AV ID</th>
                                     <th nowrap>LAST MODIFIED DATE</th>
                                     <th nowrap>AXIS LOCATION</th>
-                                    <th nowrap>REASSIGN</th>
+                                    <th nowrap>ACTION</th>
                                     <th nowrap>AUDIT</th>
                                 </tr>
                             </thead>
@@ -144,27 +144,28 @@
                                 <tr *ngFor="let leads of displayedLeads; let i = index">
                                     <td>{{i + 1}}</td>
                                     <td>{{leads.refNo}}</td>
-                                    <td>{{leads.customerName}}</td>
+                                    <td>{{leads.proposerName}}</td>
                                     <td>{{leads.imdCode}}</td>
                                     <td>{{leads.axisProcess}}</td>
                                     <td>{{leads.proposalNo}}</td>
                                     <td>{{leads.planName}}</td>
-                                    <td>{{leads.netPremium}}</td>
+                                    <td>{{leads.premium}}</td>
                                     <td>{{leads.status}}</td>
                                     <td>{{leads.leadGenerationDate}}</td>
-                                    <td>{{leads.customerId}}</td> 
-                                    <td>{{leads.policyNumber}}</td>    
-                                    <td>{{leads.policyIssuanceDate}}</td>
+                                    <td>{{leads.customerId}}</td>
+                                    <td>{{leads.policyNumber}}</td>
+                                    <td nowrap>{{leads.policyIssuanceDate}}</td>
                                     <td>{{leads.disposition}}</td>
                                     <td>{{leads.subDisposition}}</td>
                                     <td>{{leads.remark}}</td>
-                                    <td>{{leads.avname}}</td>
-                                    <td>{{leads.avId}}</td>
+                                    <td>{{leads.avName}}</td>
+                                    <td>{{leads.avid}}</td>
                                     <td>{{leads.latestModifiedDateTime}}</td>
-                                    <td>{{leads.axisCenter}}</td>
-                                    <td><button type="button" class="btn_reassign jsOpenPopup" aria-label="modal-reAssign" (click)="ReassignAgent(item.refNo)" >Re Assign</button></td>
-                                    <td><button type="button" (click)="auditLead(item)" class="btn_audit jsOpenPopup"
-                                        aria-label="modal-audit">Audit</button></td>   
+                                    <td>{{leads.axisLocation}}</td>
+                                    <td><td nowrap><button type="button" [disabled]="leads.status === 'Payment Done'" class="btn_reassign">View Details</button><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="backToDo(leads)"  class="btn_reassign">Back To Do</button>
+                                    </td>
+                                    <td><button type="button"  class="btn_audit jsOpenPopup"
+                                            aria-label="modal-audit" (click)="auditLead(leads)">Audit</button></td>
                                 </tr>
                             </tbody>
                         </table>
