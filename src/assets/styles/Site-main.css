@@ -6839,6 +6839,15 @@ position: relative;
   border-right: 6px solid transparent;
   border-bottom: 10px solid #ffffff;
 }
+.main_content_tooltipScroll {
+  max-height: 200px;
+  overflow-y: auto;
+  display: inline-block;
+}
+.main_content_tooltipScroll::-webkit-scrollbar-button {
+width: 0px;
+height: 0;
+}
 .main_content_tooltip h6 {
   font-weight: 600;
   margin:0 0 5px !important;
