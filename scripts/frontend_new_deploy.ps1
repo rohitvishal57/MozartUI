@@ -73,23 +73,14 @@ function Set-HTTPSBinding {
         }
 
         # Add HTTPS Binding
-        Write-Output "Adding HTTPS binding on port 443."
-        $httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -Port 8443 -HostHeader $BindingHost -ErrorAction SilentlyContinue
+        $httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -ErrorAction SilentlyContinue
         if (-not $httpsBinding) {
-            New-WebBinding -Name $SiteName -Protocol "https" -Port 8443 -HostHeader $BindingHost
-        }
-        else {
-            Write-Output "HTTPS binding already exists for $BindingHost on port 443."
-        }
-
-        # Assign SSL Certificate
-        $bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https" | Where-Object { $_.bindingInformation -like "*:8443:$BindingHost" }
-        if ($bindingInfo) {
+            Write-Output "Adding HTTPS binding for '$SiteName'."
+            New-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost
+            $bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https"
             $bindingInfo.AddSslCertificate($certThumbprint, "My")
-            Write-Output "Successfully assigned SSL certificate to HTTPS binding."
-        }
-        else {
-            Write-Output "Failed to find HTTPS binding to assign SSL certificate."
+        } else {
+            Write-Output "HTTPS binding already exists for '$SiteName'."
         }
         Write-Output "Successfully configured HTTPS binding for: $SiteName"
     }
