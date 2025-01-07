@@ -337,7 +337,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'aadharNumber') {
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').setValidators([Validators.required, Validators.pattern('^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.aadharCradNo || "No policy data available");
     }
     if (value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
@@ -402,7 +402,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'panNumber') {
       this.caseCreationForm.get("endorsementDetails").get('panNumber').setValidators([Validators.required, Validators.pattern('^([A-Z]){5}([0-9]){4}([A-Z]){1}$')]);
       this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.panNumber || "No policy data available");
     }
 
     if (value === 'panNumber' || value === 'aadharNumber') {
@@ -441,23 +441,27 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
 
   currentNomineeDetails(): string {
-    const nomineeFirstName = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name;
-    const relationship = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship;
-    const nomineeContactNo = this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No;
+    const nomineeFirstName = this.externalPolicyData?.nomineeFirstName || "";
+    const nomineeMiddleName = this.externalPolicyData?.nomineeMiddleName || "";
+    const nomineeLastName = this.externalPolicyData?.nomineeLastName || "";    
+    const relationship = this.externalPolicyData?.nomineeRelation;
+    const nomineeContactNo = this.externalPolicyData?.nomineeContactNumber;
+
+    const fullName = [nomineeFirstName, nomineeMiddleName, nomineeLastName].filter(name => name).join(" ");
   
     let policyDetails = "";
   
-    if (nomineeFirstName || relationship || nomineeContactNo) {
-      if (nomineeFirstName) {
-        policyDetails += nomineeFirstName;
+    if (fullName || relationship || nomineeContactNo) {
+      if (fullName) {
+        policyDetails += fullName;
       }
-      if (nomineeFirstName && (relationship || nomineeContactNo)) {
+      if (fullName && (relationship || nomineeContactNo)) {
         policyDetails += ", ";
       }
       if (relationship) {
         policyDetails += relationship;
       }
-      if ((relationship || nomineeFirstName) && nomineeContactNo) {
+      if ((relationship || fullName) && nomineeContactNo) {
         policyDetails += ", ";
       }
       if (nomineeContactNo) {
@@ -862,7 +866,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (resp: any) => {
           if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
             this.policyInfoDetails = resp.data;
-            this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
+            this.externalPolicyData = this.policyInfoDetails.NomineeDetails;
           }
           else {
             this.openErrorModal(resp?.message);

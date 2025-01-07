@@ -1,28 +1,8 @@
-<!--<div class="modal-content" [ngClass]="data.type">
-    <div class="modal-icon">
-      <img
-        [src]="data.type === 'success' ? 'assets/Img/success-icon.png' : 'assets/Img/error-icon.png'"
-        [alt]="data.type === 'success' ? 'Success Icon' : 'Error Icon'"
-      />
-    </div>
-    <h2>
-      {{ data.type === 'success' ? 'Congratulations! Your ' + data.title + ' Request was created Successfully' : 'Error' }}
-    </h2>
-    <p>{{ data.type && data.message }}</p>
-    <button
-      id="continue"
-      name="continue"
-      [ngClass]="data.type"
-      (click)="onClose()"
-    >
-      {{ data.type === 'success' ? 'Continue' : 'I Understand' }}
-    </button>
-  </div>-->
-  <div class="messageModal">
+<div class="messageModal">
   <div class="modal-content" [ngClass]="data.type">
     <div class="modal-header">
       <h5 class="modal-title" id="roomModalLabel">
-        {{ data.type === 'success' ? 'Congratulations! Your ' + data.title + ' Request was created Successfully' : 'Error' }}
+        {{ data.type === 'success' ? 'Success' : 'Error' }}
       </h5>
     </div>
     <div class="modal-body">
@@ -34,7 +14,10 @@
       </div>
       <div class="row">
           <div class="col-12 text-center">
-              <p>{{ data.type && data.message }}</p>
+            <p *ngIf="data.type === 'success'">{{ 'Your ' + data?.title + ' Request was created Successfully'}}</p>
+            <p [style.font-weight]="data.type === 'success' ? 'bold' : 'normal'">
+              {{ data.message }}
+            </p>
           </div>
       </div>
         

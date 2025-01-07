@@ -147,7 +147,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       "toDate": "",
       "start": 0,
       "length": this.rows,
-      "sortColumn": "RaisedOn",
+      "sortColumn": "",
       "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
@@ -168,6 +168,12 @@ export class EndorsementsRequestsComponent implements OnInit {
       (response: any) => {
         if (response.data && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
+            if (!obj.raisedOn || isNaN(Date.parse(obj.raisedOn))) {
+              return {
+                ...obj,
+                raisedOn: 'NA',
+              };
+            }
             const date = new Date(obj.raisedOn);
             const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
             return {

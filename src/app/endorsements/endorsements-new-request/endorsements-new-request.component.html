@@ -16,7 +16,7 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
                 <input class="form-control input-textBox" value="" (keyup)="onPolicyNoChange($event)" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber"  [placeholder]="'Search Policy Number' | translate">
-                <label for="policyNumber">{{"Search Policy Number" | translate}} </label>
+                <label for="policyNumber">{{"Search Policy Number" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty) || submitted">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">{{"Policy number is required." | translate}}</small>
                 </div>     
@@ -29,13 +29,25 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" formControlName="member" id="selectmember" name="selectmember" (change)="memberIdChange($event)">
+                <select
+                  class="form-select input-selectBox" 
+                  formControlName="member" 
+                  id="selectmember" 
+                  name="selectmember" 
+                  (change)="memberIdChange($event)">
                   <option value="" disabled selected>{{"Select Member" | translate}}</option>
-                  <option *ngFor="let opt of MemberIdList" [value]="opt.memberId">
-                    {{ opt.memberName | translate }} ({{ opt.relationWithProposer }})
-                  </option>
+                  <ng-container *ngIf="MemberIdList && MemberIdList.length > 0; else noRecords">
+                    <option *ngFor="let opt of MemberIdList" [value]="opt.memberId">
+                      {{ opt.memberName | translate }} ({{ opt.relationWithProposer }})
+                    </option>
+                  </ng-container>
                 </select>
-                <label for="member">{{"Member Name" | translate}}</label>
+
+                <ng-template #noRecords>
+                  <option value="" disabled>{{"No members were found" | translate}}</option>
+                </ng-template>
+
+                <label for="member">{{"Member Name" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="caseCreationForm.get('member')?.invalid && (caseCreationForm.get('member')?.touched || caseCreationForm.get('member')?.dirty) || submitted">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('member')?.errors?.required">{{"Member name is required." | translate}}</small>
                 </div>
@@ -49,7 +61,7 @@
                     {{ opt.name | translate}}
                   </option>
                 </select>
-                <label for="endorsementtype">{{"Endorsement Type" | translate}}</label>
+                <label for="endorsementtype">{{"Endorsement Type" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="caseCreationForm.get('endorsementType')?.invalid && (caseCreationForm.get('endorsementType')?.touched || caseCreationForm.get('endorsementType')?.dirty || submitted)">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementType')?.errors?.required">{{"Endorsement Type is required." | translate}}</small>
                 </div>
@@ -61,7 +73,7 @@
                   <option value="" disabled selected>{{"Choose Option" | translate}}</option>
                   <option value="Endorsement - Non financial">{{"Endorsement - Non financial" | translate}}</option>
                 </select>
-                <label for="asignedTeam">{{"Assigned Team" | translate}}</label>
+                <label for="asignedTeam">{{"Assigned Team" | translate}}<span class="text-danger">*</span></label>
                 <span *ngIf="submitted && caseCreationForm.get('asignedTeam').invalid" class="ui-error block-show">Please select Assigned Team</span>
               </div>
             </div>
@@ -325,8 +337,8 @@
                 <div *ngIf="!showDocInfo">
                   <div class="uploadDocument_area" (click)="fileInput.click()">
                     <div class="ud_area_left">
-                      <h6>{{"Upload Documents" | translate}}</h6>
-                      <p>{{"JPG/JPEG/PNG/PDF Files (up to 10MB)" | translate}}"</p>
+                      <h6>{{"Upload Documents" | translate}}<span class="text-danger">*</span></h6>
+                      <p>{{"JPG/JPEG/PNG/PDF Files (up to 10MB) | translate}}"</p>
                     </div>
                     <div class="ud_area_right">
                       <button type="button" id="upload" name="upload" class="btn_uploadDocument">
