@@ -1337,6 +1337,11 @@ export class RugDynamicFormComponent {
           startDate: formattedDate,
           consentDeclare: true
         })
+        this.dynamicFormGroup.get('bankName')?.disable();
+        this.dynamicFormGroup.get('ifscCode')?.disable();
+        this.dynamicFormGroup.get('accountNumber')?.disable();
+        this.dynamicFormGroup.get('micrCode')?.disable();
+        this.dynamicFormGroup.get('branchName')?.disable();
         if (this.bbdetails?.ifscCode && this.bbdetails.ifscCode.trim() !== "") {
           console.log("IFSC Code is valid:", this.bbdetails.ifscCode);
           this.getBankDetailsByIfsc();
@@ -3024,7 +3029,7 @@ export class RugDynamicFormComponent {
                         control.get('gender').setValue("F")
                       }
                       control.get('relation').disable();
-                      // control.get('gender').disable();
+                      control.get('gender').disable();
                     }
                     if(control.get('relation').value == "Son1" || control.get('relation').value == "Son2"){
                       control.get('gender').setValue("M")
