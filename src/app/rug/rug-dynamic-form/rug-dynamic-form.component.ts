@@ -4442,6 +4442,14 @@ export class RugDynamicFormComponent {
   ond2cSubmit(){
     if(this.dynamicFormGroup.valid){
       if(this.getFormIndexValue() == 0 ||this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
+        if(this.getFormIndexValue() == 2 && this.isDeclarationSelected.value != "no"){
+          this.toast.warning({ detail: "Warning", summary: "Basis the information provided this proposal cannot be processed.", duration: 3000 });
+          return;
+        }
+        if(this.dynamicFormGroup.get('decl2')?.value != true && this.dynamicFormGroup.get('decl1')?.value != true){
+          this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
+          return
+        }
         // if(this.getFormIndexValue() == 3){
         //   this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
         //   // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
