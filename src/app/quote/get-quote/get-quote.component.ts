@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked, ViewChild, ElementRef,  } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef, } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -55,10 +55,14 @@ export class GetQuoteComponent implements AfterViewChecked {
   };
 
   diseases = [
+    { id: 'PTCA', value: 'PTCA', label: 'PTCA' },
     { id: 'hypertension', value: 'hypertension', label: 'Hypertension' },
-    { id: 'bloodpressure', value: 'bloodpressure', label: 'Blood-Pressure' },
-    { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
-    { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
+    { id: 'diabetesMellitus', value: 'diabetesMellitus', label: 'Diabetes Mellitus' },
+    { id: 'COPD', value: 'COPD', label: 'COPD' },
+    { id: 'Asthma', value: 'Asthma', label: 'Asthma' },
+    { id: 'hyperlipidemia', value: 'hyperlipidemia', label: 'Hyperlipidemia' },
+    { id: 'highBMI', value: 'highBMI', label: 'High BMI' }
+
   ];
   proposerZone: any;
   proposerZoneValue: any = '';
@@ -174,12 +178,12 @@ export class GetQuoteComponent implements AfterViewChecked {
     ["R003", 0],
     ["R004", 0],
   ];
-  checkGender:boolean=false;
+  checkGender: boolean = false;
   pageName: string | undefined;
-  formData:any;
+  formData: any;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
-    private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
+    private translateService: TranslateService, private router: Router, private quoteService: QuoteService) { }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -194,7 +198,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
-    
+
     if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
       this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
@@ -227,7 +231,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
-    if(this.route.url.includes('dashboard')){
+    if (this.route.url.includes('dashboard')) {
       this.onPlanTypeChange(this.selectedPlan)
     }
     if (this.formData) {
@@ -278,15 +282,15 @@ export class GetQuoteComponent implements AfterViewChecked {
                 currentCount += 1;
                 this.relationCountMap.set(item.id, currentCount);
               }
-              this.formData.insuredMemberDetails.forEach((member:any)=>{
-                if(member.relation == memberName){
-                  item.age= member.memberAge;
+              this.formData.insuredMemberDetails.forEach((member: any) => {
+                if (member.relation == memberName) {
+                  item.age = member.memberAge;
                   item.dob = member.memberdob;
                   item.gender = member.memberGender;
                 }
               })
-              console.log(mockEvent,item,this.formData.insuredMemberDetails);
-              
+              console.log(mockEvent, item, this.formData.insuredMemberDetails);
+
               this.onRelationChange(mockEvent, item);
             }
           });
@@ -510,7 +514,7 @@ export class GetQuoteComponent implements AfterViewChecked {
             // }
             let isValid = true;
             if (selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')) {
-              let days:any = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : null : null;
+              let days: any = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : null : null;
 
 
               switch (this.selectedPlan) {
@@ -519,7 +523,7 @@ export class GetQuoteComponent implements AfterViewChecked {
 
 
                   // Check if age is greater than 25 years or if days are less than 91
-                  if (age > 25 ||  (days != null && days < 91)) {
+                  if (age > 25 || (days != null && days < 91)) {
                     this.toast.error({
                       detail: "Error",
                       summary: "Member should be less than 25 years and Greater than 91 days",
@@ -547,7 +551,7 @@ export class GetQuoteComponent implements AfterViewChecked {
               }
             }
             else {
-              if(birthDateObj.getFullYear() <= currentDate.getFullYear()){
+              if (birthDateObj.getFullYear() <= currentDate.getFullYear()) {
                 age = age ? age.toString().includes("days") ? "1" : age : age;
                 if (age < 18 || age > 120) {
                   this.toast.error({
@@ -607,21 +611,21 @@ export class GetQuoteComponent implements AfterViewChecked {
     return age;
   }
 
-  calculateAgeInDays(birthDate : any):any | null {
+  calculateAgeInDays(birthDate: any): any | null {
     // Get the current date
-    const currentDate : any = new Date();
-   
+    const currentDate: any = new Date();
+
     // Convert the birth date into a Date object
-    const birthDateObj : any = new Date(birthDate);
-   
+    const birthDateObj: any = new Date(birthDate);
+
     // oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
     // Calculate the difference in milliseconds
     if (birthDateObj.getFullYear() + 1 == currentDate.getFullYear()) {
       const diffInMilliseconds = currentDate - birthDateObj;
-     
+
       // Convert the difference from milliseconds to days
       const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-     
+
       return diffInDays;
     }
     return null;
@@ -735,7 +739,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.quoteFormGroup.get('upgradableZones')?.setValue(this.upgradableZones);
     this.quoteFormGroup.get('zone')?.setValue(this.upgradedZone);
     this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
-    console.log("quoteForm Group",this.quoteFormGroup.value);
+    console.log("quoteForm Group", this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
     sessionStorage.setItem("relations", this.encryptionService.encrypt(this.relations));
     console.log(this.quoteFormGroup.get('insuredMemberDetails')?.value.length);
@@ -957,7 +961,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     // this.relations = JSON.parse(this.anotherRelations);
     // console.log(this.anotherRelationCountMap);
     // this.relationCountMap = new Map(this.anotherRelationCountMap);
-    console.log(this.relations,this.relationCountMap);
+    console.log(this.relations, this.relationCountMap);
     this.numberOfChild = 0;
     this.addHide = false;
     this.activeDropdown = null;
@@ -1184,13 +1188,13 @@ export class GetQuoteComponent implements AfterViewChecked {
       }
     });
   }
-  getrelationsviapolicytype(policyType:any){
+  getrelationsviapolicytype(policyType: any) {
     const reqData = {
       "policyType": policyType
     }
     console.log(reqData);
     this.quoteService.getquoterelationsviapolicytype(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         this.relations = res.data;
         this.relationCountMap.clear();
@@ -1202,7 +1206,7 @@ export class GetQuoteComponent implements AfterViewChecked {
             this.relationCountMap.set(relation.id, 0);
           }
         });
-        console.log(this.relationCountMap,this.relations);
+        console.log(this.relationCountMap, this.relations);
       },
       error: (err) => {
         console.error(err);
@@ -1231,10 +1235,10 @@ export class GetQuoteComponent implements AfterViewChecked {
   shouldScroll: boolean = false; // Flag to trigger the scroll logic
   ngAfterViewChecked() {
     if (this.scrollTarget && this.scrollTarget.nativeElement && this.shouldScroll) {
-    //if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
+      //if (this.activeDropdown !== null && this.activeDropdown != 2 && this.scrollTarget) {
       // Option 1: Scroll to an element using scrollIntoView
       //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      
+
       // Option 2: Scroll to a specific position on the page
       // window.scrollTo(0, this.scrollTarget.nativeElement.offsetTop);
       //window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
@@ -1243,10 +1247,9 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.pageName = currentUrl.split('/').pop(); // Get last part of the URL
       //console.log('Full URL:', currentUrl);
       //console.log('Page Name:', this.pageName);
-      if (this.pageName === 'dashboard')
-      {
+      if (this.pageName === 'dashboard') {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
-      }else {
+      } else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
       // Reset the flag to prevent it from scrolling multiple times
@@ -1260,17 +1263,16 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.pageName = currentUrl.split('/').pop(); // Get last part of the URL
       //console.log('Full URL:', currentUrl);
       //console.log('Page Name:', this.pageName);
-      if (this.pageName === 'dashboard')
-      {
+      if (this.pageName === 'dashboard') {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 150, behavior: 'smooth' });
-      }else {
+      } else {
         window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
       }
     }
   }
 
-   onPortingChange(value: string): void {
-    this.quoteFormGroup.get('isPortability')?.setValue(value); 
+  onPortingChange(value: string): void {
+    this.quoteFormGroup.get('isPortability')?.setValue(value);
     this.closeCustomDiv()
   }
 }
