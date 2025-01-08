@@ -4995,7 +4995,7 @@ export class RugDynamicFormComponent {
                     relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
                     relationCode: JSON.parse(member.relationshipType)?.id || "",
                     tenure: null,
-                    height: member.height || 0,
+                    height: this.convertToCentimeters(member.height, member.heightInches).toFixed(2).toString() || 0,
                     heightInch: member.heightInches || null,
                     weight: member.weight
                   })),
@@ -5376,7 +5376,7 @@ export class RugDynamicFormComponent {
                       relationCode: JSON.parse(member.relationshipType)?.id || "",
                       email: member.emailId,
                       mobileNumber: member.mobileNumber,
-                      height:  member.height || 0,
+                      height: this.convertToCentimeters(member.height, member.heightInches).toFixed(2).toString() || 0,
                       heightInch: member.heightInches || null,
                       weight: member.weight,
                       allDisease: null,
