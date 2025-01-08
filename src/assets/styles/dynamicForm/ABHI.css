@@ -2096,7 +2096,7 @@ body {
     background-color: #F9FAFB;
     border: none;
     padding: 12px 10px;
-    margin: 10px;
+    margin: 10px 10px 0 0;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     font-family: "Anek Latin", sans-serif !important;
