@@ -1025,12 +1025,18 @@
                               <ng-container *ngIf="subControl.visible !== false">
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
                                   [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
+                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" >
+                                    Proposer
+                                  </div> 
                                   <label class="display_label" *ngIf="subControl.visibleLabel === true">
                                     {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
-                                  </label>
+                                  </label>                                 
                                   <div *ngIf="subControl.disabled" class="view_Text more_view_Text">
                                     {{ formData?.[control.name]?.[i-1]?.[subControl.name] }}
+                                  </div>
+                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" class="view_Text more_view_Text">
+                                    <label>PAN Number:</label> {{ formData?.panNo }}
                                   </div>
                                   <!--<input *ngIf="subControl.disabled" class="view_Text"
                                     formControlName="{{ subControl.name }}" [name]="subControl.name"
@@ -1434,11 +1440,11 @@
                                                             [class]="benefitControl.class" [hidden]="!benefitControl.visible">
                                                               <div class="input-checkbox-block">
                                                                 <div class="input-checkbox-feild">
-                                                                <input type="checkbox" 
-                                                                [formControlName]="benefitControl.name"
+                                                                <input type="checkbox"
+                                                                  [formControlName]="benefitControl.name" 
                                                                   [name]="benefitControl.name" [id]="benefitControl.name"
                                                                   class="input-check"
-                                                                  (change)="onInputChange($event, control,null,null,subControl,innerSubForm,null,benefitControl)" />
+                                                                  (change)="onInputChange($event, control,null,null,subControl,innerSubForm,null)" />
                                                                 <label [for]="benefitControl.name"
                                                                   [innerHTML]="benefitControl.label ? benefitControl.label : innerSubForm.label" ></label>
                                                                  </div>

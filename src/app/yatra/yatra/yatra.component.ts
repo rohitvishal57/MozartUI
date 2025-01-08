@@ -522,10 +522,12 @@ export class YatraComponent {
 
     await this.yatraService.Getform(reqData).subscribe({
       next: async (res: any) => {
+
         this.formSequence = JSON.parse(res.data.formConfig) || [];
 
         this.form = JSON.parse(res.data.jsonFormData);
-
+        console.log("form",this.form);
+        
         this.formData = {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
@@ -1901,7 +1903,7 @@ export class YatraComponent {
 
 
 
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     this.changesMade = true;
     let eventValue = event.target.value;
     if (control.name == 'totalPremium') {
@@ -5071,7 +5073,7 @@ export class YatraComponent {
 
 
   //new add On added
-  addOnAdded(control: any, parentControl: any = null) {
+  addOnAdded(control: any, parentControl: any = null) {    
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
@@ -5089,7 +5091,7 @@ export class YatraComponent {
             }
             else {
               const coverId = addOnData.addOnId;
-              const coverName = addOnData.optionalCoverName;
+              const coverName = addOnData.optionalCoverName || addOnData.additionalCoverName;
               let coverFound = false;
 
               if (!member.covers) {

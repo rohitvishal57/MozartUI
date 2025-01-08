@@ -213,6 +213,7 @@ export interface IDynamicControl {
   value?: any;
   apiEndpoint?: any;
   disabled?: boolean;
+  relationDisabled?:boolean;
   class?: string;
   methodName?: any;
   visible?: boolean;
