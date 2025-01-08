@@ -2946,7 +2946,6 @@ export class RenewalJourneyComponent {
         "documentId": this.documentId,
         "productName": this.formData.productName
       };
-      console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
           if (res.isSuccess && res.data.isFullQuoteSuccess) {
@@ -2959,7 +2958,6 @@ export class RenewalJourneyComponent {
             this.formData.premiumPaid = res.data.premiumPaid || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-            console.log(res.data);
           }else if (res.isSuccess && !res.data.isFullQuoteSuccess) {
             this.isFullQuote = res.data.isFullQuoteSuccess;
             this.formData.status = res.data.status || null;
@@ -2971,7 +2969,6 @@ export class RenewalJourneyComponent {
             this.rowData.paymentMessage = "policy issuance pending";
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-            console.log(res.data);
           }
           else {
             this.toast.warning({ detail: "Warning", summary: res.message || "Payment and policy issuance failed", duration: 5000 });
@@ -2979,7 +2976,6 @@ export class RenewalJourneyComponent {
         },
         (err) => {
           this.toast.error({ detail: '', summary: 'Failed to do offline payment.', duration: 3000 });
-          console.log("error is coming from fullquote api");
         })
     });
   }
@@ -2990,13 +2986,11 @@ export class RenewalJourneyComponent {
       key => this.formData.insuredMembers[key] === true
     );
     control.value = a;
-    console.log(control, this.formData, a);
   }
 
   getNomineeRelationShip(control: any) {
     this.yatraService.getNomineeRelationship().subscribe({
       next: (res: any) => {
-        console.log(res);
         control.options = res.data;
         control.options.forEach((option: any) => {
           // if(option.name == this.formData)
@@ -3011,7 +3005,6 @@ export class RenewalJourneyComponent {
   getNatureOfDuty(control: any) {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
-        console.log(res);
         control.options = res.data;
       },
       error: (err: any) => {
@@ -3023,7 +3016,6 @@ export class RenewalJourneyComponent {
   getInsuredOccupation(control: any) {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
-        console.log(res);
         control.options = res.data;
       },
       error: (err: any) => {
@@ -3616,8 +3608,8 @@ export class RenewalJourneyComponent {
         console.log("sharePaymentLinkApi", response);
         if (response.data) {
           this.toast.success({ detail: "SUCCESS", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
-          this.changeMainFormDependentControls(control.dependentControls, true);
           if(response.data.paymentLink){
+            this.changeMainFormDependentControls(control.dependentControls, true);
             this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
           }
         } else {
@@ -3756,7 +3748,7 @@ export class RenewalJourneyComponent {
   }
 
   backToRenewalList(){
-    this.router.navigate(['renewal/renewalList'], {
+    this.router.navigate(['renewal/renewalList'], { 
       state: {
         formData: this.encryptionService.encrypt(this.policyNumber),
       }

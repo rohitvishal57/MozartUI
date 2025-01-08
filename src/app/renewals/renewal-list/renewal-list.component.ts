@@ -51,6 +51,7 @@ export class RenewalListComponent {
   selectedDocument: any = null;
   searchApplied: boolean = false;
   policyNumber: any;
+  paymentStatus: any = "";
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
@@ -559,132 +560,243 @@ export class RenewalListComponent {
     }
   }
 
-  async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
-    await this.getProposalNum();
-    const paymentStatusRequestBody = {
-      policyNumber: proposerDetail.policyNumber,
-    };
-    this.renewalService.getpaymentdetailsbypolicynoApi(paymentStatusRequestBody).subscribe(
-      (res: any) => {
-        const paymentDetail = res.data;
-        if (!paymentDetail || Object.keys(paymentDetail).length === 0) {
-          return;
-        }
-        const formData = {
-          proposalNumber: paymentDetail?.fullQuoteResponse?.proposalNumber || '',
-          policyNumber: paymentDetail?.fullQuoteResponse?.policyNumber || '',
-          policyStatus: paymentDetail?.policyStatus || '',
-          policyStartDate: paymentDetail?.fullQuoteResponse?.policyStartDate || '',
-          policyEndDate: paymentDetail?.fullQuoteResponse?.policyEndDate || '',
-          receiptID: paymentDetail?.fullQuoteResponse?.receiptID || '',
-          customerId: paymentDetail?.customerId || '',
-          applicationNumber: paymentDetail?.applicationNumber || '',
-          status: paymentDetail?.fullQuoteResponse?.status || '',
-          productName: paymentDetail?.productName || '',
-          premiumPaid: paymentDetail?.fullQuoteResponse?.premiumPaid || '',
-          isFullQuoteSuccess: paymentDetail?.isFullQuoteSuccess || false,
-          paymentMessage: "",
-          paymentStatus: paymentDetail?.paymentStatus
-        };
-        if (paymentDetail?.paymentStatus.toUpperCase() === 'SUCCESS' || (paymentDetail?.paymentStatus.toUpperCase()).startsWith('IN')) {
-          if (paymentDetail?.isFullQuoteSuccess) {
-            if (res.data.fullQuoteResponse.errorMessage) { this.toast.success({ detail: "Success", summary: res.data.fullQuoteResponse.errorMessage, duration: 5000 }); }
-            this.router.navigate(['renewal/renewalJourney'], {
-              state: {
-                formData: this.encryptionService.encrypt(formData),
-                proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
-                journeyProcess: this.encryptionService.encrypt(0),
-                formIndex: "1",
-              },
-            });
-          } else {
-            if (res.data.errorMessage) { this.toast.warning({ detail: "Warning", summary: res.data.errorMessage, duration: 5000 }); }
-            formData.paymentMessage = "Payment completed successfully; policy issuance pending";
-            this.router.navigate(['renewal/renewalJourney'], {
-              state: {
-                formData: this.encryptionService.encrypt(formData),
-                policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
-                formIndex: "1",
-              },
-            });
-          }
-        }
-        else if (paymentDetail?.paymentStatus.toUpperCase() == 'INPROGRESS' || paymentDetail?.paymentStatus.toUpperCase() == 'PENDING') {
-          formData.paymentMessage = "Payment pending; please wait for processing";
-          this.toast.warning({ detail: "warning", summary:res.data.errorMessage || "payment Pending", duration: 5000 });
-          this.router.navigate(['renewal/renewalJourney'], {
-            state: {
-              formData: this.encryptionService.encrypt(formData),
-              policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
-              paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
-              formIndex: "1",
-            }
-          });
-        }
-      },
-      (err) => {
-        console.error("Error from getpaymentstatus API:", err);
-        this.toast.error({ detail: "Error", summary: "Error while getting renewal payment status.", duration: 3000 });
-      }
-    );
+  // async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
+  //   await this.getProposalNum();
+  //   const paymentStatusRequestBody = {
+  //     policyNumber: proposerDetail.policyNumber,
+  //   };
+  //   await this.renewalService.getpaymentdetailsbypolicynoApi(paymentStatusRequestBody).subscribe(
+  //     (res: any) => {
+  //       const paymentDetail = res.data;
+  //       if (!paymentDetail || Object.keys(paymentDetail).length === 0) {
+  //         return;
+  //       }
+  //       this.paymentStatus = paymentDetail?.paymentStatus.toUpperCase();        
+  //       const formData = {
+  //         proposalNumber: paymentDetail?.fullQuoteResponse?.proposalNumber || '',
+  //         policyNumber: paymentDetail?.fullQuoteResponse?.policyNumber || '',
+  //         policyStatus: paymentDetail?.policyStatus || '',
+  //         policyStartDate: paymentDetail?.fullQuoteResponse?.policyStartDate || '',
+  //         policyEndDate: paymentDetail?.fullQuoteResponse?.policyEndDate || '',
+  //         receiptID: paymentDetail?.fullQuoteResponse?.receiptID || '',
+  //         customerId: paymentDetail?.customerId || '',
+  //         applicationNumber: paymentDetail?.applicationNumber || '',
+  //         status: paymentDetail?.fullQuoteResponse?.status || '',
+  //         productName: paymentDetail?.productName || '',
+  //         premiumPaid: paymentDetail?.fullQuoteResponse?.premiumPaid || '',
+  //         isFullQuoteSuccess: paymentDetail?.isFullQuoteSuccess || false,
+  //         paymentMessage: "",
+  //         paymentStatus: paymentDetail?.paymentStatus
+  //       };
+  //       if (paymentDetail?.paymentStatus.toUpperCase() === 'SUCCESS' || (paymentDetail?.paymentStatus.toUpperCase()).startsWith('IN')) {
+  //         if (paymentDetail?.isFullQuoteSuccess) {
+  //           if (res.data.fullQuoteResponse.errorMessage) { this.toast.success({ detail: "Success", summary: res.data.fullQuoteResponse.errorMessage, duration: 5000 }); }
+  //           this.router.navigate(['renewal/renewalJourney'], {
+  //             state: {
+  //               formData: this.encryptionService.encrypt(formData),
+  //               proposalNum: this.encryptionService.encrypt(""),
+  //               policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+  //               journeyProcess: this.encryptionService.encrypt(0),
+  //               formIndex: "1",
+  //             },
+  //           });
+  //         } else {
+  //           if (res.data.errorMessage) { this.toast.warning({ detail: "Warning", summary: res.data.errorMessage, duration: 5000 }); }
+  //           formData.paymentMessage = "Payment completed successfully; policy issuance pending";
+  //           this.router.navigate(['renewal/renewalJourney'], {
+  //             state: {
+  //               formData: this.encryptionService.encrypt(formData),
+  //               policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+  //               formIndex: "1",
+  //             },
+  //           });
+  //         }
+  //       }
+  //       else if (paymentDetail?.paymentStatus.toUpperCase() == 'INPROGRESS' || paymentDetail?.paymentStatus.toUpperCase() == 'PENDING') {
+  //         formData.paymentMessage = "Payment pending; please wait for processing";
+  //         this.toast.warning({ detail: "warning", summary:res.data.errorMessage || "payment Pending", duration: 5000 });
+  //         this.router.navigate(['renewal/renewalJourney'], {
+  //           state: {
+  //             formData: this.encryptionService.encrypt(formData),
+  //             policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+  //             paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
+  //             formIndex: "1",
+  //           }
+  //         });
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error("Error from getpaymentstatus API:", err);
+  //       this.toast.error({ detail: "Error", summary: "Error while getting renewal payment status.", duration: 3000 });
+  //     }
+  //   );
 
-    // Set form index based on the action
-    const formIndex = action === 'withmodify' ? '0' : '2';
-    localStorage.setItem('formIndex', formIndex);
-    const formatDate = (date: string): string => {
-      if (!date) return "";
-      const parsedDate = new Date(date);
-      const day = String(parsedDate.getDate()).padStart(2, '0');
-      const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-      const year = parsedDate.getFullYear();
-      return `${day}/${month}/${year}`;
-    };
-    if (action === "withmodify") {
-      const payload = {
-        policyNumber: proposerDetail.policyNumber,
-        dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""),
-        mobileNumber: "",
-      };
-      this.renewalService.cpRedirectionApi(payload).subscribe(
-        (res: any) => {
-          const encryptedUrl = res.data;
-          window.open(encryptedUrl, '_blank');
-        },
-        (err) => {
-          this.toast.error({ detail: "Error", summary: "Error from re-direction", duration: 3000 });
-        }
-      );
-    } else if (action === 'withoutmodify') {
-      const renewalInfoRequestBody = {
-        policy_Number: proposerDetail.policyNumber,
-      };
-      this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-        (res: any) => {
-          if (res.statusCode == 200 && res.isSuccess == true && Object.keys(res.data).length > 0) {
-            const formData = this.encryptionService.encrypt(res.data);
-            const proposalNum = this.encryptionService.encrypt(this.proposalNum);
-            const policyNumber = this.encryptionService.encrypt(proposerDetail.policyNumber);
-            const journeyProcess = this.encryptionService.encrypt(0);
-            this.router.navigate(['renewal/renewalJourney'], {
+  //   // Set form index based on the action
+  //   const formIndex = action === 'withmodify' ? '0' : '2';
+  //   localStorage.setItem('formIndex', formIndex);
+  //   const formatDate = (date: string): string => {
+  //     if (!date) return "";
+  //     const parsedDate = new Date(date);
+  //     const day = String(parsedDate.getDate()).padStart(2, '0');
+  //     const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+  //     const year = parsedDate.getFullYear();
+  //     return `${month}/${day}/${year}`;
+  //   };
+  //   if (action === "withmodify" && this.paymentStatus == "" && this.paymentStatus != "SUCCESS" && this.paymentStatus != "PENDING") {
+  //     const payload = {
+  //       policyNumber: proposerDetail.policyNumber,
+  //       dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""),
+  //       mobileNumber: "",
+  //     };
+  //     this.renewalService.cpRedirectionApi(payload).subscribe(
+  //       (res: any) => {
+  //         const encryptedUrl = res.data;
+  //         window.open(encryptedUrl, '_blank');
+  //       },
+  //       (err) => {
+  //         this.toast.error({ detail: "Error", summary: "Error from re-direction", duration: 3000 });
+  //       }
+  //     );
+  //   } else if (action === 'withoutmodify' && this.paymentStatus == "" && this.paymentStatus != "SUCCESS" && this.paymentStatus != "PENDING") {
+  //     const renewalInfoRequestBody = {
+  //       policy_Number: proposerDetail.policyNumber,
+  //     };
+  //     this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+  //       (res: any) => {
+  //         if (res.statusCode == 200 && res.isSuccess == true && Object.keys(res.data).length > 0) {
+  //           const formData = this.encryptionService.encrypt(res.data);
+  //           const proposalNum = this.encryptionService.encrypt(this.proposalNum);
+  //           const policyNumber = this.encryptionService.encrypt(proposerDetail.policyNumber);
+  //           const journeyProcess = this.encryptionService.encrypt(0);
+  //           this.router.navigate(['renewal/renewalJourney'], {
+  //             state: {
+  //               formData: formData,
+  //               proposalNum: proposalNum,
+  //               policyNumber: policyNumber,
+  //               journeyProcess: journeyProcess,
+  //               formIndex: "0",
+  //             },
+  //           });
+  //         } else if(res.message?.toLowerCase().includes("policy renewed")) {
+  //           this.toast.success({ detail: "Success", summary: res.message || "renewal Success", duration: 3000 });
+  //         } else {
+  //           this.toast.warning({ detail: "Warning", summary: res.message || "Error while getting renewal Information.", duration: 3000 });
+  //         }
+  //       },
+  //       (err) => {
+  //         this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
+  //       }
+  //     );
+  //   }
+  // }
+
+  async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
+    try {
+      await this.getProposalNum();
+      const paymentStatusRequestBody = { policyNumber: proposerDetail.policyNumber };
+      const paymentDetailResponse: any = await firstValueFrom(this.renewalService.getpaymentdetailsbypolicynoApi(paymentStatusRequestBody));
+      if (paymentDetailResponse.message.toLowerCase().includes("policy renewed")) {
+        this.toast.success({ detail: "Success", summary: paymentDetailResponse.message, duration: 3000 });
+        return;
+      }
+      if (!paymentDetailResponse?.isSuccess || !paymentDetailResponse?.data || Object.keys(paymentDetailResponse.data).length === 0) {
+        if (action === "withmodify") {
+          const formatDate = (date: string): string => {
+            if (!date) return "";
+            const parsedDate = new Date(date);
+            const day = String(parsedDate.getDate()).padStart(2, '0');
+            const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+            const year = parsedDate.getFullYear();
+            return `${month}/${day}/${year}`;
+          };
+          const payload = {
+            policyNumber: proposerDetail.policyNumber,
+            dateOfBirth: formatDate(proposerDetail.proposerDateOfBirth || ""),
+            mobileNumber: "",
+          };
+          const redirectionResponse: any = await firstValueFrom(this.renewalService.cpRedirectionApi(payload));
+          const encryptedUrl = redirectionResponse.data;
+          window.open(encryptedUrl, "_blank");
+        } else if (action === "withoutmodify") {
+          const renewalInfoRequestBody = { policy_Number: proposerDetail.policyNumber };
+          const renewalInfoResponse: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+          if (renewalInfoResponse.statusCode === 200 && renewalInfoResponse.isSuccess === true && Object.keys(renewalInfoResponse.data).length > 0) {
+            this.router.navigate(["renewal/renewalJourney"], {
               state: {
-                formData: formData,
-                proposalNum: proposalNum,
-                policyNumber: policyNumber,
-                journeyProcess: journeyProcess,
+                formData: this.encryptionService.encrypt(renewalInfoResponse.data),
+                proposalNum: this.encryptionService.encrypt(this.proposalNum),
+                policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
                 formIndex: "0",
               },
             });
-          } else if(res.message?.toLowerCase().includes("policy renewed")) {
-            this.toast.success({ detail: "Success", summary: res.message || "renewal Success", duration: 3000 });
+          } else if (renewalInfoResponse.message?.toLowerCase().includes("policy renewed")) {
+            this.toast.success({ detail: "Success", summary: renewalInfoResponse.message || "Renewal Success", duration: 3000 });
           } else {
-            this.toast.warning({ detail: "Warning", summary: res.message || "Error while getting renewal Information.", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: renewalInfoResponse.message || "Error while getting renewal Information.", duration: 3000 });
           }
-        },
-        (err) => {
-          this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
         }
-      );
+        return;
+      }
+      const paymentDetail = paymentDetailResponse.data;
+      this.paymentStatus = paymentDetail?.paymentStatus.toUpperCase();
+      const formData = {
+        proposalNumber: paymentDetail?.fullQuoteResponse?.proposalNumber || '',
+        policyNumber: paymentDetail?.fullQuoteResponse?.policyNumber || '',
+        policyStatus: paymentDetail?.policyStatus || '',
+        policyStartDate: paymentDetail?.fullQuoteResponse?.policyStartDate || '',
+        policyEndDate: paymentDetail?.fullQuoteResponse?.policyEndDate || '',
+        receiptID: paymentDetail?.fullQuoteResponse?.receiptID || '',
+        customerId: paymentDetail?.customerId || '',
+        applicationNumber: paymentDetail?.applicationNumber || '',
+        status: paymentDetail?.fullQuoteResponse?.status || '',
+        productName: paymentDetail?.productName || '',
+        premiumPaid: paymentDetail?.fullQuoteResponse?.premiumPaid || '',
+        isFullQuoteSuccess: paymentDetail?.isFullQuoteSuccess || false,
+        paymentMessage: "",
+        paymentStatus: paymentDetail?.paymentStatus,
+      };
+      if (paymentDetail?.paymentStatus.toUpperCase() === "SUCCESS" || paymentDetail?.paymentStatus.toUpperCase().startsWith("IN")) {
+        if (paymentDetail?.isFullQuoteSuccess) {
+          if (paymentDetail.errorMessage) {
+            this.toast.success({ detail: "Success", summary: paymentDetail.errorMessage, duration: 5000 });
+          }
+          this.router.navigate(["renewal/renewalJourney"], {
+            state: {
+              formData: this.encryptionService.encrypt(formData),
+              proposalNum: this.encryptionService.encrypt(""),
+              policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+              journeyProcess: this.encryptionService.encrypt(0),
+              formIndex: "1",
+            },
+          });
+        } else {
+          if (paymentDetail?.errorMessage) {
+            this.toast.warning({ detail: "Warning", summary: paymentDetail?.errorMessage, duration: 5000 });
+          }
+          formData.paymentMessage = "Payment completed successfully; policy issuance pending";
+          this.router.navigate(["renewal/renewalJourney"], {
+            state: {
+              formData: this.encryptionService.encrypt(formData),
+              policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+              formIndex: "1",
+            },
+          });
+        }
+      } else if (paymentDetail?.paymentStatus.toUpperCase() === "INPROGRESS" || paymentDetail?.paymentStatus.toUpperCase() === "PENDING") {
+        formData.paymentMessage = "Payment pending; please wait for processing";
+        this.toast.warning({ detail: "Warning", summary: paymentDetail.errorMessage || "Payment Pending", duration: 5000 });
+        this.router.navigate(["renewal/renewalJourney"], {
+          state: {
+            formData: this.encryptionService.encrypt(formData),
+            policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+            paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
+            formIndex: "1",
+          },
+        });
+      }
+    } catch (err) {
+      this.toast.error({ detail: "Error", summary: "Error while processing renewal journey.", duration: 3000 });
     }
   }
 
