@@ -248,6 +248,12 @@ button {
 .block-hide {
   display: none !important;
 }
+.block-position-relative {
+  position: relative;
+}
+.block-position-absolute {
+  position: absolute;
+}
 .detailsRow {
   gap: 12px;
   margin-bottom: 15px;
@@ -426,6 +432,11 @@ button {
   position: absolute;
   top: -11px;
   left: 17px;
+}
+.common-badge-align-top-right {
+  position: absolute;
+  top: 12px;
+  right: 10px;
 }
 .bg-dark-grey {
   background: #D5D7DE;

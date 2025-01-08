@@ -1023,11 +1023,14 @@
                           <div class="col-md-6 col-lg-4 banner-card">
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible !== false">
+                                <div class="block-proposer" *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'">
+                                  <div class="common-badge common-badge-rounded common-badge-align-top-right bg-dark-org"  >
+                                    Proposer
+                                  </div>
+                                </div>
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
                                   [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
-                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" >
-                                    Proposer
-                                  </div> 
+                                   
                                   <label class="display_label" *ngIf="subControl.visibleLabel === true">
                                     {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
@@ -1035,8 +1038,8 @@
                                   <div *ngIf="subControl.disabled" class="view_Text more_view_Text">
                                     {{ formData?.[control.name]?.[i-1]?.[subControl.name] }}
                                   </div>
-                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" class="view_Text more_view_Text">
-                                    <label>PAN Number:</label> {{ formData?.panNo }}
+                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" >
+                                    <label class="display_label">PAN Number</label> <div class="view_Text more_view_Text">{{ formData?.panNo }}</div>
                                   </div>
                                   <!--<input *ngIf="subControl.disabled" class="view_Text"
                                     formControlName="{{ subControl.name }}" [name]="subControl.name"

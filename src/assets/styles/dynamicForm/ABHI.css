@@ -1435,6 +1435,7 @@ body {
     margin: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    position: relative;
 }
 
 .main-container .right-panel .banner-container .banner-card .display-container {
@@ -3276,6 +3277,10 @@ margin: 0;
     font-size: 14px;
     margin-top: 20px;
     text-transform: uppercase;
+}
+.block-proposer {
+    width: 100%;
+    padding: 0 0 22px;
 }
 /*----Toggle switch checkbox start----*/
 .toggle-checkbox {
