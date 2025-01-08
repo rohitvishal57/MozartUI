@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PerformanceService } from '../performance.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
+import { ActivatedRoute } from '@angular/router';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-my-performace',
@@ -36,8 +38,9 @@ export class MyPerformaceComponent {
       "value": "END"
     }
   ];
-
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   constructor(
+    private activatedRoute : ActivatedRoute,
     private performanceService: PerformanceService, private languageService: LanguageService,
     private translateService: TranslateService,private formBuilder: FormBuilder,private toast: NgToastService
   ) { }
@@ -61,6 +64,14 @@ export class MyPerformaceComponent {
     this.getPerformanceDetailedViewCount();
     this.getPerformanceDetailedList();
   }
+
+  ngAfterViewInit(){
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeLeadStatus  = params['status'];
+      this.tabGroup.selectedIndex = routeLeadStatus;
+    });
+  }
+
 
   inItForm() {
     this.commissionForm = this.formBuilder.group({

@@ -288,7 +288,7 @@
                     (cdkDropListDropped)="dropPerformance($event)">
                     <ng-container *ngFor="let perform of performanceCard">
                       <ng-container [ngSwitch]="perform.type">
-                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -297,7 +297,7 @@
                           <div class="card-tip" *ngIf="perform.description"><img
                               [src]="perform.subIcon">{{perform.description | translate}}</div>
                         </div>
-                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -308,7 +308,7 @@
                             <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                           </div>
                         </div>
-                        <div style="cursor: pointer;" [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [queryParams]="{ status: 1}" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -427,7 +427,7 @@
               <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropRenewal($event)">
                 <ng-container *ngFor="let tab of renewalDetail">
-                  <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="!isDesktopView"
+                  <div cdkDrag [cdkDragDisabled]="!isDesktopView"
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                     <header class="leads_itemHeader"
                       [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
