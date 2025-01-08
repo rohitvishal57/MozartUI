@@ -3,10 +3,10 @@ import { Injectable } from "@angular/core";
 
 export default class HeaderInformation {
   marketingContent : any[] =[
-    {
-      "name": "Aarambh",
-      "redirectURL": "https://aarambh.adityabirlacapital.com/Lead/Dashboard"
-    },
+    // {
+    //   "name": "Aarambh",
+    //   "redirectURL": "https://aarambh.adityabirlacapital.com/Lead/Dashboard"
+    // },
     {
       "name": "Content Hub Portal",
       "redirectURL": "https://abhimarketingcontenthub.com/contenthub/index.php/home/index"
