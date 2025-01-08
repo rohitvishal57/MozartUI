@@ -866,7 +866,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (resp: any) => {
           if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
             this.policyInfoDetails = resp.data;
-            this.externalPolicyData = this.policyInfoDetails.NomineeDetails;
+            this.externalPolicyData = this.policyInfoDetails.nomineeDetails;
           }
           else {
             this.openErrorModal(resp?.message);
