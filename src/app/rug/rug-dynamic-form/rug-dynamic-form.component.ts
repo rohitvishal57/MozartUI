@@ -8807,6 +8807,30 @@ export class RugDynamicFormComponent {
   }
   }
 
+  restrictKeyPress(event: KeyboardEvent,control:IFormControl): void {
+    if(control.inputMaxLength!=null && control.inputMaxLength!=undefined && control.inputMaxLength>0){
+      const inputField = event.target as HTMLInputElement;
+      const currentValue = inputField.value;
+      const key = event.key;
+      if (inputField.type === 'text') {
+          if (currentValue.length > control.inputMaxLength-1) {
+              event.preventDefault(); 
+          }
+      }
+      if (inputField.type === 'number') {
+          if (!/^[0-9]$/.test(key) || currentValue.length > control.inputMaxLength-1) {
+             event.preventDefault();
+         }
+      }
+    }
+    if(control.restrictKeyPress!=null && control.restrictKeyPress!=undefined && control.restrictKeyPress){
+      const charCode = event.key.charCodeAt(0);
+      // Allow only letters (A-Z, a-z)
+      if ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+          event.preventDefault();
+      }
+    }
+  }
 
 
   updatePlansBasedOnSumInsured(sumInsured: number = 500000): void {
