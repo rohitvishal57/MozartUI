@@ -510,12 +510,54 @@
                         <div [ngClass]="{'form-box': isD2C}">
                         <ng-container [formGroupName]="i-1">
                           <div class="details-element">
-                            <div class="form-boxHead" *ngIf="isD2C">
-                              <!-- <span class="headBadge">{{i == 1 ? "Self" : "" || i == 2 ? "Spouse" : ""}}</span> -->
-                            </div>
+                            
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible!=false">
-                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                                <div *ngIf="subControl.name == 'relation' && isD2C"
+                                [class]="subControl.class"  class="form-boxHead" [hidden]="!control.visible">
+                                
+                                <div [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
+                                  <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                    [name]="subControl.name" [id]="subControl.name" class="headBadge"
+                                    [type]="subControl.type" style="background: #404040;color: #fff;"
+                                    (change)="onInputChange($event, subControl,control,i-1)">
+                                  <input  *ngIf="subControl.disabled"style="background: #404040;color: #fff;"
+                                    [formControlName]="subControl.name" [name]="subControl.name"
+                                    [id]="subControl.name" class="headBadge" [type]="subControl.type"
+                                    readonly>
+                                  <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
+                                    translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                </div>
+                                <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
+                                  getValidationErrors(subControl,control,i-1)?
+                                  (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                </small>
+
+                              </div>
+                              <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type) && isD2C && subControl.name != 'relation'"
+                                  [class]="subControl.class" class="typecss input-typecss" [hidden]="!control.visible">
+                                  
+                                  <div class="input-container" [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
+                                    <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                      [name]="subControl.name" [id]="subControl.name" class="inputField_Text"
+                                      [type]="subControl.type"
+                                      [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
+                                      (change)="onInputChange($event, subControl,control,i-1)">
+                                    <input  *ngIf="subControl.disabled"
+                                      [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
+                                      [formControlName]="subControl.name" [name]="subControl.name"
+                                      [id]="subControl.name" class="inputField_Text_disabled" [type]="subControl.type"
+                                      readonly>
+                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
+                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                  </div>
+                                  <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
+                                    getValidationErrors(subControl,control,i-1)?
+                                    (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                  </small>
+
+                                </div>
+                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)&& !isD2C"
                                   [class]="subControl.class" class="typecss input-typecss" [hidden]="!control.visible">
                                   
                                   <div class="input-container" [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
