@@ -95,6 +95,7 @@ export interface IFormControl {
   minDateLength?:any;
   maxLength?: any;
   minLength?: any;
+  inputMaxLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
 }
