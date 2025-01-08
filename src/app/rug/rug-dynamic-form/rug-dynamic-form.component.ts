@@ -5271,7 +5271,7 @@ export class RugDynamicFormComponent {
                       isOtpValidated: false,
                       groupCode: this.tsDetails.groupCode,
                       productPlanName: this.tsDetails.productPlanName,
-                      productPlanCode: this.tsDetails.productPlanCode,
+                      productPlanCode: this.tsDetails.productPlanCode.toString(),
                       combiId: this.tsDetails.combiId,
                       combiName: null,
                       ghiPremium: this.tsDetails.ghiPremium,
