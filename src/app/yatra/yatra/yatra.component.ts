@@ -3754,7 +3754,8 @@ export class YatraComponent {
   async onSubmit() {
     this.changesMade = false;
     console.log("dynamic form group", this.formData);
-
+    // console.log(this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
+    // console.log(this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
     const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
     const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
@@ -4005,6 +4006,14 @@ export class YatraComponent {
       }
 
     }
+    if(this.form.formTitle == 'Health & Lifestyle'){
+        console.log("self legth",this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
+       console.log("spouse legth",this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+    }
+    if(this.form.formTitle == 'Policy Summary'){
+      console.log("self legth",this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
+     console.log("spouse legth",this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+  }
   }
   changeMainFormDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
@@ -7947,4 +7956,12 @@ export class YatraComponent {
     // });
 
   }
+  parseJson(value: string): any[] {
+    try {
+      return JSON.parse(value || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+  
 }

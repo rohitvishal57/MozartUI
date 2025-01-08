@@ -214,6 +214,7 @@ export interface IDynamicControl {
   apiEndpoint?: any;
   disabled?: boolean;
   relationDisabled?:boolean;
+  questionCondition?:boolean;
   class?: string;
   methodName?: any;
   visible?: boolean;

@@ -1029,8 +1029,7 @@
                                   </div>
                                 </div>
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
-                                  [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
-                                   
+                                  [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">     
                                   <label class="display_label" *ngIf="subControl.visibleLabel === true">
                                     {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
@@ -1038,12 +1037,17 @@
                                   <div *ngIf="subControl.disabled" class="view_Text more_view_Text">
                                     {{ formData?.[control.name]?.[i-1]?.[subControl.name] }}
                                   </div>
-                                  <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" >
-                                    <label class="display_label">PAN Number</label> <div class="view_Text more_view_Text">{{ formData?.panNo }}</div>
+                                  <div *ngIf="subControl.disabled && subControl.questionCondition" class="view_Text more_view_Text">
+                                    <span *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length === 0">No </span>
+                                    <span *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length > 0">Yes</span>
                                   </div>
                                   <!--<input *ngIf="subControl.disabled" class="view_Text"
                                     formControlName="{{ subControl.name }}" [name]="subControl.name"
                                     [type]="subControl.type" readonly>-->
+                                </div> 
+                                <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" class="display-container col-12 col-lg-12 col-md-6">
+                                  <label class="display_label">PAN Number</label>
+                                   <div class="view_Text more_view_Text">{{ formData?.panNo }}</div>
                                 </div>
                               </ng-container>
                             </ng-container>
