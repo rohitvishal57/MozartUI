@@ -588,7 +588,7 @@ export class RenewalListComponent {
         };
         if (paymentDetail?.paymentStatus.toUpperCase() === 'SUCCESS' || (paymentDetail?.paymentStatus.toUpperCase()).startsWith('IN')) {
           if (paymentDetail?.isFullQuoteSuccess) {
-            if (res.data.fullQuoteResponse.errorMessage) { this.toast.error({ detail: "Error", summary: res.data.fullQuoteResponse.errorMessage, duration: 5000 }); }
+            if (res.data.fullQuoteResponse.errorMessage) { this.toast.success({ detail: "Success", summary: res.data.fullQuoteResponse.errorMessage, duration: 5000 }); }
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
@@ -599,7 +599,7 @@ export class RenewalListComponent {
               },
             });
           } else {
-            if (res.data.errorMessage) { this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 5000 }); }
+            if (res.data.errorMessage) { this.toast.warning({ detail: "Warning", summary: res.data.errorMessage, duration: 5000 }); }
             formData.paymentMessage = "Payment completed successfully; policy issuance pending";
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
@@ -636,7 +636,7 @@ export class RenewalListComponent {
       if (!date) return "";
       const parsedDate = new Date(date);
       const day = String(parsedDate.getDate()).padStart(2, '0');
-      const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
       const year = parsedDate.getFullYear();
       return `${day}/${month}/${year}`;
     };
@@ -675,8 +675,10 @@ export class RenewalListComponent {
                 formIndex: "0",
               },
             });
+          } else if(res.message?.toLowerCase().includes("policy renewed")) {
+            this.toast.success({ detail: "Success", summary: res.message || "renewal Success", duration: 3000 });
           } else {
-            this.toast.error({ detail: "Error", summary: res.message || "Error while getting renewal Information.", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: res.message || "Error while getting renewal Information.", duration: 3000 });
           }
         },
         (err) => {

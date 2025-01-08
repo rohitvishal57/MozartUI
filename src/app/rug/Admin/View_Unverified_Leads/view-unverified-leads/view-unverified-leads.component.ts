@@ -14,47 +14,47 @@ import { Router } from '@angular/router';
   templateUrl: './view-unverified-leads.component.html',
   styleUrls: ['./view-unverified-leads.component.scss']
 })
-export class ViewUnverifiedLeadsComponent implements OnInit{
+export class ViewUnverifiedLeadsComponent implements OnInit {
   soloJourneyForm!: FormGroup
-   page: number = 1;
-   first: number = 0;
-   rows: number = 10;
-   totalRecords: number = 0;
-   displayedLeads: any[] = [];
-   searchTerm: string = '';
-   today: string = '';
-   filterAllAvs = [];
-   getAllLeads: any[] = [];
-   filteredArray: any;
-   itemsPerPage = 10;
-   currentPage = 1;
- 
-   Location: any[] = ["Noida", "Hyderabad", "Bangalore", "Mumbai", "Kolkata"];
-   AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
-   dialog: any;
-   item: any;
-   constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog, private router:Router) {
- 
-   }
-   ngOnInit(): void {
-     this.inItForm();
-     this.getSoloJourneyDetails();
-   }
- 
-   inItForm() {
-     this.soloJourneyForm = this.fb.group({
-       mobileno: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
-       leadid: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
-       policyno: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
-       location: ['', Validators.required],
-       lgdate: ['', Validators.required],
-       pidate: ['', Validators.required],
-       axisprocess: ['', Validators.required]
-     });
-   }
- 
-   getSoloJourneyDetails(): void {
-     const reqdata = {
+  page: number = 1;
+  first: number = 0;
+  rows: number = 10;
+  totalRecords: number = 0;
+  displayedLeads: any[] = [];
+  searchTerm: string = '';
+  today: string = '';
+  filterAllAvs = [];
+  getAllLeads: any[] = [];
+  filteredArray: any;
+  itemsPerPage = 10;
+  currentPage = 1;
+
+  Location: any[] = ["Noida", "Hyderabad", "Bangalore", "Mumbai", "Kolkata"];
+  AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
+  dialog: any;
+  item: any;
+  constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog, private router: Router) {
+
+  }
+  ngOnInit(): void {
+    this.inItForm();
+    this.getSoloJourneyDetails();
+  }
+
+  inItForm() {
+    this.soloJourneyForm = this.fb.group({
+      mobileno: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
+      leadid: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
+      policyno: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
+      location: ['', Validators.required],
+      lgdate: ['', Validators.required],
+      pidate: ['', Validators.required],
+      axisprocess: ['', Validators.required]
+    });
+  }
+
+  getSoloJourneyDetails(): void {
+    const reqdata = {
       userId: '467895',
       isSoloJourney: false,
       isUnverifiedLead: true,
@@ -63,36 +63,36 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
       isViewCheckerLead: false,
       pageNumber: this.page,
       pageSize: this.rows
-     };
+    };
 
-     this.adminService.getLead(reqdata).subscribe((res: any) => {
-       const response = JSON.parse(res.data);
-       this.getAllLeads = response.data.leadDetails;
-       console.log(this.getAllLeads.length)
-       this.totalRecords = this.getAllLeads.length;
-       this.updateDisplayedData();
-     });
-   }
- 
-   updateDisplayedData(): void {
-     const startIndex = this.first;
-     const endIndex = this.first + this.rows;
-     this.displayedLeads = this.getAllLeads.slice(startIndex, endIndex);
-   }
- 
-   formatDate(dateString: string): string {
-     const date = new Date(dateString);
-     return date.toISOString().split('T')[0];
-   }
- 
-   onPageChange(event: any) {
-     this.first = event.first;
-     this.rows = event.rows;
-     this.page = Math.floor(this.first / this.rows) + 1;
-     this.getSoloJourneyDetails();
-   }
-  
-   onInput(event: any) {
+    this.adminService.getLead(reqdata).subscribe((res: any) => {
+      const response = JSON.parse(res.data);
+      this.getAllLeads = response.data.leadDetails;
+      console.log(this.getAllLeads.length)
+      this.totalRecords = this.getAllLeads.length;
+      this.updateDisplayedData();
+    });
+  }
+
+  updateDisplayedData(): void {
+    const startIndex = this.first;
+    const endIndex = this.first + this.rows;
+    this.displayedLeads = this.getAllLeads.slice(startIndex, endIndex);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getSoloJourneyDetails();
+  }
+
+  onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
       option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
@@ -104,31 +104,56 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
       option?.axisProcess?.toLowerCase().includes(this.searchTerm)
     );
   }
- 
-  actionLead(lead: any){
-    let ecrytpedLeadID = lead.leadNo;
-    let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
-    this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId
-  ]);
-}
 
-  backToDo(lead:any){
-    let reqObj={
+  actionLead(lead: any){
+    console.log(lead);
+    localStorage.setItem('leadId', lead.leadNo)
+    let data = {
+      partnerId: 45,
+      productId: 26
+    }
+
+    if(lead.planName == 'Health Pro'){
+      data.partnerId =  45
+      data.productId = 26
+      
+    }else if(lead.planName == 'Health Pro Infinity'){
+      data.partnerId =  45
+      data.productId = 27
+    }else if(lead.planName == 'Group Activ Secure'){
+      data.partnerId =  45
+      data.productId = 29
+    }else{
+      data.partnerId =  45
+      data.productId = 29
+    }
+
+    this.router.navigate(['rug'], {
+      state: { productData: data}
+   });
+    // let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
+    // let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
+    // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
+
+  }
+
+  backToDo(lead: any) {
+    let reqObj = {
       "leadId": lead.leadNo
     }
-    this.adminService.AssignBackToDo(reqObj).subscribe((response:any)=>{
+    this.adminService.AssignBackToDo(reqObj).subscribe((response: any) => {
       let res = JSON.parse(response.data)
-      console.log('SuccessPopUp',res)
-        const dialogRef=this.matdialogue.open(SuccesspopupComponent,{
-          width: "500px",
-          autoFocus: false,
-          data: res.message
-        });
-        dialogRef.afterClosed().subscribe((result:any)=>{
-          console.log(result)
-        });
-      },
-      error=>{
+      console.log('SuccessPopUp', res)
+      const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+        width: "500px",
+        autoFocus: false,
+        data: res.message
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result)
+      });
+    },
+      error => {
         console.log(error);
       });
 
@@ -138,8 +163,8 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
     let reqObj = {
       leadId: lead.leadNo // Use leadId for the request
     };
-  
-    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {      
+
+    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
       let res = JSON.parse(response.data);
       console.log(res.allAudit)
       const dialogRef = this.matdialogue.open(AuditpopupComponent, {
@@ -147,46 +172,46 @@ export class ViewUnverifiedLeadsComponent implements OnInit{
         autoFocus: false,
         data: res.data.allAudit
       });
-          dialogRef.afterClosed().subscribe((result: any) => {
-            console.log(result);
-          });
-        },
-        error => {
-          console.error("API Error:", error);
-        }
-      );
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+      });
+    },
+      error => {
+        console.error("API Error:", error);
+      }
+    );
   }
- 
+
   ReassignAgent(leadNo: string) {
-     interface Element {
-       avName: string;
-       avId: string;
-       // You can add more properties here if needed
-     }
-     let AVdata: Element[] = [];
-     this.getAllLeads.forEach((element: any) => {
-       if (AVdata.findIndex(item => item.avId == element.avid) == -1 && element.avid != '') {
-         AVdata.push({
-           avName: element.avName,
-           avId: element.avid
-         });
-       }
-     });
-   }
-   onSelect(event: any) {
-     this.itemsPerPage = event.target.value;
-   }
- 
-   exportToxl() {
-     if (this.getAllLeads.length > this.itemsPerPage) {
-       this.excelService.exportAsExcelFile(this.filteredArray.slice(0, this.itemsPerPage), 'solo');
-       console.log('export', this.itemsPerPage)
-     } else {
-       this.excelService.exportAsExcelFile(this.filteredArray, 'solo')
-     }
-   }
-   
-   clearFilter() {
-     this.soloJourneyForm.reset();
-   }
+    interface Element {
+      avName: string;
+      avId: string;
+      // You can add more properties here if needed
+    }
+    let AVdata: Element[] = [];
+    this.getAllLeads.forEach((element: any) => {
+      if (AVdata.findIndex(item => item.avId == element.avid) == -1 && element.avid != '') {
+        AVdata.push({
+          avName: element.avName,
+          avId: element.avid
+        });
+      }
+    });
+  }
+  onSelect(event: any) {
+    this.itemsPerPage = event.target.value;
+  }
+
+  exportToxl() {
+    if (this.getAllLeads.length > this.itemsPerPage) {
+      this.excelService.exportAsExcelFile(this.filteredArray.slice(0, this.itemsPerPage), 'solo');
+      console.log('export', this.itemsPerPage)
+    } else {
+      this.excelService.exportAsExcelFile(this.filteredArray, 'solo')
+    }
+  }
+
+  clearFilter() {
+    this.soloJourneyForm.reset();
+  }
 }

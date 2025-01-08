@@ -2810,7 +2810,7 @@ export class CustomerJourneyComponent {
       sourceSystemName: "",
       searchOperator: "AND",
     };
-    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(  
       (response: any) => {
         if (response.isSuccess) {
           const searchResponse = response.data.searchResponse;
@@ -2853,8 +2853,8 @@ export class CustomerJourneyComponent {
     }
   }
 
-  checkPaymentStatus(control: any): void {
-    if(!this.isFullQuote || this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
+  checkPaymentStatus() {
+    if(this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
       this.form.formSections.forEach((section, sectionIndex) => {
         if (sectionIndex === 0) {
           section.formControls.forEach((formControl: IFormControl) => {

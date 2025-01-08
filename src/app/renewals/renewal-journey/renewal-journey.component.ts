@@ -2937,7 +2937,7 @@ export class RenewalJourneyComponent {
         "instrumentNo": data.chequeNumber,
         "instrumentDate": data.chequeDate,
         "policyNumber": this.policyNumber,
-        "proposalNum": this.proposalNum,
+        "proposalNum": "",
         "agentCode": this.agentCode,
         "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,

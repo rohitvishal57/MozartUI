@@ -246,7 +246,7 @@ export class KycComponent {
                 console.error("Error from getRenewalInfo API:", err);
                 this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
               }
-            } else if (res.data.kycStatus == "false") {
+            } else if (res.data.kycStatus == "False") {
               this.agentCode = localStorage.getItem('agentCode');
               const renewalInfoRequestBody = { policy_Number: res.data.policyNumber };
               const resInfo: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));

@@ -135,7 +135,7 @@
                                             </div>
                                             <div class="row-renewalPremium">
                                                 <span class="lable">{{"Renewal Premium" | translate}}</span>
-                                                <span class="value">₹ {{ row.renewalPremiumAmount - row.healthReturn }}</span>
+                                                <span class="value">₹ {{ (row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
                                             </div>
                                         </div>
                                     </td>
@@ -259,7 +259,7 @@
                                         </div>
                                         <div class="row-renewalPremium">
                                             <span class="lable">{{"Renewal Premium" | translate}}</span>
-                                            <span class="value">₹{{ row.renewalPremiumAmount - row.healthReturn }}</span>
+                                            <span class="value">₹{{ (row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
                                         </div>
                                     </div>
                                 </div>

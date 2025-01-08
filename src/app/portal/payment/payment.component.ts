@@ -319,6 +319,7 @@ export class PaymentComponent {
           customerId: this.paymentDetail.customerId,
           applicationNumber: this.paymentDetail.applicationNumber,
           status: this.paymentDetail.policyStatus,
+          isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false,
           paymentMessage:"",
           paymentStatus: this.paymentDetail.paymentStatus
         };
