@@ -55,7 +55,7 @@ export class RenewalJourneyComponent {
   selectedFile: any;
   documentId: any;
   agentCode: any;
-  rowData: any;
+  rowData: any={};
   formSequence: any[] = [payment, thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
@@ -118,12 +118,12 @@ export class RenewalJourneyComponent {
               policy_Number: decryptedFormData.policyNumber
             };
             const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-            this.formData = { ...this.formData, ...response.data, ...decryptedFormData };
+            this.formData = { ...this.formData, ...decryptedFormData, ...response.data, };
           }
         } catch (error) {
           console.error('Error fetching renewal info:');
         }
-        this.formData = { ...this.formData, ...decryptedFormData };
+        this.formData = {  ...decryptedFormData ,...this.formData,};
       }
       if (stateData.formSequence) {
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
@@ -2959,16 +2959,22 @@ export class RenewalJourneyComponent {
             this.formData.premiumPaid = res.data.premiumPaid || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-
-            // this.fullQuoteResponse=res.data;          
-            // this.setSection('thankyou')
-            // this.hideSection=false
-            // this.isFeedBackModalVisible = true;
             console.log(res.data);
-
+          }else if (res.isSuccess && !res.data.isFullQuoteSuccess) {
+            this.isFullQuote = res.data.isFullQuoteSuccess;
+            this.formData.status = res.data.status || null;
+            this.formData.policyStartDate = res.data.policyStartDate || null;
+            this.formData.policyEndDate = res.data.policyEndDate || null;
+            this.formData.receiptID = res.data.receiptID || null;
+            this.formData.customerId = res.data.customerId || null;
+            this.formData.premiumPaid = res.data.premiumPaid || null;
+            this.rowData.paymentMessage = "policy issuance pending";
+            this.incrementIndex();
+            this.getFormDataFromFormSequence();
+            console.log(res.data);
           }
           else {
-            this.toast.error({ detail: "Error", summary: "Payment and policy issuance failed", duration: 5000 });
+            this.toast.warning({ detail: "Warning", summary: res.message || "Payment and policy issuance failed", duration: 5000 });
           }
         },
         (err) => {
@@ -2977,6 +2983,7 @@ export class RenewalJourneyComponent {
         })
     });
   }
+  
 
   mergeMember(control: any) {
     const a = Object.keys(this.formData.insuredMembers).filter(
@@ -3610,7 +3617,9 @@ export class RenewalJourneyComponent {
         if (response.data) {
           this.toast.success({ detail: "SUCCESS", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
           this.changeMainFormDependentControls(control.dependentControls, true);
-          this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+          if(response.data.paymentLink){
+            this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+          }
         } else {
           this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
         }
@@ -3666,6 +3675,8 @@ export class RenewalJourneyComponent {
       isVisible = false;
     }else {
       isVisible = !(this.formData.isKycCompleted);
+      console.log("log",isVisible);
+      
     }
     // const isVisible=true;
     this.form.formSections.forEach((section) => {
@@ -3679,11 +3690,13 @@ export class RenewalJourneyComponent {
   }
 
   checkPaymentStatus(control: any): void {
+    console.log(this.isFullQuote,"isFullQuote");
+    
     if(!this.isFullQuote || this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
       this.form.formSections.forEach((section, sectionIndex) => {
         if (sectionIndex === 0) {
           section.formControls.forEach((formControl: IFormControl) => {
-            if (formControl.name === "label1") formControl.label = this.rowData.paymentMessage
+            if (formControl.name === "label1") formControl.label = this.rowData.paymentMessage 
             else if(formControl.name == "backToRenewalList") formControl.visible=true
           });
         } else {

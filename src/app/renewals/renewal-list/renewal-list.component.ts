@@ -612,7 +612,7 @@ export class RenewalListComponent {
         }
         else if (paymentDetail?.paymentStatus.toUpperCase() == 'INPROGRESS' || paymentDetail?.paymentStatus.toUpperCase() == 'PENDING') {
           formData.paymentMessage = "Payment pending; please wait for processing";
-          this.toast.warning({ detail: "warning", summary: "payment Pending", duration: 5000 });
+          this.toast.warning({ detail: "warning", summary:res.data.errorMessage || "payment Pending", duration: 5000 });
           this.router.navigate(['renewal/renewalJourney'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
