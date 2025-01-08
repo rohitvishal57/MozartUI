@@ -498,6 +498,28 @@ export class RugDynamicFormComponent {
       console.error(err)
       }
     });
+    this.rugService.getDispositions().subscribe({
+      next: (res: any) => {
+        console.log(res)
+        res = JSON.parse(res.data).data
+        console.log(res);
+        this.dispositionList = res.allDisposition;           
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+    this.yatraService.getRelations().subscribe({
+      next: (response: any) => {
+        response = JSON.parse(response.data).data;
+        this.nomineeRelations = response;
+        console.log(this.nomineeRelations);
+        this.nomineeRelations = this.nomineeRelations.relationShipModels;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
   initializeRequiredData() {
     if (sessionStorage.getItem('allFormData') != null)
@@ -1315,6 +1337,11 @@ export class RugDynamicFormComponent {
           startDate: formattedDate,
           consentDeclare: true
         })
+        this.dynamicFormGroup.get('bankName')?.disable();
+        this.dynamicFormGroup.get('ifscCode')?.disable();
+        this.dynamicFormGroup.get('accountNumber')?.disable();
+        this.dynamicFormGroup.get('micrCode')?.disable();
+        this.dynamicFormGroup.get('branchName')?.disable();
         if (this.bbdetails?.ifscCode && this.bbdetails.ifscCode.trim() !== "") {
           console.log("IFSC Code is valid:", this.bbdetails.ifscCode);
           this.getBankDetailsByIfsc();
@@ -2294,22 +2321,25 @@ export class RugDynamicFormComponent {
       "ifsC_Code": this.bbdetails.ifscCode
     }
     console.log(reqData);
-    this.yatraService.getBankDetailsByIFSC(reqData).subscribe({
-      next: (response: any) => {
-        response = JSON.parse(response.data)
-        if (response.isSuccess && response.data) {
-          this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
-          this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
-          this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
-        } else {
-          // Handle error, you can show a message if required
-          this.toast.warning({ detail: "Warning", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+    if(this.bbdetails.ifscCode != ""){
+      this.yatraService.getBankDetailsByIFSC(reqData).subscribe({
+        next: (response: any) => {
+          response = JSON.parse(response.data)
+          if (response.isSuccess && response.data) {
+            this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+            this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+            this.dynamicFormGroup.get('branchName')?.setValue(response.data.branchName || '');
+          } else {
+            // Handle error, you can show a message if required
+            this.toast.warning({ detail: "Warning", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+          }
+        },
+        error: (err) => {
+          this.toast.error({ detail: "Error", summary: 'Failed to Fetch Bank Details', duration: 3000 });
         }
-      },
-      error: (err) => {
-        this.toast.error({ detail: "Error", summary: 'Failed to Fetch Bank Details', duration: 3000 });
-      }
-    });
+      });
+    }
+
   }
   calculateAge(dob: Date): number | string {
     const today = new Date();
@@ -2999,7 +3029,7 @@ export class RugDynamicFormComponent {
                         control.get('gender').setValue("F")
                       }
                       control.get('relation').disable();
-                      // control.get('gender').disable();
+                      control.get('gender').disable();
                     }
                     if(control.get('relation').value == "Son1" || control.get('relation').value == "Son2"){
                       control.get('gender').setValue("M")
@@ -4965,7 +4995,7 @@ export class RugDynamicFormComponent {
                     relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
                     relationCode: JSON.parse(member.relationshipType)?.id || "",
                     tenure: null,
-                    height: member.height || 0,
+                    height: this.convertToCentimeters(member.height, member.heightInches).toFixed(2).toString() || 0,
                     heightInch: member.heightInches || null,
                     weight: member.weight
                   })),
@@ -5346,7 +5376,7 @@ export class RugDynamicFormComponent {
                       relationCode: JSON.parse(member.relationshipType)?.id || "",
                       email: member.emailId,
                       mobileNumber: member.mobileNumber,
-                      height:  member.height || 0,
+                      height: this.convertToCentimeters(member.height, member.heightInches).toFixed(2).toString() || 0,
                       heightInch: member.heightInches || null,
                       weight: member.weight,
                       allDisease: null,

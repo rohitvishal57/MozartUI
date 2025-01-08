@@ -14,7 +14,7 @@
       </div>
       <div class="row">
           <div class="col-12 text-center">
-            <p *ngIf="data.type === 'success'">{{ 'Your ' + data?.title + ' Request was created Successfully'}}</p>
+            <p *ngIf="data.type === 'success'">{{ 'Your ' + data.title + ' Request was created Successfully'}}</p>
             <p [style.font-weight]="data.type === 'success' ? 'bold' : 'normal'">
               {{ data.message }}
             </p>
