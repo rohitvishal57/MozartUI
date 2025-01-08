@@ -134,7 +134,9 @@ export class RugDynamicFormComponent {
   premiumArray:any = [];
   D2CproductCode:any
   premiumObj:any;
+  occupationList: any;
   isDeclarationSelected = new FormControl('no');
+  selectedOccupationCode: any;
   constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -180,7 +182,7 @@ export class RugDynamicFormComponent {
           }else if(this.agentCode == "467896" || this.agentCode =="467897"){
             this.isD2C = false;
             this.isBB = false;
-            this.isTS = true
+            this.isTS = true;
           }
           
           console.log(this.formSequence[this.getFormIndexValue()].formName)
@@ -485,6 +487,15 @@ export class RugDynamicFormComponent {
       },
       error: (err) => {
         console.error(err);
+      }
+    });
+    this.rugService.getMasterData().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.occupationList = JSON.parse(res?.data).data.occupation;
+      },
+      error: (err: any) => {
+      console.error(err)
       }
     });
   }
@@ -1763,14 +1774,13 @@ export class RugDynamicFormComponent {
   getBBoccupation(control: any) {
     this.rugService.getMasterData().subscribe({
       next: (res: any) => {
-        let occupationList;
         console.log(res);
-        occupationList = JSON.parse(res?.data).data.occupation;
-        occupationList.map((item: any) => {
+        this.occupationList = JSON.parse(res?.data).data.occupation;
+        this.occupationList.map((item: any) => {
           item.name = item.occupationName;
           item.value = item.occupationName;
       })
-        control.options = occupationList;
+        control.options = this.occupationList;
       },
       error: (err: any) => {
       console.error(err)
@@ -2124,6 +2134,7 @@ export class RugDynamicFormComponent {
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
             this.calculateBBPremium();
             this.calculateD2CPremium()
+            this.calculateTSPremium();
           }
         }
       }
@@ -4039,18 +4050,21 @@ export class RugDynamicFormComponent {
     let spouseDob;
     let sortedArray: any[] = []
     const sinsuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-    sinsuredMembersArray.controls.forEach((memberControl: any, i: any) => {
-      const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
-
-      console.log(memberGroup);
-      memberDob = memberGroup.value.dob
-      memberRelation = memberGroup.value.relation
+    const rawValues = sinsuredMembersArray.getRawValue();
+    console.log(rawValues);
+    rawValues.forEach((memberControl: any, i: any) => {
+      const memberGroup = rawValues.at(i) as FormGroup;
+      console.log(sinsuredMembersArray.at(i).get('relation')?.value);
+      console.log(memberControl);
+      console.log(memberControl.dob);
+      memberDob = memberControl.dob;
+      memberRelation = memberControl.relation
       if (memberRelation == "Self") {
-        selfDob = memberGroup.value.dob
+        selfDob = memberControl.dob
       }
       if (memberRelation == "Spouse") {
         familyConstruct = 2
-        spouseDob = memberGroup.value.dob
+        spouseDob = memberControl.dob
       }
       console.log('member Relationship Type:', memberRelation);
       console.log('member dob:', memberDob);
@@ -5133,7 +5147,7 @@ export class RugDynamicFormComponent {
       }
         console.log(reqData);
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
-          next: (res: any) => {
+          next: async (res: any) => {
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
@@ -5220,7 +5234,27 @@ export class RugDynamicFormComponent {
 
               );
               console.log(this.dispositionList);
-
+              console.log(this.tsDetails);
+              console.log(this.occupationList);
+              if(this.occupationList != undefined){
+                this.selectedOccupationCode = this.occupationList.filter(
+                  (item: any) => item.occupationName === this.tsDetails.occupation
+                );
+              }else{
+                await this.rugService.getMasterData().subscribe({
+                  next: (res: any) => {
+                    console.log(res);
+                    this.occupationList = JSON.parse(res?.data).data.occupation;
+                    this.selectedOccupationCode = this.occupationList.filter(
+                      (item: any) => item.occupationName === this.tsDetails.occupation
+                    );
+                  },
+                  error: (err: any) => {
+                  console.error(err)
+                  }
+                });
+              }
+              console.log(this.selectedOccupationCode);
                 const payloadObject = {
                     agentDetails: {
                       axisProcess: this.tsDetails.axisProcess,
@@ -5255,14 +5289,14 @@ export class RugDynamicFormComponent {
                       state: this.tsDetails.proposerState,
                       pinCode: this.tsDetails.proposerPincode,
                       panNumber: this.tsDetails.proposerPanNumber,
-                      tenure: 0,
+                      tenure: 1,
                       sumInsured: this.tsDetails.sumInsured,
                       premium: this.tsDetails.totalPremium,
                       annualIncome: this.tsDetails.annualIncome,
                       familyConstructId: this.tsDetails.familyConstructId,
                       familyConstruct: this.tsDetails.familyConstruct,
-                      occupationType: this.tsDetails.occupation.value,
-                      occupation:  this.tsDetails.occupation.name,
+                      occupationType: this.selectedOccupationCode[0].occupationCode,
+                      occupation:  this.tsDetails.occupation,
                       leadStatus: "DRAFT",
                       productCode: this.tsDetails.productCode,
                       productName: this.tsDetails.productName,
@@ -5308,8 +5342,8 @@ export class RugDynamicFormComponent {
                       gender: member.gender,
                       dob: member.dob,
                       age: member.age,
-                      relationWithProposer:  member.relation,
-                      relationCode: member.relationCode,
+                      relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
+                      relationCode: JSON.parse(member.relationshipType)?.id || "",
                       email: member.emailId,
                       mobileNumber: member.mobileNumber,
                       height:  member.height || 0,
