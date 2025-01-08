@@ -227,6 +227,7 @@ export class DashboardComponent {
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
         this.profileDetails = res.data;
+        localStorage.setItem("designation", res.data.designation);
       }
     });
     this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {

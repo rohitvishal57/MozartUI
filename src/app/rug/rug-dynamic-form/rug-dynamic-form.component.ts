@@ -8374,14 +8374,14 @@ export class RugDynamicFormComponent {
         const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
   
         console.log(memberGroup);
-        // memberDob = memberGroup.value.dob
-        memberRelation = memberGroup.value.relation
+        memberDob = sinsuredMembersArray.at(i).get('dob')?.value;
+      memberRelation = sinsuredMembersArray.at(i).get('relation')?.value;
         if (memberRelation == "Self") {
-          selfDob = memberGroup.value.dob
+          selfDob = sinsuredMembersArray.at(i).get('dob')?.value
         }
         if (memberRelation == "Spouse") {
           familyConstruct = 2
-          spouseDob = memberGroup.value.dob
+          spouseDob = sinsuredMembersArray.at(i).get('dob')?.value
         }
         console.log('member Relationship Type:', memberRelation);
         console.log('member dob:', memberDob);
