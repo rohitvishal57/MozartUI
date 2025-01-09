@@ -526,8 +526,8 @@ export class YatraComponent {
         this.formSequence = JSON.parse(res.data.formConfig) || [];
 
         this.form = JSON.parse(res.data.jsonFormData);
-        console.log("form",this.form);
-        
+        console.log("form", this.form);
+
         this.formData = {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
@@ -929,6 +929,7 @@ export class YatraComponent {
         this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
       }
       this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
+      console.log(this.dynamicFormGroup)
       //dynamic css
       // this.showHtmlContent = true;
       // if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
@@ -1089,6 +1090,15 @@ export class YatraComponent {
       else if (control.innerControls && control.visible == true) {
         let innerGroup = this.initializeDynamicFormControls(control.innerControls);
         formGroup.addControl(control.name, innerGroup);
+      }
+      else if (control.innerArrayControl && control.visible == true) {
+        let tempFormArray = this.fb.array([]);
+        for (let z = 1; z < control.innerArrayControl.length; z++) {
+          tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control));
+        }
+        formGroup.addControl(control.name, tempFormArray);
+        console.log(formGroup,tempFormArray,control)
+        // formGroup.setValue(control.name, tempFormArray);
       }
       else {
         let controlValidators: any = [];
@@ -1593,7 +1603,7 @@ export class YatraComponent {
   async callMethod(methodName: string, control: any, section?: any) {
 
     console.log(methodName);
-    
+
     if (control.otherControlName && section != undefined) {
       let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
       const method = (this as any)[methodName];
@@ -2616,7 +2626,7 @@ export class YatraComponent {
     let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
 
     console.log(methodName);
-    
+
 
     // Specific logic for handling certain method names
     if (methodName === 'addOrRemoveAdditionalInsuredMember') {
@@ -4016,14 +4026,14 @@ export class YatraComponent {
       }
 
     }
-    if(this.form.formTitle == 'Health & Lifestyle'){
-        console.log("self legth",this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-       console.log("spouse legth",this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+    if (this.form.formTitle == 'Health & Lifestyle') {
+      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
+      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
     }
-    if(this.form.formTitle == 'Policy Summary'){
-      console.log("self legth",this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-     console.log("spouse legth",this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
-  }
+    if (this.form.formTitle == 'Policy Summary') {
+      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
+      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+    }
   }
   changeMainFormDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
@@ -5097,7 +5107,7 @@ export class YatraComponent {
 
 
   //new add On added
-  addOnAdded(control: any, parentControl: any = null) {    
+  addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
@@ -6113,20 +6123,20 @@ export class YatraComponent {
                   ) {
                     // Push the valid question object into productQuestionnaire
                     productQuestionnaire.push(detail[key]);
-                    Object.keys(detail[key]).forEach((key2)=>{
-                      if(key2 == 'diseaseCode'){
+                    Object.keys(detail[key]).forEach((key2) => {
+                      if (key2 == 'diseaseCode') {
                         chronicDiseases += chronicDiseases == ""
-                        ? `${detail[key][key2]}` 
-                        : `,${detail[key][key2]}`;
+                          ? `${detail[key][key2]}`
+                          : `,${detail[key][key2]}`;
                       }
                     })
                   }
-                  if(key.includes("obesityValue")){
-                    Object.keys(detail[key]).forEach((key2)=>{
-                      if(key2 == 'diseaseCode'){
+                  if (key.includes("obesityValue")) {
+                    Object.keys(detail[key]).forEach((key2) => {
+                      if (key2 == 'diseaseCode') {
                         chronicDiseases += chronicDiseases == ""
-                        ? `${detail[key][key2]}` 
-                        : `,${detail[key][key2]}`;
+                          ? `${detail[key][key2]}`
+                          : `,${detail[key][key2]}`;
                       }
                     })
                   }
@@ -8024,6 +8034,27 @@ export class YatraComponent {
     // } else {
     //   this.toast.error('Please fill all the required details.');
     // }
+
+    
+
+  }
+
+  addMorePolicies(innerControl: any, control: any, parentControl: any, index: number) {
+    console.log(innerControl, control, parentControl, index)
+    console.log(this.dynamicFormGroup.get(parentControl.name) as FormArray)
+    let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
+    control.innerArrayControl.push(tempControl);
+    let formArr = (((this.dynamicFormGroup.get(parentControl.name) as FormArray)
+    .controls[index] as FormGroup).controls[control.name] as FormArray);
+    formArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
+
+    console.log(formArr,'dfgd', this.dynamicFormGroup, 'form', this.form)
+  }
+
+  removePolicy(control: any, index: number): void {
+    if (control.innerArrayControl && control.innerArrayControl.length > index) {
+      control.innerArrayControl.splice(index, 1);  // Removes the element at the specified index
+    }
   }
 
 }

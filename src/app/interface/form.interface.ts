@@ -225,6 +225,7 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
+  innerArrayControl?: IDynamicControl[][];
   innerControls?: ISubControl[];
   image?:IImage;
   tabs?:ITab[];
