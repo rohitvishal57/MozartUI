@@ -1170,9 +1170,6 @@
                                     <span *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length === 0">No </span>
                                     <span *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length > 0">Yes</span>
                                   </div>
-                                  <!--<input *ngIf="subControl.disabled" class="view_Text"
-                                    formControlName="{{ subControl.name }}" [name]="subControl.name"
-                                    [type]="subControl.type" readonly>-->
                                 </div> 
                                 <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'" class="display-container col-12 col-lg-12 col-md-6">
                                   <label class="display_label">PAN Number</label>
@@ -1387,7 +1384,7 @@
                             <div style="display: flex;">
                               <input type="checkbox" formControlName="{{ subControl.name }}" [id]="subControl.name"
                                 [name]="subControl.name" (click)="onCheckboxChange($event, subControl,control)"
-                                style="height:20px; width:20px; margin-left: 10px;" />
+                                style="height:20px; width:20px; margin-left: 10px;" [disabled]="true"/>
                               <label [for]="subControl.name" class="checkbox-label checkbox-label2"
                                 style="pointer-events: none; cursor: auto;">
                                 <span [innerHTML]="subControl.label"></span>

@@ -98,6 +98,7 @@ export interface IFormControl {
   inputMaxLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
+  isDefault?:boolean;
 }
 export interface ISubControl {
   name: string;
