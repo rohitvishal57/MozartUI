@@ -8843,7 +8843,7 @@ export class RugDynamicFormComponent {
 
   updatePlansBasedOnSumInsured(sumInsured: number = 500000): void {
     sumInsured = this.dynamicFormGroup.get('sumInsured')?.value
-    if (sumInsured == 7500000 || sumInsured == 10000000) {
+    if (sumInsured == 10000000) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
           if (controls.name === 'planAvailable' && controls.radioOptions) {
