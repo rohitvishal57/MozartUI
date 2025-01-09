@@ -196,10 +196,10 @@
                   <div class="label-value-container" (click)="control.name === 'plandetails' && openPlanSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
-                    <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{
+                    <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible && control.name === 'plandetails'}">{{
                       control.value }}</div>
                   </div>
-                  <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
+                  <div *ngIf="isPlanDetailsVisible && control.name === 'plandetails'" class="bottom_planDetails" id="bottom_planDetails">
                     <div class="bottom_planDetails_sub body_flex_column">
                       <div class="common_ProductInfo">
                         <div class="common_ppi_img">
