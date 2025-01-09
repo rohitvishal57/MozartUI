@@ -255,7 +255,6 @@ export class ClaimsViewComponent {
       id: localStorage.getItem("agentCode"),
       policyNumber: ["", [Validators.required, Validators.pattern("^[0-9]+-[0-9]+-[0-9]+-[0-9]+$"), Validators.minLength(16), Validators.maxLength(16)]],
       proposalNumber: [""],
-      claimInfoId:[""],
       memberName: [""],
       memberId: [""],
       memberRelation: [""],
@@ -1190,6 +1189,16 @@ export class ClaimsViewComponent {
       this.navigateToListClaim();
     });
   }
+  openErrorModal(msg: string){
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+      disableClose: true,
+      panelClass:"messageModal-mat",
+      data: {
+        type: 'error',
+        message: msg
+      },
+    });
+  }
   submitRequest(): void {
     if (this.form.get('claimType')?.value === 'Reimbursement') {
       if (this.uploadedFiles.length === 0) {
@@ -1297,22 +1306,12 @@ export class ClaimsViewComponent {
             }
             //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
-            this.toast.error({
-              detail: 'Error', 
-              summary: response.data.message !== ""? response.data.message: "Failed to process the request.",
-              duration: 0,
-              sticky: true
-            });
+            this.openErrorModal(response.data.message)
           }
           this.updateStatusLabel();
         },
         (_error: any) => {
-          this.toast.error({
-            detail: 'Error',
-            summary: "Error occurred during claims submission",
-            duration: 0,
-            sticky: true
-          });
+          this.openErrorModal(_error);
         }
       );
     } else {
