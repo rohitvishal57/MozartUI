@@ -818,6 +818,7 @@ export class YatraComponent {
             }
           }
           else {
+
             if (control.type === 'date') {
               const lowerCaseName = control.name.toLowerCase();
               if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
@@ -961,6 +962,10 @@ export class YatraComponent {
               })
             }
 
+            if (control.type == 'boldtext' && control.methodName) {
+              this.resolveMethod(control.methodName);
+            }
+            
             if (control.name == 'totalPremium' && this.totalPremium != 0) {
               this.dynamicFormGroup.addControl(control.name, new FormControl(this.totalPremium, controlValidators));
             }
@@ -4635,7 +4640,6 @@ export class YatraComponent {
 
 
   async getPremiumAmount() {
-
     if (this.changesMade) {
       this.changeRecalculate(false);
     }
@@ -7051,7 +7055,6 @@ export class YatraComponent {
     );
   }
   skipKycURL(control: any) {
-    debugger;
     const skipKycRequestBody = {
       proposalOrPolicyNumber: this.proposalNum,
       businessType: "NB"
@@ -7107,7 +7110,6 @@ export class YatraComponent {
   }
 
   formatDate(dateString: string | Date): string {
-    debugger;
     // if (!dateString) return "";
 
     // const date = new Date(dateString);
