@@ -255,6 +255,7 @@ export class ClaimsViewComponent {
       id: localStorage.getItem("agentCode"),
       policyNumber: ["", [Validators.required, Validators.pattern("^[0-9]+-[0-9]+-[0-9]+-[0-9]+$"), Validators.minLength(16), Validators.maxLength(16)]],
       proposalNumber: [""],
+      claimInfoId:[""],
       memberName: [""],
       memberId: [""],
       memberRelation: [""],
@@ -1177,7 +1178,6 @@ export class ClaimsViewComponent {
   }
   openModal(resp: any) {
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
-      width: '400px',
       disableClose: true,
       data: {
         type: 'success',
@@ -1298,7 +1298,8 @@ export class ClaimsViewComponent {
             //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
             this.toast.error({
-              detail: 'Error', summary: "No response from Jarvis.",
+              detail: 'Error', 
+              summary: response.data.message !== ""? response.data.message: "Failed to process the request.",
               duration: 0,
               sticky: true
             });
