@@ -4446,7 +4446,7 @@ export class RugDynamicFormComponent {
           this.toast.warning({ detail: "Warning", summary: "Basis the information provided this proposal cannot be processed.", duration: 3000 });
           return;
         }
-        if(this.dynamicFormGroup.get('decl2')?.value != true && this.dynamicFormGroup.get('decl1')?.value != true){
+        if(this.getFormIndexValue() == 2 && this.dynamicFormGroup.get('decl2')?.value != true && this.dynamicFormGroup.get('decl1')?.value != true){
           this.toast.warning({ detail: "Warning", summary: "Declaration to be selected mandatorily to proceed with the journey", duration: 3000 });
           return
         }
