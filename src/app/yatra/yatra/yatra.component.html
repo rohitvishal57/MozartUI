@@ -915,7 +915,7 @@
                                               <input type="radio" [formControlName]="innerControl.name"
                                                 [name]="innerControl.name" [id]="innerControl.name"
                                                 [value]="option.value" style="margin-right: 10px;"
-                                                (change)="onInputChange($event,subControl,control,i,null,innerControl)">
+                                                (change)="onInputChange($event,innerControl,subControl,i)">
                                               <label [innerHTML]="option.label">
                                               </label>
                                             </div>
@@ -930,7 +930,7 @@
                                               formControlName="{{ innerControl.name }}" [name]="innerControl.name"
                                               [id]="innerControl.name" [type]="innerControl.type"
                                               [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
-                                              (change)="onInputChange($event, innerControl)">
+                                              (change)="onInputChange($event, innerControl,subControl)">
                                             <input class="inputField_Text"
                                               *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type === 'date'"
                                               formControlName="{{ subControl.name }}" [name]="subControl.name"

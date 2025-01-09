@@ -533,7 +533,8 @@ export class YatraComponent {
           ...JSON.parse(res.data.formData)  // parsed response data
         };
 
-        if (this.getFormIndexValue() == 8) {
+        console.log(this.form, this.formSequence, this.formData);
+        if(this.getFormIndexValue() == 8){
           this.modifyThankYouJson();
         }
         this.initializeForm();
@@ -2107,42 +2108,51 @@ export class YatraComponent {
         this.resolveMethod(control.onChangeMethod, control, eventValue);
       }
     }
-    else if (innerControl != null && innerControl.onChangeMethod) {
-      if (innerControl.type === 'radio') {
-        let selectedValue = '';
-        if (parentControl == null)
-          selectedValue = this.dynamicFormGroup.get(control.name)?.value;
-        else if (parentControl != null && index != null) {
-          if (subControl == null && innerControl != null) {
-            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
-          }
-          else
-            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
-        }
-        eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
+    // else if (innerControl != null && innerControl.onChangeMethod) {
+    //   if (innerControl.type === 'radio') {
+    //     console.log(this.dynamicFormGroup);
+    //     let selectedValue = '';
+    //     if (parentControl == null)
+    //       selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+    //     else if (parentControl != null && index != null) {
+    //       if (subControl == null && innerControl != null) {
+    //         selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
+    //       }
+    //       else
+    //         selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+    //     }
+    //     console.log(selectedValue);
 
-        let selectedOption;
-        // Find the selected option by value
-        if (innerControl != null) {
-          selectedOption = innerControl.radioOptions.find((option: any) => option.value === selectedValue);
-        }
-        else {
-          selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
-        }
+    //     eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
 
-        // Check if the control or the selected option has dependentControls
-        const dependent = control.dependentControls
-          ? control.dependentControls
-          : selectedOption?.dependentControls ?? control;
+    //     let selectedOption;
+    //     // Find the selected option by value
+    //     if (innerControl != null) {
+    //       selectedOption = innerControl.radioOptions.find((option: any) => option.value === selectedValue);
+    //     }
+    //     else {
+    //       selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+    //     }
 
-        if (parentControl != null && index != null) {
-          this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index, innerControl.name);
-        }
-        else {
-          // Call the resolveMethod with the found dependent controls
-          this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue);
-        }
-      }
+    //     // Check if the control or the selected option has dependentControls
+    //     const dependent = control.dependentControls
+    //       ? control.dependentControls
+    //       : selectedOption?.dependentControls ?? control;
+
+    //     console.log(dependent);
+
+
+    //     if (parentControl != null && index != null) {
+    //       this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index, innerControl.name);
+    //     }
+    //     else {
+    //       // Call the resolveMethod with the found dependent controls
+    //       this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue);
+    //     }
+    //   }
+    // }
+    else if(parentControl != null && parentControl.onChangeMethod){
+      this.resolveMethod(parentControl.onChangeMethod);
     }
 
     if (parentControl == null && control.name == 'ifscCode') {
@@ -4574,6 +4584,12 @@ export class YatraComponent {
           member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
           member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
+
+          // Add previousPolicyDetails if the control exists and value is not empty
+          const previousPolicyControl = this.dynamicFormGroup.get(['insuredMemberDetails', index, 'previousPolicyDetails']);
+          if (previousPolicyControl && previousPolicyControl.value !== "") {
+            member['previousPolicyDetails'] = previousPolicyControl.value;
+          }
         });
 
 
@@ -4683,10 +4699,6 @@ export class YatraComponent {
     Object.keys(obj).forEach(key => {
       const value = obj[key];
       const newKey = prefix + key;
-      // if (key == 'criticalIllness') {
-      //   console.log(this.formData[key], this.dynamicFormGroup.get(key), typeof this.dynamicFormGroup.get(key));
-
-      // }
       if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
         if (typeof value === 'object' && value !== null && 'id' in value) {
           this.dynamicFormGroup.get(newKey)?.patchValue(value);
@@ -4746,6 +4758,9 @@ export class YatraComponent {
                       control.patchValue(value[key2][member][index]);
                     }
                   });
+                }
+                else{
+                  formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
                 }
 
               })
@@ -6156,6 +6171,7 @@ export class YatraComponent {
           pedWaitingPeriod: this.pedWaitingPeriod || '',
           chronicDisease: chronicDiseases || '',
           deductibleAmount: member?.deductibleAmount || '',
+          previousPolicyDetails: member?.previousPolicyDetails || {}
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
@@ -6317,7 +6333,7 @@ export class YatraComponent {
     return value[extract];
   }
 
-  changeRecalculate(visiblility: boolean) {
+  changeRecalculate(visiblility: boolean = true) {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'recalculate') {
@@ -7778,6 +7794,12 @@ export class YatraComponent {
             })
           }
         }
+        // if (formControl.name == 'recalculate' && isPortability) {
+        //   formControl.visible = isPortability;
+        // }
+        // if (formControl.name == 'next' && isPortability) {
+        //   formControl.visible = !isPortability;
+        // }
       })
     })
   }
@@ -7963,5 +7985,45 @@ export class YatraComponent {
       return [];
     }
   }
-  
+
+  checkPreviousPolicyDetails(parentControl: any) {
+    // const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+
+    // // Flag to track validation
+    // let allValid = true;
+
+    console.log(this.dynamicFormGroup.valid, this.dynamicFormGroup);
+
+    if (this.dynamicFormGroup.valid) {
+      this.changeRecalculate(false);
+      this.getPremiumAmount();
+    }
+    else {
+      this.toast.error({ detail: "Error", summary: "Please fill all the required details", duration: 3000 })
+    }
+    // // Iterate through each member
+    // formArray.controls.forEach((group: AbstractControl, index: number) => {
+    //   const previousPolicyDetails = group.get('previousPolicyDetails') as FormGroup;
+
+    //   if (previousPolicyDetails) {
+    //     // Check if all keys in previousPolicyDetails are valid
+    //     Object.keys(previousPolicyDetails.controls).forEach(key => {
+    //       const control = previousPolicyDetails.get(key);
+    //       if (control && control.invalid) {
+    //         allValid = false; // Mark as invalid if any field is invalid
+    //       }
+    //     });
+    //   } else {
+    //     allValid = false; // If previousPolicyDetails doesn't exist, mark as invalid
+    //   }
+    // });
+
+    // // Toast the appropriate message
+    // if (allValid) {
+    //   this.toast.success({ detail: "Error", summary: "All details are filled correctly!", duration: 3000 });
+    // } else {
+    //   this.toast.error('Please fill all the required details.');
+    // }
+  }
+
 }
