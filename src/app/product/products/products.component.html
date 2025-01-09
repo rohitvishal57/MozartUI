@@ -8,13 +8,15 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
                     <div class="searchFilter_container">
-                        <input  class="inputfilter_search"  id="filterSearch" name="filterSearch"  type="text" [(ngModel)]="searchProductName" 
-                            placeholder="Enter Product Name To Search..." (keyup)="productSearch()"/>
-                            <!-- <img _ngcontent-ng-c1672851114="" src="assets/Img/icon_magnify_grey.svg"> -->
+                        <input class="inputfilter_search" id="filterSearch" name="filterSearch" type="text"
+                            [(ngModel)]="searchProductName" placeholder="Enter Product Name To Search..."
+                            (input)="productSearch()" />
+
+                        <!-- <img _ngcontent-ng-c1672851114="" src="assets/Img/icon_magnify_grey.svg"> -->
                     </div>
                 </div>
-                
-                
+
+
             </div>
             <div class="row" *ngIf="ProductList.length > 0; else noProducts">
                 <div class="col-12">
@@ -23,24 +25,35 @@
                             <div class="cardViewItem" *ngFor="let item of ProductList">
                                 <header>
                                     <div class="body_flex_row">
-                                        <img *ngIf="item.partnerId !== 14 && item.partnerId !== 45" src="assets/logo/activeOne.svg">
+                                        <img *ngIf="item.partnerId !== 14 && item.partnerId !== 45"
+                                            src="assets/logo/activeOne.svg">
                                         <h6>{{ item.productName?(item.productName | translate): ''}}</h6>
                                     </div>
-                                    <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload" title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img  src="./assets/Img/icon_download_grey.svg" ></button>
+                                    <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
+                                        id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload"
+                                        title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img
+                                            src="./assets/Img/icon_download_grey.svg"></button>
                                 </header>
                                 <div class="cardViewBody">
                                     <p>{{item.productDescription | translate}}</p>
                                 </div>
                                 <footer>
                                     <div class="btn_groupAction">
-                                        <button type="button" id="buynow" name="buynow" value="buynow" class="btn_red btn_products btn_buy" (click)="buyNow(item)">
+                                        <button type="button" id="buynow" name="buynow" value="buynow"
+                                            class="btn_red btn_products btn_buy" (click)="buyNow(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
                                             {{"Buy Now" | translate}}
                                         </button>
-                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">{{"View details" | translate}}</button>
-                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompareProducts(item)">
+                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
+                                            id="viewdetails" name="viewdetails" value="viewdetails"
+                                            class="btn_pink btn_products" (click)="productsDetail(item)">{{"View
+                                            details" | translate}}</button>
+                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
+                                            id="addtocompare" name="addtocompare" value="addtocompare"
+                                            class="btn_grey btn_products btn_addtocompare"
+                                            (click)="addToCompareProducts(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                           {{"Add to Compare" | translate}}
+                                            {{"Add to Compare" | translate}}
                                         </button>
                                     </div>
                                 </footer>
@@ -59,7 +72,9 @@
             <h5>Compare Plans</h5>
         </div>
         <div class="bi_right">
-            <button type="button" id="checkcomparison" name="checkcomparison" value="savenew" class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Check Comparison</button>
+            <button type="button" id="checkcomparison" name="checkcomparison" value="savenew"
+                class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()"
+                [disabled]="compareItems.length === 1">Check Comparison</button>
             <!--<button type="button" value="proceed" class="btn_pink btn_pinkNext btn_checkComparison_close" (click)="closeComparison()">Close</button>-->
         </div>
     </div>
@@ -67,7 +82,7 @@
         <div class="bi_left bi_left_fullWidth">
             <div class="policePlans">
                 <!--Police Info start-->
-                <div class="planProductInfo" *ngIf="compareItems[0]"> 
+                <div class="planProductInfo" *ngIf="compareItems[0]">
                     <div class="ppi_img">
                         <img src="assets/Img/icon_activeone.svg">
                     </div>
@@ -75,15 +90,17 @@
                         <h4>{{compareItems[0].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[0])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1"
+                            class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[0])"><img
+                                src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
-            
+
             <div class="planSeparator block-hide">vs</div>
             <div class="policePlans">
                 <!--Police Info start-->
-                <div class="planProductInfo" *ngIf="compareItems[1]"> 
+                <div class="planProductInfo" *ngIf="compareItems[1]">
                     <div class="ppi_img">
                         <img src="assets/Img/icon_activeone.svg">
                     </div>
@@ -91,14 +108,16 @@
                         <h4>{{compareItems[1].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button"  id="compareproduct-2" name="compareproduct-2" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[1])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-2" name="compareproduct-2"
+                            class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[1])"><img
+                                src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
             <div class="planSeparator block-hide">vs</div>
-            <div class="policePlans" >
+            <div class="policePlans">
                 <!--Police Info start-->
-                <div class="planProductInfo" *ngIf="compareItems[2]"> 
+                <div class="planProductInfo" *ngIf="compareItems[2]">
                     <div class="ppi_img">
                         <img src="assets/Img/icon_activeone.svg">
                     </div>
@@ -106,18 +125,22 @@
                         <h4>{{compareItems[2].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[2])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3"
+                            class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[2])"><img
+                                src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
 
         </div>
         <div class="bi_right block-hide">
-            <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
-            <button type="button" id="compareclose" name="compareclose" value="compareclose" class="btn_pink btn_pinkNext" (click)="closeProductComparison()">Close</button>
+            <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew"
+                (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
+            <button type="button" id="compareclose" name="compareclose" value="compareclose"
+                class="btn_pink btn_pinkNext" (click)="closeProductComparison()">Close</button>
         </div>
     </div>
-  </div>
+</div>
 <!--Bottom: ADD TO CAMPARE PRODUCTS END-->
 
 <!--OLD PRODUCT CODE START-->
@@ -125,43 +148,46 @@
     <div class="left-panel-product">
         <div class="r-p-header" style="display: none;">
             <div class="product-heading">Products</div>
-            <div class="prod-head-desc">Discover our products to insure your health</div> 
+            <div class="prod-head-desc">Discover our products to insure your health</div>
         </div>
-     
+
 
         <div class="product-list-container">
-        <div *ngIf="ProductList.length > 0; else noProducts">
-        <div  class="card_ProductList" >
-            <div class="cardRow">
+            <div *ngIf="ProductList.length > 0; else noProducts">
+                <div class="card_ProductList">
+                    <div class="cardRow">
 
-                <ng-container *ngFor="let item of ProductList">
-                    <div class="cardItem box">
-                        <!-- {{ item | json}}  -->
-                        <div class="product-item">
-                            <img src="assets/logo/activeOne.svg">
-                            {{item.productName}}</div>
-                        <p>{{item.productDescription}}</p>
-                        <div class="product-button">
-                            <button type="button" id="buynow2" name="buynow2" class="get" (click)="buyNow(item)">
-                               <img src="assets/Img/trolley1.svg" alt="">
-                               Buy Now
-                            </button>
-                            <button type="button" id="viewaddons" name="viewaddons" class="get1" (click)="productsDetail(item)">View Recommended Add-Ons</button>
-                            <button type="button" id="addtocompare2" name="addtocompare2" class="get2" >
-                                <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                Add to Compare
-                            </button>
-                        </div>
+                        <ng-container *ngFor="let item of ProductList">
+                            <div class="cardItem box">
+                                <!-- {{ item | json}}  -->
+                                <div class="product-item">
+                                    <img src="assets/logo/activeOne.svg">
+                                    {{item.productName}}
+                                </div>
+                                <p>{{item.productDescription}}</p>
+                                <div class="product-button">
+                                    <button type="button" id="buynow2" name="buynow2" class="get"
+                                        (click)="buyNow(item)">
+                                        <img src="assets/Img/trolley1.svg" alt="">
+                                        Buy Now
+                                    </button>
+                                    <button type="button" id="viewaddons" name="viewaddons" class="get1"
+                                        (click)="productsDetail(item)">View Recommended Add-Ons</button>
+                                    <button type="button" id="addtocompare2" name="addtocompare2" class="get2">
+                                        <img src="assets/Img/left-and-right-arrows1.svg" alt="">
+                                        Add to Compare
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
-                </ng-container>
+                </div>
             </div>
+            <ng-template #noProducts>
+                <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
+                    type.</div>
+            </ng-template>
         </div>
-        </div>
-        <ng-template #noProducts>
-            <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
-                type.</div>
-        </ng-template>
-     </div>
     </div>
 
     <!-- <div class="right-panel-cart">

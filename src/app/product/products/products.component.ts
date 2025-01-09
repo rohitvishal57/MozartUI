@@ -407,10 +407,9 @@ donwloadBrowcher(productName : any){
     }
   }
 
-  productSearch() {
-    this.ProductList = this.productsInformation;
-    this.ProductList = this.ProductList.filter(product =>
-      product.productName.toLowerCase().startsWith(this.searchProductName.toLowerCase())
+  productSearch(): void {
+    this.ProductList = this.productsInformation.filter(product =>
+      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
     );
   }
 
