@@ -18,31 +18,40 @@ export class ProposalPolicyViewDetailsComponent {
 
   }
 
-  onSearch() {
+  onSearch(lead:any) {
     let reqData = {
       leadId: this.leadId,
-      policyNumber: this.policyNumber
+      policyNumber: ''
     }
-    if (this.leadId) {
+    localStorage.setItem('leadId', this.leadId);
+    let data = {
+      partnerId: 45,
+      productId: 26
+    }
+    if(lead.planName == 'Health Pro'){
+      data.partnerId =  45
+      data.productId = 26
+      
+    }else if(lead.planName == 'Health Pro Infinity'){
+      data.partnerId =  45
+      data.productId = 27
+    }else if(lead.planName == 'Group Activ Secure'){
+      data.partnerId =  45
+      data.productId = 29
+    }else{
+      data.partnerId =  45
+      data.productId = 29
+    }
       this.adminServise.GetTSPolicyInfoByLeadId(reqData).subscribe(
         (response) => {
-          this.router.navigateByUrl('/rug');
+          this.router.navigate(['rug'], {
+            state: { productData: data}
+         });
         },
         (error) => {
           console.error("Error fetching data:", error);
         }
       );
-    } else if (this.policyNumber) {
-      this.adminServise.GetTSPolicyInfoByLeadId(reqData).subscribe(
-        (response) => {
-          this.router.navigateByUrl('/rug');
-        },
-        (error) => {
-          console.error("Error fetching data:", error);
-        }
-      );
-    }
-
   }
 
   clearFilter() {

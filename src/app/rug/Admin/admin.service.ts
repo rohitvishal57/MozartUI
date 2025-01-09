@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -83,14 +83,29 @@ AssignBackToDo(reqdata:any){
   return this.httpService.post(assignBacktoDo, reqdata)
 }
 
-ExtractMasterData(reqdata:any){
-  const extractMastardata = this.configService.config.baseUrl + this.configService.config.extractMastarData;
-  return this.httpService.post(extractMastardata, reqdata)
+// ExtractMasterData(reqdata:any){
+//   const extractMastardata = this.configService.config.baseUrl + this.configService.config.extractMastarData;
+//   return this.httpService.post(extractMastardata, reqdata)
+// }
+
+ExtractMasterData(apiUrl:any,request: any,fileName:any): Observable<void> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.httpService.post(apiUrl, request, { headers, responseType: 'blob' }).pipe(
+    map((response: any) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(response);
+      a.href = objectUrl;
+      a.download = `${fileName}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+      return
+    })
+  );
 }
 
 GetTSPolicyInfoByLeadId(reqdata:any){
-  const getTSPolicyInfoLeadId = this.configService.config.baseUrl + this.configService.config.extractMastarData;
-  return this.httpService.post(getTSPolicyInfoLeadId, reqdata)
+  const getTSPolicyInfoLeadid = this.configService.config.baseUrl + this.configService.config.getTSPolicyInfoLeadId;
+  return this.httpService.post(getTSPolicyInfoLeadid, reqdata)
 }
 }
 

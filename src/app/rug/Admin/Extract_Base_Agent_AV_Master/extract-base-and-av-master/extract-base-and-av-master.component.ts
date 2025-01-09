@@ -1,37 +1,38 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../admin.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-extract-base-and-av-master',
   templateUrl: './extract-base-and-av-master.component.html',
   styleUrls: ['./extract-base-and-av-master.component.scss']
 })
-export class ExtractBaseAndAvMasterComponent{
+export class ExtractBaseAndAvMasterComponent {
 
-  constructor(private adminServise: AdminService){
+  constructor(private adminServise: AdminService) {
 
   }
 
   onDownloadAVMasterDataClick() {
     const request = {
       isAvExtract: true,
-      isBaseCallerExtract : false 
+      isBaseCallerExtract: false
     };
-    this.adminServise.ExtractMasterData(request).subscribe(() => {
+    this.adminServise.ExtractMasterData(environment.baseUrl + 'api/rug/ExtractMasterData',request, this.getFormattedFileName("AVMASTER")).subscribe(() => {
       console.log('File downloaded successfully');
-    }, (error:any) => {
+    }, (error: any) => {
       console.error('Error downloading file', error);
     });
   }
 
   onDownloadBaseCallerMasterDataClick() {
     const request = {
-      IsAvExtract: false,  
-      IsBaseCallerExtract: true 
+      IsAvExtract: false,
+      IsBaseCallerExtract: true
     };
-    this.adminServise.ExtractMasterData(request).subscribe(() => {
+    this.adminServise.ExtractMasterData(environment.baseUrl + 'api/rug/ExtractMasterData',request, this.getFormattedFileName("BASEAGENT")).subscribe(() => {
       console.log('File downloaded successfully');
-    }, (error:any) => {
+    }, (error: any) => {
       console.error('Error downloading file', error);
     });
   }
