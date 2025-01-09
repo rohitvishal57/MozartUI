@@ -263,6 +263,22 @@
                                                         <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadQuote(row.proposalNumber)"  title="Download Quote"><img
                                                                     src="assets/Img/icon_download_grey.svg">        
                                                                </button>
+                                                       <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+
+                                                        <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                                            <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                                <ul class="actionItemsMain">
+                                                                    <li class="actionItem">
+                                                                        <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Share KycLink</span></a>
+                                                                    </li>
+                                                                    <li class="actionItem" >
+                                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share PaymentLink</span></a>
+                                                                    </li>
+                                                                    </ul>
+                                                               
+                                                            </div>
+                                                        </mat-menu>
                                                     </div>
                                                
                                                   </td>
