@@ -1228,8 +1228,8 @@ export class RugDynamicFormComponent {
             insuredMembersArray.at(0).get('firstName')?.disable();
             insuredMembersArray.at(0).get('mobileNumber')?.disable();
             insuredMembersArray.at(index).get('relation')?.disable();
-            // insuredMembersArray.at(index).get('gender')?.disable();
-        item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
+            insuredMembersArray.at(index).get('gender')?.disable();
+        // item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
 
           });
         }
@@ -2618,29 +2618,39 @@ export class RugDynamicFormComponent {
     index += 1;
     const baseName = option.value.replace(/\d+$/, '');
     const newControlName = baseName + index;
-
-    // Add the new control with a unique name
-    formGroup.addControl(newControlName, new FormControl(false));
-
-    this.form.formSections.forEach((section) => {
-      section.formControls.forEach((formControl: IFormControl) => {
-        if (formControl.name === control.name) {
-          formControl.selectCheckboxOptions?.push({
-            label: option.label,
-            value: newControlName,
-            isIncrement: false,
-            imagePath: option.imagePath
-          });
-
-          // Disable the button for the current option
-          formControl.selectCheckboxOptions?.forEach((checkOption) => {
-            if (checkOption.value === option.value) {
-              checkOption.isIncrement = false;
+    const controlCount = Object.keys(formGroup.controls).length;
+    let selectedMembers: string[] = [];
+    Object.keys(formGroup.controls).forEach((key: string) => {
+      if(formGroup.controls[key].value === true){
+        selectedMembers.push(key);
+      }
+    })
+    if ((selectedMembers.includes("Son1") && selectedMembers.includes("Daughter1")) || (selectedMembers.includes("Son1") && selectedMembers.includes("Daughter2")) || (selectedMembers.includes("Son2") && selectedMembers.includes("Daughter1")) || (selectedMembers.includes("Son2") && selectedMembers.includes("Daughter2")) || (selectedMembers.includes("Son1") && selectedMembers.includes("Son2")) || (selectedMembers.includes("Daughter1") && selectedMembers.includes("Daughter2")) ) {
+      this.toast.warning({ detail: "Warning", summary: "Only two kids are allowed to select", duration: 3000 });
+    } else {
+          // Add the new control with a unique name
+        formGroup.addControl(newControlName, new FormControl(false));
+        this.form.formSections.forEach((section) => {
+          section.formControls.forEach((formControl: IFormControl) => {
+            if (formControl.name === control.name) {
+              formControl.selectCheckboxOptions?.push({
+                label: option.label,
+                value: newControlName,
+                isIncrement: false,
+                imagePath: option.imagePath
+              });
+    
+              // Disable the button for the current option
+              formControl.selectCheckboxOptions?.forEach((checkOption) => {
+    
+                if (checkOption.value === option.value) {
+                  checkOption.isIncrement = false;
+                }
+              });
             }
           });
-        }
-      });
-    });
+        });
+    }
   }
 
   // getProposerRelationship(control: IFormControl): Promise<any> {
@@ -2937,6 +2947,14 @@ export class RugDynamicFormComponent {
             console.log(formControl.dynamicControls);
             console.log(option.value);
             let optionValue = option.value;
+            let selectedMembers: string[] = [];
+            formControl.dynamicControls.forEach(group => 
+              group.forEach(control => {
+                if(control.name === 'relation'){
+                  selectedMembers.push(control.value)
+                }
+              })
+            );
             let isSelfPresent = formControl.dynamicControls.some(group => 
               group.some(control => 
                 control.name === 'relation' && control.value.toLowerCase() === optionValue.toLowerCase()
@@ -2947,107 +2965,147 @@ export class RugDynamicFormComponent {
             } else {
               console.log("Relation is not present.");
               if(formControl.dynamicControls.length < 5){
-                let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-                tempControl[1].value = option.value;
-                tempControl[0].value = JSON.stringify(option);
-                formControl.dynamicControls?.push(tempControl);
-                console.log(this.formData);
-    
-                let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-                // let formArr;
-                console.log(formArr);
-    
-                if (formArr != null) {
-                  console.log(formArr.length);
-                  formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-                  formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
-                }
-                else {
-                  formArr = this.fb.array([]);
-                  formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
-                  this.dynamicFormGroup.addControl(controls.idProperty, formArr);
-                }
-                if (checkbox.checked == true && option.value == 'Self') {
-                  // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
-                  let index = -1;
-                  if (formControl.dynamicControls) {
-                    for (let i = 0; i < formControl.dynamicControls.length; i++) {
-                      let element = formControl.dynamicControls[i];
-                      try {
-    
-                        console.log(element[0]);
-                        let parsedValue = element[0].value;
-    
-                        if (this.isStringifiedJson(parsedValue)) {
-                            parsedValue = JSON.parse(parsedValue);
+                if ((selectedMembers.includes("Son1") && selectedMembers.includes("Daughter1") && option.value != 'Spouse') || (selectedMembers.includes("Son1") && selectedMembers.includes("Daughter2") && option.value != 'Spouse') || (selectedMembers.includes("Son2") && selectedMembers.includes("Daughter1") && option.value != 'Spouse') || (selectedMembers.includes("Son2") && selectedMembers.includes("Daughter2") && option.value != 'Spouse') || (selectedMembers.includes("Son1") && selectedMembers.includes("Son2") && option.value != 'Spouse') || (selectedMembers.includes("Daughter1") && selectedMembers.includes("Daughter2") && option.value != 'Spouse') ) {
+                  Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+                    const control = this.dynamicFormGroup.get(field);
+                    if(field == "insuredMembers"){
+                      if (control instanceof FormGroup) {
+                        Object.keys(control.controls).forEach(nestedField => {
+                          const nestedControl = control.get(nestedField);
+                          if(nestedField == option.value){
+                            nestedControl?.setValue(false);
                           }
-                        if (parsedValue.value === option.value) {
-                          element.forEach((control: any) => {
-                            if (control.name == 'dob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'name' || control.name == 'lastName' || control.name == 'relation' || control.name == 'gender') {
-                              control.disabled = true
-                            }
-                          })
-                          index = i;
-                          break;
-                        }
-                      } catch (e) {
-                        console.error('Error parsing JSON:', e);
+                        });
+                      } else {
+                        // control?.markAsTouched({ onlySelf: true });
                       }
                     }
-                  }
-    
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
-                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-    
+                    else {
+                      console.log("not working");
+                    }
+                  });
+                  this.toast.warning({ detail: "Warning", summary: "Only two kids are allowed to select", duration: 3000 });
                 }else{
-                  console.log(checkbox);
-                  console.log(option);
-                  const insuredMembersFormGroup = this.dynamicFormGroup.get('insuredMemberDetails') as FormGroup;
-                  console.log(insuredMembersFormGroup);
-                  (insuredMembersFormGroup.controls as unknown as any[]).forEach((control: any, index : any) => {
-                    console.log(control.get('relation').value);
-                    if(control.get('relation').value == "Spouse"){
-                      console.log(this.bbdetails);
-                      if(this.isBB || this.isTS){
-                        if(this.bbdetails.proposerGender == "M"){
-                          control.get('gender').setValue("F")
-                        }else{
-                          control.get('gender').setValue("M")
+                  let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+                  tempControl[1].value = option.value;
+                  tempControl[0].value = JSON.stringify(option);
+                  formControl.dynamicControls?.push(tempControl);
+                  console.log(this.formData);
+      
+                  let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                  // let formArr;
+                  console.log(formArr);
+      
+                  if (formArr != null) {
+                    console.log(formArr.length);
+                    formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                    formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
+                  }
+                  else {
+                    formArr = this.fb.array([]);
+                    formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
+                    this.dynamicFormGroup.addControl(controls.idProperty, formArr);
+                  }
+                  if (checkbox.checked == true && option.value == 'Self') {
+                    // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
+                    let index = -1;
+                    if (formControl.dynamicControls) {
+                      for (let i = 0; i < formControl.dynamicControls.length; i++) {
+                        let element = formControl.dynamicControls[i];
+                        try {
+      
+                          console.log(element[0]);
+                          let parsedValue = element[0].value;
+      
+                          if (this.isStringifiedJson(parsedValue)) {
+                              parsedValue = JSON.parse(parsedValue);
+                            }
+                          if (parsedValue.value === option.value) {
+                            element.forEach((control: any) => {
+                              if (control.name == 'dob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'name' || control.name == 'lastName' || control.name == 'relation' || control.name == 'gender') {
+                                control.disabled = true
+                              }
+                            })
+                            index = i;
+                            break;
+                          }
+                        } catch (e) {
+                          console.error('Error parsing JSON:', e);
                         }
-                      }else{
-                        control.get('gender').setValue("F")
                       }
-                      control.get('relation').disable();
-                      control.get('gender').disable();
                     }
-                    if(control.get('relation').value == "Son1" || control.get('relation').value == "Son2"){
-                      control.get('gender').setValue("M")
-                      control.get('relation').disable();
-                      control.get('gender').disable();
-                    }
-                    if(control.get('relation').value == "Daughter1" || control.get('relation').value == "Daughter2"){
-                      control.get('gender').setValue("F")
-                      control.get('relation').disable();
-                      control.get('gender').disable();
-                    }
-                      control.get('mobileNumber')?.clearValidators();
-              
-                      // Update the validation state
-                      control.get('mobileNumber')?.updateValueAndValidity();
-                    });
+      
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+                    // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+      
+                  }else{
+                    console.log(checkbox);
+                    console.log(option);
+                    const insuredMembersFormGroup = this.dynamicFormGroup.get('insuredMemberDetails') as FormGroup;
+                    console.log(insuredMembersFormGroup);
+                    (insuredMembersFormGroup.controls as unknown as any[]).forEach((control: any, index : any) => {
+                      console.log(control.get('relation').value);
+                      if(control.get('relation').value == "Spouse"){
+                        console.log(this.bbdetails);
+                        if(this.isBB || this.isTS){
+                          if(this.bbdetails.proposerGender == "M"){
+                            control.get('gender').setValue("F")
+                          }else{
+                            control.get('gender').setValue("M")
+                          }
+                        }else{
+                          control.get('gender').setValue("F")
+                        }
+                        control.get('relation').disable();
+                        control.get('gender').disable();
+                      }
+                      if(control.get('relation').value == "Son1" || control.get('relation').value == "Son2"){
+                        control.get('gender').setValue("M")
+                        control.get('relation').disable();
+                        control.get('gender').disable();
+                      }
+                      if(control.get('relation').value == "Daughter1" || control.get('relation').value == "Daughter2"){
+                        control.get('gender').setValue("F")
+                        control.get('relation').disable();
+                        control.get('gender').disable();
+                      }
+                        control.get('mobileNumber')?.clearValidators();
+                
+                        // Update the validation state
+                        control.get('mobileNumber')?.updateValueAndValidity();
+                      });
+                  }
                 }
               }else{
+                Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+                  const control = this.dynamicFormGroup.get(field);
+                  if(field == "insuredMembers"){
+                    if (control instanceof FormGroup) {
+                      Object.keys(control.controls).forEach(nestedField => {
+                        const nestedControl = control.get(nestedField);
+                        if(nestedField == option.value){
+                          nestedControl?.setValue(false);
+                        }
+                      });
+                    } else {
+                      // control?.markAsTouched({ onlySelf: true });
+                    }
+                  }
+                  else {
+                    console.log("not working");
+                  }
+                });
                 this.toast.warning({ detail: "Warning", summary: "Only four members are allowed to select", duration: 3000 });
               }
             }
@@ -3092,6 +3150,27 @@ export class RugDynamicFormComponent {
                 }
               });
             }
+            if(option.value == "Self" && index == 1){
+              Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+                const control = this.dynamicFormGroup.get(field);
+                if(field == "insuredMembers"){
+                  console.log(control);
+                  if (control instanceof FormGroup) {
+                    Object.keys(control.controls).forEach(nestedField => {
+                      const nestedControl = control.get(nestedField);
+                      if(nestedField == option.value){
+                        nestedControl?.setValue(true);
+                      }
+                    });
+                  } else {
+                    // control?.markAsTouched({ onlySelf: true });
+                  }
+                }
+                else {
+                  console.log("not working");
+                }
+              });
+            }
             console.log(this.formData);
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
             // this.calculateD2CPremium()
@@ -3106,7 +3185,7 @@ export class RugDynamicFormComponent {
           if((this.isD2C == true && controls.name == 'insuredMembers') && this.isFormLoaded == true){
             this.calculateD2CPremium();
           }
-          if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true){
+          if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true && option.value != "Self"){
             this.calculateBBPremium();
           }
 
@@ -4421,7 +4500,7 @@ export class RugDynamicFormComponent {
                       // }
 
                     } else {
-                      this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
 
                     }
 
