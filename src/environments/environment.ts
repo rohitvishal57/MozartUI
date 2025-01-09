@@ -206,5 +206,7 @@ export const environment = {
   d2cAxisRedirection: "api/v1/",
   assignBackToDo:"api/rug/AssignBackToDo",
   verifylink:"api/yatra/verifylink",
-  confirmproposer:"api/yatra/confirmproposer"
+  confirmproposer:"api/yatra/confirmproposer",
+  extractMastarData:"api/rug/ExtractMasterData",
+  getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId"
 };

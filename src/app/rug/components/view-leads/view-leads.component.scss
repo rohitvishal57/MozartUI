@@ -1,77 +1,65 @@
-.filterWraperForm .fw_form .fw_checkboxWraper {
-	gap: 5px;
+.commontable tr td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #E2E2E2;
+    padding: 10px;
 }
-
-.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
-	width: 48%;
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
 }
-.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
-	width: 23%;
+.text-center {
+    text-align: center !important;
 }
-
-.searchWraperForm {
-	padding: 10px 20px;
+.btn_reassign {
+    background: #FFFFFF;
+    border: 1px solid #c7222a;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: Lato-bold, sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #c7222a;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
 }
-
-.searchWraperForm header {
-	padding-top: 5px;
-	font-weight: 600;
-	font-size: 22px;
+.field_searchMain .filterSearch {
+    width: 100%;
+    background: var(--site-body-bg);
+    border-width: 0;
+    padding: 12px 16px 12px 35px;
+    margin-left: 55rem;
+    width: 250px;
 }
-
-.searchWraperForm .searchHeader,
-.fw_form .searchHeader {
-	display: flex;
-	justify-content: space-between;
-	height: 40px;
-	padding-bottom: 5px;
+#save{
+    padding-right: 40px;
 }
-
-.fw_form .filterHeader {
-	display: flex;
-	justify-content: space-between;
+#save img{
+    padding-left: 70px;
+    color: white;
 }
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 0 !important;
+.btn_audit {
+    background: #606c76;
+    border: 1px solid #606c76;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: sans-serif;
+    font-size: 8x;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #fff;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
-
-.table>:not(caption)>*>* {
-	background-color: inherit;
-}
-
-.tableSubMain .table th,
-.tableSubMain .table td {
-	padding: 8px 12px;
-}
-
-.quickFilterMain {
-	
-	align-items: center;
-}
-
-.tableSubMain .table td {
-	/*line-height: 10px;*/
-}
-
-.btn_quickFilter {
-	padding: 9px 9px 7px;
-}
-
-.starRating {
-	margin-top: 5px;
-}
-
-.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
-	line-height: 16px;
-	min-height: initial;
-}
-
 //pagination css start
 .tableNav .pagination {
 	flex-direction: column;
@@ -178,190 +166,5 @@ h6 {
 
 	::ng-deep .mat-mdc-menu-panel {
 		overflow: hidden !important;
-	}
-}
-
-//pagination css end
-
-.form-floating>.form-control,
-.form-floating>.form-control-plaintext,
-.form-floating>.form-select {
-	min-height: auto;
-}
-
-.btn_iconGrey {
-	padding: 6px;
-}
-
-.btn_iconGrey img {
-	float: left;
-}
-
-.filterWraperForm {
-	padding: 15px 24px;
-}
-
-.filterWraperForm .fw_form header {
-	font-size: 21px;
-}
-
-.filterWraperForm .fw_form .fw_formRow h6 {
-	font-size: 16px;
-}
-
-.filterWraperForm .fw_form {
-	gap: 10px;
-}
-
-.filterWraperForm .fw_form .fw_formBody {
-	gap: 18px;
-}
-
-.input-block {
-	margin-bottom: 5px;
-}
-
-::ng-deep .mat-mdc-menu-content {
-	padding: 0 !important;
-}
-
-.moreActionItems ul a {
-	font-size: 13px;
-	letter-spacing: normal;
-}
-
-.btn_search_white {
-	padding: 10px 16px;
-	border-radius: 12px;
-	background: #F1F3F6;
-	font-weight: 500;
-	font-size: 18px;
-	line-height: 24px;
-	color: var(--text-black-4c);
-	border: 1px solid var(--white-color);
-	width: 100%;
-}
-.lead-sub-menu{
-	display: inline-flex !important;
-}
-/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
-	background: var(--primary-red-color) !important;
-	color: white;
-	img{
-		filter: brightness(0) invert(1);
-	}
-  } */
-  .btn_container_leads{
-	display: flex;
-    justify-content: end;
-	gap: 2%;
-  }
-  .icon_leads_check{
-    display: flex;
-	justify-content: space-around;
-  }
-.checkbox_selectAll{
-	top: 2px;
-    position: relative;
-}
-
-.leads_searchWraper {
-	.field_searchMain {
-	  display: flex;
-	  gap:8px;
-	  margin-right: 5px;
-	  .filterSearch {
-		width: 160px;
-		height: auto;
-		padding: 9px 35px 9px 16px;
-		&:focus {
-		  border-width: 0 !important;
-		}
-	  }
-	  button {
-		position: absolute;
-		right: 10px;
-		top: 7px;
-		padding: 0;
-		img {
-		  position: initial;
-		}
-	  }
-	  @media(max-width:767px) {
-		  flex-direction: column;
-		  .filterSearch {
-			  width: 100%;
-			  
-		  }
-		  .btn_text.btn_clearSearch {
-			top: 10px !important;
-		  }
-	  }
-	}
-  }
-  .icon_allAssignLead {
-	width: 70px;
-	.icon_leads_check {
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
-	}
-  }
-  .input-checkbox-noSpace{
-		padding-right: 0;
-		.input-check + label:before{
-			margin-right: 0;
-		}
-	}
-  .btn_subQuote {
-	&:hover {
-		img {
-			filter: brightness(0) invert(1);
-			opacity: 1;
-		}
-	}
-	img {
-		filter: brightness(0) invert(0);
-		opacity: 0.3;
-		width: 10px;
-		height: 11px;
-	}
-  }
-  .btn_subQuote.btn_exportLead {
-	&:hover {
-		img {
-			filter: brightness(0) invert(1);
-			opacity: 1;
-		}
-	}
-	img {
-		opacity: 0.5;
-	}
-  }
-  .btn_assignTo {
-	background: #4CAF50;
-	width: 16px;
-    height: 17px;
-    padding: 4px;
-	border-radius: 4px;
-	img {
-		filter: brightness(0) invert(1);
-	}
-  }
-  
-@media only screen and (max-width: 1024) {
-	.filterWraperForm{
-		padding: 0px;
-	}
-}
-  @media only screen and (max-width: 767px) {
-	.filterWraperForm{
-		padding: 0px;
-	}
-	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
-		width: 100%;
-	}
-	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
-		width: 30%;
 	}
 }

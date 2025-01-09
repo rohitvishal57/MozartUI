@@ -23,6 +23,7 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
   displayedLeads: any[] = [];
   searchTerm: string = '';
   today: string = '';
+  agentCode: any;
   filterAllAvs = [];
   getAllLeads: any[] = [];
   filteredArray: any;
@@ -54,8 +55,9 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
   }
 
   getSoloJourneyDetails(): void {
+    this.agentCode = localStorage.getItem("agentCode");
     const reqdata = {
-      userId: '467895',
+      userId: this.agentCode,
       isSoloJourney: false,
       isUnverifiedLead: true,
       isDualJourney: false,

@@ -33,6 +33,7 @@ import { ReassignpopupComponent } from "./Admin/View_For_Solo_Journey/reassignpo
 import { AuditpopupComponent } from "./components/auditpopup/auditpopup.component";
 import { SuccesspopupComponent } from "./components/successpopup/successpopup.component";
 import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
+import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         ReassignpopupComponent,
         AuditpopupComponent,
         SuccesspopupComponent,
-        ProductDetailsComponent
+        ProductDetailsComponent,
+        ProposalPolicyViewDetailsComponent
     ],
     
     imports: [

@@ -19,6 +19,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
   rows: number = 10;
   totalRecords: number = 0;
   displayedLeads: any[] = [];
+  agentCode: any;
   searchTerm: string = '';
   today: string = '';
   filterAllAvs = [];
@@ -52,8 +53,9 @@ export class ViewForSoloJourneyComponent implements OnInit {
   }
 
   getSoloJourneyDetails(): void {
+    this.agentCode = localStorage.getItem("agentCode");
     const reqdata = {
-      userId: '467895',
+      userId: this.agentCode,
       isSoloJourney: true,
       isUnverifiedLead: false,
       isDualJourney: false,

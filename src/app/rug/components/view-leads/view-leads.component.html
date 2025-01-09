@@ -85,7 +85,7 @@
                                         <td class="text-center" nowrap>{{item.policyIssuanceDate}}</td>
                                         <td class="text-center" nowrap>{{item.remark}}</td>
                                         <td class="text-center" nowrap>
-                                            <button type="button" class="btn btn-danger " [disabled]="item.status === 'Payment Done'" (click)="actionLead(item)">Action</button> 
+                                            <button type="button" class="btn btn-danger mx-2" [disabled]="item.status === 'Payment Done'" (click)="actionLead(item)">Action</button> 
                                             <button type="button"  class="btn btn-danger " [disabled]="item.buttonDisabled || item.status === 'Payment Done'" (click)="backToDo(item)">Back To Do</button>
                                         </td>
                                         <td class="text-center" nowrap>

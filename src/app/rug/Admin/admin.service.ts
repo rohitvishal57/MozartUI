@@ -83,4 +83,14 @@ AssignBackToDo(reqdata:any){
   return this.httpService.post(assignBacktoDo, reqdata)
 }
 
+ExtractMasterData(reqdata:any){
+  const extractMastardata = this.configService.config.baseUrl + this.configService.config.extractMastarData;
+  return this.httpService.post(extractMastardata, reqdata)
 }
+
+GetTSPolicyInfoByLeadId(reqdata:any){
+  const getTSPolicyInfoLeadId = this.configService.config.baseUrl + this.configService.config.extractMastarData;
+  return this.httpService.post(getTSPolicyInfoLeadId, reqdata)
+}
+}
+

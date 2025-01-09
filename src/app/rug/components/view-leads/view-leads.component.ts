@@ -63,8 +63,8 @@ export class ViewLeadsComponent implements OnInit {
       "isSoloJourney": false,
       "isUnverifiedLead": false,
       "isDualJourney": false,
-      "isViewLead": false,
-      "isViewCheckerLead": true,
+      "isViewLead": true,
+      "isViewCheckerLead": false,
       "pageNumber": this.page,
       "pageSize": this.rows
     }

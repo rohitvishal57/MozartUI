@@ -1,1 +1,55 @@
-<p>proposal-policy-view-details works!</p>
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>View Lead Details</h2>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    (input)="onInput($event)"> -->
+                                <section class="white_container mb-3">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="leadId" name="leadId"
+                                                    placeholder="Mobile Number" type="text"
+                                                     [(ngModel)]="leadId">
+                                                <label for="leadId">Enter Lead Id </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="policyNumber" name="policyNumber"
+                                                    placeholder="Enter Policy Number" type="text"
+                                                     [(ngModel)]="policyNumber">
+                                                <label for="leadid">Enter Policy Number </label>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <button type="submit" id="save" name="save" (click)="clearFilter()"
+                                                    class="btn_red btn_white">Clear
+                                                    Filter</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <button type="submit" id="save" name="save" (click)="onSearch()"
+                                                    class="btn_red">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

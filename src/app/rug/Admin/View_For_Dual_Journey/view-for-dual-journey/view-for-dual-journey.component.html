@@ -162,7 +162,7 @@
                                     <td>{{leads.avid}}</td>
                                     <td>{{leads.latestModifiedDateTime}}</td>
                                     <td>{{leads.axisLocation}}</td>
-                                    <td><td nowrap><button type="button" [disabled]="leads.status === 'Payment Done'" class="btn_reassign">View Details</button><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="backToDo(leads)"  class="btn_reassign">Back To Do</button>
+                                    <td nowrap><button type="button" [disabled]="leads.status === 'Payment Done'" class="btn_reassign"  (click)="viewDeails(leads)">View Details</button><button type="button" [disabled]="leads.status === 'Payment Done'" (click)="backToDo(leads)"  class="btn_reassign">Back To Do</button>
                                     </td>
                                     <td><button type="button"  class="btn_audit jsOpenPopup"
                                             aria-label="modal-audit" (click)="auditLead(leads)">Audit</button></td>

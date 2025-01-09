@@ -5,6 +5,7 @@ import { ExcelServiceService } from 'src/app/services/excel-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
 import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-for-dual-journey',
@@ -18,6 +19,7 @@ export class ViewForDualJourneyComponent implements OnInit {
   rows: number = 10;
   totalRecords: number = 0;
   displayedLeads: any[] = [];
+  agentCode: any;
   searchTerm: string = '';
   today: string = '';
   filterAllAvs = [];
@@ -30,7 +32,7 @@ export class ViewForDualJourneyComponent implements OnInit {
   AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
   dialog: any;
   item: any;
-  constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog) {
+  constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog, private router: Router) {
 
   }
   ngOnInit(): void {
@@ -51,8 +53,9 @@ export class ViewForDualJourneyComponent implements OnInit {
   }
 
   getSoloJourneyDetails(): void {
+    this.agentCode = localStorage.getItem("agentCode");
     const reqdata = {
-      userId: '467895',
+      userId: this.agentCode,
       isSoloJourney: false,
       isUnverifiedLead: false,
       isDualJourney: true,
@@ -90,6 +93,34 @@ export class ViewForDualJourneyComponent implements OnInit {
     } else {
       this.excelService.exportAsExcelFile(this.displayedLeads, 'dual');
     }
+  }
+
+  viewDeails(lead:any){
+    console.log(lead);
+    localStorage.setItem('leadId', lead.leadNo)
+    let data = {
+      partnerId: 45,
+      productId: 26
+    }
+
+    if(lead.planName == 'Health Pro'){
+      data.partnerId =  45
+      data.productId = 26
+      
+    }else if(lead.planName == 'Health Pro Infinity'){
+      data.partnerId =  45
+      data.productId = 27
+    }else if(lead.planName == 'Group Activ Secure'){
+      data.partnerId =  45
+      data.productId = 29
+    }else{
+      data.partnerId =  45
+      data.productId = 29
+    }
+
+    this.router.navigate(['rug'], {
+      state: { productData: data}
+   });
   }
 
   backToDo(lead: any) {
