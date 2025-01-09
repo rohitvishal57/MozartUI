@@ -534,7 +534,7 @@ export class YatraComponent {
         };
 
         console.log(this.form, this.formSequence, this.formData);
-        if(this.getFormIndexValue() == 8){
+        if (this.getFormIndexValue() == 8) {
           this.modifyThankYouJson();
         }
         this.initializeForm();
@@ -702,6 +702,12 @@ export class YatraComponent {
                 if (subControl.name == 'addOnCover' && control.name == 'deductible') {
                   subControl.value = true;
                 }
+                if (control.isDefault) {
+                  const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                  if (addOnCoverControl) {
+                    addOnCoverControl.value = true;
+                  }
+                }
                 if (subControl.name == 'addOnDetails') {
                   let demoTypeIndex: any;
                   let doneButton: any;
@@ -714,7 +720,7 @@ export class YatraComponent {
                       // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
                     ]; // Keep the first control (or reset)
                   }
-                  this.formData['insuredMemberDetails'].forEach((member: any) => {
+                  this.formData['insuredMemberDetails'].forEach((member: any,index:any) => {
                     if (subControl.innerSubControls) {
                       let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
                       const tempRelationshipType = JSON.parse(member.relationshipType);
@@ -731,25 +737,85 @@ export class YatraComponent {
                         })
                       }
 
-                      if (subControl.conditionCheck) {
-                        tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-                          if (corecontrol.dependentControls && this.formData[control.name]) {
-                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
-                            corecontrol.dependentControls.forEach((question: any) => {
-                              let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
-                              newcontrol.visible = newvalue;
-                            })
+                      if (control.isDefault) {
+                        let addOnSumInsured = 0;
+                        tempInnerControl.coreControls.forEach((coreControl: any) => {
+                          if (coreControl.name == 'memberCheckbox') {
+                            coreControl.value = true;
+                          }
+                          if(coreControl.name == 'addOnSumInsured'){
+                            addOnSumInsured = coreControl.value;
                           }
                         })
+
+                        const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                        const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+
+                        if (coverId && coverName) {
+                          // Initialize member.covers if not present
+                          if (!member.covers) {
+                            member.covers = [];
+                          }
+
+                          // Check and push into member.covers if not already present
+                          let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                          if (!memberCoverExists) {
+                            member.covers.push({
+                              coverId: coverId,
+                              value: addOnSumInsured, // Add appropriate value if needed
+                              coverName: coverName
+                            });
+                          }
+
+                          // Initialize this.covers[index] if not present
+                          if (!this.covers[index]) {
+                            this.covers[index] = [];
+                          }
+
+                          // Check and push into this.covers[index] if not already present
+                          let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                          if (!coverExistsInCovers) {
+                            this.covers[index].push({
+                              coverId: coverId,
+                              value: addOnSumInsured, // Add appropriate value if needed
+                              coverName: coverName
+                            });
+                          }
+
+                        }
+
+                        }
+
+                        if (subControl.conditionCheck) {
+                          tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
+                            if (corecontrol.dependentControls && this.formData[control.name]) {
+                              const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                              corecontrol.dependentControls.forEach((question: any) => {
+                                let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
+                                newcontrol.visible = newvalue;
+                              })
+                            }
+                          })
+                        }
+                        subControl.innerSubControls?.push(tempInnerControl);
                       }
-                      subControl.innerSubControls?.push(tempInnerControl);
-                    }
-                  });
+                    });
                   subControl.innerSubControls?.push(doneButton);
                 }
               });
             }
             this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
+
+            if (control.isDefault) {
+
+              this.dynamicFormGroup.get(control.name)?.get('addOnCover')?.disable();
+              console.log(this.dynamicFormGroup.get(control.name)?.get('addOnDetails'));
+              const addOnDetailsGroup = this.dynamicFormGroup.get(control.name)?.get('addOnDetails') as FormGroup;
+              Object.keys(addOnDetailsGroup.value).forEach((key) => {
+                console.log(addOnDetailsGroup.get(key));
+                (addOnDetailsGroup.get(key) as FormArray).controls[0].get('memberCheckbox')?.disable();
+              })
+            }
           }
           else {
             if (control.type === 'date') {
@@ -2161,7 +2227,7 @@ export class YatraComponent {
     //     }
     //   }
     // }
-    else if(parentControl != null && parentControl.onChangeMethod){
+    else if (parentControl != null && parentControl.onChangeMethod) {
       this.resolveMethod(parentControl.onChangeMethod);
     }
 
@@ -4776,7 +4842,7 @@ export class YatraComponent {
                     }
                   });
                 }
-                else{
+                else {
                   formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
                 }
 
