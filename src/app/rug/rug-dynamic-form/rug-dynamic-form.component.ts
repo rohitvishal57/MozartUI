@@ -3241,7 +3241,7 @@ export class RugDynamicFormComponent {
           });
         }
         insuredMembersArray.at(index).get('relation')?.disable();
-        item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
+        // item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
       });
       insuredMembersArray.at(0).patchValue({
         mobileNumber:this.bbdetails.proposerMobileNumber,
