@@ -3760,6 +3760,13 @@ export class YatraComponent {
             }
           });
         }
+        else{
+          this.toast.error({
+            detail: "Error",
+            summary: res.message,
+            duration: 3000,
+          });
+        }
       },
       (error) => {
         console.log("err", error);
@@ -7080,7 +7087,7 @@ export class YatraComponent {
               window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
             }
           } else {
-            this.toast.warning({ detail: "Warning", summary: "Invalid payment link received", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
             console.error('Invalid payment link received:', response);
           }
         },
