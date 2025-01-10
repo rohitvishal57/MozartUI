@@ -1444,7 +1444,7 @@
                                         <ng-container [formGroupName]="subControl.name">
                                           <ng-container
                                             *ngFor="let innerSubForm of subControl.innerSubControls,index as k">
-                                            <div *ngIf="k>0" class="row margin_selectMember">
+                                            <div *ngIf="k>0" class="row margin_selectMember cd-checkboxMain">
                                               <ng-container *ngIf="innerSubForm.coreControls"
                                                 [formArrayName]="innerSubForm.name">
                                                 <ng-container
@@ -1478,7 +1478,7 @@
                                                     <!-- (click)="onCheckboxChange($event, subControl,control)" -->
 
                                                     <div *ngIf="innerControl.type === 'checkbox'"
-                                                      style="margin-bottom: 15px;" [hidden]="!innerControl.visible">
+                                                      style="margin-bottom: 15px;" class="cd-checkbox" [hidden]="!innerControl.visible">
                                                       <div style="display: flex;">
                                                         <input type="checkbox" formControlName="{{ innerControl.name }}"
                                                           [name]="innerControl.name" [id]="innerControl.name"
