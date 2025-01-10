@@ -106,6 +106,7 @@
     position: relative;
     display: inline-block;
     margin-left: 5px;
+    pointer-events: auto !important;
 }
 .tooltip-wrapper:hover .tooltip-text {
     visibility: visible;
