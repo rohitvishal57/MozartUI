@@ -279,14 +279,16 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   getPolicyMembers(value: string) {
     const policyMembersReq = {
-      "policyNumber": value
+      "policyNumber": value,
+      "agentCode": this.agentCode
     }
 
     this.endorsement_service.getPolicyMembersApi(policyMembersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp?.data?.policyMembersList
-          this.getMemberIdList(this.policyMembersList)
+          this.policyMembersList = resp?.data?.policyMembersList;
+          this.getMemberIdList(this.policyMembersList);
+          this.isPolicyExistsForAgent(value);
         } else {
           this.openErrorModal(resp?.message);
         }
@@ -324,6 +326,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   _removealphabets(value: any) {
     return value.replace(/[^\d.-]/g, '');
+  }
+
+  isPolicyExistsForAgent(policyNo: string) {
+    const isPolicyPresent = this.policiesListData.some(
+      (policy) => policy.policyNumber === policyNo
+    );
+    if(!isPolicyPresent) {
+      this.MemberIdList = [];  // Handle New Endorsement Requests for Policies Not Associated with the Agent
+      const msg = `No Members were found for the given Policy Number: ${policyNo}`
+      this.openErrorModal(msg);
+    }
   }
 
   endorsementChange(event: any) {
