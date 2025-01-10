@@ -720,7 +720,7 @@ export class YatraComponent {
                       // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
                     ]; // Keep the first control (or reset)
                   }
-                  this.formData['insuredMemberDetails'].forEach((member: any,index:any) => {
+                  this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
                     if (subControl.innerSubControls) {
                       let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
                       const tempRelationshipType = JSON.parse(member.relationshipType);
@@ -743,7 +743,7 @@ export class YatraComponent {
                           if (coreControl.name == 'memberCheckbox') {
                             coreControl.value = true;
                           }
-                          if(coreControl.name == 'addOnSumInsured'){
+                          if (coreControl.name == 'addOnSumInsured') {
                             addOnSumInsured = coreControl.value;
                           }
                         })
@@ -784,22 +784,22 @@ export class YatraComponent {
 
                         }
 
-                        }
-
-                        if (subControl.conditionCheck) {
-                          tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-                            if (corecontrol.dependentControls && this.formData[control.name]) {
-                              const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
-                              corecontrol.dependentControls.forEach((question: any) => {
-                                let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
-                                newcontrol.visible = newvalue;
-                              })
-                            }
-                          })
-                        }
-                        subControl.innerSubControls?.push(tempInnerControl);
                       }
-                    });
+
+                      if (subControl.conditionCheck) {
+                        tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
+                          if (corecontrol.dependentControls && this.formData[control.name]) {
+                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                            corecontrol.dependentControls.forEach((question: any) => {
+                              let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
+                              newcontrol.visible = newvalue;
+                            })
+                          }
+                        })
+                      }
+                      subControl.innerSubControls?.push(tempInnerControl);
+                    }
+                  });
                   subControl.innerSubControls?.push(doneButton);
                 }
               });
@@ -815,6 +815,9 @@ export class YatraComponent {
                 console.log(addOnDetailsGroup.get(key));
                 (addOnDetailsGroup.get(key) as FormArray).controls[0].get('memberCheckbox')?.disable();
               })
+            }
+            if (control.postControlCreationMethod) {
+              this.resolveMethod(control.postControlCreationMethod, control);
             }
           }
           else {
@@ -965,7 +968,7 @@ export class YatraComponent {
             if (control.type == 'boldtext' && control.methodName) {
               this.resolveMethod(control.methodName);
             }
-            
+
             if (control.name == 'totalPremium' && this.totalPremium != 0) {
               this.dynamicFormGroup.addControl(control.name, new FormControl(this.totalPremium, controlValidators));
             }
@@ -1168,7 +1171,7 @@ export class YatraComponent {
           tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control));
         }
         formGroup.addControl(control.name, tempFormArray);
-        console.log(formGroup,tempFormArray,control)
+        console.log(formGroup, tempFormArray, control)
         // formGroup.setValue(control.name, tempFormArray);
       }
       else {
@@ -2234,6 +2237,9 @@ export class YatraComponent {
     // }
     else if (parentControl != null && parentControl.onChangeMethod) {
       this.resolveMethod(parentControl.onChangeMethod);
+    }
+    else if (innerControl != null && innerControl.onChangeMethod) {
+      this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl);
     }
 
     if (parentControl == null && control.name == 'ifscCode') {
@@ -3831,7 +3837,7 @@ export class YatraComponent {
             }
           });
         }
-        else{
+        else {
           this.toast.error({
             detail: "Error",
             summary: res.message,
@@ -5185,8 +5191,11 @@ export class YatraComponent {
 
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
-    let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    let addOnData = this.dynamicFormGroup.get(parentControl.name)?.getRawValue();
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+
+    console.log(addOnData);
+    
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
@@ -8110,7 +8119,7 @@ export class YatraComponent {
     //   this.toast.error('Please fill all the required details.');
     // }
 
-    
+
 
   }
 
@@ -8120,14 +8129,70 @@ export class YatraComponent {
     let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
     control.innerArrayControl.push(tempControl);
     let formArr = (((this.dynamicFormGroup.get(parentControl.name) as FormArray)
-    .controls[index] as FormGroup).controls[control.name] as FormArray);
+      .controls[index] as FormGroup).controls[control.name] as FormArray);
     formArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
-    console.log(formArr,'dfgd', this.dynamicFormGroup, 'form', this.form)
+    console.log(formArr, 'dfgd', this.dynamicFormGroup, 'form', this.form)
   }
 
   removePolicy(control: any, index: number): void {
     if (control.innerArrayControl && control.innerArrayControl.length > index) {
       control.innerArrayControl.splice(index, 1);  // Removes the element at the specified index
+    }
+  }
+
+  disableForAllOtherMembers(control: any) {
+    const addOnControlGroup = this.dynamicFormGroup.get(control.name);
+    if (addOnControlGroup) {
+      const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+      console.log(addOnDetailsControl);
+      Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+        console.log(Key, index);
+        if (index != 0) {
+          const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+          console.log(memberArray);
+
+          memberArray.controls.forEach((member: any) => {
+            console.log(member);
+
+            const memberControlCheckbox = member.get('memberCheckbox');
+            console.log(memberControlCheckbox);
+
+            if (memberControlCheckbox) {
+              memberControlCheckbox.disable();
+            }
+          })
+
+        }
+
+      })
+    }
+  }
+
+  selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
+    console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
+    const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+    if (addOnControlGroup) {
+      const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+      Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+        console.log(Key, index);
+        if (index != 0) {
+          const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+          console.log(memberArray);
+
+          memberArray.controls.forEach((member: any) => {
+            console.log(member);
+
+            const memberControlCheckbox = member.get('memberCheckbox');
+            console.log(memberControlCheckbox);
+
+            if (memberControlCheckbox) {
+              memberControlCheckbox.setValue(event.target.checked);
+            }
+          })
+
+        }
+
+      })
     }
   }
 
