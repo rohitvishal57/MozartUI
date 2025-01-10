@@ -381,6 +381,9 @@ export class ClaimsViewComponent {
           this.filteredPolicyList = [...this.policyNumbers];
           this.cdr.markForCheck();
         }
+        else{
+        this.openErrorModal(resp.message)
+        }
       },
       (err) => {
         console.log(err);
