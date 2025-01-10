@@ -98,6 +98,7 @@ export interface IFormControl {
   inputMaxLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
+  isDefault?:boolean;
 }
 export interface ISubControl {
   name: string;
@@ -225,6 +226,7 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
+  innerArrayControl?: IDynamicControl[][];
   innerControls?: ISubControl[];
   image?:IImage;
   tabs?:ITab[];
