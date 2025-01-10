@@ -715,7 +715,7 @@ export class RenewalListComponent {
             mobileNumber: "",
           };
           const redirectionResponse: any = await firstValueFrom(this.renewalService.cpRedirectionApi(payload));
-          const encryptedUrl = redirectionResponse.data;
+          const encryptedUrl = decodeURIComponent(redirectionResponse.data);
           window.open(encryptedUrl, "_blank");
         } else if (action === "withoutmodify") {
           const renewalInfoRequestBody = { policy_Number: proposerDetail.policyNumber };
