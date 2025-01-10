@@ -457,14 +457,15 @@ export class ClaimsViewComponent {
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim();
-    this.form.patchValue({
-      "memberName": "",
-    });
-    this.memberNames = [];
+   
+    
     this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
       item.policyNumber.includes(input)
     );
-    
+    this.form.patchValue({
+      "memberId": "",
+    });
+    this.memberNames = [];
     if (input.length >= 16) {
       this.policyNoChangeSubject.next(input);
     }
