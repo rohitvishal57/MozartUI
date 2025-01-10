@@ -96,13 +96,24 @@ export class ViewForSoloJourneyComponent implements OnInit {
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
-      option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
       option?.refNo?.toLowerCase().includes(this.searchTerm) ||
-      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisLocation?.toLowerCase().includes(this.searchTerm) ||
+      option?.proposerName?.toLowerCase().includes(this.searchTerm) ||
+      option?.imdCode?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisProcess?.toLowerCase().includes(this.searchTerm) ||
+      option?.proposalNo?.toLowerCase().includes(this.searchTerm) ||
+      option?.planName?.toLowerCase().includes(this.searchTerm) ||
+      option?.premium?.toLowerCase().includes(this.searchTerm) ||
+      option?.status?.toLowerCase().includes(this.searchTerm) ||
       option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
       option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisProcess?.toLowerCase().includes(this.searchTerm)
+      option?.disposition?.toLowerCase().includes(this.searchTerm) ||
+      option?.subDisposition?.toLowerCase().includes(this.searchTerm) ||
+      option?.remark?.toLowerCase().includes(this.searchTerm) ||
+      option?.avName?.toLowerCase().includes(this.searchTerm) ||
+      option?.avid?.toLowerCase().includes(this.searchTerm) ||
+      option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisLocation?.toLowerCase().includes(this.searchTerm)
     );
   }
 
