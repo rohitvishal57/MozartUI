@@ -221,6 +221,9 @@ export class KycComponent {
         }
         this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
           async (res: any) => {
+            if(res.data.agentCode){
+              localStorage.setItem('token', res.data.agentCode)
+            }
             if (res.data.kycStatus == "True") {
               this.agentCode = localStorage.getItem('agentCode');
               const renewalInfoRequestBody = { policy_Number: res.data.policyNumber };
@@ -310,6 +313,9 @@ export class KycComponent {
         }
         this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
           async (res: any) => {
+            if(res.data.agentCode){
+              localStorage.setItem('token', res.data.agentCode)
+            }
             const kycData = res.data;
             if(kycData.kycStatus == "True"){
               this.toast.success({ detail: "Success", summary: "KYC Success", duration: 5000 });
