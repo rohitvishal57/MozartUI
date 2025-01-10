@@ -382,7 +382,12 @@ export class ClaimsViewComponent {
           this.cdr.markForCheck();
         }
         else{
-        this.openErrorModal(resp.message)
+          this.toast.error({
+            detail: 'Error',
+            summary: resp.message,
+            duration: 0,
+            sticky: true
+          });
         }
       },
       (err) => {
