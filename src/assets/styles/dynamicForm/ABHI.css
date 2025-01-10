@@ -1176,8 +1176,8 @@ body {
 }
 .main-container .right-panel .custom-line2 {
     border-bottom: 1px solid #E6E6E6;
-    margin: 10px 0 15px;
-    padding: 0 0 20px;
+    margin: 15px 0 15px;
+    padding: 0 0 10px;
     opacity: 1;
     width: 100%;
     position: relative;
