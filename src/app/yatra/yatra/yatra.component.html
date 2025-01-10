@@ -868,8 +868,16 @@
                                     <ng-container [formGroupName]="subControl.name">
                                       <ng-container *ngFor="let subInner of subControl.innerArrayControl; let z = index">
                                         <ng-container  *ngIf="z>0">
+                                          <div class="row mt-4 mb-4 custom-line2" *ngIf="z!=1">
+                                            <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10  d-flex align-items-center">
+                                              Policy {{z}}
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-end">
+                                              <button (click)="removePolicy(subControl, z)" type="button" id="btn-policyDelete" name="btn-policyDelete" class="btn_iconText btn_customiseDelete"><img src="assets/Img/icon_delete_red2.svg"></button>
+                                            </div>
+                                          </div>
+                                            
                                         <ng-container [formGroupName]="z-1">
-                                          <button *ngIf="z!=1" (click)="removePolicy(subControl, z)">Delete</button>
                                           <ng-container *ngFor="let innerControl of subInner;">
                                             <div *ngIf="innerControl.type === 'paragraph'" class="paragraphs" [class]="innerControl.class">
                                               <p [innerHTML]="innerControl.label ? (innerControl.label | translate) : ''">
@@ -970,7 +978,7 @@
                                                   <span *ngIf="innerControl.validators">*</span>
                                                 </label>
                                               </div>
-                                              <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
+                                              
                                               <small *ngIf="checkValidations(subControl,control,i-1,null,innerControl)" class="text-danger">{{
                                                 getValidationErrors(subControl,control,i-1,null,innerControl)?
                                                 (getValidationErrors(subControl,control,i-1,null,innerControl)| translate) :
@@ -983,8 +991,6 @@
                                               [disabled]="innerControl.disabled" [ngClass]="[innerControl.class, getButtonClass(innerControl)]"
                                               [name]="innerControl.name" [id]="innerControl.name"
                                               [value]="innerControl.label ? (innerControl.label | translate) : ''">
-                                      
-                                              <!-- <button type="button">Remove Inner Policy</button> -->
                                           </ng-container>
                                         </ng-container>
                                         </ng-container>

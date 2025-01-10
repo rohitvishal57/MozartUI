@@ -8122,7 +8122,6 @@ export class YatraComponent {
     let formArr = (((this.dynamicFormGroup.get(parentControl.name) as FormArray)
     .controls[index] as FormGroup).controls[control.name] as FormArray);
     formArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
-
     console.log(formArr,'dfgd', this.dynamicFormGroup, 'form', this.form)
   }
 
