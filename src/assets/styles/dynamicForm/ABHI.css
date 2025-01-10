@@ -1635,6 +1635,7 @@ body {
 .main-container .right-panel .back-btn,
 .main-container .right-panel .field-btn {
     padding: 10px 21px;
+    margin-right: 5px;
 }
 
 /*===AUGUST 16th styles start===*/
@@ -3294,6 +3295,12 @@ margin: 0;
 .block-proposer {
     width: 100%;
     /* padding: 0 0 22px; */
+}
+.main-container .right-panel input[type="checkbox"]:disabled {
+    background-color: #0075ff !important;
+    border: 1px solid #0075ff;
+    filter: invert(0%) sepia(70%) saturate(7414%) hue-rotate(180deg) brightness(79%) contrast(117%) !important;
+    opacity: 0.5;
 }
 /*----Toggle switch checkbox start----*/
 .toggle-checkbox {
