@@ -401,27 +401,34 @@ export class ClaimsViewComponent {
     this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
         this.form.get('memberId')?.setValue('');
-        this.memberNames = [];
-        this.form.get('policyNumber')?.setErrors(null);
+        //this.memberNames = [];
+        //this.form.get('policyNumber')?.setErrors(null);
       }
     });
     const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
-    if (!filteredMembers || filteredMembers.length === 0) {      // If no members are found
-      this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
-    } else {
-      this.form.get('policyNumber')?.setErrors(null);
-    }
+    // if (!filteredMembers || filteredMembers.length === 0) {      // If no members are found
+    //   this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    // } else {
+    //   this.form.get('policyNumber')?.setErrors(null);
+    // }
     this.form.get("memberId")?.setValue("");
     this.cdr.markForCheck();
     this.getPolicyMembers(value)
     this.fetchCoverNames(value)
   }
-
+  // handleDropdownChange(value: string): void {
+  //   if (value == "") {
+  //     this.form.get('policyNumber')?.reset();
+  //   }
+  
+  //   this.getPolicyMembers(value)
+  //   this.fetchCoverNames(value)
+  // }
   getPolicyMembers(value: string) {
     const membersReq = {
-      "AgentCode": localStorage.getItem("agentCode"),
+      "agentCode": localStorage.getItem("agentCode"),
       "policyNumber": value
     }
 
@@ -430,6 +437,10 @@ export class ClaimsViewComponent {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policyMembersList = resp.data.policyMembersList
           this.getMemberIdList(this.policyMembersList)
+        }
+        else
+        {
+          this.openErrorModal(resp.message)
         }
       },
       (err) => {
@@ -449,27 +460,27 @@ export class ClaimsViewComponent {
     this.form.patchValue({
       "memberName": "",
     });
-
+    this.memberNames = [];
     this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
       item.policyNumber.includes(input)
     );
-
+    
     if (input.length >= 16) {
       this.policyNoChangeSubject.next(input);
     }
-    if (!this.filteredPolicyList || this.filteredPolicyList.length === 0) {      // If no members are found
-      this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
-    } else {
-      this.form.get('policyNumber')?.setErrors(null);
-    }
+    // if (!this.filteredPolicyList || this.filteredPolicyList.length === 0) {      // If no members are found
+    //   this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    // } else {
+    //   this.form.get('policyNumber')?.setErrors(null);
+    // }
   }
 
 
   onChange(value: string) {
     this.selectedPolicyNumber = value;
-    if (value == "") {
-      // this.form.get('policyNumber').reset();
-    }
+    // if (value == "") {
+    //   // this.form.get('policyNumber').reset();
+    // }
     this.getPolicyMembers(value);
   }
   onInput(event: any): void {
