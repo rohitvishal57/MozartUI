@@ -96,6 +96,7 @@ export const environment = {
   endorsementValidateOTP: "api/claims/endorsementvalidateotp",
   getpolicyinfodetails: "api/claims/getpolicyinfodetails",
   endorsementCaseDetails: "api/claims/getcasedetailsbycaseid",
+  getEndorsementStatus: "api/claims/getstatusbycaseid",
   agentCartDetails: "api/quote/getagentcartdetails",
   insertOrUpdateAgentCartDetails: "api/quote/insertorupdateagentcartdetails",
   deleteagentcartitems: "api/quote/deleteagentcartitems",
