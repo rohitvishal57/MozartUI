@@ -6291,7 +6291,7 @@ export class YatraComponent {
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
       idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
-      proposerOccupation: JSON.parse(formData?.occupation).name || '',
+      proposerOccupation: this.jsonParse(formData?.occupation, 'name') || '',
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       proposerPANNo: formData?.panNo || '',
       gstDetails: formData?.gstDetails || '',
