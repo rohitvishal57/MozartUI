@@ -354,6 +354,8 @@ export class YatraComponent {
   initializeRequiredData() {
     if (sessionStorage.getItem('allFormData') != null)
       this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
+    console.log(this.formData);
+
 
     if (sessionStorage.getItem('insuredMemberDetails') != null)
       this.insuredMemberDetails = this.encryptionService.decrypt(sessionStorage.getItem('insuredMemberDetails') as string)
@@ -608,9 +610,6 @@ export class YatraComponent {
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
             control.value = this.formData[control.name];
-            // if (control.name == 'proposerPincode') {
-            //   console.log(control.value);
-            // }
           }
         }
       });
@@ -787,9 +786,62 @@ export class YatraComponent {
                       }
 
                       if (subControl.conditionCheck) {
+                        console.log(subControl, this.formData, tempInnerControl);
+
+                        if (member.chronicDiseases != "") {
+                          tempInnerControl.coreControls.forEach((coreControl: any) => {
+                            if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                              coreControl.value = true;
+                            }
+                          });
+
+                          const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                          if (addOnCoverControl) {
+                            addOnCoverControl.value = true;
+                          }
+
+                          const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                          const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+
+                          if (coverId && coverName) {
+                            // Initialize member.covers if not present
+                            if (!member.covers) {
+                              member.covers = [];
+                            }
+
+                            // Check and push into member.covers if not already present
+                            let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                            if (!memberCoverExists) {
+                              member.covers.push({
+                                coverId: coverId,
+                                value: 0, // Add appropriate value if needed
+                                coverName: coverName
+                              });
+                            }
+
+                            // Initialize this.covers[index] if not present
+                            if (!this.covers[index]) {
+                              this.covers[index] = [];
+                            }
+
+                            // Check and push into this.covers[index] if not already present
+                            let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                            if (!coverExistsInCovers) {
+                              this.covers[index].push({
+                                coverId: coverId,
+                                value: 0, // Add appropriate value if needed
+                                coverName: coverName
+                              });
+                            }
+                          }
+                        }
+
+
                         tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
                           if (corecontrol.dependentControls && this.formData[control.name]) {
                             const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                            console.log(newvalue);
+
                             corecontrol.dependentControls.forEach((question: any) => {
                               let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
                               newcontrol.visible = newvalue;
@@ -818,6 +870,40 @@ export class YatraComponent {
             }
             if (control.postControlCreationMethod) {
               this.resolveMethod(control.postControlCreationMethod, control);
+            }
+
+            // control.subControls.forEach((subControl: ISubControl) => {
+            //   if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
+            //     console.log(subControl,control,this.dynamicFormGroup);
+
+            //     // this.formData['insuredMemberDetails'].forEach((member: any) => {
+            //     //   if (member.shouldTriggerInputChange) {
+            //     //     this.onInputChange(true);
+            //     //     // Reset the flag after triggering
+            //     //     member.shouldTriggerInputChange = false;
+            //     //   }
+            //     // });
+            //   }
+            // });
+            if (control.type == 'combinedCheckbox') {
+              control.subControls.forEach((subControl: any) => {
+                if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
+                  this.formData['insuredMemberDetails'].forEach((member: any) => {
+                    if (subControl.innerSubControls) {
+                      subControl.innerSubControls.forEach((innerSubControl: any, index: number) => {
+                        if (innerSubControl.name == member.relation && member.chronicDiseases != "") {
+                          console.log(member.chronicDiseases);
+                          innerSubControl.coreControls.forEach((coreControl: any) => {
+                            if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                              this.onInputChange(true, subControl, control, index, innerSubControl, coreControl);
+                            }
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
+              })
             }
           }
           else {
@@ -886,6 +972,7 @@ export class YatraComponent {
                 this.resolveMethod(control.methodName, control)
               }
             }
+
             if (control.type === 'select' && control.options) {
               // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
@@ -902,6 +989,8 @@ export class YatraComponent {
                 //   });
                 // });
               }
+
+
 
 
               // If the control's value is empty, set it based on the selected options
@@ -937,7 +1026,8 @@ export class YatraComponent {
 
             if (control.type == 'radio') {
 
-              control.value = control.radioOptions?.find(option => option.selected)?.value || "";
+              if (control.value == "")
+                control.value = control.radioOptions?.find(option => option.selected)?.value || "";
 
               if (control.methodName)
                 this.callMethod(control.methodName, control);
@@ -1988,9 +2078,12 @@ export class YatraComponent {
 
 
 
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
+    console.log(event, control, parentControl, index, subControl, innerControl);
+    console.log(typeof event);
+
     this.changesMade = true;
-    let eventValue = event.target.value;
+    let eventValue = typeof event == 'boolean' ? event : event.target.value;
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
@@ -2058,69 +2151,6 @@ export class YatraComponent {
 
       }
     }
-    // if (control.name === 'idProof') {
-
-    //   const idProof = JSON.parse(event.target.value);
-    //   this.idProofType = idProof.value;
-
-    //   const idNumberControl = this.dynamicFormGroup.get('idNo');
-    //   idNumberControl?.setValue('');
-
-    //   switch (this.idProofType) {
-    //     case 'Aadhar Card':
-    //       const inputElement = event.target as HTMLInputElement;
-    //       idNumberControl?.setValidators([
-    //         Validators.required,
-    //         Validators.pattern('[0-9]{4}')
-    //       ]);
-    //       this.tooltipMessage = 'Please enter the last 4 digits of your Aadhar ID.';
-    //       this.patternErrorMessage = 'Aadhar ID must be exactly last 4 digits.';
-    //       break;
-
-    //     case 'Passport':
-    //       idNumberControl?.setValidators([
-    //         Validators.required,
-    //         Validators.pattern('^[A-Z][0-9]{2}(?: [0-9]{5}|[0-9]{5})$')
-    //       ]);
-    //       this.tooltipMessage = 'Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.';
-    //       this.patternErrorMessage = 'Passport Number must follow the format: First letter (A-Z), 2 numbers, optional space and 5 numbers.';
-    //       break;
-
-    //     case 'Voter ID':
-    //       idNumberControl?.setValidators([
-    //         Validators.required,
-    //         Validators.pattern('^[A-Z]{3}[0-9]{7}$')
-    //       ]);
-    //       this.tooltipMessage = 'Please enter a valid Voter ID, e.g., WED1234567.';
-    //       this.patternErrorMessage = 'Voter ID must follow the format: 3 uppercase letters followed by 7 digits.';
-    //       break;
-
-    //     case 'Driving License':
-    //       idNumberControl?.setValidators([
-    //         Validators.required,
-    //         Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
-    //       ]);
-    //       this.tooltipMessage = 'The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.';
-    //       this.patternErrorMessage = 'Driving License must follow the format: 2 uppercase letters, 2 digits, 4 digits, 7 digits.';
-    //       break;
-
-    //     case '10th (SSC) Mark sheet':
-    //       idNumberControl?.setValidators([
-    //         Validators.required,
-    //         Validators.pattern('^[0-9]{7}$')
-    //       ]);
-    //       this.tooltipMessage = 'Please enter a valid SSC Marksheet number with 7 digits.';
-    //       this.patternErrorMessage = 'SSC Marksheet number must be exactly 7 digits.';
-    //       break;
-
-    //     default:
-    //       idNumberControl?.clearValidators();
-    //       this.tooltipMessage = '';
-    //       this.patternErrorMessage = '';
-    //   }
-
-    //   idNumberControl?.updateValueAndValidity();
-    // }
 
     if (control.onChangeMethod) {
 
@@ -2372,7 +2402,12 @@ export class YatraComponent {
       }
       else {
         if (innerControl != null && innerControl.dependentControls) {
-          this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
+          const checkboxChecked = typeof event == 'boolean' ? event : event.target.checked;
+          console.log(checkboxChecked, typeof event);
+
+          console.log(innerControl, checkboxChecked, control.name, parentControl.name, index, innerControl.name);
+
+          this.changeMainFormDependentControls(innerControl.dependentControls, checkboxChecked, control.name, parentControl.name, index, innerControl.name);
         }
         this.changeOverLayDone(control, parentControl, false);
       }
@@ -5846,6 +5881,7 @@ export class YatraComponent {
         else {
           control.controls[firstKey].setValue(true);
           this.changeOverLayDone(subControl, parentControl, true);
+          this.changeRecalculate(true);
           this.addOnAdded(subControl, parentControl);
         }
       }
@@ -5862,12 +5898,12 @@ export class YatraComponent {
     else {
       console.log("pop up closed");
 
-      this.closePopUp();
+      this.closePopUp(control);
       subControl.visible = false;
     }
   }
   closePopUp(control: any = null) {
-    if (this.dynamicFormGroup.invalid) {
+    if (this.dynamicFormGroup.get(control.name)?.invalid) {
       let dynamicControl = this.dynamicFormGroup.get(control.name);
       this.traverseFormGroup(dynamicControl as FormGroup);
       if (dynamicControl instanceof FormGroup) {
@@ -5884,12 +5920,12 @@ export class YatraComponent {
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((controls: any) => {
-        if (controls.name == 'recalculate') {
-          controls.visible = true;
-        }
-        if (controls.name == 'next') {
-          controls.visible = false;
-        }
+        // if (controls.name == 'recalculate') {
+        //   controls.visible = true;
+        // }
+        // if (controls.name == 'next') {
+        //   controls.visible = false;
+        // }
         if (parentControl != null && controls.name == parentControl.name) {
           if (parentControl.subControls) {
             parentControl.subControls.forEach((subControl: any) => {

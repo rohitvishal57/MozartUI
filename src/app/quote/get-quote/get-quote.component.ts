@@ -228,6 +228,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       memberDobProposer: [''],
       memberAgeProposer: [''],
       isPortability: [null],
+      isChronicCare: ["N"],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
@@ -886,7 +887,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   diseaseSelection() {
     this.diseaseNames = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : '';
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
-
+    this.quoteFormGroup.get('isChronicCare')?.setValue(this.diseaseNames !== "" ? "Y" : "N");
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
       memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
@@ -1033,15 +1034,6 @@ export class GetQuoteComponent implements AfterViewChecked {
       });
       return;
     }
-
-    // if(this.DateCheck.includes(false) && this.DateCheck.length > 0){
-    //   this.toast.error({
-    //     detail: "Error",
-    //     summary: "Please fill valid Date.",
-    //     duration: 1000
-    //   });
-    //   return;
-    // }
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid && !isValid) {
       // const insured:any=[];
