@@ -217,7 +217,7 @@ export class PaymentComponent {
       else if (this.businessType == 'REN') {
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
-          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyNumber: this.paymentDetail.policyNumber || this.paymentDetail.oldPolicyNumber || '',
           policyStatus: this.paymentDetail.policyStatus || '',
           policyStartDate: this.paymentDetail.policyStartDate || '',
           policyEndDate: this.paymentDetail.policyEndDate || '',
@@ -264,7 +264,7 @@ export class PaymentComponent {
               state: {
                 formData: this.encryptionService.encrypt(formData),
                 proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([payment, thankYou]),
                 formIndex: "1",
@@ -276,7 +276,7 @@ export class PaymentComponent {
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 formIndex: "1",
               },
             });
@@ -288,7 +288,7 @@ export class PaymentComponent {
           this.router.navigate(['renewal/renewalJourney'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
               formIndex: "1",
             }
@@ -299,7 +299,7 @@ export class PaymentComponent {
             state: {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               formSequence: this.encryptionService.encrypt([payment, thankYou]),
               formIndex: "0",
             }
@@ -397,7 +397,7 @@ export class PaymentComponent {
       } else if (this.businessType == 'REN' || this.paymentDetail.businessType == 'Renewal') {
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
-          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyNumber: this.paymentDetail.policyNumber || this.paymentDetail.oldPolicyNumber || '',
           policyStatus: this.paymentDetail.policyStatus || '',
           policyStartDate: this.paymentDetail.policyStartDate || '',
           policyEndDate: this.paymentDetail.policyEndDate || '',
@@ -443,7 +443,7 @@ export class PaymentComponent {
               state: {
                 formData: this.encryptionService.encrypt(formData),
                 proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
                 formIndex: "1",
@@ -455,7 +455,7 @@ export class PaymentComponent {
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 formSequence: this.encryptionService.encrypt([thankYou]),
                 formIndex: "0",
               },
@@ -467,7 +467,7 @@ export class PaymentComponent {
            this.router.navigate(['renewal/customerPayment'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               formSequence: this.encryptionService.encrypt([thankYou]),
               formIndex: "0",
             }

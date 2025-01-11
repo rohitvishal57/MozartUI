@@ -144,13 +144,13 @@
                                     <td>{{ row.renewalStatus }}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                        <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="activeFilter !== 'Lapsed'">
                                                             <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'sms')">
@@ -199,14 +199,14 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
                                     aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="activeFilter !== 'Lapsed'">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'sms')">

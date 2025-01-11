@@ -16,6 +16,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { RenewalJourneyComponent } from './renewal-journey/renewal-journey.component';
 import { KycStatusComponent } from './kyc-status/kyc-status.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -37,7 +38,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MyMaterialModule,
     RenewalsRoutingModule,
     NgxSliderModule,
-    ClipboardModule,
+    ClipboardModule,  
+    SharedModule,
+    
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
