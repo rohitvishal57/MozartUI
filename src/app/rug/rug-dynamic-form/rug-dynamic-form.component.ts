@@ -8923,8 +8923,54 @@ export class RugDynamicFormComponent {
       }
     }
   }
-
-
+  changeTsDobValidation(control: any, event: any){
+  const dobValue = this.dynamicFormGroup.get('dob')?.value;
+  const dobArray = dobValue.split('-');
+    if ((dobArray[0] as number >= 1800) && dobValue) {
+      console.log(dobValue);  // Logs the complete value
+      let age = this.calculateAge(dobValue);
+      if(Number(age) < 18 || Number(age) > 55){
+        console.log("lessthan 18")
+        this.updateDobValidator(Number(age));
+      }
+    }
+  }
+  updateDobValidator(age: any){
+    const annualIncomeControl = this.dynamicFormGroup.get('dob');
+    if (age < 18 || age > 55) {
+      annualIncomeControl?.setValidators([this.ageRangeValidator(18, 55, age)]);
+    } else {
+      annualIncomeControl?.clearValidators();
+    }
+    annualIncomeControl?.updateValueAndValidity();
+  }
+  ageRangeValidator(minAge: number, maxAge: number, eneterdAge: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const dob = control.value ? new Date(control.value) : null;
+      if (dob) {
+        const age = this.calculateTsAge(dob);
+        if (Number(age) < minAge || Number(age) > maxAge) {
+          return { ageRange: { minAge, maxAge, actualAge: age } };
+        }
+      }
+      return null;
+    };
+  }
+  calculateTsAge(dob: Date): number {
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      return age - 1;
+    }
+    return age;
+  }
+  changeTsGenderOnSalutaion(event: any){
+    console.log(this.dynamicFormGroup.value.salutation);
+    this.dynamicFormGroup.get('gender')?.setValue(this.dynamicFormGroup.value.salutation == 'Mr' ? 'M':'F');
+    this.dynamicFormGroup.get('gender')?.disable();
+  }
   updatePlansBasedOnSumInsured(sumInsured: number = 500000): void {
     sumInsured = this.dynamicFormGroup.get('sumInsured')?.value
     if (sumInsured == 10000000) {
