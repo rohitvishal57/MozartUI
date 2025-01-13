@@ -6,6 +6,7 @@ import { AdminService } from '../../admin.service';
 import { ReassignpopupComponent } from '../reassignpopup/reassignpopup.component';
 import { ExcelServiceService } from 'src/app/services/excel-service.service';
 import { AuditpopupComponent } from 'src/app/rug/components/auditpopup/auditpopup.component';
+import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
 
 @Component({
   selector: 'app-view-for-solo-journey',
@@ -131,11 +132,9 @@ export class ViewForSoloJourneyComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
       })
-      // this.leadsArray = response.allLeads
     },
       (error: any) => {
         console.log(error);
-        // this.loading = false;
       });
   }
 
@@ -161,7 +160,6 @@ export class ViewForSoloJourneyComponent implements OnInit {
       console.log('Dialog closed with data:', data);
 
       if (data) {
-        // Extract the leadId from the allLeads array
         const selectedLead = this.getAllLeads.find((lead: any) => lead.avid === data);
         const leadId = selectedLead ? selectedLead.refNo : null;
 
@@ -171,8 +169,8 @@ export class ViewForSoloJourneyComponent implements OnInit {
         }
 
         let request = {
-          leadId: String(leadId), // Ensure leadId is a string
-          avId: String(data)      // Ensure avId is a string
+          leadId: String(leadId), 
+          avId: String(data)     
         };
 
         console.log('Request payload:', JSON.stringify(request));
@@ -180,16 +178,16 @@ export class ViewForSoloJourneyComponent implements OnInit {
         this.adminService.assignToAv(request).subscribe(
           (response: any) => {
             console.log('API Response:', response);
-            if (response.isSuccess && response.statusCode === 200) {
-              const dialogRef = this.dialog.open(ReassignpopupComponent, {
-                width: "2000px",
+         
+              const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+                width: "500px",
                 autoFocus: false,
                 data: "Successfully Reassigned"
               });
               dialogRef.afterClosed().subscribe((result: any) => {
                 console.log(result);
               });
-            }
+            
           },
           (error: any) => {
             console.error('API Error:', error);
@@ -199,7 +197,6 @@ export class ViewForSoloJourneyComponent implements OnInit {
       }
     });
   }
-
 
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
@@ -217,5 +214,4 @@ export class ViewForSoloJourneyComponent implements OnInit {
   clearFilter() {
     this.soloJourneyForm.reset();
   }
-
 }

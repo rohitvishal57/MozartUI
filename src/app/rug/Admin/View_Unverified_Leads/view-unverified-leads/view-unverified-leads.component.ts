@@ -184,22 +184,6 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
     );
   }
 
-  ReassignAgent(leadNo: string) {
-    interface Element {
-      avName: string;
-      avId: string;
-      // You can add more properties here if needed
-    }
-    let AVdata: Element[] = [];
-    this.getAllLeads.forEach((element: any) => {
-      if (AVdata.findIndex(item => item.avId == element.avid) == -1 && element.avid != '') {
-        AVdata.push({
-          avName: element.avName,
-          avId: element.avid
-        });
-      }
-    });
-  }
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
   }

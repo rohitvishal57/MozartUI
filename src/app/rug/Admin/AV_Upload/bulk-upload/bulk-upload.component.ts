@@ -74,43 +74,50 @@ export class BulkUploadComponent {
   // Submit handler for file upload
   continueFileUpload() {
     this.submitted = true;
-
+  
     if (!this.selectedFile) {
       this.isFilenotSelected = true;
+      this.toast.error({
+        detail: "Error",
+        summary: "No file selected. Please select a file to upload.",
+        duration: 5000,
+      });
       return;
     }
+  
     const data = new FormData();
     data.append('File', this.filedata);
     data.append('UploadedBy', 'teleadmin1');
     data.append('IsDoUpload', 'false');
     data.append('IsAVUpload', 'true');
     data.append('IsBaseCallerUpload', 'false');
- 
+  
     this.adminService.UploadBulk(data).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
-          window.open(response.data.url, '_blank');
-          this.toast.success({
-            detail: "Success",
-            summary: "File uploaded successfully!",
-            duration: 3000,
-          });
-        } 
-      },
-      (error: any) => {
-        console.error("Error from API:", error);
-        this.toast.error({
-          detail: "Error",
-          summary: "An error occurred while uploading. Please try again.",
-          duration: 5000,
-        });
+          const res = JSON.parse(response.data);
+          if (res.statusCode === 200) {
+            this.toast.success({
+              detail: "Success",
+              summary: "File uploaded successfully!",
+              duration: 3000,
+            });
+  
+            // Reset the file list after successful upload
+            this.fileList = [];
+            this.selctedFileName = '';
+          } else {
+            this.toast.error({
+              detail: "Error",
+              summary: "Unexpected response format. Please try again.",
+              duration: 5000,
+            });
+               this.fileList = [];
+            this.selctedFileName = '';
+          }
       }
     );
-    
-    // Reset the file list after successful upload
-    this.fileList = [];
-    this.selctedFileName = '';
   }
+
   backToAvList(){
     this.router.navigate(['/rug/av-list'], {
   });
