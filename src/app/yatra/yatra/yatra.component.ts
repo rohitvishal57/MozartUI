@@ -37,6 +37,8 @@ export class YatraComponent {
   Code: any;
   proposalNum: any;
 
+  familyGroup = '';
+  selectedFamilyMembers: string[] = [];
   idProofType: string = '';
 
   private allJsonForm: any[] = [];
@@ -144,6 +146,8 @@ export class YatraComponent {
   uploadInfo: { name: any; data: any; }[] | null = null;
   fullQuoteDocRelated: any;
 
+  hospiCashSelected: boolean = false;
+  hospiCashTab: number = -1;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -1246,9 +1250,19 @@ export class YatraComponent {
     dynamicFormControls.forEach((control: IDynamicControl) => {
       if (control.subControls) {
         let tempFormArray = this.fb.array([]);
-        // for (let i = 0; i < control.subControls.length; i++) {
-        //   tempFormArray.push(this.initializeSubControls(control.subControls[i]))
-        // }
+        if (control.type == 'hospiCashInfo') {
+          console.log(Array.isArray(control.subControls));
+
+          if (Array.isArray(control.subControls)) {
+            (control.subControls as ISubControl[][]).forEach((hospiMemberControl: any) => {
+              let tempFormGroup: any = this.fb.group({});
+              hospiMemberControl.forEach((memberControl: any) => {
+                tempFormGroup.addControl(memberControl.name, new FormControl(control.value));
+              })
+              tempFormArray.push(tempFormGroup);
+            });
+          }
+        }
         formGroup.addControl(control.name, tempFormArray);
       }
       else if (control.innerControls && control.visible == true) {
@@ -1316,6 +1330,7 @@ export class YatraComponent {
             });
           }
         }
+
 
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
@@ -1540,15 +1555,22 @@ export class YatraComponent {
     control: IFormControl | IDynamicControl,
     parentControl: IFormControl | IDynamicControl | ISubControl | null = null,
     index: number | null = null,
-    innerControl: any = null
+    innerControl: any = null,
+    indexj: any = null,
+    subControl: any = null
   ): boolean {
     if (parentControl != null && index != null) {
       const parentFormArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       const childControl = parentFormArray.controls[index].get(control.name);
 
       // If innerControl is not null, check its value
-      if (innerControl != null) {
+      if (innerControl != null && indexj == null) {
         return !!childControl?.get(innerControl.name)?.value;
+      }
+      else if (innerControl != null && indexj != null) {
+        if (innerControl.name == 'hospiCashCoverName')
+          console.log((childControl as FormArray)?.controls[indexj].get(innerControl.name), innerControl.name);
+        return !!(childControl as FormArray)?.controls[indexj].get(innerControl.name)?.value;
       }
 
       return !!childControl?.value;
@@ -2144,7 +2166,7 @@ export class YatraComponent {
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
-    console.log(event, control, parentControl, index, subControl, innerControl);
+    console.log(event, control, parentControl, index, subControl, innerControl, indexj);
     console.log(typeof event);
 
     this.changesMade = true;
@@ -2221,6 +2243,42 @@ export class YatraComponent {
     }
     if (control.name == 'correspondentPincode') {
       this.getCityStateByPinByCorressponding();
+    }
+
+    if (control.name == 'hospiCashCoverDetails')
+      console.log(control.name);
+
+    if (control.name == 'hospiCashCoverDetails') {
+      console.log(subControl, event.target.checked, this.activeMemberTabIndex);
+
+      if ((this.familyGroup == '' || subControl.group == this.familyGroup)) {
+        if (event.target.checked) {
+          this.familyGroup = subControl.group;
+          this.selectedFamilyMembers.push(subControl.label);
+          this.hospiCashSelected = true;
+          this.hospiCashTab = this.activeMemberTabIndex;
+        }
+        else {
+          const labelIndex = this.selectedFamilyMembers.indexOf(subControl.label);
+          if (labelIndex > -1) {
+            this.selectedFamilyMembers.splice(labelIndex, 1);
+          }
+
+          // Reset the familyGroup if no members are selected
+          if (this.selectedFamilyMembers.length === 0) {
+            this.familyGroup = '';
+            this.hospiCashSelected = false;
+            this.hospiCashTab = -1;
+          }
+        }
+      }
+      else {
+        const checkbox = event.target as HTMLInputElement;
+        checkbox.checked = false;
+        return;
+      }
+      // this.changeHospiCoverDependentControls(subControl.dependentControls, event.target.checked, control.name, parentControl.name, index, subControl, indexj);
+      // this.removeOrAddControlsforOtherMembers(event.target.checked,control.name,parentControl.name,index,subControl,indexj)
     }
     if (control.name == 'abhaMailId') {
       if (this.enableABHAConcent()) {
@@ -4391,6 +4449,140 @@ export class YatraComponent {
     this.activeMemberTabIndex = tempIndex;
   }
 
+  changeHospiCoverDependentControls(dependentControlNames: (string | { name: string; visibility: boolean })[],
+    visibility: boolean,
+    controlName: string | null = null,
+    parentControlName: string | null = null,
+    controlIndex: number | null = null,
+    innerControl: any = null,
+    innerControlIndex: any = null) {
+
+
+    console.log(controlName, parentControlName, controlIndex, innerControl, innerControlIndex);
+
+    if (dependentControlNames) {
+      dependentControlNames.forEach((dependent) => {
+        // Extract control name and visibility from either string or object
+        const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
+        const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
+        this.form.formSections.forEach((section: IFormSections) => {
+          section.formControls.forEach((control: IFormControl) => {
+            if (control.dynamicControls && controlIndex != null && control.dynamicControls.length > controlIndex) {
+              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+              console.log(targetDynamicControl);
+
+              // targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+              //   if (dynamicControl.name === dependentName) {
+              //     dynamicControl.visible = dependentVisibility;
+              //   } else if (dynamicControl.subControls && dynamicControl.name === controlName) {
+              //     dynamicControl.subControls.forEach((subControlArray: any) => {
+              //       subControlArray.forEach((subControl: ISubControl) => {
+              //         if (subControl.name === dependentName) {
+              //           subControl.visible = dependentVisibility;
+              //         }
+              //       });
+              //     });
+              //   }
+              // });
+
+              // targetDynamicControl.forEach((dynamicControl:IDynamicControl)=>{
+              //   if(dynamicControl.name == )
+              // })
+
+              control.dynamicControls[controlIndex] = targetDynamicControl;
+
+            }
+            else if (control.name == parentControlName && control.subControls) {
+              control.subControls.forEach((subControl: any) => {
+                if (subControl.name == controlName && controlIndex != null) {
+                  subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
+                    if (innerControl.name == dependentName) {
+                      innerControl.visible = visibility;
+                      let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
+                      let dcontrol = dparentControl.get(subControl.name) as FormGroup;
+                      let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
+                      let dindexj = dsubControl.at(zindex) as FormGroup;
+                      let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
+                      if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                        if (dinnercontrol instanceof FormControl) {
+                          dinnercontrol.setValue(false);
+                        }
+                        innerControl.dependentControls.forEach((dependentName: string) => {
+                          // Find the dependent control in coreControls
+                          const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
+                            (control: any) => control.name === dependentName
+                          );
+                          let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
+
+                          if (dependentControl) {
+                            dependentControl.visible = visibility;
+                            dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
+                            dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
+                            Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                              dinnercontrol.removeControl(element);
+                            });
+                          }
+                          // else {
+                          //   console.log('Dependent Control not found for:', dependentName);
+                          // }
+                        });
+                      }
+                      if (innerControl.innerControls && innerControl.visible == true) {
+                        this.initializeSubControls(innerControl.innerControls, dinnercontrol)
+                      }
+                      else if (innerControl.innerControls && innerControl.visible == false) {
+                        Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                          dinnercontrol.removeControl(element);
+                        });
+                      }
+                    }
+                  })
+                }
+              })
+            }
+            else if (control.name == parentControlName && control.dynamicControls && controlIndex != null) {
+              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+              targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+                if (dynamicControl.name == controlName && dynamicControl.innerControls) {
+                  dynamicControl.innerControls.forEach((innerArrayControl: any) => {
+                    if (innerArrayControl.name == innerControl) {
+                      innerArrayControl.visible = visibility;
+                    }
+                  })
+                }
+              })
+            }
+            else if (control.name === dependentName) {
+              control.visible = dependentVisibility;
+              if (dependentVisibility) {
+                let controlValidators: any = [];
+                control.validators?.forEach((val: IValidator) => {
+                  if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                  if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                  if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                  if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                  if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+                });
+                this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+                this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
+                if (control.name == 'zoneValue' && control.type == 'select') {
+                  control.options = this.formData.availableZones.map((zone: any) => ({
+                    name: zone,
+                    value: zone
+                  }));
+                }
+              } else {
+                this.dynamicFormGroup.get(control.name)?.clearValidators();
+                this.dynamicFormGroup.get(control.name)?.reset();
+              }
+            }
+          });
+        });
+      });
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
 
 
   generateLeadAndProposalId(control: any) {
@@ -6320,6 +6512,7 @@ export class YatraComponent {
 
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
+
     const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
@@ -6375,6 +6568,10 @@ export class YatraComponent {
           }
           member.productQuestionnaire = JSON.stringify(productQuestionnaire);
         }
+
+        if (Array.isArray(member.hospiCashCoverDetails)) {
+          member.hospiCashCoverDetails = member.hospiCashCoverDetails.filter((detail: any) => detail.memberCover !== "");
+        }
         return {
           relation: member?.relation || '',
           memberRelationCode: this.jsonParse(member.relationshipType, 'id') || '',
@@ -6410,7 +6607,8 @@ export class YatraComponent {
           pedWaitingPeriod: this.pedWaitingPeriod || '',
           chronicDisease: chronicDiseases || '',
           deductibleAmount: member?.deductibleAmount || '',
-          previousPolicyDetails: member?.previousPolicyDetails || {}
+          previousPolicyDetails: member?.previousPolicyDetails || {},
+          hospiCashCoverDetails: member?.hospiCashCoverDetails || []
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
@@ -6476,7 +6674,6 @@ export class YatraComponent {
       appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : '',
       lrFlag: formData?.lrFlag || ''
     };
-
     return mappedData;
   }
 
