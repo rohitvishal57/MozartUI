@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -7,8 +8,14 @@ import { HttpService } from 'src/app/services/http.service';
 })
 export class RugService {
 
+  private isHeadersD2CShow = new BehaviorSubject<boolean>(false);
+  currentStatus = this.isHeadersD2CShow.asObservable();
   constructor(private configService: ConfigService,
     private httpService: HttpService) { }
+
+    changeStatus(flag: boolean) {
+      this.isHeadersD2CShow.next(flag);
+    }
 
     createLeadTS(reqData:any){
       const  createLead = this.configService.config.baseUrl1 + this.configService.config.tsCreateLead;

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
   selector: 'app-side-navbar',
@@ -35,10 +36,12 @@ export class SideNavbarComponent {
     private router: Router,
     private loginService: CommonService,
     private toast: NgToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private rugService: RugService
   ) { }
 
   ngOnInit(): void {
+    this.rugService.currentStatus.subscribe(flag => this.isSideNavVisible = !flag);
     this.agentCode = localStorage.getItem('agentCode');
     this.formIndex = localStorage.getItem('formIndex');
     if(this.agentCode == '467896' && this.formIndex >= 8){
