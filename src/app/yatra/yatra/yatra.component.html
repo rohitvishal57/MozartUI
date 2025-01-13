@@ -893,7 +893,7 @@
                                                   [id]="innerControl.name" aria-label="Default select example"
                                                   (change)="onInputChange($event, innerControl,subControl,i-1)"
                                                   [attr.disabled]="innerControl.disabled ? 'disabled' : null"
-                                                  [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}">
+                                                  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}">
                                                   <ng-container *ngFor="let opt of innerControl.options">
                                                     <option [value]="opt.id ? stringifyObject(opt) : opt.value" [disabled]="opt.disabled">{{
                                                       opt.name?(opt.name|translate):'' }}
@@ -932,21 +932,21 @@
                                                 <input class="inputField_Text"
                                                   *ngIf="!innerControl.bigFont && !innerControl.disabled && innerControl.type !== 'date'"
                                                   formControlName="{{ innerControl.name }}" [name]="innerControl.name" [id]="innerControl.name"
-                                                  [type]="innerControl.type" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
-                                                  (change)="onInputChange($event, innerControl)">
+                                                  [type]="innerControl.type" [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
+                                                  (change)="onInputChange($event, innerControl, subControl, i , control, null , z-1)">
                                                 <input class="inputField_Text"
                                                   *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type === 'date'"
                                                   formControlName="{{ subControl.name }}" [name]="subControl.name" [id]="subControl.name"
-                                                  [type]="subControl.type" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
+                                                  [type]="subControl.type"  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                   (change)="onInputChange($event, subControl)">
                                       
                                                 <input class="inputField_Text" *ngIf="!innerControl.bigFont && innerControl.disabled==true"
                                                   formControlName="{{ innerControl.name }}" [name]="innerControl.name" [id]="innerControl.name"
-                                                  [type]="innerControl.type" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
+                                                  [type]="innerControl.type"  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                   readonly>
                                                 <input style="border: none;font-weight: 700;" *ngIf="innerControl.bigFont==true && !innerControl.disabled"
                                                   formControlName="{{ innerControl.name }}" [name]="innerControl.name" [id]="innerControl.name"
-                                                  [type]="innerControl.type" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
+                                                  [type]="innerControl.type"  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                   readonly>
                                                 <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
                                                   innerControl.label ?
@@ -965,12 +965,12 @@
                                               <div class="input-container">
                                                 <input *ngIf="!innerControl.disabled" class="inputField_Text" formControlName="{{ innerControl.name }}"
                                                   [name]="innerControl.name" [id]="innerControl.name" [type]="innerControl.type"
-                                                  [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
+                                                  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                   [min]="getDate(innerControl.minDateLength)" [max]="getDate(innerControl.maxDateLength)"
                                                   (change)="onInputChange($event, innerControl,subControl,i-1)">
                                                 <input *ngIf="innerControl.disabled" class="inputField_Text" formControlName="{{ innerControl.name }}"
                                                   [name]="innerControl.name" [id]="innerControl.name" [type]="innerControl.type"
-                                                  [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1,innerControl)}"
+                                                  [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                   [min]="getDate(innerControl.minDateLength)" [max]="getDate(innerControl.maxDateLength)"
                                                   (change)="onInputChange($event, innerControl,subControl,i-1)" readonly>
                                                 <label *ngIf="innerControl.visibleLabel">{{

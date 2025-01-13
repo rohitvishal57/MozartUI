@@ -1536,6 +1536,11 @@ export class YatraComponent {
     return formControl ? formControl.value : null;
   }
 
+  hasAnyActiveValue(control : any, subControl : any, index : any, parentControl : any, subIndex? : any ){
+    const selectedValue = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)).controls[index - 1].get(subControl.name) as FormGroup).controls[subIndex].get(control.name)?.value
+    return selectedValue ? selectedValue : null;
+  }
+
   // triggerFileInput(controlName: string) {
 
   //   const fileInputControl = this.document.getElementById(controlName);
@@ -2086,6 +2091,20 @@ export class YatraComponent {
     let eventValue = typeof event == 'boolean' ? event : event.target.value;
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+    }
+    if (control.name == 'activePolicySumInsured') {
+      const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control['dependentControls'])?.value
+      if(selectedValue == 'Y'){
+        this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
+
+      } else {
+          if(eventValue < 1000000){
+            this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
+          } else {
+            this.toast.success({ detail: "Success", summary: 'Details saved successfully', duration: 3000 });
+
+          }
+      }
     }
 
     if (control.name == 'physicalcopy' && control.type == 'radio') {
@@ -8230,6 +8249,13 @@ export class YatraComponent {
 
       })
     }
+  }
+
+  onCheckActivPolicySumInsured(innerControl: any, control: any, parentControl: any, index: number){
+    console.log('1',innerControl)
+    console.log('2',control)
+    console.log('3',parentControl)
+    console.log('4',index)
   }
 
 }
