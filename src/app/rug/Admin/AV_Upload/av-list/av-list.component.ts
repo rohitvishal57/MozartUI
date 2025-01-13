@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../admin.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuditComponent } from '../audit/audit.component';
+import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
 
 
 
@@ -41,7 +42,7 @@ export class AVListComponent {
     private claimsService: ClaimsViewService,
     private languageService: LanguageService,
     private excelExportService: ExcelExportService,
-    private translateService: TranslateService, private adminService: AdminService, private dialog: MatDialog,) { }
+    private translateService: TranslateService, private adminService: AdminService, private matdialogue: MatDialog) { }
  
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -107,12 +108,27 @@ export class AVListComponent {
     };
     this.adminService.deleteav(reqData).subscribe((el: any) => {
       this.AllAVs.splice(index, 1);
-      console.log('DeleteData', el)
-      window.location.reload();
+      console.log('DeleteData', el);
+      const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+        width: "500px",
+        autoFocus: false,
+        data: "Lead Successfully Deleted."
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+        window.location.reload();
+      });
     },
-      (error: any) => {
-      })
+    (error: any) => {
+      console.error('API Error:', error);
+      console.error('Error Details:', error.error); 
+    }
+  );
   }
+
+
+
+
 
   navigateToCreateAV() {
     this.router.navigate(['rug/create_AV']);
@@ -124,7 +140,7 @@ export class AVListComponent {
 
   audit(index: any) {
     let value = this.AllAVs[index]
-    const dialogRef = this.dialog.open(AuditComponent, {
+    const dialogRef = this.matdialogue.open(AuditComponent, {
       width: "1000px",
       autoFocus: false,
       data: {
