@@ -171,7 +171,7 @@ export class RugDynamicFormComponent {
           console.log(res);
           this.formSequence = JSON.parse(res.data.formSequence);
           console.log(this.formSequence);
-          if(this.agentCode != "467898" && this.agentCode == "467899"){
+          if(this.agentCode != "467898" && this.partnerId == "16"){
             this.isD2C = false;
             this.isTS = false;
             this.isBB = true;
@@ -352,7 +352,7 @@ export class RugDynamicFormComponent {
       }
 
 
-      if(this.agentCode != "467898" && this.agentCode == "467899"){
+      if(this.agentCode != "467898" && this.partnerId == "16"){
         this.isD2C = false;
         this.isTS = false;
         this.isBB = true;
@@ -1233,7 +1233,7 @@ export class RugDynamicFormComponent {
 
           });
         }
-        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
           // insuredMembersArray.at(0).get('firstName')?.disable();
           this.dynamicFormGroup.get('preFix')?.disable();
           this.dynamicFormGroup.get('customerFirstName')?.disable();
@@ -1284,7 +1284,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
       }
       console.log(this.dynamicFormGroup.value);
-      if (this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details") {
+      if (this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16") {
         console.log("Customer Details");
         console.log(this.dynamicFormGroup.value);
         console.log(this.bbdetails);
@@ -3251,7 +3251,7 @@ export class RugDynamicFormComponent {
       insuredMembersArray.at(0).get('firstName')?.disable();
       insuredMembersArray.at(0).get('mobileNumber')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
-      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
                 // insuredMembersArray.at(0).get('firstName')?.disable();
                 this.dynamicFormGroup.get('customerFirstName')?.disable();
                 this.dynamicFormGroup.get('customerLastName')?.disable();
@@ -4500,7 +4500,7 @@ export class RugDynamicFormComponent {
                       // }
 
                     } else {
-                      this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: halfQuoteResponse.message, duration: 3000 });
 
                     }
 
