@@ -3987,16 +3987,19 @@ export class YatraComponent {
       return;
     }
     if (this.form.formTitle == 'Total Premium') {
-      if(this.formData.productName=='Active Secure'){
-        const hasEmptyCovers = this.formData.insuredMemberDetails.some(
-          (member: any) => !member.covers || member.covers.length === 0
-        );
-      
-        if (hasEmptyCovers) {
-          this.toast.warning({detail: "Warning",summary: "Each member must have at least one cover selected.",duration: 3000});
+      if (this.formData.productName === 'Active Secure') {
+        console.log("Form data:", this.formData);
+        const requiredCoverIds = ['CIL', 'CS', 'PA'];  
+        const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
+          const validCovers = member.covers.filter((cover: any) => requiredCoverIds.includes(cover.coverId));      
+          return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
+        });
+        if (hasEmptyRequiredCovers) {
+          this.toast.warning({detail: "Warning",summary: "Each member must have at least one valid cover (CIL, CS, or PA) selected.",duration: 3000});
           return;
         }
       }
+      
       if (this.dynamicFormGroup.get('deductible')) {
         if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
           this.toast.warning({ detail: "Warning", summary: "Deductible Cover is mandatory", duration: 3000 });
