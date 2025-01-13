@@ -1245,6 +1245,13 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
           this.dynamicFormGroup.get('proposerAddress')?.disable();
       }
+      if(this.formSequence[this.getFormIndexValue()].formId == 4 && this.partnerId == "45"){
+        this.dynamicFormGroup.patchValue({
+          preFix: this.tsDetails.proposerGender == "M" ? "Mr" : "Ms"
+        })
+        this.dynamicFormGroup.get('preFix')?.disable();
+        this.dynamicFormGroup.get('proposerGender')?.disable();
+      }
         if(this.getFormIndexValue() == 1 && (this.formSequence[0].formName == "Proposer Details")){
           console.log(this.tsDetails)
           this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
@@ -8748,7 +8755,74 @@ export class RugDynamicFormComponent {
         nomineeMobileNumber: ''
       });
     }
-    
+    if(this.partnerId == "45"){
+      let selectedGender=this.getGender(relationWithProposer)
+      this.dynamicFormGroup.patchValue({
+        preFix: this.mapSalutation(relationWithProposer),
+        nomineeGender: selectedGender,
+      })
+    }
+  }
+  getGender(relation: string): string {
+    switch (relation.toLowerCase()) {
+      case 'spouse':
+        return this.tsDetails.proposerGender=='F'?'M':'F';
+      case 'son':
+      case 'grandson':
+      case 'nephew':
+      case 'brother':
+      case 'father':
+      case 'son-in-law':
+      case 'brother-in-law':
+      case 'father-in-law':
+      case 'grandfather':
+      case 'uncle':
+        return 'M';
+      case 'daughter':
+      case 'granddaughter':
+      case 'niece':
+      case 'sister':
+      case 'mother':
+      case 'daughter-in-law':
+      case 'sister-in-law':
+      case 'mother-in-law':
+      case 'grandmother':
+      case 'aunt':
+        return 'F';
+      default:
+        return '';
+    }
+  }
+  mapSalutation(relation: string): string {
+    switch (relation.toLowerCase()) {
+      case 'spouse':
+        return  this.tsDetails.proposerGender=='M'?'Mrs':'Mr';
+      case 'son':
+      case 'grandson':
+      case 'nephew':
+      case 'brother':
+      case 'father':
+      case 'son-in-law':
+      case 'brother-in-law':
+      case 'father-in-law':
+      case 'grandfather':
+      case 'uncle':
+        return 'Mr';
+      case 'daughter':
+      case 'granddaughter':
+      case 'niece':
+      case 'sister':
+      case 'mother':
+      case 'daughter-in-law':
+      case 'sister-in-law':
+      case 'mother-in-law':
+      case 'grandmother':
+      case 'aunt':
+        return 'Ms';
+      default:
+        return '';
+        
+    }
   }
   changeD2CNomineeRelation(control: any){
     console.log(this.d2cDetails.insuredMemberDetails);
