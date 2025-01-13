@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RugService } from '../../rug.service';
+import { AdminService } from '../../Admin/admin.service';
+import { AuditpopupComponent } from '../auditpopup/auditpopup.component';
 // import { ApiService } from 'src/app/core/services/api.service';
 // import { AuditPopupComponent } from 'src/app/shared/components/audit-popup/audit-popup.component';
 // import { SuccessPopupComponent } from 'src/app/shared/components/success-popup/success-popup.component';
@@ -12,9 +14,9 @@ import { RugService } from '../../rug.service';
 @Component({
   selector: 'app-view-leads',
   templateUrl: './view-leads.component.html',
-  // styleUrls: ['./view-leads.component.scss',"../../../../assets/css/main.css",
-  // "../../../../assets/css/mobile-main.css"]
+  styleUrls: ['./view-leads.component.scss']
 })
+
 export class ViewLeadsComponent implements OnInit {
   loginData: any
   localStorageData: any;
@@ -30,7 +32,9 @@ export class ViewLeadsComponent implements OnInit {
     private dialog: MatDialog,
     // private apiService: ApiService,
     private formBuilder: FormBuilder,
-    private rugService: RugService
+    private rugService: RugService,
+    private adminService: AdminService,
+    private matdialogue: MatDialog
   ) { }
   currentPage = 1;
   itemsPerPage = 10;
@@ -45,11 +49,14 @@ export class ViewLeadsComponent implements OnInit {
   first: number = 0;
   rows: number = 10;
   displayedAVs: any[] = [];
+  mobileNumber: string = ""
+  leadId: string = '';
   ngOnInit(): void {
     this.viewLeadForm = this.formBuilder.group({
       mobileNumber: [''],
       leadId: [''],
-    })
+    });
+    this.displayedAVs = [...this.allLeads];
     this.getAllLeads();
   }
   getAllLeads() {
@@ -84,17 +91,29 @@ export class ViewLeadsComponent implements OnInit {
         console.error(err);
       }
     });
-    // this.apiService.postCall(environment.ENDPOINTS.GetLeads, this.reqBody)
-    //   .subscribe(
-    //     response => {
-    //       this.loading = false;
-    //       this.leadsArray = response.allLeads;
-    //       this.filteredArray = this.leadsArray;
-    //     },
-    //     error => {
-    //       console.log(error);
-    //       this.loading = false;
-    //     });
+  }
+
+
+  onInput(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.displayedAVs = this.allLeads.filter((option: any) =>
+      option?.leadId?.toLowerCase().includes(this.searchTerm) ||
+      option?.proposalNo?.toLowerCase().includes(this.searchTerm) ||
+      option?.customerName?.toLowerCase().includes(this.searchTerm) ||
+      option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm) ||
+      option?.latestMappedDOName?.toLowerCase().includes(this.searchTerm) ||
+      option?.latestMappedAVName?.toLowerCase().includes(this.searchTerm)||
+      option?.planName?.toLowerCase().includes(this.searchTerm) ||
+      option?.netPremium?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisCenter?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisLob?.toLowerCase().includes(this.searchTerm) ||
+      option?.disposition?.toLowerCase().includes(this.searchTerm) ||
+      option?.subDisposition?.toLowerCase().includes(this.searchTerm)||
+      option?.status?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.remark?.toLowerCase().includes(this.searchTerm)
+    );
   }
   applySearch() {
     if (this.searchInputControl.valid) {
@@ -106,8 +125,23 @@ export class ViewLeadsComponent implements OnInit {
       this.page = 1;
     this.getAllLeads();
     }
-    
   }
+
+  searchLeads() {
+    const mobileNumber = this.viewLeadForm.value.mobileNumber;
+    const leadId = this.viewLeadForm.value.leadId;
+
+    if (mobileNumber || leadId) {
+      this.displayedAVs = this.allLeads.filter(item =>
+        (mobileNumber && item.mobileNumber === mobileNumber) ||
+        (leadId && item.leadId === leadId)
+      );
+    } else {
+      this.displayedAVs = [...this.allLeads]; // Reset to all leads
+    }
+  }
+
+
   actionLead(lead: any){
     console.log(lead);
     localStorage.setItem('leadId', lead.leadId)
@@ -147,33 +181,27 @@ export class ViewLeadsComponent implements OnInit {
     console.log(this.displayedAVs)
   }
   auditLead(lead: any){
-    // let reqObj = {
-    //   "leadId": lead.leadId,
-    // }
-    // this.apiService.postCall(environment.ENDPOINTS.GET_ALL_AUDIT, reqObj)
-    // .subscribe(
-    //   response => {
-    //     const dialogRef = this.dialog.open(AuditPopupComponent, {
-    //       width: "500px",
-    //       autoFocus: false,
-    //       data: response.allAudit
-    //     });
-    //     dialogRef.afterClosed().subscribe((result: any) => {
-    //       console.log(result);
-    //     })
-    //     // this.leadsArray = response.allLeads
-    //   },
-    //   error => {
-    //     console.log(error);
-    //     // this.loading = false;
-    //   });
+   let reqObj = {
+         leadId: lead.leadId 
+       };
+   
+       this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
+         let res = JSON.parse(response.data);
+         console.log(res.data.allAudit)
+         const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+           width: "1000px",
+           autoFocus: false,
+           data: res.data.allAudit
+         });
+         dialogRef.afterClosed().subscribe((result: any) => {
+           console.log(result);
+         });
+       },
+         error => {
+           console.error("API Error:", error);
+         }
+       );
   }
-  // actionLead(lead: any){
-  //   let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
-  //   let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
-  //   this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
-
-  // }
   onSubmit(){
     if(this.viewLeadForm.get('leadId')?.value){
       this.filteredArray = this.leadsArray.filter((option:any) =>{
@@ -193,15 +221,15 @@ export class ViewLeadsComponent implements OnInit {
     this.itemsPerPage = event.target.value;
     }
 
-    onInput(event:any){
-      this.searchTerm = event.target.value
-      this.filteredArray = this.leadsArray.filter((option:any) =>
-        option?.leadId?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||  option?.mobileNumber?.includes(this.searchTerm) || option?.proposalNo?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.customerName?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    ||  option?.planName?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
-      || option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    this.currentPage = 1
-     }
+    // onInput(event:any){
+    //   this.searchTerm = event.target.value
+    //   this.filteredArray = this.leadsArray.filter((option:any) =>
+    //     option?.leadId?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||  option?.mobileNumber?.includes(this.searchTerm) || option?.proposalNo?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.customerName?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    // ||  option?.planName?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    //   || option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    // );
+    // this.currentPage = 1
+    //  }
 
 
      backToDo(lead:any){

@@ -142,7 +142,6 @@ export class ViewForDualJourneyComponent implements OnInit {
       error => {
         console.log(error);
       });
-
   }
 
   auditLead(lead: any) {
