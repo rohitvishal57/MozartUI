@@ -3408,7 +3408,7 @@ export class YatraComponent {
                 this.isQuote = false;
                 this.quickQuoteRedirect == false;
               }
-              let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+              let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));              
               tempControl[0].value = JSON.stringify(option);
               tempControl[1].value = option.value;
               tempControl[2].value = option.memberRelationCode;
@@ -3511,8 +3511,10 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('annualIncome')?.setValue(this.dynamicFormGroup.get('annualIncome')?.value);
-                if (this.dynamicFormGroup.get('occupation')?.value != '')
-                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
+                if(this.dynamicFormGroup.get('occupation')){
+                  if (this.dynamicFormGroup.get('occupation')?.value != '')
+                    (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
+                }
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
               }
               if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
@@ -3985,6 +3987,16 @@ export class YatraComponent {
       return;
     }
     if (this.form.formTitle == 'Total Premium') {
+      if(this.formData.productName=='Active Secure'){
+        const hasEmptyCovers = this.formData.insuredMemberDetails.some(
+          (member: any) => !member.covers || member.covers.length === 0
+        );
+      
+        if (hasEmptyCovers) {
+          this.toast.warning({detail: "Warning",summary: "Each member must have at least one cover selected.",duration: 3000});
+          return;
+        }
+      }
       if (this.dynamicFormGroup.get('deductible')) {
         if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
           this.toast.warning({ detail: "Warning", summary: "Deductible Cover is mandatory", duration: 3000 });
@@ -3992,6 +4004,7 @@ export class YatraComponent {
         }
       }
     }
+    
     if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
       this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
       return;
