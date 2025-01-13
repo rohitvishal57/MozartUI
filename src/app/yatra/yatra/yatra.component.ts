@@ -1429,7 +1429,7 @@ export class YatraComponent {
     const parentArray1 = parentArray.controls[index] as FormGroup;
     const parentArray2 = parentArray1.controls[parentControl?.name] as FormArray;
     const parentArray3 = parentArray2.controls[SubIndex] as FormGroup;
-    myFormControl = parentArray3
+    myFormControl = parentArray3.get(control.name)
     let errorMessage = ''
 
     control.validators?.forEach((val) => {
@@ -4176,7 +4176,7 @@ export class YatraComponent {
                   const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
                   if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
                     firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
-                  }
+                  } 
                 })
               }
             })
