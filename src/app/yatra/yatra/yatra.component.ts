@@ -18,6 +18,7 @@ import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
 import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-yatra',
@@ -2640,8 +2641,11 @@ export class YatraComponent {
 
       if (pinCodeLength === 6) {
         const reqData = {
-          "pincode": event.target.value
+          "pincode": event.target.value,
+          agentcode: this.agentCode,
+          productId: this.productId.toString()
         }
+        console.log(reqData);
 
         this.commonService.getPinCodeByCity(reqData).subscribe({
           next: (res) => {
@@ -2675,6 +2679,23 @@ export class YatraComponent {
                 });
               }
 
+              const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+              if (sumInsuredControl) {
+                const sumInsuredList = res.data.sumInsuredList || [];
+                sumInsuredControl.setValue(''); // Reset current value
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'sumInsured') {
+                      control.options = sumInsuredList.map((sumInsured: any) => ({
+                        name: sumInsured.name,
+                        value: sumInsured.value,
+                      }));
+                      console.log(control.options);
+                    }
+                  });
+                });
+              }
+
 
             } else {
               console.error('Failed to fetch zone details.');
@@ -2696,8 +2717,11 @@ export class YatraComponent {
       parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
         if (dynamicControl.name == 'pincode' && dynamicControl.name == control.name) {
           const reqdata = {
-            "pincode": event.target.value
+            "pincode": event.target.value,
+            agentcode: this.agentCode,
+            productId: this.productId.toString()
           }
+          console.log(reqdata);
           // this.spinner.show();
           this.commonService.getPinCodeByCity(reqdata).subscribe({
             next: (res: any) => {
@@ -2705,11 +2729,6 @@ export class YatraComponent {
 
                 if (res.data.upgradableZones.length > 0) {
                   const zoneOptions = res.data.upgradableZones;
-                  // .map((zone: any) => ({
-                  //   name: zone.zone,   // Zone name
-                  //   value: zone.zoneCode, // Zone code
-                  // }));
-
                   parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                     if (dynamicControl.name == 'zoneValue') {
                       dynamicControl.options = zoneOptions;
@@ -2717,6 +2736,24 @@ export class YatraComponent {
                   });
                   (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableZones')?.setValue(zoneOptions);
                 }
+
+                const sumInsuredList = res.data.sumInsuredList; 
+                parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
+                  if (dynamicControl.name === 'sumInsured') {
+                    dynamicControl.options = sumInsuredList;
+                  }
+                });
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('sumInsured')?.setValue(sumInsuredList);
+                
+
+                parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
+                  if (dynamicControl.name == 'sumInsured') {
+                    dynamicControl.options = sumInsuredList.map((item: any) => ({
+                      name: item.name,
+                      value: item.value,
+                    }));
+                  }
+                });
 
 
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
@@ -3533,6 +3570,16 @@ export class YatraComponent {
                             control.disabled = true
                           }
                           if (control.name == 'zoneValue') {
+                            this.form.formSections.forEach(formSection => {
+                              formSection.formControls.forEach(formcontrol => {
+                                if (formcontrol.name == control.name) {
+                                  control.options = formcontrol.options;
+                                  memberupgradableZones = formcontrol.options || [];
+                                }
+                              });
+                            });
+                          }
+                          if (control.name == 'sumInsured') {
                             this.form.formSections.forEach(formSection => {
                               formSection.formControls.forEach(formcontrol => {
                                 if (formcontrol.name == control.name) {
@@ -8511,6 +8558,7 @@ export class YatraComponent {
   selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
     console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
     const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+    console.log(addOnControlGroup)
     if (addOnControlGroup) {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -8527,6 +8575,22 @@ export class YatraComponent {
 
             if (memberControlCheckbox) {
               memberControlCheckbox.setValue(event.target.checked);
+            }
+            const memberRoomTypeControl = member.get('roomType');
+            if (memberRoomTypeControl) {
+              if (event.target.checked) {
+                if (memberRoomTypeControl.value === "") {
+                  const firstOption = subControl.innerSubControls[0].coreControls.find(
+                    (control: any) => control.name === 'roomType'
+                  )?.options?.[0];
+
+                  if (firstOption) {
+                    memberRoomTypeControl.setValue(firstOption.value);
+                  }
+                }
+              } else {
+                memberRoomTypeControl.setValue("");
+              }
             }
           })
 

@@ -101,7 +101,7 @@ export const environment = {
   insertOrUpdateAgentCartDetails: "api/quote/insertorupdateagentcartdetails",
   deleteagentcartitems: "api/quote/deleteagentcartitems",
   productList: "api/yatra/getproductlist",
-  pinCodeDetails: "api/yatra/getpincodedetails",
+  pinCodeDetails: "api/yatra/getpincodeandSIdetails",
   proposalNumber: "api/yatra/getproposalnumber",
   formSequence: "api/yatra/getformsequence",
   getForm: "api/yatra/getform",
