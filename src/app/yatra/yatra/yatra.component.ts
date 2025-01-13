@@ -1365,6 +1365,7 @@ export class YatraComponent {
         validator.validatorName === 'required' && validator.required === true
     );
   }
+
   getValidationErrors(control: IFormControl | IDynamicControl | ISubControl, parentControl: IFormControl | ISubControl | null = null, index: number | null = null,
     subControl: any | null = null,
     innerControl: any | null = null,
@@ -1413,6 +1414,42 @@ export class YatraComponent {
     return errorMessage;
   }
 
+  getActiveValidationErrors(control: IFormControl | IDynamicControl | ISubControl, parentControl: any | ISubControl | null = null, index: any | null = null,
+    innerControl: any | null = null,
+    SubIndex: any | null = null
+  ): string {
+    // console.log('sukhadev1 ', control);
+    // console.log('sukhadev2 ', parentControl);
+    // console.log('sukhadev3 ', index);
+    // console.log('sukhadev4 ', innerControl);
+    // console.log('sukhadev5', SubIndex);
+    let myFormControl: any;
+
+    const parentArray = this.dynamicFormGroup.get(innerControl?.name) as FormArray;
+    const parentArray1 = parentArray.controls[index] as FormGroup;
+    const parentArray2 = parentArray1.controls[parentControl?.name] as FormArray;
+    const parentArray3 = parentArray2.controls[SubIndex] as FormGroup;
+    myFormControl = parentArray3
+    let errorMessage = ''
+
+    control.validators?.forEach((val) => {
+      if (myFormControl?.hasError(val.validatorName as string)) {
+        if (control.name == 'insuredMembers' && val.validatorName == 'required') {
+          if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
+            errorMessage = val.message as string + 'one'
+          }
+          else {
+            errorMessage = val.message as string + 'two'
+          }
+        }
+        else
+          errorMessage = val.message as string
+      }
+    })
+
+    return errorMessage;
+  }
+
   checkValidations(
     control: IFormControl | IDynamicControl,
     parentControl: IFormControl | IDynamicControl | ISubControl | null = null,
@@ -1446,6 +1483,29 @@ export class YatraComponent {
     } else {
       myControl = this.dynamicFormGroup.get(control.name);
     }
+
+    if (myControl instanceof FormControl) {
+      return myControl.invalid && myControl.touched;
+    } else if (myControl instanceof FormGroup) {
+      return myControl.invalid && !myControl.pristine;
+    }
+
+    return false;
+  }
+
+  checkActiveValidations(
+    control: IFormControl | IDynamicControl,
+    parentControl: any = null,
+    index: any | null = null,
+    innerControl: any | null = null,
+    SubIndex: any | null = null
+  ): boolean {
+    let myControl: AbstractControl | null | undefined;
+    const parentArray = this.dynamicFormGroup.get(innerControl?.name) as FormArray;
+    const parentArray1 = parentArray.controls[index] as FormGroup;
+    const parentArray2 = parentArray1.controls[parentControl?.name] as FormArray;
+    const parentArray3 = parentArray2.controls[SubIndex] as FormGroup;
+    myControl = parentArray3?.get(control.name);
 
     if (myControl instanceof FormControl) {
       return myControl.invalid && myControl.touched;
@@ -1536,7 +1596,7 @@ export class YatraComponent {
     return formControl ? formControl.value : null;
   }
 
-  hasAnyActiveValue(control : any, subControl : any, index : any, parentControl : any, subIndex? : any ){
+  hasAnyActiveValue(control: any, subControl: any, index: any, parentControl: any, subIndex?: any) {
     const selectedValue = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)).controls[index - 1].get(subControl.name) as FormGroup).controls[subIndex].get(control.name)?.value
     return selectedValue ? selectedValue : null;
   }
@@ -2094,16 +2154,16 @@ export class YatraComponent {
     }
     if (control.name == 'activePolicySumInsured') {
       const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control['dependentControls'])?.value
-      if(selectedValue == 'Y'){
+      if (selectedValue == 'Y') {
         this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
 
       } else {
-          if(eventValue < 1000000){
-            this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
-          } else {
-            this.toast.success({ detail: "Success", summary: 'Details saved successfully', duration: 3000 });
+        if (eventValue < 1000000) {
+          this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
+        } else {
+          this.toast.success({ detail: "Success", summary: 'Details saved successfully', duration: 3000 });
 
-          }
+        }
       }
     }
 
@@ -5249,7 +5309,7 @@ export class YatraComponent {
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
     console.log(addOnData);
-    
+
 
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
@@ -8251,11 +8311,11 @@ export class YatraComponent {
     }
   }
 
-  onCheckActivPolicySumInsured(innerControl: any, control: any, parentControl: any, index: number){
-    console.log('1',innerControl)
-    console.log('2',control)
-    console.log('3',parentControl)
-    console.log('4',index)
+  onCheckActivPolicySumInsured(innerControl: any, control: any, parentControl: any, index: number) {
+    console.log('1', innerControl)
+    console.log('2', control)
+    console.log('3', parentControl)
+    console.log('4', index)
   }
 
 }

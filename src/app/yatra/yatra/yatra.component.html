@@ -904,9 +904,9 @@
                                                   (innerControl.label |
                                                   translate) : '' }}<span *ngIf="innerControl.validators">*</span></label>
                                               </div>
-                                              <small *ngIf="checkValidations(subControl,control,i-1,null,innerControl)" class="text-danger">{{
-                                                getValidationErrors(subControl,control,i-1,null,innerControl)?
-                                                (getValidationErrors(subControl,control,i-1,null,innerControl)| translate) :
+                                              <small *ngIf="checkActiveValidations(innerControl, subControl, i-1, control , z-1)" class="text-danger">{{
+                                                getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)?
+                                                (getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)| translate) :
                                                 ''}}
                                               </small>
                                             </div>
@@ -953,9 +953,9 @@
                                                   (innerControl.label | translate) : '' }}<span
                                                     *ngIf="innerControl.validators && isFieldRequired(innerControl.validators)">*</span></label>
                                               </div>
-                                              <small *ngIf="checkValidations(subControl,control,i-1,null,innerControl)" class="text-danger">{{
-                                                getValidationErrors(subControl,control,i-1,null,innerControl)?
-                                                (getValidationErrors(subControl,control,i-1,null,innerControl)| translate) :
+                                              <small *ngIf="checkActiveValidations(innerControl, subControl, i-1, control , z-1)" class="text-danger">{{
+                                                getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)?
+                                                (getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)| translate) :
                                                 ''}}
                                               </small>
                                             </div>
@@ -979,9 +979,9 @@
                                                 </label>
                                               </div>
                                               
-                                              <small *ngIf="checkValidations(subControl,control,i-1,null,innerControl)" class="text-danger">{{
-                                                getValidationErrors(subControl,control,i-1,null,innerControl)?
-                                                (getValidationErrors(subControl,control,i-1,null,innerControl)| translate) :
+                                              <small *ngIf="checkActiveValidations(innerControl, subControl, i-1, control , z-1)" class="text-danger">{{
+                                                getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)?
+                                                (getActiveValidationErrors(innerControl, subControl, i-1, control , z-1)| translate) :
                                                 ''}}
                                               </small>
                                             </div>
