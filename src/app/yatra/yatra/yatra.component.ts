@@ -696,28 +696,58 @@ export class YatraComponent {
                   tempMemberControl.name = tempRelationshipType.value.toLowerCase();
                   tempInnerControl.label = tempRelationshipType.value;
                   tempInnerControl.name = tempRelationshipType.value;
-                  if(control.idProperty === '12345'){
-                    console.log(tempInnerControl);
-                  }
-                  else{
-                    if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
-                      for (const key in this.formData[control.name]) {
-                        const value = this.formData[control.name][key];
-                        if (key == tempRelationshipType.value.toLowerCase()) {
-                          if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
-                            // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
-                            tempMemberControl.value = true;
-                            tempInnerControl.visible = true;
-                            this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
+                  if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
+                    for (const key in this.formData[control.name]) {
+                      const value = this.formData[control.name][key];
+                      if (key == tempRelationshipType.value.toLowerCase()) {
+                        if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
+                          // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
+                          tempMemberControl.value = true;
+                          tempInnerControl.visible = true;
+                          this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
+                            if (control.idProperty === '12345') {
+                              Object.keys(item).forEach(key => {
+                                tempInnerControl.innerArrayControl[0].forEach((element: any) => {
+                                  if (element.name == key) {
+                                    if (element.innerControls) {
+                                      if (item[key] && typeof item[key] === 'object' && !Array.isArray(item[key]) && Object.keys(item[key]).length > 0) {
+                                        element.visible = true;
+                                        element.innerControls.forEach((JItem: any) => {
+                                          JItem.value = item[key][JItem.name];
+                                          JItem.visible = true;
+                                        });
+                                      }
+                                      else {
+                                        element.visible = false;
+                                      }
+                                    }
+                                    else {
+                                      const newItem = this.formData.insuredMemberDetails.find((item: any) => item.relation === tempRelationshipType.value);
+                                      const trueKeys = Object.keys(newItem.chronicDiseases).filter(key => newItem.chronicDiseases[key]);
+                                      console.log(newItem, newItem.chronicDiseases, trueKeys);
+                                      tempInnerControl.innerArrayControl[0].forEach((elementt: any) => {
+                                        if (trueKeys.includes(elementt.name)) {
+                                          elementt.visible = true;
+                                        }
+                                      });
+                                      element.value = item[key];
+                                      // element.visible = item[key];
+                                    }
+                                    console.log(element, item, key, item[key]);
+                                  }
+                                });
+                              })
+                            }
+                            else {
                               tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
-                            })
-                          }
+                            }
+                          })
                         }
                       }
                     }
-                    else {
-                      tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
-                    }
+                  }
+                  else {
+                    tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
                   }
 
                   control.subControls?.push(tempMemberControl);
@@ -725,7 +755,7 @@ export class YatraComponent {
                 }
               });
               control.subControls?.push(doneButton);
-              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)),null,control));
+              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
             }
             else {
               if ((control.name == 'chronicCare' || control.name == 'chronicManagement') && this.formData['isChronicCare'] == 'N') {
@@ -1176,7 +1206,24 @@ export class YatraComponent {
         if (control.innerArrayControl) {
           if (control.visible) {
             if(parentControl.idProperty === '12345'){
-              formGroup.addControl(control.name, this.initializeSubControls(control.innerControls));
+              if(control.innerControls){
+                formGroup.addControl(control.name, this.initializeSubControls(control.innerControls));
+              }
+              else{
+                const formArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
+    
+                // Initialize nested FormGroup inside FormArray
+                const nestedFormGroup = this.initializeSubControls(
+                  control.innerArrayControl[0], 
+                  null, 
+                  parentControl
+                ) as FormGroup;
+                
+                formArray.push(nestedFormGroup);
+                
+                // Add FormArray to formGroup
+                formGroup.addControl(control.name, formArray);              
+              }
             }
             else{
               let tempFormArray = this.fb.array([]);
@@ -1718,8 +1765,6 @@ export class YatraComponent {
     return formControl;
   }
   hasChronicValue(control: any, parentControl: any | null = null, innerControl: any | null = null, chronicControl: any | null = null, index: any | null = null) {
-    console.log(control,parentControl,innerControl,chronicControl,index);
-    console.log(((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray)?.controls[index]);
     const formControl = parentControl != null && index != null ?
       ((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray)?.controls[index] as FormGroup)?.controls[innerControl.name] as FormArray).get(chronicControl.name)?.value
       : this.dynamicFormGroup.get(control.name);
@@ -2711,7 +2756,7 @@ export class YatraComponent {
     }
 
 
-    if ((parentControl !== null && parentControl.type == 'combinedCheckbox')) {
+    if ((parentControl !== null && parentControl.type == 'combinedCheckbox') || parentControl.idProperty === '12345') {
       if (control.type === 'select') {
         this.callMethod(parentControl.methodName, control)
       }
