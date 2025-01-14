@@ -57,11 +57,11 @@ export class GetQuoteComponent implements AfterViewChecked {
   diseases = [
     { id: 'PTCA', value: 'PTCA', label: 'PTCA' },
     { id: 'hypertension', value: 'hypertension', label: 'Hypertension' },
-    { id: 'diabetesMellitus', value: 'diabetesMellitus', label: 'Diabetes Mellitus' },
-    { id: 'COPD', value: 'COPD', label: 'COPD' },
-    { id: 'Asthma', value: 'Asthma', label: 'Asthma' },
+    { id: 'diabetesMellitus', value: 'diabetes', label: 'Diabetes Mellitus' },
+    { id: 'COPD', value: 'copd', label: 'COPD' },
+    { id: 'Asthma', value: 'asthma', label: 'Asthma' },
     { id: 'hyperlipidemia', value: 'hyperlipidemia', label: 'Hyperlipidemia' },
-    { id: 'highBMI', value: 'highBMI', label: 'High BMI' }
+    { id: 'highBMI', value: 'obesity', label: 'High BMI' }
 
   ];
   proposerZone: any;
