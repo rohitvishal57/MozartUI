@@ -209,5 +209,6 @@ export const environment = {
   verifylink:"api/yatra/verifylink",
   confirmproposer:"api/yatra/confirmproposer",
   extractMastarData:"api/rug/ExtractMasterData",
-  getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId"
+  getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId",
+  pinCodeDetailsQuote: "api/yatra/getpincodedetails"
 };

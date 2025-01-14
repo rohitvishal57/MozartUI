@@ -198,8 +198,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
-
-    if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
+        if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
       this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
@@ -1144,7 +1143,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     };
 
     this.upgradableZones = [];
-    this.service.getPinCodeByCity(reqdata).subscribe({
+    this.service.getPinCodeByCityForQuote(reqdata).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           console.log(res);

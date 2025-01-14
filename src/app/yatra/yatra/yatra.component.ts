@@ -3569,6 +3569,9 @@ export class YatraComponent {
                   if (temp.name == 'zoneValue') {
                     temp.options = this.formData['upgradableZones'];
                   }
+                  // if (temp.name == 'sumInsured') {
+                  //   temp.options = this.formData['upgradableSumInsured'];
+                  // }
                 })
               }
               if (option.gender) {

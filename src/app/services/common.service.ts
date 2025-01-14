@@ -29,6 +29,11 @@ export class CommonService {
     return this.http.post<any>(PinCodeByCity, reqdata);
   }
 
+  getPinCodeByCityForQuote(reqdata: any) {
+    const PinCodeByCityQuote = this.configService.config.baseUrl + this.configService.config.pinCodeDetailsQuote;
+    return this.http.post<any>(PinCodeByCityQuote, reqdata);
+  }
+
   // getHealthPlans(year: any, adultCount: any, childCount: any) {
   //   return this.http.get<any>(`${this.apiUrl}`);
   // }
