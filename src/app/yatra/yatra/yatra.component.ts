@@ -8600,13 +8600,6 @@ export class YatraComponent {
     }
   }
 
-  onCheckActivPolicySumInsured(innerControl: any, control: any, parentControl: any, index: number) {
-    console.log('1', innerControl)
-    console.log('2', control)
-    console.log('3', parentControl)
-    console.log('4', index)
-  }
-
   markNestedControlsAsTouched(control: AbstractControl): void {
     // If the control is a FormGroup, iterate over its controls
     if (control instanceof FormGroup) {
