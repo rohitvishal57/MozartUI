@@ -204,11 +204,12 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
     console.log(this.formData, this.relations);
-    if (this.formData && (this.formData.currentZone || this.formData.zoneValue || this.formData.zone || this.formData.upgradableZones)) {
+    if (this.formData && (this.formData.currentZone || this.formData.zoneValue || this.formData.zone || this.formData.upgradableZones || this.formData.memberPolicyType)) {
       this.currentZone = this.formData.currentZone;
       this.proposerZoneValue = this.formData.zoneValue;
       this.proposerZone = this.formData.zone;
       this.upgradableZones = this.formData.upgradableZones;
+      this.selectedPlan = this.formData.memberPolicyType;
     }
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
@@ -993,7 +994,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   // Add new member details
   addInsuredMemberDetails(): void {
     this.showErrors = false;
-    console.log(this.selectedRelationships, this.quoteFormGroup);
+    console.log(this.selectedRelationships, this.quoteFormGroup,this.selectedPlan);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
         detail: "Error",

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { YatraRoutingModule } from './yatra-routing.module';
@@ -11,6 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MyMaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
@@ -19,8 +20,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [YatraComponent],
   imports: [
     CommonModule,
-    PrimeNgModule,
     ReactiveFormsModule,
+    PrimeNgModule,
     ClipboardModule,
     YatraRoutingModule,
     MyMaterialModule,
@@ -32,6 +33,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     })
-  ]
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
 })
 export class YatraModule { }
