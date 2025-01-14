@@ -38,8 +38,7 @@ export class YatraComponent {
   Code: any;
   proposalNum: any;
 
-  familyGroup = '';
-  selectedFamilyMembers: string[] = [];
+
   idProofType: string = '';
 
   private allJsonForm: any[] = [];
@@ -146,6 +145,10 @@ export class YatraComponent {
   pennyDropVerficationByOCRDetails: any;
   uploadInfo: { name: any; data: any; }[] | null = null;
   fullQuoteDocRelated: any;
+
+  //hospiCashCoverVariables
+  familyGroup = '';
+  selectedFamilyMembers: string[] = [];
   hospiCashSelected: boolean = false;
   hospiCashTab: number = -1;
   showOptions: { [controlName: string]: { [index: number]: boolean } } = {};
@@ -540,6 +543,24 @@ export class YatraComponent {
           ...JSON.parse(res.data.formData)  // parsed response data
         };
 
+        if(this.form.formTitle == 'Insurance Details'){
+          console.log(this.formData);
+          
+          if(this.formData['familyGroup']){
+            this.familyGroup = this.formData['familyGroup'];
+          }
+          if(this.formData['selectedFamilyMembers']){
+            this.selectedFamilyMembers = this.formData['selectedFamilyMembers'];
+          }
+
+          if(this.formData['hospiCashSelected']){
+             this.hospiCashSelected = this.formData['hospiCashSelected'];
+          }
+
+          if(this.formData['hospiCashTab']){
+            this.hospiCashTab = this.formData['hospiCashTab'];
+         }
+        }
         console.log(this.form, this.formSequence, this.formData);
         if (this.getFormIndexValue() == 8) {
           this.modifyThankYouJson();
@@ -1277,7 +1298,12 @@ export class YatraComponent {
             (control.subControls as ISubControl[][]).forEach((hospiMemberControl: any) => {
               let tempFormGroup: any = this.fb.group({});
               hospiMemberControl.forEach((memberControl: any) => {
-                tempFormGroup.addControl(memberControl.name, new FormControl(control.value));
+                if (memberControl.type == 'radio') {
+                  memberControl.value = memberControl.radioOptions.find(
+                    (option: any) => option.selected === true
+                  )?.value;
+                }
+                tempFormGroup.addControl(memberControl.name, new FormControl(memberControl.value));
               })
               tempFormArray.push(tempFormGroup);
             });
@@ -1512,7 +1538,8 @@ export class YatraComponent {
     parentControl: IFormControl | IDynamicControl | ISubControl | null = null,
     index: number | null = null, subControl: any | null = null,
     innerControl: any | null = null,
-    innerSubControl: any | null = null
+    innerSubControl: any | null = null,
+    innerSubControlIndex: number | null = null
   ): boolean {
     // console.log(control, parentControl, index, subControl, innerControl, innerSubControl);
     let myControl: AbstractControl | null | undefined;
@@ -1530,6 +1557,13 @@ export class YatraComponent {
       const parentArray3 = parentArray2.controls[index] as FormGroup;
 
       myControl = parentArray3.controls[innerControl.name].get(innerSubControl.name);
+    }
+    else if (innerControl != null && innerSubControl == null && parentControl != null && index != null && innerSubControlIndex != null) {
+      const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      const memberGroup = formArray.at(index) as FormGroup;
+      const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+      const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
+      myControl = memberGroupInnerControlGroup.get(innerControl.name);
     }
     else if (innerControl != null && parentControl != null && index != null) {
       myControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
@@ -1580,6 +1614,50 @@ export class YatraComponent {
     return false;
   }
 
+  checkHospiCashValidations(
+    control: IFormControl | IDynamicControl,
+    parentControl: IFormControl | IDynamicControl | ISubControl,
+    index: number, subControl: any | null = null,
+    innerSubControlIndex: number
+  ): boolean {
+
+    let myControl: AbstractControl | null | undefined;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
+    myControl = memberGroupInnerControlGroup.get(subControl.name);
+    if (myControl) {
+      return myControl.invalid && myControl.touched;
+    }
+
+    return false;
+  }
+
+  getHospiCashValidations(
+    control: IFormControl | IDynamicControl,
+    parentControl: IFormControl | IDynamicControl | ISubControl,
+    index: number, subControl: any | null = null,
+    innerSubControlIndex: number
+  ): string {
+
+    let errorMessage = ''
+    let myControl: AbstractControl | null | undefined;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
+    myControl = memberGroupInnerControlGroup.get(subControl.name);
+
+
+    subControl.validators?.forEach((val: any) => {
+      if (myControl?.hasError(val.validatorName as string)) {
+        errorMessage = val.message as string
+      }
+    })
+    return errorMessage;
+  }
+
   onCheckboxSelect(controlName: string, event?: any) {
     const control = this.dynamicFormGroup.get(controlName);
     if (control) {
@@ -1617,8 +1695,7 @@ export class YatraComponent {
         return !!childControl?.get(innerControl.name)?.value;
       }
       else if (innerControl != null && indexj != null) {
-        if (innerControl.name == 'hospiCashCoverName')
-          console.log((childControl as FormArray)?.controls[indexj].get(innerControl.name), innerControl.name);
+
         return !!(childControl as FormArray)?.controls[indexj].get(innerControl.name)?.value;
       }
 
@@ -2308,34 +2385,78 @@ export class YatraComponent {
     if (control.name == 'hospiCashCoverDetails') {
       console.log(subControl, event.target.checked, this.activeMemberTabIndex);
 
-      if ((this.familyGroup == '' || subControl.group == this.familyGroup)) {
-        if (event.target.checked) {
-          this.familyGroup = subControl.group;
-          this.selectedFamilyMembers.push(subControl.label);
-          this.hospiCashSelected = true;
-          this.hospiCashTab = this.activeMemberTabIndex;
+      if (subControl != null && subControl.name == 'memberCover') {
+        if ((this.familyGroup == '' || subControl.group == this.familyGroup)) {
+          if (event.target.checked) {
+            this.familyGroup = subControl.group;
+            this.selectedFamilyMembers.push(subControl.label);
+            this.hospiCashSelected = true;
+            this.hospiCashTab = this.activeMemberTabIndex;
+          }
+          else {
+            const labelIndex = this.selectedFamilyMembers.indexOf(subControl.label);
+            if (labelIndex > -1) {
+              this.selectedFamilyMembers.splice(labelIndex, 1);
+            }
+
+            // Reset the familyGroup if no members are selected
+            if (this.selectedFamilyMembers.length === 0) {
+              this.familyGroup = '';
+              this.hospiCashSelected = false;
+              this.hospiCashTab = -1;
+            }
+          }
         }
         else {
-          const labelIndex = this.selectedFamilyMembers.indexOf(subControl.label);
-          if (labelIndex > -1) {
-            this.selectedFamilyMembers.splice(labelIndex, 1);
-          }
+          const checkbox = event.target as HTMLInputElement;
+          checkbox.checked = false;
+          const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+          const memberGroup = formArray.at(index) as FormGroup;
+          const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+          const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+          const memberGroupInnerControl = memberGroupInnerControlGroup.get(subControl.name);
+          memberGroupInnerControl?.setValue(false);
 
-          // Reset the familyGroup if no members are selected
-          if (this.selectedFamilyMembers.length === 0) {
-            this.familyGroup = '';
-            this.hospiCashSelected = false;
-            this.hospiCashTab = -1;
+
+
+
+          // const formControl = formGroup.get(subControl.name) as FormControl;
+          // formControl.setValue(false); // Set the FormControl value to false
+          return;
+        }
+        this.changeHospiCoverDependentControls(subControl.dependentControls, event.target.checked, control.name, parentControl.name, index, subControl, indexj);
+        // this.removeOrAddControlsforOtherMembers(event.target.checked,control.name,parentControl.name,index,subControl,indexj)
+      }
+
+      if (subControl != null && subControl.name == 'hospiCashCoverDOB') {
+        console.log(event.target.value, event.target.value.length);
+        if (event.target.value.length === 10) {
+          // Validate the date format (YYYY-MM-DD)
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+          if (dateRegex.test(event.target.value)) {
+            const enteredDate = new Date(event.target.value);
+
+            // Ensure the year, month, and day are valid
+            if (
+              enteredDate.getFullYear() > 1900 &&
+              enteredDate.getMonth() >= 0 &&
+              enteredDate.getDate() > 0
+            ) {
+              const familyMemberAge = this.calculateAge(event.target.value);
+              console.log(familyMemberAge);
+
+              const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+              const memberGroup = formArray.at(index) as FormGroup;
+              const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+              const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+              const memberGroupInnerControl = memberGroupInnerControlGroup.get('hospiCashCoverAge');
+              memberGroupInnerControl?.setValue(familyMemberAge);
+            }
           }
         }
+
+
       }
-      else {
-        const checkbox = event.target as HTMLInputElement;
-        checkbox.checked = false;
-        return;
-      }
-      // this.changeHospiCoverDependentControls(subControl.dependentControls, event.target.checked, control.name, parentControl.name, index, subControl, indexj);
-      // this.removeOrAddControlsforOtherMembers(event.target.checked,control.name,parentControl.name,index,subControl,indexj)
     }
     if (control.name == 'abhaMailId') {
       if (this.enableABHAConcent()) {
@@ -4176,6 +4297,40 @@ export class YatraComponent {
       }
     }
 
+    if (this.form.formTitle == 'Insurance Details' && this.formData.productName == 'Activ One SAVR') {
+      console.log(this.formData, this.hospiCashSelected);
+      if (this.hospiCashSelected == false) {
+        this.toast.warning({ detail: "Warning", summary: "Please include either Parents or Parents-in-law (Mother/Father/Father-in-law/Mother-in-law) respectively in the hospital cash coverage to complete the buying journey.", duration: 5000 });
+        return;
+      }
+      else {
+        // Set values for the controls
+        const familyGroupControl = this.dynamicFormGroup.get('familyGroup');
+        const selectedFamilyMembersControl = this.dynamicFormGroup.get('selectedFamilyMembers');
+        const hospiCashSelectedControl = this.dynamicFormGroup.get('hospiCashSelected');
+        const hospiCashTabControl = this.dynamicFormGroup.get('hospiCashTab');
+
+        // Ensure each control exists and then set their values
+        if (familyGroupControl) {
+          familyGroupControl.setValue(this.familyGroup);
+        }
+
+        if (selectedFamilyMembersControl) {
+          selectedFamilyMembersControl.setValue(this.selectedFamilyMembers); // Convert array to a comma-separated string if needed
+        }
+
+        if (hospiCashSelectedControl) {
+          hospiCashSelectedControl.setValue(this.hospiCashSelected);
+        }
+
+        if (hospiCashTabControl) {
+          hospiCashTabControl.setValue(this.hospiCashTab);
+        }
+
+      }
+
+    }
+
     if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
       this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
       return;
@@ -4483,6 +4638,8 @@ export class YatraComponent {
       console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
       console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
     }
+
+
   }
   changeMainFormDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
@@ -4662,8 +4819,8 @@ export class YatraComponent {
 
   changeHospiCoverDependentControls(dependentControlNames: (string | { name: string; visibility: boolean })[],
     visibility: boolean,
-    controlName: string | null = null,
-    parentControlName: string | null = null,
+    controlName: string,
+    parentControlName: string,
     controlIndex: number | null = null,
     innerControl: any = null,
     innerControlIndex: any = null) {
@@ -4679,120 +4836,210 @@ export class YatraComponent {
         this.form.formSections.forEach((section: IFormSections) => {
           section.formControls.forEach((control: IFormControl) => {
             if (control.dynamicControls && controlIndex != null && control.dynamicControls.length > controlIndex) {
-              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex + 1]));
               console.log(targetDynamicControl);
 
-              // targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
-              //   if (dynamicControl.name === dependentName) {
-              //     dynamicControl.visible = dependentVisibility;
-              //   } else if (dynamicControl.subControls && dynamicControl.name === controlName) {
-              //     dynamicControl.subControls.forEach((subControlArray: any) => {
-              //       subControlArray.forEach((subControl: ISubControl) => {
-              //         if (subControl.name === dependentName) {
-              //           subControl.visible = dependentVisibility;
-              //         }
-              //       });
-              //     });
-              //   }
-              // });
-
-              // targetDynamicControl.forEach((dynamicControl:IDynamicControl)=>{
-              //   if(dynamicControl.name == )
-              // })
-
-              control.dynamicControls[controlIndex] = targetDynamicControl;
-
-            }
-            else if (control.name == parentControlName && control.subControls) {
-              control.subControls.forEach((subControl: any) => {
-                if (subControl.name == controlName && controlIndex != null) {
-                  subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
+              targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+                console.log(dynamicControl);
+                if (dynamicControl.name == controlName && dynamicControl.subControls) {
+                  dynamicControl.subControls[innerControlIndex].forEach((innerControl: any) => {
                     if (innerControl.name == dependentName) {
                       innerControl.visible = visibility;
-                      let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
-                      let dcontrol = dparentControl.get(subControl.name) as FormGroup;
-                      let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
-                      let dindexj = dsubControl.at(zindex) as FormGroup;
-                      let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
-                      if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
-                        if (dinnercontrol instanceof FormControl) {
-                          dinnercontrol.setValue(false);
-                        }
-                        innerControl.dependentControls.forEach((dependentName: string) => {
-                          // Find the dependent control in coreControls
-                          const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
-                            (control: any) => control.name === dependentName
-                          );
-                          let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
+                      if (visibility) {
+                        const controlValidators: any[] = [];
+                        innerControl?.validators?.forEach((validator: any) => {
+                          if (validator.validatorName === 'required') controlValidators.push(Validators.required);
+                          if (validator.validatorName === 'email') controlValidators.push(Validators.email);
+                          if (validator.validatorName === 'minlength') controlValidators.push(Validators.minLength(validator.minLength));
+                          if (validator.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(validator.maxLength));
+                          if (validator.validatorName === 'pattern') controlValidators.push(Validators.pattern(validator.pattern));
+                        });
 
-                          if (dependentControl) {
-                            dependentControl.visible = visibility;
-                            dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
-                            dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
-                            Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                              dinnercontrol.removeControl(element);
-                            });
-                          }
-                          // else {
-                          //   console.log('Dependent Control not found for:', dependentName);
-                          // }
-                        });
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                        console.log(formArray);
+
+                        const memberGroup = formArray.at(controlIndex) as FormGroup;
+                        console.log(memberGroup);
+
+                        const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+                        console.log(memberGroupControlArray);
+
+                        const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+                        console.log(memberGroupInnerControlGroup);
+
+                        const memberGroupInnerControl = memberGroupInnerControlGroup.get(innerControl.name);
+                        console.log(memberGroupInnerControl);
+
+                        memberGroupInnerControl?.setValidators(controlValidators);
+                        memberGroupInnerControl?.updateValueAndValidity();
+
                       }
-                      if (innerControl.innerControls && innerControl.visible == true) {
-                        this.initializeSubControls(innerControl.innerControls, dinnercontrol)
-                      }
-                      else if (innerControl.innerControls && innerControl.visible == false) {
-                        Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                          dinnercontrol.removeControl(element);
-                        });
+                      else {
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                        const memberGroup = formArray.at(controlIndex) as FormGroup;
+                        const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+                        const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+                        const memberGroupInnerControl = memberGroupInnerControlGroup.get(innerControl.name);
+                        memberGroupInnerControl?.clearValidators();
+                        memberGroupInnerControl?.updateValueAndValidity();
                       }
                     }
                   })
                 }
               })
+
+              control.dynamicControls[controlIndex + 1] = targetDynamicControl;
+
             }
-            else if (control.name == parentControlName && control.dynamicControls && controlIndex != null) {
-              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
-              targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
-                if (dynamicControl.name == controlName && dynamicControl.innerControls) {
-                  dynamicControl.innerControls.forEach((innerArrayControl: any) => {
-                    if (innerArrayControl.name == innerControl) {
-                      innerArrayControl.visible = visibility;
-                    }
-                  })
-                }
-              })
-            }
-            else if (control.name === dependentName) {
-              control.visible = dependentVisibility;
-              if (dependentVisibility) {
-                let controlValidators: any = [];
-                control.validators?.forEach((val: IValidator) => {
-                  if (val.validatorName === 'required') controlValidators.push(Validators.required);
-                  if (val.validatorName === 'email') controlValidators.push(Validators.email);
-                  if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
-                  if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
-                  if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
-                });
-                this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
-                this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
-                if (control.name == 'zoneValue' && control.type == 'select') {
-                  control.options = this.formData.availableZones.map((zone: any) => ({
-                    name: zone,
-                    value: zone
-                  }));
-                }
-              } else {
-                this.dynamicFormGroup.get(control.name)?.clearValidators();
-                this.dynamicFormGroup.get(control.name)?.reset();
-              }
-            }
+            // else if (control.name == parentControlName && control.subControls) {
+            //   control.subControls.forEach((subControl: any) => {
+            //     if (subControl.name == controlName && controlIndex != null) {
+            //       subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
+            //         if (innerControl.name == dependentName) {
+            //           innerControl.visible = visibility;
+            //           let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
+            //           let dcontrol = dparentControl.get(subControl.name) as FormGroup;
+            //           let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
+            //           let dindexj = dsubControl.at(zindex) as FormGroup;
+            //           let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
+            //           if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+            //             if (dinnercontrol instanceof FormControl) {
+            //               dinnercontrol.setValue(false);
+            //             }
+            //             innerControl.dependentControls.forEach((dependentName: string) => {
+            //               // Find the dependent control in coreControls
+            //               const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
+            //                 (control: any) => control.name === dependentName
+            //               );
+            //               let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
+
+            //               if (dependentControl) {
+            //                 dependentControl.visible = visibility;
+            //                 dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
+            //                 dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
+            //                 Object.keys(dinnercontrol.controls).forEach((element: any) => {
+            //                   dinnercontrol.removeControl(element);
+            //                 });
+            //               }
+            //               // else {
+            //               //   console.log('Dependent Control not found for:', dependentName);
+            //               // }
+            //             });
+            //           }
+            //           if (innerControl.innerControls && innerControl.visible == true) {
+            //             this.initializeSubControls(innerControl.innerControls, dinnercontrol)
+            //           }
+            //           else if (innerControl.innerControls && innerControl.visible == false) {
+            //             Object.keys(dinnercontrol.controls).forEach((element: any) => {
+            //               dinnercontrol.removeControl(element);
+            //             });
+            //           }
+            //         }
+            //       })
+            //     }
+            //   })
+            // }
+            // else if (control.name == parentControlName && control.dynamicControls && controlIndex != null) {
+            //   const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+            //   targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+            //     if (dynamicControl.name == controlName && dynamicControl.innerControls) {
+            //       dynamicControl.innerControls.forEach((innerArrayControl: any) => {
+            //         if (innerArrayControl.name == innerControl) {
+            //           innerArrayControl.visible = visibility;
+            //         }
+            //       })
+            //     }
+            //   })
+            // }
+            // else if (control.name === dependentName) {
+            //   control.visible = dependentVisibility;
+            //   if (dependentVisibility) {
+            //     let controlValidators: any = [];
+            //     control.validators?.forEach((val: IValidator) => {
+            //       if (val.validatorName === 'required') controlValidators.push(Validators.required);
+            //       if (val.validatorName === 'email') controlValidators.push(Validators.email);
+            //       if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+            //       if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+            //       if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+            //     });
+            //     this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+            //     this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
+            //     if (control.name == 'zoneValue' && control.type == 'select') {
+            //       control.options = this.formData.availableZones.map((zone: any) => ({
+            //         name: zone,
+            //         value: zone
+            //       }));
+            //     }
+            //   } else {
+            //     this.dynamicFormGroup.get(control.name)?.clearValidators();
+            //     this.dynamicFormGroup.get(control.name)?.reset();
+            //   }
+            // }
           });
         });
       });
       this.changeDetectorRef.detectChanges();
     }
   }
+
+  // changeHospiCoverDependentControls(
+  //   dependentControlNames: (string | { name: string; visibility: boolean })[],
+  //   visibility: boolean,
+  //   controlName: string,
+  //   parentControlName: string,
+  //   controlIndex: number | null = null,
+  //   innerControl: any = null,
+  //   innerControlIndex: any = null
+  // ) {
+  //   console.log(controlName, parentControlName, controlIndex, innerControl, innerControlIndex);
+
+  //   if (dependentControlNames) {
+  //     dependentControlNames.forEach((dependent) => {
+  //       // Extract control name and visibility from either string or object
+  //       const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
+  //       const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
+
+  //       // Get the dynamic form control hierarchy
+  //       const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+  //       if (!formArray || controlIndex === null) return;
+
+  //       const memberGroup = formArray.at(controlIndex) as FormGroup;
+  //       const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+  //       if (!memberGroupControlArray || innerControlIndex === null) return;
+
+  //       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+  //       const memberGroupInnerControl = memberGroupInnerControlGroup.get(dependentName);
+
+  //       if (memberGroupInnerControl) {
+  //         // Set visibility of the control
+  //         if (dependentVisibility) {
+  //           // Add validations if visible
+  //           const controlValidators: any[] = [];
+  //           innerControl?.validators?.forEach((validator: any) => {
+  //             if (validator.validatorName === 'required') controlValidators.push(Validators.required);
+  //             if (validator.validatorName === 'email') controlValidators.push(Validators.email);
+  //             if (validator.validatorName === 'minlength') controlValidators.push(Validators.minLength(validator.minLength));
+  //             if (validator.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(validator.maxLength));
+  //             if (validator.validatorName === 'pattern') controlValidators.push(Validators.pattern(validator.pattern));
+  //           });
+  //           memberGroupInnerControl.setValidators(controlValidators);
+  //           memberGroupInnerControl.updateValueAndValidity();
+  //         } else {
+  //           // Remove validations if not visible
+  //           memberGroupInnerControl.clearValidators();
+  //           memberGroupInnerControl.updateValueAndValidity();
+  //           memberGroupInnerControl.setValue(false); // Reset value to false
+  //         }
+
+  //         // Update the visibility in the control object
+  //         innerControl.visible = dependentVisibility;
+  //       }
+  //     });
+
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
+
 
 
 
@@ -6807,8 +7054,10 @@ export class YatraComponent {
           member.productQuestionnaire = JSON.stringify(productQuestionnaire);
         }
 
-        if (Array.isArray(member.hospiCashCoverDetails)) {
-          member.hospiCashCoverDetails = member.hospiCashCoverDetails.filter((detail: any) => detail.memberCover !== "");
+        if (member.hospiCashCoverDetails && Array.isArray(member.hospiCashCoverDetails)) {
+          member.hospiCashCoverDetails = member.hospiCashCoverDetails.filter(
+            (detail: any) => detail.memberCover !== "" || detail.memberCover !== false
+          );
         }
         return {
           relation: member?.relation || '',
