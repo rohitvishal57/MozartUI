@@ -10,7 +10,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./bulk-upload-basecaller.component.scss']
 })
 export class BulkUploadBasecallerComponent {
-bulkUploadForm!: FormGroup;
+  bulkUploadForm!: FormGroup;
   submitted: boolean = false;
   showNote: boolean = false;
   isFilenotSelected: boolean = false;
@@ -85,7 +85,7 @@ bulkUploadForm!: FormGroup;
 
     const data = new FormData();
     data.append('File', this.filedata);
-    data.append('UploadedBy', 'teleadmin1');
+    data.append('UploadedBy', 'teleadmin2');
     data.append('IsDoUpload', 'false');
     data.append('IsAVUpload', 'false');
     data.append('IsBaseCallerUpload', 'true');
@@ -117,7 +117,7 @@ bulkUploadForm!: FormGroup;
   }
 
   backToAvList() {
-    this.router.navigate(['/rug/av-list'], {
+    this.router.navigate(['/rug/basecaller'], {
     });
   }
 
