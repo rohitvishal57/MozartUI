@@ -579,6 +579,10 @@ export class YatraComponent {
                 if (innerControl.name == 'zoneValue') {
                   innerControl.options = member.upgradableZones;
                 }
+                if(innerControl.name == 'sumInsured'){
+                  innerControl.options = member.upgradableSumInsured;
+                }
+
 
                 if (
                   this.formData['ckycNo'] &&
@@ -2586,7 +2590,7 @@ export class YatraComponent {
     }
 
 
-    if ((parentControl !== null && parentControl.type == 'combinedCheckbox') || parentControl.idProperty === '12345') {
+    if ((parentControl !== null && parentControl.type == 'combinedCheckbox')) {
       if (control.type === 'select') {
         this.callMethod(parentControl.methodName, control)
       }
@@ -2665,7 +2669,6 @@ export class YatraComponent {
         }
       }
     }
-
 
     if (parentControl == null && control.name == 'zoneValue') {
       const selectedZone = control.options.find((option: any) =>
@@ -2794,27 +2797,27 @@ export class YatraComponent {
                 const sumInsuredList = res.data.sumInsuredList;
                 parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                   if (dynamicControl.name === 'sumInsured') {
-                    dynamicControl.options = sumInsuredList;
-                  }
-                });
-                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('sumInsured')?.setValue(sumInsuredList);
-
-
-                parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
-                  if (dynamicControl.name == 'sumInsured') {
                     dynamicControl.options = sumInsuredList.map((item: any) => ({
                       name: item.name,
                       value: item.value,
                     }));
                   }
                 });
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableSumInsured')?.setValue(sumInsuredList);
+                // parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
+                //   if (dynamicControl.name == 'sumInsured') {
+                //     dynamicControl.options = sumInsuredList.map((item: any) => ({
+                //       name: item.name,
+                //       value: item.value,
+                //     }));
+                //   }
+                // });
 
 
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(res.data.zone);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('city')?.setValue(res.data.city);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('state')?.setValue(res.data.state);
-
 
                 // // Locate the `zone` control and update its options
                 // const zoneControl = dynamicControls.find(dc => dc.name === 'zone');
@@ -3613,6 +3616,7 @@ export class YatraComponent {
                 // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
                 let index = -1;
                 let memberupgradableZones: IOptions[] = [];
+                let zoneWiseSI:IOptions[]=[];
                 if (formControl.dynamicControls) {
                   for (let i = 0; i < formControl.dynamicControls.length; i++) {
                     let element = formControl.dynamicControls[i];
@@ -3620,7 +3624,7 @@ export class YatraComponent {
                       let parsedValue = JSON.parse(element[0].value);
                       if (parsedValue.value === option.value) {
                         element.forEach((control: any) => {
-                          if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
+                          if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName') {
                             control.disabled = true
                           }
                           if (control.name == 'zoneValue') {
@@ -3638,7 +3642,7 @@ export class YatraComponent {
                               formSection.formControls.forEach(formcontrol => {
                                 if (formcontrol.name == control.name) {
                                   control.options = formcontrol.options;
-                                  memberupgradableZones = formcontrol.options || [];
+                                  zoneWiseSI = formcontrol.options || [];
                                 }
                               });
                             });
@@ -3675,6 +3679,8 @@ export class YatraComponent {
                     (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
                 }
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableSumInsured')?.setValue(zoneWiseSI);
+                // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(zoneWiseSI);
               }
               if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
@@ -5222,7 +5228,7 @@ export class YatraComponent {
         });
 
 
-        this.formData['sumInsured'] = this.formData['sumInsured'] ?? this.formData.insuredMemberDetails[0].sumInsured;
+        this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
         this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
         this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
 
