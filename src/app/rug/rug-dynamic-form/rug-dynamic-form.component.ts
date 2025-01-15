@@ -9001,22 +9001,24 @@ export class RugDynamicFormComponent {
   const dobValue = this.dynamicFormGroup.get('dob')?.value;
   const dobArray = dobValue.split('-');
     if ((dobArray[0] as number >= 1800) && dobValue) {
-      console.log(dobValue);  // Logs the complete value
       let age = this.calculateAge(dobValue);
+      let isKid = /^\d+days$/.test(age.toString());
+      if(isKid == true){
+        age = 1;
+      }
       if(Number(age) < 18 || Number(age) > 55){
-        console.log("lessthan 18")
         this.updateDobValidator(Number(age));
       }
     }
   }
   updateDobValidator(age: any){
-    const annualIncomeControl = this.dynamicFormGroup.get('dob');
+    const dobControl = this.dynamicFormGroup.get('dob');
     if (age < 18 || age > 55) {
-      annualIncomeControl?.setValidators([this.ageRangeValidator(18, 55, age)]);
+      dobControl?.setValidators([this.ageRangeValidator(18, 55, age)]);
     } else {
-      annualIncomeControl?.clearValidators();
+      dobControl?.clearValidators();
     }
-    annualIncomeControl?.updateValueAndValidity();
+    dobControl?.updateValueAndValidity();
   }
   ageRangeValidator(minAge: number, maxAge: number, eneterdAge: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
