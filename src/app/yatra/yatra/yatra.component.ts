@@ -4381,7 +4381,7 @@ export class YatraComponent {
       return;
     }
     else {
-      if (this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.controls['memberPolicyType'].value == 'Multi Individual') {
+      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
         const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
         const ageFlag = insuredMemberDetails.controls.every((person: any) => {
           return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
@@ -4408,7 +4408,7 @@ export class YatraComponent {
 
         }
       }
-      if (this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.controls['memberPolicyType'].value == 'Family Floater') {
+      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
         const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
         const ageFlag = insuredMemberDetails.controls.some((person: any) => {
           return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
@@ -4432,7 +4432,7 @@ export class YatraComponent {
               }
             }
           });
-          event.stopPropogation();
+          //event.stopPropogation();
         }
       }
       if (this.dynamicFormGroup.valid &&
@@ -8278,8 +8278,8 @@ export class YatraComponent {
     });
   }
 
-  onClickDownloadFromConfirmation() {
-    this.onSearchDocumentFromConfirmation();
+   onClickDownloadFromConfirmation() {
+     this.onSearchDocumentFromConfirmation();
     if (this.retrievedDocuments) {
       const downloadPolicyKitRequestBody = {
         agentCode: this.agentCode,
