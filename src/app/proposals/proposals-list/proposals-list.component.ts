@@ -703,6 +703,8 @@ export class ProposalsListComponent {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
           this.toast.success({ detail: "Success", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
+        }else{
+          this.toast.error({ detail: "Error", summary: response.message, duration: 2000 }); 
         }
       },(error)=>{
         console.log('failed to generate PDF ',error);
