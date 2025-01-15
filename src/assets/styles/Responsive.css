@@ -622,26 +622,40 @@
     .col-daterange input[type="date"] {
         min-width: 95%;
     }
-    input[type="date"]{
+    .member_extraInfoSubDate input[type="date"]{
         position: relative;
         /* display: inline-block; */
-        /* appearance: none;
-        -webkit-appearance:none; */
+        appearance: none;
+        -webkit-appearance:none;
+        -moz-appearance: none;
+        min-width: 95px;
     }
-    /* input[type="date"]::after{
+    .member_extraInfoSubDate input[type="date"]::-webkit-calendar-picker-indicator {
+        /* display: none; */
+        opacity: 0;
+        z-index: 9;
+    }
+    .member_extraInfoSubDate input[type="date"]::before{
+    }
+    .member_extraInfoSubDate input[type="date"]::after{
         content: '';
         position: absolute;
         top: 50%;
-        right: 10px; 
+        right: 9px; 
         transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        background-image: url('/src/assets/Img/date.png');
+        width: 10px;
+        height: 12px;
+        background-image: url(/assets/Img/date_icon.svg);
         background-size: contain;
         background-repeat: no-repeat;
-        pointer-events: none; 
         
-    }  */
+    } 
+    .member_extraInfoSubDate input[type="date"]::-webkit-input-placeholder,
+    .member_extraInfoSubDate input[type="date"]:-moz-placeholder,
+    .member_extraInfoSubDate input[type="date"]::-moz-placeholder,
+    .member_extraInfoSubDate input[type="date"]:-ms-input-placeholder {
+        visibility: hidden;
+    }
     .custom_toastStyles .toast-container.active,
     .custom_toastStyles .toast-container {
         right: auto !important;
