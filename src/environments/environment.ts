@@ -211,5 +211,7 @@ export const environment = {
   extractMastarData:"api/rug/ExtractMasterData",
   getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId",
   pinCodeDetailsQuote: "api/yatra/getpincodedetails",
-  getBaseCallerDetails: "api/rug/GetBaseCallerDetails"
+  getBaseCallerDetails: "api/rug/GetBaseCallerDetails",
+  DeleteBaseCaller:"api/rug/DeleteBaseCaller",
+  CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller"
 };

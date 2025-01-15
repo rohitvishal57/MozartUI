@@ -71,7 +71,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/rug/GetAllAudit',
     'https://usp.monocept.ai/api/rug/ExtractMasterData',
     'https://usp.monocept.ai/api/rug/GetTSPolicyInfoByLeadId',
-    'https://upuat.adityabirlahealth.com/api/rug/GetBaseCallerDetails'
+    'https://upuat.adityabirlahealth.com/api/rug/GetBaseCallerDetails',
+    "https://usp.monocept.ai/api/rug/DeleteBaseCaller",
+    "https://usp.monocept.ai/api/rug/CreateUpdateBaseCaller"
   ];
   
 

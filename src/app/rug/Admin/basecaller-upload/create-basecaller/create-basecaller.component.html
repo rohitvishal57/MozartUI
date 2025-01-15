@@ -201,72 +201,61 @@
                                 </span>
                             </div>
                         </div>
-                        
-                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="domainId" 
-                                    name="domainId" 
-                                    placeholder="Domain Id *" 
-                                    formControlName="domainId" 
-                                    type="text"
-                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('domainId')?.invalid && (createBaseCallerForm.get('domainId')?.touched || submitted) }">
-                                <label for="domainId">Domain Id *</label>
-                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('domainId')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['required']">
-                                        Please enter Domain Id.
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="center" 
+                                    name="center" 
+                                    formControlName="center"  (change)="onLocationChange($event)" 
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('center')?.invalid && (createBaseCallerForm.get('center')?.touched || submitted) }">
+                                    <option value="" disabled selectedLocationId>Select Center</option> 
+                                    <option *ngFor="let opt of allAxisLocations" [value]="opt.location">{{ opt.location }}</option>
+                                </select>
+                                <label for="center">Center *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('center')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('center')?.errors?.['required']">
+                                        Please select a Center.
                                     </span>
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['pattern']">
-                                        Domain Id should only contain alphanumeric characters.
+                                </span>
+                            </div>
+                        </div> 
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="lob" name="lob"
+                                    formControlName="lob"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('lob')?.invalid && (createBaseCallerForm.get('lob')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select LOB</option>
+                                    <option *ngFor="let lob of AllManageLOB" [value]="lob">{{lob}}</option>
+                                </select>
+                                <label for="lob">LOB*</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('lob')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBaseCallerForm.get('lob')?.errors?.['required']">
+                                        Please select Axis Lob
                                     </span>
                                 </span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="domainId" 
-                                    name="domainId" 
-                                    placeholder="Domain Id *" 
-                                    formControlName="domainId" 
-                                    type="text"
-                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('domainId')?.invalid && (createBaseCallerForm.get('domainId')?.touched || submitted) }">
-                                <label for="domainId">Domain Id *</label>
-                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('domainId')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['required']">
-                                        Please enter Domain Id.
-                                    </span>
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['pattern']">
-                                        Domain Id should only contain alphanumeric characters.
+                                <select class="form-select input-selectBox" id="vendor" name="vendor"
+                                    formControlName="vendor"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('vendor')?.invalid && (createBaseCallerForm.get('vendor')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Vendor</option>
+                                    <option *ngFor="let opt of filteredAxisVendors" [value]="opt.vendorName">{{
+                                        opt.vendorName }}</option>
+                                </select>
+                                <label for="vendor">Vendor*</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('vendor')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBaseCallerForm.get('vendor')?.errors?.['required']">
+                                        Please select Axis Vendor
                                     </span>
                                 </span>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="domainId" 
-                                    name="domainId" 
-                                    placeholder="Domain Id *" 
-                                    formControlName="domainId" 
-                                    type="text"
-                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('domainId')?.invalid && (createBaseCallerForm.get('domainId')?.touched || submitted) }">
-                                <label for="domainId">Domain Id *</label>
-                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('domainId')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['required']">
-                                        Please enter Domain Id.
-                                    </span>
-                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['pattern']">
-                                        Domain Id should only contain alphanumeric characters.
-                                    </span>
-                                </span>
-                            </div>
-                        </div> -->
-                        
-                        
+                        </div>    
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input 

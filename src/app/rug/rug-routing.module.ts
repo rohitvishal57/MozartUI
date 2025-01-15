@@ -37,6 +37,7 @@ const routes: Routes = [
     {path:'basecaller',component:BasecallerListComponent},
     {path:'upload_basecaller',component:BulkUploadBasecallerComponent},
     {path:'create_baseCaller',component:CreateBasecallerComponent},
+    {path:'update_baseCaller/:domainId',component:CreateBasecallerComponent},
     { path:'av-list', component:AVListComponent},
     { path:'bulk_upload', component:BulkUploadComponent},
     { path:'create_AV', component:CreateAVComponent},

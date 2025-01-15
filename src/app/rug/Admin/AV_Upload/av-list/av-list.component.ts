@@ -20,7 +20,7 @@ import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/succe
   styleUrls: ['./av-list.component.scss']
 })
 export class AVListComponent {
-[x: string]: any;
+  [x: string]: any;
 
   viewClaims: boolean = false;
   selected: string = '';
@@ -34,7 +34,7 @@ export class AVListComponent {
   displayedAVs: any[] = [];
   searchTerm: string = '';
   filterAllAvs = [...this.AllAVs];
-  
+
   constructor(private http: HttpClient,
     private router: Router,
     private commonService: CommonService,
@@ -43,7 +43,7 @@ export class AVListComponent {
     private languageService: LanguageService,
     private excelExportService: ExcelExportService,
     private translateService: TranslateService, private adminService: AdminService, private matdialogue: MatDialog) { }
- 
+
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -119,11 +119,11 @@ export class AVListComponent {
         window.location.reload();
       });
     },
-    (error: any) => {
-      console.error('API Error:', error);
-      console.error('Error Details:', error.error); 
-    }
-  );
+      (error: any) => {
+        console.error('API Error:', error);
+        console.error('Error Details:', error.error);
+      }
+    );
   }
 
 
@@ -156,7 +156,7 @@ export class AVListComponent {
   selectAllAssigneLeadDialog() {
 
   }
-  
+
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;

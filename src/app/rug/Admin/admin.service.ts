@@ -30,9 +30,19 @@ export class AdminService {
     return this.httpService.get(req);
   }
 
+  // getAllBaseCaller(baseCallerEmpId?: any): Observable<any> {
+  //   const req = this.configService.config.baseUrl + this.configService.config.getBaseCaller;
+  //   return this.httpService.get(req);
+  // }
+
   createAV(reqdata: any) {
     const createUpdateAV = this.configService.config.baseUrl + this.configService.config.createUpdateAv;
     return this.httpService.post(createUpdateAV, reqdata)
+  }
+
+  createUpdatebaseCaller(reqdata: any) {
+    const createUpdatebaseCaller = this.configService.config.baseUrl + this.configService.config.CreateUpdateBaseCaller;
+    return this.httpService.post(createUpdatebaseCaller, reqdata);
   }
 
   updateAV(endPoint:string,reqdata: any){
@@ -45,10 +55,17 @@ export class AdminService {
   return this.httpService.post(deleteav, reqData);
  }
 
+ deleteBaseCaller(reqData:string){
+  const deleteBaseCaller = this.configService.config.baseUrl + this.configService.config.DeleteBaseCaller;
+  return this.httpService.post(deleteBaseCaller, reqData);
+ }
+
  UploadBulk(reqdata: any) {
   const BulkUpload = this.configService.config.baseUrl + this.configService.config.bulkUpload;
   return this.httpService.post(BulkUpload, reqdata)
 }
+
+
 
 
   getAllBaseCaller(pageNo:number,noOfRecords:number){
