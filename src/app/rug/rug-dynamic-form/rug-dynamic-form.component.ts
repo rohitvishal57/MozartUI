@@ -1314,6 +1314,40 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
+      if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.partnerId == "45") {
+        let baseCallerRequest = {
+          "baseCallerId": this.agentCode.toString()
+        }
+        this.rugService.getBaseCallerDetails(baseCallerRequest).subscribe({
+          next: (res: any) => {
+            let baseCallerResponse: any;
+            console.log(res);
+            baseCallerResponse = JSON.parse(res.data);
+            console.log(baseCallerResponse);
+            if (baseCallerResponse.isSuccess == true && baseCallerResponse.statusCode == 200) {
+              // this.toast.success({ detail: "Success", summary: baseCallerResponse.message, duration: 3000 });
+              this.dynamicFormGroup.patchValue({
+                baseCallerId: baseCallerResponse?.data?.baseCallerDetails?.baseCallerId,
+                baseCallerName: baseCallerResponse?.data?.baseCallerDetails?.baseCallerName,
+                tlID: baseCallerResponse?.data?.baseCallerDetails?.tlid,
+                tlName: baseCallerResponse?.data?.baseCallerDetails?.tlName,
+                axisLocation: baseCallerResponse?.data?.baseCallerDetails?.axisLocation,
+                avCode: baseCallerResponse?.data?.baseCallerDetails?.avCode,
+                avName: baseCallerResponse?.data?.baseCallerDetails?.avName,
+                imdCode: baseCallerResponse?.data?.baseCallerDetails?.imdCode
+              })
+
+            } else {
+              this.toast.success({ detail: "Success", summary: baseCallerResponse.message, duration: 3000 });
+
+            }
+
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
       if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
         this.dynamicFormGroup.patchValue({
           nomineeShare: this.bbdetails.defaultShare,

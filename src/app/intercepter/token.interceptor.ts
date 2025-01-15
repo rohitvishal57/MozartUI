@@ -75,7 +75,8 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/rug/AssignBackToDo',
     'https://upuat.adityabirlahealth.com/api/rug/GetAllAudit',
     'https://usp.monocept.ai/api/rug/ExtractMasterData',
-    'https://usp.monocept.ai/api/rug/GetTSPolicyInfoByLeadId'
+    'https://usp.monocept.ai/api/rug/GetTSPolicyInfoByLeadId',
+    'https://upuat.adityabirlahealth.com/api/rug/GetBaseCallerDetails'
   ];
 
   intercept(
