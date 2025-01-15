@@ -271,6 +271,18 @@ h6 {
 .siteBody {
 	padding-bottom: 6rem;
 }
+.btn_actionShare img {
+	opacity: 0.6;
+}
+.btn_actionShare:hover img {
+	opacity: 1;
+}
+.actionItemHead {
+	font-family: "Anek Latin", sans-serif !important;
+	font-size: 14px;
+	font-weight: 500;
+	color:#a8a8a8 ;
+}
 @media (max-width:767px) {
 	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
 		width: 100%;
