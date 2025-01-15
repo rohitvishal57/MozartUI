@@ -2249,10 +2249,6 @@ export class YatraComponent {
 
   getAllBankDetails(control: any) {
     if (control.options.length <= 0) {
-
-      // }
-      // else{
-
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
           control.options = res.data;
@@ -2269,8 +2265,8 @@ export class YatraComponent {
     const data = JSON.parse(event.target.value);
     this.bankCode = data.id;
     const reqData = {
-      "cityCode": "",
-      "bankCode": this.bankCode
+      "cityName": "",
+      "bankName": this.bankCode
     };
     this.yatraService.getBankCity(reqData).subscribe({
       next: (res: any) => {
@@ -2290,8 +2286,8 @@ export class YatraComponent {
     this.bankCity = data.id as string;
 
     const reqData = {
-      "bankCode": this.bankCode,
-      "cityCode": this.bankCity
+      "bankName": this.bankCode,
+      "cityName": this.bankCity
     };
 
     this.yatraService.getBranchDetails(reqData).subscribe({
@@ -2722,11 +2718,11 @@ export class YatraComponent {
                     value: response.data.bankName,
                     name: response.data.bankName
                   };
-                  this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+                  this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
                   this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
 
-                  if (response.data.bankCode) {
-                    const cityReqData = { cityCode: "", bankCode: response.data.bankCode };
+                  if (response.data.bankName) {
+                    const cityReqData = { cityName: "", bankName: response.data.bankName };
                     this.yatraService.getBankCity(cityReqData).subscribe({
                       next: (cityRes: any) => {
                         const cityDetails = cityRes.data || [];
@@ -2753,8 +2749,8 @@ export class YatraComponent {
                         }
                         this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
                         const branchReqData = {
-                          bankCode: response.data.bankCode,
-                          cityCode: response.data.cityCode
+                          bankName: response.data.bankName,
+                          cityName: response.data.cityName
                         };
                         this.yatraService.getBranchDetails(branchReqData).subscribe({
                           next: (branchRes: any) => {
@@ -2928,7 +2924,6 @@ export class YatraComponent {
 
     if (parentControl == null && control.name == 'proposerPincode') {
       const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.toString().length || 0;
-
       if (pinCodeLength === 6) {
         const reqData = {
           "pincode": event.target.value,
@@ -8303,7 +8298,7 @@ export class YatraComponent {
     const reqData = {
       "pincode": this.formData.proposerPincode && this.formData.proposerPincode.toString()
     }
-    this.formData.proposerPincode && this.commonService.getPinCodeByCity(reqData).subscribe(res => {
+    this.formData.proposerPincode && this.commonService.getPinCodeByCityForQuote(reqData).subscribe(res => {
       if (res.isSuccess && res.data) {
         // Update city and state fields
         this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
