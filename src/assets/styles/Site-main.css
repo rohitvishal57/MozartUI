@@ -6567,7 +6567,11 @@ input[type=number]::-webkit-outer-spin-button {
   position: initial;
 }
 /*----New styles added 13-nov-24 end----*/
-
+.btn_customiseDelete {
+  padding: 6px 8px;
+    border-radius: 7px;
+    border: 1px solid #C7222A;
+}
 
 
 /*----Axis D2C Header start----*/

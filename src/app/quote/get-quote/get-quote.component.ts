@@ -57,11 +57,11 @@ export class GetQuoteComponent implements AfterViewChecked {
   diseases = [
     { id: 'PTCA', value: 'PTCA', label: 'PTCA' },
     { id: 'hypertension', value: 'hypertension', label: 'Hypertension' },
-    { id: 'diabetesMellitus', value: 'diabetesMellitus', label: 'Diabetes Mellitus' },
-    { id: 'COPD', value: 'COPD', label: 'COPD' },
-    { id: 'Asthma', value: 'Asthma', label: 'Asthma' },
+    { id: 'diabetesMellitus', value: 'diabetes', label: 'Diabetes Mellitus' },
+    { id: 'COPD', value: 'copd', label: 'COPD' },
+    { id: 'Asthma', value: 'asthma', label: 'Asthma' },
     { id: 'hyperlipidemia', value: 'hyperlipidemia', label: 'Hyperlipidemia' },
-    { id: 'highBMI', value: 'highBMI', label: 'High BMI' }
+    { id: 'highBMI', value: 'obesity', label: 'High BMI' }
 
   ];
   proposerZone: any;
@@ -198,17 +198,17 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
-
-    if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
+        if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
       this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
     console.log(this.formData, this.relations);
-    if (this.formData && (this.formData.currentZone || this.formData.zoneValue || this.formData.zone || this.formData.upgradableZones)) {
+    if (this.formData && (this.formData.currentZone || this.formData.zoneValue || this.formData.zone || this.formData.upgradableZones || this.formData.memberPolicyType)) {
       this.currentZone = this.formData.currentZone;
       this.proposerZoneValue = this.formData.zoneValue;
       this.proposerZone = this.formData.zone;
       this.upgradableZones = this.formData.upgradableZones;
+      this.selectedPlan = this.formData.memberPolicyType;
     }
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
@@ -228,6 +228,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       memberDobProposer: [''],
       memberAgeProposer: [''],
       isPortability: [null],
+      isChronicCare: ["N"],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
@@ -886,7 +887,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   diseaseSelection() {
     this.diseaseNames = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : '';
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
-
+    this.quoteFormGroup.get('isChronicCare')?.setValue(this.diseaseNames !== "" ? "Y" : "N");
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
       memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
@@ -992,7 +993,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   // Add new member details
   addInsuredMemberDetails(): void {
     this.showErrors = false;
-    console.log(this.selectedRelationships, this.quoteFormGroup);
+    console.log(this.selectedRelationships, this.quoteFormGroup,this.selectedPlan);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
         detail: "Error",
@@ -1033,15 +1034,6 @@ export class GetQuoteComponent implements AfterViewChecked {
       });
       return;
     }
-
-    // if(this.DateCheck.includes(false) && this.DateCheck.length > 0){
-    //   this.toast.error({
-    //     detail: "Error",
-    //     summary: "Please fill valid Date.",
-    //     duration: 1000
-    //   });
-    //   return;
-    // }
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid && !isValid) {
       // const insured:any=[];
@@ -1151,7 +1143,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     };
 
     this.upgradableZones = [];
-    this.service.getPinCodeByCity(reqdata).subscribe({
+    this.service.getPinCodeByCityForQuote(reqdata).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           console.log(res);

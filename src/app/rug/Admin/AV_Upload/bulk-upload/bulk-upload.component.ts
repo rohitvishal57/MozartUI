@@ -21,12 +21,12 @@ export class BulkUploadComponent {
   fileList: any[] = [];
   isContinueButtonDisabled: boolean = true;
   selectedFile: File | null = null;
-  filedata:any;
+  filedata: any;
 
-  constructor(private formBuilder: FormBuilder, 
-              private toast: NgToastService,
-              private adminService: AdminService, 
-              private router: Router) { }
+  constructor(private formBuilder: FormBuilder,
+    private toast: NgToastService,
+    private adminService: AdminService,
+    private router: Router) { }
 
   ngOnInit() {
     this.bulkUploadForm = this.formBuilder.group({
@@ -43,7 +43,7 @@ export class BulkUploadComponent {
     const files: FileList = event.target.files;
     console.log('files', event.target.files)
 
-    
+
 
     if (files && files.length > 0) {
       const file = files[0];
@@ -77,45 +77,52 @@ export class BulkUploadComponent {
 
     if (!this.selectedFile) {
       this.isFilenotSelected = true;
+      this.toast.error({
+        detail: "Error",
+        summary: "No file selected. Please select a file to upload.",
+        duration: 5000,
+      });
       return;
     }
+
     const data = new FormData();
     data.append('File', this.filedata);
     data.append('UploadedBy', 'teleadmin1');
     data.append('IsDoUpload', 'false');
     data.append('IsAVUpload', 'true');
     data.append('IsBaseCallerUpload', 'false');
- 
+
     this.adminService.UploadBulk(data).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
-          window.open(response.data.url, '_blank');
+        const res = JSON.parse(response.data);
+        if (res.statusCode === 200) {
           this.toast.success({
             detail: "Success",
             summary: "File uploaded successfully!",
             duration: 3000,
           });
-        } 
-      },
-      (error: any) => {
-        console.error("Error from API:", error);
-        this.toast.error({
-          detail: "Error",
-          summary: "An error occurred while uploading. Please try again.",
-          duration: 5000,
-        });
+
+          // Reset the file list after successful upload
+          this.fileList = [];
+          this.selctedFileName = '';
+        } else {
+          this.toast.error({
+            detail: "Error",
+            summary: "Unexpected response format. Please try again.",
+            duration: 5000,
+          });
+          this.fileList = [];
+          this.selctedFileName = '';
+        }
       }
     );
-    
-    // Reset the file list after successful upload
-    this.fileList = [];
-    this.selctedFileName = '';
   }
-  backToAvList(){
+
+  backToAvList() {
     this.router.navigate(['/rug/av-list'], {
-  });
+    });
   }
-  
+
 
   // Submit form method
   onSubmit() {

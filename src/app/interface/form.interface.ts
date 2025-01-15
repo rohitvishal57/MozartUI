@@ -99,6 +99,7 @@ export interface IFormControl {
   visibleToolTip?:boolean;
   toolTipMessage?:string;
   isDefault?:boolean;
+  postControlCreationMethod?: string;
 }
 export interface ISubControl {
   name: string;

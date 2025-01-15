@@ -171,7 +171,7 @@ export class RugDynamicFormComponent {
           console.log(res);
           this.formSequence = JSON.parse(res.data.formSequence);
           console.log(this.formSequence);
-          if(this.agentCode != "467898" && this.agentCode == "467899"){
+          if(this.agentCode != "467898" && this.partnerId == "16"){
             this.isD2C = false;
             this.isTS = false;
             this.isBB = true;
@@ -352,7 +352,7 @@ export class RugDynamicFormComponent {
       }
 
 
-      if(this.agentCode != "467898" && this.agentCode == "467899"){
+      if(this.agentCode != "467898" && this.partnerId == "16"){
         this.isD2C = false;
         this.isTS = false;
         this.isBB = true;
@@ -1233,7 +1233,7 @@ export class RugDynamicFormComponent {
 
           });
         }
-        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
           // insuredMembersArray.at(0).get('firstName')?.disable();
           this.dynamicFormGroup.get('preFix')?.disable();
           this.dynamicFormGroup.get('customerFirstName')?.disable();
@@ -1244,6 +1244,13 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('proposerPanNumber')?.disable();
           this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
           this.dynamicFormGroup.get('proposerAddress')?.disable();
+      }
+      if(this.formSequence[this.getFormIndexValue()].formId == 4 && this.partnerId == "45"){
+        this.dynamicFormGroup.patchValue({
+          preFix: this.tsDetails.proposerGender == "M" ? "Mr" : "Ms"
+        })
+        this.dynamicFormGroup.get('preFix')?.disable();
+        this.dynamicFormGroup.get('proposerGender')?.disable();
       }
         if(this.getFormIndexValue() == 1 && (this.formSequence[0].formName == "Proposer Details")){
           console.log(this.tsDetails)
@@ -1284,7 +1291,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
       }
       console.log(this.dynamicFormGroup.value);
-      if (this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details") {
+      if (this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16") {
         console.log("Customer Details");
         console.log(this.dynamicFormGroup.value);
         console.log(this.bbdetails);
@@ -3064,6 +3071,16 @@ export class RugDynamicFormComponent {
                           }else{
                             control.get('gender').setValue("M")
                           }
+                        }else if(this.isD2C){
+                          if(this.d2cDetails.proposerGender == "M"){
+                            control.get('gender').setValue("F")
+                            control.get('salutation').setValue("MRS")
+                            control.get('salutation').disable();
+                          }else{
+                            control.get('gender').setValue("M")
+                            control.get('salutation').setValue("MR")
+                            control.get('salutation').disable();
+                          }
                         }else{
                           control.get('gender').setValue("F")
                         }
@@ -3074,11 +3091,19 @@ export class RugDynamicFormComponent {
                         control.get('gender').setValue("M")
                         control.get('relation').disable();
                         control.get('gender').disable();
+                        if(this.isD2C){
+                        control.get('salutation').setValue("MR")
+                        control.get('salutation').disable();
+                        }
                       }
                       if(control.get('relation').value == "Daughter1" || control.get('relation').value == "Daughter2"){
                         control.get('gender').setValue("F")
                         control.get('relation').disable();
                         control.get('gender').disable();
+                        if(this.isD2C){
+                          control.get('salutation').setValue("MS")
+                          control.get('salutation').disable();
+                          }
                       }
                         control.get('mobileNumber')?.clearValidators();
                 
@@ -3251,7 +3276,7 @@ export class RugDynamicFormComponent {
       insuredMembersArray.at(0).get('firstName')?.disable();
       insuredMembersArray.at(0).get('mobileNumber')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
-      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.formSequence[this.getFormIndexValue()].formName == "Customer Details"){
+      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
                 // insuredMembersArray.at(0).get('firstName')?.disable();
                 this.dynamicFormGroup.get('customerFirstName')?.disable();
                 this.dynamicFormGroup.get('customerLastName')?.disable();
@@ -3332,6 +3357,11 @@ export class RugDynamicFormComponent {
                 lastName = fullName.split(" ")?.[2]
             }
             // const [firstName, lastName] = fullName.split(' ');
+            if(item.relation == "Self"){
+              insuredMembersArray.at(index).patchValue({
+                salutation: this.d2cDetails.customerSalutation,
+              });
+            }
             insuredMembersArray.at(index).patchValue({
               name: item.name,
               firstName:firstName,
@@ -3343,29 +3373,11 @@ export class RugDynamicFormComponent {
               weight: item.weight,
               height: item.height,
               heightInches: item.heightInches
-              // firstName: item.name,
-              // lastName: item.name,
-              // memberdob: item.dob,
-              // memberGender: item.gender,
-              // memberAge: this.getAgeFromDOB(item.dob),
-              // weight: item.weight,
-              // height: item.height,
-              // heightInches: item.heightInches
-              // if(item.relation == "Self"){
-              // firstName: item.name,
-              // lastName: item.name ? item.name : ".",
-              // memberdob: item.dob,
-              // memberGender: item.gender ?  item.gender : "",
-              // memberAge: item.age ? item.age : "",
-              // weight: item.weight ? item.weight : "",
-              // height: item.height ? item.height : "",
-              // heightInches: item.heightInches ? item.heightInches : ""
-              // height: selfResult.feet !== 0 ? selfResult.feet : null,
-              // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
             });
           }
         });
         insuredMembersArray.at(0).get('gender')?.disable();
+        insuredMembersArray.at(0).get('salutation')?.disable();
       }
     }
     if(this.formSequence[0].formName == "Proposer Details" && (this.formSequence[this.getFormIndexValue()].formId == 2 || this.formSequence[this.getFormIndexValue()].formId == 9)){
@@ -4500,7 +4512,7 @@ export class RugDynamicFormComponent {
                       // }
 
                     } else {
-                      this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+                      this.toast.success({ detail: "Success", summary: halfQuoteResponse.message, duration: 3000 });
 
                     }
 
@@ -8743,7 +8755,74 @@ export class RugDynamicFormComponent {
         nomineeMobileNumber: ''
       });
     }
-    
+    if(this.partnerId == "45"){
+      let selectedGender=this.getGender(relationWithProposer)
+      this.dynamicFormGroup.patchValue({
+        preFix: this.mapSalutation(relationWithProposer),
+        nomineeGender: selectedGender,
+      })
+    }
+  }
+  getGender(relation: string): string {
+    switch (relation.toLowerCase()) {
+      case 'spouse':
+        return this.tsDetails.proposerGender=='F'?'M':'F';
+      case 'son':
+      case 'grandson':
+      case 'nephew':
+      case 'brother':
+      case 'father':
+      case 'son-in-law':
+      case 'brother-in-law':
+      case 'father-in-law':
+      case 'grandfather':
+      case 'uncle':
+        return 'M';
+      case 'daughter':
+      case 'granddaughter':
+      case 'niece':
+      case 'sister':
+      case 'mother':
+      case 'daughter-in-law':
+      case 'sister-in-law':
+      case 'mother-in-law':
+      case 'grandmother':
+      case 'aunt':
+        return 'F';
+      default:
+        return '';
+    }
+  }
+  mapSalutation(relation: string): string {
+    switch (relation.toLowerCase()) {
+      case 'spouse':
+        return  this.tsDetails.proposerGender=='M'?'Mrs':'Mr';
+      case 'son':
+      case 'grandson':
+      case 'nephew':
+      case 'brother':
+      case 'father':
+      case 'son-in-law':
+      case 'brother-in-law':
+      case 'father-in-law':
+      case 'grandfather':
+      case 'uncle':
+        return 'Mr';
+      case 'daughter':
+      case 'granddaughter':
+      case 'niece':
+      case 'sister':
+      case 'mother':
+      case 'daughter-in-law':
+      case 'sister-in-law':
+      case 'mother-in-law':
+      case 'grandmother':
+      case 'aunt':
+        return 'Ms';
+      default:
+        return '';
+        
+    }
   }
   changeD2CNomineeRelation(control: any){
     console.log(this.d2cDetails.insuredMemberDetails);
@@ -8918,8 +8997,54 @@ export class RugDynamicFormComponent {
       }
     }
   }
-
-
+  changeTsDobValidation(control: any, event: any){
+  const dobValue = this.dynamicFormGroup.get('dob')?.value;
+  const dobArray = dobValue.split('-');
+    if ((dobArray[0] as number >= 1800) && dobValue) {
+      console.log(dobValue);  // Logs the complete value
+      let age = this.calculateAge(dobValue);
+      if(Number(age) < 18 || Number(age) > 55){
+        console.log("lessthan 18")
+        this.updateDobValidator(Number(age));
+      }
+    }
+  }
+  updateDobValidator(age: any){
+    const annualIncomeControl = this.dynamicFormGroup.get('dob');
+    if (age < 18 || age > 55) {
+      annualIncomeControl?.setValidators([this.ageRangeValidator(18, 55, age)]);
+    } else {
+      annualIncomeControl?.clearValidators();
+    }
+    annualIncomeControl?.updateValueAndValidity();
+  }
+  ageRangeValidator(minAge: number, maxAge: number, eneterdAge: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const dob = control.value ? new Date(control.value) : null;
+      if (dob) {
+        const age = this.calculateTsAge(dob);
+        if (Number(age) < minAge || Number(age) > maxAge) {
+          return { ageRange: { minAge, maxAge, actualAge: age } };
+        }
+      }
+      return null;
+    };
+  }
+  calculateTsAge(dob: Date): number {
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      return age - 1;
+    }
+    return age;
+  }
+  changeTsGenderOnSalutaion(event: any){
+    console.log(this.dynamicFormGroup.value.salutation);
+    this.dynamicFormGroup.get('gender')?.setValue(this.dynamicFormGroup.value.salutation == 'Mr' ? 'M':'F');
+    this.dynamicFormGroup.get('gender')?.disable();
+  }
   updatePlansBasedOnSumInsured(sumInsured: number = 500000): void {
     sumInsured = this.dynamicFormGroup.get('sumInsured')?.value
     if (sumInsured == 10000000) {

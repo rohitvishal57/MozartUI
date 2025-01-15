@@ -12,9 +12,9 @@
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
                         <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All', 'totalRecords')">{{"All" | translate}} ({{activeCount + resolvedCount + cancelledCount}})</button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active', 'activeCount')">{{"Active" | translate}} ({{activeCount}})</button></li>
+                        <!-- <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active', 'activeCount')">{{"Active" | translate}} ({{activeCount}})</button></li>
                         <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved', 'resolvedCount')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled', 'cancelledCount')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled', 'cancelledCount')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li> -->
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
@@ -131,7 +131,7 @@
                                 <th scope="col">{{"Contact Info" | translate}}</th>
                                 <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">{{"Request Type" | translate}}</th>
-                                <th scope="col">{{"Status" | translate}}</th>
+                                <!-- <th scope="col">{{"Status" | translate}}</th> -->
                                 <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
                                 <th scope="col">{{"Action" | translate}}</th>
                             </tr>
@@ -146,7 +146,7 @@
                                 <td><span class="text-break-w100">{{ row?.mobileNumber }} {{ row?.emailId }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
-                                <td>{{ row?.status }}</td>
+                                <!-- <td>{{ row?.status }}</td> -->
                                 <td>{{ row?.raisedOn }}</td>
                                 <td>
                                     <div class="btn_groupAction">

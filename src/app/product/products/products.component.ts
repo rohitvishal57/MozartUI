@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import HeaderInformation from 'src/app/layout/headerInfo';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { error } from 'jquery';
+import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
   selector: 'app-products',
@@ -55,7 +56,7 @@ export class ProductsComponent implements OnInit {
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute, private languageService: LanguageService,
-   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
+   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService,  private rugService: RugService ) {}
 
   ngOnInit(): void {
     
@@ -79,6 +80,7 @@ export class ProductsComponent implements OnInit {
         this.productId = this.paramLeadId.ProductId;
         // this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
         console.log(this.formSequence);
+        this.rugService.changeStatus(true)
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem('agentCode', this.paramLeadId.AgentCode)
         localStorage.setItem('leadId', this.paramLeadId.LeadId)

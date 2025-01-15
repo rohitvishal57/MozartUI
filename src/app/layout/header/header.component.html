@@ -1,5 +1,5 @@
 <!--Header start-->
-<header class="siteHeader" *ngIf="agentCode != '467898'">
+<header class="siteHeader" *ngIf="!showD2cHeader">
 
   <!--ABC Links start-->
   <div class="abcLinksMain" *ngIf="agentCode != '467899'">
@@ -48,6 +48,11 @@
             </button>
             <div class="collapse navbar-collapse" id="supported_NavBar">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                  <a class="nav-link"  href="https://login-in21.leadsquared.com/Home/SignInWithSSO" target="_blank" rel="noopener noreferrer">
+                    {{"LSQ" | translate}}
+                  </a>
+                </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link"  href="https://insights.adityabirlahealth.com/#/signin" target="_blank" rel="noopener noreferrer">
                     {{"MIS" | translate}}
@@ -173,7 +178,7 @@
 </header>
 <!--Header end-->
 <!--Axis Header start-->  
-<header class="pageHeader" *ngIf="agentCode == '467898'">
+<header class="pageHeader" *ngIf="showD2cHeader">
   <div class="pageHeaderContainer">
           <div class="ph_Left">
               <img src="assets/axis_assets/images/logo_axis.svg" alt="Axis insurance" class="logo_desktop">

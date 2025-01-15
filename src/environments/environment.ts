@@ -96,11 +96,12 @@ export const environment = {
   endorsementValidateOTP: "api/claims/endorsementvalidateotp",
   getpolicyinfodetails: "api/claims/getpolicyinfodetails",
   endorsementCaseDetails: "api/claims/getcasedetailsbycaseid",
+  getEndorsementStatus: "api/claims/getstatusbycaseid",
   agentCartDetails: "api/quote/getagentcartdetails",
   insertOrUpdateAgentCartDetails: "api/quote/insertorupdateagentcartdetails",
   deleteagentcartitems: "api/quote/deleteagentcartitems",
   productList: "api/yatra/getproductlist",
-  pinCodeDetails: "api/yatra/getpincodedetails",
+  pinCodeDetails: "api/yatra/getpincodeandSIdetails",
   proposalNumber: "api/yatra/getproposalnumber",
   formSequence: "api/yatra/getformsequence",
   getForm: "api/yatra/getform",
@@ -208,5 +209,6 @@ export const environment = {
   verifylink:"api/yatra/verifylink",
   confirmproposer:"api/yatra/confirmproposer",
   extractMastarData:"api/rug/ExtractMasterData",
-  getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId"
+  getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId",
+  pinCodeDetailsQuote: "api/yatra/getpincodedetails"
 };

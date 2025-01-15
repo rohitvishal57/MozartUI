@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/notifications/notification.service'
 import { error } from 'jquery';
 import HeaderInformation from '../headerInfo';
 import { ConfigService } from 'src/app/services/config.service';
+import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
   selector: 'app-header',
@@ -25,13 +26,14 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   unReadNotificaitons : any[]=[];
   showNotifications : Boolean = false;
   agentCode : any;
+  showD2cHeader:any = false;
   @Input() isLoggedIn: any;
 
 
   
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
-    ,public headerInformation : HeaderInformation,private configService: ConfigService
+    ,public headerInformation : HeaderInformation,private configService: ConfigService, private rugService: RugService
   ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
@@ -39,6 +41,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   ngOnInit() {
+    this.rugService.currentStatus.subscribe(flag => this.showD2cHeader = flag);
     this.languageService.language$.subscribe(lang => {
       this.currentLanguage = lang;
       this.agentCode = localStorage.getItem('agentCode');

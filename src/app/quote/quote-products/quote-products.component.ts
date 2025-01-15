@@ -112,26 +112,31 @@ export class QuoteProductsComponent implements OnInit {
     this.quoteService.Getproductlist2(reqData).subscribe({
       next: (res: any) => {
         console.log(res)
-        this.Getagentcartdetails();
-        this.partnerId = res.data.partnerId
-        this.ProductList = res.data.products
-        console.log(this.ProductList);
-        this.ProductList.forEach((prod: any) => {
-          // Parse keyFeatures and initialize selectedAddon
-          prod.keyFeatures = JSON.parse(prod.keyFeatures);
-          prod.selectedAddon = [];
-
-          // Round tenure premiums
-          prod.tenure1Premium = Math.round(prod.tenure1Premium);
-          prod.tenure2Premium = Math.round(prod.tenure2Premium);
-          prod.tenure3Premium = Math.round(prod.tenure3Premium);
-
-          // Optionally, log the updated product
-          console.log(prod);
-        });
-
-        this.selectedPlans = Array(this.ProductList.length).fill(3);
-        this.addonView = Array(this.ProductList.length).fill(false);
+        if(res.isSuccess){
+          this.Getagentcartdetails();
+          this.partnerId = res.data.partnerId
+          this.ProductList = res.data.products
+          console.log(this.ProductList);
+          this.ProductList.forEach((prod: any) => {
+            // Parse keyFeatures and initialize selectedAddon
+            prod.keyFeatures = JSON.parse(prod.keyFeatures);
+            prod.selectedAddon = [];
+  
+            // Round tenure premiums
+            prod.tenure1Premium = Math.round(prod.tenure1Premium);
+            prod.tenure2Premium = Math.round(prod.tenure2Premium);
+            prod.tenure3Premium = Math.round(prod.tenure3Premium);
+  
+            // Optionally, log the updated product
+            console.log(prod);
+          });
+  
+          this.selectedPlans = Array(this.ProductList.length).fill(3);
+          this.addonView = Array(this.ProductList.length).fill(false);
+        }
+        else{
+          this.toast.error({detail: "Error",summary: res.message,duration: 3000});
+        }
       },
       error: (err) => {
         // this.spinner.hide();

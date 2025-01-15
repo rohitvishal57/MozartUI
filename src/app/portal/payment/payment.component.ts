@@ -217,7 +217,7 @@ export class PaymentComponent {
       else if (this.businessType == 'REN') {
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
-          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyNumber: this.paymentDetail.policyNumber || this.paymentDetail.oldPolicyNumber || '',
           policyStatus: this.paymentDetail.policyStatus || '',
           policyStartDate: this.paymentDetail.policyStartDate || '',
           policyEndDate: this.paymentDetail.policyEndDate || '',
@@ -259,24 +259,24 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus?.startsWith('IN')) {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "Success", summary: this.paymentDetail.errorMessage || "Payment successful", duration: 5000 });
+            this.toast.success({ detail: "Success", summary: this.paymentDetail.policyRejectedReason || "Payment successful", duration: 5000 });
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
                 proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([payment, thankYou]),
                 formIndex: "1",
               },
             });
           } else {
-            this.toast.warning({ detail: "Warning", summary: this.paymentDetail.errorMessage || "Payment was successful, but policy issuance failed.", duration: 5000 });
+            this.toast.warning({ detail: "Warning", summary: this.paymentDetail.policyRejectedReason || "Payment was successful, but policy issuance failed.", duration: 5000 });
             formData.paymentMessage = "Payment completed successfully; policy issuance pending";
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 formIndex: "1",
               },
             });
@@ -284,22 +284,22 @@ export class PaymentComponent {
         }
         else if (this.paymentDetail?.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
           formData.paymentMessage = "Payment pending; please wait for processing";
-          this.toast.warning({ detail: "Warning", summary: this.paymentDetail.errorMessage || "payment Pending", duration: 5000 });
+          this.toast.warning({ detail: "Warning", summary: this.paymentDetail.policyRejectedReason || "payment Pending", duration: 5000 });
           this.router.navigate(['renewal/renewalJourney'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
               formIndex: "1",
             }
           });
         } else {
-          this.toast.error({ detail: "Error", summary: this.paymentDetail.errorMessage || "Payment failed", duration: 5000 });
+          this.toast.error({ detail: "Error", summary: this.paymentDetail.policyRejectedReason || "Payment failed", duration: 5000 });
           this.router.navigate(['renewal/renewalJourney'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               formSequence: this.encryptionService.encrypt([payment, thankYou]),
               formIndex: "0",
             }
@@ -397,7 +397,7 @@ export class PaymentComponent {
       } else if (this.businessType == 'REN' || this.paymentDetail.businessType == 'Renewal') {
         const formData = {
           proposalNumber: this.paymentDetail.proposalId || '',
-          policyNumber: this.paymentDetail.oldPolicyNumber || '',
+          policyNumber: this.paymentDetail.policyNumber || this.paymentDetail.oldPolicyNumber || '',
           policyStatus: this.paymentDetail.policyStatus || '',
           policyStartDate: this.paymentDetail.policyStartDate || '',
           policyEndDate: this.paymentDetail.policyEndDate || '',
@@ -438,42 +438,42 @@ export class PaymentComponent {
             });
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
-            this.toast.success({ detail: "Success", summary: this.paymentDetail.errorMessage || "Payment successful", duration: 5000 });
+            this.toast.success({ detail: "Success", summary: this.paymentDetail.policyRejectedReason || "Payment successful", duration: 5000 });
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
                 proposalNum: this.encryptionService.encrypt(""),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
                 formIndex: "1",
               },
             });
           } else {
-            this.toast.warning({ detail: "Warning", summary: this.paymentDetail.errorMessage || "Payment was successful, but policy issuance pending.", duration: 5000 });
+            this.toast.warning({ detail: "Warning", summary: this.paymentDetail.policyRejectedReason || "Payment was successful, but policy issuance pending.", duration: 5000 });
             formData.paymentMessage = "Payment completed successfully; policy issuance pending";
             this.router.navigate(['renewal/customerPayment'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
-                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 formSequence: this.encryptionService.encrypt([thankYou]),
                 formIndex: "0",
               },
             });
           }
         } else if (this.paymentDetail.paymentStatus == 'INPROGRESS' || this.paymentDetail?.paymentStatus == 'PENDING') {
-           this.toast.warning({ detail: "Warning", summary: this.paymentDetail.errorMessage || `${'payment '+ this.paymentDetail.paymentStatus}` , duration: 5000 });
+           this.toast.warning({ detail: "Warning", summary: this.paymentDetail.policyRejectedReason || `${'payment '+ this.paymentDetail.paymentStatus}` , duration: 5000 });
            formData.paymentMessage = "Payment pending; please wait for processing";
            this.router.navigate(['renewal/customerPayment'], {
             state: {
               formData: this.encryptionService.encrypt(formData),
-              policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+              // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               formSequence: this.encryptionService.encrypt([thankYou]),
               formIndex: "0",
             }
           });
          } else {
-           this.toast.error({ detail: "Error", summary: this.paymentDetail.errorMessage || "Payment failed", duration: 5000 });
+           this.toast.error({ detail: "Error", summary: this.paymentDetail.policyRejectedReason || "Payment failed", duration: 5000 });
            this.router.navigate(['renewal/customerPayment'], {
              state: {
                formData: this.encryptionService.encrypt(formData),

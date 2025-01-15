@@ -1174,6 +1174,19 @@ body {
     background: #E6E6E6;
     height: 1px;
 }
+.main-container .right-panel .custom-line2 {
+    border-bottom: 1px solid #E6E6E6;
+    margin: 15px 0 15px;
+    padding: 0 0 10px;
+    opacity: 1;
+    width: 100%;
+    position: relative;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.8px;
+    color: #2e2e2e;
+}
 
 .main-container .right-panel .back-btn {
     background-color: #ffe6e7;
@@ -1276,7 +1289,7 @@ body {
 
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
-    margin-top: 28px;
+    margin-top: 12px;
     min-height: 100px;
     min-width: 380px;
 }
@@ -1622,6 +1635,7 @@ body {
 .main-container .right-panel .back-btn,
 .main-container .right-panel .field-btn {
     padding: 10px 21px;
+    margin-right: 5px;
 }
 
 /*===AUGUST 16th styles start===*/
@@ -3282,6 +3296,12 @@ margin: 0;
     width: 100%;
     /* padding: 0 0 22px; */
 }
+.main-container .right-panel input[type="checkbox"]:disabled {
+    background-color: #0075ff !important;
+    border: 1px solid #0075ff;
+    filter: invert(0%) sepia(70%) saturate(7414%) hue-rotate(180deg) brightness(79%) contrast(117%) !important;
+    opacity: 0.5;
+}
 /*----Toggle switch checkbox start----*/
 .toggle-checkbox {
     border: 1px solid #E2E2E2;
@@ -3323,5 +3343,44 @@ margin: 0;
     justify-content: center;
     height: auto !important;
 }
+
+.checkbox-selector {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .checkbox-options {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 25%;
+  }
+  
+  .checkbox-options div {
+    margin-bottom: 5px;
+  }
+  
+  .checkbox-options input {
+    margin-right: 10px;
+  }
+  .checkbox-options input[type="checkbox"] {
+    display: block !important;
+  }
+  .checkbox-options label {
+    display: contents;
+  }
+  .multi-label{
+    top: 1px !important;
+    color: #4C4C4C !important;
+    background: rgb(255, 255, 255) !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(242, 243, 246, 0.1) 100%);
+  }
 
 /*----Toggle switch checkbox end----*/

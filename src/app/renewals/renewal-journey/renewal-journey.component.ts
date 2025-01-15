@@ -1374,7 +1374,7 @@ export class RenewalJourneyComponent {
 
 
   resetInsuredMembers(control: any, planType: any) {
-    console.log(this.form, control, planType);
+    console.log("member ->",this.form, control, planType,"member <-");
 
     this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(0);
     // this.renewalFormGroup.removeControl('insuredMemberDetails');
@@ -1384,53 +1384,53 @@ export class RenewalJourneyComponent {
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
 
 
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = true;
-      //     if (section.formControls[1]) {
-      //       section.formControls[1].visible = false;
-      //       while (section.formControls[1].dynamicControls.length > 1) {
-      //         section.formControls[1].dynamicControls.pop();
-      //       }
-      //     }
-      //     section.visible = false;
-      //   }
-      // });
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = true;
+          if (section.formControls[1]) {
+            section.formControls[1].visible = false;
+            while (section.formControls[1].dynamicControls.length > 1) {
+              section.formControls[1].dynamicControls.pop();
+            }
+          }
+          section.visible = false;
+        }
+      });
     }
     else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
       console.log(this.form);
 
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = false;
-      //     section.formControls[1].visible = true;
-      //     while (section.formControls[0].dynamicControls.length > 1) {
-      //       section.formControls[0].dynamicControls.pop();
-      //     }
-      //     section.visible = false;
-      //   }
-      // });
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = true;
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
+          section.visible = false;
+        }
+      });
     }
     else {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = false;
-      //     section.formControls[1].visible = false;
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = false;
 
-      //     while (section.formControls[0].dynamicControls.length > 1) {
-      //       section.formControls[0].dynamicControls.pop();
-      //     }
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
 
-      //     while (section.formControls[1].dynamicControls.length > 1) {
-      //       section.formControls[1].dynamicControls.pop();
-      //     }
+          while (section.formControls[1].dynamicControls.length > 1) {
+            section.formControls[1].dynamicControls.pop();
+          }
 
-      //   }
-      // });
+        }
+      });
     }
   }
 
@@ -2819,83 +2819,123 @@ export class RenewalJourneyComponent {
     }
   }
 
-  uploadSelectedDocument(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      if (this.selectedButton) {
-        try {
-          if (this.formData.chequeDate && this.formData.chequeDate !== this.currentDate) {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid chequeDate", duration: 3000 });
-            return;
-          }
-          // const policyNum = this.proposalNum.replace(/-/g, "");
-          const policyNum = this.formData.policyNumber.replace(/-/g, "");
-          console.log("kjsdajlkda", policyNum);
+  async onUploadFile(event: any, control: any) {
+    if (event[0]) {
+      if (this.renewalFormGroup?.get(control.name)) {
+        this.selectedFile = event[0];
+        this.renewalFormGroup?.get(control.name)?.setValue(event[0].name);
+      } else {
+        this.renewalFormGroup?.get(control.name)?.markAsTouched();
+        this.selectedFile = null;
+      }
+    }
 
-          const formData = new FormData();
-          formData.append("Files", this.selectedFile);
-          formData.append("UniqueNumber", policyNum);
+    const formData = new FormData();
+    const policyNum = this.formData.policyNumber.replace(/-/g, "");
+    formData.append("Files", event[0]);
+    formData.append("UniqueNumber", policyNum);
 
-          console.log(formData, this.selectedFile, this.policyNumber);
-
-          this.commonService.uploadDocument(formData).subscribe(
-            async (res: any) => {
-              if (res.isSuccess) {
-                console.log("response after success", res);
-                console.log("unique id", res.data.uploadResponse[0].globalId);
-                this.documentId = res.data.uploadResponse[0].globalId;
-
-                try {
-                  console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
-
-                  this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
-
-                  // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                  // await this.getFullQuoteViaOfflinePayment();
-                  resolve(); // Resolve the promise once everything completes
-                } catch (error) {
-                  console.error("Error in full quote generation:", error);
-                  reject(error); // Reject the promise to prevent further flow
-                }
-              } else {
-                const errorMessage = "Document upload failed.";
-                console.error(errorMessage, res);
-                this.toast.error({
-                  detail: "ERROR",
-                  summary: errorMessage,
-                  duration: 3000,
-                });
-                reject(new Error(errorMessage));
-              }
-
-            },
-            (err) => {
-              console.error("Error during upload:", err);
+        this.commonService.uploadDocument(formData).subscribe(
+          async (res: any) => {
+            if (res.isSuccess) {
+              this.documentId = res.data.uploadResponse[0].globalId
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+            } else {
               this.toast.error({
                 detail: "Error",
-                summary: err.message || "Document upload failed.",
-                duration: 1500,
+                summary: res.message,
+                duration: 3000,
               });
-              reject(err); // Reject the promise on upload error
             }
-          );
-        } catch (error) {
-          console.error("Error preparing upload:", error);
-          this.toast.error({
-            detail: "Error",
-            summary: "An unexpected error occurred while preparing the upload.",
-            duration: 3000,
-          });
-          reject(error); // Reject the promise on preparation error
-        }
-      } else {
-        this.toast.warning({
-          detail: "WARNING",
-          summary: "Please select Payment Mode.",
-          duration: 3000,
-        });
-      }
-    });
+
+          },
+          (err) => {
+            console.error("Error during upload:", err);
+            this.toast.error({
+              detail: "Error",
+              summary: err.message || "Document upload failed.",
+              duration: 1500,
+            });
+          }
+        );
   }
+
+  // uploadSelectedDocument(): Promise<void> {
+  //   return new Promise(async (resolve, reject) => {
+  //     if (this.selectedButton) {
+  //       try {
+  //         if (this.formData.chequeDate && this.formData.chequeDate !== this.currentDate) {
+  //           this.toast.warning({ detail: "WARNING", summary: "Invalid chequeDate", duration: 3000 });
+  //           return;
+  //         }
+  //         // const policyNum = this.proposalNum.replace(/-/g, "");
+  //         const policyNum = this.formData.policyNumber.replace(/-/g, "");
+  //         console.log("kjsdajlkda", policyNum);
+
+  //         const formData = new FormData();
+  //         formData.append("Files", this.selectedFile);
+  //         formData.append("UniqueNumber", policyNum);
+
+  //         console.log(formData, this.selectedFile, this.policyNumber);
+
+  //         this.commonService.uploadDocument(formData).subscribe(
+  //           async (res: any) => {
+  //             if (res.isSuccess) {
+  //               console.log("response after success", res);
+  //               console.log("unique id", res.data.uploadResponse[0].globalId);
+  //               this.documentId = res.data.uploadResponse[0].globalId;
+  //               try {
+  //                 console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
+
+  //                 this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
+
+  //                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+  //                 // await this.getFullQuoteViaOfflinePayment();
+  //                 resolve(); // Resolve the promise once everything completes
+  //               } catch (error) {
+  //                 console.error("Error in full quote generation:", error);
+  //                 reject(error); // Reject the promise to prevent further flow
+  //               }
+  //             } else {
+  //               const errorMessage = "Document upload failed.";
+  //               console.error(errorMessage, res);
+  //               this.toast.error({
+  //                 detail: "ERROR",
+  //                 summary: errorMessage,
+  //                 duration: 3000,
+  //               });
+  //               reject(new Error(errorMessage));
+  //             }
+
+  //           },
+  //           (err) => {
+  //             console.error("Error during upload:", err);
+  //             this.toast.error({
+  //               detail: "Error",
+  //               summary: err.message || "Document upload failed.",
+  //               duration: 1500,
+  //             });
+  //             reject(err); // Reject the promise on upload error
+  //           }
+  //         );
+  //       } catch (error) {
+  //         console.error("Error preparing upload:", error);
+  //         this.toast.error({
+  //           detail: "Error",
+  //           summary: "An unexpected error occurred while preparing the upload.",
+  //           duration: 3000,
+  //         });
+  //         reject(error); // Reject the promise on preparation error
+  //       }
+  //     } else {
+  //       this.toast.warning({
+  //         detail: "WARNING",
+  //         summary: "Please select Payment Mode.",
+  //         duration: 3000,
+  //       });
+  //     }
+  //   });
+  // }
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
@@ -2948,17 +2988,23 @@ export class RenewalJourneyComponent {
       };
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
-          if (res.isSuccess && res.data.isFullQuoteSuccess) {
+          if (res.isSuccess && res.statusCode === 200 && res.data.isFullQuoteSuccess) {
             this.isFullQuote = res.data.isFullQuoteSuccess;
             this.formData.status = res.data.status || null;
+            this.formData.policyNumber = res.data.policyNumber || this.policyNumber
             this.formData.policyStartDate = res.data.policyStartDate || null;
             this.formData.policyEndDate = res.data.policyEndDate || null;
             this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
             this.formData.premiumPaid = res.data.premiumPaid || null;
+            this.rowData.paymentStatus = "";
+            this.rowData.isFullQuoteSuccess =res.data.isFullQuoteSuccess;
+            if(res.data.errorMessage){
+              this.toast.success({ detail: 'Success', summary: res.data.errorMessage || 'Success', duration: 3000 });
+            }
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-          }else if (res.isSuccess && !res.data.isFullQuoteSuccess) {
+          }else if (res.isSuccess && res.statusCode === 200 && !res.data.isFullQuoteSuccess) {
             this.isFullQuote = res.data.isFullQuoteSuccess;
             this.formData.status = res.data.status || null;
             this.formData.policyStartDate = res.data.policyStartDate || null;
@@ -2967,6 +3013,9 @@ export class RenewalJourneyComponent {
             this.formData.customerId = res.data.customerId || null;
             this.formData.premiumPaid = res.data.premiumPaid || null;
             this.rowData.paymentMessage = "policy issuance pending";
+            if(res.data.errorMessage){
+              this.toast.warning({ detail: 'Warning', summary: res.data.errorMessage || 'policy issuance failed.', duration: 3000 });
+            }
             this.incrementIndex();
             this.getFormDataFromFormSequence();
           }
@@ -3638,11 +3687,8 @@ export class RenewalJourneyComponent {
       };
       this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
-          console.log('Juspay API Response:', response);
-
           if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
             if (this.selectedButton == 'sendLinkButton') {
-              console.log(response);
               this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
             }
             else {
@@ -3650,12 +3696,10 @@ export class RenewalJourneyComponent {
             }
           } else {
             this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
-            console.error('Invalid payment link received:', response);
           }
         },
         error: (error) => {
           this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
         }
       });
     }
@@ -3767,14 +3811,11 @@ export class RenewalJourneyComponent {
   }
   formatDate(dateString: string | Date): string {
     if (!dateString) return "";
-
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return ""; // Return empty string if invalid date
-
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const year = date.getFullYear();
-
     return `${day}-${month}-${year}`;
   }
 
