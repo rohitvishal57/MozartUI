@@ -6974,3 +6974,25 @@ height: 0;
   bottom: -12px;
 }
 /*---Tooltip end---*/
+
+/*--Hospital Cash Cover css start--*/
+.input-radio-block.input-radio-hcc {
+  gap: 1px;
+  max-width: 100%;
+  flex-direction: column;
+  margin: 10px 0 10px;
+}
+.input-radio-block.input-radio-hcc .input-radio-block {
+  gap: 4px;
+  max-width: 100%;
+  flex-direction: row;
+}
+.input-radio-hcc .input-radioField_Label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+}
+.main-container .right-panel .main_hospitalCashCover .typecss {
+  padding-bottom: 20px !important;
+}
+/*--Hospital Cash Cover css end--*/

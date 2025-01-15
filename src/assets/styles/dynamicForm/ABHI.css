@@ -260,6 +260,7 @@ body {
     padding: 0 5px;
     /* padding-right: 35px; */
     padding-right: 20px;
+    width: 53%;
 }
 
 .main-container .right-panel .boldtext_input:focus {
@@ -3384,3 +3385,14 @@ margin: 0;
   }
 
 /*----Toggle switch checkbox end----*/
+
+.main_hospitalCashCover {
+    margin: 0 0 10px;
+    background: #fafafb;
+    border-radius: 10px;
+    padding: 15px;
+}
+.main_hospitalCashCover .input-checkbox-feild .input-check + label {
+    font-weight: 600;
+    padding-left: 25px !important;
+}

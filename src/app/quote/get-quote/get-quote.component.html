@@ -258,7 +258,7 @@
                                 <label for="{{relation.value}}"><img
                                     src="{{relation.imagePath}}">{{relation.name | translate}}</label>
                                 <div class="member_extraInfo">
-                                  <div class="member_extraInfoSub">
+                                  <div class="member_extraInfoSub member_extraInfoSubDate">
                                     <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
                                       [value]="relation.dob"  [max]="currentDate"
                                       (input)="onAgeChange($event, relation)">
