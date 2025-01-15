@@ -719,4 +719,23 @@ export class ProposalsListComponent {
     }
     return new Blob([arrayBuffer], { type });
   }
+
+  shareKyc(proposalInformation : any){
+    let requestPayload: any = {};
+    requestPayload.policyNumber = "";
+    requestPayload.proposerNumber = proposalInformation.proposalNumber;
+    requestPayload.fullName = proposalInformation.firstName  + proposalInformation.lastName ;
+    requestPayload.panNumber = "";
+    requestPayload.dob = "";
+    requestPayload.pepCheck = "No";
+    requestPayload.businessType = "NB";
+    requestPayload.emailId = proposalInformation.emailId;
+    requestPayload.agentCode = this.agentCode;
+    requestPayload.MobileNumber = proposalInformation.mobileNumber;
+    requestPayload.ProductName = proposalInformation.productVarientName;
+    requestPayload.ProductCode = "";
+    
+
+
+  }
 }
