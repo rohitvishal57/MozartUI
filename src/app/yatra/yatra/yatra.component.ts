@@ -2756,7 +2756,7 @@ export class YatraComponent {
     }
 
 
-    if ((parentControl !== null && parentControl.type == 'combinedCheckbox') || parentControl.idProperty === '12345') {
+    if ((parentControl !== null && parentControl.type == 'combinedCheckbox') || (parentControl?.idProperty === '12345')) {
       if (control.type === 'select') {
         this.callMethod(parentControl.methodName, control)
       }
