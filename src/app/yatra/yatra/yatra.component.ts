@@ -9262,7 +9262,7 @@ export class YatraComponent {
       const trueCount = Object.values(selectedValues).filter(value => value === true).length;
 
       if (checkbox.checked && trueCount > 3) {
-        // If already 3 or more values are true and checkbox is being checked
+        // If already 3 or more values are true and checkbox is being chec"{\"productName\":\"Activ Health Platinum Premiere\",\"proposalNumber\":\"UPP160125173820346\",\"applicableZones\":\"Zone I,Zone II,Zone III\",\"accountHolderName\":\"SOUVIK MITRA\",\"exisitingPolicy\":\"N\",\"isAdityaBirlaPolicy\":\"\",\"getPolicyNumber\":\"\",\"getPolicyDetails\":null,\"getInsurerDetails\":\"\",\"previousDocumentPara\":null,\"policyDocumentUpload\":\"\",\"policyDocumentSubmit\":\"\",\"productNameOfPreviousPolicy\":\"\",\"previousPolicyType\":\"\",\"previousPolicyNumber\":\"\",\"nameOfInsurer\":\"\",\"sumInsuredPorting\":\"\",\"policyStartDate\":\"\",\"policyEndDate\":\"\",\"previousPolicyVariant\":\"\",\"inceptionDate\":\"\",\"breakTime\":\"N\",\"claimPreviousPolicy\":\"N\",\"anyAddOns\":\"N\",\"memberDobProposer\":\"1965-07-22\",\"memberAgeProposer\":\"59\",\"panNo\":\"FVYPM1429K\",\"verifyKYC\":null,\"isPep\":\"N\",\"productVariant\":\"Premiere\",\"ckycNo\":\"\",\"leadNumber\":\"\",\"tenureAmount\":[0,0,0],\"displayTaxList\":[],\"isEmployee\":false,\"typeOfBusiness\":\"NB\",\"memberPlan\":\"Premiere\",\"productType\":\"AH\",\"planCode\":\"6212100002\",\"productId\":\"6212\",\"preFix\":\"Mr\",\"firstName\":\"SOUVIK\",\"middleName\":\"\",\"lastName\":\"MITRA\",\"proposerGender\":\"M\",\"emailId\":\"souvik@gmail.com\",\"alternateEmailId\":\"\",\"mobileNumber\":\"9930519086\",\"whatsAppNumber\":\"\",\"idProof\":\"{\\\"id\\\":\\\"2\\\",\\\"value\\\":\\\"Aadhar Card\\\",\\\"name\\\":\\\"Aadhar Card\\\",\\\"dependentControls\\\":[{\\\"name\\\":\\\"aadharIdNo\\\",\\\"visibility\\\":true},{\\\"name\\\":\\\"passportIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"licenseIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"voterIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"marksheetIdNo\\\",\\\"visibility\\\":false}]}\",\"aadharIdNo\":\"6789\",\"passportIdNo\":null,\"licenseIdNo\":null,\"voterIdNo\":null,\"marksheetIdNo\":null,\"annualIncome\":\"500000\",\"occupation\":\"{\\\"id\\\":\\\"10\\\",\\\"value\\\":\\\"O557\\\",\\\"name\\\":\\\"CA\\\"}\",\"maritalStatus\":\"{\\\"id\\\":\\\"M\\\",\\\"value\\\":\\\"Married\\\",\\\"name\\\":\\\"Married\\\"}\",\"gstDetails\":\"Consumers\",\"educationDetails\":\"{\\\"id\\\":\\\"6\\\",\\\"value\\\":\\\"Post Graduate\\\",\\\"name\\\":\\\"Post Graduate\\\"}\",\"nationality\":\"{\\\"id\\\":\\\"1\\\",\\\"value\\\":\\\"Indian\\\",\\\"name\\\":\\\"Indian\\\",\\\"selected\\\":true}\",\"sumInsured\":\"1500000\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"horizontalLine\":null,\"addressTitle\":null,\"permanentAddress1\":\"C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR\",\"permanentAddress2\":\"KARIMGANJ ASSAM\",\"permanentAddress3\":\"nhgfdfghj\",\"proposerPincode\":500013,\"city\":\"Hyderabad\",\"state\":\"TELANGANA\",\"corresaddressTitle\":null,\"addressTitle1\":true,\"proposerAddress1\":\"C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR\",\"proposerAddress2\":\"KARIMGANJ ASSAM\",\"proposerAddress3\":\"nhgfdfghj\",\"correspondentPincode\":500013,\"correspondingCity\":\"Hyderabad\",\"correspondingState\":\"TELANGANA\",\"addMembers\":null,\"insureMem\":null,\"numberOfInsuredMembers\":3,\"plandetails\":\"\",\"totalPremium\":\"\",\"next\":null,\"memberPolicyType\":\"Multi Individual\",\"insuredMembers\":{\"Self\":true,\"Spouse\":true,\"Son1\":true,\"Daughter1\":false,\"Mother\":false,\"Father\":false,\"Mother-In-Law\":false,\"Father-In-Law\":false,\"Brother1\":false,\"Sister1\":false,\"Grand-Father\":false,\"Grand-Mother\":false,\"Grand-Son1\":false,\"Grand-Daughter1\":false,\"Son-In-Law1\":false,\"Daughter-In-Law1\":false,\"Brother-In-Law\":false,\"Sister-In-Law\":false,\"Nephew1\":false,\"Niece1\":false},\"insuredMemberDetails\":[{\"relationshipType\":\"{\\\"id\\\":\\\"R001\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Self\\\",\\\"name\\\":\\\"Self\\\",\\\"memberRelationCode\\\":\\\"24\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Self.png\\\"}\",\"relation\":\"Self\",\"memberRelationCode\":\"24\",\"memberdob\":\"1965-07-22\",\"memberAge\":\"59\",\"firstName\":\"SOUVIK\",\"lastName\":\"MITRA\",\"middleName\":\"\",\"mobileNumber\":\"9930519086\",\"memberRoomCategory\":\"\",\"emailId\":\"souvik@gmail.com\",\"memberGender\":\"M\",\"sumInsured\":\"1500000\",\"pincode\":500013,\"planType\":\"Multi Individual\",\"memberIndex\":0,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"\",\"covers\":[{\"coverId\":\"ADPTD\",\"value\":500000,\"coverName\":\"Personal Accident Cover (AD, PTD)\"}],\"preFix\":\"Mr\",\"productMemberDesignation\":\"{\\\"id\\\":\\\"10\\\",\\\"value\\\":\\\"O557\\\",\\\"name\\\":\\\"CA\\\"}\",\"occupationCode\":\"O014\",\"natureOfDutyCode\":\"ND02\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"},{\"relationshipType\":\"{\\\"id\\\":\\\"R002\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Spouse\\\",\\\"name\\\":\\\"Spouse\\\",\\\"memberRelationCode\\\":\\\"13\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Spouse.png\\\"}\",\"relation\":\"Spouse\",\"memberRelationCode\":\"13\",\"memberdob\":\"1958-12-12\",\"memberAge\":\"66\",\"firstName\":\"\",\"lastName\":\"\",\"middleName\":\"\",\"mobileNumber\":\"\",\"weight\":\"\",\"height\":\"\",\"memberRoomCategory\":\"\",\"heightInches\":\"\",\"emailId\":\"\",\"memberGender\":\"F\",\"sumInsured\":\"1500000\",\"pincode\":\"500013\",\"planType\":\"Multi Individual\",\"memberIndex\":1,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"TELANGANA\",\"covers\":[],\"preFix\":\"\",\"productMemberDesignation\":\"\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"},{\"relationshipType\":\"{\\\"id\\\":\\\"R003\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Son1\\\",\\\"name\\\":\\\"Son1\\\",\\\"memberRelationCode\\\":\\\"23\\\",\\\"isIncrement\\\":true,\\\"imagePath\\\":\\\"assets/Son.png\\\",\\\"gender\\\":\\\"M\\\"}\",\"relation\":\"Son1\",\"memberRelationCode\":\"23\",\"memberdob\":\"2022-01-01\",\"memberAge\":\"3\",\"firstName\":\"\",\"lastName\":\"\",\"middleName\":\"\",\"mobileNumber\":\"\",\"weight\":\"\",\"height\":\"\",\"memberRoomCategory\":\"\",\"heightInches\":\"\",\"emailId\":\"\",\"memberGender\":\"M\",\"sumInsured\":\"1500000\",\"pincode\":\"500013\",\"planType\":\"Multi Individual\",\"memberIndex\":2,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"TELANGANA\",\"covers\":[],\"preFix\":\"\",\"productMemberDesignation\":\"\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"}],\"noOfChildrens\":1,\"familySize\":\"3A\",\"proposerName\":\"SOUVIKMITRA\"}"ked
         checkbox.checked = false; // Revert the checkbox state
         // Show toast message (use your toast service here)
         // formArrayControl.get(option.name)?.setValue(false);
@@ -9397,11 +9397,177 @@ export class YatraComponent {
       });
     }
   }
-  chronicFunction(control:any){
 
-  }
+  // defaultAddOn(control: any) {
+  //   const addOnControl = this.dynamicFormGroup.get(control.name);
+  //   const addOnCoverControl = addOnControl?.get('addOnCover');
+  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
+  //   const addOnIdControl = addOnControl?.get('addOnId');
+  //   const addOnCoverNameControl = addOnControl?.get('optionalCoverName');
 
-  defaultAddOn(control: any, parentControl: any = null) {
+  //   const addOnData = addOnControl?.getRawValue();
+  //   const modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+
+  //   if (!addOnDetailsControl || !addOnData) {
+  //     console.warn('Add-on details control or data is not found.');
+  //     return;
+  //   }
+
+  //   // Ensure addOnCover and memberCheckbox values are true
+  //   addOnCoverControl?.setValue(true);
+
+  //   if(addOnCoverNameControl?.value.includes('Personal Accident')){
+  //     Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+  //       const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+  //       console.log(memberArray);
+
+  //       memberArray.controls.forEach((member: any) => {
+  //         console.log(member);
+
+  //         const memberControlCheckbox = member.get('memberCheckbox');
+  //         const occupationControl = member.get('occupation');
+  //         const occupationRiskControl = member.get('occupationRisk');
+  //         const addOnSumInsuredControl = member.get('addOnSumInsured')
+
+  //         console.log(memberControlCheckbox, occupationControl, occupationRiskControl);
+
+
+  //         if (memberControlCheckbox) {
+  //           memberControlCheckbox.setValue(true);
+
+  //           if (key === 'Self') {
+  //             // Disable the checkbox for 'Self'
+  //             memberControlCheckbox.disable();
+  //             addOnCoverControl?.disable();
+  //           }
+  //         }
+
+  //         if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+  //           console.log(control.subControls[1].innerSubControls);
+
+  //           // Set default values for occupation and occupationRisk by iterating through coreControls
+  //           const innerControls = control.subControls[1].innerSubControls || [];
+  //           const coreControls = innerControls[0]?.coreControls || [];
+
+  //           if (occupationControl) {
+  //             coreControls.forEach((coreControl: any) => {
+  //               if (coreControl.name === 'occupation' && occupationControl && occupationControl.value === '') {
+  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
+  //                 if (defaultOption) {
+  //                   occupationControl.setValue(defaultOption);
+  //                 }
+  //               }
+  //             });
+  //           }
+
+  //           if (occupationRiskControl) {
+  //             console.log(occupationRiskControl);
+
+  //             coreControls.forEach((coreControl: any) => {
+  //               if (coreControl.name === 'occupationRisk' && occupationRiskControl && occupationRiskControl.value === '') {
+  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
+  //                 if (defaultOption) {
+  //                   occupationRiskControl.setValue(defaultOption);
+  //                 }
+  //               }
+  //             });
+  //           }
+
+  //           if (addOnSumInsuredControl) {
+  //             coreControls.forEach((coreControl: any) => {
+  //               if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl && addOnSumInsuredControl.value === '') {
+  //                 const defaultOption = coreControl.options?.[0]?.value;
+  //                 if (defaultOption) {
+  //                   addOnSumInsuredControl.setValue(defaultOption);
+  //                 }
+  //               }
+  //             });
+  //           }
+  //         }
+
+  //         console.log(occupationControl, occupationRiskControl);
+  //         const addOnData = addOnControl?.value;
+  //         console.log(addOnData,addOnControl);
+
+
+  //         // Check if the checkbox is enabled and checked
+  //         // if (memberControlCheckbox.value) {
+  //         modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+  //           if (insuredMember.relation === key) {
+  //             const coverId = addOnIdControl?.value;
+  //             const coverName = addOnCoverNameControl?.value || '';
+
+  //             let addOnSumInsured = 0;
+  //             let coverFound = false;
+
+  //             const addOnDetails = addOnData.addOnDetails[key];
+  //             addOnDetails.forEach((detail: any) => {
+  //               if (detail.addOnSumInsured) {
+  //                 addOnSumInsured = detail.addOnSumInsured;
+  //               } else if (detail.roomType) {
+  //                 addOnSumInsured = detail.roomType;
+  //               }
+
+  //               if (coverName.includes('Personal Accident') && detail.occupation) {
+  //                 insuredMember.occupationCode = JSON.parse(detail.occupation).value;
+  //               }
+
+  //               if (coverName.includes('Personal Accident') && detail.occupationRisk) {
+  //                 insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
+  //               }
+  //             });
+
+  //             if (!insuredMember.covers) {
+  //               insuredMember.covers = [];
+  //             }
+
+  //             insuredMember.covers.forEach((cover: any) => {
+  //               if (cover.coverId === coverId) {
+  //                 cover.value = addOnSumInsured;
+  //                 coverFound = true;
+  //               }
+  //             });
+
+  //             if (!coverFound) {
+  //               insuredMember.covers.push({
+  //                 coverId,
+  //                 value: addOnSumInsured,
+  //                 coverName
+  //               });
+  //             }
+
+  //             if (!this.covers[index]) {
+  //               this.covers[index] = [];
+  //             }
+
+  //             const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+  //             if (coverInCovers) {
+  //               coverInCovers.value = addOnSumInsured;
+  //             } else {
+  //               this.covers[index].push({
+  //                 coverId,
+  //                 value: addOnSumInsured,
+  //                 coverName
+  //               });
+  //             }
+  //           }
+  //         });
+  //         // }
+
+  //       });
+  //     });
+  //   }
+  //   else{
+  //     if(this.formData['memberPolicyType']== 'Family Floater'){
+
+  //     }
+  //   }
+
+
+  // }
+
+  defaultAddOn(control: any) {
     const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
@@ -9416,171 +9582,260 @@ export class YatraComponent {
       return;
     }
 
-    // Ensure addOnCover and memberCheckbox values are true
-    addOnCoverControl?.setValue(true);
-
-    Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-      const memberArray = addOnDetailsControl.get(key) as FormArray;
-
-      console.log(memberArray);
-
-      memberArray.controls.forEach((member: any) => {
-        console.log(member);
-
-        const memberControlCheckbox = member.get('memberCheckbox');
-        const occupationControl = member.get('occupation');
-        const occupationRiskControl = member.get('occupationRisk');
-        const addOnSumInsuredControl = member.get('addOnSumInsured')
-
-        console.log(memberControlCheckbox, occupationControl, occupationRiskControl);
 
 
-        if (memberControlCheckbox) {
-          memberControlCheckbox.setValue(true);
+    if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+      let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
+      let isSelfPresent = false;
+      // Check for age validation rules
+      const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
+      if (ageValidationRule) {
+        this.checkForAgeValidations(control); // Call the age validation method
+      }
 
-          if (key === 'Self') {
-            // Disable the checkbox for 'Self'
-            memberControlCheckbox.disable();
-            addOnCoverControl?.disable();
-          }
-        }
+      // Existing "Personal Accident" logic
+      Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+        const memberArray = addOnDetailsControl.get(key) as FormArray;
 
-        if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-          console.log(control.subControls[1].innerSubControls);
+        memberArray.controls.forEach((member: any) => {
+          const memberControlCheckbox = member.get('memberCheckbox');
+          const occupationControl = member.get('occupation');
+          const occupationRiskControl = member.get('occupationRisk');
+          const addOnSumInsuredControl = member.get('addOnSumInsured');
 
-          // Set default values for occupation and occupationRisk by iterating through coreControls
-          const innerControls = control.subControls[1].innerSubControls || [];
-          const coreControls = innerControls[0]?.coreControls || [];
-
-          if (occupationControl) {
-            coreControls.forEach((coreControl: any) => {
-              if (coreControl.name === 'occupation' && occupationControl && occupationControl.value === '') {
-                const defaultOption = JSON.stringify(coreControl.options?.[0]);
-                if (defaultOption) {
-                  occupationControl.setValue(defaultOption);
-                }
-              }
-            });
+          // Skip processing if member control is disabled
+          if (memberControlCheckbox?.disabled) {
+            console.log(`Skipping disabled member: ${key}`);
+            return;
           }
 
-          if (occupationRiskControl) {
-            console.log(occupationRiskControl);
+          if (memberControlCheckbox) {
+            memberControlCheckbox.setValue(true);
 
-            coreControls.forEach((coreControl: any) => {
-              if (coreControl.name === 'occupationRisk' && occupationRiskControl && occupationRiskControl.value === '') {
-                const defaultOption = JSON.stringify(coreControl.options?.[0]);
-                if (defaultOption) {
-                  occupationRiskControl.setValue(defaultOption);
-                }
-              }
-            });
-          }
-
-          if (addOnSumInsuredControl) {
-            coreControls.forEach((coreControl: any) => {
-              if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl && addOnSumInsuredControl.value === '') {
-                const defaultOption = coreControl.options?.[0]?.value;
-                if (defaultOption) {
-                  addOnSumInsuredControl.setValue(defaultOption);
-                }
-              }
-            });
-          }
-
-          // coreControls.forEach((coreControl: any) => {
-          //   if (coreControl.name === 'occupation' && occupationControl && occupationControl.value === '') {
-          //     const defaultOption = coreControl.options?.[0]?.value;
-          //     if (defaultOption) {
-          //       occupationControl.setValue(defaultOption);
-          //     }
-          //   }
-
-          //   if (coreControl.name === 'occupationRisk' && occupationRiskControl && occupationRiskControl.value === '') {
-          //     const defaultOption = coreControl.options?.[0]?.value;
-          //     if (defaultOption) {
-          //       occupationRiskControl.setValue(defaultOption);
-          //     }
-          //   }
-          // });
-        }
-
-        console.log(occupationControl, occupationRiskControl);
-        const addOnData = addOnControl?.value;
-        console.log(addOnData, addOnControl);
-
-
-        // Check if the checkbox is enabled and checked
-        // if (memberControlCheckbox.value) {
-        modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-          if (insuredMember.relation === key) {
-            const coverId = addOnIdControl?.value;
-            const coverName = addOnCoverNameControl?.value || '';
-
-            let addOnSumInsured = 0;
-            let coverFound = false;
-
-            const addOnDetails = addOnData.addOnDetails[key];
-            addOnDetails.forEach((detail: any) => {
-              if (detail.addOnSumInsured) {
-                addOnSumInsured = detail.addOnSumInsured;
-              } else if (detail.roomType) {
-                addOnSumInsured = detail.roomType;
-              }
-
-              if (coverName.includes('Personal Accident') && detail.occupation) {
-                insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-              }
-
-              if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-                insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-              }
-            });
-
-            if (!insuredMember.covers) {
-              insuredMember.covers = [];
+            if (key === 'Self') {
+              isSelfPresent = true;
+              // Disable the checkbox for 'Self'
+              memberControlCheckbox.disable();
             }
 
-            insuredMember.covers.forEach((cover: any) => {
-              if (cover.coverId === coverId) {
-                cover.value = addOnSumInsured;
-                coverFound = true;
-              }
-            });
+            shouldEnableAddOnCover = true; // Set the flag if any checkbox is enabled
+          }
 
-            if (!coverFound) {
-              insuredMember.covers.push({
-                coverId,
-                value: addOnSumInsured,
-                coverName
+          if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+            const innerControls = control.subControls[1].innerSubControls || [];
+            const coreControls = innerControls[0]?.coreControls || [];
+
+            if (occupationControl) {
+              coreControls.forEach((coreControl: any) => {
+                if (coreControl.name === 'occupation' && occupationControl.value === '') {
+                  const defaultOption = JSON.stringify(coreControl.options?.[0]);
+                  if (defaultOption) {
+                    occupationControl.setValue(defaultOption);
+                  }
+                }
               });
             }
 
-            if (!this.covers[index]) {
-              this.covers[index] = [];
+            if (occupationRiskControl) {
+              coreControls.forEach((coreControl: any) => {
+                if (coreControl.name === 'occupationRisk' && occupationRiskControl.value === '') {
+                  const defaultOption = JSON.stringify(coreControl.options?.[0]);
+                  if (defaultOption) {
+                    occupationRiskControl.setValue(defaultOption);
+                  }
+                }
+              });
             }
 
-            const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-            if (coverInCovers) {
-              coverInCovers.value = addOnSumInsured;
-            } else {
-              this.covers[index].push({
-                coverId,
-                value: addOnSumInsured,
-                coverName
+            if (addOnSumInsuredControl) {
+              coreControls.forEach((coreControl: any) => {
+                if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl.value === '') {
+                  const defaultOption = coreControl.options?.[0]?.value;
+                  if (defaultOption) {
+                    addOnSumInsuredControl.setValue(defaultOption);
+                  }
+                }
               });
             }
           }
+
+          modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+            if (insuredMember.relation === key) {
+              const coverId = addOnIdControl?.value;
+              const coverName = addOnCoverNameControl?.value || '';
+
+              let addOnSumInsured = 0;
+              let coverFound = false;
+
+              const addOnDetails = addOnControl?.value.addOnDetails[key];
+              addOnDetails.forEach((detail: any) => {
+                if (detail.addOnSumInsured) {
+                  addOnSumInsured = detail.addOnSumInsured;
+                } else if (detail.roomType) {
+                  addOnSumInsured = detail.roomType;
+                }
+
+                if (coverName.includes('Personal Accident') && detail.occupation) {
+                  insuredMember.occupationCode = JSON.parse(detail.occupation).value;
+                }
+
+                if (coverName.includes('Personal Accident') && detail.occupationRisk) {
+                  insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
+                }
+              });
+
+              if (!insuredMember.covers) {
+                insuredMember.covers = [];
+              }
+
+              insuredMember.covers.forEach((cover: any) => {
+                if (cover.coverId === coverId) {
+                  cover.value = addOnSumInsured;
+                  coverFound = true;
+                }
+              });
+
+              if (!coverFound) {
+                insuredMember.covers.push({
+                  coverId,
+                  value: addOnSumInsured,
+                  coverName
+                });
+              }
+
+              if (!this.covers[index]) {
+                this.covers[index] = [];
+              }
+
+              const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+              if (coverInCovers) {
+                coverInCovers.value = addOnSumInsured;
+              } else {
+                this.covers[index].push({
+                  coverId,
+                  value: addOnSumInsured,
+                  coverName
+                });
+              }
+            }
+          });
         });
-        // }
-
       });
-    });
 
-    // Disable addOnCoverControl if 'Self' is involved
-    if (Object.keys(addOnDetailsControl.value).includes('Self')) {
-      addOnCoverControl?.disable();
+      // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
+      if (shouldEnableAddOnCover) {
+        addOnCoverControl?.setValue(true);
+        if(isSelfPresent){
+          addOnCoverControl?.disable();
+        }
+      } else {
+        addOnCoverControl?.setValue(false);
+      }
+    } else {
+      // New logic for validationRules
+      const validationRules = control.validationRules || [];
+      const matchingRule = validationRules.find(
+        (rule: any) => rule.policyType === this.formData['memberPolicyType']
+      );
+
+      console.log(matchingRule);
+
+
+      if (matchingRule) {
+        const { allMemberSelected, allMemberDisabled } = matchingRule;
+
+        if (allMemberSelected) {
+          console.log(addOnCoverControl);
+
+          addOnCoverControl?.setValue(true);
+        }
+        if (allMemberDisabled) {
+          addOnCoverControl?.disable();
+        }
+
+        // Only start iteration if allMemberSelected or allMemberDisabled is true
+        if (allMemberSelected || allMemberDisabled) {
+          Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+            const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              const addOnSumInsuredControl = member.get('addOnSumInsured');
+
+              // Handle allMemberSelected
+              if (allMemberSelected && memberControlCheckbox) {
+                memberControlCheckbox.setValue(true);
+              }
+
+              // Handle allMemberDisabled
+              if (allMemberDisabled) {
+                if (memberControlCheckbox) {
+                  memberControlCheckbox.disable();
+                }
+                if (addOnSumInsuredControl) {
+                  addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
+                }
+              }
+
+              // Set addOnSumInsured value logic if the control exists
+              if (addOnSumInsuredControl) {
+                const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
+                let addOnSumInsured = '';
+
+                coreControls.forEach((coreControl: any) => {
+                  if (coreControl.name === 'addOnSumInsured') {
+                    if (coreControl.options?.[0]?.value) {
+                      addOnSumInsured = coreControl.options[0].value;
+                    } else {
+                      const memberDetail = modifiedInsuredMemberDetails.find(
+                        (member: any) => member.relation === key
+                      );
+                      addOnSumInsured = memberDetail?.memberSumInsured || '';
+                    }
+      
+                    if (addOnSumInsuredControl && addOnSumInsured !== '') {
+                      addOnSumInsuredControl.setValue(addOnSumInsured);
+                    }
+                  }
+                });
+
+                // Update insuredMemberDetails logic
+                modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                  if (insuredMember.relation === key) {
+                    const coverId = addOnIdControl?.value;
+                    const coverName = addOnCoverNameControl?.value || '';
+
+                    if (!insuredMember.covers) {
+                      insuredMember.covers = [];
+                    }
+
+                    const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                    if (existingCover) {
+                      existingCover.value = addOnSumInsured;
+                    } else {
+                      insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                    }
+
+                    if (!this.covers[index]) {
+                      this.covers[index] = [];
+                    }
+
+                    const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                    if (existingCoverInCovers) {
+                      existingCoverInCovers.value = addOnSumInsured;
+                    } else {
+                      this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                    }
+                  }
+                });
+              }
+            });
+          });
+        }
+      }
     }
   }
+
 
   checkForAgeValidations(control: any) {
     const addOnControl = this.dynamicFormGroup.get(control.name);
