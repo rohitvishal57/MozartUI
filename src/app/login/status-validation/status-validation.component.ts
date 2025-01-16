@@ -29,49 +29,52 @@ export class StatusValidationComponent implements OnInit {
    this.checkADFSLogin();
   }
 
-  checkADFSLogin(){
-    let idToken:any = '';
-    this.route.fragment.subscribe(fragment => {
-      let url:any = this.router.url.split('/');
-      let data:any = {}
-        if (fragment) {
-          console.log(fragment, url);
-          if(url.includes('adfs')){
-              const token = "id_token";
-              data.Idtoken = this.extractIdToken(fragment, token);
-              data.username = localStorage.getItem('agentCode');
-              this.loginService.checkADFSLogin(data,data.Idtoken, data.username).subscribe({
-                next: (res:any) => {
-                  if(res.data && res.isSuccess && res.statusCode == '200') {
-                    this.navigateToDashboard(res);
-                  } else {
-                    this.navigateToLogin(res?.message);
-                  }
-                },
-                error: (err) => {
-                  this.navigateToLogin('ERR101 : Some Error Occured! Please Try Again.');
-                },
-              });
-          }else{
-            const token = "code";
-            data.Idtoken = this.extractIdToken(fragment, token);
-            data.username = localStorage.getItem('agentCode');
-            this.loginService.checkCyberArkLogin(data,data.Idtoken,data.username).subscribe({
-              next: (res:any) => {
-                if(res.data && res.isSuccess && res.statusCode == '200') {
-                  this.navigateToDashboard(res);
-                } else {
-                  this.navigateToLogin(res?.message);
-                }
-              },
-              error: (err) => {
-                this.navigateToLogin('ERR102 : Some Error Occured! Please Try Again.');
-              },
-            });
-          }
-        }else{
-          this.navigateToLogin('ERR103 : Some Error Occured! Please Try Again.')
+  checkADFSLogin() {
+    let idToken: any = '';
+    this.route.queryParams.subscribe(params => {
+      let url: any = this.router.url.split('/');
+      let data: any = {};
+  
+      // Check if the URL includes 'adfs' or 'cyberark'
+      if (params) {
+        console.log(params, url);
+  
+        if (url.includes('adfs')) {
+          const token = "id_token";
+          data.Idtoken = params[token]; // Get the token from queryParams
+          data.username = localStorage.getItem('agentCode');
+          this.loginService.checkADFSLogin(data, data.Idtoken, data.username).subscribe({
+            next: (res: any) => {
+              if (res.data && res.isSuccess && res.statusCode == '200') {
+                this.navigateToDashboard(res);
+              } else {
+                this.navigateToLogin(res?.message);
+              }
+            },
+            error: (err) => {
+              this.navigateToLogin('ERR101 : Some Error Occurred! Please Try Again.');
+            },
+          });
+        } else {
+          const token = "code";
+          data.Idtoken = params[token]; // Get the token from queryParams
+          data.username = localStorage.getItem('agentCode');
+          this.loginService.checkCyberArkLogin(data, data.Idtoken, data.username).subscribe({
+            next: (res: any) => {
+              if (res.data && res.isSuccess && res.statusCode == '200') {
+                this.navigateToDashboard(res);
+              } else {
+                this.navigateToLogin(res?.message);
+              }
+            },
+            error: (err) => {
+              this.navigateToLogin('ERR102 : Some Error Occurred! Please Try Again.');
+            },
+          });
         }
+      } else {
+        this.navigateToLogin('ERR103 : Some Error Occurred! Please Try Again.');
+      }
     });
   }
 
