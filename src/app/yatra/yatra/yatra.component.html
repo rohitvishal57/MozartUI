@@ -361,8 +361,7 @@
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                     class="text-danger">
-                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only
-                    PNG,JPG,JPEG,PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG,JPG,JPEG,PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
                   </small>
@@ -965,7 +964,7 @@
                                                 <div [class]="innerControl.class" *ngFor="let option of innerControl.radioOptions">
                                                   <input type="radio" [formControlName]="innerControl.name" [name]="innerControl.name"
                                                     [id]="innerControl.name" [value]="option.value" style="margin-right: 10px;"
-                                                    (change)="onInputChange($event,subControl,control,i,null,innerControl)">
+                                                    (change)="onInputChange($event, innerControl, subControl, i , control, null , z-1)">
                                                   <label [innerHTML]="option.label">
                                                   </label>
                                                 </div>

@@ -2416,19 +2416,39 @@ export class YatraComponent {
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
-    if (control.name == 'activePolicySumInsured') {
-      const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control['dependentControls'])?.value
+    if (control.name == "portingABHIPolicy") {
+      const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
       if (selectedValue == 'Y') {
         this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
-
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((controls: any) => {
+            if (controls.name == "next") {
+              controls.visible = false;
+            }
+          });
+        });
       } else {
-        if (eventValue < 1000000) {
-          this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
-        } else {
-          this.toast.success({ detail: "Success", summary: 'Details saved successfully', duration: 3000 });
-
-        }
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((controls: any) => {
+            if (controls.name == "next") {
+              controls.visible = true;
+            }
+          });
+        });
       }
+      
+      // if (selectedValue == 'Y') {
+      //   this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
+      // } else {
+      //   if (parseInt(eventValue) < 1000000) {
+      //     const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name) as FormControl;
+      //     selectedValue.setValue(null);
+      //     selectedValue.setErrors({ required: true });
+      //     this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
+      //   } else {
+      //     this.toast.success({ detail: "Success", summary: 'Details saved successfully', duration: 3000 });
+      //   }
+      // }
     }
 
     if (control.name == 'physicalcopy' && control.type == 'radio') {
@@ -2722,7 +2742,7 @@ export class YatraComponent {
                     section.formControls.forEach((formControl: any) => {
                       if (formControl.name == "bankName" && formControl.onChangeMethod) {
                         this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
-                      } else if(formControl.name == "bankName") {
+                      } else if (formControl.name == "bankName") {
                         this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
                       }
                     });
@@ -9337,8 +9357,8 @@ export class YatraComponent {
 
         console.log(occupationControl, occupationRiskControl);
         const addOnData = addOnControl?.value;
-        console.log(addOnData,addOnControl);
-        
+        console.log(addOnData, addOnControl);
+
 
         // Check if the checkbox is enabled and checked
         // if (memberControlCheckbox.value) {
@@ -9417,11 +9437,11 @@ export class YatraComponent {
     const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
-  
+
     // Initialize maxAge and minAge
     let maxAge: number | null = null;
     let minAge: number | null = null;
-  
+
     // Retrieve ageValidationRule
     const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
     if (ageValidationRule) {
@@ -9431,7 +9451,7 @@ export class YatraComponent {
       } else {
         console.warn('Invalid maxAge format:', ageValidationRule.maxAge);
       }
-    
+
       // Handle minAge
       if (typeof ageValidationRule.minAge === 'number') {
         minAge = ageValidationRule.minAge;
@@ -9442,18 +9462,18 @@ export class YatraComponent {
         console.warn('Invalid minAge format:', ageValidationRule.minAge);
       }
     }
-    
-  
+
+
     // Ensure maxAge and minAge are defined
     if (maxAge !== null && minAge !== null) {
       this.formData.insuredMemberDetails.forEach((member: any) => {
         console.log(member);
-  
+
         Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
           // Use explicit non-null assertion for maxAge and minAge
           if (member.relation === key && (member.memberAge > maxAge! || member.memberAge < minAge!)) {
             const memberArray = addOnDetailsControl?.get(key) as FormArray;
-  
+
             memberArray.controls.forEach((formGroup: AbstractControl) => {
               if (formGroup instanceof FormGroup) {
                 Object.keys(formGroup.controls).forEach((controlName) => {
@@ -9461,7 +9481,7 @@ export class YatraComponent {
                 });
               }
             });
-  
+
             console.log('All controls in the FormGroup are disabled:', memberArray);
           }
         });
@@ -9470,11 +9490,11 @@ export class YatraComponent {
       console.warn('MaxAge or MinAge not defined in validation rules.');
     }
   }
-  
 
-  
-  
-  
+
+
+
+
 
 
 }
