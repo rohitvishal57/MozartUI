@@ -49,7 +49,7 @@ export class StatusValidationComponent implements OnInit {
                   }
                 },
                 error: (err) => {
-                  this.navigateToLogin('Some Error Occured! Please Try Again.');
+                  this.navigateToLogin('ERR101 : Some Error Occured! Please Try Again.');
                 },
               });
           }else{
@@ -65,12 +65,12 @@ export class StatusValidationComponent implements OnInit {
                 }
               },
               error: (err) => {
-                this.navigateToLogin('Some Error Occured! Please Try Again.');
+                this.navigateToLogin('ERR102 : Some Error Occured! Please Try Again.');
               },
             });
           }
         }else{
-          this.navigateToLogin('Some Error Occured! Please Try Again.')
+          this.navigateToLogin('ERR103 : Some Error Occured! Please Try Again.')
         }
     });
   }
