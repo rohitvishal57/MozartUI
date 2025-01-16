@@ -504,7 +504,7 @@ export class CreateLeadComponent implements OnInit {
     const reqData = {
       "pincode": pincode
     }
-    this.common.getPinCodeByCity(reqData).subscribe(
+    this.common.getCommonPinCodeByCity(reqData).subscribe(
       (response) => {
         if(response?.isSuccess){
          this.pincodeResponse = response?.data;         

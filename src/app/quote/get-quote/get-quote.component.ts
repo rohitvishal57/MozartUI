@@ -1143,7 +1143,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     };
 
     this.upgradableZones = [];
-    this.service.getPinCodeByCityForQuote(reqdata).subscribe({
+    this.service.getCommonPinCodeByCity(reqdata).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           console.log(res);

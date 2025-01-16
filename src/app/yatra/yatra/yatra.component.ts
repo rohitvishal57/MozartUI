@@ -8326,7 +8326,7 @@ export class YatraComponent {
     const reqData = {
       "pincode": this.formData.proposerPincode && this.formData.proposerPincode.toString()
     }
-    this.formData.proposerPincode && this.commonService.getPinCodeByCityForQuote(reqData).subscribe(res => {
+    this.formData.proposerPincode && this.commonService.getCommonPinCodeByCity(reqData).subscribe(res => {
       if (res.isSuccess && res.data) {
         // Update city and state fields
         this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
