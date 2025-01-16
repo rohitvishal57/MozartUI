@@ -9310,7 +9310,7 @@ export class YatraComponent {
 
   disableForAllOtherMembers(control: any) {
     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
-    if (addOnControlGroup) {
+    if (addOnControlGroup && this.formData.memberPolicyType=='Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
       console.log(addOnDetailsControl);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -9339,8 +9339,8 @@ export class YatraComponent {
   selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
     console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
     const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
-    console.log(addOnControlGroup)
-    if (addOnControlGroup) {
+    console.log(addOnControlGroup,this.formData.memberPolicyType)
+    if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
         console.log(Key, index);
