@@ -581,7 +581,28 @@ export class ProposalsListComponent {
    async redirectQuote(quoteInformation : any){
     console.log(quoteInformation);
 
+    try {
+      const reqData = {
+        partnerId: quoteInformation.partnerId,
+        productId: quoteInformation.productId,
+        formId: quoteInformation.formId??"0",
+        proposalNum: quoteInformation.proposalNum,
+        agentCode: this.agentCode,
+        currentFormSequence: quoteInformation.currentFormSequence??"0",
+        leadId: quoteInformation.leadId
+      }
+      localStorage.setItem("formIndex",  (quoteInformation.currentFormSequence ??0).toString());
+      const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+
+      this.router.navigate(['yatra'], {
+        queryParams: { data: encodedEncryptedData }
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
   }
+
 
   async redirect(proposalDetails: any) {
 
@@ -595,9 +616,9 @@ export class ProposalsListComponent {
         proposalNum: proposalDetails.proposalNumber,
         agentCode: this.agentCode,
         currentFormSequence: proposalDetails.formSequence,
-        leadId: proposalDetails.leadId
+        leadId: proposalDetails.leadIdp
       }
-      localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
+      localStorage.setItem("formIndex",   proposalDetails.formSequence.toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
       this.router.navigate(['yatra'], {
