@@ -102,22 +102,22 @@ export class CreateAVComponent implements OnInit {
   getAllLOB() {
     this.adminService.getAllManageLOB().subscribe(
       (response: any) => {
-        response = JSON.parse(response.data);
-        console.log('Full API Response:', response);
-        if (response?.data?.allManageLobs) {
-          this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
-          console.log('LOB Names:', this.AllManageLOB);
-        } else {
-          console.error('allManageLobs not found or invalid API Response:', response);
-          this.AllManageLOB = [];
-        }
-      },
-      (error) => {
-        console.error('Error fetching LOB data:', error);
-        this.AllManageLOB = [];
+          // Parse the data if necessary
+          const parsedData = JSON.parse(response.data);
+  
+          console.log('Full API Response:', parsedData);
+  
+          if (parsedData?.data?.allManageLobs) {
+            this.AllManageLOB = parsedData.data.allManageLobs.filter((item: any) => item.singleJourney === true).map((item: any) => item.lobName);
+            console.log('Filtered LOB Names:', this.AllManageLOB);
+          } else {
+            console.error('allManageLobs not found or invalid API Response:', parsedData);
+            this.AllManageLOB = [];
+          }
       }
     );
   }
+  
 
   inItForm() {
     this.createAvForm = this.formBuilder.group({
