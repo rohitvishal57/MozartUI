@@ -7254,7 +7254,7 @@ export class YatraComponent {
           }
           member.productQuestionnaire = JSON.stringify(productQuestionnaire);
         }
-        else{
+        else if( member['chronicDiseases']){
           chronicDiseases = member['chronicDiseases'] = Object.keys(member.chronicDiseases)
           .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
           .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
