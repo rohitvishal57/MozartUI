@@ -13,6 +13,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CustomersService } from 'src/app/customers/customers.service';
 import { thankYou, thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
+import { payment } from 'src/assets/styles/renewals-forms/payment';
+import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
+import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
+import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
 
 @Component({
   selector: 'app-renewal-list',
@@ -715,8 +719,26 @@ export class RenewalListComponent {
             mobileNumber: "",
           };
           const redirectionResponse: any = await firstValueFrom(this.renewalService.cpRedirectionApi(payload));
-          const encryptedUrl = decodeURIComponent(redirectionResponse.data);
+          const encryptedUrl = redirectionResponse.data;
           window.open(encryptedUrl, "_blank");
+          // const renewalInfoRequestBody = { policy_Number: proposerDetail.policyNumber };
+          // const renewalInfoResponse: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+          // if (renewalInfoResponse.statusCode === 200 && renewalInfoResponse.isSuccess === true && Object.keys(renewalInfoResponse.data).length > 0) {
+          //   this.router.navigate(["renewal/renewalJourney"], {
+          //     state: {
+          //       formData: this.encryptionService.encrypt(renewalInfoResponse.data),
+          //       proposalNum: this.encryptionService.encrypt(this.proposalNum),
+          //       policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+          //       journeyProcess: this.encryptionService.encrypt(0),
+          //       formSequence : this.encryptionService.encrypt([new_combinedForms,totalPremium,payment,thankYou]),       
+          //       formIndex: "0",
+          //     },
+          //   });
+          // } else if (renewalInfoResponse.message?.toLowerCase().includes("policy renewed")) {
+          //   this.toast.success({ detail: "Success", summary: renewalInfoResponse.message || "Renewal Success", duration: 3000 });
+          // } else {
+          //   this.toast.warning({ detail: "Warning", summary: renewalInfoResponse.message || "Error while getting renewal Information.", duration: 3000 });
+          // }
         } else if (action === "withoutmodify") {
           const renewalInfoRequestBody = { policy_Number: proposerDetail.policyNumber };
           const renewalInfoResponse: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
@@ -765,7 +787,7 @@ export class RenewalListComponent {
             state: {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
-              // policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+              policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
               journeyProcess: this.encryptionService.encrypt(0),
               formIndex: "1",
             },
@@ -778,7 +800,7 @@ export class RenewalListComponent {
           this.router.navigate(["renewal/renewalJourney"], {
             state: {
               formData: this.encryptionService.encrypt(formData),
-              // policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+              policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
               formIndex: "1",
             },
           });
@@ -789,7 +811,7 @@ export class RenewalListComponent {
         this.router.navigate(["renewal/renewalJourney"], {
           state: {
             formData: this.encryptionService.encrypt(formData),
-            // policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
+            policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
             paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
             formIndex: "1",
           },
