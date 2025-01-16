@@ -7173,7 +7173,7 @@ export class YatraComponent {
 
         if (member.hospiCashCoverDetails && Array.isArray(member.hospiCashCoverDetails)) {
           member.hospiCashCoverDetails = member.hospiCashCoverDetails.filter(
-            (detail: any) => detail.memberCover !== "" || detail.memberCover !== false
+            (detail: any) => detail.memberCover !== "" && detail.memberCover !== false
           );
         }
         return {
