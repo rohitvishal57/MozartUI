@@ -2898,7 +2898,7 @@ export class YatraComponent {
     }
 
 
-    if ((parentControl !== null && parentControl.type == 'combinedCheckbox') || (parentControl?.idProperty === '12345')) {
+    if ((parentControl !== null && parentControl.type == 'combinedCheckbox')) {
       if (control.type === 'select') {
         this.callMethod(parentControl.methodName, control)
       }
@@ -7327,8 +7327,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      // accountType: this.jsonParse(formData?.accountType, 'value') || '',
-      // bankAccountType: this.jsonParse(formData?.accountType, 'name') || '',
+      accountType: this.jsonParse(formData?.accountType, 'value') || '',
+      bankAccountType: this.jsonParse(formData?.accountType, 'name') || '',
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',
