@@ -102,11 +102,8 @@ export class CreateAVComponent implements OnInit {
   getAllLOB() {
     this.adminService.getAllManageLOB().subscribe(
       (response: any) => {
-          // Parse the data if necessary
           const parsedData = JSON.parse(response.data);
-  
           console.log('Full API Response:', parsedData);
-  
           if (parsedData?.data?.allManageLobs) {
             this.AllManageLOB = parsedData.data.allManageLobs.filter((item: any) => item.singleJourney === true).map((item: any) => item.lobName);
             console.log('Filtered LOB Names:', this.AllManageLOB);

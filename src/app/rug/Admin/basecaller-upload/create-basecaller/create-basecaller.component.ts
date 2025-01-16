@@ -190,7 +190,7 @@ export class CreateBasecallerComponent implements OnInit {
         response = JSON.parse(response.data);
         console.log('Full API Response:', response);
         if (response?.data?.allManageLobs) {
-          this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
+          this.AllManageLOB = response.data.allManageLobs.filter((item: any) => item.dualJourney === true).map((item: any) => item.lobName);
           console.log('LOB Names:', this.AllManageLOB);
         } else {
           console.error('allManageLobs not found or invalid API Response:', response);
