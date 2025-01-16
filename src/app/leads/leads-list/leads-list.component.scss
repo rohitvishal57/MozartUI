@@ -350,6 +350,11 @@ h6 {
 		padding: 0px;
 	}
 }
+@media (max-width: 1093px) {
+    .siteBody {
+        padding: 12rem 2rem 12rem;
+    }
+}
   @media only screen and (max-width: 767px) {
 	.filterWraperForm{
 		padding: 0px;
@@ -363,4 +368,13 @@ h6 {
     .siteBody {
         padding-bottom: 6rem;
     }
+	.btn_newRequest {
+		line-height: normal;
+	}
+	.leads_searchWraper .field_searchMain.field_searchMainMobile {
+		flex-direction: row;
+	}
+	.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch {
+		width: 150px;
+	}
   }
