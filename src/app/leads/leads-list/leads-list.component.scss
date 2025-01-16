@@ -352,7 +352,7 @@ h6 {
 }
 @media (max-width: 1093px) {
     .siteBody {
-        padding: 12rem 2rem 12rem;
+        padding: 11rem 2rem 12rem;
     }
 }
   @media only screen and (max-width: 767px) {
@@ -376,5 +376,24 @@ h6 {
 	}
 	.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch {
 		width: 150px;
+	}
+	.bodyColumn h2 {
+		font-size: 14px;
+		font-weight: 600;
+	}
+	.btn_newRequest {
+		border: 1px solid #c7222a;
+	}
+	.btn_newRequest:hover {
+		border: 0px solid #c7222a;
+	}
+	.quickFilterMain {
+		padding: 0;
+	}
+	.siteBody {
+		background: #fff;
+	}
+	.body_flex_column {
+		gap: 10px;
 	}
   }
