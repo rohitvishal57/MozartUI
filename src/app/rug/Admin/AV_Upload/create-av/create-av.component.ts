@@ -18,21 +18,21 @@ export class CreateAVComponent implements OnInit {
   submitted: boolean = false;
   today: string = '';
   AllManageLOB: any[] = [];
-  PatchAllAv:any;
-  joy:any;
-  allAxisLocations: any[] = []; 
-  allAxisVendors: any[] = [];   
-  filteredVendors: any[] = [];  
-  selectedLocationId:any = ''; 
-  selectedLocation:any;
+  PatchAllAv: any;
+  joy: any;
+  allAxisLocations: any[] = [];
+  allAxisVendors: any[] = [];
+  filteredVendors: any[] = [];
+  selectedLocationId: any = '';
+  selectedLocation: any;
   AxisProcess: any[] = [" Inbound Phone Banking", "Outbound Call Center (OCC)"];
   selectedUserId: any | null = null;
   isUpdate: boolean = false;
   filteredAxisVendors: any;
-  dataToModify!:any
+  dataToModify!: any
 
   constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private adminService: AdminService, private toast: NgToastService) {
-    
+
   }
   ngOnInit(): void {
     this.inItForm();
@@ -48,13 +48,13 @@ export class CreateAVComponent implements OnInit {
     this.getAllLOB();
   }
 
-  getAllAVs(){
+  getAllAVs() {
     const endPoint = "getallAv/" + this.selectedUserId;
-    this.adminService.getAllAVs(endPoint).subscribe((response: any) => {  
+    this.adminService.getAllAVs(endPoint).subscribe((response: any) => {
       this.joy = JSON.parse(response.data);
-      this.PatchAllAv = this.joy.data.allAvDetails.filter((res:any) => 
+      this.PatchAllAv = this.joy.data.allAvDetails.filter((res: any) =>
         res.avId == this.selectedUserId);
-      console.log('Joy',this.joy)
+      console.log('Joy', this.joy)
       console.log("pathValue", this.PatchAllAv)
       if (response) {
         this.createAvForm.patchValue({
@@ -69,14 +69,14 @@ export class CreateAVComponent implements OnInit {
           tlName: this.PatchAllAv[0].tlName,
           imdCode: this.PatchAllAv[0].imdCode,
           axisVendor: this.PatchAllAv[0].axisVendor,
-          axislob: this.PatchAllAv[0].axisLob
+          axislob: this.PatchAllAv[0].axislob
         });
         this.createAvForm.updateValueAndValidity();
       }
-      let selectedLocationId=this.allAxisLocations?.filter((location:any) => location.location==this.selectedLocation)[0].axisLocationId;
-      this.filteredAxisVendors=this.allAxisVendors?.filter((vendor:any)=>vendor.axisLocationId==selectedLocationId);
+      let selectedLocationId = this.allAxisLocations?.filter((location: any) => location.location == this.selectedLocation)[0].axisLocationId;
+      this.filteredAxisVendors = this.allAxisVendors?.filter((vendor: any) => vendor.axisLocationId == selectedLocationId);
     })
-    
+
   }
 
   getAllVendorsAndLocation() {
@@ -86,39 +86,36 @@ export class CreateAVComponent implements OnInit {
       this.allAxisVendors = res.data.allVendors;
     });
   }
- 
-  onLocationChange(event:any) {
+
+  onLocationChange(event: any) {
     let selectedValue: any;
-  if(typeof(event) === "object"){
-    selectedValue = event.target.value;
-  }else{
-    selectedValue = event
-  }
-  let selectedLocation=selectedValue;
-  let selectedLocationId=this.allAxisLocations?.filter((location:any) => location.location==selectedLocation)[0].axisLocationId;
-  this.filteredAxisVendors=this.allAxisVendors?.filter((vendor:any)=>vendor.axisLocationId==selectedLocationId);
+    if (typeof (event) === "object") {
+      selectedValue = event.target.value;
+    } else {
+      selectedValue = event
+    }
+    let selectedLocation = selectedValue;
+    let selectedLocationId = this.allAxisLocations?.filter((location: any) => location.location == selectedLocation)[0].axisLocationId;
+    this.filteredAxisVendors = this.allAxisVendors?.filter((vendor: any) => vendor.axisLocationId == selectedLocationId);
   }
 
   getAllLOB() {
     this.adminService.getAllManageLOB().subscribe(
       (response: any) => {
-        response = JSON.parse(response.data);
-        console.log('Full API Response:', response); 
-        if (response?.data?.allManageLobs) {
-          this.AllManageLOB = response.data.allManageLobs.map((item: any) => item.lobName);
-          console.log('LOB Names:', this.AllManageLOB);
-        } else {
-          console.error('allManageLobs not found or invalid API Response:', response);
-          this.AllManageLOB = []; 
-        }
-      },
-      (error) => {
-        console.error('Error fetching LOB data:', error);
-        this.AllManageLOB = []; 
+          const parsedData = JSON.parse(response.data);
+          console.log('Full API Response:', parsedData);
+          if (parsedData?.data?.allManageLobs) {
+            this.AllManageLOB = parsedData.data.allManageLobs.filter((item: any) => item.singleJourney === true).map((item: any) => item.lobName);
+            console.log('Filtered LOB Names:', this.AllManageLOB);
+          } else {
+            console.error('allManageLobs not found or invalid API Response:', parsedData);
+            this.AllManageLOB = [];
+          }
       }
     );
   }
   
+
   inItForm() {
     this.createAvForm = this.formBuilder.group({
       avid: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
@@ -138,7 +135,7 @@ export class CreateAVComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
-    
+
     if (this.createAvForm.invalid) {
       const firstInvalidControl = Object.keys(this.createAvForm.controls).find(
         control => this.createAvForm.get(control)?.invalid
@@ -147,7 +144,7 @@ export class CreateAVComponent implements OnInit {
         const invalidElement = document.getElementById(firstInvalidControl);
         invalidElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-      return; 
+      return;
     }
     const formData = {
       avId: this.createAvForm.value.avid,
@@ -167,13 +164,13 @@ export class CreateAVComponent implements OnInit {
     };
 
     this.adminService.createAV(formData).subscribe((response: any) => {
-        console.log('create AV successfully:', response);
-        this.toast.success({ detail: "Success", summary: "Successful..", duration: 3000 })
-      });
+      console.log('create AV successfully:', response);
+      this.toast.success({ detail: "Success", summary: "Successful..", duration: 3000 })
+    });
     this.router.navigate(['rug/av-list']);
     console.log('Form Submitted:', this.createAvForm.value);
   }
-  
+
 
   backToAV() {
     this.router.navigate(['rug/av-list']);

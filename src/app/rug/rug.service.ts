@@ -58,6 +58,10 @@ export class RugService {
       const halfQuoteData = this.configService.config.baseUrl1 + this.configService.config.bbHalfQuote;
       return this.httpService.post(halfQuoteData, reqData);
     }
+    getBaseCallerDetails(reqData: any){
+      const baseCallerData = this.configService.config.baseUrl1 + this.configService.config.getBaseCallerDetails;
+      return this.httpService.post(baseCallerData, reqData);
+    }
     getAllLeads(reqData: any) {
       const halfQuoteData = this.configService.config.baseUrl1 + this.configService.config.GetLeads;
       return this.httpService.post(halfQuoteData, reqData);

@@ -210,5 +210,8 @@ export const environment = {
   confirmproposer:"api/yatra/confirmproposer",
   extractMastarData:"api/rug/ExtractMasterData",
   getTSPolicyInfoLeadId:"api/rug/GetTSPolicyInfoByLeadId",
-  pinCodeDetailsQuote: "api/yatra/getpincodedetails"
+  pinCodeDetailsQuote: "api/yatra/getpincodedetails",
+  getBaseCallerDetails: "api/rug/GetBaseCallerDetails",
+  DeleteBaseCaller:"api/rug/DeleteBaseCaller",
+  CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller"
 };

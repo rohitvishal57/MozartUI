@@ -33,14 +33,13 @@ export class KycComponent {
   }
 
   ngOnInit() {
-    debugger;
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.params = this.route.snapshot.queryParams;
-      this.user = this.params.userType;
-      this.transactionId = this.params['transactionId'] ? this.params['transactionId'] : "";
       if (this.params['token']) {
         localStorage.setItem('token', this.params['token']);
       }
+      this.user = this.params.userType;
+      this.transactionId = this.params['transactionId'] ? this.params['transactionId'] : "";
     }
     this.agentCode = localStorage.getItem('agentCode');
     this.redirectFunction();

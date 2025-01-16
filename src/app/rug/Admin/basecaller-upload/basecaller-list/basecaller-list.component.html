@@ -41,9 +41,9 @@
                                     <td>{{baseCaller.status}}</td>
                                     <td>
                                         <div class="btn_groupAction lead_btnList justify-content-center">
-                                            <button type="button" id="updateBaseCaller" name="updateBaseCaller" class="btn_action btn_renewalAction" title="Update BaseCaller"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="deleteBaseCaller" name="deleteBaseCaller" class="btn_action btn_renewalAction"  title="InActive BaseCaller"><img src="/assets/Img/delete.svg"></button>
-                                            <button type="button" id="updatePassword" name="updatePassword" class="btn_action btn_editAction" title="Change Password"><img src="assets/Img/icon_profile.svg" /></button>
+                                            <button type="button" id="updateBaseCaller" name="updateBaseCaller" class="btn_action btn_renewalAction" title="Update BaseCaller"><img src="assets/Img/icon_edit_grey.svg" [routerLink]="['update_baseCaller',baseCaller.domainId]"></button>
+                                            <button type="button" id="deleteBaseCaller" name="deleteBaseCaller" class="btn_action btn_renewalAction"  title="InActive BaseCaller" (click)="deleteUser(i)"><img src="/assets/Img/delete.svg"></button>
+                                            <!-- <button type="button" id="updatePassword" name="updatePassword" class="btn_action btn_editAction" title="Change Password"><img src="assets/Img/icon_profile.svg" /></button> -->
                                         </div>
                                     </td>
                                 </tr>

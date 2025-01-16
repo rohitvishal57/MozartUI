@@ -166,6 +166,8 @@ export class RenewalJourneyComponent {
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
     });
+    console.log("form",this.form);
+    
   }
 
 
@@ -1400,7 +1402,7 @@ export class RenewalJourneyComponent {
     else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
-      console.log(this.form);
+      // console.log(this.form);
 
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle == "Insured Member Details") {
@@ -1425,7 +1427,7 @@ export class RenewalJourneyComponent {
             section.formControls[0].dynamicControls.pop();
           }
 
-          while (section.formControls[1].dynamicControls.length > 1) {
+          while (section.formControls[1].dynamicControls.length > 1) {  
             section.formControls[1].dynamicControls.pop();
           }
 
@@ -2582,7 +2584,7 @@ export class RenewalJourneyComponent {
   }
 
   //tab-view methods
-  generateHeader(control: any, i: any) {
+  generateHeader(control: any, i: any) {  
     console.log(control, this.renewalFormGroup);
 
     // console.log(this.formData[control.name][i-1].relationshipType,control,i);
@@ -2729,8 +2731,8 @@ export class RenewalJourneyComponent {
     const data = JSON.parse(event.target.value);
     this.bankCode = data.id;
     const reqData = {
-      "cityCode": "",
-      "bankCode": this.bankCode
+      "cityName": "",
+      "bankName": this.bankCode
     };
     this.yatraService.getBankCity(reqData).subscribe({
       next: (res: any) => {
@@ -2753,8 +2755,8 @@ export class RenewalJourneyComponent {
     console.log(this.bankCity);
 
     const reqData = {
-      "bankCode": this.bankCode,
-      "cityCode": this.bankCity
+      "bankName": this.bankCode,
+      "cityName": this.bankCity
     };
 
     console.log(reqData);
@@ -3925,7 +3927,7 @@ export class RenewalJourneyComponent {
               window.open(fileURL, "_blank");
             }
           } else {
-            this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: response.message || "No file found to download.", duration: 3000 });
           }
         },
         (error: any) => {
@@ -3934,7 +3936,6 @@ export class RenewalJourneyComponent {
         }
       );
     }
-
   }
 
   onSearchDocumentFromConfirmation() {
