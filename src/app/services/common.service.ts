@@ -29,7 +29,7 @@ export class CommonService {
     return this.http.post<any>(PinCodeByCity, reqdata);
   }
 
-  getPinCodeByCityForQuote(reqdata: any) {
+  getCommonPinCodeByCity(reqdata: any) {
     const PinCodeByCityQuote = this.configService.config.baseUrl + this.configService.config.pinCodeDetailsQuote;
     return this.http.post<any>(PinCodeByCityQuote, reqdata);
   }

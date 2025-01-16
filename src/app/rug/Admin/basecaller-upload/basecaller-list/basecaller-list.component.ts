@@ -13,11 +13,15 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class BasecallerListComponent {
   allBaseCaller:any[]=[];
+  page: number = 1;
   pageNo:number=1;
   noOfRows:number=100;
   totalRecords:number=0;
   first: number = 0;
   rows: number = 10;
+  searchTerm: string = '';
+  displayedAVs: any[] = [];
+
   constructor(private languageService: LanguageService,private translateService: TranslateService,
     private adminService: AdminService, private matdialogue: MatDialog
   ){}
@@ -36,18 +40,49 @@ export class BasecallerListComponent {
     this.adminService.getAllBaseCaller(this.pageNo, this.noOfRows).subscribe(
       (res: any) => {
         this.allBaseCaller =JSON.parse(res.data).data.allBaseCaller;
-        this.totalRecords=this.allBaseCaller.length;       
+        this.totalRecords=this.allBaseCaller.length;  
+        this.updateDisplayedData();
       },
       (error: any) => {
         console.log("Error fetching data", error);
       }
     );
   }
+
+  updateDisplayedData(): void {
+    const startIndex = this.first;
+    const endIndex = this.first + this.rows;
+    this.displayedAVs = this.allBaseCaller.slice(startIndex, endIndex);
+  }
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  }
+
+  
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getAllBaseCaller();
+  }
   createBaseCaller(){
 
   }
   bulkUploadBaseCaller(){
 
+  }
+
+  onInput(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.displayedAVs = this.allBaseCaller.filter((option: any) =>
+      option?.baseCallerEmpId?.toLowerCase().includes(this.searchTerm) ||
+      option?.baseCallerName?.toLowerCase().includes(this.searchTerm) ||
+      option?.tlName?.toLowerCase().includes(this.searchTerm) ||
+      option?.amName?.toLowerCase().includes(this.searchTerm) ||
+      option?.omName?.toLowerCase().includes(this.searchTerm) ||
+      option?.status?.toLowerCase().includes(this.searchTerm) 
+    );
   }
 
   deleteUser(index: number) {
@@ -75,11 +110,4 @@ export class BasecallerListComponent {
         }
       );
     }
-
-  onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
-    // this. = Math.floor(this.first / this.rows) + 1;
-    // this.getAllAVs();
-  }
 }
