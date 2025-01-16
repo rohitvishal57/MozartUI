@@ -2718,7 +2718,15 @@ export class YatraComponent {
                     value: response.data.bankName,
                     name: response.data.bankName
                   };
-                  this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                  this.form.formSections.forEach((section: any) => {
+                    section.formControls.forEach((formControl: any) => {
+                      if (formControl.name == "bankName" && formControl.onChangeMethod) {
+                        this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                      } else if(formControl.name == "bankName") {
+                        this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+                      }
+                    });
+                  });
                   this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
 
                   if (response.data.bankName) {
