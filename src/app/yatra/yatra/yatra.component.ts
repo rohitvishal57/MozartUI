@@ -5675,8 +5675,19 @@ export class YatraComponent {
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
           // Initialize member's properties with default values if undefined
           member['covers'] = this.covers[index] ?? [];
-          member['isChronic'] = member['isChronic'] ?? "No";
-          member['chronicDiseases'] = member['chronicDiseases'] ?? null;
+          if (member.chronicDiseases && typeof member.chronicDiseases === 'object') {
+            member['chronicDiseases'] = Object.keys(member.chronicDiseases)
+              .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
+              .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
+              .join(','); // Join with a comma and space
+              member['isChronic'] = "YES";
+
+          } else {
+            member['chronicDiseases'] = null; 
+            member['isChronic'] = member['isChronic'] ?? "No";
+            // Set to empty string if no valid chronic diseases
+          }
+          // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
           member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
 
@@ -7242,6 +7253,12 @@ export class YatraComponent {
             }
           }
           member.productQuestionnaire = JSON.stringify(productQuestionnaire);
+        }
+        else{
+          chronicDiseases = member['chronicDiseases'] = Object.keys(member.chronicDiseases)
+          .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
+          .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
+          .join(',');
         }
 
         if (member.hospiCashCoverDetails && Array.isArray(member.hospiCashCoverDetails)) {
@@ -9298,10 +9315,16 @@ export class YatraComponent {
   getSelectedDiseases(control: any, index: any, subControl: string): string {
     const controlName = this.dynamicFormGroup.get(control)?.get([index, subControl]);
     if (controlName?.value) {
-      return Object.keys(controlName.value)
-        .filter(key => controlName.value[key])
-        .map(key => key.charAt(0).toUpperCase() + key.slice(1))
-        .join(', ');
+      const selectedKeys = Object.keys(controlName.value).filter(key => controlName.value[key]);
+      const isTouched:any = selectedKeys.length > 0;
+      controlName.markAsTouched(isTouched); // Mark as touched or untouched
+      controlName.markAsDirty(isTouched); // Optional: Mark dirty for additional validation logic
+
+      if (selectedKeys.length > 0) {
+        return selectedKeys
+          .map(key => key.charAt(0).toUpperCase() + key.slice(1))
+          .join(', ');
+      }
     }
     return 'Select Options';
   }
