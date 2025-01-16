@@ -148,7 +148,7 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let leads of displayedLeads; let i = index">
-                                    <td>{{i + 1}}</td>
+                                    <td>{{(first + i + 1)}}</td>
                                     <td>{{leads.refNo}}</td>
                                     <td>{{leads.proposerName}}</td>
                                     <td>{{leads.imdCode}}</td>
@@ -188,7 +188,7 @@
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ?
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ?
                                     totalRecords : first + rows}}</span> {{"of" | translate}} <span
                                     class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>

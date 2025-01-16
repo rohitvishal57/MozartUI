@@ -14,6 +14,18 @@
                     </button>
                 </div>
             </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    [(ngModel)]="searchTerm" (input)="onInput($event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <section id="quotes-list" class="tableMain quoteView block-show">
                 <div class="tableSubMain">
                     <div class="table-responsive">
@@ -31,8 +43,8 @@
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                                <tr *ngFor="let baseCaller of allBaseCaller; let i = index">
-                                    <td>{{((pageNo-1)*totalRecords)+i+1}}</td>
+                                <tr *ngFor="let baseCaller of displayedAVs; let i = index">
+                                    <td>{{(first + i + 1)}}</td>
                                     <td>{{baseCaller.baseCallerEmpId}}</td>
                                     <td>{{baseCaller.baseCallerName}}</td>
                                     <td>{{baseCaller.tlName}}</td>
@@ -51,21 +63,24 @@
                         </table>
                     </div>
                 </div>
-            
                 <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
                                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
+               
             </section>
         </div>
     </div>
