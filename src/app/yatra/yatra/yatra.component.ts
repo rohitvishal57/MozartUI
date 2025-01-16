@@ -705,7 +705,7 @@ export class YatraComponent {
                           tempMemberControl.value = true;
                           tempInnerControl.visible = true;
                           this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
-                              tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                            tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
                           })
                         }
                       }
@@ -779,7 +779,7 @@ export class YatraComponent {
 
                 console.log(member, member.chronicDiseases, trueKeys, control);
                 const isControlInTrueKeys = control?.nameProperty?.toLowerCase && trueKeys.includes(control.nameProperty.toLowerCase());
-                 // Store matching control information in the array if condition is true
+                // Store matching control information in the array if condition is true
                 if (isControlInTrueKeys) {
                   matchedControls.push(member);
                   visibleMatchedControls.push(true);
@@ -798,7 +798,7 @@ export class YatraComponent {
                     ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
                   ]; // Keep the first control (or reset)
                 }
-                matchedControls.forEach((member:any,i:any) => {
+                matchedControls.forEach((member: any, i: any) => {
                   if (control.subControls) {
                     let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
                     let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
@@ -819,7 +819,7 @@ export class YatraComponent {
                         }
                       }
                     }
-  
+
                     control.subControls?.push(tempMemberControl);
                     control.subControls?.push(tempInnerControl);
                   }
@@ -1344,11 +1344,11 @@ export class YatraComponent {
         }
         if (control.innerArrayControl) {
           if (control.visible) {
-              let tempFormArray = this.fb.array([]);
-              for (let i = 1; i < control.innerArrayControl.length; i++) {
-                tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i, control));
-              }
-              formGroup.addControl(control.name, tempFormArray);
+            let tempFormArray = this.fb.array([]);
+            for (let i = 1; i < control.innerArrayControl.length; i++) {
+              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i, control));
+            }
+            formGroup.addControl(control.name, tempFormArray);
           }
           else {
             formGroup.addControl(control.name, new FormArray([]));
@@ -1366,7 +1366,7 @@ export class YatraComponent {
           formGroup.addControl(control.name, this.initializeSubControls(control.innerSubControls.slice(1)));
         }
         if (control.innerControls) {
-            formGroup.addControl(control.name, this.initializeSubControls(control.innerControls));
+          formGroup.addControl(control.name, this.initializeSubControls(control.innerControls));
         }
         else if (control.coreControls) {
           let tempFormArray = this.fb.array([]);
@@ -2487,7 +2487,7 @@ export class YatraComponent {
           });
         });
       }
-      
+
       // if (selectedValue == 'Y') {
       //   this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
       // } else {
@@ -4817,7 +4817,7 @@ export class YatraComponent {
                     innControl?.markAsTouched({ onlySelf: true });
                   })
                 }
-                else{
+                else {
                   innerControl?.markAsDirty({ onlySelf: true });
                 }
               });
@@ -5979,9 +5979,9 @@ export class YatraComponent {
 
   onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null, innerControl: any = null, indexj: number | null = null) {
     this.changesMade = true;
-    if(parentControl.type === 'chronicquestionnaire'){
-      parentControl.subControls.forEach((element:any) => {
-        if(element.name == control.label){
+    if (parentControl.type === 'chronicquestionnaire') {
+      parentControl.subControls.forEach((element: any) => {
+        if (element.name == control.label) {
           element.visible = !element.visible;
         }
       });
@@ -6085,9 +6085,9 @@ export class YatraComponent {
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
             if (event.target.checked == false) {
-                subControl.innerArrayControl = subControl.innerArrayControl?.slice(0, 2);
-                let formArray = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
-                formArray.clear();
+              subControl.innerArrayControl = subControl.innerArrayControl?.slice(0, 2);
+              let formArray = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
+              formArray.clear();
 
               // Remove all items from the FormArray
               // while (formArray.length > 1) {
@@ -6214,9 +6214,6 @@ export class YatraComponent {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.getRawValue();
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
 
-    console.log(addOnData);
-
-
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
         modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
@@ -6283,6 +6280,42 @@ export class YatraComponent {
                 });
               }
 
+            }
+
+            if (parentControl.name == 'chronicCare') {
+              const chronicDiseases: string[] = [];
+
+              console.log(addOnData.addOnDetails[key]);
+
+              addOnData.addOnDetails[key].forEach((innerObject:any)=>{
+
+                Object.keys(innerObject).forEach((diseaseKey) => {
+                  const diseaseValue = innerObject[diseaseKey];
+                  console.log(diseaseValue);
+                  
+  
+                  if (
+                    diseaseKey !== 'memberCheckbox' && // Exclude memberCheckbox
+                    !diseaseKey.includes('Question') && // Exclude keys containing 'question'
+                    !diseaseKey.includes('Value') &&
+                    diseaseValue === true // Include only true values
+                  ) {
+                    chronicDiseases.push(diseaseKey); // Add disease name to the list
+                  }
+                });
+              });
+
+              console.log(chronicDiseases);
+
+              if (chronicDiseases.length > 0) {
+                member.isChronic = 'Yes';
+                member.chronicDiseases = chronicDiseases.join(', '); // Join disease names with commas
+              } else {
+                member.isChronic = 'No';
+                member.chronicDiseases = ''; // Clear chronic diseases if none found
+              }
+              console.log(member);
+              
             }
           }
         });
@@ -7344,8 +7377,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      accountType: this.jsonParse(formData?.accountType, 'value') || '',
-      bankAccountType: this.jsonParse(formData?.accountType, 'name') || '',
+      // accountType: this.jsonParse(formData?.accountType, 'value') || '',
+      // bankAccountType: this.jsonParse(formData?.accountType, 'name') || '',
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',
@@ -9273,9 +9306,9 @@ export class YatraComponent {
 
   onmultiCheckboxChange(event: Event, subControl: any, control: any, i: any, option: any) {
     const checkbox = event.target as HTMLInputElement;
-    const formArrayControl = this.getNestedControl(control.name, i , subControl.name,option.value) as FormGroup;
+    const formArrayControl = this.getNestedControl(control.name, i, subControl.name, option.value) as FormGroup;
     const selectedValues = formArrayControl.value || [];
-    if(selectedValues){
+    if (selectedValues) {
       const trueCount = Object.values(selectedValues).filter(value => value === true).length;
 
       if (checkbox.checked && trueCount > 3) {
@@ -9287,7 +9320,7 @@ export class YatraComponent {
         this.toast.error({ detail: "Error", summary: 'You can select a maximum of 3 options only.', duration: 3000 });
         return;
       }
-      else{
+      else {
         formArrayControl.get(option.name.toLowerCase())?.setValue(checkbox.checked);
 
       }
@@ -9304,7 +9337,7 @@ export class YatraComponent {
     if (!this.showOptions[controlName]) {
       this.showOptions[controlName] = {};
     }
-    Object.keys(this.showOptions[controlName]).forEach((key:any) => {
+    Object.keys(this.showOptions[controlName]).forEach((key: any) => {
       if (key != index) { // Exclude the current index
         this.showOptions[controlName][key] = false;
       }
@@ -9748,7 +9781,7 @@ export class YatraComponent {
       // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
       if (shouldEnableAddOnCover) {
         addOnCoverControl?.setValue(true);
-        if(isSelfPresent){
+        if (isSelfPresent) {
           addOnCoverControl?.disable();
         }
       } else {
@@ -9815,7 +9848,7 @@ export class YatraComponent {
                       );
                       addOnSumInsured = memberDetail?.memberSumInsured || '';
                     }
-      
+
                     if (addOnSumInsuredControl && addOnSumInsured !== '') {
                       addOnSumInsuredControl.setValue(addOnSumInsured);
                     }
