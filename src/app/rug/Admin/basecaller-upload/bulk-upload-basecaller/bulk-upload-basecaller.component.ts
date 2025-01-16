@@ -106,7 +106,7 @@ export class BulkUploadBasecallerComponent {
         } else {
           this.toast.error({
             detail: "Error",
-            summary: "Unexpected response format. Please try again.",
+            summary: "Not Inserted. The uploaded file is missing the required column Domain Id. Please ensure that this column is included and correctly labeled in your file.",
             duration: 5000,
           });
           this.fileList = [];
