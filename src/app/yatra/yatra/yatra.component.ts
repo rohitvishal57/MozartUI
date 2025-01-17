@@ -4484,7 +4484,7 @@ export class YatraComponent {
     if (this.form.formTitle == 'Total Premium') {
       if (this.formData.productName === 'Active Secure') {
         console.log("Form data:", this.formData);
-        const requiredCoverIds = ['CIL', 'CANC','PA']
+        const requiredCoverIds = ['CIL', 'CANC', 'PA']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
           const validCovers = member.covers.filter((cover: any) => requiredCoverIds.includes(cover.coverId));
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
@@ -5665,7 +5665,7 @@ export class YatraComponent {
     }
 
     console.log(this.formData);
-    
+
     if (this.isQuote === false) {
       if (Object.keys(this.formData).length > 0) {
 
@@ -5673,28 +5673,28 @@ export class YatraComponent {
           // Initialize member's properties with default values if undefined
           member['covers'] = this.covers[index] ?? [];
           if (member.chronicDiseases) {
-            if(typeof member.chronicDiseases === 'object'){
+            if (typeof member.chronicDiseases === 'object') {
               member['chronicDiseases'] = Object.keys(member.chronicDiseases)
                 .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
                 .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
                 .join(','); // Join with a comma and space
-                member['isChronic'] = "YES";
-  
+              member['isChronic'] = "YES";
+
             }
-            else if (typeof member.chronicDiseases === 'string'){
+            else if (typeof member.chronicDiseases === 'string') {
               member.chronicDiseases = member.chronicDiseases;
             }
-             else {
-              member['chronicDiseases'] = null; 
+            else {
+              member['chronicDiseases'] = null;
               member['isChronic'] = member['isChronic'] ?? "No";
               // Set to empty string if no valid chronic diseases
             }
           }
-          else if(member.chronicDiseases == ""){
-            member['chronicDiseases'] = null; 
+          else if (member.chronicDiseases == "") {
+            member['chronicDiseases'] = null;
             member['isChronic'] = member['isChronic'] ?? "No";
           }
-          
+
           // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
           member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
@@ -6295,13 +6295,13 @@ export class YatraComponent {
 
               console.log(addOnData.addOnDetails[key]);
 
-              addOnData.addOnDetails[key].forEach((innerObject:any)=>{
+              addOnData.addOnDetails[key].forEach((innerObject: any) => {
 
                 Object.keys(innerObject).forEach((diseaseKey) => {
                   const diseaseValue = innerObject[diseaseKey];
                   console.log(diseaseValue);
-                  
-  
+
+
                   if (
                     diseaseKey !== 'memberCheckbox' && // Exclude memberCheckbox
                     !diseaseKey.includes('Question') && // Exclude keys containing 'question'
@@ -6323,7 +6323,7 @@ export class YatraComponent {
                 member.chronicDiseases = ''; // Clear chronic diseases if none found
               }
               console.log(member);
-              
+
             }
           }
         });
@@ -7295,11 +7295,11 @@ export class YatraComponent {
           }
           member.productQuestionnaire = JSON.stringify(productQuestionnaire);
         }
-        else if( member['chronicDiseases']){
+        else if (member['chronicDiseases']) {
           chronicDiseases = member['chronicDiseases'] = Object.keys(member.chronicDiseases)
-          .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
-          .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
-          .join(',');
+            .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
+            .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
+            .join(',');
         }
 
         if (member.hospiCashCoverDetails && Array.isArray(member.hospiCashCoverDetails)) {
@@ -9381,7 +9381,7 @@ export class YatraComponent {
     const controlName = this.dynamicFormGroup.get(control)?.get([index, subControl]);
     if (controlName?.value) {
       const selectedKeys = Object.keys(controlName.value).filter(key => controlName.value[key]);
-      const isTouched:any = selectedKeys.length > 0;
+      const isTouched: any = selectedKeys.length > 0;
       controlName.markAsTouched(isTouched); // Mark as touched or untouched
       controlName.markAsDirty(isTouched); // Optional: Mark dirty for additional validation logic
 
@@ -9398,7 +9398,7 @@ export class YatraComponent {
 
   disableForAllOtherMembers(control: any) {
     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
-    if (addOnControlGroup && this.formData.memberPolicyType=='Family Floater') {
+    if (addOnControlGroup && this.formData.memberPolicyType == 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
       console.log(addOnDetailsControl);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -9427,7 +9427,7 @@ export class YatraComponent {
   selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
     console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
     const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
-    console.log(addOnControlGroup,this.formData.memberPolicyType)
+    console.log(addOnControlGroup, this.formData.memberPolicyType)
     if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -9857,12 +9857,12 @@ export class YatraComponent {
               const memberControlCheckbox = member.get('memberCheckbox');
               const addOnSumInsuredControl = member.get('addOnSumInsured');
               let isDisabledByAgeValidation = false;
-              if(ageValidationRule){
+              if (ageValidationRule) {
                 const matchingMember = this.formData.insuredMemberDetails.find(
                   (insuredMember: any) => key === insuredMember.relation
                 );
 
-                if(matchingMember.memberAge>ageValidationRule.maxAge || matchingMember.memberAge<ageValidationRule.minAge){
+                if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
                   isDisabledByAgeValidation = true;
                 }
               }
@@ -9978,22 +9978,42 @@ export class YatraComponent {
       this.formData.insuredMemberDetails.forEach((member: any) => {
         console.log(member);
 
-        Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
-          // Use explicit non-null assertion for maxAge and minAge
-          if (member.relation === key && (member.memberAge > maxAge! || member.memberAge < minAge!)) {
-            const memberArray = addOnDetailsControl?.get(key) as FormArray;
-
-            memberArray.controls.forEach((formGroup: AbstractControl) => {
-              if (formGroup instanceof FormGroup) {
-                Object.keys(formGroup.controls).forEach((controlName) => {
-                  formGroup.get(controlName)?.disable();
-                });
-              }
-            });
-
-            console.log('All controls in the FormGroup are disabled:', memberArray);
+        let memberAge: number | null = null;
+        if (typeof member.memberAge === 'string') {
+          if(member.memberAge.includes('days')){
+            const days = parseInt(member.memberAge.replace('days', '').trim(), 10);
+            memberAge = days / 365; // Convert days to approximate years
           }
-        });
+          else{
+            memberAge = parseInt(member.memberAge);
+          }
+        } else if (typeof member.memberAge === 'number') {
+          memberAge = member.memberAge;
+        }
+
+        console.log(memberAge,maxAge,minAge);
+        
+
+        if (memberAge != null) {
+          Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+            // Use explicit non-null assertion for maxAge and minAge
+            if (member.relation === key && (memberAge! > maxAge! || memberAge! < minAge!)) {
+              const memberArray = addOnDetailsControl?.get(key) as FormArray;
+
+              memberArray.controls.forEach((formGroup: AbstractControl) => {
+                if (formGroup instanceof FormGroup) {
+                  Object.keys(formGroup.controls).forEach((controlName) => {
+                    formGroup.get(controlName)?.disable();
+                  });
+                }
+              });
+
+              console.log('All controls in the FormGroup are disabled:', memberArray);
+            }
+          });
+        }
+
+
       });
     } else {
       console.warn('MaxAge or MinAge not defined in validation rules.');
