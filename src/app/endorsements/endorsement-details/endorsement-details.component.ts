@@ -12,7 +12,6 @@ export class EndorsementDetailsComponent {
   caseId: string | undefined;
   policyData: any = null;
   isPublic: boolean = false;
-  endorsementStatus: string | undefined;
 
   constructor(
     private _router: Router,
@@ -26,7 +25,6 @@ export class EndorsementDetailsComponent {
       this.caseId = params.get('caseId') || '';
     });
     this.getPolicyDetails();
-    this.getStatus();
   }
 
   getPolicyDetails() {
@@ -39,30 +37,6 @@ export class EndorsementDetailsComponent {
         (resp:any) => {
           if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
             this.policyData = resp.data;
-          } else {
-            this.toast.error({
-              detail: 'Error',
-              summary: resp.message,
-              duration: 5000,
-            });
-          }
-        },
-        (err: any) => {
-          console.log(err);
-        }
-      );
-  }
-
-  getStatus() {
-    let endorsementCaseDetailsReqBody = {
-      "caseId": this.caseId
-    }
-    this.endorsement_service
-      .getEndorsementStatusApi(endorsementCaseDetailsReqBody)
-      .subscribe(
-        (resp:any) => {
-          if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
-            this.endorsementStatus = resp.data.caseDetails[0].status;
           } else {
             this.toast.error({
               detail: 'Error',
