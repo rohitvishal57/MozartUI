@@ -701,11 +701,13 @@ export class ProposalsListComponent {
   }
 
 
-  downloadQuote(proposalNum : any){
+  downloadQuote(proposalNum : any , isProposal : any){
     let requestBody : any ={};
     requestBody.proposalID = proposalNum;
     requestBody.generationType = "";
     requestBody.isDownload = "";
+    requestBody.isProposal = isProposal;
+
     this.proposalService.quoteDownloadPdf(requestBody).subscribe(
       (response)=>{
         if(response.isSuccess){
