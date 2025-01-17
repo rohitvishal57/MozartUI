@@ -657,12 +657,12 @@
         background-repeat: no-repeat;
         
     } 
-    .member_extraInfoSubDate input[type="date"]::-webkit-input-placeholder,
+    /*.member_extraInfoSubDate input[type="date"]::-webkit-input-placeholder,
     .member_extraInfoSubDate input[type="date"]:-moz-placeholder,
     .member_extraInfoSubDate input[type="date"]::-moz-placeholder,
     .member_extraInfoSubDate input[type="date"]:-ms-input-placeholder {
-        visibility: hidden;
-    }
+         visibility: hidden;
+    } */
     .custom_toastStyles .toast-container.active,
     .custom_toastStyles .toast-container {
         right: auto !important;
