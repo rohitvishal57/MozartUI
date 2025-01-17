@@ -5655,25 +5655,10 @@ export class YatraComponent {
       this.changeRecalculate(false);
     }
 
+    console.log(this.formData);
+    
     if (this.isQuote === false) {
       if (Object.keys(this.formData).length > 0) {
-
-        // this.formData.insuredMemberDetails.forEach((member: any) => {
-        //   member['covers'] = member['covers'] ?? [];
-        //   member['isChronic'] = member['isChronic'] ?? "No";
-        //   member['chronicDiseases'] = member['chronicDiseases'] ?? null;
-        //   member['roomCategory'] = member['roomCategory'] ?? "";
-
-        //   if (!member.hasOwnProperty('memberRelationCode')) {
-        //     const relationCodeMap: { [key: string]: number } = {
-        //       'Self': 24,
-        //       'Spouse': 22,
-        //       'Son': 23,
-        //       'Daughter': 19
-        //     };
-        //     member['memberRelationCode'] = relationCodeMap[member.relation] ?? null;
-        //   }
-        // });
 
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
           // Initialize member's properties with default values if undefined
@@ -5696,6 +5681,11 @@ export class YatraComponent {
               // Set to empty string if no valid chronic diseases
             }
           }
+          else if(member.chronicDiseases == ""){
+            member['chronicDiseases'] = null; 
+            member['isChronic'] = member['isChronic'] ?? "No";
+          }
+          
           // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";
           member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
