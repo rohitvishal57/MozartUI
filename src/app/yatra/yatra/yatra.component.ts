@@ -4475,13 +4475,13 @@ export class YatraComponent {
     if (this.form.formTitle == 'Total Premium') {
       if (this.formData.productName === 'Active Secure') {
         console.log("Form data:", this.formData);
-        const requiredCoverIds = ['CIL', 'CS', 'PA'];
+        const requiredCoverIds = ['CIL', 'CANC','PA']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
           const validCovers = member.covers.filter((cover: any) => requiredCoverIds.includes(cover.coverId));
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
         });
         if (hasEmptyRequiredCovers) {
-          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CS, or PA) selected.", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or PA) selected.", duration: 3000 });
           return;
         }
       }
