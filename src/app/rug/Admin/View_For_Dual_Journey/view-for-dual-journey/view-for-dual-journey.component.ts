@@ -68,22 +68,31 @@ export class ViewForDualJourneyComponent implements OnInit {
     this.adminService.getLead(reqdata).subscribe((res: any) => {
       const response = JSON.parse(res.data);
       this.getAllLeads = response.data.leadDetails;
-      console.log('getAllLeads', this.getAllLeads)
-      console.log(this.getAllLeads.length)
-      this.totalRecords = this.getAllLeads.length;
+      this.totalRecords = response.data.totalRecords;
+      if (this.getAllLeads.length === 0 && this.page > 1) {
+        this.page = 1;
+        this.getSoloJourneyDetails();
+        return;
+      }
       this.updateDisplayedData();
     });
   }
 
   updateDisplayedData(): void {
-    const startIndex = this.first;
-    const endIndex = this.first + this.rows;
-    this.displayedLeads = this.getAllLeads.slice(startIndex, endIndex);
+    this.displayedLeads = [...this.getAllLeads];
+    console.log('Displayed Leads:', this.displayedLeads);
   }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
+  }
+
+  onPageChange(event: any): void {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getSoloJourneyDetails();
   }
 
   exportToxl() {
@@ -95,7 +104,7 @@ export class ViewForDualJourneyComponent implements OnInit {
     }
   }
 
-  viewDeails(lead:any){
+  viewDeails(lead: any) {
     console.log(lead);
     localStorage.setItem('leadId', lead.leadNo)
     let data = {
@@ -103,24 +112,24 @@ export class ViewForDualJourneyComponent implements OnInit {
       productId: 26
     }
 
-    if(lead.planName == 'Health Pro'){
-      data.partnerId =  45
+    if (lead.planName == 'Health Pro') {
+      data.partnerId = 45
       data.productId = 26
-      
-    }else if(lead.planName == 'Health Pro Infinity'){
-      data.partnerId =  45
+
+    } else if (lead.planName == 'Health Pro Infinity') {
+      data.partnerId = 45
       data.productId = 27
-    }else if(lead.planName == 'Group Activ Secure'){
-      data.partnerId =  45
+    } else if (lead.planName == 'Group Activ Secure') {
+      data.partnerId = 45
       data.productId = 29
-    }else{
-      data.partnerId =  45
+    } else {
+      data.partnerId = 45
       data.productId = 29
     }
 
     this.router.navigate(['rug'], {
-      state: { productData: data}
-   });
+      state: { productData: data }
+    });
   }
 
   backToDo(lead: any) {
@@ -167,13 +176,6 @@ export class ViewForDualJourneyComponent implements OnInit {
     );
   }
 
-  onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
-    this.page = Math.floor(this.first / this.rows) + 1;
-    this.getSoloJourneyDetails();
-  }
-
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
@@ -194,7 +196,7 @@ export class ViewForDualJourneyComponent implements OnInit {
       option?.remark?.toLowerCase().includes(this.searchTerm) ||
       option?.avName?.toLowerCase().includes(this.searchTerm) ||
       option?.avid?.toLowerCase().includes(this.searchTerm) ||
-      option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm)||
+      option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm) ||
       option?.axisLocation?.toLowerCase().includes(this.searchTerm)
     );
   }
@@ -218,7 +220,7 @@ export class ViewForDualJourneyComponent implements OnInit {
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
   }
-  
+
   clearFilter() {
     this.soloJourneyForm.reset();
   }

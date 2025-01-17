@@ -67,32 +67,42 @@ export class ViewForSoloJourneyComponent implements OnInit {
     };
 
     this.adminService.getLead(reqdata).subscribe((res: any) => {
-      const response = JSON.parse(res.data);
-      this.getAllLeads = response.data.leadDetails;
-      console.log('getAllLeads', this.getAllLeads)
-      console.log(this.getAllLeads.length)
-      this.totalRecords = this.getAllLeads.length;
-      this.updateDisplayedData();
+      try {
+        const response = JSON.parse(res.data);
+        this.getAllLeads = response.data.leadDetails;
+        this.totalRecords = response.data.totalRecords;
+
+        if (this.getAllLeads.length === 0 && this.page > 1) {
+          this.page = 1;
+          this.getSoloJourneyDetails();
+          return;
+        }
+
+        console.log(`Page ${this.page}:`, this.getAllLeads);
+        this.updateDisplayedData();
+      } catch (error) {
+        console.error('Error parsing API response:', error);
+      }
     });
   }
 
+
   updateDisplayedData(): void {
-    const startIndex = this.first;
-    const endIndex = this.first + this.rows;
-    this.displayedLeads = this.getAllLeads.slice(startIndex, endIndex);
-  }
+    this.displayedLeads = [...this.getAllLeads];
+    console.log('Displayed Leads:', this.displayedLeads);
+}
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
 
-  onPageChange(event: any) {
+  onPageChange(event: any): void {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getSoloJourneyDetails();
-  }
+}
 
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();

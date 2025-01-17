@@ -68,18 +68,21 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
     };
 
     this.adminService.getLead(reqdata).subscribe((res: any) => {
-      const response = JSON.parse(res.data);
-      this.getAllLeads = response.data.leadDetails;
-      console.log(this.getAllLeads.length)
-      this.totalRecords = this.getAllLeads.length;
-      this.updateDisplayedData();
+        const response = JSON.parse(res.data);
+        this.getAllLeads = response.data.leadDetails;
+        this.totalRecords = response.data.totalRecords;
+        if (this.getAllLeads.length === 0 && this.page > 1) {
+          this.page = 1;
+          this.getSoloJourneyDetails();
+          return;
+        }
+        this.updateDisplayedData();
     });
   }
 
   updateDisplayedData(): void {
-    const startIndex = this.first;
-    const endIndex = this.first + this.rows;
-    this.displayedLeads = this.getAllLeads.slice(startIndex, endIndex);
+    this.displayedLeads = [...this.getAllLeads];
+    console.log('Displayed Leads:', this.displayedLeads);
   }
 
   formatDate(dateString: string): string {
@@ -107,7 +110,7 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
     );
   }
 
-  actionLead(lead: any){
+  actionLead(lead: any) {
     console.log(lead);
     localStorage.setItem('leadId', lead.leadNo)
     let data = {
@@ -115,24 +118,24 @@ export class ViewUnverifiedLeadsComponent implements OnInit {
       productId: 26
     }
 
-    if(lead.planName == 'Health Pro'){
-      data.partnerId =  45
+    if (lead.planName == 'Health Pro') {
+      data.partnerId = 45
       data.productId = 26
-      
-    }else if(lead.planName == 'Health Pro Infinity'){
-      data.partnerId =  45
+
+    } else if (lead.planName == 'Health Pro Infinity') {
+      data.partnerId = 45
       data.productId = 27
-    }else if(lead.planName == 'Group Activ Secure'){
-      data.partnerId =  45
+    } else if (lead.planName == 'Group Activ Secure') {
+      data.partnerId = 45
       data.productId = 29
-    }else{
-      data.partnerId =  45
+    } else {
+      data.partnerId = 45
       data.productId = 29
     }
 
     this.router.navigate(['rug'], {
-      state: { productData: data}
-   });
+      state: { productData: data }
+    });
     // let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
     // let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
     // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
