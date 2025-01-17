@@ -2209,8 +2209,16 @@ export class RugDynamicFormComponent {
       else {
         if (dobArray[0] as number >= 1800) {
           if(control.name == "nomineeDob"){
-            const nomineeAge = this.calculateAge(dob);
+            let nomineeAge = this.calculateAge(dob);
+            let isKid = /^\d+days$/.test(nomineeAge.toString());
+            if(isKid == true){
+              nomineeAge = 1;
+            }
             if (typeof nomineeAge === "number") {        
+              const appointeeNameControl = this.dynamicFormGroup.get('appointeeName');
+              const appointeeMobileNumberControl = this.dynamicFormGroup.get('appointeeMobileNumber');
+              const appointeeDobControl = this.dynamicFormGroup.get('appointeeDob');
+              const relationWithNomineeControl = this.dynamicFormGroup.get('relationWithNominee');
               // Determine the second argument based on nomineeAge
               const shouldEnableDependentControls = nomineeAge < 18;
               if(shouldEnableDependentControls){
@@ -2224,6 +2232,10 @@ export class RugDynamicFormComponent {
                     }
                   })
                 })
+                appointeeNameControl?.setValidators([Validators.required]);
+                appointeeMobileNumberControl?.setValidators([Validators.required]);
+                appointeeDobControl?.setValidators([Validators.required]);
+                relationWithNomineeControl?.setValidators([Validators.required]);
               }else{
                 control.dependentControls.forEach((item: any) => {
                   item.visibility = false
@@ -2235,7 +2247,15 @@ export class RugDynamicFormComponent {
                     }
                   })
                 })
-              }
+                appointeeNameControl?.clearValidators();
+                appointeeMobileNumberControl?.clearValidators();
+                appointeeDobControl?.clearValidators();
+                relationWithNomineeControl?.clearValidators();
+              }             
+              appointeeNameControl?.updateValueAndValidity();
+              appointeeMobileNumberControl?.updateValueAndValidity();
+              appointeeDobControl?.updateValueAndValidity();
+              relationWithNomineeControl?.updateValueAndValidity();
             } else {
               console.error("Nominee age is not a number:", nomineeAge);
             }
