@@ -261,7 +261,7 @@
                                   <div class="member_extraInfoSub member_extraInfoSubDate">
                                     <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
                                       [value]="relation.dob"  [max]="currentDate"
-                                      (input)="onAgeChange($event, relation)">
+                                      (input)="onAgeChange($event, relation)" [placeholder]="datePlaceholder">
                                       <!-- <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
                                         src="assets/Img/icon_delete_red2.svg"></span> -->
                                     </div>

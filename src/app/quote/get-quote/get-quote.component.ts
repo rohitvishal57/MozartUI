@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked, ViewChild, ElementRef, } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -181,6 +181,9 @@ export class GetQuoteComponent implements AfterViewChecked {
   checkGender: boolean = false;
   pageName: string | undefined;
   formData: any;
+  datePlaceholder: string = '';
+  isDesktopView: boolean = false;
+  isStandalone: boolean = false;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
     private translateService: TranslateService, private router: Router, private quoteService: QuoteService) { }
@@ -404,6 +407,15 @@ export class GetQuoteComponent implements AfterViewChecked {
     //   }
     // })
     // this.loadStoredData();
+
+    // Check if the app is installed as a PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.isStandalone = true;  // Set to true if in standalone mode
+      this.checkView();
+    }else {
+      this.isStandalone = false; // Set to false if not in standalone mode
+      console.log("This app is not running in standalone mode.");
+    }
   }
 
 
@@ -1266,5 +1278,15 @@ export class GetQuoteComponent implements AfterViewChecked {
   onPortingChange(value: string): void {
     this.quoteFormGroup.get('isPortability')?.setValue(value);
     this.closeCustomDiv()
+  }
+  @HostListener('window:resize', ['$event'])
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 767;
+    if (this.isDesktopView) {
+      //this.datePlaceholder = ''; 
+    }else {
+      this.datePlaceholder= 'dd/mm/yyyy'; // PWA date placeholder
+    }
   }
 }
