@@ -8236,7 +8236,7 @@ export class YatraComponent {
       businessType: "NB"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
-      (res: any) => {
+      async (res: any) => {
         if (res.data.kycStatus) {
           this.toast.success({
             detail: "Success",
@@ -8245,6 +8245,30 @@ export class YatraComponent {
           });
           this.verifyKYCStatus = res.data.kycStatus;
           this.checkKycDetail(control);
+          let reqData = {
+            "proposalNum": this?.formData?.proposalNumber,
+            "partnerId": this.partnerId,
+            "agentCode": this.agentCode,
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+            "formName": this.formSequence[this.getFormIndexValue()].formName,
+            "formConfig": JSON.stringify(this.formSequence),
+            "productId": this.productId.toString(),
+            "formId": this.formSequence[this.getFormIndexValue()].formId,
+            "jsonForm": JSON.stringify(this.form),
+            "formSequence": this.getFormIndexValue(),
+            "leadNumber": this.leadnumber,
+            "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+          };
+          console.log(reqData);
+          await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+            next: (res: any) => {
+              this.leadnumber = res.data;
+              console.log(res);
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
         }
       },
       (err) => {

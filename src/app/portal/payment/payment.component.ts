@@ -127,35 +127,63 @@ export class PaymentComponent {
     if (this.paymentDetail.userType == 'Agent') {
       if (this.paymentDetail.businessType == 'NB') {
         if (this.paymentDetail.paymentMethodType == 'emandate_payment') {
-          const reqData = {
-            agentcode: this.paymentDetail.agentCode,
-            proposalNumber: this.paymentDetail.proposalId,
-            paymentMethod: 'enach_payment',
-            source: 'Retail',
-            policyType: 'NB',
-            policyNumber: '',
-            quoteNumber: "",
-            productName: this.paymentDetail.productName,
-            userType: 'Agent',
-            mandateOrderId: this.paymentDetail.orderId
-          };
-          console.log(reqData);
-          this.yatraService.justPayRedirection(reqData).subscribe({
-            next: (response: any) => {
-              console.log('Juspay API Response:', response);
-
-              if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-                window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-              } else {
-                this.toast.error({ detail: "Error", summary: "Invalid payment link received", duration: 3000 });
-                console.error('Invalid payment link received:', response);
+          if (this.paymentDetail.paymentStatus == 'SUCCESS' || this.paymentDetail.paymentStatus == 'PENDING'){
+            const reqData = {
+              agentcode: this.paymentDetail.agentCode,
+              proposalNumber: this.paymentDetail.proposalId,
+              paymentMethod: 'enach_payment',
+              source: 'Retail',
+              policyType: 'NB',
+              policyNumber: '',
+              quoteNumber: "",
+              productName: this.paymentDetail.productName,
+              userType: 'Agent',
+              mandateOrderId: this.paymentDetail.orderId
+            };
+            console.log(reqData);
+            this.yatraService.justPayRedirection(reqData).subscribe({
+              next: (response: any) => {
+                console.log('Juspay API Response:', response);
+  
+                if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+                  window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+                } else {
+                  this.toast.error({ detail: "Error", summary: "Invalid payment link received", duration: 3000 });
+                  console.error('Invalid payment link received:', response);
+                }
+              },
+              error: (error) => {
+                this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
+                console.error('Error generating payment link:', error);
               }
-            },
-            error: (error) => {
-              this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
-              console.error('Error generating payment link:', error);
+            });
+          }
+          else {
+            const reqData:any = {
+              partnerId: this.paymentDetail.partnerId,
+              productId: this.paymentDetail.productId,
+              formId: "5",
+              proposalNum: this.paymentDetail.proposalId,
+              agentCode: this.paymentDetail.agentCode,
+              currentFormSequence: "7",
+              leadId: this.paymentDetail.leadId,
+              policyNumber: this.paymentDetail.policyNumber,
+              policyStatus: this.paymentDetail.policyStatus,
+              policyStartDate: this.paymentDetail.policyStartDate,
+              policyEndDate: this.paymentDetail.policyEndDate,
+              ReceiptNumber: this.paymentDetail.receiptNumber,
+              customerId: this.paymentDetail.customerId,
+              applicationNumber: this.paymentDetail.applicationNumber,
+              paymentStatus: this.paymentDetail.paymentStatus,
             }
-          });
+            localStorage.setItem("formIndex", "7");
+            this.toast.error({ detail: "Error", summary: 'payment '+this.paymentDetail.paymentStatus || " Failed", duration: 5000 });
+            const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+
+            this.router.navigate(['yatra'], {
+              queryParams: { data: encodedEncryptedData }
+            });
+          }
         }
         else {
           let reqData:any;
