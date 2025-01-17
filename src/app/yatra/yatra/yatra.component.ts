@@ -9799,6 +9799,13 @@ export class YatraComponent {
     } else {
       // New logic for validationRules
       const validationRules = control.validationRules || [];
+
+      const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
+
+      if (ageValidationRule) {
+        this.checkForAgeValidations(control); // Call the age validation method
+      }
+
       const matchingRule = validationRules.find(
         (rule: any) => rule.policyType === this.formData['memberPolicyType']
       );
@@ -9826,9 +9833,19 @@ export class YatraComponent {
             memberArray.controls.forEach((member: any) => {
               const memberControlCheckbox = member.get('memberCheckbox');
               const addOnSumInsuredControl = member.get('addOnSumInsured');
+              let isDisabledByAgeValidation = false;
+              if(ageValidationRule){
+                const matchingMember = this.formData.insuredMemberDetails.find(
+                  (insuredMember: any) => key === insuredMember.relation
+                );
+
+                if(matchingMember.memberAge>ageValidationRule.maxAge || matchingMember.memberAge<ageValidationRule.minAge){
+                  isDisabledByAgeValidation = true;
+                }
+              }
 
               // Handle allMemberSelected
-              if (allMemberSelected && memberControlCheckbox) {
+              if (allMemberSelected && memberControlCheckbox && !isDisabledByAgeValidation) {
                 memberControlCheckbox.setValue(true);
               }
 
@@ -9837,13 +9854,13 @@ export class YatraComponent {
                 if (memberControlCheckbox) {
                   memberControlCheckbox.disable();
                 }
-                if (addOnSumInsuredControl) {
-                  addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
-                }
+                // if (addOnSumInsuredControl) {
+                //   addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
+                // }
               }
 
               // Set addOnSumInsured value logic if the control exists
-              if (addOnSumInsuredControl) {
+              if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
                 const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
                 let addOnSumInsured = '';
 
