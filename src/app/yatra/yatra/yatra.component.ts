@@ -1402,6 +1402,15 @@ export class YatraComponent {
           this.resolveMethod(subControls.getAllOption, subControls, parentControl);
         }
       }
+      if (subControls.type == 'select' && subControls.value === "") {
+        if (subControls.options && subControls.options.length > 0) {
+          subControls.options.forEach((option: IOptions) => {
+            if (option.selected) {
+              subControls.value = option.id ? this.stringifyObject(option) : option.value;
+            }
+          });
+        }
+      }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
         if (subControls.visible == true) {
           formGroup.addControl(subControls.name, this.initializeSubControls(subControls.innerControls))
