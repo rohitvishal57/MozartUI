@@ -6229,6 +6229,7 @@ export class YatraComponent {
             else {
               const coverId = addOnData.addOnId;
               const coverName = addOnData.optionalCoverName || addOnData.additionalCoverName;
+              const code = addOnData.Code
               let coverFound = false;
 
               if (!member.covers) {
@@ -6261,7 +6262,8 @@ export class YatraComponent {
                 member.covers.push({
                   coverId: coverId,
                   value: addOnSumInsured,
-                  coverName: coverName
+                  coverName: coverName,
+                  code: code
                 });
               }
 
@@ -6276,7 +6278,8 @@ export class YatraComponent {
                 this.covers[index].push({
                   coverId: coverId,
                   value: addOnSumInsured,
-                  coverName: coverName
+                  coverName: coverName,
+                  code: code
                 });
               }
 
