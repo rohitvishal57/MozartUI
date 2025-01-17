@@ -344,7 +344,9 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
-  
+  .cardViewMain .cardViewWraper .cardViewItem header .card_btnGroup {
+	max-width: 124px;
+  }
 @media only screen and (max-width: 1024) {
 	.filterWraperForm{
 		padding: 0px;

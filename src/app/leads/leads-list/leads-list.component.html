@@ -212,7 +212,7 @@
                                                      src="assets/Img/icon_savenew_subquote.svg">        
                                             </button>
                                             <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
-                                                src="assets/Img/icon_download_grey.svg">        
+                                                src="assets/Img/icon_file_export.svg">        
                                            </button>
                                             <mat-menu #moreMenu="matMenu"
                                                 class="overlay_popupMenu_Main_CDK moreActionItems active">
@@ -284,7 +284,9 @@
                                     <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
                                     <button type="button" id="gridquickquote" name="gridquickquote" class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote"  (click)="redirectProducts(row)"><img
                                         src="assets/Img/icon_savenew_subquote.svg"></button>
-                                   
+                                        <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                            src="assets/Img/icon_file_export.svg">        
+                                       </button>
                                         <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
