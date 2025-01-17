@@ -727,7 +727,10 @@ export class YatraComponent {
               let visibleMatchedControls: any[] = [];
               let checkHyp = false;
               this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {                           //           const newItem = this.formData.insuredMemberDetails.find((item: any) => item.relation === tempRelationshipType.value);
-                let trueKeys = Object.keys(member.chronicDiseases).filter(key => member.chronicDiseases[key]);
+                // let trueKeys = Object.keys(member.chronicDiseases).filter(key => member.chronicDiseases[key]);
+                let trueKeys = Object.keys(member.chronicDiseases)
+                  .filter(key => member.chronicDiseases[key])
+                  .map(key => key.toLowerCase());
                 if (trueKeys.length > 0 && trueKeys.includes(control.nameProperty.toLowerCase())) {
                   const hasHypertensionAndHyperlipidemia = trueKeys.includes('hypertension') && trueKeys.includes('hyperlipidemia');
                   const hasAsthmaAndCopd = trueKeys.includes('asthma') && trueKeys.includes('copd');
@@ -5675,17 +5678,23 @@ export class YatraComponent {
         this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
           // Initialize member's properties with default values if undefined
           member['covers'] = this.covers[index] ?? [];
-          if (member.chronicDiseases && typeof member.chronicDiseases === 'object') {
-            member['chronicDiseases'] = Object.keys(member.chronicDiseases)
-              .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
-              .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
-              .join(','); // Join with a comma and space
-              member['isChronic'] = "YES";
-
-          } else {
-            member['chronicDiseases'] = null; 
-            member['isChronic'] = member['isChronic'] ?? "No";
-            // Set to empty string if no valid chronic diseases
+          if (member.chronicDiseases) {
+            if(typeof member.chronicDiseases === 'object'){
+              member['chronicDiseases'] = Object.keys(member.chronicDiseases)
+                .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
+                .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
+                .join(','); // Join with a comma and space
+                member['isChronic'] = "YES";
+  
+            }
+            else if (typeof member.chronicDiseases === 'string'){
+              member.chronicDiseases = member.chronicDiseases;
+            }
+             else {
+              member['chronicDiseases'] = null; 
+              member['isChronic'] = member['isChronic'] ?? "No";
+              // Set to empty string if no valid chronic diseases
+            }
           }
           // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
           member['roomCategory'] = member['roomCategory'] ?? "";

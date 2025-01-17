@@ -2138,7 +2138,7 @@
                     </ng-container>
                   </div>
                 </div>
-                <div *ngIf="control.type === 'chronicquestionnaire'" [class]="control.class"
+                <div *ngIf="control.type === 'chronicquestionnaire' && control.visible" [class]="control.class"
                   class="checkboxes col-md-12 questionnaire_space multi-premium-optional-cover-gry-box"
                   style="position: relative;">
                   <div class="row" *ngIf="control.visible">
