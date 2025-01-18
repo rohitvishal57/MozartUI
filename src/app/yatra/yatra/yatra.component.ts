@@ -9361,12 +9361,12 @@ export class YatraComponent {
         checkbox.checked = false; // Revert the checkbox state
         // Show toast message (use your toast service here)
         // formArrayControl.get(option.name)?.setValue(false);
-        formArrayControl.get(option.name.toLowerCase())?.setValue(false);
+        formArrayControl.get(option.name)?.setValue(false);
         this.toast.error({ detail: "Error", summary: 'You can select a maximum of 3 options only.', duration: 3000 });
         return;
       }
       else {
-        formArrayControl.get(option.name.toLowerCase())?.setValue(checkbox.checked);
+        formArrayControl.get(option.name)?.setValue(checkbox.checked);
 
       }
     }
