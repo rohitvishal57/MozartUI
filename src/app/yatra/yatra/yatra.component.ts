@@ -4484,13 +4484,13 @@ export class YatraComponent {
     if (this.form.formTitle == 'Total Premium') {
       if (this.formData.productName === 'Active Secure') {
         console.log("Form data:", this.formData);
-        const requiredCoverIds = ['CIL', 'CANC', 'PA']
+        const requiredCoverIds = ['CIL','CANC','ACCD']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
           const validCovers = member.covers.filter((cover: any) => requiredCoverIds.includes(cover.coverId));
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
         });
         if (hasEmptyRequiredCovers) {
-          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or PA) selected.", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or ACCD(Personal Accident)) selected.", duration: 3000 });
           return;
         }
       }
@@ -7335,7 +7335,8 @@ export class YatraComponent {
           memberSumInsured: member?.sumInsured || '',
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
           memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
-          memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
+          // memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
+          memberOccupation: (member?.productMemberOccupation!='')?JSON.parse(member?.productMemberOccupation).value || '' :'',
           covers: this.covers[index] || [],
           productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: rrtoCover ? rrtoCover.value : member?.memberRoomCategory || '',
@@ -7367,7 +7368,8 @@ export class YatraComponent {
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
       idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
-      proposerOccupation: this.jsonParse(formData?.occupation, 'value') || '',
+      // proposerOccupation: this.jsonParse(formData?.occupation, 'value') || '',
+      proposerOccupation: (formData?.occupation)? this.jsonParse(formData?.occupation, 'value') || '' :'',
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       proposerPANNo: formData?.panNo || '',
       gstDetails: formData?.gstDetails || '',
@@ -7408,7 +7410,7 @@ export class YatraComponent {
       appointeeMobileNumber: formData?.appointeeContactNo || '',
       appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : '',
       lrFlag: formData?.lrFlag || ''
-    };
+    };    
     return mappedData;
   }
 
