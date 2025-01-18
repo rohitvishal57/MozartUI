@@ -2575,9 +2575,6 @@ export class YatraComponent {
       this.getCityStateByPinByCorressponding();
     }
 
-    if (control.name == 'hospiCashCoverDetails')
-      console.log(control.name);
-
     if (control.name == 'hospiCashCoverDetails') {
       console.log(subControl, event.target.checked, this.activeMemberTabIndex);
 
@@ -2780,7 +2777,7 @@ export class YatraComponent {
       this.resolveMethod(parentControl.onChangeMethod);
     }
     else if (innerControl != null && innerControl.onChangeMethod) {
-      this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl);
+      this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
     }
 
     if (parentControl == null && control.name == 'ifscCode') {
@@ -9701,6 +9698,14 @@ export class YatraComponent {
         this.checkForAgeValidations(control); // Call the age validation method
       }
 
+      const memberSumInsuredValidationRule = control.validationRules?.find((rule: any) => rule.type === 'memberLevelSumInsured');
+      if (memberSumInsuredValidationRule) {
+        this.memberSumInsuredValidationMethod(memberSumInsuredValidationRule);
+      }
+
+      console.log("After disabling based on member", this.form);
+
+
       // Existing "Personal Accident" logic
       Object.keys(addOnDetailsControl.value).forEach((key: any) => {
         const memberArray = addOnDetailsControl.get(key) as FormArray;
@@ -9730,8 +9735,11 @@ export class YatraComponent {
           }
 
           if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+            console.log(control.subControls);
+
             const innerControls = control.subControls[1].innerSubControls || [];
-            const coreControls = innerControls[0]?.coreControls || [];
+            const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
+            const coreControls = matchingInnerControl?.coreControls || [];
 
             if (occupationControl) {
               coreControls.forEach((coreControl: any) => {
@@ -10000,19 +10008,19 @@ export class YatraComponent {
 
         let memberAge: number | null = null;
         if (typeof member.memberAge === 'string') {
-          if(member.memberAge.includes('days')){
+          if (member.memberAge.includes('days')) {
             const days = parseInt(member.memberAge.replace('days', '').trim(), 10);
             memberAge = days / 365; // Convert days to approximate years
           }
-          else{
+          else {
             memberAge = parseInt(member.memberAge);
           }
         } else if (typeof member.memberAge === 'number') {
           memberAge = member.memberAge;
         }
 
-        console.log(memberAge,maxAge,minAge);
-        
+        console.log(memberAge, maxAge, minAge);
+
 
         if (memberAge != null) {
           Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
@@ -10042,8 +10050,144 @@ export class YatraComponent {
 
 
 
+  memberSumInsuredValidationMethod(memberSumInsuredValidationRule: any) {
+    console.log('Member Sum Insured Validation Rule Found:', memberSumInsuredValidationRule);
+    console.log(this.form);
+
+    this.form.formSections.forEach((section: any) => {
+      if (section.sectionTitle == "Optional Covers") {
+        section.formControls.forEach((control: any) => {
+          if (control.name == 'accident') {
+            control.subControls.forEach((subControl: any) => {
+              if (subControl.name == 'addOnDetails') {
+                subControl.innerSubControls.forEach((innerSubControl: any) => {
+                  if (innerSubControl.name.includes('Son') || innerSubControl.name.includes('Daughter')) {
+                    const memberRules = memberSumInsuredValidationRule.kids;
+                    let maxSumInsured = memberRules.maxSumInsured;
+                    let minSumInsured = memberRules.minSumInsured;
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => innerSubControl.name === insuredMember.relation
+                    );
+                    if (memberRules.ageBasedRules) {
+                      if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
+                        maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
+                        minSumInsured = memberRules.ageBasedRules.minSumInsured;
+                      }
+                    }
+
+                    innerSubControl.coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name == 'addOnSumInsured') {
+                        coreControl.options = coreControl.options.filter((option: any) =>
+                          option.value >= minSumInsured && option.value <= maxSumInsured
+                        );
+                      }
+                    })
+                  }
+                  else if (innerSubControl.name != 'demoType' && innerSubControl.name != 'doneButton') {
+                    console.log(memberSumInsuredValidationRule, innerSubControl);
+
+                    const memberRules = memberSumInsuredValidationRule.adults;
+                    console.log(memberRules);
+                    let maxSumInsured = memberRules.maxSumInsured;
+                    let minSumInsured = memberRules.minSumInsured;
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => innerSubControl.name === insuredMember.relation
+                    );
+                    if (memberRules.ageBasedRules) {
+                      if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
+                        maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
+                        minSumInsured = memberRules.ageBasedRules.minSumInsured;
+                      }
+                    }
+
+                    innerSubControl.coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name == 'addOnSumInsured') {
+                        coreControl.options = coreControl.options.filter((option: any) =>
+                          option.value >= minSumInsured && option.value <= maxSumInsured
+                        );
+                      }
+                    })
+                    console.log(innerSubControl.coreControls);
+
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
+    // Proceed with applying the validation rules
+    // Additional logic to be added based on further instructions
+  }
 
 
+  alterSumInsuredOptions(event: any, innerControl: any = null, control: any, parentControl: any = null, index: any = null, indexj: any = null, memberControl: any = null) {
+    console.log("Inside alter", event, innerControl, control, parentControl, index, indexj, memberControl);
+    console.log(this.dynamicFormGroup.get(parentControl.name), this.form);
+    if (innerControl.name == 'occupation') {
+      const memberOccupation = (this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
+      console.log(memberOccupation);
+      if (JSON.parse(memberOccupation).name == 'Housewife' || JSON.parse(memberOccupation).name == 'Retired') {
+        memberControl.coreControls.forEach((coreControl: any) => {
+          if (coreControl.name == 'occupationRisk') {
+            const matchingOption = coreControl.options.find((option: any) =>
+              option.name.toLowerCase() === JSON.parse(memberOccupation).name.toLowerCase()
+            );
 
+            if (matchingOption) {
+              console.log('Found matching option:', matchingOption);
+              const riskValue = JSON.stringify(matchingOption);
+              console.log(riskValue);
+
+              // You can now set the selected option or take further actions here
+              const occupationRiskControl = (this.dynamicFormGroup.get(parentControl.name)
+                ?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj + 1].get('occupationRisk');
+
+              console.log(occupationRiskControl);
+
+              if (occupationRiskControl && riskValue) {
+                // Only proceed if the control exists
+                occupationRiskControl.setValue(riskValue);
+              } else {
+                console.log('occupationRisk control does not exist!');
+              }
+            }
+          }
+
+          if (coreControl.name == 'addOnSumInsured') {
+            // this.form.formSections.forEach((section: any) => {
+            //   if (section.sectionTitle == "Optional Covers") {
+            //     section.formControls.forEach((control: any) => {
+            //       if (control.name == 'accident') {
+            //         control.subControls.forEach((subControl: any) => {
+            //           if (subControl.name == 'addOnDetails') {
+            //           }
+            //         })
+            //       }
+            //     })
+            //   }
+            // })
+            coreControl.options = [];
+            coreControl.options.push(
+              {
+                "name": "3000000",
+                "label": "3000000",
+                "value": 3000000
+              }
+            )
+          }
+        })
+      }
+      else {
+        memberControl.coreControls.forEach((coreControl: any) => {
+          if (coreControl.name == 'addOnSumInsured') {
+            coreControl.options = control.innerSubControls[0].coreControls[3].options;
+          }
+        })
+      }
+
+    }
+  }
 
 }

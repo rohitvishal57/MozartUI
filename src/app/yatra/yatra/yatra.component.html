@@ -1647,7 +1647,7 @@
                                                           [name]="innerControl.name" [id]="innerControl.name"
                                                           aria-label="Default select example"
                                                           [ngClass]="{'has-value': hasSubValue(control,subControl,innerSubForm,innerControl,l)}"
-                                                          (change)="onInputChange($event, subControl,control)">
+                                                          (change)="onInputChange($event, subControl,control,j,innerSubForm,innerControl,l)">
 
                                                           <option selected value="">{{"Choose..." | translate}}</option>
                                                           <ng-container *ngFor="let opt of innerControl.options">
