@@ -832,6 +832,9 @@ export class YatraComponent {
                 control.subControls?.push(doneButton);
                 this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
               }
+              else{
+                control.visible = false;
+              }
 
             }
             else {
