@@ -9713,6 +9713,8 @@ export class YatraComponent {
       console.log("After disabling based on member", this.form);
 
 
+      const zoneValidationRule = control.validationRules?.find((rule: any) => rule.type === 'zoneWiseValidation');
+
       // Existing "Personal Accident" logic
       Object.keys(addOnDetailsControl.value).forEach((key: any) => {
         const memberArray = addOnDetailsControl.get(key) as FormArray;
@@ -9847,8 +9849,15 @@ export class YatraComponent {
 
       // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
       if (shouldEnableAddOnCover) {
+        let zoneValidationRuleApplicable = false;
+        if (zoneValidationRule) {
+          zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
+            (insuredMember: any) => insuredMember.zone === 'Zone I'
+          );
+        }
         addOnCoverControl?.setValue(true);
-        if (isSelfPresent) {
+
+        if (isSelfPresent && !zoneValidationRuleApplicable) {
           addOnCoverControl?.disable();
         }
       } else {
