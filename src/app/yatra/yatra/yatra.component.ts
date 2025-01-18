@@ -2477,6 +2477,7 @@ export class YatraComponent {
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
+    console.log(event.target.value);
     console.log(typeof event);
 
     this.changesMade = true;
@@ -2484,6 +2485,8 @@ export class YatraComponent {
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
+
+
     if (control.name == "portingABHIPolicy") {
       const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
       if (selectedValue == 'Y') {
@@ -3230,7 +3233,6 @@ export class YatraComponent {
         this.toast.warning({ detail: "Warning", summary: "Date cannot be in the future.", duration: 3000 });
       }
     }
-
   }
 
   calculateAge(dob: Date): string {
@@ -7311,6 +7313,7 @@ export class YatraComponent {
             (detail: any) => detail.memberCover !== "" && detail.memberCover !== false
           );
         }
+
         return {
           relation: member?.relation || '',
           memberRelationCode: this.jsonParse(member.relationshipType, 'id') || '',
@@ -7348,7 +7351,8 @@ export class YatraComponent {
           chronicDisease: chronicDiseases || '',
           deductibleAmount: member?.deductibleAmount || '',
           previousPolicyDetails: member?.previousPolicyDetails || {},
-          hospiCashCoverDetails: member?.hospiCashCoverDetails || []
+          hospiCashCoverDetails: member?.hospiCashCoverDetails || [],
+          activePolicyDetails: member?.activePolicyDetails || []
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
@@ -8758,10 +8762,13 @@ export class YatraComponent {
   }
 
   calculateEmployeeDiscount(control: any) {
-    const employeeIdValue = this.dynamicFormGroup.get('employeeId')?.value;
+    const employeeIdValue = this.dynamicFormGroup.get('employeeId')?.value || null;
+    const affiliateEmployeeIdValue = this.dynamicFormGroup.get('affiliateEmployeeId')?.value || null;
+
     this.formData = {
       ...this.formData,
-      employeeId: employeeIdValue || '',
+      employeeId: employeeIdValue,
+      affiliateEmployeeId: employeeIdValue ? null : affiliateEmployeeIdValue,
     };
 
     this.getPremiumAmount();
