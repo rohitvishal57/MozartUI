@@ -740,6 +740,7 @@ export class YatraComponent {
                       control.visible = true;
                     }
                     else {
+                      control.label = 'Hypertension';
                       control.visible = true;
                     }
                   }
@@ -760,6 +761,7 @@ export class YatraComponent {
                       control.visible = true;
                     }
                     else {
+                      control.label = 'Asthma';
                       control.visible = true;
                     }
                   }
@@ -4791,6 +4793,8 @@ export class YatraComponent {
                 Object.keys(arrayControl.controls).forEach(nestedField => {
                   const nestedControl = arrayControl.get(nestedField);
                   if (nestedControl instanceof FormGroup) {
+                    nestedControl?.markAsDirty({ onlySelf: true });
+                    nestedControl?.markAsTouched({ onlySelf: true });
                     Object.keys(nestedControl.controls).forEach((innerField) => {
                       const innerControl = nestedControl.get(innerField);
                       innerControl?.markAsTouched({ onlySelf: true });
@@ -4817,7 +4821,7 @@ export class YatraComponent {
             });
           }
           else if (control instanceof FormGroup) {
-            // control?.markAsDirty({ onlySelf: true });
+            control?.markAsDirty({ onlySelf: true });
             const controlKeys = Object.keys(control.controls);
 
             if (controlKeys.length > 0) {
@@ -9380,12 +9384,15 @@ export class YatraComponent {
     console.log(this.showOptions);
   }
   getSelectedDiseases(control: any, index: any, subControl: string): string {
-    const controlName = this.dynamicFormGroup.get(control)?.get([index, subControl]);
+    const controlName:any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
+    const selectedKeys = Object.keys(controlName?.value).filter(key => controlName?.value[key] === true);
+    if (controlName) {
+      controlName.setValidators(this.addCustomValidationForChronicCondition(controlName));
+      controlName.updateValueAndValidity();
+
+    }
+    // controlName.markAsPristine(!isTouched); // Optional: Mark dirty for additional validation logic
     if (controlName?.value) {
-      const selectedKeys = Object.keys(controlName.value).filter(key => controlName.value[key]);
-      const isTouched: any = selectedKeys.length > 0;
-      controlName.markAsTouched(isTouched); // Mark as touched or untouched
-      controlName.markAsDirty(isTouched); // Optional: Mark dirty for additional validation logic
 
       if (selectedKeys.length > 0) {
         return selectedKeys
@@ -9396,7 +9403,15 @@ export class YatraComponent {
     return 'Select Options';
   }
 
-
+  addCustomValidationForChronicCondition(controlName:FormGroup): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const controlGroup = controlName;
+        const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
+          key => controlGroup.controls[key].value === true
+        );
+        return hasAtLeastOneSelected ? null : { required: true };
+    };
+  }
 
   disableForAllOtherMembers(control: any) {
     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
