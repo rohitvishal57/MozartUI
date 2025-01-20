@@ -252,6 +252,12 @@ export class YatraComponent {
                 if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
                   this.quickQuoteRedirect = false;
                 }
+                if(decryptedData.firstName || decryptedData.proposerGender){
+                  this.formData={
+                    firstName: decryptedData.firstName || "",
+                    proposerGender:decryptedData.proposerGender || ""
+                  }                  
+                }
                 if (this.formData) {
                   const proposalRequiredDetails: {
                     totalPremium: any;
