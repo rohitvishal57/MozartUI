@@ -565,7 +565,8 @@
                                       [name]="subControl.name" [id]="subControl.name" class="inputField_Text"
                                       [type]="subControl.type"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
-                                      (change)="onInputChange($event, subControl,control,i-1)">
+                                      (change)="onInputChange($event, subControl,control,i-1)"
+                                      (keypress)="subControl.type == 'number' ? restrictKeyPress($event, subControl) : null">
                                     <input  *ngIf="subControl.disabled"
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
                                       [formControlName]="subControl.name" [name]="subControl.name"

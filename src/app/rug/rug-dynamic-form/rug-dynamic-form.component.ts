@@ -3160,8 +3160,8 @@ export class RugDynamicFormComponent {
                           }
                       }
                         control.get('mobileNumber')?.clearValidators();
-                
-                        // Update the validation state
+                        control.get('mobileNumber')?.setValidators([Validators.pattern('^[6-9]\\d{9}$')]);
+                        // // Update the validation state
                         control.get('mobileNumber')?.updateValueAndValidity();
                       });
                   }
@@ -9026,8 +9026,25 @@ export class RugDynamicFormComponent {
       this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
   }
   }
+  restrictFiledKeyPress(event: KeyboardEvent,control: any){
+    const inputField = event.target as HTMLInputElement;
+    const currentValue = inputField.value;
+    console.log(inputField);
+    console.log(currentValue);
+    // Check if key is a number or a control key
+    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete'];
+    const key = event.key;
 
-  restrictKeyPress(event: KeyboardEvent,control:IFormControl): void {
+    if (!/^\d$/.test(key) && !allowedKeys.includes(key)) {
+      event.preventDefault(); // Prevent non-numeric input
+    }
+
+    // Allow input only if length is less than 10
+    if (currentValue.length >= 10 && !allowedKeys.includes(key)) {
+      event.preventDefault();
+    }
+  }
+  restrictKeyPress(event: KeyboardEvent,control:IFormControl | IDynamicControl): void {
     if(control.inputMaxLength!=null && control.inputMaxLength!=undefined && control.inputMaxLength>0){
       const inputField = event.target as HTMLInputElement;
       const currentValue = inputField.value;
@@ -9052,7 +9069,8 @@ export class RugDynamicFormComponent {
     }
   }
   changeTsDobValidation(control: any, event: any){
-  const dobValue = this.dynamicFormGroup.get('dob')?.value;
+    console.log(control.name);
+  const dobValue = this.dynamicFormGroup.get(control.name)?.value;
   const dobArray = dobValue.split('-');
     if ((dobArray[0] as number >= 1800) && dobValue) {
       let age = this.calculateAge(dobValue);
@@ -9061,12 +9079,12 @@ export class RugDynamicFormComponent {
         age = 1;
       }
       if(Number(age) < 18 || Number(age) > 55){
-        this.updateDobValidator(Number(age));
+        this.updateDobValidator(Number(age), control.name);
       }
     }
   }
-  updateDobValidator(age: any){
-    const dobControl = this.dynamicFormGroup.get('dob');
+  updateDobValidator(age: any, control: any){
+    const dobControl = this.dynamicFormGroup.get(control);
     if (age < 18 || age > 55) {
       dobControl?.setValidators([this.ageRangeValidator(18, 55, age)]);
     } else {

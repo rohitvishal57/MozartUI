@@ -219,6 +219,7 @@ export interface IDynamicControl {
   relationDisabled?:boolean;
   questionCondition?:boolean;
   class?: string;
+  restrictKeyPress?: boolean;
   methodName?: any;
   visible?: boolean;
   options?: IOptions[];
@@ -237,6 +238,7 @@ export interface IDynamicControl {
   minDateLength?:any;
   maxLength?: any;
   minLength?: any;
+  inputMaxLength?: any;
 }
 export interface IValidator {
   validatorName?: string;
