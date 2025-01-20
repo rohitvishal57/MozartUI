@@ -1289,4 +1289,11 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.datePlaceholder= 'dd/mm/yyyy'; // PWA date placeholder
     }
   }
+  hasAnyValue(relation:any): boolean {
+    const matchingRelation = this.selectedRelationships.find(
+      (element: any) => relation.name === element.name && element.age > 0
+    );
+  
+    return !!matchingRelation;
+    }
 }
