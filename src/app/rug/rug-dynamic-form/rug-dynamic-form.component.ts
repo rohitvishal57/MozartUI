@@ -638,7 +638,8 @@ export class RugDynamicFormComponent {
       this.yatraService.Getform(reqData).subscribe({
         next: (res: any) => {
           console.log(res);
-          this.form = JSON.parse(res.data.jsonFormData);
+           this.form = JSON.parse(res.data.jsonFormData);
+         
          
         
           this.bbdetails = JSON.parse(res.data.formData);
@@ -1132,6 +1133,7 @@ export class RugDynamicFormComponent {
                 lastName: item.lastName,
                 dob: item.dob,
                 gender: item.gender,
+                salutation:item.salutation,
                 memberAge:  this.getAgeFromDOB(item.dob),
                 weight: item.weight,
                 height: item.height,
@@ -1228,6 +1230,7 @@ export class RugDynamicFormComponent {
             insuredMembersArray.at(0).get('firstName')?.disable();
             insuredMembersArray.at(0).get('mobileNumber')?.disable();
             insuredMembersArray.at(index).get('relation')?.disable();
+           
             // insuredMembersArray.at(index).get('gender')?.disable();
         item.relation != "Spouse" ? insuredMembersArray.at(index).get('gender')?.disable(): "";
 
@@ -2156,6 +2159,7 @@ export class RugDynamicFormComponent {
         // Clear the bankName and micrCode fields
         this.dynamicFormGroup.get('bankName')?.setValue('');
         this.dynamicFormGroup.get('micrCode')?.setValue('');
+        this.dynamicFormGroup.get('branchName')?.setValue('');
         return; // Exit the function
       }
 
