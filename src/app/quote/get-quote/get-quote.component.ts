@@ -1291,7 +1291,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   }
   hasAnyValue(relation:any): boolean {
     const matchingRelation = this.selectedRelationships.find(
-      (element: any) => relation.name === element.name && element.age > 0
+      (element: any) => relation.name === element.name && element.dob !=""
     );
   
     return !!matchingRelation;

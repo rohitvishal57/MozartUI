@@ -635,7 +635,7 @@
         opacity: 0;
         z-index: 9;
     }
-    /* .member_extraInfoSubDate input[type="date"]::before{
+    .member_extraInfoSubDate input[type="date"]::before{
         content: 'dd/mm/yyyy';
         position: absolute;
         left: 4px;
@@ -646,7 +646,7 @@
     }
     .member_extraInfoSubDate input[type="date"].mobiledate_textbox::before {
         content: '';
-    } */
+    } 
     .member_extraInfoSubDate input[type="date"]::after{
         content: '';
         position: absolute;
@@ -660,12 +660,12 @@
         background-repeat: no-repeat;
         
     } 
-    /*.member_extraInfoSubDate input[type="date"]::-webkit-input-placeholder,
+    .member_extraInfoSubDate input[type="date"]::-webkit-input-placeholder,
     .member_extraInfoSubDate input[type="date"]:-moz-placeholder,
     .member_extraInfoSubDate input[type="date"]::-moz-placeholder,
     .member_extraInfoSubDate input[type="date"]:-ms-input-placeholder {
          visibility: hidden;
-    } */
+    } 
     .custom_toastStyles .toast-container.active,
     .custom_toastStyles .toast-container {
         right: auto !important;
