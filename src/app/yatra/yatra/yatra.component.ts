@@ -19,6 +19,7 @@ import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
 import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
 import { Options } from '@angular-slider/ngx-slider';
+import { LogarithmicScale } from 'chart.js';
 
 @Component({
   selector: 'app-yatra',
@@ -595,8 +596,11 @@ export class YatraComponent {
             control.dynamicControls = control.dynamicControls.slice(0, 1)
             this.formData[control.name].forEach((member: any, index: number) => {
               let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-              control.dynamicControls.push(tempDynamicControl)
-              control.dynamicControls[index + 1].forEach((innerControl: any) => {
+              
+              console.log(tempDynamicControl,member);
+              
+              
+              tempDynamicControl.forEach((innerControl: any) => {
                 if (innerControl.name == 'relation') {
                   innerControl.value = member.relation
                 }
@@ -610,6 +614,30 @@ export class YatraComponent {
                   innerControl.options = member.upgradableSumInsured;
                 }
 
+                if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
+                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                  console.log(innerControl.innerArrayControl);
+            
+                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                    // Create a fresh template copy for each iteration
+                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+            
+                    if (i === 0) {
+                      // For the first index, push the full template
+                      innerControl.innerArrayControl.push(freshTemplate);
+                    } else {
+                      // Create a customized version for subsequent indices
+                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                      customizedInnerArrayControl.forEach((controlElement: any) => {
+                        if (controlElement.name == 'policyIndex') {
+                          controlElement.label = 'Policy ' + (i + 1);
+                        }
+                      });
+                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                    }
+                  }
+                }
+
 
                 if (
                   this.formData['ckycNo'] &&
@@ -619,6 +647,9 @@ export class YatraComponent {
                   innerControl.disabled = true; // Disable the control
                 }
               })
+
+              control.dynamicControls.push(tempDynamicControl);
+              
             })
           }
         }
@@ -650,6 +681,8 @@ export class YatraComponent {
         }
       });
     });
+    console.log(this.form);
+    
 
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
@@ -1320,6 +1353,9 @@ export class YatraComponent {
       this.spinner.hide();
     }
 
+    console.log(this.form);
+    
+
 
     if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
       //this.customerFeedbackModule.show();
@@ -1735,8 +1771,8 @@ export class YatraComponent {
     innerSubControl: any | null = null,
     innerSubControlIndex: number | null = null
   ): boolean {
-    if(control.name == 'previousPolicyDetails')
-    console.log(control, parentControl, index, subControl, innerControl, innerSubControl,innerSubControlIndex);
+    // if(control.name == 'previousPolicyDetails')
+    // console.log(control, parentControl, index, subControl, innerControl, innerSubControl,innerSubControlIndex);
     let myControl: AbstractControl | null | undefined;
     if (innerControl != null && innerSubControl != null && subControl == null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
@@ -1759,7 +1795,6 @@ export class YatraComponent {
       const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
       myControl = memberGroupInnerControlGroup.get(innerControl.name);
-      console.log(myControl);
       
     }
     else if (innerControl != null && parentControl != null && index != null) {
@@ -9109,6 +9144,30 @@ export class YatraComponent {
                 }
                 if (innerControl.name == 'zoneValue') {
                   innerControl.options = member.upgradableZones;
+                }
+
+                if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
+                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                  console.log(innerControl.innerArrayControl);
+            
+                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                    // Create a fresh template copy for each iteration
+                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+            
+                    if (i === 0) {
+                      // For the first index, push the full template
+                      innerControl.innerArrayControl.push(freshTemplate);
+                    } else {
+                      // Create a customized version for subsequent indices
+                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                      customizedInnerArrayControl.forEach((controlElement: any) => {
+                        if (controlElement.name == 'policyIndex') {
+                          controlElement.label = 'Policy ' + (i + 1);
+                        }
+                      });
+                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                    }
+                  }
                 }
 
                 if (
