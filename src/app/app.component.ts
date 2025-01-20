@@ -58,6 +58,7 @@ export class AppComponent {
       '/yatra/kyc',
       '/yatra/payment',
       '/proposals/shareconstent',
+      '/proposals/shareSummary',
       '/rug/test-page'
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {

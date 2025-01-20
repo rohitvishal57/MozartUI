@@ -213,5 +213,6 @@ export const environment = {
   pinCodeDetailsQuote: "api/yatra/getpincodedetails",
   getBaseCallerDetails: "api/rug/GetBaseCallerDetails",
   DeleteBaseCaller:"api/rug/DeleteBaseCaller",
-  CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller"
+  CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller",
+  getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum"
 };

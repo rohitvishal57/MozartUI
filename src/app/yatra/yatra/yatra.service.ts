@@ -245,4 +245,10 @@ export class YatraService {
     const confirmproposer = this.configService.config.baseUrl + this.configService.config.confirmproposer;
     return this.httpService.post(confirmproposer,reqData);
   }
+
+  getforminfobyproposalNum(reqData:any){
+    const getforminfobyproposalNum = this.configService.config.baseUrl + this.configService.config.getforminfobyproposalNum;
+    return this.httpService.post(getforminfobyproposalNum,reqData);
+  }
+
 }
