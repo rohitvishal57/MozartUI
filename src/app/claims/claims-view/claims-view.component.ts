@@ -65,6 +65,7 @@ export class ClaimsViewComponent {
   totalFilesCount = 0;
   selectedMember: any;
   uploadedFilesCount = 0;
+  showCustomHospitalInput = false;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
   uploadSuccess: boolean = true;
@@ -170,6 +171,7 @@ export class ClaimsViewComponent {
   }
 
   ngOnInit(): void {
+
     const currentDate = new Date();
 
     // Get the month, day, and year
@@ -207,6 +209,7 @@ export class ClaimsViewComponent {
         }
       });
     });
+
 
     this.createForm();
     this.saveUpload();
@@ -264,6 +267,7 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       coverCode: [""],
       hospitalName: ["", Validators.required],
+      customHospitalName: [""],
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
       proposerName: [""],
@@ -797,6 +801,12 @@ export class ClaimsViewComponent {
 
   fetchBlackListedHsp(event: any) {
     this.selectedHospital = event.target.value;
+    //const selectedValue = event.target.value;
+    this.showCustomHospitalInput = this.selectedHospital === 'others';
+    
+    if (!this.showCustomHospitalInput) {
+      this.form.get('customHospitalName')?.reset();
+    }
     if (this.selectedHospital) {
       this.selectedHospitalObj = this.hospitals.find(h => h.hospitalId === this.selectedHospital);
 
@@ -1239,6 +1249,16 @@ export class ClaimsViewComponent {
     this.claimSubmitted = true;
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
+      let hospitalName: string;
+
+     if (this.form.get('hospitalName')?.value === 'others') {
+      saveClaimData.hospitalName = this.form.get('customHospitalName')?.value;
+      saveClaimData.hospitalCode = ''; 
+    } else {
+      saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+      saveClaimData.hospitalCode = this.selectedHospital;
+    }
+
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.formattedDate;
       saveClaimData.admissionTime = saveClaimData.admissionTime ? saveClaimData.admissionTime : "6:00";
@@ -1247,7 +1267,10 @@ export class ClaimsViewComponent {
       saveClaimData.memberId = this.form.get('memberId')?.value;
       saveClaimData.memberName = this.form.get('memberName')?.value;
       saveClaimData.hospitalCode = this.selectedHospital;
-      saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+      saveClaimData.customHospitalName = "";
+      //saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+      
+      
       const coverNames = this.form.get('coverName')?.value;
       const coverCode = this.form.get('coverCode')?.value;
       if (coverNames && coverCode) {

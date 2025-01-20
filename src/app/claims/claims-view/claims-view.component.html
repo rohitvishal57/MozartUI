@@ -467,7 +467,7 @@
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select class="form-select input-selectBox" formControlName="hospitalName"
                                                 id="hospitalName" name="hospitalName" [disabled]="!selectedCity"
@@ -476,10 +476,46 @@
                                                     Hospitals</option>
                                                 <option *ngFor="let hospital of hospitals"
                                                     [value]="hospital.hospitalId">{{ hospital.hospitalName }}</option>
+                                                    <option>{{"Others"}}</option>
                                             </select>
                                             <label for="city">Select Hospital<span class="text-danger">*</span></label>
                                             <small class="ui-error block-show"
                                                 *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
+                                                {{"Hospital Name is required" | translate}}
+                                            </small>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select class="form-select input-selectBox" 
+                                                    formControlName="hospitalName"
+                                                    id="hospitalName" 
+                                                    name="hospitalName" 
+                                                    [disabled]="!selectedCity"
+                                                    (change)="fetchBlackListedHsp($event)">
+                                                <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
+                                                <option *ngFor="let hospital of hospitals" [value]="hospital.hospitalId">
+                                                    {{ hospital.hospitalName }}
+                                                </option>
+                                                <option value="others">Others</option>
+                                            </select>
+                                            <label for="city">Select Hospital<span class="text-danger">*</span></label>
+                                            <small class="ui-error block-show"
+                                                *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
+                                                {{"Hospital Name is required" | translate}}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showCustomHospitalInput">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" 
+                                                   class="form-control input-textBox"
+                                                   id="customHospitalName"
+                                                   formControlName="customHospitalName"
+                                                   placeholder="Enter Hospital Name">
+                                            <label for="customHospitalName">Enter Hospital Name<span class="text-danger">*</span></label>
+                                            <small class="ui-error block-show"
+                                                *ngIf="form.get('customHospitalName')?.invalid && form.get('customHospitalName')?.touched">
                                                 {{"Hospital Name is required" | translate}}
                                             </small>
                                         </div>
@@ -490,7 +526,7 @@
                                             <input type="text" class="form-control input-textBox"
                                                 formControlName="hospitalAddress" id="hospitalAddress"
                                                 name="hospitalAddress" placeholder="{ 'Hospital Address' | translate }"
-                                                readonly />
+                                                 />
                                             <label for="addnotes">Hospital Address</label>
                                             <small class="ui-error block-show"
                                                 *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">

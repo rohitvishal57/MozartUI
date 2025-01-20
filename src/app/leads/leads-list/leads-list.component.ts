@@ -15,6 +15,9 @@ declare var bootstrap: any;
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { ExcelExportService } from 'src/app/services/excel-export.service';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-leads-list',
@@ -641,8 +644,34 @@ export class LeadsListComponent {
   }
 
   downloadSingleItem(item: any): void {
-    this.excelExportService.exportToExcel([item], `Lead_${item.leadNumber}`);
+    debugger;
+    this.exportToExcel([item], `Lead_${item.leadNumber}`);
   }
+
+  exportToExcel(data: any[], fileName: string): void {
+    try {
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+      const workbook: XLSX.WorkBook = {
+        Sheets: { data: worksheet },
+        SheetNames: ['data'],
+      };
+
+      const excelBuffer: any = XLSX.write(workbook, {
+        bookType: 'xlsx', 
+        type: 'array',    
+      });
+
+      const dataBlob: Blob = new Blob([excelBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+
+      saveAs(dataBlob, `${fileName}.xlsx`);
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+    }
+  }
+  
 
   maskEmail(email: any): string {
     const [localPart, domain] = email.split('@');

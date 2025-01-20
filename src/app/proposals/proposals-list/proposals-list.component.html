@@ -263,7 +263,7 @@
                                                         <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadQuote(row.proposalNumber,true)"  title="Download Quote"><img
                                                                     src="assets/Img/icon_download_grey.svg">        
                                                                </button>
-                                                        <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction"
+                                                        <!-- <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction"
                                                                *ngIf="row.proposalStatus == 'Declaration'" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu">
                                                            <img src="assets/Img/icon_dots_vertical_grey.svg">
                                                        </button>
@@ -281,9 +281,9 @@
                                                                     </ul>
                                                                
                                                             </div>
-                                                        </mat-menu>
+                                                        </mat-menu> -->
 
-                                                        <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare block-hide" aria-label="item-moreaction" [matMenuTriggerFor]="shareMenu">
+                                                        <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare" aria-label="item-moreaction" [matMenuTriggerFor]="shareMenu">
                                                            <img src="assets/Img/icon_share.svg">
                                                         </button>
                                                         <mat-menu #shareMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -293,24 +293,13 @@
                                                                     <li class="actionItem" >
                                                                         <a><span>Proposal summary</span></a>
                                                                     </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Proposal issuance status</span></a>
+                                                                    <li class="actionItem" (click)="shareKyc(row)"  *ngIf="row.proposalStatus == 'Declaration'">
+                                                                        <a><span>Share KycLink</span></a>
                                                                     </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Link for document upload</span></a>
+                                                                    <li class="actionItem"   *ngIf="row.proposalStatus == 'Declaration'">
+                                                                        <a><span>Share PaymentLink</span></a>
                                                                     </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Link for counter-offer</span></a>
-                                                                    </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Link for SI registration</span></a>
-                                                                    </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Link to get journey feedback</span></a>
-                                                                    </li>
-                                                                    <li class="actionItem" >
-                                                                        <a><span>Link for post issuance for DHA completion</span></a>
-                                                                    </li>
+        
                                                                 </ul>
                                                                
                                                             </div>
@@ -364,7 +353,7 @@
                                                  <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadQuote(row.proposalNumber,true)"  title="Download Quote"><img
                                                             src="assets/Img/icon_download_grey.svg">        
                                                        </button>
-                                                       <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare block-hide" aria-label="item-moreaction" >
+                                                       <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare" aria-label="item-moreaction" >
                                                            <img src="assets/Img/icon_share.svg">
                                                         </button>
                                             </div>

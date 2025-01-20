@@ -1284,9 +1284,16 @@ export class GetQuoteComponent implements AfterViewChecked {
   checkView() {
     this.isDesktopView = window.innerWidth <= 767;
     if (this.isDesktopView) {
-      //this.datePlaceholder = ''; 
-    }else {
       this.datePlaceholder= 'dd/mm/yyyy'; // PWA date placeholder
+    }else {
+      //this.datePlaceholder = ''; 
     }
   }
+  hasAnyValue(relation:any): boolean {
+    const matchingRelation = this.selectedRelationships.find(
+      (element: any) => relation.name === element.name && element.age > 0
+    );
+  
+    return !!matchingRelation;
+    }
 }
