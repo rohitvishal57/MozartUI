@@ -838,7 +838,7 @@ export class YatraComponent {
                 control.subControls?.push(doneButton);
                 this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
               }
-              else{
+              else {
                 control.visible = false;
               }
 
@@ -1618,7 +1618,8 @@ export class YatraComponent {
   getValidationErrors(control: IFormControl | IDynamicControl | ISubControl, parentControl: IFormControl | ISubControl | null = null, index: number | null = null,
     subControl: any | null = null,
     innerControl: any | null = null,
-    innerSubControl: any | null = null
+    innerSubControl: any | null = null,
+    innerSubControlIndex:any | null =null
   ): string {
     let myFormControl: any;
     if (innerControl != null && innerSubControl != null && subControl == null) {
@@ -1629,6 +1630,15 @@ export class YatraComponent {
       myFormControl = parentControl != null && index != null ? ((((this.dynamicFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
         .controls[innerControl.name].get(control.name) : this.dynamicFormGroup.get(innerSubControl.name);
+    }
+    else if (innerControl != null && innerSubControl == null && parentControl != null && index != null && innerSubControlIndex != null) {
+      const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      const memberGroup = formArray.at(index) as FormGroup;
+      const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+      const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
+      myFormControl = memberGroupInnerControlGroup.get(innerControl.name);
+      console.log(myFormControl);
+      
     }
     else if (innerControl != null && parentControl != null && index != null && subControl == null) {
       myFormControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
@@ -1725,7 +1735,8 @@ export class YatraComponent {
     innerSubControl: any | null = null,
     innerSubControlIndex: number | null = null
   ): boolean {
-    // console.log(control, parentControl, index, subControl, innerControl, innerSubControl);
+    if(control.name == 'previousPolicyDetails')
+    console.log(control, parentControl, index, subControl, innerControl, innerSubControl,innerSubControlIndex);
     let myControl: AbstractControl | null | undefined;
     if (innerControl != null && innerSubControl != null && subControl == null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
@@ -1748,6 +1759,8 @@ export class YatraComponent {
       const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
       myControl = memberGroupInnerControlGroup.get(innerControl.name);
+      console.log(myControl);
+      
     }
     else if (innerControl != null && parentControl != null && index != null) {
       myControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
@@ -4494,7 +4507,7 @@ export class YatraComponent {
     if (this.form.formTitle == 'Total Premium') {
       if (this.formData.productName === 'Active Secure') {
         console.log("Form data:", this.formData);
-        const requiredCoverIds = ['CIL','CANC','ACCD']
+        const requiredCoverIds = ['CIL', 'CANC', 'ACCD']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
           const validCovers = member.covers.filter((cover: any) => requiredCoverIds.includes(cover.coverId));
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
@@ -7349,7 +7362,7 @@ export class YatraComponent {
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
           memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
           // memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
-          memberOccupation: (member?.productMemberOccupation!='')?JSON.parse(member?.productMemberOccupation).value || '' :'',
+          memberOccupation: (member?.productMemberOccupation != '') ? JSON.parse(member?.productMemberOccupation).value || '' : '',
           covers: this.covers[index] || [],
           productQuestionnaire: member?.productQuestionnaire,
           memberRoomCategory: rrtoCover ? rrtoCover.value : member?.memberRoomCategory || '',
@@ -7383,7 +7396,7 @@ export class YatraComponent {
       idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
       // proposerOccupation: this.jsonParse(formData?.occupation, 'value') || '',
-      proposerOccupation: (formData?.occupation)? this.jsonParse(formData?.occupation, 'value') || '' :'',
+      proposerOccupation: (formData?.occupation) ? this.jsonParse(formData?.occupation, 'value') || '' : '',
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       proposerPANNo: formData?.panNo || '',
       gstDetails: JSON.parse(formData?.gstDetails).value || '',
@@ -7425,7 +7438,7 @@ export class YatraComponent {
       appointeeMobileNumber: formData?.appointeeContactNo || '',
       appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : '',
       lrFlag: formData?.lrFlag || ''
-    };    
+    };
     return mappedData;
   }
 
@@ -9074,8 +9087,13 @@ export class YatraComponent {
               formControl.value = this.formData[formControl.name].length;
             }
             formControl.dynamicControls[0].forEach((dynamicControl: any) => {
-              if (dynamicControl.innerControls) {
+              if (dynamicControl.innerArrayControl) {
                 dynamicControl.visible = isPortability;
+                if (isPortability) {
+                  let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                  dynamicControl.innerArrayControl.push(tempControl);
+                }
+
               }
             })
             formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
@@ -9130,6 +9148,38 @@ export class YatraComponent {
         Object.keys(currentValues).forEach(key => {
           if (otherGroup.get(control.name)?.get(key)) {
             otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
+          }
+        });
+      }
+    });
+    // this.onClickReq(parentControl.value[index + 1]);
+  }
+
+  duplicatePortabilityPolicyForAllMembers(innerControl: any, control: any, parentControl: any, index: number,indexj: number) {
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const currentGroup = formArray.controls[index] as FormGroup;
+
+    console.log(currentGroup);
+    
+    const innerFormArr = currentGroup.get(control.name) as FormArray;
+
+
+    // Get the value of the control in the current group
+    const currentValues = innerFormArr.controls[indexj]?.value;
+
+    // // Traverse all other indices in the FormArray
+    formArray.controls.forEach((group, idx) => {
+      if (idx !== index) {
+        const otherGroup = group as FormGroup;
+        const otherInnerFormArr = otherGroup.get(control.name) as FormArray;
+        // Update each key in the other group
+        Object.keys(currentValues).forEach(key => {
+          // if (otherGroup.get(control.name)?.get(key)) {
+          //   otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
+          // }
+
+          if(otherInnerFormArr.controls[indexj]?.get(key)){
+            otherInnerFormArr.controls[indexj]?.get(key)?.setValue(currentValues[key]);
           }
         });
       }
@@ -9302,7 +9352,7 @@ export class YatraComponent {
     // // Flag to track validation
     // let allValid = true;
 
-    console.log(this.dynamicFormGroup.valid, this.dynamicFormGroup);
+    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup);
 
     if (this.dynamicFormGroup.valid) {
       this.changeRecalculate(false);
@@ -9350,11 +9400,112 @@ export class YatraComponent {
     console.log(formArr, 'dfgd', this.dynamicFormGroup, 'form', this.form)
   }
 
+  addMorePortabilityPolicies(innerControl: any, control: any, parentControl: any, index: number) {
+    console.log(innerControl, control, parentControl, index, this.form);
+    let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
+    console.log(tempControl);
+
+    tempControl = tempControl.splice(3);
+
+    // tempControl.forEach((innerControl:any)=>{
+    //   if(innerControl.name == 'policyIndex'){
+    //     innerControl.label = 'Policy'+
+    //   }
+    // })
+
+    console.log(tempControl, this.form);
+
+    // tempControl
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == parentControl.name) {
+          let targetDynamicControls = JSON.parse(JSON.stringify(formControl.dynamicControls[index + 1]));
+          targetDynamicControls.forEach((innerControl: any) => {
+            if (innerControl.name == control.name) {
+              // Deep clone before pushing
+              tempControl.forEach((innerArrayControl:any)=>{
+                if(innerArrayControl.name == 'policyIndex'){
+                  innerArrayControl.label = 'Policy '+ innerControl.innerArrayControl.length;
+                }
+              })
+              innerControl.innerArrayControl.push([...tempControl]);
+            }
+          });
+
+
+          formControl.dynamicControls[index + 1] = targetDynamicControls;
+        }
+      })
+    })
+    console.log(this.dynamicFormGroup);
+    
+    let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    // let formArr;
+
+    
+    if (formArr != null) {
+      formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      console.log(formArr);
+      
+      let innerFormArr=formArr.controls[index].get(control.name) as FormArray;
+      console.log(control.innerArrayControl.length - 1);
+      
+      innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
+    }
+
+    console.log(this.form, this.dynamicFormGroup);
+
+
+
+  }
+
   removePolicy(control: any, index: number): void {
     if (control.innerArrayControl && control.innerArrayControl.length > index) {
       control.innerArrayControl.splice(index, 1);  // Removes the element at the specified index
     }
   }
+
+  removePortabilityPolicy(subControl: any, parentControl: any, index: number, z: number): void {
+    console.log('Removing portability policy:',subControl, parentControl, index, z, this.form);
+  
+    // Update `innerArrayControl` in the UI structure (this.form)
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name === parentControl.name) {
+          formControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
+            if (dynamicControl.name === subControl.name) {
+              // Remove the `z`-th element from `innerArrayControl`
+              dynamicControl.innerArrayControl.splice(z+1, 1);
+
+              console.log(dynamicControl.innerArrayControl);
+
+              dynamicControl.innerArrayControl.forEach((policy: any, idx: number) => {
+                policy.forEach((control: any) => {
+                  if (control.name === 'policyIndex' && idx>z) {
+                    control.label = `Policy ${idx}`;
+                  }
+                });
+              });
+            }
+          });
+        }
+      });
+    });
+  
+    // Update the reactive form (this.dynamicFormGroup)
+    const formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    if (formArr) {
+      const innerFormArr = formArr.controls[index].get(subControl.name) as FormArray;
+      if (innerFormArr) {
+        innerFormArr.removeAt(z); // Remove the `z`-th FormGroup from FormArray
+      }
+    }
+  
+    console.log('Updated form structure:', this.form);
+    console.log('Updated reactive form:', this.dynamicFormGroup);
+  }
+  
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
     const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
     const control = formArray?.controls[index]?.get(controlName) as FormGroup;
@@ -9403,7 +9554,7 @@ export class YatraComponent {
     console.log(this.showOptions);
   }
   getSelectedDiseases(control: any, index: any, subControl: string): string {
-    const controlName:any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
+    const controlName: any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
     const selectedKeys = Object.keys(controlName?.value).filter(key => controlName?.value[key] === true);
     if (controlName) {
       controlName.setValidators(this.addCustomValidationForChronicCondition(controlName));
@@ -9422,13 +9573,13 @@ export class YatraComponent {
     return 'Select Options';
   }
 
-  addCustomValidationForChronicCondition(controlName:FormGroup): ValidatorFn {
+  addCustomValidationForChronicCondition(controlName: FormGroup): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const controlGroup = controlName;
-        const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
-          key => controlGroup.controls[key].value === true
-        );
-        return hasAtLeastOneSelected ? null : { required: true };
+      const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
+        key => controlGroup.controls[key].value === true
+      );
+      return hasAtLeastOneSelected ? null : { required: true };
     };
   }
 
