@@ -1042,6 +1042,10 @@ export class RugDynamicFormComponent {
               if(formControl.name == "label3"){
                 formControl.visible = true;
               }
+              if(formControl.name == "leadID"){
+                formControl.visible = true;
+                formControl.value = this.tsDetails.leadId;
+              }
             })
           }
         });
@@ -5083,6 +5087,11 @@ export class RugDynamicFormComponent {
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
+              let nomineeRelationCode = this.filterRelationByName(this.bbdetails.relationWithProposer);
+              this.selectedOccupationCode = this.occupationList.filter(
+                (item: any) => item.occupationName === this.bbdetails.occupation
+              );
+              
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.getFormIndexValue() == 4){
                 const payloadObject = {
@@ -5105,7 +5114,7 @@ export class RugDynamicFormComponent {
                     tenure: 1,
                     sumInsured: this.bbdetails.sumInsured,
                     premium: this.bbdetails.totalPremium,
-                    annualIncome: "",
+                    annualIncome: this.bbdetails.annualIncome ,
                     axisProductCode: this.bbdetails.axisProductCode,
                     axisProductName: this.bbdetails.axisProductName,
                     familyConstruct: this.bbdetails.familyConstruct,
@@ -5114,7 +5123,7 @@ export class RugDynamicFormComponent {
                     ifscCode: this.bbdetails.ifscCode,
                     branchName: this.bbdetails.branchName,
                     branchSolId: this.bbdetails.branchSolId,
-                    amount: "",
+                    amount: this.bbdetails.totalPremium,
                     isGoGreen: true,
                     bankName: this.bbdetails.bankName,
                     debitType: this.bbdetails.debitType || "",
@@ -5125,8 +5134,8 @@ export class RugDynamicFormComponent {
                     startDate: this.bbdetails.startDate || "",
                     idType: this.bbdetails.idType,
                     idValue: this.bbdetails.idValue,
-                    occupationType: "",
-                    occupation: "",
+                    occupationType: this.selectedOccupationCode[0].occupationCode,
+                    occupation: this.bbdetails.occupation,
                     leadStatus: null,
                     productCode: this.bbdetails.productCode,
                     productName: this.bbdetails.productName,
@@ -5167,7 +5176,7 @@ export class RugDynamicFormComponent {
                     leadId: this.bbdetails.leadId,
                     NomineeSalutation: this.bbdetails.nomineeGender == "M" ? "Mr" : this.bbdetails.nomineeGender == "F" ? "Ms" : null, // Assuming not provided
                     nomineeRelation: this.bbdetails.relationWithProposer || "son",
-                    NomineeRelationCode: "R003",
+                    NomineeRelationCode: nomineeRelationCode[0].relationCode,
                     nomineeFirstname: this.bbdetails.nomineeFirstName,
                     nomineeLastname: this.bbdetails.nomineeLastName,
                     nomineeContactNumber: this.bbdetails.nomineeMobileNumber,
@@ -5194,6 +5203,7 @@ export class RugDynamicFormComponent {
                   isFinalSubmit: true,
                   leadStatus: "SUBMITTED"
                 }
+                console.log(commonDraftRequest);
                 this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
                   next: (res: any) => {
                     console.log(res);
