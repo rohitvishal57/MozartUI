@@ -28,7 +28,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
   filteredArray: any;
   itemsPerPage = 10;
   currentPage = 1;
-
+  allLeads: any[] = []; 
   Location: any[] = ["Noida", "Hyderabad", "Bangalore", "Mumbai", "Kolkata"];
   AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
   dialog: any;
@@ -55,6 +55,16 @@ export class ViewForSoloJourneyComponent implements OnInit {
 
   getSoloJourneyDetails(): void {
     this.agentCode = localStorage.getItem("agentCode");
+    const filters = {
+      RefNo: [this.soloJourneyForm.controls['leadid'].value.toString()].filter(value => value),
+      MobileNumber: [this.soloJourneyForm.controls['mobileno'].value.toString()].filter(value => value.toString()),
+      LeadGenerationDate: [this.soloJourneyForm.controls['lgdate'].value.toString()].filter(value => value),
+      PolicyNumber: [this.soloJourneyForm.controls['policyno'].value.toString()].filter(value => value),
+      AxisLocation: [this.soloJourneyForm.controls['location'].value.toString()].filter(value => value),
+      AxisProcess: [this.soloJourneyForm.controls['axisprocess'].value.toString()].filter(value => value),
+      PolicyInsuraceDate: [this.soloJourneyForm.controls['pidate'].value.toString()].filter(value => value)
+    };
+  
     const reqdata = {
       userId: this.agentCode,
       isSoloJourney: true,
@@ -62,72 +72,52 @@ export class ViewForSoloJourneyComponent implements OnInit {
       isDualJourney: false,
       isViewLead: false,
       isViewCheckerLead: false,
-      pageNumber: this.page,
-      pageSize: this.rows
+      pageNumber: this.searchTerm ? 1 : this.page,
+      pageSize: this.searchTerm ? 10 : this.rows,
+      filters: filters
     };
-
-    this.adminService.getLead(reqdata).subscribe((res: any) => {
-      try {
-        const response = JSON.parse(res.data);
-        this.getAllLeads = response.data.leadDetails;
-        this.totalRecords = response.data.totalRecords;
-
-        if (this.getAllLeads.length === 0 && this.page > 1) {
-          this.page = 1;
-          this.getSoloJourneyDetails();
-          return;
+  
+    console.log('Request Data:', reqdata);
+  
+    this.adminService.getLead(reqdata).subscribe(
+      (res: any) => {
+        try {
+          const response = JSON.parse(res.data);
+          console.log('API Response Data:', response);
+          this.getAllLeads = response.data.leadDetails;
+          this.displayedLeads = [...this.getAllLeads];
+          this.totalRecords = this.searchTerm ? this.getAllLeads.length : response.data.totalRecords;
+  
+          if (this.getAllLeads.length === 0 && this.searchTerm) {
+            console.warn('No data found for the provided refNo:', this.searchTerm);
+            this.displayedLeads = [];
+          }
+        } catch (error) {
+          console.error('Error parsing response:', error);
         }
-
-        console.log(`Page ${this.page}:`, this.getAllLeads);
-        this.updateDisplayedData();
-      } catch (error) {
-        console.error('Error parsing API response:', error);
+      },
+      (error) => {
+        console.error('API Error:', error);
       }
-    });
-  }
-
-
-  updateDisplayedData(): void {
-    this.displayedLeads = [...this.getAllLeads];
-    console.log('Displayed Leads:', this.displayedLeads);
-}
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
-  }
-
-  onPageChange(event: any): void {
-    this.first = event.first;
-    this.rows = event.rows;
-    this.page = Math.floor(this.first / this.rows) + 1;
-    this.getSoloJourneyDetails();
-}
-
-  onInput(event: any) {
-    this.searchTerm = event.target.value.toLowerCase();
-    this.displayedLeads = this.getAllLeads.filter((option: any) =>
-      option?.refNo?.toLowerCase().includes(this.searchTerm) ||
-      option?.proposerName?.toLowerCase().includes(this.searchTerm) ||
-      option?.imdCode?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisProcess?.toLowerCase().includes(this.searchTerm) ||
-      option?.proposalNo?.toLowerCase().includes(this.searchTerm) ||
-      option?.planName?.toLowerCase().includes(this.searchTerm) ||
-      option?.premium?.toLowerCase().includes(this.searchTerm) ||
-      option?.status?.toLowerCase().includes(this.searchTerm) ||
-      option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
-      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
-      option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
-      option?.disposition?.toLowerCase().includes(this.searchTerm) ||
-      option?.subDisposition?.toLowerCase().includes(this.searchTerm) ||
-      option?.remark?.toLowerCase().includes(this.searchTerm) ||
-      option?.avName?.toLowerCase().includes(this.searchTerm) ||
-      option?.avid?.toLowerCase().includes(this.searchTerm) ||
-      option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm) ||
-      option?.axisLocation?.toLowerCase().includes(this.searchTerm)
     );
   }
-
+  
+  
+  onInput(event: any): void {
+    this.searchTerm = event.target.value.trim().toLowerCase(); 
+    console.log('Search Term:', this.searchTerm);
+    this.getSoloJourneyDetails(); 
+  }
+  
+  onPageChange(event: any): void {
+    if (!this.searchTerm) {
+      this.first = event.first;
+      this.rows = event.rows;
+      this.page = Math.floor(this.first / this.rows) + 1;
+      this.getSoloJourneyDetails();
+    }
+  }
+  
   auditLead(lead: any) {
     let reqObj = {
       "leadId": lead.refNo,
@@ -179,8 +169,8 @@ export class ViewForSoloJourneyComponent implements OnInit {
         }
 
         let request = {
-          leadId: String(leadId), 
-          avId: String(data)     
+          leadId: String(leadId),
+          avId: String(data)
         };
 
         console.log('Request payload:', JSON.stringify(request));
@@ -188,20 +178,20 @@ export class ViewForSoloJourneyComponent implements OnInit {
         this.adminService.assignToAv(request).subscribe(
           (response: any) => {
             console.log('API Response:', response);
-         
-              const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
-                width: "500px",
-                autoFocus: false,
-                data: "Successfully Reassigned"
-              });
-              dialogRef.afterClosed().subscribe((result: any) => {
-                console.log(result);
-              });
-            
+
+            const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+              width: "500px",
+              autoFocus: false,
+              data: "Successfully Reassigned"
+            });
+            dialogRef.afterClosed().subscribe((result: any) => {
+              console.log(result);
+            });
+
           },
           (error: any) => {
             console.error('API Error:', error);
-            console.error('Error Details:', error.error); 
+            console.error('Error Details:', error.error);
           }
         );
       }
@@ -223,5 +213,18 @@ export class ViewForSoloJourneyComponent implements OnInit {
 
   clearFilter() {
     this.soloJourneyForm.reset();
+  }
+
+  onsearch(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.displayedLeads = this.getAllLeads.filter((option: any) =>
+      option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.refNo?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisLocation?.toLowerCase().includes(this.searchTerm) ||
+      option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
+      option?.axisProcess?.toLowerCase().includes(this.searchTerm)
+    );
   }
 }

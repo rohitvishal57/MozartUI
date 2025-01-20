@@ -46,7 +46,7 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <select class="form-select input-selectBox" id="location"
                                                         name="location" formControlName="location"
-                                                        (input)="onInput($event)">
+                                                        (change)="onInput($event)">
                                                         <option value="" disabled>Select Center
                                                         </option>
                                                         <option *ngFor="let location of Location" [value]="location">
@@ -77,7 +77,7 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <select class="form-select input-selectBox" id="axisprocess"
                                                         name="axisprocess" formControlName="axisprocess"
-                                                        (input)="onInput($event)">
+                                                        (change)="onInput($event)">
                                                         <option value="" disabled>Select Axis Process</option>
                                                         <option *ngFor="let axisprocess of AxisProcess"
                                                             [value]="axisprocess">{{ axisprocess}}</option>
@@ -108,11 +108,11 @@
                             <div class="body_flex_row leads_searchWraper">
                                 <div class="field_searchMain">
                                     <div class="filterFieldGroup">
-                                        <button type="submit" id="save" name="save"
-                                            class="btn_red"><img src="/assets/Img/exporticon.svg" alt=""
-                                                (click)="exportToxl()"> Export </button>
+                                        <button type="submit" id="save" name="save" class="btn_red"><img
+                                                src="/assets/Img/exporticon.svg" alt="" (click)="exportToxl()"> Export
+                                        </button>
                                         <input class="filterSearch" id="filterSearch" name="filterSearch"
-                                            placeholder="Filter" (input)="onInput($event)">
+                                            placeholder="Filter" (input)="onsearch($event)">
                                     </div>
                                 </div>
                             </div>
