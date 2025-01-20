@@ -260,6 +260,8 @@ export class PaymentComponent {
           paymentStatus :this.paymentDetail?.paymentStatus
         };
         if (this.paymentDetail?.paymentMethodType == 'emandate_payment') {
+          if (this.paymentDetail.paymentStatus == 'SUCCESS' || this.paymentDetail.paymentStatus == 'PENDING'){
+
           const reqData = {
             agentcode: this.paymentDetail.agentCode,
             proposalNumber: '',
@@ -285,6 +287,18 @@ export class PaymentComponent {
               this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
               console.log('error', error);
             });
+          }
+          else {
+            this.toast.error({ detail: "Error", summary: this.paymentDetail.policyRejectedReason || "Payment failed", duration: 3000 });
+            this.router.navigate(['renewal/renewalJourney'], {
+            state: {
+              formData: this.encryptionService.encrypt(formData),
+              proposalNum: this.encryptionService.encrypt(""),
+              formSequence: this.encryptionService.encrypt([payment, thankYou]),
+              formIndex: "0",
+            }
+          });
+          }  
         } else if (this.paymentDetail?.paymentStatus === 'SUCCESS' || this.paymentDetail?.paymentStatus?.startsWith('IN')) {
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "Success", summary: this.paymentDetail.policyRejectedReason || "Payment successful", duration: 5000 });
@@ -440,6 +454,7 @@ export class PaymentComponent {
           paymentStatus :this.paymentDetail?.paymentStatus
         };
         if (this.paymentDetail?.paymentMethodType == 'emandate_payment') {
+          if (this.paymentDetail.paymentStatus == 'SUCCESS' || this.paymentDetail.paymentStatus == 'PENDING'){
           const reqData = {
             agentcode: this.paymentDetail.agentCode,
             proposalNumber: '',
@@ -464,6 +479,19 @@ export class PaymentComponent {
               this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
               console.log('error', error);
             });
+          } else {
+            this.toast.error({ detail: "Error", summary: this.paymentDetail.policyRejectedReason || "Payment failed", duration: 5000 });
+            this.router.navigate(['renewal/customerPayment'], {
+              state: {
+                formData: this.encryptionService.encrypt(formData),
+                proposalNum: this.encryptionService.encrypt(""),
+                policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
+                journeyProcess: this.encryptionService.encrypt(0),
+                formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
+                formIndex: "0",
+              }
+            });
+           }
         } else if (this.paymentDetail?.paymentStatus == 'SUCCESS' || this.paymentDetail?.paymentStatus == 'INTIATED') {
           if (this.paymentDetail?.isFullQuoteSuccess) {
             this.toast.success({ detail: "Success", summary: this.paymentDetail.policyRejectedReason || "Payment successful", duration: 5000 });

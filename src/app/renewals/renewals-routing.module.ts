@@ -9,7 +9,7 @@ import { KycStatusComponent } from './kyc-status/kyc-status.component';
 
 const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
-  // { path: "payment", component: RenewalDynamicFormComponent },
+  { path: "withmodify", component: RenewalDynamicFormComponent },
   { path: "renewalJourney", component: RenewalJourneyComponent},
   { path: "quote", component: SubQuotesComponent },
   { path: "paymentstatus",component:PaymentstatusComponent},

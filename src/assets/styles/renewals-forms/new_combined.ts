@@ -319,7 +319,7 @@ export const new_combinedForms = {
                 {
                   "name": "Personal Details",
                   "visibleLabel": true,
-                  "label": "Personal Details",
+                  "label": "Member Details",
                   "class": "col-12 col-md-6 col-lg-12",
                   "type": "paragraph",
                   "visible": true
@@ -560,65 +560,6 @@ export const new_combinedForms = {
                     }
                   ]
                 },
-                // {
-                //   "name": "sumInsured",
-                //   "label": "Sum Insured",
-                //   "visibleLabel": true,
-                //   "type": "select",
-                //   "value": "",
-                //   "class": "col-12 col-md-6 col-lg-4",
-                //   "visible": true,
-                //   "disabled": false,
-                //   "options": [
-                //     {
-                //       "name": "500000",
-                //       "value": 500000
-                //     },
-                //     {
-                //       "name": "700000",
-                //       "value": 700000
-                //     },
-                //     {
-                //       "name": "1000000",
-                //       "value": 1000000
-                //     },
-                //     {
-                //       "name": "1500000",
-                //       "value": 1500000
-                //     },
-                //     {
-                //       "name": "2000000",
-                //       "value": 2000000
-                //     },
-                //     {
-                //       "name": "2500000",
-                //       "value": 2500000
-                //     },
-                //     {
-                //       "name": "5000000",
-                //       "value": 5000000
-                //     },
-                //     {
-                //       "name": "7500000",
-                //       "value": 7500000
-                //     },
-                //     {
-                //       "name": "10000000",
-                //       "value": 10000000
-                //     },
-                //     {
-                //       "name": "20000000",
-                //       "value": 20000000
-                //     }
-                //   ],
-                //   "validators": [
-                //     {
-                //       "validatorName": "required",
-                //       "required": true,
-                //       "message": "Sum Insured is required field."
-                //     }
-                //   ]
-                // },
                 {
                   "name": "designation",
                   "label": "Designation",
