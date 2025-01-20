@@ -3498,7 +3498,14 @@ export class RugDynamicFormComponent {
     }
 
   }
-
+  onDrillDown(index: any, caseName: any) {
+    const lastPage = this.getFormIndexValue()
+    if (this.formSequence.length - 1 == lastPage) {
+      return;
+    }
+    this.setFormIndexValue(index)
+    this.getFormDataFromFormSequence(this.formSequence[index][caseName?.formId]);
+  }
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
     return formIndex ? parseInt(formIndex, 10) : 0;
