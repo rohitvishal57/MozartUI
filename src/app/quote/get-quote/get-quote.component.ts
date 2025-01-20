@@ -1284,9 +1284,9 @@ export class GetQuoteComponent implements AfterViewChecked {
   checkView() {
     this.isDesktopView = window.innerWidth <= 767;
     if (this.isDesktopView) {
-      //this.datePlaceholder = ''; 
-    }else {
       this.datePlaceholder= 'dd/mm/yyyy'; // PWA date placeholder
+    }else {
+      //this.datePlaceholder = ''; 
     }
   }
   hasAnyValue(relation:any): boolean {
