@@ -2208,9 +2208,15 @@ export class RugDynamicFormComponent {
             ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob).toString();
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-            this.calculateBBPremium();
-            this.calculateD2CPremium()
-            this.calculateTSPremium();
+            if(this.isBB == true){
+              this.calculateBBPremium();
+            }
+            if(this.isD2C == true){
+              this.calculateD2CPremium()
+            }
+            if(this.isTS == true){
+              this.calculateTSPremium();
+            }
           }
         }
       }
@@ -4639,6 +4645,9 @@ export class RugDynamicFormComponent {
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.productId == 31){
                 if(this.getFormIndexValue() == 3){
+                  this.selectedOccupationCode = this.occupationList.filter(
+                    (item: any) => item.occupationName === this.d2cDetails.occupation
+                  );
                   const payloadObject = {
                     proposerDetails: {
                       leadId: this.d2cDetails.leadId,
@@ -4656,7 +4665,8 @@ export class RugDynamicFormComponent {
                       nationality: this.d2cDetails.proposerNationality,
                       emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
                       maritalStatus: this.d2cDetails.proposerMaritalStatus,
-                      occupationType: this.d2cDetails.proposerOccupationType,
+                      occupationType: this.selectedOccupationCode[0].occupationCode,
+                      occupation: this.d2cDetails.occupation,
                       panNumber: this.d2cDetails.proposerPanNumber,
                       sumInsured: this.d2cDetails.sumInsured,
                       premium: this.d2cDetails.totalPremium.toString(),
@@ -4669,7 +4679,6 @@ export class RugDynamicFormComponent {
                       quotationNumber: null,
                       productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03",
                       productName: null,
-                      occupationName: this.d2cDetails.productPlanName,
                       productPlanCode: this.d2cDetails.productPlanCode.toString(),
                       productPlan: null,                  
                       groupCode: "CATEGORY 1",
@@ -4776,6 +4785,11 @@ export class RugDynamicFormComponent {
               }else{
 
                 if(this.getFormIndexValue() == 3){
+                  console.log(this.d2cDetails);
+                  let nomineeRelationCode = this.filterRelationByName(this.d2cDetails.nomineeRelation);
+                  this.selectedOccupationCode = this.occupationList.filter(
+                    (item: any) => item.occupationName === this.d2cDetails.occupation
+                  );
                   const payloadObject = {
                     proposerDetails: {
                       leadId: this.d2cDetails.leadId,
@@ -4793,7 +4807,9 @@ export class RugDynamicFormComponent {
                       nationality: this.d2cDetails.proposerNationality,
                       emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
                       maritalStatus: this.d2cDetails.proposerMaritalStatus,
-                      occupationType: this.d2cDetails.proposerOccupationType,
+                      occupationType: this.selectedOccupationCode[0].occupationCode,
+                      occupationName: this.d2cDetails.occupation,
+                      annualIncome: this.d2cDetails.annualIncome .toString() || null,
                       panNumber: this.d2cDetails.proposerPanNumber,
                       sumInsured: this.d2cDetails.sumInsured,
                       premium: this.d2cDetails.totalPremium.toString(),
@@ -4806,10 +4822,9 @@ export class RugDynamicFormComponent {
                       quotationNumber: null,
                       productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" :  this.productId == '30'  ? "D04" : "",
                       productName: null,
-                      occupationName: this.d2cDetails.productPlanName,
                       productPlanCode: this.d2cDetails.productPlanCode.toString(),
-                      productPlan: null,                  
-                      groupCode: "GRP001",
+                      productPlan: this.d2cDetails.productPlanName,                  
+                      groupCode: this.d2cDetails.groupCode,
                       combiId: this.d2cDetails.combiId,
                       combiName: this.d2cDetails.planAvailable,
                       familyConstruct: this.d2cDetails.familyConstruct,
@@ -4822,11 +4837,12 @@ export class RugDynamicFormComponent {
                       gfbQuoteNumber: null,
                       accountNumber: this.d2cDetails.accountNumber,
                       ifsc: this.d2cDetails.ifscCode,
-                      accType: this.d2cDetails.accType,
+                      accType: this.d2cDetails.accountType,
                       bankName: this.d2cDetails.bankName,
                       bankAccountType: this.d2cDetails.accountType,
                       micrCode: this.d2cDetails.micrCode,
                       branchName: this.d2cDetails.branchName,
+                      
                       // address: this.d2cDetails.proposerAddress,
                       // city: this.d2cDetails.proposerCity,
                 
@@ -4878,19 +4894,19 @@ export class RugDynamicFormComponent {
                       leadId: this.d2cDetails.leadId,
                       name: member.name ? member.name : member.firstName + member.lastName,
                       dob: member.dob,
-                      relationName: null,
+                      relationName: member.relation,
                       relationCode: JSON.parse(member.relationshipType)?.id || "",
                       gender: member.gender,                
-                      height: member.height || 0,
+                      height: this.convertToCentimeters(member.height, member.heightInches).toFixed(2).toString() || 0,
                       weight: member.weight
                     })),
                     nomineeDetails: {
                       leadId: this.d2cDetails.leadId,
                       nomineeName: this.d2cDetails.firstName,
                       nomineeRelation: this.d2cDetails.nomineeRelation,
-                      nomineeRelationCode: "R002",
-                      nomineeDOB: "11-11-1999",
-                      nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
+                      nomineeRelationCode: nomineeRelationCode[0].relationCode,
+                      nomineeDOB: this.d2cDetails.nomineeDob,
+                      nomineeGender: this.d2cDetails.nomineeGender || null,
                       nomineeMobileNumber: this.d2cDetails.mobileNumber,
                       nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
                       appointeeDOB: null,
@@ -8152,6 +8168,7 @@ export class RugDynamicFormComponent {
 
         filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
         console.log(filterArr);
+        this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
         this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
         this.getTSPremium(filterArr);
       },
@@ -8188,6 +8205,7 @@ export class RugDynamicFormComponent {
 
           filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
           console.log(filterArr);
+          this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
           if (this.bbdetails.productCode != "R10") {
             this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
           } else {
@@ -8250,6 +8268,7 @@ export class RugDynamicFormComponent {
 
         filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
         console.log(filterArr);
+        this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
         this.d2cDetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
         if(this.bbdetails.productCode != "R10"){
           this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
