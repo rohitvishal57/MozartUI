@@ -614,7 +614,7 @@
                                 <!-- </div> -->
                                 <div *ngIf="subControl.type === 'multipleselect'" [class]="subControl.class" class="typecss"
                                 [hidden]="!subControl.visible">
-                                  <div class="input-container">
+                                  <div class="input-container inputField_SelectCD">
                                     <div class="checkbox-container" *ngIf="!subControl.disabled" [formGroupName]="subControl.name"
                                     aria-label="Default select example">
                                     <!-- <div class="selected-diseases">
@@ -626,12 +626,12 @@
                                       </div>
                                   
                                       <!-- Options list visibility controlled by isOptionVisible -->
-                                      <div *ngIf="showOptions[subControl.name]?.[i-1]" class="checkbox-options"
+                                      <div *ngIf="showOptions[subControl.name]?.[i-1]" class="checkbox-options input-checkbox-block"
                                       aria-label="Default select example" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}">
-                                        <div *ngFor="let option of subControl.options" style="height: 100%;">
+                                        <div *ngFor="let option of subControl.options" class="input-checkbox-feild">
                                           <input type="checkbox" [formControlName]="option.value"
                                             (change)="onmultiCheckboxChange($event, subControl, control, i-1, option)"
-                                            [name]="option.value"  id="{{option.value}}"/>
+                                            [name]="option.value"  id="{{option.value}}" class="input-check"/>
                                           <label for="{{option.value}}">{{ option.name ? (option.name | translate) : '' }}</label>
                                         </div>
                                       </div>
