@@ -4641,6 +4641,7 @@ export class RugDynamicFormComponent {
             // this.toast.success({ detail: "Success", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
             this.leadnumber = res.data;
+            console.log(this.d2cDetails)
             if (res.isSuccess == true && res.statusCode == 200) {
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.productId == 31){

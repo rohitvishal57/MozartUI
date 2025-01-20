@@ -10,13 +10,14 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { ProposalShareConsentComponent } from './proposal-share-consent/proposal-share-consent.component';
+import { ProposalSummaryComponent } from './proposal-summary/proposal-summary.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 @NgModule({
-  declarations: [ProposalsListComponent, ProposalShareConsentComponent],
+  declarations: [ProposalsListComponent, ProposalShareConsentComponent, ProposalSummaryComponent],
   imports: [
     CommonModule,
     ProposalsRoutingModule,

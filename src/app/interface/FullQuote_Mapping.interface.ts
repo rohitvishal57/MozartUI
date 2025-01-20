@@ -72,6 +72,7 @@ export interface IFullQuoteMapping {
     appointeeRelationCode:string
     lrFlag:string
     deductibleAmount:string
+    gstIn:string
 }
 
 export interface InsuredMemberDetail {

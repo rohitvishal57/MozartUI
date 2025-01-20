@@ -27,6 +27,7 @@ import { LoadingService } from './services/loading.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';  // Import LocationStrategy and PathLocationStrategy
 import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
@@ -38,7 +39,6 @@ export function loadConfig(configService: ConfigService) {
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
-
 
 @NgModule({
   declarations: [
@@ -76,6 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    File,
     ConfigService,
     LoadingService,
     { provide: LocationStrategy, useClass: PathLocationStrategy },  // Use PathLocationStrategy

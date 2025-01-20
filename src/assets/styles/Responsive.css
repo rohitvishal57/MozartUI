@@ -624,10 +624,10 @@
     }
     .member_extraInfoSubDate input[type="date"]{
         position: relative;
-        /* display: inline-block; 
+        /* display: inline-block; */
         appearance: none;
         -webkit-appearance:none;
-        -moz-appearance: none;*/
+        -moz-appearance: none;
         min-width: 95px;
     }
     .member_extraInfoSubDate input[type="date"]::-webkit-calendar-picker-indicator {
@@ -744,3 +744,20 @@
         padding: 3px 3px;
     }
 }
+@media (max-width:360px) {
+    .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
+        max-width: 120px;
+    }
+	.cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems.cv_bodyItems_45 {
+		width: 46%;
+	}
+    .main_productTabs .nav-pills {
+        gap: 4px;
+    }
+    .bodyColumn h2{
+        font-size: 14px;
+    }
+    .custom_toastStyles .toast-container .ng-toast{
+        width: 300px !important;
+    }
+  }

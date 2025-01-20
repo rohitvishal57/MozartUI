@@ -11,86 +11,90 @@
                             <div class="filterFieldGroup">
                                 <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
                                     (input)="onInput($event)"> -->
-                                <form [formGroup]="soloJourneyForm">
-                                    <section class="white_container mb-3">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" id="mobileno"
-                                                        name="mobileno" placeholder="Mobile Number"
-                                                        formControlName="mobileno" type="number" (input)="onInput($event)">
-                                                    <label for="mobileno">Enter Mobile Number</label>
+                                    <form [formGroup]="soloJourneyForm">
+                                        <section class="white_container mb-3">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" id="mobileno"
+                                                            name="mobileno" placeholder="Mobile Number"
+                                                            formControlName="mobileno" type="number"
+                                                            (input)="onInput($event)">
+                                                        <label for="mobileno">Enter Mobile Number</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" id="leadid" name="leadid"
+                                                            placeholder="Lead Id" formControlName="leadid" type="number"
+                                                            (input)="onInput($event)">
+                                                        <label for="leadid">Enter Lead Id</label>
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" id="policyno"
+                                                            name="policyno" placeholder="Policy Number"
+                                                            formControlName="policyno" type="text"
+                                                            (input)="onInput($event)">
+                                                        <label for="policyno">Enter Policy No</label>
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <select class="form-select input-selectBox" id="location"
+                                                            name="location" formControlName="location"
+                                                            (change)="onInput($event)">
+                                                            <option value="" disabled>Select Center
+                                                            </option>
+                                                            <option *ngFor="let location of Location" [value]="location">
+                                                                {{location}}</option>
+                                                        </select>
+                                                        <label for="location">Select Location</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" id="lgdate" name="lgdate"
+                                                            placeholder="License Expiry From Date *"
+                                                            formControlName="lgdate" type="date" [max]="today"
+                                                            (input)="onInput($event)">
+                                                        <label for="lgdate">Enter Lead Generation Date</label>
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" id="pidate" name="pidate"
+                                                            placeholder="License Expiry To Date *" formControlName="pidate"
+                                                            type="date" [max]="today" (input)="onInput($event)">
+                                                        <label for="pidate">Enter Policy Insurance Date</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <select class="form-select input-selectBox" id="axisprocess"
+                                                            name="axisprocess" formControlName="axisprocess"
+                                                            (change)="onInput($event)">
+                                                            <option value="" disabled>Select Axis Process</option>
+                                                            <option *ngFor="let axisprocess of AxisProcess"
+                                                                [value]="axisprocess">{{ axisprocess}}</option>
+                                                        </select>
+                                                        <label for="axisprocess">Select Axis Process</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <button type="submit" id="save" name="save" (click)="clearFilter()"
+                                                            class="btn_red">Clear
+                                                            Filter</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" id="leadid" name="leadid"
-                                                        placeholder="Lead Id" formControlName="leadid" type="number"
-                                                        (input)="onInput($event)">
-                                                    <label for="leadid">Enter Lead Id</label>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" id="policyno"
-                                                        name="policyno" placeholder="Policy Number"
-                                                        formControlName="policyno" type="text" (input)="onInput($event)">
-                                                    <label for="policyno">Enter Policy No</label>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <select class="form-select input-selectBox" id="location"
-                                                        name="location" formControlName="location" (input)="onInput($event)">
-                                                        <option value="" disabled>Select Center
-                                                        </option>
-                                                        <option *ngFor="let location of Location" [value]="location">
-                                                            {{location}}</option>
-                                                    </select>
-                                                    <label for="location">Select Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" id="lgdate" name="lgdate"
-                                                        placeholder="License Expiry From Date *"
-                                                        formControlName="lgdate" type="date" [max]="today" (input)="onInput($event)">
-                                                    <label for="lgdate">Enter Lead Generation Date</label>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" id="pidate" name="pidate"
-                                                        placeholder="License Expiry To Date *" formControlName="pidate"
-                                                        type="date" [max]="today" (input)="onInput($event)">
-                                                    <label for="pidate">Enter Policy Insurance Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <select class="form-select input-selectBox" id="axisprocess"
-                                                        name="axisprocess" formControlName="axisprocess" (input)="onInput($event)">
-                                                        <option value="" disabled>Select Axis Process</option>
-                                                        <option *ngFor="let axisprocess of AxisProcess"
-                                                            [value]="axisprocess">{{ axisprocess}}</option>
-                                                    </select>
-                                                    <label for="axisprocess">Select Axis Process</label>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <button type="submit" id="save" name="save" (click)="clearFilter()"
-                                                        class="btn_red">Clear
-                                                        Filter</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </form>
+                                        </section>
+                                    </form>
                             </div>
                         </div>
                     </div>
@@ -106,7 +110,7 @@
                                         <button type="submit" id="save" name="save"
                                         class="btn_red"><img src="/assets/Img/exporticon.svg" alt="" (click)="exportToxl()"> Export </button>
                                         <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
-                                             (input)="onInput($event)">
+                                             (input)="onsearch($event)">
                                     </div>
                                 </div>
                             </div>

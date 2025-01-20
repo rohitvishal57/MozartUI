@@ -20,6 +20,7 @@ import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-li
 import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
 import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
 import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
+import { ManageLobComponent } from "./Admin/manage-lob/manage-lob.component";
 
 
 
@@ -30,7 +31,7 @@ const routes: Routes = [
     { path:'productdownload', component: ProductDownloadComponent },
     { path:'base-caller-upload', component: ProductDownloadComponent }, 
     { path:'extract-base-agent', component: ProductDownloadComponent },
-    { path:'manage-LOB', component: ProductDownloadComponent },
+    { path:'manage-LOB', component: ManageLobComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
     { path:'test-page', component: BbTestPageComponent },
     { path:'bb-test-page', component: BbTestPageComponent },

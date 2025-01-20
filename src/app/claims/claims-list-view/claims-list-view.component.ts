@@ -92,7 +92,7 @@ export class ClaimsListViewComponent implements OnInit {
 
     this.fetchData();
     //this.fetchClaimStatusCounts(this.agentCode);
-    this.checkView();
+    this.fetchData();
   }
 
   claimsView(view: string) {
@@ -328,7 +328,6 @@ export class ClaimsListViewComponent implements OnInit {
   }
 
   applySearch() {
-
     let searchValue = this.searchInputControl.value?.trim();
     if (!searchValue) {
       this.claimsReqBody.memberId = "";

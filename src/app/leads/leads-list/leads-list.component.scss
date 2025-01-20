@@ -399,3 +399,17 @@ h6 {
 		gap: 10px;
 	}
   }
+  @media (max-width: 360px) {
+	.siteBody {
+		padding: 12rem 2rem 12rem;
+	}
+	.btn_newRequest{
+		font-size: 11px;
+	}
+	.btn_quickFilter {
+		padding: 9px 6px 7px;
+	}
+	.cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems.cv_bodyItems_45 {
+		width: 46%;
+	}
+  }
