@@ -4635,6 +4635,7 @@ export class RugDynamicFormComponent {
             // this.toast.success({ detail: "Success", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
             this.leadnumber = res.data;
+            console.log(this.d2cDetails)
             if (res.isSuccess == true && res.statusCode == 200) {
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.productId == 31){
@@ -4806,10 +4807,13 @@ export class RugDynamicFormComponent {
                       quotationNumber: null,
                       productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" :  this.productId == '30'  ? "D04" : "",
                       productName: null,
-                      occupationName: this.d2cDetails.productPlanName,
+                      occupationName: this.d2cDetails.occupation,
                       productPlanCode: this.d2cDetails.productPlanCode.toString(),
-                      productPlan: null,                  
-                      groupCode: "GRP001",
+                      productPlan: this.d2cDetails.productPlanName,   
+
+                      // groupCode: "GRP001",
+                      groupCode:this.d2cDetails.groupCode,
+                      annualIncome:this.d2cDetails.annualIncome,
                       combiId: this.d2cDetails.combiId,
                       combiName: this.d2cDetails.planAvailable,
                       familyConstruct: this.d2cDetails.familyConstruct,
