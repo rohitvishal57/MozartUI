@@ -8970,63 +8970,68 @@ export class YatraComponent {
     }
   }
   async modifyThankYouJson() {
-    const reqData = {
-      proposalNumber: this.proposalNum
-    };
-
-    // Convert Observable to Promise
-    await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
-      .then((res: any) => {
-        if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
-          this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
-          this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
-          this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
-          this.formData.quoteValidToDate = res.data.fullQuoteResponse.policyEndDate || null;
-          this.formData.ReceiptNumber = res.data.fullQuoteResponse.receiptNumber || null;
-          this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
-          this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
-        }
-        if (res.data.errorMessage) {
-          this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
-        }
-        const data = res.data;
-        const status =
-          (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && data.isFullQuoteSuccess
-            ? [true, false, false]
-            : (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && !data.isFullQuoteSuccess
-              ? [false, false, true]
-              : data.paymentStatus.toUpperCase() === 'PENDING'
-                ? [false, true, false]
-                : [false, false, false]; // Default case
-
-        this.form.formSections.forEach((formSection: any, i: any) => {
-          formSection.formControls.forEach((formControl: any) => {
-            if (formControl.idProperty === true || formControl.idProperty === false) {
-              if (formControl.name === 'labelA') {
-                formControl.visible = status[0];
-              } else if (formControl.name === 'labelB') {
-                formControl.visible = status[1];
-                this.form.formSections[i + 1].visible = status[0];
-                this.form.formSections[i + 2].visible = status[0];
-                this.form.formSections[i + 3].visible = status[0];
-                this.form.formSections[i + 4].visible = status[0];
-              } else if (formControl.name === 'labelC') {
-                formControl.visible = status[2];
-                if (res.data.errorMessage) {
-                  formControl.label = res.data.errorMessage;
+    if(this.formData.paymentMode === 'offline'){
+      console.log(this.formData);
+    }
+    else{
+      const reqData = {
+        proposalNumber: this.proposalNum
+      };
+  
+      // Convert Observable to Promise
+      await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
+        .then((res: any) => {
+          if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
+            this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
+            this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
+            this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
+            this.formData.quoteValidToDate = res.data.fullQuoteResponse.policyEndDate || null;
+            this.formData.ReceiptNumber = res.data.fullQuoteResponse.receiptNumber || null;
+            this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
+            this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
+          }
+          if (res.data.errorMessage) {
+            this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
+          }
+          const data = res.data;
+          const status =
+            (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && data.isFullQuoteSuccess
+              ? [true, false, false]
+              : (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && !data.isFullQuoteSuccess
+                ? [false, false, true]
+                : data.paymentStatus.toUpperCase() === 'PENDING'
+                  ? [false, true, false]
+                  : [false, false, false]; // Default case
+  
+          this.form.formSections.forEach((formSection: any, i: any) => {
+            formSection.formControls.forEach((formControl: any) => {
+              if (formControl.idProperty === true || formControl.idProperty === false) {
+                if (formControl.name === 'labelA') {
+                  formControl.visible = status[0];
+                } else if (formControl.name === 'labelB') {
+                  formControl.visible = status[1];
+                  this.form.formSections[i + 1].visible = status[0];
+                  this.form.formSections[i + 2].visible = status[0];
+                  this.form.formSections[i + 3].visible = status[0];
+                  this.form.formSections[i + 4].visible = status[0];
+                } else if (formControl.name === 'labelC') {
+                  formControl.visible = status[2];
+                  if (res.data.errorMessage) {
+                    formControl.label = res.data.errorMessage;
+                  }
+                  this.form.formSections[i + 1].visible = status[0];
+                  this.form.formSections[i + 2].visible = status[0];
+                  this.form.formSections[i + 3].visible = status[0];
+                  this.form.formSections[i + 4].visible = status[0];
                 }
-                this.form.formSections[i + 1].visible = status[0];
-                this.form.formSections[i + 2].visible = status[0];
-                this.form.formSections[i + 3].visible = status[0];
-                this.form.formSections[i + 4].visible = status[0];
               }
-            }
+            });
           });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
   }
 
   setPreviousPolicyYears(control: any) {
