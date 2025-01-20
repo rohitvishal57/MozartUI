@@ -10304,69 +10304,94 @@ export class YatraComponent {
   alterSumInsuredOptions(event: any, innerControl: any = null, control: any, parentControl: any = null, index: any = null, indexj: any = null, memberControl: any = null) {
     console.log("Inside alter", event, innerControl, control, parentControl, index, indexj, memberControl);
     console.log(this.dynamicFormGroup.get(parentControl.name), this.form);
-    if (innerControl.name == 'occupation') {
-      const memberOccupation = (this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
-      console.log(memberOccupation);
-      if (JSON.parse(memberOccupation).name == 'Housewife' || JSON.parse(memberOccupation).name == 'Retired') {
-        memberControl.coreControls.forEach((coreControl: any) => {
-          if (coreControl.name == 'occupationRisk') {
-            const matchingOption = coreControl.options.find((option: any) =>
-              option.name.toLowerCase() === JSON.parse(memberOccupation).name.toLowerCase()
-            );
-
-            if (matchingOption) {
-              console.log('Found matching option:', matchingOption);
-              const riskValue = JSON.stringify(matchingOption);
-              console.log(riskValue);
-
-              // You can now set the selected option or take further actions here
-              const occupationRiskControl = (this.dynamicFormGroup.get(parentControl.name)
-                ?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj + 1].get('occupationRisk');
-
-              console.log(occupationRiskControl);
-
-              if (occupationRiskControl && riskValue) {
-                // Only proceed if the control exists
-                occupationRiskControl.setValue(riskValue);
-              } else {
-                console.log('occupationRisk control does not exist!');
+    if(!memberControl.name.includes('Son') && !memberControl.name.includes('Daughter')){
+      if (innerControl.name == 'occupation') {
+        const memberOccupation = (this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
+        console.log(memberOccupation);
+        if (JSON.parse(memberOccupation).name.toLowerCase().includes('house') || JSON.parse(memberOccupation).name == 'Retired') {
+          memberControl.coreControls.forEach((coreControl: any) => {
+            if (coreControl.name == 'occupationRisk') {
+              const matchingOption = coreControl.options.find((option: any) =>
+                option.name.toLowerCase() === JSON.parse(memberOccupation).name.toLowerCase()
+              );
+  
+              if (matchingOption) {
+                console.log('Found matching option:', matchingOption);
+                const riskValue = JSON.stringify(matchingOption);
+                console.log(riskValue);
+  
+                // You can now set the selected option or take further actions here
+                const occupationRiskControl = (this.dynamicFormGroup.get(parentControl.name)
+                  ?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj + 1].get('occupationRisk');
+  
+                console.log(occupationRiskControl);
+  
+                if (occupationRiskControl && riskValue) {
+                  // Only proceed if the control exists
+                  occupationRiskControl.setValue(riskValue);
+                } else {
+                  console.log('occupationRisk control does not exist!');
+                }
               }
             }
-          }
+  
+            if (coreControl.name == 'addOnSumInsured') {
+              // this.form.formSections.forEach((section: any) => {
+              //   if (section.sectionTitle == "Optional Covers") {
+              //     section.formControls.forEach((control: any) => {
+              //       if (control.name == 'accident') {
+              //         control.subControls.forEach((subControl: any) => {
+              //           if (subControl.name == 'addOnDetails') {
+              //           }
+              //         })
+              //       }
+              //     })
+              //   }
+              // })
+              coreControl.options = [];
+              coreControl.options.push(
+                {
+                  "name": "3000000",
+                  "label": "3000000",
+                  "value": 3000000
+                }
+              )
+            }
+          })
+        }
+        else {
+          const memberSumInsuredValidationRule = parentControl.validationRules?.find((rule: any) => rule.type === 'memberLevelSumInsured');
+          const memberRules = memberSumInsuredValidationRule.adults;
+                    console.log(memberRules);
+                    let maxSumInsured = memberRules.maxSumInsured;
+                    let minSumInsured = memberRules.minSumInsured;
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => memberControl.name === insuredMember.relation
+                    );
+                    if (memberRules.ageBasedRules) {
+                      if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
+                        maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
+                        minSumInsured = memberRules.ageBasedRules.minSumInsured;
+                      }
+                    }
 
-          if (coreControl.name == 'addOnSumInsured') {
-            // this.form.formSections.forEach((section: any) => {
-            //   if (section.sectionTitle == "Optional Covers") {
-            //     section.formControls.forEach((control: any) => {
-            //       if (control.name == 'accident') {
-            //         control.subControls.forEach((subControl: any) => {
-            //           if (subControl.name == 'addOnDetails') {
-            //           }
-            //         })
-            //       }
-            //     })
-            //   }
-            // })
-            coreControl.options = [];
-            coreControl.options.push(
-              {
-                "name": "3000000",
-                "label": "3000000",
-                "value": 3000000
-              }
-            )
-          }
-        })
+                    memberControl.coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name == 'addOnSumInsured') {
+                        coreControl.options = control.innerSubControls[0].coreControls[3].options.filter((option: any) =>
+                          option.value >= minSumInsured && option.value <= maxSumInsured
+                        );
+                      }
+                    })
+          // memberControl.coreControls.forEach((coreControl: any) => {
+          //   if (coreControl.name == 'addOnSumInsured') {
+          //     coreControl.options = control.innerSubControls[0].coreControls[3].options;
+          //   }
+          // })
+        }
+  
       }
-      else {
-        memberControl.coreControls.forEach((coreControl: any) => {
-          if (coreControl.name == 'addOnSumInsured') {
-            coreControl.options = control.innerSubControls[0].coreControls[3].options;
-          }
-        })
-      }
-
     }
+    
   }
 
 }
