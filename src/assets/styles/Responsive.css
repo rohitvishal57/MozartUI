@@ -748,4 +748,16 @@
     .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
         max-width: 120px;
     }
-}
+	.cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems.cv_bodyItems_45 {
+		width: 46%;
+	}
+    .main_productTabs .nav-pills {
+        gap: 4px;
+    }
+    .bodyColumn h2{
+        font-size: 14px;
+    }
+    .custom_toastStyles .toast-container .ng-toast{
+        width: 300px !important;
+    }
+  }
