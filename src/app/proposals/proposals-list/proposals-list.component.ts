@@ -770,7 +770,7 @@ export class ProposalsListComponent {
     requestBody.name = proposalDetails.firstName + " " + proposalDetails.lastName;
     requestBody.agentCode = this.agentCode;
     requestBody.proposalNumber = proposalDetails.proposalNumber;
-    requestBody.premiumAmount = proposalDetails.totalPremiumInt;
+    requestBody.premiumAmount = proposalDetails.totalPremiumInt.toString();
     requestBody.productName = proposalDetails.productVarientName;
 
     this.proposalService.shareSummary(requestBody).subscribe(
