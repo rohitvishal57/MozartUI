@@ -17,6 +17,11 @@ color: var(--white-color);
 border: 1px solid var(--primary-red-color);
 border-radius: 17px;
 }
+.ul_withIcon li {
+  display: flex;
+  gap: 8px;
+  cursor: default;
+}
 /*---Common css start---*/
 .btn_red {
   padding: 10px 32px;
