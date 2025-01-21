@@ -763,7 +763,7 @@
     .mat-mdc-tab-group.claims_matTabs .mat-mdc-tab-header .mat-mdc-tab-label-container{
         padding: 0 30px !important;
     }
-    .cardViewMain .cardViewWraper .cardViewItem header {
+    .cardViewMain .cardViewWraper .cardViewItem header.head_cardViewItem {
         flex-direction: column;
     }
     .cardViewMain .cardViewWraper .cardViewItem header.head_cardViewItem .icon_productInfoDetails {
