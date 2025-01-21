@@ -253,11 +253,11 @@ export class YatraComponent {
                 if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
                   this.quickQuoteRedirect = false;
                 }
-                if(decryptedData.firstName || decryptedData.proposerGender){
-                  this.formData={
+                if (decryptedData.firstName || decryptedData.proposerGender) {
+                  this.formData = {
                     firstName: decryptedData.firstName || "",
-                    proposerGender:decryptedData.proposerGender || ""
-                  }                  
+                    proposerGender: decryptedData.proposerGender || ""
+                  }
                 }
                 if (this.formData) {
                   const proposalRequiredDetails: {
@@ -7435,7 +7435,7 @@ export class YatraComponent {
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       proposerPANNo: formData?.panNo || '',
       gstDetails: JSON.parse(formData?.gstDetails).value || '',
-      gstIn:this.formData?.gstIn || '',
+      gstIn: this.formData?.gstIn || '',
       proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
       ifPEP: formData?.isPep || '',
       proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
@@ -8588,13 +8588,24 @@ export class YatraComponent {
   }
 
   getPermanentAddressDetails(flag: boolean) {
+    const controlsToDisable = [
+      'proposerAddress1',
+      'proposerAddress2',
+      'proposerAddress3',
+      'correspondentPincode'
+    ];
     if (flag) {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
       this.dynamicFormGroup?.controls['proposerAddress3'].setValue(this.dynamicFormGroup?.controls['permanentAddress3'].value)
       this.dynamicFormGroup?.controls['correspondentPincode'].setValue(this.dynamicFormGroup?.controls['proposerPincode'].value)
-      this.dynamicFormGroup?.controls['correspondingCity'].setValue(this.dynamicFormGroup?.controls['city'].value)
-      this.dynamicFormGroup?.controls['correspondingState'].setValue(this.dynamicFormGroup?.controls['state'].value)
+      this.dynamicFormGroup?.controls['correspondingCity'].setValue(this.dynamicFormGroup?.controls['city'].value);
+      this.dynamicFormGroup?.controls['correspondingState'].setValue(this.dynamicFormGroup?.controls['state'].value);
+
+      controlsToDisable.forEach(controlName => {
+        this.dynamicFormGroup?.controls[controlName]?.disable();
+      });
+
     } else {
       this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
       this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
@@ -8602,6 +8613,9 @@ export class YatraComponent {
       this.dynamicFormGroup?.controls['correspondentPincode'].setValue('')
       this.dynamicFormGroup?.controls['correspondingCity'].setValue('')
       this.dynamicFormGroup?.controls['correspondingState'].setValue('')
+      controlsToDisable.forEach(controlName => {
+        this.dynamicFormGroup?.controls[controlName]?.enable();
+      });
     }
 
   }
@@ -9025,14 +9039,14 @@ export class YatraComponent {
     }
   }
   async modifyThankYouJson() {
-    if(this.formData.paymentMode === 'offline'){
+    if (this.formData.paymentMode === 'offline') {
       console.log(this.formData);
     }
-    else{
+    else {
       const reqData = {
         proposalNumber: this.proposalNum
       };
-  
+
       // Convert Observable to Promise
       await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
         .then((res: any) => {
@@ -9057,7 +9071,7 @@ export class YatraComponent {
                 : data.paymentStatus.toUpperCase() === 'PENDING'
                   ? [false, true, false]
                   : [false, false, false]; // Default case
-  
+
           this.form.formSections.forEach((formSection: any, i: any) => {
             formSection.formControls.forEach((formControl: any) => {
               if (formControl.idProperty === true || formControl.idProperty === false) {
