@@ -3418,3 +3418,21 @@ margin: 0;
     font-weight: 600;
     padding-left: 25px !important;
 }
+@media (max-width:767px){
+    .main-container .right-panel .typecss_proposalNumber .boldtext_input {
+        padding: 0;
+        width: 190px;
+    }
+    .main-container .right-panel input[type="date"].inputField_Text {
+        min-width: 95%;
+    }
+    input[type="date"]::-webkit-date-and-time-value {
+        margin-top: 0px;
+        text-align: left !important;
+        inline-size: 100%;
+    }
+    .main-container .right-panel .send-btn.send-link-btn {
+        margin-bottom: 5px;
+        width: 93%;
+    }
+}
