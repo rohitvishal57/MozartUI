@@ -165,7 +165,7 @@ export class ProposalSummaryComponent {
       next: (res: any) => {
         console.log(res);
         // this.form = JSON.parse(res.data.jsonFormData);
-        this.formData = JSON.parse(res.data.formData);
+        this.formData = JSON.parse(res.data);
         this.yatraService.getStaticForms(reqBody).subscribe(
           (response: any) => {
             console.log(response);
