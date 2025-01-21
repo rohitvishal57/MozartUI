@@ -93,6 +93,8 @@ export class ClaimsListViewComponent implements OnInit {
     this.fetchData();
     //this.fetchClaimStatusCounts(this.agentCode);
     this.fetchData();
+
+    this.checkView(); //Screen View check
   }
 
   claimsView(view: string) {
