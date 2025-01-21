@@ -36,7 +36,7 @@ export class UploadPerformaceComponent implements OnInit{
     let fileExt = file.name.replace(/^.*\./, '');
     const data = new FormData();
     console.log(this.performanceUploadForm.get('selectedView')?.value);
-    if(this.performanceUploadForm.get('')?.value == "performance"){
+    if(this.performanceUploadForm.get('selectedView')?.value == "performance"){
       this.isPerformance = true
       this.isDetailedView = false
     }else{
