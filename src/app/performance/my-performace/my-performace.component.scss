@@ -425,8 +425,23 @@
 .btn_grid:hover {
   background-color: #C7222A;; /* Darken color on hover */
 }
+@media (max-width: 820px) {
+  .btn_camp_performance{
+    height: 30px;
+  }
+}
 @media (max-width: 767px) {
   .siteBody {
       padding-bottom: 6rem;
+  }
+}
+@media (max-width: 539px) {
+  .claims_member_info .body_flex_row {
+    gap: 8px;        
+  }
+}
+@media (max-width: 320px) {
+  .claims_member_info .body_flex_row {
+    flex-direction: column;
   }
 }
