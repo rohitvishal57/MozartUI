@@ -24,4 +24,11 @@ export class ProposalsService {
     return this.http.post<any>(getQuoteDownloadtApi, reqBody); 
   }
 
+
+  shareSummary(reqBody : any){
+    const shareSummaryAPI = this.configService.config.baseUrl + this.configService.config.ShareProposalSummary;
+    return this.http.post<any>(shareSummaryAPI, reqBody); 
+  }
+  
+  
 }

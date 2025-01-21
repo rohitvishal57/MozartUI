@@ -521,4 +521,49 @@ export class QuoteProductsComponent implements OnInit {
       }
    
   }
+
+  donwloadQuote(quoteInfo : any){
+   let requestBody : any  ={};
+   requestBody.quoteInformation = JSON.stringify(quoteInfo);
+   requestBody.agentCode =  this.agentCode;
+   requestBody.formData =  JSON.stringify(this.formData);
+   requestBody.tenure = this.selectedPlans[this.ProductList.indexOf(quoteInfo)];
+
+   this.quoteService.downloadQuote(requestBody).subscribe(
+    (response: any)=>{
+      if(response.isSuccess){
+        let  blob :any = '';
+        try{
+           blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
+        }catch(exception){
+          this.toast.error({ detail: "Error", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+        }
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        debugger;
+        link.download = quoteInfo.tenure1QuoteNumber +".pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        this.toast.success({ detail: "Success", summary: 'Quote Information has Successfully Downloaded.', duration: 2000 }); 
+      }else{
+        this.toast.error({ detail: "Error", summary: response.message, duration: 2000 }); 
+      }
+    },(error)=>{
+      console.error('Failed to download Quote',error);
+      this.toast.error({ detail: "Error", summary: "Failed to download quoteInformation.", duration: 2000 }); 
+    }
+  )};
+  
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
+  }
 }

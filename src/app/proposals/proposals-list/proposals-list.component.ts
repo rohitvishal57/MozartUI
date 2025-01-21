@@ -761,8 +761,70 @@ export class ProposalsListComponent {
     requestPayload.MobileNumber = proposalInformation.mobileNumber;
     requestPayload.ProductName = proposalInformation.productVarientName;
     requestPayload.ProductCode = "";
-    
-
-
   }
+
+  shareProposalSummary(proposalDetails: any) {
+    let requestBody: any = {};
+    requestBody.emailId = proposalDetails.proposerEmail;
+    requestBody.mobileNumber = proposalDetails.mobileNo;
+    requestBody.name = proposalDetails.firstName + " " + proposalDetails.lastName;
+    requestBody.agentCode = this.agentCode;
+    requestBody.proposalNumber = proposalDetails.proposalNumber;
+    requestBody.premiumAmount = proposalDetails.totalPremiumInt;
+    requestBody.productName = proposalDetails.productVarientName;
+
+    this.proposalService.shareSummary(requestBody).subscribe(
+      (response) => {
+        if(response.isSuccess){
+          this.toast.success({ detail: "Success", summary: 'Proposal Summary Info Shared Successfully.', duration: 2000 }); 
+        }
+      },
+      (error) => {
+        console.log('failed to Share Proposal Summary Info',error);
+
+      });
+  }
+
+  async insurenow(item: any) {
+    console.log(item);
+    item.tenureAmounts = [];
+    this.formData = {
+      ...JSON.parse(item.quoteData), productName: item.productName, totalPremium: item.selectedPremiumAmount,
+      firstName: item.proposerName, quoteId: item.quoteNumber, proposalNumber: item.proposalNum
+    }
+    console.log(this.formData);
+    try {
+      await this.getFormSequence(item);
+      for (let i = 1; i <= 3; i++) {
+        const premiumKey = `t${i}PremiumAmount`;
+        console.log(item[premiumKey]);
+        if (item.selectedPremiumAmount == item[premiumKey]) {
+          item.tenure = i;
+        }
+        item.tenureAmounts[i - 1] = item[premiumKey]
+      }
+      this.formData = {
+        ...this.formData, tenure: item.tenure + ' years'
+      }
+      console.log(item, this.formData)
+      const productData = {
+        partnerId: item.partnerId,
+        productId: item.productId,
+        tenureAmounts: item.tenureAmounts,
+        selectedAddons: item.selectedAddons,
+        proposalNum: item.proposalNum,
+        tenure: item.tenure
+      }
+      sessionStorage.setItem("isQuote", true.toString());
+      console.log(productData)
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.router.navigate(['yatra'], {
+          state: { productData: productData, formSequence: this.formSequence }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 }

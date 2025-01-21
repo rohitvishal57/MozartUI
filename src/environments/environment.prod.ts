@@ -108,6 +108,8 @@ export const environment = {
   getNatureOfDuty: "api/yatra/getnatureofduty",
   getOccupation: "api/yatra/getoccupation",
   getProposerOccupation: "api/yatra/getproposeroccupation",
+  ShareProposalSummary:"api/yatra/shareproposal",
+  downloadQuote : "api/yatra/downloadquote",
   getNomineeRelationShip: "api/yatra/getnomineerelationship",
   getAllBankDetails: "api/yatra/getbanknames",
   getBankCity: "api/yatra/getbankcitydetails",
