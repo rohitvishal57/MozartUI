@@ -7369,7 +7369,7 @@ export class YatraComponent {
           pedWaitingPeriod: this.pedWaitingPeriod || '',
           chronicDisease: chronicDiseases || '',
           deductibleAmount: member?.deductibleAmount || '',
-          previousPolicyDetails: member?.previousPolicyDetails || {},
+          previousPolicyDetails: member?.previousPolicyDetails || [],
           hospiCashCoverDetails: member?.hospiCashCoverDetails || [],
           activePolicyDetails: member?.activePolicyDetails || []
         };
