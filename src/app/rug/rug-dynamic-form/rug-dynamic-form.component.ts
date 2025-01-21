@@ -498,17 +498,19 @@ export class RugDynamicFormComponent {
       console.error(err)
       }
     });
-    this.rugService.getDispositions().subscribe({
-      next: (res: any) => {
-        console.log(res)
-        res = JSON.parse(res.data).data
-        console.log(res);
-        this.dispositionList = res.allDisposition;           
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    if(this.isTS == true){
+      this.rugService.getDispositions().subscribe({
+        next: (res: any) => {
+          console.log(res)
+          res = JSON.parse(res.data).data
+          console.log(res);
+          this.dispositionList = res.allDisposition;           
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
     this.yatraService.getRelations().subscribe({
       next: (response: any) => {
         response = JSON.parse(response.data).data;
