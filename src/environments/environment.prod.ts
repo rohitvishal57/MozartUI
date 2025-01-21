@@ -214,5 +214,6 @@ export const environment = {
   getBaseCallerDetails: "api/rug/GetBaseCallerDetails",
   DeleteBaseCaller:"api/rug/DeleteBaseCaller",
   CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller",
-  getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum"
+  getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
+  insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson"
 };

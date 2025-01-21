@@ -251,4 +251,8 @@ export class YatraService {
     return this.httpService.post(getforminfobyproposalNum,reqData);
   }
 
+  insertoptionalcoversjson(reqData:any){
+    const insertoptionalcoversjson = this.configService.config.baseUrl + this.configService.config.insertoptionalcoversjson;
+    return this.httpService.post(insertoptionalcoversjson,reqData);
+  }
 }
