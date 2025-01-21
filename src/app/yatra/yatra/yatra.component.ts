@@ -614,29 +614,29 @@ export class YatraComponent {
                   innerControl.options = member.upgradableSumInsured;
                 }
 
-                if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
-                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
-                  console.log(innerControl.innerArrayControl);
+                // if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
+                //   innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                //   console.log(innerControl.innerArrayControl);
             
-                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
-                    // Create a fresh template copy for each iteration
-                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                //   for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                //     // Create a fresh template copy for each iteration
+                //     let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
             
-                    if (i === 0) {
-                      // For the first index, push the full template
-                      innerControl.innerArrayControl.push(freshTemplate);
-                    } else {
-                      // Create a customized version for subsequent indices
-                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
-                      customizedInnerArrayControl.forEach((controlElement: any) => {
-                        if (controlElement.name == 'policyIndex') {
-                          controlElement.label = 'Policy ' + (i + 1);
-                        }
-                      });
-                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
-                    }
-                  }
-                }
+                //     if (i === 0) {
+                //       // For the first index, push the full template
+                //       innerControl.innerArrayControl.push(freshTemplate);
+                //     } else {
+                //       // Create a customized version for subsequent indices
+                //       let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                //       customizedInnerArrayControl.forEach((controlElement: any) => {
+                //         if (controlElement.name == 'policyIndex') {
+                //           controlElement.label = 'Policy ' + (i + 1);
+                //         }
+                //       });
+                //       innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                //     }
+                //   }
+                // }
 
 
                 if (
