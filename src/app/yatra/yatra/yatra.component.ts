@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, Renderer2, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
@@ -153,6 +153,7 @@ export class YatraComponent {
   hospiCashSelected: boolean = false;
   hospiCashTab: number = -1;
   showOptions: { [controlName: string]: { [index: number]: boolean } } = {};
+  clickedInside = false;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -9618,6 +9619,7 @@ export class YatraComponent {
   }
   toggleOptionsVisibility(index: any, controlName: string) {
     console.log(this.showOptions, controlName, index);
+    this.clickedInside = true;
     if (!this.showOptions[controlName]) {
       this.showOptions[controlName] = {};
     }
@@ -10515,5 +10517,21 @@ export class YatraComponent {
         console.error(err.message, err);
       },
     });
+  }
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(targetElement: HTMLElement): void {
+    if (!this.clickedInside && this.showOptions) {
+      // Close all dropdowns when clicking outside
+      Object.keys(this.showOptions).forEach((controlName) => {
+        Object.keys(this.showOptions[controlName]).forEach((key: any) => {
+          this.showOptions[controlName][key] = false;
+        });
+      });
+    }
+    this.clickedInside = false;
+  }
+  stopPropagation(event: Event): void {
+    // Prevent the click event from propagating to the document
+    event.stopPropagation();
   }
 }
