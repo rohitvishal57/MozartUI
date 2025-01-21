@@ -4747,7 +4747,7 @@ export class RugDynamicFormComponent {
                         let justpayPayload = { 
                           "agentcode": this.agentCode,
                            "proposalNumber": this.leadId,
-                           "paymentMethod": "autoDebit",
+                           "paymentMethod": this.dynamicFormGroup.get('paymentOption')?.value == "eMandate" ? "emandate_payment" : "autoDebit",
                            "source": "RUG",
                            "policyType": "New Business",
                            "policyNumber": "", 
@@ -4758,8 +4758,8 @@ export class RugDynamicFormComponent {
                            "MiddleName": "",
                            "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
                            "Phone": this.d2cDetails.proposerMobileNumber,
-                           "Email": "LHME.SHAH@ARVIND.IN",
-                           "DOB": "10/07/1997",                       
+                           "Email": this.d2cDetails.proposerEmailAddress,
+                           "DOB": this.d2cDetails.proposerDob,                   
                            "appName":"D2C"
                                   
                           }
@@ -4935,7 +4935,7 @@ export class RugDynamicFormComponent {
                         let justpayPayload = { 
                           "agentcode": this.agentCode,
                            "proposalNumber": this.leadId,
-                           "paymentMethod": "autoDebit",
+                           "paymentMethod": this.dynamicFormGroup.get('paymentOption')?.value == "eMandate" ? "emandate_payment" : "autoDebit",
                            "source": "RUG",
                            "policyType": "New Business",
                            "policyNumber": "", 
@@ -4946,8 +4946,8 @@ export class RugDynamicFormComponent {
                            "MiddleName": "",
                            "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
                            "Phone": this.d2cDetails.proposerMobileNumber,
-                           "Email": "LHME.SHAH@ARVIND.IN",
-                           "DOB": "10/07/1997",                       
+                           "Email": this.d2cDetails.proposerEmailAddress,
+                           "DOB": this.d2cDetails.proposerDob,                       
                            "appName":"D2C"
                                   
                           }
