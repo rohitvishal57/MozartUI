@@ -1277,6 +1277,12 @@ export class GetQuoteComponent implements AfterViewChecked {
 
   onPortingChange(value: string): void {
     this.quoteFormGroup.get('isPortability')?.setValue(value);
+    if(value == 'Yes'){
+      this.quoteFormGroup.get('typeOfBusiness')?.setValue('Roll Over');
+    }
+    else{
+      this.quoteFormGroup.get('typeOfBusiness')?.setValue('NB');
+    }
     this.closeCustomDiv()
   }
   @HostListener('window:resize', ['$event'])
