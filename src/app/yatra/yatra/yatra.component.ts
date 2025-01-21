@@ -4714,6 +4714,9 @@ export class YatraComponent {
         // }
         // this.saveData = JSON.parse(JSON.stringify(this.dynamicFormGroup.getRawValue()));
         // this.flattenObjectInsert(this.saveData);
+        if (this.form.formTitle == 'Total Premium' && this.covers){
+          this.mappingCoversAccordingtoMember(this.form);
+        }
 
         this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
         console.log(this.formData);
@@ -10466,5 +10469,51 @@ export class YatraComponent {
     }
     
   }
-
+  mappingCoversAccordingtoMember(form:any){
+    let allCover :any = {
+      covers: {}
+    }
+    this.formData.insuredMemberDetails.forEach((member:any,index:any) =>{
+      allCover.covers[member.relation] = {}
+      form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.type == "combinedCheckbox") {
+            console.log(formControl);
+            const optionalCoverControl = formControl.subControls?.find(
+              (subControl: any) => subControl.name === "optionalCoverName"
+            );
+    
+            if (optionalCoverControl && optionalCoverControl.value) {
+              // Use the value of optionalCoverName as the key and assign false
+              allCover.covers[member.relation][optionalCoverControl.value] = false;
+            }
+            console.log(this.covers,index);
+            if(this.covers && this.covers[index] 
+              && this.covers[index].some(
+                (cover: any) => cover.coverName === optionalCoverControl.value
+              )){
+                allCover.covers[member.relation][optionalCoverControl.value] = true;
+            }
+          }
+        });
+      });
+    })
+    console.log(allCover);
+    const reqData = {
+      proposalNum: this.proposalNum,
+      optionalCoversJson: JSON.stringify(allCover)
+    }
+    this.yatraService.insertoptionalcoversjson(reqData).subscribe({
+      next: (res: any) => {
+        if (res.isSuccess && res.data) {
+          console.log(res);
+        } else {
+          console.error(res.message);
+        }
+      },
+      error: (err: any) => {
+        console.error(err.message, err);
+      },
+    });
+  }
 }
