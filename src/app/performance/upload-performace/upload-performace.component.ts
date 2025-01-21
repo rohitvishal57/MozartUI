@@ -32,6 +32,10 @@ export class UploadPerformaceComponent implements OnInit{
     // this.getActiveCampaignList();
   }
   continueFileUpload() {
+    console.log(this.selectedFile);
+    if(this.selectedFile == undefined){
+      this.isFilenotSelected = true;
+    }
     let file = this.selectedFile;
     let fileExt = file.name.replace(/^.*\./, '');
     const data = new FormData();
@@ -95,6 +99,8 @@ export class UploadPerformaceComponent implements OnInit{
     }
   }
   viewSelected(event: any){
+    this.selectedFile = undefined;
+    this.selctedFileName = "";
     console.log(event.target.value);
   }
   onSubmit(){
