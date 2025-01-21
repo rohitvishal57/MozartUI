@@ -60,8 +60,11 @@ export class UploadPerformaceComponent implements OnInit{
                 detail: 'Success',
                 summary: response.statusName,
               });
-            } 
-            else {console.error("API request was not successful.");}
+            }
+            else {
+              this.toast.error({ detail: "Error", summary:"API request was not successful.", duration: 5000 });
+              console.error("API request was not successful.");
+            }
           },
           (error: any) => {
             console.error("Error from getRenewalsList API:", error);
