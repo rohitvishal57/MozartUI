@@ -20,7 +20,8 @@ import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-li
 import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
 import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
 import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
-import { ManageLobComponent } from "./Admin/manage-lob/manage-lob.component";
+import { ManageLobComponent } from "./Admin/LOB/manage-lob/manage-lob.component";
+import { CreateLobComponent } from "./Admin/LOB/create-lob/create-lob.component";
 
 
 
@@ -50,7 +51,9 @@ const routes: Routes = [
     {path:'verification_script', component: VerificationScriptComponent},
     {path:'product_details', component:ProductDetailsComponent},
     {path:'extract_base_agent_av_master', component:ExtractBaseAndAvMasterComponent},
-    {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent}
+    {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent},
+    {path:'create_LOB', component:CreateLobComponent},
+    {path:'update_LOB/:lobName', component:CreateLobComponent}
     
 ];
 

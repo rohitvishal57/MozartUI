@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  baseUrl: "https://usp.monocept.ai/",
+  baseUrl: "https://upuat.adityabirlahealth.com/",
   baseUrl1: "https://upuat.adityabirlahealth.com/",
   axisBaseUrl: "https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api",
   getRenewalList: "api/renewal/getrenewallist",
@@ -217,5 +217,6 @@ export const environment = {
   DeleteBaseCaller:"api/rug/DeleteBaseCaller",
   CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller",
   getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
-  insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson"
+  insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
+  CreateLob:"api/rug/CreateManageLob"
 };
