@@ -398,6 +398,28 @@ h6 {
 	.body_flex_column {
 		gap: 10px;
 	}
+	.leads_searchWraperMobile.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch{
+		min-width: 150px;
+        max-width: 150px;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile {
+		flex-direction: row;
+		align-items: center;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterFieldGroup {
+		width: 100%;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper {
+		min-width: 20px;
+        width: 20px;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter {
+		border-width: 0 !important;
+		padding: 0 !important;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter #filter-count {
+		display: none;
+	}
   }
   @media (max-width: 360px) {
 	.siteBody {

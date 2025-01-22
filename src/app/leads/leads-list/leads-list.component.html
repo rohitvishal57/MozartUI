@@ -34,7 +34,7 @@
 
                 
              
-                <div class="quickFilterRight">
+                <div class="quickFilterRight leads_searchWraperMobile">
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain field_searchMainMobile">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >

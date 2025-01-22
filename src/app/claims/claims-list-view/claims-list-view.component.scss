@@ -221,5 +221,10 @@ padding:0 0 0 10px !important;
       padding-bottom: 6rem;
   }
 }
+@media (max-width:360px) {
+  .details_claimsInfo .row_claimsInfo {
+    flex-wrap: wrap;
+  }
+}
 /*---Common css end---*/
 /* Required Css End */
