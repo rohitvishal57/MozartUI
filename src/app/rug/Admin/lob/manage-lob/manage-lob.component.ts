@@ -11,6 +11,7 @@ import { AdminService } from '../../admin.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateLobComponent } from '../create-lob/create-lob.component';
 import { SuccesspopupComponent } from 'src/app/rug/components/successpopup/successpopup.component';
+import { ConfirmPopupComponent } from '../confirm-popup/confirm-popup.component';
 
 @Component({
   selector: 'app-manage-lob',
@@ -85,7 +86,7 @@ export class ManageLobComponent {
 
   updateStatus(data:any ,isSoloJourney:boolean){
    
-    const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+    const dialogRef = this.matdialogue.open(ConfirmPopupComponent, {
       width: "500px",
       autoFocus: false,
      data: {

@@ -388,3 +388,29 @@ h6 {
 		width: 30%;
 	}
 }
+
+.green_badge {
+    color: white;
+    background-color: green;
+    font-weight: bold; /* Optional for emphasis */
+  }
+  
+  .red_badge {
+    color: white;
+    background-color: red;
+    font-weight: bold; /* Optional for emphasis */
+  }
+  
+  .headBadge {
+    cursor: pointer; 
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: Lato-Regular, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.32px;
+    color: #fff;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-transform: uppercase;
+}

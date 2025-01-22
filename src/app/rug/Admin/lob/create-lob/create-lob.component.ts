@@ -45,8 +45,8 @@ export class CreateLobComponent {
     inItForm() {
         this.createLob = this.fb.group({
         lobName:['', Validators.required],
-        soloJourney:['', Validators.required],
-        dualJourney:['', Validators.required],
+        soloJourney:[''],
+        dualJourney:[''],
         axisProcess:['', Validators.required]
         });
       }
@@ -85,6 +85,7 @@ export class CreateLobComponent {
 
     onSubmit(): void {
       this.submitted = true;
+    
       if (this.createLob.valid) {
         const reqData: any = {
           lobId: this.createLob.get('lobId')?.value || 0,
@@ -95,17 +96,18 @@ export class CreateLobComponent {
           isDualJourney: this.createLob.get('dualJourney')?.value?.trim() === 'Enabled',
         };
     
-        if (reqData.isSoloJourney === reqData.isDualJourney) {
-          const errorMessage = reqData.isSoloJourney
-            ? "An LOB cannot have both Journey's Enabled"
-            : "An LOB cannot have both Journey's Disabled";
-          this.matdialogue.open(SuccesspopupComponent, {
-            width: '500px',
-            data: errorMessage,
-          });
-          return;
+        if (!this.isUpdate) {
+          if (reqData.isSoloJourney === reqData.isDualJourney) {
+            const errorMessage = reqData.isSoloJourney
+              ? "An LOB cannot have both Journey's Enabled"
+              : "An LOB cannot have both Journey's Disabled";
+            this.matdialogue.open(SuccesspopupComponent, {
+              width: '500px',
+              data: errorMessage,
+            });
+            return;
+          }
         }
-    
         this.adminServise.createLob(reqData).subscribe(
           (res: any) => {
             console.log('API Response:', res);

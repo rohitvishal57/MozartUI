@@ -36,6 +36,9 @@ import { ProductDetailsComponent } from "./Admin/Product_Details/product-details
 import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
 import { ManageLobComponent } from "./Admin/lob/manage-lob/manage-lob.component";
 import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component";
+import { CancelPopupComponent } from "./Admin/lob/cancel-popup/cancel-popup.component";
+import { ConfirmPopupComponent } from "./Admin/lob/confirm-popup/confirm-popup.component";
+import { UpdatedPopupComponent } from "./Admin/lob/updated-popup/updated-popup.component";
 
 
 
@@ -64,7 +67,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         ProductDetailsComponent,
         ProposalPolicyViewDetailsComponent,
         ManageLobComponent,
-        CreateLobComponent
+        CreateLobComponent,
+        CancelPopupComponent,
+        ConfirmPopupComponent,
+        UpdatedPopupComponent
     ],
     
     imports: [

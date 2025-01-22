@@ -1,0 +1,118 @@
+.popup-modal-content {
+    position: relative;
+    display: flex
+;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    padding: 48px 32px;
+    outline: 0;
+}
+.text-center {
+    text-align: center !important;
+}
+.popup-modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 0 16px;
+    margin: 2rem 0 0;
+    font-family: Lato-Regular, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #282828;
+}
+.btn_white {
+    border: 1px solid #c7222a;
+    background: #fff;
+    color: #c7222a;
+}
+.btn_width_f {
+    width: 330px;
+}
+.btn_Default {
+    border-width: 0;
+    background: transparent;
+    padding: 12px 16px;
+    font-family: Lato-Bold;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #282828;
+    border-radius: 10px;
+    height: 44px;
+    letter-spacing: 1px;
+}
+.popup-modal-footer {
+    display: flex
+;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 16px;
+    border-top: 0px solid #dee2e6;
+    border-bottom-right-radius: calc(0.3rem - 1px);
+    border-bottom-left-radius: calc(0.3rem - 1px);
+    margin-top: 2rem;
+}
+.btn_group_wfull {
+    width: 100%;
+}
+
+.btn_group {
+    display: flex
+;
+    flex-direction: row;
+    gap: 15px;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+
+.btn_white {
+    border: 1px solid #c7222a;
+    background: #fff;
+    color: #c7222a;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+
+.btn_red {
+    border: 1px solid #c7222a;
+    background: #c7222a;
+    color: #fff;
+}
+.popup-content-title {
+    font-family: Lato-Bold, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #282828;
+    margin-bottom: 10px !important;
+    line-height: 26px !important;
+}
+.popup-modal-content p {
+    font-family: Lato-Regular, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #6E6E6E;
+    font-weight: 400;
+}
+.img_grey {
+    filter: grayscale(100);
+}
+
+img, svg {
+    vertical-align: middle;
+}
