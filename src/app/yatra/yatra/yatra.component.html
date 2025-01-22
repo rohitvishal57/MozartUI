@@ -1360,20 +1360,43 @@
                                                   <div class="input-checkbox-block"
                                                     *ngIf="memberControl.type === 'checkbox'">
                                                     <div class="input-checkbox-feild">
-                                                      <!-- Checkbox and label will be aligned horizontally in the same line -->
-                                                      <input type="checkbox" [formControlName]="memberControl.name"
-                                                        [name]="memberControl.name" id="{{memberControl.name}}_{{z}}"
+                                                      <!-- <input type="checkbox" [formControlName]="memberControl.name"
+                                                        [name]="memberControl.name" [id]="memberControl.name" id="{{memberControl.name}}_{{i}}"
                                                         [value]="memberControl.value" class="input-check"
                                                         (change)="onInputChange($event,subControl,control,i-1,memberControl,null,z)" />
 
                                                       <label for="{{memberControl.name}}_{{z}}"
                                                         [innerHTML]="memberControl.label ? (memberControl.label | translate) : ''"
                                                         class="">
+                                                        <span *ngIf="memberControl.validators">*</span> -->
+                                                        <input type="checkbox" [formControlName]="memberControl.name"
+                                                        [name]="memberControl.name"
+                                                        id="{{memberControl.name}}_{{z}}" [value]="memberControl.value"
+                                                        class="checkbox-label" [ngStyle]="{'display': 'inline-block'}" (change)="onInputChange($event,subControl,control,i-1,memberControl,null,z)"/>
+                                                  
+                                                      <label for="{{memberControl.name}}_{{z}}"
+                                                        [innerHTML]="memberControl.label ? (memberControl.label | translate) : ''"
+                                                        class="checkboxes">
                                                         <span *ngIf="memberControl.validators">*</span>
                                                       </label>
                                                     </div>
                                                   </div>
 
+                                                  <!-- <div *ngIf="memberControl.type === 'checkbox'">
+                                                    <div [class]="memberControl.class" style="display: inline-flex; align-items: center;">
+                                                      
+                                                      <input type="checkbox" [formControlName]="memberControl.name"
+                                                        [name]="memberControl.name"
+                                                        id="{{memberControl.name}}_{{z}}" [value]="memberControl.value"
+                                                        class="checkbox-label" [ngStyle]="{'display': 'inline-block'}" (change)="onInputChange($event,subControl,control,i-1,memberControl,null,z)"/>
+                                                  
+                                                      <label for="{{memberControl.name}}_{{z}}"
+                                                        [innerHTML]="memberControl.label ? (memberControl.label | translate) : ''"
+                                                        class="checkboxes">
+                                                        <span *ngIf="memberControl.validators">*</span>
+                                                      </label>
+                                                    </div>
+                                                  </div> -->
 
                                                   <div *ngIf="memberControl.type ==='radio'"
                                                     class="input-radio-block input-radio-hcc"
