@@ -597,10 +597,10 @@ export class YatraComponent {
             control.dynamicControls = control.dynamicControls.slice(0, 1)
             this.formData[control.name].forEach((member: any, index: number) => {
               let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-              
-              console.log(tempDynamicControl,member);
-              
-              
+
+              console.log(tempDynamicControl, member);
+
+
               tempDynamicControl.forEach((innerControl: any) => {
                 if (innerControl.name == 'relation') {
                   innerControl.value = member.relation
@@ -618,11 +618,11 @@ export class YatraComponent {
                 // if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
                 //   innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
                 //   console.log(innerControl.innerArrayControl);
-            
+
                 //   for (let i = 0; i < member.previousPolicyDetails.length; i++) {
                 //     // Create a fresh template copy for each iteration
                 //     let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-            
+
                 //     if (i === 0) {
                 //       // For the first index, push the full template
                 //       innerControl.innerArrayControl.push(freshTemplate);
@@ -650,7 +650,7 @@ export class YatraComponent {
               })
 
               control.dynamicControls.push(tempDynamicControl);
-              
+
             })
           }
         }
@@ -683,7 +683,7 @@ export class YatraComponent {
       });
     });
     console.log(this.form);
-    
+
 
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
@@ -1355,7 +1355,7 @@ export class YatraComponent {
     }
 
     console.log(this.form);
-    
+
 
 
     if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
@@ -1656,7 +1656,7 @@ export class YatraComponent {
     subControl: any | null = null,
     innerControl: any | null = null,
     innerSubControl: any | null = null,
-    innerSubControlIndex:any | null =null
+    innerSubControlIndex: any | null = null
   ): string {
     let myFormControl: any;
     if (innerControl != null && innerSubControl != null && subControl == null) {
@@ -1675,7 +1675,7 @@ export class YatraComponent {
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
       myFormControl = memberGroupInnerControlGroup.get(innerControl.name);
       console.log(myFormControl);
-      
+
     }
     else if (innerControl != null && parentControl != null && index != null && subControl == null) {
       myFormControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
@@ -1796,7 +1796,7 @@ export class YatraComponent {
       const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
       myControl = memberGroupInnerControlGroup.get(innerControl.name);
-      
+
     }
     else if (innerControl != null && parentControl != null && index != null) {
       myControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
@@ -4715,7 +4715,7 @@ export class YatraComponent {
         // }
         // this.saveData = JSON.parse(JSON.stringify(this.dynamicFormGroup.getRawValue()));
         // this.flattenObjectInsert(this.saveData);
-        if (this.form.formTitle == 'Total Premium' && this.covers){
+        if (this.form.formTitle == 'Total Premium' && this.covers) {
           this.mappingCoversAccordingtoMember(this.form);
         }
 
@@ -9164,14 +9164,14 @@ export class YatraComponent {
                   innerControl.options = member.upgradableZones;
                 }
 
-                if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
+                if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
                   innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
                   console.log(innerControl.innerArrayControl);
-            
+
                   for (let i = 0; i < member.previousPolicyDetails.length; i++) {
                     // Create a fresh template copy for each iteration
                     let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-            
+
                     if (i === 0) {
                       // For the first index, push the full template
                       innerControl.innerArrayControl.push(freshTemplate);
@@ -9232,12 +9232,12 @@ export class YatraComponent {
     // this.onClickReq(parentControl.value[index + 1]);
   }
 
-  duplicatePortabilityPolicyForAllMembers(innerControl: any, control: any, parentControl: any, index: number,indexj: number) {
+  duplicatePortabilityPolicyForAllMembers(innerControl: any, control: any, parentControl: any, index: number, indexj: number) {
     const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const currentGroup = formArray.controls[index] as FormGroup;
 
     console.log(currentGroup);
-    
+
     const innerFormArr = currentGroup.get(control.name) as FormArray;
 
 
@@ -9255,7 +9255,7 @@ export class YatraComponent {
           //   otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
           // }
 
-          if(otherInnerFormArr.controls[indexj]?.get(key)){
+          if (otherInnerFormArr.controls[indexj]?.get(key)) {
             otherInnerFormArr.controls[indexj]?.get(key)?.setValue(currentValues[key]);
           }
         });
@@ -9501,9 +9501,9 @@ export class YatraComponent {
           targetDynamicControls.forEach((innerControl: any) => {
             if (innerControl.name == control.name) {
               // Deep clone before pushing
-              tempControl.forEach((innerArrayControl:any)=>{
-                if(innerArrayControl.name == 'policyIndex'){
-                  innerArrayControl.label = 'Policy '+ innerControl.innerArrayControl.length;
+              tempControl.forEach((innerArrayControl: any) => {
+                if (innerArrayControl.name == 'policyIndex') {
+                  innerArrayControl.label = 'Policy ' + innerControl.innerArrayControl.length;
                 }
               })
               innerControl.innerArrayControl.push([...tempControl]);
@@ -9516,18 +9516,18 @@ export class YatraComponent {
       })
     })
     console.log(this.dynamicFormGroup);
-    
+
     let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     // let formArr;
 
-    
+
     if (formArr != null) {
       formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       console.log(formArr);
-      
-      let innerFormArr=formArr.controls[index].get(control.name) as FormArray;
+
+      let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
       console.log(control.innerArrayControl.length - 1);
-      
+
       innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
     }
 
@@ -9544,8 +9544,8 @@ export class YatraComponent {
   }
 
   removePortabilityPolicy(subControl: any, parentControl: any, index: number, z: number): void {
-    console.log('Removing portability policy:',subControl, parentControl, index, z, this.form);
-  
+    console.log('Removing portability policy:', subControl, parentControl, index, z, this.form);
+
     // Update `innerArrayControl` in the UI structure (this.form)
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
@@ -9553,13 +9553,13 @@ export class YatraComponent {
           formControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
             if (dynamicControl.name === subControl.name) {
               // Remove the `z`-th element from `innerArrayControl`
-              dynamicControl.innerArrayControl.splice(z+1, 1);
+              dynamicControl.innerArrayControl.splice(z + 1, 1);
 
               console.log(dynamicControl.innerArrayControl);
 
               dynamicControl.innerArrayControl.forEach((policy: any, idx: number) => {
                 policy.forEach((control: any) => {
-                  if (control.name === 'policyIndex' && idx>z) {
+                  if (control.name === 'policyIndex' && idx > z) {
                     control.label = `Policy ${idx}`;
                   }
                 });
@@ -9569,7 +9569,7 @@ export class YatraComponent {
         }
       });
     });
-  
+
     // Update the reactive form (this.dynamicFormGroup)
     const formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     if (formArr) {
@@ -9578,11 +9578,11 @@ export class YatraComponent {
         innerFormArr.removeAt(z); // Remove the `z`-th FormGroup from FormArray
       }
     }
-  
+
     console.log('Updated form structure:', this.form);
     console.log('Updated reactive form:', this.dynamicFormGroup);
   }
-  
+
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
     const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
     const control = formArray?.controls[index]?.get(controlName) as FormGroup;
@@ -10350,6 +10350,38 @@ export class YatraComponent {
                     const matchingMember = this.formData.insuredMemberDetails.find(
                       (insuredMember: any) => innerSubControl.name === insuredMember.relation
                     );
+
+    
+                    if (memberRules.proposerSIRule) {
+                      if (matchingMember.relation === 'Self') {
+                        
+                          if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
+                            maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
+                            minSumInsured = memberRules.proposerSIRule.minSumInsured;
+                          }
+                        
+                        console.log(matchingMember.relation)
+                        innerSubControl.coreControls.forEach((coreControl: any) => {
+                          console.log(coreControl);
+                          if (coreControl.name == 'addOnSumInsured') {
+                            coreControl.options = coreControl.options.filter((option: any) => {
+                              return option.value >= minSumInsured && option.value <= maxSumInsured;
+                            });
+                            console.log(coreControl.options)
+                          }
+                        });
+                      } else {
+                        innerSubControl.coreControls.forEach((coreControl: any) => {
+                          if (coreControl.name == 'addOnSumInsured') {
+                            coreControl.options = coreControl.options.filter((option: any) =>
+                              option.value >= minSumInsured && option.value <= maxSumInsured
+                            );
+                            console.log(coreControl.options)
+                          }
+                        });
+                      }
+                    }
+
                     if (memberRules.ageBasedRules) {
                       if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
                         maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
@@ -10382,7 +10414,7 @@ export class YatraComponent {
   alterSumInsuredOptions(event: any, innerControl: any = null, control: any, parentControl: any = null, index: any = null, indexj: any = null, memberControl: any = null) {
     console.log("Inside alter", event, innerControl, control, parentControl, index, indexj, memberControl);
     console.log(this.dynamicFormGroup.get(parentControl.name), this.form);
-    if(!memberControl.name.includes('Son') && !memberControl.name.includes('Daughter')){
+    if (!memberControl.name.includes('Son') && !memberControl.name.includes('Daughter')) {
       if (innerControl.name == 'occupation') {
         const memberOccupation = (this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
         console.log(memberOccupation);
@@ -10392,18 +10424,18 @@ export class YatraComponent {
               const matchingOption = coreControl.options.find((option: any) =>
                 option.name.toLowerCase() === JSON.parse(memberOccupation).name.toLowerCase()
               );
-  
+
               if (matchingOption) {
                 console.log('Found matching option:', matchingOption);
                 const riskValue = JSON.stringify(matchingOption);
                 console.log(riskValue);
-  
+
                 // You can now set the selected option or take further actions here
                 const occupationRiskControl = (this.dynamicFormGroup.get(parentControl.name)
                   ?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj + 1].get('occupationRisk');
-  
+
                 console.log(occupationRiskControl);
-  
+
                 if (occupationRiskControl && riskValue) {
                   // Only proceed if the control exists
                   occupationRiskControl.setValue(riskValue);
@@ -10412,7 +10444,7 @@ export class YatraComponent {
                 }
               }
             }
-  
+
             if (coreControl.name == 'addOnSumInsured') {
               // this.form.formSections.forEach((section: any) => {
               //   if (section.sectionTitle == "Optional Covers") {
@@ -10440,42 +10472,42 @@ export class YatraComponent {
         else {
           const memberSumInsuredValidationRule = parentControl.validationRules?.find((rule: any) => rule.type === 'memberLevelSumInsured');
           const memberRules = memberSumInsuredValidationRule.adults;
-                    console.log(memberRules);
-                    let maxSumInsured = memberRules.maxSumInsured;
-                    let minSumInsured = memberRules.minSumInsured;
-                    const matchingMember = this.formData.insuredMemberDetails.find(
-                      (insuredMember: any) => memberControl.name === insuredMember.relation
-                    );
-                    if (memberRules.ageBasedRules) {
-                      if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
-                        maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
-                        minSumInsured = memberRules.ageBasedRules.minSumInsured;
-                      }
-                    }
+          console.log(memberRules);
+          let maxSumInsured = memberRules.maxSumInsured;
+          let minSumInsured = memberRules.minSumInsured;
+          const matchingMember = this.formData.insuredMemberDetails.find(
+            (insuredMember: any) => memberControl.name === insuredMember.relation
+          );
+          if (memberRules.ageBasedRules) {
+            if (parseInt(matchingMember.memberAge) < memberRules.ageBasedRules.ageThreshold) {
+              maxSumInsured = memberRules.ageBasedRules.maxSumInsured;
+              minSumInsured = memberRules.ageBasedRules.minSumInsured;
+            }
+          }
 
-                    memberControl.coreControls.forEach((coreControl: any) => {
-                      if (coreControl.name == 'addOnSumInsured') {
-                        coreControl.options = control.innerSubControls[0].coreControls[3].options.filter((option: any) =>
-                          option.value >= minSumInsured && option.value <= maxSumInsured
-                        );
-                      }
-                    })
+          memberControl.coreControls.forEach((coreControl: any) => {
+            if (coreControl.name == 'addOnSumInsured') {
+              coreControl.options = control.innerSubControls[0].coreControls[3].options.filter((option: any) =>
+                option.value >= minSumInsured && option.value <= maxSumInsured
+              );
+            }
+          })
           // memberControl.coreControls.forEach((coreControl: any) => {
           //   if (coreControl.name == 'addOnSumInsured') {
           //     coreControl.options = control.innerSubControls[0].coreControls[3].options;
           //   }
           // })
         }
-  
+
       }
     }
-    
+
   }
-  mappingCoversAccordingtoMember(form:any){
-    let allCover :any = {
+  mappingCoversAccordingtoMember(form: any) {
+    let allCover: any = {
       covers: {}
     }
-    this.formData.insuredMemberDetails.forEach((member:any,index:any) =>{
+    this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
       allCover.covers[member.relation] = {}
       form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
@@ -10484,17 +10516,17 @@ export class YatraComponent {
             const optionalCoverControl = formControl.subControls?.find(
               (subControl: any) => subControl.name === "optionalCoverName"
             );
-    
+
             if (optionalCoverControl && optionalCoverControl.value) {
               // Use the value of optionalCoverName as the key and assign false
               allCover.covers[member.relation][optionalCoverControl.value] = false;
             }
-            console.log(this.covers,index);
-            if(this.covers && this.covers[index] 
+            console.log(this.covers, index);
+            if (this.covers && this.covers[index]
               && this.covers[index].some(
                 (cover: any) => cover.coverName === optionalCoverControl.value
-              )){
-                allCover.covers[member.relation][optionalCoverControl.value] = true;
+              )) {
+              allCover.covers[member.relation][optionalCoverControl.value] = true;
             }
           }
         });
