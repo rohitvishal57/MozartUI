@@ -644,8 +644,28 @@ export class LeadsListComponent {
   }
 
   downloadSingleItem(item: any): void {
-    debugger;
-    this.exportToExcel([item], `Lead_${item.leadNumber}`);
+    // this.exportToExcel([item], `Lead_${item.leadNumber}`);
+    const leadReqBody = {
+      leadNumber: item.leadNumber
+    }
+
+    this.leadsService.downloadSingleLead(leadReqBody, item.leadNumber).subscribe(
+      (response)=>{
+        if(response.isSuccess){
+          const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = response?.data?.fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url); 
+        }
+      },
+      (error)=>{
+       console.log('Exception',error);
+    });
   }
 
   exportToExcel(data: any[], fileName: string): void {
@@ -705,8 +725,6 @@ export class LeadsListComponent {
       console.log('Exception',error);
      });
   }
-
-
 
   base64ToBlob(base64: string, type: string): Blob {
     const binary = atob(base64);
