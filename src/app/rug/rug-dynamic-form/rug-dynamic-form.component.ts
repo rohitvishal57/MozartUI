@@ -179,6 +179,7 @@ export class RugDynamicFormComponent {
             this.isD2C = true;
             this.isBB = false;
             this.isTS = false
+            this.rugService.changeStatus(true)
           }else if(this.agentCode == "467896" || this.agentCode =="467897"){
             this.isD2C = false;
             this.isBB = false;
@@ -360,6 +361,7 @@ export class RugDynamicFormComponent {
         this.isD2C = true;
         this.isBB = false;
         this.isTS = false
+        this.rugService.changeStatus(true)
       }else if(this.agentCode == "467896" || this.agentCode =="467897"){
         this.isD2C = false;
         this.isBB = false;
@@ -4783,7 +4785,7 @@ export class RugDynamicFormComponent {
                       productCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03",
                       productName: null,
                       productPlanCode: this.d2cDetails.productPlanCode.toString(),
-                      productPlan: null,                  
+                      productPlan: "GHI,GPA",                  
                       groupCode: this.d2cDetails.groupCode,
                       combiId: this.d2cDetails.combiId,
                       combiName: null,
@@ -4809,8 +4811,8 @@ export class RugDynamicFormComponent {
                       leadId:  this.d2cDetails.leadId,
                       name: this.d2cDetails.childName,
                       dob: this.d2cDetails.childDob,
-                      relationName: this.d2cDetails.childgender == 'M' ? 'male' : 'female',
-                      relationCode: "R003",
+                      relationName:  this.d2cDetails.childRelation,
+                      relationCode: this.d2cDetails.childRelation == "son" ? "R003" : "R004" || "",
                       gender: this.d2cDetails.childgender == 'M' ? 'male' : 'female',
                       height: null,
                       weight: null,
@@ -8739,166 +8741,167 @@ export class RugDynamicFormComponent {
         })
       }
       console.log(premiumObj);
-      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
-        const filteredData = premiumObj.filter(
-          (item: any) => item.combinationName === "GHI"
-        );
-        console.log(filteredData);
-        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-        this.d2cDetails.productPlanName = "GHI";
-        this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
-        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-      this.d2cDetails.productPlanName = "GHI";
-      this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-        // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
-        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+      if(this.productId == 30){
+        this.d2cDetails.gpaPremium = premiumObj[0].premium.toString();
+        this.d2cDetails.gciPremium = premiumObj[1].premium.toString();
+        this.d2cDetails.productPlanName = "GPA,GCI";
+        this.d2cDetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
+        this.dynamicFormGroup.get('gpaPremium')?.setValue(premiumObj[0].premium.toString());
+        this.dynamicFormGroup.get('gciPremium')?.setValue(premiumObj[1].premium.toString());
+        this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
-        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
-        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
-            return ele;
-          }
-          });
-          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-          this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-      }
-      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
-        const filteredData = premiumObj.filter(
-          (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
-        );
-        console.log(filteredData);
-        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-        this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
-        this.d2cDetails.productPlanName = "GHI,GPA";
-        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);      this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-      this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
-      this.d2cDetails.productPlanName = "GHI,GPA";
-      this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
-        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-        this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
-        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
-        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+        this.dynamicFormGroup.get('productPlanCode')?.setValue(premiumObj[0].planSID);
+        this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
         let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
         if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
           return ele;
         }
         });
         this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-      }
-      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
-        const filteredData = premiumObj.filter(
-          (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
-        );
-        console.log(filteredData);
-        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-        this.d2cDetails.gciPremium = filteredData[1].premium.toString();
-        this.d2cDetails.gpaPremium = filteredData[2].premium.toString();
-        this.d2cDetails.productPlanName = "GHI,GPA,GCI";
-        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
-        this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
-      this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
-      this.d2cDetails.gciPremium = filteredData[2].premium.toString();
-      this.d2cDetails.productPlanName = "GHI,GPA,GCI";
-      this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-        this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
-        this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
-        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-        this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
-        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
-        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+      }else{
+        if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
+          const filteredData = premiumObj.filter(
+            (item: any) => item.combinationName === "GHI"
+          );
+          console.log(filteredData);
+          this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+          this.d2cDetails.productPlanName = "GHI";
+          this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+          this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.productPlanName = "GHI";
+        this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+          // this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+          this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+          this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+          this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);      
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+          let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+            if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+              return ele;
+            }
+            });
+            this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+            this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+        }
+        if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+          const filteredData = premiumObj.filter(
+            (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+          );
+          console.log(filteredData);
+          this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+          this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+          this.d2cDetails.productPlanName = "GHI,GPA";
+          this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);      this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+        this.d2cDetails.productPlanName = "GHI,GPA";
+        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+          this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+          this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+          this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+          this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+          this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+          let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
           if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
             return ele;
           }
           });
           this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
           this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-      }
-      if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
-        const filteredData = premiumObj.filter(
-          (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
-        );
-        console.log(filteredData);
-        this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-        this.d2cDetails.productPlanName = "GHI-5L";
-        this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
-        this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-        this.d2cDetails.productPlanName = "GHI-5L";
-        this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+        }
+        if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
+          const filteredData = premiumObj.filter(
+            (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
+          );
+          console.log(filteredData);
+          this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+          this.d2cDetails.gciPremium = filteredData[1].premium.toString();
+          this.d2cDetails.gpaPremium = filteredData[2].premium.toString();
+          this.d2cDetails.productPlanName = "GHI,GPA,GCI";
+          this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+          this.d2cDetails.ghiPremium = filteredData[0].premium.toString();
+        this.d2cDetails.gpaPremium = filteredData[1].premium.toString();
+        this.d2cDetails.gciPremium = filteredData[2].premium.toString();
+        this.d2cDetails.productPlanName = "GHI,GPA,GCI";
+        this.d2cDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-        this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-        this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-        this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
-        let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
-            return ele;
-          }
-          });
-          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-  
-  
-      }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
-        const filteredData = premiumObj.filter(
-          (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
-        );
-        console.log(filteredData);
-        console.log(this.dynamicFormGroup.get('sumInsured')?.value);
-        if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
+          this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
+          this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
+          this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+          this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+          this.dynamicFormGroup.get('productPlanCode')?.setValue(filteredData[0].planSID);
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+          let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+            if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
+              return ele;
+            }
+            });
+            this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+            this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+        }
+        if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
+          const filteredData = premiumObj.filter(
+            (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
+          );
+          console.log(filteredData);
           this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-          this.d2cDetails.productPlanName = "GHI-10L";
+          this.d2cDetails.productPlanName = "GHI-5L";
           this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
           this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-          this.d2cDetails.productPlanName = "GHI-10L";
+          this.d2cDetails.productPlanName = "GHI-5L";
           this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
           this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-          this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
-    
           this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
           this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
           this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
           let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
             if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
               return ele;
             }
             });
             this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
-        }else{
-          this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
-          this.toast.warning({ detail: "Warning", summary: "Please select Sum Insured as 1CR", duration: 3000 });
-          this.calculateD2CPremium();
-        }
-        this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
-  
-      }
-
-      if(this.productId == 30){
-          this.d2cDetails.gpaPremium = premiumObj[0].premium.toString();
-          this.d2cDetails.gciPremium = premiumObj[1].premium.toString();
-          this.d2cDetails.productPlanName = "GPA,GCI";
-          this.d2cDetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-          this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
-          this.dynamicFormGroup.get('gpaPremium')?.setValue(premiumObj[0].premium.toString());
-          this.dynamicFormGroup.get('gciPremium')?.setValue(premiumObj[1].premium.toString());
-          this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-          this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
-          this.dynamicFormGroup.get('productPlanCode')?.setValue(premiumObj[0].planSID);
-          this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
-          let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-          if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
-            return ele;
+          this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+    
+    
+        }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
+          const filteredData = premiumObj.filter(
+            (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
+          );
+          console.log(filteredData);
+          console.log(this.dynamicFormGroup.get('sumInsured')?.value);
+          if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
+            this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+            this.d2cDetails.productPlanName = "GHI-10L";
+            this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+            this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+            this.d2cDetails.productPlanName = "GHI-10L";
+            this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+            this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+            this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
+      
+            this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+            this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
+            this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+            this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+            let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+              if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+                return ele;
+              }
+              });
+              this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+          }else{
+            this.dynamicFormGroup.get('planAvailable')?.setValue('GHI');
+            this.toast.warning({ detail: "Warning", summary: "Please select Sum Insured as 1CR", duration: 3000 });
+            this.calculateD2CPremium();
           }
-          });
-          this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+          this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
+    
         }
+      }
+     
       }
 
   }
