@@ -3294,6 +3294,10 @@ export class YatraComponent {
             }
           }
         });
+
+        if(parentControl.type == 'details'){
+          this.changeRecalculate(true);
+        }
       }
     }
 
@@ -4138,6 +4142,7 @@ export class YatraComponent {
     if (event != null) {
       this.isQuote = false;
       this.quickQuoteRedirect = false;
+      this.changeRecalculate(true);
     }
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
@@ -7045,6 +7050,10 @@ export class YatraComponent {
                 option.selected = false;
               }
             });
+          }
+
+          if(this.form.formTitle != 'Total Premium'){
+            this.dynamicFormGroup.get(formControl.name)?.setValue(this.tenureAmount[this.selectedIndex]);
           }
         }
       });
@@ -10806,5 +10815,19 @@ export class YatraComponent {
   stopPropagation(event: Event): void {
     // Prevent the click event from propagating to the document
     event.stopPropagation();
+  }
+
+  calculatePremium(){
+    console.log(this.dynamicFormGroup.valid);
+    if(!this.dynamicFormGroup.valid){
+      this.toast.warning({ detail: "Warning", summary: "Please enter all the details.", duration: 5000 });
+      return;
+    }
+    else{
+      this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
+      this.changeRecalculate(false);
+      this.getPremiumAmount();
+    }
+    
   }
 }
