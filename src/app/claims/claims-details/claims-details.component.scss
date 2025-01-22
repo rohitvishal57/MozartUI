@@ -456,6 +456,7 @@
   }
   .details_claimsInfo  .sub_claimsInfo h6 {
     font-size: 16px;
+    min-height: 17px;
   }
   ::ng-deep .table>:not(caption)>*>* {
     background: hidden;
@@ -478,6 +479,16 @@
 }
 .tableNav .pagination {
   flex-direction: column;
+}
+
+.list-detailsInfo li .label {
+  width: 60%;
+  line-height: normal;
+}
+.list-detailsInfo li .value {
+  width: 40%;
+  text-align: right;
+  line-height: normal;
 }
   @media (max-width: 767px) {
     .siteBody {

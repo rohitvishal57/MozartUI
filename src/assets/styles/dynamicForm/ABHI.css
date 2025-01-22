@@ -3435,4 +3435,12 @@ margin: 0;
         margin-bottom: 5px;
         width: 93%;
     }
+    .main-container .right-panel .typecss.bottom-product span {
+        line-height: normal;
+    }
+}
+@media (max-width:360px){
+    .main-container .right-panel .bottom-section{
+        margin: 0 -16px -1px !important;
+    }
 }

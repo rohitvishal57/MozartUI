@@ -697,6 +697,14 @@
     .infoMsgModal .icon_infoMsg, .messageModal .icon_infoMsg {
         left: 37%;
     }
+    
+    .mat-mdc-tab-group.claims_matTabs .mat-mdc-tab-header .mat-mdc-tab-label-container{
+        padding: 0 5px !important;
+    }
+    .mat-mdc-tab-header-pagination-controls-enabled .mat-mdc-tab-header-pagination{
+        min-width: 12px;
+        height: 48px;
+    }
 }
 @media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-container {
@@ -760,13 +768,11 @@
     .custom_toastStyles .toast-container .ng-toast{
         width: 300px !important;
     }
-    .mat-mdc-tab-group.claims_matTabs .mat-mdc-tab-header .mat-mdc-tab-label-container{
-        padding: 0 30px !important;
-    }
     .cardViewMain .cardViewWraper .cardViewItem header.head_cardViewItem {
         flex-direction: column;
     }
     .cardViewMain .cardViewWraper .cardViewItem header.head_cardViewItem .icon_productInfoDetails {
         justify-content: flex-end;
     }
+    
   }
