@@ -3968,8 +3968,8 @@ export class RugDynamicFormComponent {
     let premiumObj;
     let memberRelation;
     let familyConstruct = 1;
-    let selfDob;
-    let spouseDob;
+    let selfDob: any;
+    let spouseDob: any;
     let sortedArray: any[] = []
     const sinsuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
     sinsuredMembersArray.controls.forEach((memberControl: any, i: any) => {
@@ -4018,52 +4018,76 @@ export class RugDynamicFormComponent {
     console.log(filteredFamilyConstruct);
     this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
-    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
-    console.log(ageRange);
-    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
-    console.log(this.sumInsuredData);
-    if(this.sumInsuredData == undefined){
-      let filterArr;
-      let sumInsuredObj = {
-        ProductCode: this.bbdetails.productCode
+    if(this.bbdetails.productCode == "R03"){
+      
+      if(familyConstruct == 1 || this.familyConstruct == 5 || this.familyConstruct == 6 ){
+        let selfAgeRange=this.returnMemberAgeRange(familyConstruct,memberDob);
+        premiumObj = this.bbPremiumData.filter((ele: any) => {
+          
+          return ( ele.familyConstructId == familyConstruct && ele.ageRange == selfAgeRange) 
+        })
+       }else{
+        let elderPersonAge = this.getAgeFromDOB(spouseDob) >  this.getAgeFromDOB(selfDob) ?   spouseDob :   selfDob;
+        let selfAgeRange = this.returnMemberAgeRange(familyConstruct,selfDob);
+        let spouseAgeRange = this.returnMemberAgeRange(familyConstruct,spouseDob );
+        // let ageRange = this.returnAgeRange(this.familyConstruct , this.dobform.get('spouseDob')?.value, this.dataService.policyDetails.proposerDetails.dob) // put this at dob this.dataService.policyDetails.proposerDetails.dob
+        let ageRange = this.returnMemberAgeRange(familyConstruct ,elderPersonAge) 
+        // put this at dob this.dataService.policyDetails.proposerDetails.dob
+        premiumObj = this.bbPremiumData.filter((ele: any) => {
+          
+          return ( ele.familyConstructId == familyConstruct &&(( ele.ageRange == ageRange && ele.combinationName == 'GHI')||(ele.ageRange == selfAgeRange &&ele.combinationName == 'GP')||(ele.ageRange == spouseAgeRange && ele.combinationName == 'GP') )) 
+        })
+       
+        console.log(premiumObj);
       }
-      await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
-        next: (res: any) => {
-          res = JSON.parse(res.data).data
-          this.sumInsuredData = res.productSIDetails;
-          console.log(this.sumInsuredData);
-          if (this.formSequence[this.getFormIndexValue()].formName != "Customer Summary") {  
-            console.log(this.dynamicFormGroup.get('sumInsured')?.value)
-            filterArr = this.sumInsuredData.filter((obj: any) => obj.siPlanValue.split('.')[0] == this.dynamicFormGroup.get('sumInsured')?.value)
-            console.log(filterArr);
-            if(this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
-              this.getBbPremium(filterArr);
+    }else{
+      let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
+      console.log(ageRange);
+      console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
+      console.log(this.sumInsuredData);
+      if(this.sumInsuredData == undefined){
+        let filterArr;
+        let sumInsuredObj = {
+          ProductCode: this.bbdetails.productCode
+        }
+        await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
+          next: (res: any) => {
+            res = JSON.parse(res.data).data
+            this.sumInsuredData = res.productSIDetails;
+            console.log(this.sumInsuredData);
+            if (this.formSequence[this.getFormIndexValue()].formName != "Customer Summary") {  
+              console.log(this.dynamicFormGroup.get('sumInsured')?.value)
+              filterArr = this.sumInsuredData.filter((obj: any) => obj.siPlanValue.split('.')[0] == this.dynamicFormGroup.get('sumInsured')?.value)
+              console.log(filterArr);
+              if(this.formSequence[this.getFormIndexValue()].formName != "Customer Summary"){
+                this.getBbPremium(filterArr);
+              }
             }
+          },
+          error: (err) => {
+            console.error(err);
           }
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
-    }
-    console.log(this.bbPremiumData)
-    this.familyConstruct = familyConstruct;
-    premiumObj = this.bbPremiumData.filter((ele: any) => {
-      return (ele.familyConstructId == this.familyConstruct)
-    })
-    if(this.bbdetails.productCode != "R03"){
-    premiumObj = this.bbPremiumData.filter((ele: any) => {
-      return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
-    })
-  }
-    let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
-    for(let i = 0; i <= orderOfPremium.length; i++){
-
-      premiumObj.forEach((ele: any) => {
-        if(ele.combinationName == orderOfPremium[i]){
-          sortedArray.push(ele)
-        }
+        });
+      }
+      console.log(this.bbPremiumData)
+      this.familyConstruct = familyConstruct;
+      premiumObj = this.bbPremiumData.filter((ele: any) => {
+        return (ele.familyConstructId == this.familyConstruct)
       })
+      if(this.bbdetails.productCode != "R03"){
+      premiumObj = this.bbPremiumData.filter((ele: any) => {
+        return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+      })
+    }
+      let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
+      for(let i = 0; i <= orderOfPremium.length; i++){
+  
+        premiumObj.forEach((ele: any) => {
+          if(ele.combinationName == orderOfPremium[i]){
+            sortedArray.push(ele)
+          }
+        })
+      }
     }
     console.log(premiumObj);
     console.log(this.dynamicFormGroup.get('planAvailable')?.value)
@@ -4195,17 +4219,62 @@ export class RugDynamicFormComponent {
       this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
 
     }else{
-      this.bbdetails.ghiPremium = premiumObj[0].premium.toString();
-      this.bbdetails.gpPremium = premiumObj[1].premium.toString();
-      this.bbdetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
+      if(this.bbdetails.productCode == "R03"){
+        let premium=0
+        let  fppGPpremium=0;
+        let fppGhiPremium=0;
+        premiumObj?.forEach((element: any) => {
+          element.premium || 0; // Handle potential undefined or null premiums
+      
+          // Check if filteredPremiumArray length is greater than 2
+          if (premiumObj.length > 2) {
+              // Handle 'GP' and other combinations
+              if (element.combinationName === "GP") {
+                fppGPpremium = fppGPpremium+ element.premium / 2;
+                  premium +=  element.premium / 2;
+              } else {
+                fppGhiPremium +=  element.premium;
+                  premium +=  element.premium;
+              }
+          } else {
+            if (element.combinationName === "GP") {
+              fppGPpremium +=  element.premium;
+             
+          } else {
+              fppGhiPremium +=  element.premium;
+             
+          }
+              // If length <= 2, add full premium for each case
+              premium+=element.premium
+          }
+      }); 
+      
+    
+      this.bbdetails.ghiPremium =premiumObj.length > 2?fppGhiPremium: premiumObj[0].premium.toString();
+      this.bbdetails.gpPremium = premiumObj.length > 2?fppGPpremium:premiumObj[1].premium.toString();
+      this.bbdetails.totalPremium = (premiumObj.length > 2?premium:premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj.length > 2?fppGhiPremium:premiumObj[0].premium.toString());
 
       // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
       // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
-      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj.length > 2?fppGPpremium:premiumObj[1].premium.toString());
   
-      this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+      this.dynamicFormGroup.value.totalPremium = (premiumObj.length > 2?premium:premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      }
+      else{
+        this.bbdetails.ghiPremium = premiumObj[0].premium.toString();
+        this.bbdetails.gpPremium = premiumObj[1].premium.toString();
+        this.bbdetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
+  
+        // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
+        // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
+        this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+    
+        this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      }
     }
     if(this.bbdetails.productCode == "R10"){
       const filteredData = premiumObj.filter(
@@ -4238,6 +4307,37 @@ export class RugDynamicFormComponent {
     }
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
+  }
+  returnMemberAgeRange(familyConstructDetails: any, memberDob:any) {
+    // Ensure you calculate ages from DOB
+   memberDob =this.getAgeFromDOB(memberDob)
+    
+    if (familyConstructDetails == '2' || familyConstructDetails == '4' || familyConstructDetails == '3') {
+        // Check the age ranges for the elder person
+        if (memberDob >= 46 && memberDob <= 55) {
+            return '46-55';
+        } else if (memberDob >= 36 && memberDob <= 45) {
+            return '36-45';
+        } else if (memberDob >= 18 && memberDob <= 35) {
+            return '18-35';
+        } else {
+            return;  // Invalid age
+        }
+    } else if (familyConstructDetails == '1' || familyConstructDetails == '5' || familyConstructDetails == '6') {
+        // If family construct includes only self (proposer)
+        if (memberDob >= 46 && memberDob <= 55) {
+            return '46-55';
+        } else if (memberDob >= 36 && memberDob <= 45) {
+            return '36-45';
+        } else if (memberDob >= 18 && memberDob <= 35) {
+            return '18-35';
+        } else {
+            return;  // Invalid age
+        }
+    } else {
+        // If no matching family construct found, return undefined or any default value
+        return;
+    }
   }
   calculateTSPremium() {
     let memberDob: any;
