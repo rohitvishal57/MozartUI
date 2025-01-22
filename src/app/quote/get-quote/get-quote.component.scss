@@ -1529,7 +1529,13 @@ h4 {
   background: var(--white-color) url(/assets/Img/down_arrow.svg) no-repeat 96% 50% !important;
   padding: 12px 16px !important;
 }
-
+.viewall_member {
+  overflow: hidden;
+  height: auto;
+}
+.less_members {
+  height: 155px;
+}
 @media (min-width:768px) and (max-width:1024px) {
   .dropdown-container {
     flex-wrap: wrap;
@@ -1547,6 +1553,11 @@ h4 {
   .dropdownContent .overlay_popupMain {
     left: auto;
     right: 0;
+  }
+}
+@media (max-width:540px) {
+  .less_members {
+      height: 285px;
   }
 }
 /*Custom overlay dropdown end*/

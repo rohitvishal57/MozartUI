@@ -235,9 +235,12 @@
                       </div>
                     </div>
                   </div>
-                  <h3>{{"Member details" | translate}}</h3>
+                  <div class="body_flex_row justify-content-between">
+                    <h3>{{"Member details" | translate}}</h3>
+                    <a *ngIf="checkGender" class="btn_linkText" (click)="viewAllToggleClass()">{{ viewAllToggleText }}</a>
+                  </div>
                   <div class="insurer_memberDetails" *ngIf="checkGender">
-                    <div class="input-checkbox-block input-checkbox-withIcon">
+                    <div class="input-checkbox-block input-checkbox-withIcon viewall_member less_members" [ngClass]="{'less_members': isClassAddedMembers}">
                       <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="self" value="self" class="input-check">
                                 <label for="self"><img

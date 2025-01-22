@@ -1302,4 +1302,10 @@ export class GetQuoteComponent implements AfterViewChecked {
   
     return !!matchingRelation;
     }
+  isClassAddedMembers = true;
+  viewAllToggleText: string = 'View All'; 
+  viewAllToggleClass() {
+    this.isClassAddedMembers = !this.isClassAddedMembers;
+    this.viewAllToggleText = this.viewAllToggleText === 'View All' ? 'View Less' : 'View All';
+  }
 }
