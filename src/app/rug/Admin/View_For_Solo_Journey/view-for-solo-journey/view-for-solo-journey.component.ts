@@ -87,6 +87,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
           this.getAllLeads = response.data.leadDetails;
           this.displayedLeads = [...this.getAllLeads];
           this.totalRecords = this.searchTerm ? this.getAllLeads.length : response.data.totalRecords;
+  
           if (this.getAllLeads.length === 0 && this.searchTerm) {
             console.warn('No data found for the provided refNo:', this.searchTerm);
             this.displayedLeads = [];
@@ -212,7 +213,6 @@ export class ViewForSoloJourneyComponent implements OnInit {
 
   clearFilter() {
     this.soloJourneyForm.reset();
-    window.location.reload();
   }
 
   onsearch(event: any) {

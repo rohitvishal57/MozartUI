@@ -72,6 +72,7 @@ export class AVListComponent {
     this.adminService.getAllAVs().subscribe((response: any) => {
       const rawData = response.data;
       const parsedData = JSON.parse(rawData);
+
       this.AllAVs = parsedData.data.allAvDetails.map((item: any) => ({
         ...item,
         axisprocess: item.axisProcess || 'Not Specified',
@@ -83,6 +84,7 @@ export class AVListComponent {
       this.updateDisplayedData();
     });
   }
+
   updateDisplayedData(): void {
     const startIndex = this.first;
     const endIndex = this.first + this.rows;
@@ -92,6 +94,7 @@ export class AVListComponent {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
+
   updateAV(AvId: any) {
     this.router.navigate(['/rug/updateAV'], {
     });

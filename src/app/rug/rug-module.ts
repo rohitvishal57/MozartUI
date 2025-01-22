@@ -34,8 +34,7 @@ import { AuditpopupComponent } from "./components/auditpopup/auditpopup.componen
 import { SuccesspopupComponent } from "./components/successpopup/successpopup.component";
 import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
 import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
-import { ManageLobComponent } from "./Admin/LOB/manage-lob/manage-lob.component";
-import { CreateLobComponent } from "./Admin/LOB/create-lob/create-lob.component";
+import { ManageLobComponent } from "./Admin/manage-lob/manage-lob.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,8 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         SuccesspopupComponent,
         ProductDetailsComponent,
         ProposalPolicyViewDetailsComponent,
-        ManageLobComponent,
-        CreateLobComponent
+        ManageLobComponent
     ],
     
     imports: [
