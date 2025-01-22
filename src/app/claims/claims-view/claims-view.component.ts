@@ -109,6 +109,7 @@ export class ClaimsViewComponent {
   selectedCoverCode: string = '';
   policyNoChangeSubject = new Subject<string>();
   specialCovers: any;
+  selectedCover: string = 'Hospitalisation'; 
   // coverNames:any
   documentLabelOptions = [
     'govt/KYC ID',
@@ -579,6 +580,7 @@ export class ClaimsViewComponent {
       this.form.get('isFileUploadRequired')?.clearValidators();
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showReimbursementFields = false;
+      this.selectedCover = "Hospitalisation"
       this.isFilenotSelected = false;
       this.showCashlessFields = true;
 

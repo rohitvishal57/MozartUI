@@ -107,10 +107,15 @@
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input type="text" class="form-control input-textBox" id="coverName"
-                                            name="coverName" formControlName="coverName"
-                                            [value]="'Hospitalisation' | translate" readonly />
-                                        <label for="coverName">{{"Cover Name" | translate}}</label>
+                                        <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" [(ngModel)]="selectedCover">
+                                            <option class="dropdown-options" value="Hospitalisation">
+                                                {{"Hospitalisation"}}
+                                            </option>
+                                            <option class="dropdown-options" value="">
+                                                {{"Day Care Treatments"}}
+                                            </option>
+                                        </select>
+                                        <label for="coverName">{{"Cover Name" | translate}}<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -254,15 +259,6 @@
                         <!-- Reimbursement Fields -->
                         <div class="col-12" *ngIf="showReimbursementFields">
                             <div class="row mb-3">
-                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                    <div class="input-block form-floating input-block-renew">
-                                        <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" (change)="onCoverNameChange($event)">
-                                            <option value="" disabled selected>{{"Select Cover Name" | translate}}</option>
-                                            <option *ngFor="let cover of coverNames" [value]="cover">{{ cover | translate }}</option>
-                                        </select>
-                                        <label for="coverName">{{"Cover Name" | translate}}</label>
-                                    </div>
-                                </div> -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <select class="form-select input-selectBox" id="coverName" name="coverName"
@@ -696,7 +692,7 @@
                                                                 class="success-text">Success</span></div>
                                                         <div class="upload-fail" *ngIf="!uploadSuccess"><img
                                                                 src="assets/Img/icon_failure.svg"><span
-                                                                class="failed-text">Success</span></div>
+                                                                class="failed-text">Failed</span></div>
                                                         <div *ngIf="file.uploadDateTime">
                                                             <span class="date-time">{{ file.formattedUploadDateTime
                                                                 }}</span>
