@@ -72,8 +72,8 @@ export class CreateLobComponent {
           this.createLob.patchValue({
             lobId: this.PatchAllLob[0].lobId || 0,
             lobName: this.PatchAllLob[0].lobName || '',
-            singleJouey : this.PatchAllLob[0].soloJourney || '',
-            dualJouey : this.PatchAllLob[0].dualJourney || '',
+            singleJouey : this.PatchAllLob[0].singleJourney? 'Enabled' : 'Disabled',
+            dualJouey : this.PatchAllLob[0].dualJourney? 'Enabled' : 'Disabled',
             axisProcess: this.PatchAllLob[0].axisProcess || ''
           });
           this.createLob.updateValueAndValidity();
@@ -87,20 +87,26 @@ export class CreateLobComponent {
       this.submitted = true;
     
       if (this.createLob.valid) {
+        const singleJourneyValue = this.createLob.get('singleJourney')?.value?.trim() || 'Enabled';
+        const dualJourneyValue = this.createLob.get('dualJourney')?.value?.trim() || 'Disabled';
+    
         const reqData: any = {
           lobId: this.createLob.get('lobId')?.value || 0,
           lobName: this.createLob.get('lobName')?.value.trim(),
           axisProcess: this.createLob.get('axisProcess')?.value,
           createdBy: 'teleadmin2',
-          isSoloJourney: this.createLob.get('soloJourney')?.value?.trim() === 'Enabled',
-          isDualJourney: this.createLob.get('dualJourney')?.value?.trim() === 'Enabled',
+          isSoloJourney: singleJourneyValue === 'Enabled',
+          isDualJourney: dualJourneyValue === 'Enabled',
         };
+    
+        console.log('Request Data before submission:', reqData);
     
         if (!this.isUpdate) {
           if (reqData.isSoloJourney === reqData.isDualJourney) {
             const errorMessage = reqData.isSoloJourney
               ? "An LOB cannot have both Journey's Enabled"
               : "An LOB cannot have both Journey's Disabled";
+    
             this.matdialogue.open(SuccesspopupComponent, {
               width: '500px',
               data: errorMessage,
@@ -108,6 +114,7 @@ export class CreateLobComponent {
             return;
           }
         }
+    
         this.adminServise.createLob(reqData).subscribe(
           (res: any) => {
             console.log('API Response:', res);
@@ -121,5 +128,6 @@ export class CreateLobComponent {
         console.error('Form is invalid. Please check the required fields.');
       }
     }
+    
 
 }
