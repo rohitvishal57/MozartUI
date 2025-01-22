@@ -4470,7 +4470,7 @@ export class YatraComponent {
                 });
               }
               if (controls.name == "next") {
-                controls.visible = true;
+                controls.disabled = false;
               }
             });
           });
@@ -4523,7 +4523,12 @@ export class YatraComponent {
   }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
-    return this.selectedButton === control.name ? 'active-button' : '';
+    // return this.selectedButton === control.name ? 'active-button' : '';
+    let classes = this.selectedButton === control.name ? 'active-button' : '';
+    if (control.disabled) {
+      classes += ' disabled';
+    }
+    return classes.trim();
   }
   async onSubmit(event?: any) {
     this.changesMade = false;
@@ -9363,7 +9368,7 @@ export class YatraComponent {
               section.formControls.forEach((controls: any) => {
                 control.dependentControls.forEach((item: any) => {
                   if (controls.name === item) {
-                    controls.visible = true; // Show the dependent controls for this button
+                    controls.disabled = false; // Show the dependent controls for this button
                   }
                 });
               });
