@@ -1,0 +1,93 @@
+
+<main class="siteBody"> 
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" title="Back To LOB List" (click)="backToLOBList()"></a>
+                    {{ isUpdate ? 'UPDATE LOB' : 'CREATE LOB' }}
+                </h2>
+            </div>
+
+            <form [formGroup]="createLob" (ngSubmit)="onSubmit()">
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">AV Details</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="lobName" 
+                                    name="lobName" 
+                                    placeholder="LOB Name *" 
+                                    formControlName="lobName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createLob.get('lobName')?.invalid && (createLob.get('lobName')?.touched || submitted) }">
+                                <label for="lobName">LOB Name*</label>
+                                <span class="invalid-feedback" *ngIf="createLob.get('lobName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createLob.get('lobName')?.errors?.['required']">
+                                        Please enter LOB Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createLob.get('lobName')?.errors?.['pattern']">
+                                        AV Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"  *ngIf="!isUpdate">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="soloJourney" 
+                                    name="soloJourney" 
+                                    formControlName="soloJourney"
+                                    [ngClass]="{ 'is-invalid': createLob.get('soloJourney')?.invalid && (createLob.get('soloJourney')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select</option>
+                                    <option *ngFor="let opt of SoloJourney" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="soloJourney">Solo Journey*</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"  *ngIf="!isUpdate">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="dualJourney" 
+                                    name="dualJourney" 
+                                    formControlName="dualJourney"
+                                    [ngClass]="{ 'is-invalid': createLob.get('dualJourney')?.invalid && (createLob.get('dualJourney')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select</option>
+                                    <option *ngFor="let opt of DualJourney" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="dualJourney">Dual Journey*</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="axisProcess" 
+                                    name="axisProcess" 
+                                    formControlName="axisProcess"
+                                    [ngClass]="{ 'is-invalid': createLob.get('axisProcess')?.invalid && (createLob.get('axisProcess')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Axis Process</option>
+                                    <option *ngFor="let opt of AxisProcess" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="axisProcess">Axis Process*</label>
+                                <span class="invalid-feedback" *ngIf="createLob.get('axisProcess')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createLob.get('axisProcess')?.errors?.['required']">
+                                        Please select Axis Process
+                                    </span>
+                                </span>
+                            </div>
+                        </div>        
+                        <div class="col-12 mt-4">
+                            <button type="submit" id="save" name="save" class="btn_red">Save</button>
+                        </div>
+                    </div>
+                </section>
+            </form>    
+        </div>
+    </div>
+</main>

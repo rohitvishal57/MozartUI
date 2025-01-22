@@ -20,7 +20,7 @@ export class AdminService {
     return this.httpService.get(req);
   }
 
-  getAllManageLOB() {
+  getAllManageLOB(lobName?: any): Observable<any>{
     const req = this.configService.config.baseUrl + this.configService.config.getAllManageLob;
     return this.httpService.get(req);
   }
@@ -123,6 +123,11 @@ ExtractMasterData(apiUrl:any,request: any,fileName:any): Observable<void> {
 GetTSPolicyInfoByLeadId(reqdata:any){
   const getTSPolicyInfoLeadid = this.configService.config.baseUrl + this.configService.config.getTSPolicyInfoLeadId;
   return this.httpService.post(getTSPolicyInfoLeadid, reqdata)
+}
+
+createLob(reqdata:any){
+  const createLOB = this.configService.config.baseUrl + this.configService.config.createLob;
+  return this.httpService.post(createLOB, reqdata)
 }
 }
 
