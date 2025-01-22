@@ -7571,6 +7571,15 @@ export class YatraComponent {
   jsonParse(string: any, extract: any) {
     const value = JSON.parse(string);
     return value[extract];
+    // try {
+    //   const data = JSON.parse(string);
+    //   if (typeof data === 'object') {
+    //     return data[extract];
+    //   }
+    // } catch (error) {
+    //   console.error('Error parsing JSON:', error);
+    //   return null; // Return null or handle as needed
+    // }
   }
 
   changeRecalculate(visiblility: boolean = true) {
