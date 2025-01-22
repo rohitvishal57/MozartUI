@@ -46,7 +46,6 @@ export class UploadPerformaceComponent implements OnInit{
     }else{
       this.isDetailedView = true
       this.isPerformance = false
-      this.selectedFile.reset();
     }
     if (fileExt == 'xlsx' || fileExt == 'csv'||fileExt==='xls') {
       if (fileExt == 'xlsx' || fileExt == 'csv'|| fileExt==='xls') {
@@ -54,7 +53,7 @@ export class UploadPerformaceComponent implements OnInit{
          data.append('Performace', this.isPerformance)
          data.append('DetailedView', this.isDetailedView)
          data.append('AgentCode', this.AgentCode)
-         data.append('uploadrange', file.size)
+         data.append('uploadrange', `${file.size}`);
        }
         this.performanceService.uploadPerformancefile(data).subscribe(
           (response: any) => { 
@@ -63,7 +62,7 @@ export class UploadPerformaceComponent implements OnInit{
               console.log(response);
               this.toast.success({
                 detail: 'Success',
-                summary: response.statusName,
+                summary: response.data.fileUploadMessage,
               });
             }
             else {
