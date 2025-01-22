@@ -628,7 +628,8 @@
 
                                       <!-- Options list visibility controlled by isOptionVisible -->
                                       <div *ngIf="showOptions[subControl.name]?.[i-1]" class="checkbox-options input-checkbox-block"
-                                      aria-label="Default select example" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}">
+                                      aria-label="Default select example" [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
+                                      (click)="stopPropagation($event)">
                                         <div *ngFor="let option of subControl.options" class="input-checkbox-feild">
                                           <input type="checkbox" [formControlName]="option.value"
                                             (change)="onmultiCheckboxChange($event, subControl, control, i-1, option)"
