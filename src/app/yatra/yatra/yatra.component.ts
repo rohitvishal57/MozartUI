@@ -6134,31 +6134,38 @@ export class YatraComponent {
               // Array of objects that you want to set in the FormArray
               const arrayOfObject = value[key2];
               // Loop through the array and create FormGroups for each object
-              arrayOfObject.forEach((obj: any, index: any) => {
-                if (key2 == 'covers') {
-                  const group = this.fb.group({
-                    coverId: [obj.coverId],
-                    value: [obj.value]
-                  });
-                  formArray.push(group);
-                }
-                else {
-                  const innerarray = formArray.at(index) as FormGroup;
-                  Object.keys(obj).forEach((key) => {
-                    if (innerarray.contains(key)) {
-                      // Update the value if the control exists
-                      innerarray.get(key)?.setValue(obj[key]);
-                    } else {
-                      // Optionally, add a new control if it does not exist
-                      innerarray.addControl(key, new FormControl(obj[key]));
-                    }
-                  });
-                }
-                // else {
-                //   const group = formArray.controls[0]
-                //   formArray.push(group)
-                // }
-              });
+              console.log(arrayOfObject.length);
+              console.log(key2);
+
+              if(arrayOfObject.length){
+                arrayOfObject.forEach((obj: any, index: any) => {
+                  if (key2 == 'covers') {
+                    const group = this.fb.group({
+                      coverId: [obj.coverId],
+                      value: [obj.value]
+                    });
+                    formArray.push(group);
+                  }
+                  else {
+                    const innerarray = formArray.at(index) as FormGroup;
+                    Object.keys(obj).forEach((key) => {
+                      if (innerarray.contains(key)) {
+                        // Update the value if the control exists
+                        innerarray.get(key)?.setValue(obj[key]);
+                      } else {
+                        // Optionally, add a new control if it does not exist
+                        innerarray.addControl(key, new FormControl(obj[key]));
+                      }
+                    });
+                  }
+                  // else {
+                  //   const group = formArray.controls[0]
+                  //   formArray.push(group)
+                  // }
+                });
+              }
+              
+              
             }
             // else if(!(formGroup?.get(key2) instanceof FormGroup)){
             // formGroup?.get(key2)?.setValue(value[key2]);
@@ -9108,6 +9115,28 @@ export class YatraComponent {
     }));
   }
 
+  updatePrefixBasedOnGender(control: any): void {
+    if (this.formData?.proposerGender) {
+      const proposerGender = this.formData.proposerGender; 
+      console.log(proposerGender)
+      const disabledSalutations = this.salutationMapping[proposerGender] || []; 
+
+      control.options = control.options.map((option: any) => ({
+        ...option,
+        disabled: disabledSalutations.includes(option.name),
+      }));
+
+      console.log(control.options)
+
+      // Optionally set a default value
+      const defaultOption = control.options.find(
+        (option: any) => !option.disabled
+      );
+      control.value = defaultOption ? defaultOption.value : '';
+    }
+  }
+
+
   restrictKeyPress(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
     // Allow only numeric digits (0-9)
@@ -10601,15 +10630,15 @@ export class YatraComponent {
                       (insuredMember: any) => innerSubControl.name === insuredMember.relation
                     );
 
-    
+
                     if (memberRules.proposerSIRule) {
                       if (matchingMember.relation === 'Self') {
-                        
-                          if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
-                            maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
-                            minSumInsured = memberRules.proposerSIRule.minSumInsured;
-                          }
-                        
+
+                        if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
+                          maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
+                          minSumInsured = memberRules.proposerSIRule.minSumInsured;
+                        }
+
                         console.log(matchingMember.relation)
                         innerSubControl.coreControls.forEach((coreControl: any) => {
                           console.log(coreControl);

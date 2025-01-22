@@ -263,7 +263,7 @@
                       [ngClass]="{'has-value': hasAnyValue(control)}">
                       <!-- <option value="" disabled selected>Select {{ control.label }}</option> -->
                       <ng-container *ngFor="let opt of control.options" [class]="control.class">
-                        <option [value]="opt.id ? stringifyObject(opt) : opt.value" [class]="opt.class">
+                        <option [value]="opt.id ? stringifyObject(opt) : opt.value" [disabled]="opt.disabled" [class]="opt.class">
                           {{ opt.name ? (opt.name | translate) : ''}}</option>
                       </ng-container>
                     </select>
