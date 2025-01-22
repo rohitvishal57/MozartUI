@@ -4253,11 +4253,11 @@ export class RugDynamicFormComponent {
       this.bbdetails.ghiPremium =premiumObj.length > 2?fppGhiPremium: premiumObj[0].premium.toString();
       this.bbdetails.gpPremium = premiumObj.length > 2?fppGPpremium:premiumObj[1].premium.toString();
       this.bbdetails.totalPremium = (premiumObj.length > 2?premium:premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj.length > 2?fppGhiPremium:premiumObj[0].premium.toString());
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj.length > 2?fppGhiPremium.toString():premiumObj[0].premium.toString());
 
       // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
       // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
-      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj.length > 2?fppGPpremium:premiumObj[1].premium.toString());
+      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj.length > 2?fppGPpremium.toString():premiumObj[1].premium.toString());
   
       this.dynamicFormGroup.value.totalPremium = (premiumObj.length > 2?premium:premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
