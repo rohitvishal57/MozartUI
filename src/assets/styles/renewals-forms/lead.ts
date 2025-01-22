@@ -1723,3 +1723,603 @@ export const renewals_lead = {
       }
     ]
   }
+
+  export const policySummary = {
+    "formTitle": "Policy Summary",
+    "saveBtnTitle": "Save",
+    "saveBtnFunction": "insertFullQuoteJson",
+    "calculateBtnTitle": "",
+    "themeFile": "ABHI.css",
+    "formSections": [
+      {
+        "sectionTitle": "Policy Summary",
+        "visible": true,
+        "visibleLabel": true,
+        "class": "section-title",
+        "formControls": [
+          {
+            "name": "members",
+            "label": "Members",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-6 col-md-2",
+            "visible": true,
+            "disabled": true,
+            "methodName": "mergeMember"
+          },
+          {
+            "name": "productName",
+            "label": "Policy",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-md-3",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "totalPremium",
+            "label": "Premium",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-md-2",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "sumInsured",
+            "label": "Cover",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-md-2",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "tenure",
+            "label": "Tenure",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-md-2",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "addons",
+            "label": "Add ons",
+            "visibleLabel": true,
+            "type": "displaycovers",
+            "value": "",
+            "class": "col-12 col-md-12 typecss_summary_addon",
+            "visible": true,
+            "disabled": true,
+            "methodName": "displaySelectedAddons"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Member Details",
+        "visible": true,
+        "visibleLabel": true,
+        "class": "section-title",
+        "formControls": [
+          {
+            "name": "insuredMemberDetails",
+            "label": "Insured",
+            "visibleLabel": true,
+            "class": "col-md-12",
+            "visible": true,
+            "value": 1,
+            "placeholder": "",
+            "type": "banner",
+            "dynamicControls": [
+              [
+                {
+                  "name": "relation",
+                  "label": "Relation",
+                  "disabled": false,
+                  "visibleLabel": false,
+                  "relationDisabled": true,
+                  "class": "col-12 col-md-6 col-lg-3",
+                  "type": "text",
+                  "visible": false,
+                  "value": ""
+                },
+                {
+                  "name": "preFix",
+                  "label": "Salutation",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "value": "",
+                  "type": "select",
+                  "options": [
+                    {
+                      "value": "Mr",
+                      "name": "Mr"
+                    },
+                    {
+                      "value": "Mrs",
+                      "name": "Mrs"
+                    },
+                    {
+                      "value": "Ms",
+                      "name": "Ms"
+                    },
+                    {
+                      "value": "Dr",
+                      "name": "Dr"
+                    },
+                    {
+                      "value": "Mx",
+                      "name": "Mx"
+                    },
+                    {
+                      "value": "Miss",
+                      "name": "Miss"
+                    },
+                    {
+                      "value": "Others",
+                      "name": "Others"
+                    }
+                  ],
+                  "class": "col-12 col-md-6 col-lg-3"
+                },
+                {
+                  "name": "firstName",
+                  "label": "Name",
+                  "visible": true,
+                  "visibleLabel": true,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "disabled": true,
+                  "questionCondition": false
+                },
+                {
+                  "name": "lastName",
+                  "label": "Last Name",
+                  "visibleLabel": true,
+                  "visible": true,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "disabled": true,
+                  "questionCondition": false
+                },
+                {
+                  "name": "height",
+                  "label": "Height(Ft)",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "visible": false,
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "disabled": true,
+                  "questionCondition": false
+                },
+                {
+                  "name": "height",
+                  "label": "Height(cm)",
+                  "visibleLabel": true,
+                  "visible": true,
+                  "type": "text",
+                  "disabled": true,
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "questionCondition": false
+                },
+                {
+                  "name": "weight",
+                  "label": "Weight",
+                  "visible": true,
+                  "visibleLabel": true,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "disabled": true,
+                  "questionCondition": false
+                },
+                {
+                  "name": "memberDob",
+                  "label": "D.O.B",
+                  "visible": true,
+                  "visibleLabel": true,
+                  "type": "date",
+                  "value": "",
+                  "class": "col-md-6 col-lg-4",
+                  "disabled": true,
+                  "questionCondition": false
+                },
+                {
+                  "name": "healthCondition",
+                  "label": "Health Conditions",
+                  "visible": true,
+                  "visibleLabel": true,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-md-6 col-lg-6",
+                  "disabled": true,
+                  "questionCondition": true
+                },
+                {
+                  "name": "emailId",
+                  "label": "Email Id",
+                  "visible": false,
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-md-6 col-lg-4"
+                },
+                {
+                  "name": "mobileNumber",
+                  "label": "Mobile Number",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "type": "phonenumber",
+                  "value": "",
+                  "class": "col-12 col-md-6 col-lg-4"
+                },
+                {
+                  "name": "relationshipType",
+                  "visibleLabel": false,
+                  "label": "Relationship Type",
+                  "value": "",
+                  "methodName": "getAllRelationship",
+                  "class": "col-md-2 acceptTermsCheck",
+                  "type": "select",
+                  "visible": false,
+                  "selectCheckboxOptions": [
+                    {
+                      "label": "Self",
+                      "value": "self",
+                      "button": false
+                    },
+                    {
+                      "label": "Spouse",
+                      "value": "spouse",
+                      "button": false
+                    },
+                    {
+                      "label": "Father",
+                      "value": "father",
+                      "button": false
+                    },
+                    {
+                      "label": "Mother",
+                      "value": "mother",
+                      "button": false
+                    },
+                    {
+                      "label": "Daughter",
+                      "value": "daughter1",
+                      "button": true
+                    },
+                    {
+                      "label": "Son",
+                      "value": "son1",
+                      "button": true
+                    }
+                  ]
+                },
+                {
+                  "name": "memberAge",
+                  "label": "Age",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "visibe": false,
+                  "class": "col-12 col-md-6 col-lg-2"
+                },
+                {
+                  "name": "memberGender",
+                  "label": "Gender",
+                  "visibleLabel": false,
+                  "type": "select",
+                  "value": "",
+                  "visible": false,
+                  "class": "col-12 col-md-6 col-lg-4",
+                  "options": [
+                    {
+                      "id": 1,
+                      "name": "Male",
+                      "value": "M"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Female",
+                      "value": "F"
+                    },
+                    {
+                      "id": 3,
+                      "name": "Others",
+                      "value": "O"
+                    }
+                  ]
+                },
+                {
+                  "name": "pincode",
+                  "label": "Pincode",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-12 col-md-6 col-lg-2",
+                  "visible": false
+                },
+                {
+                  "name": "sumInsured",
+                  "label": "Sum Insured",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-12 col-md-6 col-lg-3",
+                  "visible": false
+                },
+                {
+                  "name": "upgradableSumInsured",
+                  "label": "Upgradable Sum Insured",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "col-12 col-md-6 col-lg-3",
+                  "visible": false
+                },
+                {
+                  "name": "preExistingDisease",
+                  "label": "Pre Existing Disease?",
+                  "visibleLabel": false,
+                  "type": "radio",
+                  "visible": false,
+                  "class": "radio-button",
+                  "radioOptions": [
+                    {
+                      "name": "yes",
+                      "label": "Yes",
+                      "value": "yes",
+                      "selected": false
+                    },
+                    {
+                      "name": "no",
+                      "label": "No",
+                      "value": "no",
+                      "selected": true
+                    }
+                  ]
+                },
+                {
+                  "name": "memberIndex",
+                  "label": "Member Index",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "",
+                  "visible": false
+                },
+                {
+                  "name": "zone",
+                  "label": "Zone",
+                  "class": "col-12 col-md-6 col-lg-2",
+                  "visibleLabel": false,
+                  "visibe": false,
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "name": "zoneValue",
+                  "label": "Zone",
+                  "class": "col-12 col-md-6 col-lg-4",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "name": "state",
+                  "label": "State",
+                  "class": "col-12 col-md-6 col-lg-2",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "name": "city",
+                  "label": "City",
+                  "class": "col-12 col-md-6 col-lg-2",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "name": "memberType",
+                  "label": "Member Type",
+                  "visibleLabel": false,
+                  "class": "col-12 col-md-6 col-lg-3",
+                  "type": "select",
+                  "visible": false,
+                  "value": ""
+                },
+                {
+                  "name": "memberIndex",
+                  "label": "Member Index",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "",
+                  "visible": false
+                },
+                {
+                  "name": "productMemberDesignation",
+                  "label": "Designation",
+                  "visibleLabel": false,
+                  "type": "select",
+                  "visible": false,
+                  "value": ""
+                },
+                {
+                  "name": "productMemberNatureWork",
+                  "label": "Nature of Work",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "type": "select",
+                  "value": ""
+                },
+                {
+                  "name": "productMemberOccupation",
+                  "label": "Occupation",
+                  "visible": false,
+                  "visibleLabel": false,
+                  "type": "select",
+                  "class": "col-12 col-md-6 col-lg-4",
+                  "value": ""
+                },
+                {
+                  "name": "covers",
+                  "label": "Add On Covers",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "",
+                  "visible": false
+                },
+                {
+                  "name": "memberRoomCategory",
+                  "label": "Room Category",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "UPTOSI",
+                  "class": "",
+                  "visible": false
+                },
+                {
+                  "name": "productQuestionnaire",
+                  "label": "Product Questionnaire",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "",
+                  "visible": false
+                },
+                {
+                  "name": "memberRelationCode",
+                  "label": "Relation Code",
+                  "visibleLabel": false,
+                  "visible": false,
+                  "value": "",
+                  "type": "text",
+                  "class": "col-12 col-md-6 col-lg-3"
+                },
+                {
+                  "name": "hospiCashCoverDetails",
+                  "label": "Hospi Cash Cover",
+                  "visibleLabel": false,
+                  "type": "text",
+                  "value": "",
+                  "class": "",
+                  "visible": false
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Contact Details",
+        "visible": true,
+        "visibleLabel": true,
+        "class": "section-title",
+        "formControls": [
+          {
+            "name": "proposerAddress1",
+            "label": "Address",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-6",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "mobileNumber",
+            "label": "Contact",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-4",
+            "visible": true,
+            "disabled": true
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Bottom Section",
+        "visible": true,
+        "class": "section-title bottom-section-axis",
+        "formControls": [
+          {
+            "name": "plandetails",
+            "label": "Plan Details",
+            "visibleLabel": true,
+            "type": "summary",
+            "value": "",
+            "class": "col-md-12",
+            "visible": true,
+            "disabled": true
+          },
+          {
+            "name": "productName",
+            "label": "Product Name",
+            "visibleLabel": false,
+            "visible": true,
+            "disabled": true,
+            "type": "boldtext",
+            "class": "col-12 col-md-6 col-lg-3 bottom-product",
+            "value": "",
+            "text": "Aditya Birla Health Insurance"
+          },
+          {
+            "name": "totalPremium",
+            "label": "Total Premium/Incl tax",
+            "visibleLabel": true,
+            "visible": true,
+            "type": "boldtext",
+            "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+            "value": "",
+            "disabled": true
+          },
+          {
+            "name": "proposalNumber",
+            "label": "Proposal Number",
+            "visibleLabel": true,
+            "visible": true,
+            "type": "boldtext",
+            "class": "col-12 col-md-6 col-lg-3 bottom_proposalNumber",
+            "value": "",
+            "disabled": true
+          },
+          {
+            "name": "next",
+            "label": "Next",
+            "visibleLabel": false,
+            "visible": true,
+            "type": "button",
+            "class": "col-12 col-md-6 col-lg-2 next-btn",
+            "methodName": "onSubmit"
+          },
+          {
+            "name": "back",
+            "label": "Back",
+            "visibleLabel": false,
+            "visible": true,
+            "type": "button",
+            "class": "col-12 col-md-6 col-lg-2 back-btn",
+            "methodName": "onPrevious"
+          }
+        ]
+      }
+    ]
+  }

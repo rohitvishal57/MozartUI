@@ -118,7 +118,7 @@ export class RenewalJourneyComponent {
               policy_Number: decryptedFormData.policyNumber
             };
             const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-            this.formData = { ...this.formData, ...decryptedFormData, ...response.data, };
+            this.formData = { ...this.formData, ...decryptedFormData, ...response.data };
           }
         } catch (error) {
           console.error('Error fetching renewal info:');
@@ -1057,6 +1057,10 @@ export class RenewalJourneyComponent {
     } else {
       this.renewalFormGroup.get(control.name)?.setValue(value);
     }
+  }
+
+  currentDateValue(control:any){
+    control.value=this.currentDate;
   }
 
   getAllProposerOccupation(control: any) {
@@ -2981,10 +2985,10 @@ export class RenewalJourneyComponent {
         "policyNumber": this.policyNumber,
         "proposalNum": "",
         "agentCode": this.agentCode,
-        "bankName": JSON.parse(data.paymentBankName).value,
+        "bankName": data.paymentBankName,
         "ifsc": data.ifscCode,
-        "micrNo": data.micrCode,
-        "bankAccountNumber": data.accountNumber,
+        "micrNo": data.micrCode ||"",
+        "bankAccountNumber": data.accountNumber || "",
         "documentId": this.documentId,
         "productName": this.formData.productName
       };
@@ -3014,7 +3018,7 @@ export class RenewalJourneyComponent {
             this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
             this.formData.premiumPaid = res.data.premiumPaid || null;
-            this.rowData.paymentMessage = "policy issuance pending";
+            this.rowData.paymentMessage = "Policy Issuance Pending";
             if(res.data.errorMessage){
               this.toast.warning({ detail: 'Warning', summary: res.data.errorMessage || 'policy issuance failed.', duration: 3000 });
             }

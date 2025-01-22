@@ -420,7 +420,7 @@ export const new_combinedForms = {
                 },
                 {
                   "name": "height",
-                  "label": "Enter Height(cm)",
+                  "label": "Height(cm)",
                   "visibleLabel": true,
                   "type": "number",
                   "disabled": false,

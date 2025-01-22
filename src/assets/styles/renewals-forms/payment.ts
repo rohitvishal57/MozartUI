@@ -181,14 +181,9 @@ export const payment = {
             "totalPremium",
             "chequeNumber",
             "chequeDate",
-            "accountNumber",
-            "ifscCode",
-            "paymentBankName",
-            "chequeCopy",
+            "IFSCCode",
+            "BankName",
             "documentProofUpload",
-            "paymentBankCity",
-            "paymentBankBranch",
-            "micrCode",
             "nextOffline"
           ]
         },
@@ -468,7 +463,9 @@ export const payment = {
           "minDateLength": "currentDate",
           "maxDateLength": "currentDate",
           "type": "date",
+          "disabled": true,
           "value": "",
+          "methodName": "currentDateValue",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
@@ -511,17 +508,14 @@ export const payment = {
           ]
         },
         {
-          "name": "paymentBankName",
+          "name": "BankName",
           "label": "Bank Name",
           "visible": false,
           "visibleLabel": true,
-          "getAllOption": "getAllBankDetails",
-          "onChangeMethod": "getBankCity",
-          "otherControlName": "paymentBankCity",
-          "type": "select",
+          "type": "text",
           "value": "",
+          "disabled": true,
           "class": "col-12 col-md-6 col-lg-4",
-          "options": [],
           "validators": [
             {
               "validatorName": "required",
@@ -569,7 +563,7 @@ export const payment = {
           ]
         },
         {
-          "name": "ifscCode",
+          "name": "IFSCCode",
           "label": "IFSC Code",
           "visibleLabel": true,
           "visible": false,
