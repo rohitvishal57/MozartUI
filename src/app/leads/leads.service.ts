@@ -98,8 +98,4 @@ export class LeadsService {
     return this.http.post<any>(url, requestBody);
   }
 
-  downloadSingleLead(requestBody: any, leadNumber: any) {
-    const url = this.configService.config.baseUrl + this.configService.config.exportLead + '?leadno='+leadNumber;
-    return this.http.post<any>(url, leadNumber);
-  }
 }
