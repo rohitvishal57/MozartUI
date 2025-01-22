@@ -353,9 +353,31 @@
                                                  <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadQuote(row.proposalNumber,true)"  title="Download Quote"><img
                                                             src="assets/Img/icon_download_grey.svg">        
                                                        </button>
-                                                       <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare" aria-label="item-moreaction" >
+                                                       <!-- <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare" aria-label="item-moreaction" >
                                                            <img src="assets/Img/icon_share.svg">
-                                                        </button>
+                                                        </button> -->
+                                                        <button type="button" id="proposalShare" name="proposalShare" value="Share" title="Share" class="btn_action btn_moreAction btn_actionShare" aria-label="item-moreaction" [matMenuTriggerFor]="shareMenu">
+                                                            <img src="assets/Img/icon_share.svg">
+                                                         </button>
+                                                         <mat-menu #shareMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                                             <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                                 <ul class="actionItemsMain">
+                                                                     <li class="actionItemHead" >Share</li>
+                                                                     <li class="actionItem"  (click)="shareProposalSummary(row)">
+                                                                         <a><span>Proposal summary</span></a>
+                                                                     </li>
+                                                                     <li class="actionItem" (click)="shareKyc(row)"  *ngIf="row.proposalStatus == 'Declaration'">
+                                                                         <a><span>Share KycLink</span></a>
+                                                                     </li>
+                                                                     <li class="actionItem"   *ngIf="row.proposalStatus == 'Declaration'">
+                                                                         <a><span>Share PaymentLink</span></a>
+                                                                     </li>
+         
+                                                                 </ul>
+                                                                
+                                                             </div>
+                                                         </mat-menu>
+                                                        
                                             </div>
                                         </div>
                                     </header>
