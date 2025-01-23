@@ -804,6 +804,6 @@
   @media (max-width:320px){
     .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem h6 {
         max-width: 120px;
-        word-break: break-word;
+        word-wrap: break-word;
     }
   }

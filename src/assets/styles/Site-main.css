@@ -4164,6 +4164,7 @@ input[type="search"]::-webkit-search-results-decoration {
   margin: 0 0 4px;
   max-width: 320px;
   line-height: normal;
+  word-wrap: break-word;
 }
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem p {
   font-weight: 600;
