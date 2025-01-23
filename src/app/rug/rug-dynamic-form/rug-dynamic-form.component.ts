@@ -17,6 +17,7 @@ import { OtpPopupComponent } from '../otp-popup/otp-popup.component';
 import { PaymentInfoComponent } from '../payment-info/payment-info.component';
 import { CaptchaPopupComponent } from '../captcha-popup/captcha-popup.component';
 import { RugService } from 'src/app/rug/rug.service';
+import { AllProductContent } from '../constants/constant';
 declare var bootstrap: any;
 
 @Component({
@@ -1057,7 +1058,7 @@ export class RugDynamicFormComponent {
         });
 
       }
-      if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+      if((this.getFormIndexValue() == 7 || this.getFormIndexValue() == 9) && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
         console.log(this.form);
         console.log(this.bbdetails.paymentMode);
         this.form.formSections.forEach((section: any) => {
@@ -1065,8 +1066,14 @@ export class RugDynamicFormComponent {
           if (section.sectionTitle == "Details of Your Proposal" && this.bbdetails.paymentMode == "yes") {
             section.visible = false;
           }
+          if(section.sectionTitle == "details of links"){
+            section.formControls.forEach((formControl: any) => {
+              if(formControl.name == "label6"){
+                formControl.label = AllProductContent.PolicySummaryContent;
+              }
+            })
+          }
         });
-
       }
       if(this.getFormIndexValue() == 8 && this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
         console.log(this.form);
