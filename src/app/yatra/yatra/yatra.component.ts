@@ -4489,13 +4489,13 @@ export class YatraComponent {
         firstName: this.formData.firstName,
         lastName: this.formData.lastName,
         agentcode: this.agentCode,
-        emailId: 'saisatya@monocept.com',
+        emailId: this.formData.emailId,
         productName: this.formData.productName,
         pNumber: this.formData.proposalNumber,
         businessType: 'NB',
         productCode: this.formData.productId,
         premiumAmount: this.formData.totalPremium,
-        mobilenumber: '7396201298',
+        mobilenumber: this.formData.mobileNumber,
       };
       this.yatraService.sharePaymentLink(reqData).subscribe({
         next: (response: any) => {
@@ -7721,7 +7721,7 @@ export class YatraComponent {
       paymentMode: this.selectedButton || '',
       chequeNumber: formData?.chequeNumber || '',
       chequeDate: formData?.chequeDate || '',
-      bankName: this.formData?.bankName || '',
+      bankName: this.jsonParse(this.formData?.bankName,'name') || '',
       ifscCode: formData?.ifscCode || '',
       micrNo: formData?.micrCode || '',
       premiumAmount: formData?.totalPremium || '',
