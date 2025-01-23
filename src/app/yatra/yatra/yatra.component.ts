@@ -9771,80 +9771,86 @@ export class YatraComponent {
 
   addMorePortabilityPolicies(innerControl: any, control: any, parentControl: any, index: number) {
     console.log(innerControl, control, parentControl, index, this.form);
-    let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
-    console.log(tempControl);
-
-    tempControl = tempControl.splice(3);
-
-    // tempControl.forEach((innerControl:any)=>{
-    //   if(innerControl.name == 'policyIndex'){
-    //     innerControl.label = 'Policy'+
-    //   }
-    // })
-
-    console.log(tempControl, this.form);
-    let policyLength = 0;
-    // tempControl
-
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((formControl: any) => {
-        if (formControl.name == parentControl.name) {
-          let targetDynamicControls = JSON.parse(JSON.stringify(formControl.dynamicControls[index + 1]));
-          targetDynamicControls.forEach((innerControl: any) => {
-            if (innerControl.name == control.name) {
-              // Deep clone before pushing
-              tempControl.forEach((innerArrayControl: any) => {
-                if (innerArrayControl.name == 'policyIndex') {
-                  innerArrayControl.label = 'Policy ' + innerControl.innerArrayControl.length;
-                }
-                // if (innerArrayControl.name == 'selectYear') {
-                //   innerArrayControl.options = [];
-                //   const currentYear = new Date().getFullYear();
-                //   const startYear = currentYear - 4; // The starting year for your ranges
-                //   const yearOptions = [];
-
-                //   // Generate the year ranges
-                //   for (let year = startYear; year < currentYear; year++) {
-                //     yearOptions.push({
-                //       value: `${year}-${year + 1}`,
-                //       name: `${year}-${year + 1}`
-                //     });
-                //   }
-                //   innerArrayControl.options = yearOptions;
-                // }
-              })
-              console.log(tempControl);
-
-              innerControl.innerArrayControl.push([...tempControl]);
-              policyLength = innerControl.innerArrayControl.length;
-            }
-          });
-
-
-          formControl.dynamicControls[index + 1] = targetDynamicControls;
-        }
+    if(control.innerArrayControl.length<5){
+      let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
+      console.log(tempControl);
+  
+      tempControl = tempControl.splice(3);
+  
+      // tempControl.forEach((innerControl:any)=>{
+      //   if(innerControl.name == 'policyIndex'){
+      //     innerControl.label = 'Policy'+
+      //   }
+      // })
+  
+      console.log(tempControl, this.form);
+      let policyLength = 0;
+      // tempControl
+  
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == parentControl.name) {
+            let targetDynamicControls = JSON.parse(JSON.stringify(formControl.dynamicControls[index + 1]));
+            targetDynamicControls.forEach((innerControl: any) => {
+              if (innerControl.name == control.name) {
+                // Deep clone before pushing
+                tempControl.forEach((innerArrayControl: any) => {
+                  if (innerArrayControl.name == 'policyIndex') {
+                    innerArrayControl.label = 'Policy ' + innerControl.innerArrayControl.length;
+                  }
+                  // if (innerArrayControl.name == 'selectYear') {
+                  //   innerArrayControl.options = [];
+                  //   const currentYear = new Date().getFullYear();
+                  //   const startYear = currentYear - 4; // The starting year for your ranges
+                  //   const yearOptions = [];
+  
+                  //   // Generate the year ranges
+                  //   for (let year = startYear; year < currentYear; year++) {
+                  //     yearOptions.push({
+                  //       value: `${year}-${year + 1}`,
+                  //       name: `${year}-${year + 1}`
+                  //     });
+                  //   }
+                  //   innerArrayControl.options = yearOptions;
+                  // }
+                })
+                console.log(tempControl);
+  
+                innerControl.innerArrayControl.push([...tempControl]);
+                policyLength = innerControl.innerArrayControl.length;
+              }
+            });
+  
+  
+            formControl.dynamicControls[index + 1] = targetDynamicControls;
+          }
+        })
       })
-    })
-    console.log(this.dynamicFormGroup);
-
-    let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
-    // let formArr;
-
-
-    if (formArr != null) {
-      formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
-      console.log(formArr);
-
-      let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
-      console.log(control.innerArrayControl.length - 1, control);
-
-      console.log(this.form);
-
-
-      innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control, policyLength));
+      console.log(this.dynamicFormGroup);
+  
+      let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      // let formArr;
+  
+  
+      if (formArr != null) {
+        formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+        console.log(formArr);
+  
+        let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
+        console.log(control.innerArrayControl.length - 1, control);
+  
+        console.log(this.form);
+  
+  
+        innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control, policyLength));
+      }
+  
+      console.log(this.form, this.dynamicFormGroup);
     }
-
-    console.log(this.form, this.dynamicFormGroup);
+    else{
+      this.toast.warning({ detail: "Warning", summary: 'You can add a maximum of 4 policies.', duration: 3000 });
+    }
+    
 
 
 
