@@ -102,7 +102,11 @@ export class RenewalDynamicFormComponent {
   changeDetectorRef: any;
 
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService,
+     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
+     private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,
+     private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,
+     private customerService: CustomersService) { }
 
   async ngOnInit() {
     this.showHtmlContent = false;
@@ -110,6 +114,7 @@ export class RenewalDynamicFormComponent {
       this.agentCode = localStorage.getItem('agentCode');
     }
     localStorage.getItem('formIndex');
+    this.formSequence = history.state.formSequence;
 
     // Extract data from history state
     const stateData = history.state;
@@ -1764,7 +1769,7 @@ export class RenewalDynamicFormComponent {
         this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
         this.renewalFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
       }
-      // this.allJsonForm[this.getFormIndexValue()] = this.form;
+      this.allJsonForm[this.getFormIndexValue()] = this.form;
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       console.log("formData", this.formData);
 
