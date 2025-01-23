@@ -44,6 +44,7 @@ export class YatraComponent {
 
   private allJsonForm: any[] = [];
   formData: any = {}
+  questionFormData: any = {}
   selectedFile: any;
   expandedCardIndex: number | null = null;
   i!: number;
@@ -550,7 +551,6 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
-
         if (this.form.formTitle == 'Insurance Details') {
           console.log(this.formData);
 
@@ -582,7 +582,7 @@ export class YatraComponent {
   }
 
   async initializeForm() {
-    console.log(this.form, this.formData, this.productId, this.partnerId);
+    console.log(this.form, this.formData,this.questionFormData, this.productId, this.partnerId);
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
@@ -7917,248 +7917,274 @@ export class YatraComponent {
   }
   async mappingForQuestionnaire(form: any) {
     // let productQuestionnaire:any=[];
-    const dynamicValue = this.dynamicFormGroup.getRawValue();
-    // Iterate through each member in the insuredMemberDetails
-    await this.formData.insuredMemberDetails.forEach((member: any) => {
-      delete member.productQuestionnaire;
-    })
-    await form.formSections.forEach((section: any) => {
+    const reqData = {
+      partnerId: this.partnerId.toString(),
+      productId: this.productId.toString(),
+      formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()-1].formId.toString(),
+      proposalNum: this.proposalNum,
+      agentCode: this.agentCode,
+      leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
+      isLead: this.quickQuoteRedirect == false ? false : true,
+      currentFormSequence: (this.getFormIndexValue()-1).toString()
+    }
 
-      section.formControls.forEach((controls: any) => {
-        if (controls.type == 'questionnaire') {
-          this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
-            // Initialize the optionsArray for each member
-            const productQuestionnaire: any[] = [];
-            const optionsArray: any[] = [];
-            let questionId: any;
-            let questionName: any
-            // Find the matching control based on member's relation
-            const matchingControl = controls.subControls.find((subControl: any) =>
-              subControl.name === member.relation
-            );
-            questionId = controls.idProperty;
-            questionName = controls.name;
-            // If a matching control is found
-            if (matchingControl) {
-              // Iterate through innerArrayControl to find the control with name 'dName'
-              matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
-                // Check if innerControl has a dName property
-                // innerControl.forEach((inner:any) => {
-                if (innerControl && innerControl.name === 'diseaseName') {
-                  // Check if options exist in innerControl
-                  if (innerControl.options) {
-                    // Push options into the optionsArray
-                    optionsArray.push(...innerControl.options);
-                  }
+
+    await this.yatraService.Getform(reqData).subscribe({
+      next: async (res: any) => {
+
+        // this.formSequence = JSON.parse(res.data.formConfig) || [];
+
+        // this.form = JSON.parse(res.data.jsonFormData);
+        
+        this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
+        console.log("form", this.questionFormData);
+        const dynamicValue = this.dynamicFormGroup.getRawValue();
+        // Iterate through each member in the insuredMemberDetails
+        await this.questionFormData.insuredMemberDetails.forEach((member: any) => {
+          delete member.productQuestionnaire;
+        })
+        await form.formSections.forEach((section: any) => {
+    
+          section.formControls.forEach((controls: any) => {
+            if (controls.type == 'questionnaire') {
+              this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
+                // Initialize the optionsArray for each member
+                const productQuestionnaire: any[] = [];
+                const optionsArray: any[] = [];
+                let questionId: any;
+                let questionName: any
+                // Find the matching control based on member's relation
+                const matchingControl = controls.subControls.find((subControl: any) =>
+                  subControl.name === member.relation
+                );
+                questionId = controls.idProperty;
+                questionName = controls.name;
+                // If a matching control is found
+                if (matchingControl) {
+                  // Iterate through innerArrayControl to find the control with name 'dName'
+                  matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
+                    // Check if innerControl has a dName property
+                    // innerControl.forEach((inner:any) => {
+                    if (innerControl && innerControl.name === 'diseaseName') {
+                      // Check if options exist in innerControl
+                      if (innerControl.options) {
+                        // Push options into the optionsArray
+                        optionsArray.push(...innerControl.options);
+                      }
+                    }
+                    // })
+                  });
                 }
-                // })
-              });
-            }
-            // Initialize the productQuestionnaire array for the current member
-
-            // Iterate through the dynamicValue object
-            Object.keys(dynamicValue).forEach((item: any) => {
-              if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
-                const innerValue = dynamicValue[item];
-
-                // Iterate through the keys of the inner object
-                Object.keys(innerValue).forEach((subItem: any) => {
-                  // Check if the member's relation matches the current subItem
-                  if (member.relation === subItem) {
-
-                    // Iterate through the array related to the matched subItem
-                    innerValue[subItem].forEach((innerArray: any) => {
-                      // innerArray.parentQuestionCode = questionId;
-                      if (!innerArray.hasOwnProperty('subQuestionCode')) {
-                        innerArray.subQuestionCode = "";
-                      }
-
-                      if (innerArray.diseaseName) {
-                        // If optionsArray is not empty, find the corresponding option
-                        if (optionsArray.length > 0) {
-                          const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-
-                          // Set subQuestionCode and dName based on the found option
-                          if (newOption) {
-                            innerArray.subQuestionCode = newOption.value;
-                            innerArray.diseaseName = newOption.name;
+                // Initialize the productQuestionnaire array for the current member
+    
+                // Iterate through the dynamicValue object
+                Object.keys(dynamicValue).forEach((item: any) => {
+                  if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
+                    const innerValue = dynamicValue[item];
+    
+                    // Iterate through the keys of the inner object
+                    Object.keys(innerValue).forEach((subItem: any) => {
+                      // Check if the member's relation matches the current subItem
+                      if (member.relation === subItem) {
+    
+                        // Iterate through the array related to the matched subItem
+                        innerValue[subItem].forEach((innerArray: any) => {
+                          // innerArray.parentQuestionCode = questionId;
+                          if (!innerArray.hasOwnProperty('subQuestionCode')) {
+                            innerArray.subQuestionCode = "";
                           }
-                        }
-                        const filteredInnerArray = innerArray;
-                        // const filteredInnerArray = Object.fromEntries(
-                        //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                        // );
-                        const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-
-                        if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                          innerArray.parentQuestionCode = questionId;
-                          productQuestionnaire.push(filteredInnerArray);
-                        }
+    
+                          if (innerArray.diseaseName) {
+                            // If optionsArray is not empty, find the corresponding option
+                            if (optionsArray.length > 0) {
+                              const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
+    
+                              // Set subQuestionCode and dName based on the found option
+                              if (newOption) {
+                                innerArray.subQuestionCode = newOption.value;
+                                innerArray.diseaseName = newOption.name;
+                              }
+                            }
+                            const filteredInnerArray = innerArray;
+                            // const filteredInnerArray = Object.fromEntries(
+                            //   Object.entries(innerArray).filter(([key, value]) => value !== "")
+                            // );
+                            const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+    
+                            if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                              innerArray.parentQuestionCode = questionId;
+                              productQuestionnaire.push(filteredInnerArray);
+                            }
+                          }
+                          else {
+                            const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+    
+                            if (!allValuesEmpty) {
+                              innerArray.harmfulSubstances = true;
+                              innerArray.parentQuestionCode = questionId;
+                              productQuestionnaire.push(innerArray);
+                            }
+    
+                            // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
+                            //   innerArray.harmfulSubstances = false;
+                            // }
+                            // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
+                            //   innerArray.harmfulSubstances = true;
+                            // }
+    
+                            // productQuestionnaire.push(innerArray);
+                          }
+                          // productQuestionnaire.push(filteredInnerArray);
+                        });
                       }
-                      else {
-                        const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-
-                        if (!allValuesEmpty) {
-                          innerArray.harmfulSubstances = true;
-                          innerArray.parentQuestionCode = questionId;
-                          productQuestionnaire.push(innerArray);
-                        }
-
-                        // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //   innerArray.harmfulSubstances = false;
-                        // }
-                        // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //   innerArray.harmfulSubstances = true;
-                        // }
-
-                        // productQuestionnaire.push(innerArray);
-                      }
-                      // productQuestionnaire.push(filteredInnerArray);
                     });
                   }
                 });
-              }
-            });
-
-            // Assign the populated productQuestionnaire to the member
-            if (member.productQuestionnaire) {
-              member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+    
+                // Assign the populated productQuestionnaire to the member
+                if (member.productQuestionnaire) {
+                  member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+                }
+                else {
+                  member.productQuestionnaire = productQuestionnaire;
+                }
+                // Log the final productQuestionnaire for debugging
+              });
             }
-            else {
-              member.productQuestionnaire = productQuestionnaire;
-            }
-            // Log the final productQuestionnaire for debugging
-          });
-        }
-        else if (controls.type == 'chronicquestionnaire') {
-          this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
-            // Initialize the optionsArray for each member
-            const productQuestionnaire: any[] = [];
-            const optionsArray: any[] = [];
-            let questionId: any;
-            let questionName: any
-            // Find the matching control based on member's relation
-            const matchingControl = controls.subControls.find((subControl: any) =>
-              subControl.name === member.relation
-            );
-            questionId = controls.idProperty;
-            questionName = controls.name;
-            // If a matching control is found
-            // Initialize the productQuestionnaire array for the current member
-
-            // Iterate through the dynamicValue object
-            Object.keys(dynamicValue).forEach((item: any) => {
-              if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
-                const innerValue = dynamicValue[item];
-
-                // Iterate through the keys of the inner object
-                Object.keys(innerValue).forEach((subItem: any) => {
-                  // Check if the member's relation matches the current subItem
-                  if (member.relation === subItem) {
-                    innerValue[subItem].parentQuestionCode = questionId;
-                    console.log(innerValue[subItem]);
-                    productQuestionnaire.push(innerValue[subItem]);
-                    // Iterate through the array related to the matched subItem
-                    // innerValue[subItem].forEach((innerArray: any) => {
-                    //   // innerArray.parentQuestionCode = questionId;
-                    //   if (!innerArray.hasOwnProperty('subQuestionCode')) {
-                    //     innerArray.subQuestionCode = "";
-                    //   }
-
-                    //   if (innerArray.diseaseName) {
-                    //     // If optionsArray is not empty, find the corresponding option
-                    //     if (optionsArray.length > 0) {
-                    //       const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-
-                    //       // Set subQuestionCode and dName based on the found option
-                    //       if (newOption) {
-                    //         innerArray.subQuestionCode = newOption.value;
-                    //         innerArray.diseaseName = newOption.name;
-                    //       }
-                    //     }
-                    //     const filteredInnerArray = innerArray;
-                    //     // const filteredInnerArray = Object.fromEntries(
-                    //     //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                    //     // );
-                    //     const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-
-                    //     if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                    //       innerArray.parentQuestionCode = questionId;
-                    //       productQuestionnaire.push(filteredInnerArray);
-                    //     }
-                    //   }
-                    //   else {
-                    //     const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-
-                    //     if (!allValuesEmpty) {
-                    //       innerArray.harmfulSubstances = true;
-                    //       innerArray.parentQuestionCode = questionId;
-                    //       productQuestionnaire.push(innerArray);
-                    //     }
-
-                    //     // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                    //     //   innerArray.harmfulSubstances = false;
-                    //     // }
-                    //     // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                    //     //   innerArray.harmfulSubstances = true;
-                    //     // }
-
-                    //     // productQuestionnaire.push(innerArray);
-                    //   }
-                    //   // productQuestionnaire.push(filteredInnerArray);
-                    // });
+            else if (controls.type == 'chronicquestionnaire') {
+              this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+                // Initialize the optionsArray for each member
+                const productQuestionnaire: any[] = [];
+                const optionsArray: any[] = [];
+                let questionId: any;
+                let questionName: any
+                // Find the matching control based on member's relation
+                const matchingControl = controls.subControls.find((subControl: any) =>
+                  subControl.name === member.relation
+                );
+                questionId = controls.idProperty;
+                questionName = controls.name;
+                // If a matching control is found
+                // Initialize the productQuestionnaire array for the current member
+    
+                // Iterate through the dynamicValue object
+                Object.keys(dynamicValue).forEach((item: any) => {
+                  if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
+                    const innerValue = dynamicValue[item];
+    
+                    // Iterate through the keys of the inner object
+                    Object.keys(innerValue).forEach((subItem: any) => {
+                      // Check if the member's relation matches the current subItem
+                      if (member.relation === subItem) {
+                        innerValue[subItem].parentQuestionCode = questionId;
+                        console.log(innerValue[subItem]);
+                        productQuestionnaire.push(innerValue[subItem]);
+                        // Iterate through the array related to the matched subItem
+                        // innerValue[subItem].forEach((innerArray: any) => {
+                        //   // innerArray.parentQuestionCode = questionId;
+                        //   if (!innerArray.hasOwnProperty('subQuestionCode')) {
+                        //     innerArray.subQuestionCode = "";
+                        //   }
+    
+                        //   if (innerArray.diseaseName) {
+                        //     // If optionsArray is not empty, find the corresponding option
+                        //     if (optionsArray.length > 0) {
+                        //       const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
+    
+                        //       // Set subQuestionCode and dName based on the found option
+                        //       if (newOption) {
+                        //         innerArray.subQuestionCode = newOption.value;
+                        //         innerArray.diseaseName = newOption.name;
+                        //       }
+                        //     }
+                        //     const filteredInnerArray = innerArray;
+                        //     // const filteredInnerArray = Object.fromEntries(
+                        //     //   Object.entries(innerArray).filter(([key, value]) => value !== "")
+                        //     // );
+                        //     const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+    
+                        //     if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                        //       innerArray.parentQuestionCode = questionId;
+                        //       productQuestionnaire.push(filteredInnerArray);
+                        //     }
+                        //   }
+                        //   else {
+                        //     const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+    
+                        //     if (!allValuesEmpty) {
+                        //       innerArray.harmfulSubstances = true;
+                        //       innerArray.parentQuestionCode = questionId;
+                        //       productQuestionnaire.push(innerArray);
+                        //     }
+    
+                        //     // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
+                        //     //   innerArray.harmfulSubstances = false;
+                        //     // }
+                        //     // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
+                        //     //   innerArray.harmfulSubstances = true;
+                        //     // }
+    
+                        //     // productQuestionnaire.push(innerArray);
+                        //   }
+                        //   // productQuestionnaire.push(filteredInnerArray);
+                        // });
+                      }
+                    });
                   }
                 });
-              }
-            });
-
-            // Assign the populated productQuestionnaire to the member
-            if (member.productQuestionnaire) {
-              member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+    
+                // Assign the populated productQuestionnaire to the member
+                if (member.productQuestionnaire) {
+                  member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+                }
+                else {
+                  member.productQuestionnaire = productQuestionnaire;
+                }
+                // Log the final productQuestionnaire for debugging
+              });
             }
-            else {
-              member.productQuestionnaire = productQuestionnaire;
-            }
-            // Log the final productQuestionnaire for debugging
+          })
+        })
+        // this.formData.insuredMemberDetails.forEach((member: any) => {
+        //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
+        //   this.flattenObjectInsert(this.formData);
+        // })
+        this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
+          // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+          // const dindex = dynamicform.at(index) as FormGroup;
+          // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
+          if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+            this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+          }
+    
+          const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+    
+          // Ensure the FormArray has enough entries
+          while (dynamicform.length <= index) {
+            dynamicform.push(new FormGroup({}));
+          }
+    
+          const dindex = dynamicform.at(index) as FormGroup;
+          Object.keys(member).forEach((key: string) => {
+            dindex.addControl(key, new FormControl(member[key]));
           });
-        }
-      })
-    })
-    // this.formData.insuredMemberDetails.forEach((member: any) => {
-    //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
-    //   this.flattenObjectInsert(this.formData);
-    // })
-    this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
-      // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-      // const dindex = dynamicform.at(index) as FormGroup;
-      // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
-      if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
-        this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+          // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
+    
+          const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
+          dindex.addControl('productQuestionnaire', '');
+    
+          // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
+    
+          dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
+    
+          // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
+          // this.flattenObjectInsert(this.formData);
+        })
+      },
+      error: (err) => {
+        console.log(err);
       }
-
-      const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-
-      // Ensure the FormArray has enough entries
-      while (dynamicform.length <= index) {
-        dynamicform.push(new FormGroup({}));
-      }
-
-      const dindex = dynamicform.at(index) as FormGroup;
-      Object.keys(member).forEach((key: string) => {
-        dindex.addControl(key, new FormControl(member[key]));
-      });
-      // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-
-      const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-      dindex.addControl('productQuestionnaire', '');
-
-      // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
-
-      dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-
-      // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
-      // this.flattenObjectInsert(this.formData);
-    })
+    });
   }
 
   backToleads() {
