@@ -62,7 +62,6 @@ export class GetQuoteComponent implements AfterViewChecked {
     { id: 'Asthma', value: 'asthma', label: 'Asthma' },
     { id: 'hyperlipidemia', value: 'hyperlipidemia', label: 'Hyperlipidemia' },
     { id: 'highBMI', value: 'highBMI', label: 'High BMI' }
-
   ];
   proposerZone: any;
   proposerZoneValue: any = '';
@@ -869,22 +868,30 @@ export class GetQuoteComponent implements AfterViewChecked {
 
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
-
+  
     if (event.target.checked) {
-      // Add the value to the array if the checkbox is checked and not already present
-      if (!this.selectedDiseases.includes(selectedValue)) {
-        this.selectedDiseases.push(selectedValue);
+      if (this.selectedDiseases.length < 3) {
+        if (!this.selectedDiseases.includes(selectedValue)) {
+          this.selectedDiseases.push(selectedValue);
+        }
+      } else {
+        event.target.checked = false;
+        this.toast.error({
+          detail: "Error",
+          summary: "You can select a maximum of 3 diseases.",
+          duration: 5000
+        });
       }
     } else {
-      // Remove the value from the array if the checkbox is unchecked
+      // If checkbox is unchecked, remove the value from the array
       this.selectedDiseases = this.selectedDiseases.filter(disease => disease !== selectedValue);
     }
-
-    // Update sessionStorage and diseaseNames
+  
     this.saveSelectedDiseases();
     this.updateDiseaseNames();
     console.log('Selected Diseases:', this.selectedDiseases);
   }
+  
   updateDiseaseNames() {
     if (this.selectedDiseases.length > 0) {
       this.diseaseNames = this.selectedDiseases.join(', ');  // Join selected diseases as a string

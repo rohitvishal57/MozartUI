@@ -14,7 +14,6 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 declare var bootstrap: any;
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
-import { ExcelExportService } from 'src/app/services/excel-export.service';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
@@ -101,7 +100,6 @@ export class LeadsListComponent {
     private languageService: LanguageService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private excelExportService: ExcelExportService
   ) { }
 
   leadsInfoListRequestBody ={
@@ -644,7 +642,6 @@ export class LeadsListComponent {
   }
 
   downloadSingleItem(item: any): void {
-    // this.exportToExcel([item], `Lead_${item.leadNumber}`);
     const leadReqBody = {
       leadNumber: item.leadNumber
     }
@@ -661,31 +658,6 @@ export class LeadsListComponent {
     });
   }
 
-  exportToExcel(data: any[], fileName: string): void {
-    try {
-      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-
-      const workbook: XLSX.WorkBook = {
-        Sheets: { data: worksheet },
-        SheetNames: ['data'],
-      };
-
-      const excelBuffer: any = XLSX.write(workbook, {
-        bookType: 'xlsx', 
-        type: 'array',    
-      });
-
-      const dataBlob: Blob = new Blob([excelBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-
-      saveAs(dataBlob, `${fileName}.xlsx`);
-    } catch (error) {
-      console.error('Error exporting to Excel:', error);
-    }
-  }
-  
-
   maskEmail(email: any): string {
     const [localPart, domain] = email.split('@');
     const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
@@ -696,7 +668,7 @@ export class LeadsListComponent {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
 
-  downloadAllLeads(){
+  downloadAllLeads() {
     this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
      (response)=>{
       if(response.isSuccess){
