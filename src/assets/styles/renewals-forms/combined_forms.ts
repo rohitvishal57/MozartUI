@@ -2694,14 +2694,28 @@ export const combinedForms = {
               "type": "paragraph",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
             },
+            // {
+            //   "name": "backToRenewalList",
+            //   "label": "",
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
+            //   "visible": false,
+            // },
             {
               "name": "backToRenewalList",
               "label": "Back To Renewal List",
               "type": "button",
-              "class": "col-12 col-md-6 col-lg-3 next-btn backToRen",
+              "class": "col-12 col-md-6 col-lg-3 backToRen",
               "visible": false,
               "methodName": "backToRenewalList"
             },
+            // {
+            //   "name": "backToRenewalList",
+            //   "label": "",
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
+            //   "visible": false,
+            // }
           ]
         },
         {
