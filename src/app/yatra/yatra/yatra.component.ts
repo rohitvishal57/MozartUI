@@ -4243,6 +4243,7 @@ export class YatraComponent {
                   control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
                   control.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
                   control.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                  control.get('deductibleAmount')?.setValue(this.dynamicFormGroup.get('deductibleAmount')?.value);
                 })
               }
               this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
