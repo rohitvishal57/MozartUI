@@ -219,5 +219,6 @@ export const environment = {
   CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller",
   getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
   insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
-  createLob:"api/rug/CreateManageLob"
+  createLob:"api/rug/CreateManageLob",
+  getsuminsuredlist:"api/yatra/getsuminsuredlist"
 };
