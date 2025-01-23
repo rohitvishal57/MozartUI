@@ -4162,6 +4162,8 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 14px;
   color: #000;
   margin: 0 0 4px;
+  max-width: 320px;
+  line-height: normal;
 }
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem p {
   font-weight: 600;
