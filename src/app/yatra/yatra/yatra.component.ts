@@ -138,6 +138,8 @@ export class YatraComponent {
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
   requestId: string = "";
+  parsedValue:any;
+
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -1363,9 +1365,9 @@ export class YatraComponent {
       this.isFeedBackModalVisible = true;
     }
 
-   if(this.formData.productName==='Active Secure' && this.form.formTitle == 'Total Premium'){
-    this.sumInsuredList();
-   }
+  //  if(this.formData.productName==='Active Secure' && this.form.formTitle == 'Total Premium'){
+  //   this.sumInsuredList();
+  //  }
 
   }
 
@@ -2530,199 +2532,60 @@ export class YatraComponent {
     }
   }
 
-  // ActiveSecureSIvalues:any[] =[
-  //   {
-  //     "variantType": null,
-  //     "coverType": "PA",
-  //     "planType": "P1",
-  //     "productId": "ASPA",
-  //     "isPos": "0",
-  //     "isCabAgent": null,
-  //     "siList": [
-  //         {
-  //             "name": "500000",
-  //             "label": "500000",
-  //             "value": 500000
-  //         },
-  //         {
-  //             "name": "600000",
-  //             "label": "600000",
-  //             "value": 600000
-  //         },
-  //         {
-  //             "name": "700000",
-  //             "label": "700000",
-  //             "value": 700000
-  //         },
-  //         {
-  //           "name": "800000",
-  //           "label": "800000",
-  //           "value": 800000
-  //       },
-  //       {
-  //         "name": "900000",
-  //         "label": "900000",
-  //         "value": 900000
-  //     },
-  //     {
-  //       "name": "1000000",
-  //       "label": "1000000",
-  //       "value": 1000000
-  //   },
-  //     ],
-  //     "productType": "AS"
-  // },  
-  //   {
-  //       "variantType": "null",
-  //       "coverType": "PA",
-  //       "planType": "P2",
-  //       "productId": "ASPA",
-  //       "isPos": "0",
-  //       "isCabAgent": null,
-  //       "siList":   [        
-  //         {
-  //         "name": "700000",
-  //         "label": "700000",
-  //         "value": 700000
-  //     }],
-  //       "productType": "AS"
-  //   },
-  //   {
-  //       "variantType": "null",
-  //       "coverType": "PA",
-  //       "planType": "P3",
-  //       "productId": "ASPA",
-  //       "isPos": "0",
-  //       "isCabAgent": null,
-  //       "siList": [
-  //         {
-  //             "name": "500000",
-  //             "label": "500000",
-  //             "value": 500000
-  //         },
-  //         {
-  //             "name": "600000",
-  //             "label": "600000",
-  //             "value": 600000
-  //         },
-  //         {
-  //             "name": "700000",
-  //             "label": "700000",
-  //             "value": 700000
-  //         },],
-  //       "productType": "AS"
-  //   },
-  //   {
-  //       "variantType": "null",
-  //       "coverType": "PA",
-  //       "planType": "P4",
-  //       "productId": "ASPA",
-  //       "isPos": "0",
-  //       "isCabAgent": null,
-  //       "siList": [
-  //         {
-  //             "name": "500000",
-  //             "label": "500000",
-  //             "value": 500000
-  //         },
-  //         {
-  //             "name": "600000",
-  //             "label": "600000",
-  //             "value": 600000
-  //         },
-  //         {
-  //             "name": "700000",
-  //             "label": "700000",
-  //             "value": 700000
-  //         },],
-  //       "productType": "AS"
-  //   },
-  //   {
-  //       "variantType": "null",
-  //       "coverType": "PA",
-  //       "planType": "P5",
-  //       "productId": "ASPA",
-  //       "isPos": "0",
-  //       "isCabAgent": null,
-  //       "siList": [
-  //         {
-  //             "name": "500000",
-  //             "label": "500000",
-  //             "value": 500000
-  //         },
-  //         {
-  //             "name": "600000",
-  //             "label": "600000",
-  //             "value": 600000
-  //         },
-  //         {
-  //             "name": "700000",
-  //             "label": "700000",
-  //             "value": 700000
-  //         },
-  //         {
-  //           "name": "800000",
-  //           "label": "800000",
-  //           "value": 800000
-  //       },
-  //       {
-  //         "name": "900000",
-  //         "label": "900000",
-  //         "value": 900000
-  //     },],
-  //     "productType": "AS"
-  //   }
-  // ]
+
   ActiveSecureSIvalues:any;
-  sumInsuredList(){
-    this.yatraService.getSumInsuredList().subscribe({
-      next: (res: any) => {
-        this.ActiveSecureSIvalues = res.data.sumInsuredJson;
-      },
-      error: (err: any) => {
-        console.error(err);
-      }
-    });
-  }
-  getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
-   this.ActiveSecureSIvalues = (JSON.parse(this.ActiveSecureSIvalues)) 
-    console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
-    const isPos = agentCode.startsWith('pos') ? 1 : 0;
-    const coverTypeMap: { [key: string]: string } = {
-      accident: 'PA',
-      criticalIllness: 'CI',
-      cancerSecure: 'CC'
-    };
+
+  // sumInsuredList(){
+  //   this.yatraService.getSumInsuredList().subscribe({
+  //     next: (res: any) => {
+  //       // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
+  //       const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
+  //       this.ActiveSecureSIvalues = sumInsuredListValue
+  //     },
+  //     error: (err: any) => {
+  //       console.error(err);
+  //     }
+  //   });
+  // }
+
+  // getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
+  //   console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
+  //   const isPos = agentCode.startsWith('pos') ? 1 : 0;
+  //   const coverTypeMap: { [key: string]: string } = {
+  //     accident: 'PA',
+  //     criticalIllness: 'CI',
+  //     cancerSecure: 'CC'
+  //   };
   
-    const coverType = coverTypeMap[parentcontrol.name];
-    console.log("Cover Type:", coverType);
-    const data = JSON.parse(event.target.value);
-    console.log("form data in getSumInsuredValues",this.formData);
+  //   const coverType = coverTypeMap[parentcontrol.name];
+  //   console.log("Cover Type:", coverType);
+  //   const data = JSON.parse(event.target.value);
+  //   console.log("form data in getSumInsuredValues",this.formData);
     
-    if (coverType) {
-      const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
-        item.planType === data.name && 
-        item.isPos === isPos.toString() &&
-        item.coverType === coverType
-      );
-      console.log("Filtered Values:", filteredValues);
-      console.log(filteredValues[0].siList);
-      if (filteredValues.length > 0) {
-        const siList = filteredValues[0].siList;
-        this.formData.insuredMemberDetails.forEach((member:any) => {
-          const maxAllowedValue = parseInt(member.annualIncome) * 12;    
-          const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
-          otherControl.options = filteredSIList;
-          console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
-        })
-      } else {
-        console.log("No matching values found in ActiveSecureSIvalues.");
-        otherControl.options = []; // Clear options if no match is found
-      }
-    } else {
-      console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
-    }
-  }
+  //   if (coverType) {
+  //     const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
+  //       item.planType === data.name && 
+  //       item.isPos === isPos.toString() &&
+  //       item.coverType === coverType
+  //     );
+  //     console.log("Filtered Values:", filteredValues);
+  //     console.log(filteredValues[0].siList);
+  //     if (filteredValues.length > 0) {
+  //       const siList = filteredValues[0].siList;
+  //       this.formData.insuredMemberDetails.forEach((member:any) => {
+  //         const maxAllowedValue = parseInt(member.annualIncome) * 12;    
+  //         const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
+  //         otherControl.options = filteredSIList;
+  //         console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
+  //       })
+  //     } else {
+  //       console.log("No matching values found in ActiveSecureSIvalues.");
+  //       otherControl.options = []; // Clear options if no match is found
+  //     }
+  //   } else {
+  //     console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
+  //   }
+  // }
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
@@ -2771,7 +2634,9 @@ export class YatraComponent {
       // }
     }
     if(this.formData.productName=== 'Active Secure' && control.name=== 'addOnDetails'){
-      const parsedValue = JSON.parse(event.target.value);
+      if(innerControl.name != "memberCheckbox"){
+        this.parsedValue = JSON.parse(event.target.value);
+      }
       const selectedControl= subControl;
       const agentCode =this.agentCode
       this.form.formSections.forEach((section: any) => {
@@ -2782,11 +2647,34 @@ export class YatraComponent {
                 subControl.innerSubControls.forEach((innerSubControls: any) => {
                   if (innerSubControls.coreControls  && selectedControl.name == innerSubControls.name) {
                     innerSubControls.coreControls.forEach((coreControl: any) => {
-                      if(parsedValue.name === 'Retired' && coreControl.name == "occupationRisk"){
+                      if((this.parsedValue && this.parsedValue.name === 'Retired') && coreControl.name == "occupationRisk"){
                         coreControl.options =[{
                           "id": "1",
-                          "value": "O464",
+                          "value": "ND0410",
                           "name": "Retired"
+                        }]
+                      }else if((this.parsedValue && this.parsedValue.name === 'STUDENT') && coreControl.name == "occupationRisk"){
+                        coreControl.options =[{
+                          "id": "2",
+                          "value": "ND0277",
+                          "name": "STUDENT"
+                        }]
+                      }else if((this.parsedValue && this.parsedValue.name === 'Not Employed') && coreControl.name == "occupationRisk"){
+                        coreControl.options =[{
+                          "id": "6",
+                          "value": "ND0306",
+                          "name": "UnEmployed"
+                      }]
+                      }else if((this.parsedValue && this.parsedValue.name === 'HouseWife/Husband') && coreControl.name == "occupationRisk"){
+                        coreControl.options =[{
+                          "id": "3",
+                          "value": "ND0209",
+                          "name": "Housewife"
+                          },
+                          {
+                            "id": "3",
+                            "value": "ND0207",
+                            "name": "Househusband"
                         }]
                       }else if(innerControl.name == "occupation" && coreControl.name == "occupationRisk"){
                           this.yatraService.getNatureOfDuty().subscribe({
@@ -2798,10 +2686,49 @@ export class YatraComponent {
                             }
                           });
                       }
-                      // Check the condition inside coreControls
-                      else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
-                        console.log("Core Control:", coreControl);
-                        this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
+                      // else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
+                      //   console.log("Core Control:", coreControl);
+                      //   this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
+                      // }
+                      else if(innerControl.name == "memberCheckbox" && coreControl.name == "occupation" ){
+                        if(selectedControl.name == "Self"){
+                          coreControl.options =[{
+                            "id": "1",
+                            "value": "O464",
+                            "name": "Retired"
+                        },
+                        {
+                            "id": "3",
+                            "value": "O553",
+                            "name": "Salaried"
+                        },
+                        {
+                            "id": "6",
+                            "value": "O556",
+                            "name": "Self Employed"
+                        }]
+                        }else{
+                            coreControl.options =[{
+                              "id": "1",
+                              "value": "O464",
+                              "name": "Retired"
+                          },
+                          {
+                              "id": "2",
+                              "value": "O490",
+                              "name": "STUDENT"
+                          },
+                          {
+                            "id": "6",
+                            "value": "O554",
+                            "name": "Not Employed"
+                        },
+                          {
+                              "id": "3",
+                              "value": "O555",
+                              "name": "HouseWife/Husband"
+                          }]
+                        }
                       }
                     });
                   }
