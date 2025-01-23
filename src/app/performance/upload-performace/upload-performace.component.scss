@@ -19,3 +19,8 @@ input[type="radio"] {
         text-decoration: none;
     }
 }
+@media (max-width:767px) {
+    .uploaded_fileIno {
+        word-break: break-all;
+    }
+}
