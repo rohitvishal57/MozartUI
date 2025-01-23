@@ -584,7 +584,7 @@ export class YatraComponent {
   }
 
   async initializeForm() {
-    console.log(this.form, this.formData,this.questionFormData, this.productId, this.partnerId);
+    console.log(this.form, this.formData, this.questionFormData, this.productId, this.partnerId);
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
@@ -1508,7 +1508,9 @@ export class YatraComponent {
     return formGroup;
   }
 
-  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null) {
+  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null, policyLength: any = 0) {
+    console.log(parentControl);
+
     let formGroup: any = this.fb.group({})
     dynamicFormControls.forEach((control: IDynamicControl) => {
       if (control.subControls) {
@@ -1592,7 +1594,7 @@ export class YatraComponent {
           }
         }
         else if (control.type == 'select' && control.methodName) {
-          this.resolveMethod(control.methodName, control, index);
+          this.resolveMethod(control.methodName, control, index, policyLength);
         }
 
         if (control.type == 'select' && control.value === "") {
@@ -2598,6 +2600,9 @@ export class YatraComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
 
+    if (control.name == 'previousPolicyDetails') {
+      this.changeRecalculate(true);
+    }
 
     if (control.name == "portingABHIPolicy") {
       const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
@@ -2737,8 +2742,8 @@ export class YatraComponent {
             });
           }
         });
-      });        
-  }
+      });
+    }
     if (control.name == 'physicalcopy' && control.type == 'radio') {
       const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
       this.form.formSections.forEach((section: any) => {
@@ -2993,10 +2998,10 @@ export class YatraComponent {
     //     }
     //   }
     // }
-    else if (parentControl != null && parentControl.onChangeMethod) {
+    if (parentControl != null && parentControl.onChangeMethod) {
       this.resolveMethod(parentControl.onChangeMethod);
     }
-    else if (innerControl != null && innerControl.onChangeMethod) {
+    if (innerControl != null && innerControl.onChangeMethod) {
       this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
     }
 
@@ -3230,7 +3235,7 @@ export class YatraComponent {
           }
         });
 
-        if(parentControl.type == 'details'){
+        if (parentControl.type == 'details') {
           this.changeRecalculate(true);
         }
       }
@@ -6075,7 +6080,7 @@ export class YatraComponent {
               console.log(arrayOfObject.length);
               console.log(key2);
 
-              if(arrayOfObject.length){
+              if (arrayOfObject.length) {
                 arrayOfObject.forEach((obj: any, index: any) => {
                   if (key2 == 'covers') {
                     const group = this.fb.group({
@@ -6102,8 +6107,8 @@ export class YatraComponent {
                   // }
                 });
               }
-              
-              
+
+
             }
             // else if(!(formGroup?.get(key2) instanceof FormGroup)){
             // formGroup?.get(key2)?.setValue(value[key2]);
@@ -6999,7 +7004,7 @@ export class YatraComponent {
             });
           }
 
-          if(this.form.formTitle != 'Total Premium'){
+          if (this.form.formTitle != 'Total Premium') {
             this.dynamicFormGroup.get(formControl.name)?.setValue(this.tenureAmount[this.selectedIndex]);
           }
         }
@@ -7771,6 +7776,8 @@ export class YatraComponent {
   }
 
   changeRecalculate(visiblility: boolean = true) {
+    console.log(visiblility);
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'recalculate') {
@@ -7860,12 +7867,12 @@ export class YatraComponent {
     const reqData = {
       partnerId: this.partnerId.toString(),
       productId: this.productId.toString(),
-      formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()-1].formId.toString(),
+      formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue() - 1].formId.toString(),
       proposalNum: this.proposalNum,
       agentCode: this.agentCode,
       leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
       isLead: this.quickQuoteRedirect == false ? false : true,
-      currentFormSequence: (this.getFormIndexValue()-1).toString()
+      currentFormSequence: (this.getFormIndexValue() - 1).toString()
     }
 
 
@@ -7875,7 +7882,7 @@ export class YatraComponent {
         // this.formSequence = JSON.parse(res.data.formConfig) || [];
 
         // this.form = JSON.parse(res.data.jsonFormData);
-        
+
         this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
         console.log("form", this.questionFormData);
         const dynamicValue = this.dynamicFormGroup.getRawValue();
@@ -7884,7 +7891,7 @@ export class YatraComponent {
           delete member.productQuestionnaire;
         })
         await form.formSections.forEach((section: any) => {
-    
+
           section.formControls.forEach((controls: any) => {
             if (controls.type == 'questionnaire') {
               this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
@@ -7916,29 +7923,29 @@ export class YatraComponent {
                   });
                 }
                 // Initialize the productQuestionnaire array for the current member
-    
+
                 // Iterate through the dynamicValue object
                 Object.keys(dynamicValue).forEach((item: any) => {
                   if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
                     const innerValue = dynamicValue[item];
-    
+
                     // Iterate through the keys of the inner object
                     Object.keys(innerValue).forEach((subItem: any) => {
                       // Check if the member's relation matches the current subItem
                       if (member.relation === subItem) {
-    
+
                         // Iterate through the array related to the matched subItem
                         innerValue[subItem].forEach((innerArray: any) => {
                           // innerArray.parentQuestionCode = questionId;
                           if (!innerArray.hasOwnProperty('subQuestionCode')) {
                             innerArray.subQuestionCode = "";
                           }
-    
+
                           if (innerArray.diseaseName) {
                             // If optionsArray is not empty, find the corresponding option
                             if (optionsArray.length > 0) {
                               const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-    
+
                               // Set subQuestionCode and dName based on the found option
                               if (newOption) {
                                 innerArray.subQuestionCode = newOption.value;
@@ -7950,7 +7957,7 @@ export class YatraComponent {
                             //   Object.entries(innerArray).filter(([key, value]) => value !== "")
                             // );
                             const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-    
+
                             if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
                               innerArray.parentQuestionCode = questionId;
                               productQuestionnaire.push(filteredInnerArray);
@@ -7958,20 +7965,20 @@ export class YatraComponent {
                           }
                           else {
                             const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-    
+
                             if (!allValuesEmpty) {
                               innerArray.harmfulSubstances = true;
                               innerArray.parentQuestionCode = questionId;
                               productQuestionnaire.push(innerArray);
                             }
-    
+
                             // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
                             //   innerArray.harmfulSubstances = false;
                             // }
                             // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
                             //   innerArray.harmfulSubstances = true;
                             // }
-    
+
                             // productQuestionnaire.push(innerArray);
                           }
                           // productQuestionnaire.push(filteredInnerArray);
@@ -7980,7 +7987,7 @@ export class YatraComponent {
                     });
                   }
                 });
-    
+
                 // Assign the populated productQuestionnaire to the member
                 if (member.productQuestionnaire) {
                   member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
@@ -8006,12 +8013,12 @@ export class YatraComponent {
                 questionName = controls.name;
                 // If a matching control is found
                 // Initialize the productQuestionnaire array for the current member
-    
+
                 // Iterate through the dynamicValue object
                 Object.keys(dynamicValue).forEach((item: any) => {
                   if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
                     const innerValue = dynamicValue[item];
-    
+
                     // Iterate through the keys of the inner object
                     Object.keys(innerValue).forEach((subItem: any) => {
                       // Check if the member's relation matches the current subItem
@@ -8025,12 +8032,12 @@ export class YatraComponent {
                         //   if (!innerArray.hasOwnProperty('subQuestionCode')) {
                         //     innerArray.subQuestionCode = "";
                         //   }
-    
+
                         //   if (innerArray.diseaseName) {
                         //     // If optionsArray is not empty, find the corresponding option
                         //     if (optionsArray.length > 0) {
                         //       const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-    
+
                         //       // Set subQuestionCode and dName based on the found option
                         //       if (newOption) {
                         //         innerArray.subQuestionCode = newOption.value;
@@ -8042,7 +8049,7 @@ export class YatraComponent {
                         //     //   Object.entries(innerArray).filter(([key, value]) => value !== "")
                         //     // );
                         //     const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-    
+
                         //     if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
                         //       innerArray.parentQuestionCode = questionId;
                         //       productQuestionnaire.push(filteredInnerArray);
@@ -8050,20 +8057,20 @@ export class YatraComponent {
                         //   }
                         //   else {
                         //     const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-    
+
                         //     if (!allValuesEmpty) {
                         //       innerArray.harmfulSubstances = true;
                         //       innerArray.parentQuestionCode = questionId;
                         //       productQuestionnaire.push(innerArray);
                         //     }
-    
+
                         //     // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
                         //     //   innerArray.harmfulSubstances = false;
                         //     // }
                         //     // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
                         //     //   innerArray.harmfulSubstances = true;
                         //     // }
-    
+
                         //     // productQuestionnaire.push(innerArray);
                         //   }
                         //   // productQuestionnaire.push(filteredInnerArray);
@@ -8072,7 +8079,7 @@ export class YatraComponent {
                     });
                   }
                 });
-    
+
                 // Assign the populated productQuestionnaire to the member
                 if (member.productQuestionnaire) {
                   member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
@@ -8096,27 +8103,27 @@ export class YatraComponent {
           if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
             this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
           }
-    
+
           const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-    
+
           // Ensure the FormArray has enough entries
           while (dynamicform.length <= index) {
             dynamicform.push(new FormGroup({}));
           }
-    
+
           const dindex = dynamicform.at(index) as FormGroup;
           Object.keys(member).forEach((key: string) => {
             dindex.addControl(key, new FormControl(member[key]));
           });
           // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-    
+
           const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
           dindex.addControl('productQuestionnaire', '');
-    
+
           // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
-    
+
           dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-    
+
           // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
           // this.flattenObjectInsert(this.formData);
         })
@@ -9083,9 +9090,9 @@ export class YatraComponent {
 
   updatePrefixBasedOnGender(control: any): void {
     if (this.formData?.proposerGender) {
-      const proposerGender = this.formData.proposerGender; 
+      const proposerGender = this.formData.proposerGender;
       console.log(proposerGender)
-      const disabledSalutations = this.salutationMapping[proposerGender] || []; 
+      const disabledSalutations = this.salutationMapping[proposerGender] || [];
 
       control.options = control.options.map((option: any) => ({
         ...option,
@@ -9352,20 +9359,35 @@ export class YatraComponent {
     }
   }
 
-  setPreviousPolicyYears(control: any) {
-    const currentYear = new Date().getFullYear();
-    const yearOptions = [
-      {
-        value: `${currentYear - 1}-${currentYear}`,
-        name: `${currentYear - 1}-${currentYear}`
-      },
-      {
-        value: `${currentYear}-${currentYear + 1}`,
-        name: `${currentYear}-${currentYear + 1}`
+  setPreviousPolicyYears(control: any, index: any, policyLength: any = 0) {
+
+    console.log(index, policyLength);
+    if(control.options.length ==0){
+      const currentYear = new Date().getFullYear();
+    let yearOptions = [];
+    if (policyLength == 0) {
+      yearOptions = [
+        {
+          value: `${currentYear - 1}-${currentYear}`,
+          name: `${currentYear - 1}-${currentYear}`
+        }
+      ];
+    }
+    else {
+      const startYear = currentYear - 4; // The starting year for your ranges
+      yearOptions = [];
+
+      // Generate the year ranges
+      for (let year = startYear; year < currentYear - 1; year++) {
+        yearOptions.push({
+          value: `${year}-${year + 1}`,
+          name: `${year}-${year + 1}`
+        });
       }
-    ];
+    }
 
     control.options = yearOptions;
+    }
   }
 
   checkForPortability(control: any) {
@@ -9427,7 +9449,24 @@ export class YatraComponent {
                         if (controlElement.name == 'policyIndex') {
                           controlElement.label = 'Policy ' + (i + 1);
                         }
+                         if (controlElement.name == 'selectYear') {
+                          controlElement.options = [];
+                            const currentYear = new Date().getFullYear();
+                            const startYear = currentYear - 4; // The starting year for your ranges
+                            const yearOptions = [];
+          
+                            // Generate the year ranges
+                            for (let year = startYear; year < currentYear; year++) {
+                              yearOptions.push({
+                                value: `${year}-${year + 1}`,
+                                name: `${year}-${year + 1}`
+                              });
+                            }
+                            controlElement.options = yearOptions;
+                          }
                       });
+                      console.log(customizedInnerArrayControl);
+                      
                       innerControl.innerArrayControl.push(customizedInnerArrayControl);
                     }
                   }
@@ -9506,7 +9545,15 @@ export class YatraComponent {
         });
       }
     });
+
+
     // this.onClickReq(parentControl.value[index + 1]);
+    // Show a toast message upon successful completion
+    this.toast.success({
+      detail: "Success",
+      summary: "Details copied for all members.",
+      duration: 3000
+    });
   }
 
   onClickReq(obj: any, title?: any) {
@@ -9736,7 +9783,7 @@ export class YatraComponent {
     // })
 
     console.log(tempControl, this.form);
-
+    let policyLength = 0;
     // tempControl
 
     this.form.formSections.forEach((section: any) => {
@@ -9750,8 +9797,26 @@ export class YatraComponent {
                 if (innerArrayControl.name == 'policyIndex') {
                   innerArrayControl.label = 'Policy ' + innerControl.innerArrayControl.length;
                 }
+                // if (innerArrayControl.name == 'selectYear') {
+                //   innerArrayControl.options = [];
+                //   const currentYear = new Date().getFullYear();
+                //   const startYear = currentYear - 4; // The starting year for your ranges
+                //   const yearOptions = [];
+
+                //   // Generate the year ranges
+                //   for (let year = startYear; year < currentYear; year++) {
+                //     yearOptions.push({
+                //       value: `${year}-${year + 1}`,
+                //       name: `${year}-${year + 1}`
+                //     });
+                //   }
+                //   innerArrayControl.options = yearOptions;
+                // }
               })
+              console.log(tempControl);
+
               innerControl.innerArrayControl.push([...tempControl]);
+              policyLength = innerControl.innerArrayControl.length;
             }
           });
 
@@ -9771,9 +9836,12 @@ export class YatraComponent {
       console.log(formArr);
 
       let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
-      console.log(control.innerArrayControl.length - 1);
+      console.log(control.innerArrayControl.length - 1, control);
 
-      innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
+      console.log(this.form);
+
+
+      innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control, policyLength));
     }
 
     console.log(this.form, this.dynamicFormGroup);
@@ -10838,17 +10906,188 @@ export class YatraComponent {
     event.stopPropagation();
   }
 
-  calculatePremium(){
+  calculatePremium() {
     console.log(this.dynamicFormGroup.valid);
-    if(!this.dynamicFormGroup.valid){
+    if (!this.dynamicFormGroup.valid) {
       this.toast.warning({ detail: "Warning", summary: "Please enter all the details.", duration: 5000 });
       return;
     }
-    else{
+    else {
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
     }
-    
+
   }
+
+  checkPolicyStartDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
+    console.log(event, innerControl, control, parentControl, index, indexj);
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+    console.log(memberGroupInnerControlGroup);
+
+    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+
+    console.log(selectedYear.length);
+    if (selectedYear.length == 0) {
+      this.toast.warning({ detail: "Warning", summary: "Please select previous policy year", duration: 3000 });
+      memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+      return;
+    }
+    else {
+      const policyStartDate = memberGroupInnerControlGroup.get(innerControl.name)?.value;
+      const currentYear = new Date().getFullYear();
+      const selectedYearStart = parseInt(selectedYear.split('-')[0]);
+      const selectedYearEnd = parseInt(selectedYear.split('-')[1]);
+
+      // Convert policy start date to Date object
+      const policyStartDateObj = new Date(policyStartDate);
+      const policyStartYear = policyStartDateObj.getFullYear();
+
+      console.log(policyStartYear.toString().length);
+
+      if (policyStartYear.toString().length >= 4) {
+        console.log(policyStartDateObj);
+
+        // Check if policy start date is within the selected year range
+        if (policyStartYear !== selectedYearStart) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: "Please enter a valid policy start date.",
+            duration: 3000,
+          });
+          memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+          return;
+        }
+
+        // Check 59 days prior condition
+        const today = new Date();
+        const fiftyNineDaysPrior = new Date(today);
+        fiftyNineDaysPrior.setDate(today.getDate() - 59); // Correctly subtract 59 days
+
+        if (policyStartDateObj > fiftyNineDaysPrior) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: "Please enter a valid policy start date.",
+            duration: 3000,
+          });
+          memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+          return;
+        }
+      }
+
+      // If all validations pass, proceed with further processing
+    }
+
+
+
+  }
+
+  checkPolicyEndDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+
+    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+
+    if (!selectedYear || selectedYear.length === 0) {
+      this.toast.warning({ detail: "Warning", summary: "Please select previous policy year", duration: 3000 });
+      memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+      return;
+    }
+
+    const policyStartDate = memberGroupInnerControlGroup.get('previousPolicyStartDate')?.value;
+
+    if (!policyStartDate || policyStartDate.length === 0) {
+      this.toast.warning({ detail: "Warning", summary: "Please enter policy start date", duration: 3000 });
+      memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+      return;
+    }
+
+    const policyEndDate = memberGroupInnerControlGroup.get(innerControl.name)?.value;
+
+    const selectedYearStart = parseInt(selectedYear.split('-')[0]);
+    const selectedYearEnd = parseInt(selectedYear.split('-')[1]);
+    const currentYear = new Date().getFullYear();
+
+    const policyStartDateObj = new Date(policyStartDate);
+    const policyEndDateObj = new Date(policyEndDate);
+    const policyStartYear = policyStartDateObj.getFullYear();
+    const policyEndYear = policyEndDateObj.getFullYear();
+
+    if (isNaN(policyEndDateObj.getTime())) {
+      this.toast.warning({
+        detail: "Warning",
+        summary: "Please enter a valid policy end date.",
+        duration: 3000
+      });
+      memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+      return;
+    }
+
+    const today = new Date();
+
+    // Calculate the valid end date: one day before one year from the start date
+    const oneDayBeforeNextYear = new Date(policyStartDateObj);
+    oneDayBeforeNextYear.setFullYear(oneDayBeforeNextYear.getFullYear() + 1);
+    oneDayBeforeNextYear.setDate(oneDayBeforeNextYear.getDate() - 1);
+
+    if (policyEndYear.toString().length >= 4) {
+      if (selectedYearEnd === currentYear) {
+        // For current year, ensure the end date is a future date AND matches the one-day-before-one-year rule
+        if (policyEndDateObj <= today) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: "Policy end date must be a future date.",
+            duration: 3000
+          });
+          memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+          return;
+        }
+
+        if (policyEndDateObj.getTime() !== oneDayBeforeNextYear.getTime()) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: `Policy end date must be exactly one day less than one year from the start date.`,
+            duration: 3000
+          });
+          memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+          return;
+        }
+      } else {
+        // For non-current years, only the one-day-before-one-year rule applies
+        if (policyEndDateObj.getTime() !== oneDayBeforeNextYear.getTime()) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: `Policy end date must be exactly one day less than one year from the start date.`,
+            duration: 3000
+          });
+          memberGroupInnerControlGroup.get(innerControl.name)?.setValue('');
+          return;
+        }
+      }
+    }
+
+
+  }
+
+  setInsurerName(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+
+    if (memberGroupInnerControlGroup.get(innerControl.name)?.value == 'Group') {
+      memberGroupInnerControlGroup.get(innerControl.otherControlName)?.setValue('Aditya Birla Health Insurance Co. Ltd.');
+      memberGroupInnerControlGroup.get(innerControl.otherControlName)?.disable();
+    }
+    else {
+      memberGroupInnerControlGroup.get(innerControl.otherControlName)?.setValue('');
+      memberGroupInnerControlGroup.get(innerControl.otherControlName)?.enable();
+    }
+  }
+
 }
