@@ -12,7 +12,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" id="eventType" formControlName="eventType">
+                <select class="form-select input-selectBox" id="eventType" name="eventType" formControlName="eventType">
                   <option value="" disabled selected>{{"Select event type" | translate}}</option>
                   <option *ngFor="let type of eventTypes" [value]="type.value">
                     {{ type.label }}
@@ -29,6 +29,7 @@
              class="form-control input-textBox" 
              [matAutocomplete]="auto" 
              id="eventNumber" 
+             name="eventNumber"
              formControlName="eventNumber" 
              (keyup)="filterReferenceList($event)" 
              placeholder="" 
@@ -49,7 +50,7 @@
        </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName"
+                <input type="text" class="form-control input-textBox" id="customerName" name="customerName" formControlName="customerName"
                   placeholder="" pattern="^[A-Za-z\s]+$">
                 <label for="customerName">{{"Customer Name" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="saveEvent.get('customerName')?.invalid && (saveEvent.get('customerName')?.dirty || saveEvent.get('customerName')?.touched)">
@@ -67,7 +68,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="text" class="form-control input-textBox" id="mobileNumber" formControlName="mobileNumber"
+                <input type="text" class="form-control input-textBox" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber"
                   placeholder="">
                 <label for="mobileNumber">{{"Mobile No." | translate}}<span class="text-danger">*</span></label>
                 <div
@@ -81,7 +82,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="text" class="form-control input-textBox" id="activityTitle" formControlName="activityTitle"
+                <input type="text" class="form-control input-textBox" id="activityTitle" name="activityTitle" formControlName="activityTitle"
                   placeholder="" pattern="^[A-Za-z\s]+$">
                 <label for="activityTitle">{{"Activity Title" | translate}}<span class="text-danger">*</span></label>
                 <div *ngIf="saveEvent.get('activityTitle')?.invalid && (saveEvent.get('activityTitle')?.dirty || saveEvent.get('activityTitle')?.touched)">
@@ -96,7 +97,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" id="activityType" formControlName="activityType">
+                <select class="form-select input-selectBox" id="activityType" name="activityType" formControlName="activityType">
                   <option value="" disabled selected>{{"Choose option" | translate}}</option>
                   <option *ngFor="let type of activityTypes" [value]="type.value">{{ type.label | translate }}</option>
                 </select>
@@ -115,7 +116,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="date" class="form-control input-textBox" id="startDate" formControlName="startDate">
+                <input type="date" class="form-control input-textBox" id="startDate" name="startDate" formControlName="startDate">
                 <label for="startDate">{{"Activity Start Date" | translate}}<span class="text-danger">*</span></label>
                 <div
                   *ngIf="saveEvent.get('startDate')?.invalid && (saveEvent.get('startDate')?.dirty || saveEvent.get('startDate')?.touched)">
@@ -126,7 +127,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="time" class="form-control input-textBox" id="startTime" formControlName="startTime">
+                <input type="time" class="form-control input-textBox" id="startTime" name="startTime" formControlName="startTime">
                 <label for="startTime">{{"Activity Start Time" | translate}}<span class="text-danger">*</span></label>
                 <div
                   *ngIf="saveEvent.get('startTime')?.invalid && (saveEvent.get('startTime')?.dirty || saveEvent.get('startTime')?.touched)">
@@ -137,7 +138,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="time" class="form-control input-textBox" id="startTime" formControlName="endTime">
+                <input type="time" class="form-control input-textBox" id="endTime" name="endTime" formControlName="endTime">
                 <label for="endTime">{{"Activity End Time" | translate}}<span class="text-danger">*</span></label>
                 <div
                   *ngIf="saveEvent.get('endTime')?.invalid && (saveEvent.get('endTime')?.dirty || saveEvent.get('endTime')?.touched)">
@@ -151,7 +152,7 @@
           <div class="row mb-3">
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
             <div class="input-block form-floating input-block-renew">
-              <input type="date" class="form-control input-textBox" id="endDate" formControlName="endDate">
+              <input type="date" class="form-control input-textBox" id="endDate" name="endDate" formControlName="endDate">
               <label for="endDate">{{"Activity End Date" | translate}}<span class="text-danger">*</span></label>
               <div
                 *ngIf="saveEvent.get('endDate')?.invalid && (saveEvent.get('endDate')?.dirty || saveEvent.get('endDate')?.touched)">
@@ -163,7 +164,7 @@
 
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
             <div class="input-block form-floating input-block-renew">
-              <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="" pattern="^[A-Za-z0-9\s.,!?;:()-]*$">
+              <input type="text" class="form-control input-textBox" id="note" name="note" formControlName="note" placeholder="" pattern="^[A-Za-z0-9\s.,!?;:()-]*$">
               <label for="note" class="form-label">{{"Note" | translate}}<span class="text-danger">*</span></label>
               <div *ngIf="saveEvent.get('note')?.invalid && (saveEvent.get('note')?.dirty || saveEvent.get('note')?.touched)">
                 <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['required']">
@@ -177,7 +178,7 @@
           </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button type="submit" class="btn_red" [disabled]="isSubmitting">
+            <button type="submit" id="save" name="save" class="btn_red" [disabled]="isSubmitting">
               {{"Save" | translate}}
             </button>
             <!-- <button type="button" class="btn btn-secondary ms-2">Cancel</button> -->
