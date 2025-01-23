@@ -4753,12 +4753,14 @@ export class RugDynamicFormComponent {
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
               if(this.productId == 31){
                 if(this.getFormIndexValue() == 3){
+                  let nomineeRelationCode = this.filterRelationByName(this.d2cDetails.nomineeRelation);
                   this.selectedOccupationCode = this.occupationList.filter(
                     (item: any) => item.occupationName === this.d2cDetails.occupation
                   );
                   const payloadObject = {
                     proposerDetails: {
                       leadId: this.d2cDetails.leadId,
+                      occupationName:null,
                       // customerId: this.d2cDetails.customerId,
                       salutation: this.d2cDetails.proposerGender == 'M' ? "MR" : this.d2cDetails.proposerGender == 'F' ? "MS" : "Mr",
                       customerName: this.d2cDetails.customerName,
@@ -4766,14 +4768,14 @@ export class RugDynamicFormComponent {
                       address:this.d2cDetails.proposerAddress,
                       city:this.d2cDetails.proposerCity,
                       pinCode: this.d2cDetails.proposerPincode,
-                      state: "GUJARAT",
+                      state: this.d2cDetails.proposerState || "GUJRAT",
                       dob: this.d2cDetails.proposerDob,
                       gender: this.d2cDetails.proposerGender,
                       mobileNumber: this.d2cDetails.proposerMobileNumber,
                       nationality: this.d2cDetails.proposerNationality,
                       emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
                       maritalStatus: this.d2cDetails.proposerMaritalStatus,
-                      occupationType: this.selectedOccupationCode[0]?.occupationCode,
+                      occupationType: null,
                       occupation: this.d2cDetails.occupation,
                       panNumber: this.d2cDetails.proposerPanNumber,
                       sumInsured: this.d2cDetails.sumInsured,
@@ -4812,11 +4814,11 @@ export class RugDynamicFormComponent {
                     },
                     insuredDetails: [{
                       leadId:  this.d2cDetails.leadId,
-                      name: this.d2cDetails.childName,
+                      name: this.d2cDetails.childName.split(" ").length > 1 ? this.d2cDetails.childName : this.d2cDetails.childName + ".",
                       dob: this.d2cDetails.childDob,
                       relationName:  this.d2cDetails.childRelation,
                       relationCode: this.d2cDetails.childRelation == "son" ? "R003" : "R004" || "",
-                      gender: this.d2cDetails.childgender == 'M' ? 'male' : 'female',
+                      gender: this.d2cDetails.childgender,
                       height: null,
                       weight: null,
                     }],
@@ -4824,9 +4826,9 @@ export class RugDynamicFormComponent {
                       leadId: this.d2cDetails.leadId,
                       nomineeName: this.d2cDetails.firstName,
                       nomineeRelation: this.d2cDetails.nomineeRelation,
-                      nomineeRelationCode: "R002",
-                      nomineeDOB: "11-11-1999",
-                      nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
+                      nomineeRelationCode: nomineeRelationCode,
+                      nomineeDOB: this.d2cDetails.nomineeDob,
+                      nomineeGender: this.d2cDetails.nomineeGender,
                       nomineeMobileNumber: this.d2cDetails.mobileNumber,
                       nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
                       appointeeDOB: null,
@@ -4861,9 +4863,9 @@ export class RugDynamicFormComponent {
                            "quoteNumber": "",
                            "OrderId": "",
                            "Amount": Math.round(this.d2cDetails.totalPremium),
-                           "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
+                           "FirstName": this.d2cDetails.customerName.split(' ')?.[0],
                            "MiddleName": "",
-                           "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1] || '.',
+                           "LastName": this.d2cDetails.customerName.split(' ')?.[1] || '.',
                            "Phone": this.d2cDetails.proposerMobileNumber,
                            "Email": this.d2cDetails.proposerEmailAddress,
                            "DOB": this.d2cDetails.proposerDob,                   
@@ -4908,7 +4910,7 @@ export class RugDynamicFormComponent {
                       address:this.d2cDetails.proposerAddress,
                       city:this.d2cDetails.proposerCity,
                       pinCode: this.d2cDetails.proposerPincode,
-                      state: "GUJARAT",
+                      state: this.d2cDetails.proposerState || "GUJRAT",
                       dob: this.d2cDetails.proposerDob,
                       gender: this.d2cDetails.proposerGender,
                       mobileNumber: this.d2cDetails.proposerMobileNumber,
