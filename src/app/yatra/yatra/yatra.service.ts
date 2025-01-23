@@ -255,4 +255,8 @@ export class YatraService {
     const insertoptionalcoversjson = this.configService.config.baseUrl + this.configService.config.insertoptionalcoversjson;
     return this.httpService.post(insertoptionalcoversjson,reqData);
   }
+  getSumInsuredList(){
+    const suminsuredList = this.configService.config.baseUrl + this.configService.config.getsuminsuredlist;
+    return this.httpService.get(suminsuredList);
+  }
 }
