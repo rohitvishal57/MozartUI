@@ -125,7 +125,7 @@ export class ViewForDualJourneyComponent implements OnInit {
 
   viewDeails(lead: any) {
     console.log(lead);
-    localStorage.setItem('leadId', lead.leadNo)
+    localStorage.setItem('leadId', lead.refNo)
     let data = {
       partnerId: 45,
       productId: 26
