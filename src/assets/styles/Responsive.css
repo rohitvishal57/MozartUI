@@ -722,6 +722,11 @@
     .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem h6 {
         max-width: 280px;
     }
+    input[type="date"]::-webkit-date-and-time-value {
+        margin-top: 0px;
+        text-align: left !important;
+        inline-size: 100%;
+    }
 }
 @media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-container {
