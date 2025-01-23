@@ -9949,11 +9949,37 @@ export class YatraComponent {
   getSelectedDiseases(control: any, index: any, subControl: string): string {
     const controlName: any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
     const selectedKeys = Object.keys(controlName?.value).filter(key => controlName?.value[key] === true);
-    if (controlName) {
-      controlName.setValidators(this.addCustomValidationForChronicCondition(controlName));
-      controlName.updateValueAndValidity();
+    // if (controlName) {
+    //   controlName.setValidators(this.addCustomValidationForChronicCondition(controlName));
+    //   controlName.updateValueAndValidity();
 
-    }
+    // }
+    const formArray = this.dynamicFormGroup.get(control) as FormArray;
+
+  if (formArray) {
+    const hasAnyTrue: boolean[] = [];
+
+    // Build the hasAnyTrue array to track boolean values for each member
+    formArray.controls.forEach((formGroup) => {
+      const subControlGroup = formGroup.get(subControl) as FormGroup;
+      if (subControlGroup) {
+        const validationResult = this.addCustomValidationForChronicCondition(subControlGroup)(subControlGroup);
+        hasAnyTrue.push(validationResult === null);        // hasAnyTrue.push(hasTrue);
+      }
+    });
+
+    // Determine the global state for all members
+    const shouldSetValueTo = hasAnyTrue.includes(true);
+
+    // Update all members based on the shouldSetValueTo result
+    formArray.controls.forEach((formGroup) => {
+      const subControlGroup = formGroup.get(subControl) as FormGroup;
+      if (subControlGroup) {
+        subControlGroup.setValidators(() => (shouldSetValueTo ? null : { required: true }));
+        subControlGroup.updateValueAndValidity();
+      }
+    });
+  }
     // controlName.markAsPristine(!isTouched); // Optional: Mark dirty for additional validation logic
     if (controlName?.value) {
 
