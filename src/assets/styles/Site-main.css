@@ -3972,6 +3972,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadDocument_area h6 {
     font-weight: 600;
     font-size: 14px;
+    word-break: break-word;
 }
 .uploadDocument_area p {
     font-weight: 600;
@@ -4162,6 +4163,9 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 14px;
   color: #000;
   margin: 0 0 4px;
+  max-width: 320px;
+  line-height: normal;
+  word-wrap: break-word;
 }
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem p {
   font-weight: 600;

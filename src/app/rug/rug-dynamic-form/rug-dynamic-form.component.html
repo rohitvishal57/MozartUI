@@ -121,10 +121,11 @@
                           Plan Details
                     </button>
                 </div> -->
-                  <div class="label-value-container" (click)="(!isD2C && control.name == 'plandetails') ? planBBSummary() : planSummary()">
+                  <div [ngClass]="{'label-value-container': control.name != 'policyEmail'}" (click)="(!isD2C && control.name == 'plandetails') ? planBBSummary() : planSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
-                    <div class="value-text" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
+                    <div class="value-text" *ngIf="control.name != 'policyEmail'" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
+                    <div class="value-text" *ngIf="control.name == 'policyEmail'" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}"><a href='mailto:{{ control.value }}' class='btn_link'>{{ control.value }}</a></div>
                     
                   </div>
                   <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">

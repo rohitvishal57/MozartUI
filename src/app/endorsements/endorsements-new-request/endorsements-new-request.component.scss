@@ -102,5 +102,26 @@
     .siteBody {
         padding-bottom: 6rem;
     }
+    .OTPContainer {
+        gap: 5px;
+    }
+  }
+  @media (max-width: 390px) {
+    .OTPContainer .OTP_Input {
+        width: 44px;
+        padding: 8px 6px;
+    }
+  }
+  @media (max-width: 360px) {
+    .OTPContainer .OTP_Input {
+        width: 41px;
+        padding: 8px 6px;
+    }
+  }
+  @media (max-width: 320px) {
+    .OTPContainer .OTP_Input {
+        width: 35px;
+        padding: 8px 6px;
+    }
   }
   /*----MAT Select Custom styles end----*/

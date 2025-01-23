@@ -1303,9 +1303,9 @@ export class GetQuoteComponent implements AfterViewChecked {
     return !!matchingRelation;
     }
   isClassAddedMembers = true;
-  viewAllToggleText: string = 'View All'; 
+  viewAllToggleText: string = 'Show more'; 
   viewAllToggleClass() {
     this.isClassAddedMembers = !this.isClassAddedMembers;
-    this.viewAllToggleText = this.viewAllToggleText === 'View All' ? 'View Less' : 'View All';
+    this.viewAllToggleText = this.viewAllToggleText === 'Show more' ? 'Show more' : 'Show more';
   }
 }

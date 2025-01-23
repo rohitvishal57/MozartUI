@@ -29,6 +29,7 @@ export const environment = {
   getActiveCampaignDetails: "api/yatra/getactivecampaignsdetails",
   saveLeadData: "api/yatra/createlead",
   exportLeads: "api/yatra/exportleadAll",
+  exportLead: "api/yatra/exportlead",
   getLeadInfoByLeadNumber: "api/yatra/leadbyleadnumber?leadNumber=",
   getcampaignsdetails: "api/yatra/getcampaignsdetails",
   createbulklead: "api/yatra/createbulklead",
@@ -44,7 +45,7 @@ export const environment = {
   getProposalListApi: "api/yatra/getproposallist",
   getQuoteListApi: "/api/quote/getcartlist",
   getCustomerList: "api/yatra/getCustomerList",
-  sendCustomerDetails: "/api/yatra/sendcustomerdetails",
+  sendCustomerDetails: "/api/yatra/sharepolicykit",
   download: "api/yatra/downloadcustomer",
   addLeadNotes: "api/yatra/addnotes",
   getLeadNotes: "api/yatra/notelist?leadNumber=",
@@ -217,5 +218,6 @@ export const environment = {
   DeleteBaseCaller:"api/rug/DeleteBaseCaller",
   CreateUpdateBaseCaller:"api/rug/CreateUpdateBaseCaller",
   getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
-  insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson"
+  insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
+  createLob:"api/rug/CreateManageLob"
 };

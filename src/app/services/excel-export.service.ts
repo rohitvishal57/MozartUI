@@ -24,12 +24,14 @@ export class ExcelExportService {
       type: 'array',
     });
 
-    if (this.isMobile()) {
+    this.saveAsExcelFileForWeb(excelBuffer, fileName);
+
+    /* if (this.isMobile()) {
       await this.requestPermissions();
       await this.saveAsExcelFileForMobile(excelBuffer, fileName);
     } else {
       this.saveAsExcelFileForWeb(excelBuffer, fileName);
-    }
+    } */
   }
 
   private saveAsExcelFileForWeb(buffer: any, fileName: string): void {
@@ -39,7 +41,7 @@ export class ExcelExportService {
     saveAs(data, `${fileName}.xlsx`);
   }
 
-  private async saveAsExcelFileForMobile(buffer: any, fileName: string): Promise<void> {
+  /* private async saveAsExcelFileForMobile(buffer: any, fileName: string): Promise<void> {
     const data: Blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     });
@@ -76,5 +78,5 @@ export class ExcelExportService {
 
   private isMobile(): boolean {
     return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-  }
+  } */
 }

@@ -378,6 +378,10 @@ h6 {
 	}
 	.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch {
 		width: 150px;
+		height: 31px;
+	}
+	.field_searchMain.field_searchMainMobile .filterFieldGroup .ui-error-proposal {
+		position: relative;
 	}
 	.bodyColumn h2 {
 		font-size: 14px;
@@ -404,7 +408,6 @@ h6 {
 	}
 	.quickFilterMain .quickFilterRight.leads_searchWraperMobile {
 		flex-direction: row;
-		align-items: center;
 	}
 	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterFieldGroup {
 		width: 100%;
@@ -412,6 +415,8 @@ h6 {
 	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper {
 		min-width: 20px;
         width: 20px;
+		margin-top: 8px;
+
 	}
 	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter {
 		border-width: 0 !important;

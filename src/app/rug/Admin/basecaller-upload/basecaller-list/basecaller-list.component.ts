@@ -39,7 +39,8 @@ export class BasecallerListComponent {
   getAllBaseCaller(){
     this.adminService.getAllBaseCaller(this.pageNo, this.noOfRows).subscribe(
       (res: any) => {
-        this.allBaseCaller =JSON.parse(res.data).data.allBaseCaller;
+        const response =JSON.parse(res.data);
+        this.allBaseCaller = response.data.allBaseCaller;
         this.totalRecords=this.allBaseCaller.length;  
         this.updateDisplayedData();
       },
