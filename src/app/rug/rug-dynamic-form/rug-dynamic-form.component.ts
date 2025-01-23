@@ -4826,7 +4826,7 @@ export class RugDynamicFormComponent {
                       leadId: this.d2cDetails.leadId,
                       nomineeName: this.d2cDetails.firstName,
                       nomineeRelation: this.d2cDetails.nomineeRelation,
-                      nomineeRelationCode: nomineeRelationCode,
+                      nomineeRelationCode: nomineeRelationCode[0].relationCode,
                       nomineeDOB: this.d2cDetails.nomineeDob,
                       nomineeGender: this.d2cDetails.nomineeGender,
                       nomineeMobileNumber: this.d2cDetails.mobileNumber,
