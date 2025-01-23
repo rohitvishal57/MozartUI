@@ -6330,7 +6330,8 @@ export class YatraComponent {
       }
 
       if (parentControl != null && parentControl.type == 'questionnaire') {
-        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        // const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        const arrayName = (control.name).replace(/\b\w/g, (char:any) => char.toUpperCase());
         parentControl.subControls.forEach((subControl: any) => {
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
@@ -6406,7 +6407,8 @@ export class YatraComponent {
         this.addOnRemoved(control, parentControl);
       }
       if (parentControl != null && parentControl.type == 'questionnaire') {
-        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        // const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        const arrayName = (control.name).replace(/\b\w/g, (char:any) => char.toUpperCase());
         parentControl.subControls.forEach((subControl: any) => {
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
