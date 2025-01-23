@@ -3972,6 +3972,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadDocument_area h6 {
     font-weight: 600;
     font-size: 14px;
+    word-break: break-word;
 }
 .uploadDocument_area p {
     font-weight: 600;
