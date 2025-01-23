@@ -2985,7 +2985,7 @@ export class RenewalJourneyComponent {
         "policyNumber": this.policyNumber,
         "proposalNum": "",
         "agentCode": this.agentCode,
-        "bankName": data.paymentBankName,
+        "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode ||"",
         "bankAccountNumber": data.accountNumber || "",

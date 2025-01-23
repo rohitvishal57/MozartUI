@@ -2258,68 +2258,68 @@ export const renewals_lead = {
       {
         "sectionTitle": "Bottom Section",
         "visible": true,
-        "class": "section-title bottom-section-axis",
+        "class": "section-title bottom-section",
         "formControls": [
-          {
-            "name": "plandetails",
-            "label": "Plan Details",
-            "visibleLabel": true,
-            "type": "summary",
-            "value": "",
-            "class": "col-md-12",
-            "visible": true,
-            "disabled": true
-          },
-          {
-            "name": "productName",
-            "label": "Product Name",
-            "visibleLabel": false,
-            "visible": true,
-            "disabled": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3 bottom-product",
-            "value": "",
-            "text": "Aditya Birla Health Insurance"
-          },
-          {
-            "name": "totalPremium",
-            "label": "Total Premium/Incl tax",
-            "visibleLabel": true,
-            "visible": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
-            "value": "",
-            "disabled": true
-          },
-          {
-            "name": "proposalNumber",
-            "label": "Proposal Number",
-            "visibleLabel": true,
-            "visible": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3 bottom_proposalNumber",
-            "value": "",
-            "disabled": true
-          },
-          {
-            "name": "next",
-            "label": "Next",
-            "visibleLabel": false,
-            "visible": true,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "onSubmit"
-          },
-          {
-            "name": "back",
-            "label": "Back",
-            "visibleLabel": false,
-            "visible": true,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 back-btn",
-            "methodName": "onPrevious"
-          }
-        ]
+                {
+                    "name": "plandetails",
+                    "label": "Plan Details",
+                    "visibleLabel": true,
+                    "type": "summary",
+                    "value": "",
+                    "class": "col-md-12",
+                    "visible": true,
+                    "disabled": true
+                },
+                {
+                    "name": "productName",
+                    "label": "Product Name",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "disabled": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3 bottom-product",
+                    "value": "",
+                    "text": "Aditya Birla Health Insurance"
+                },
+                {
+                    "name": "totalPremium",
+                    "label": "Total Premium/Incl tax",
+                    "visibleLabel": true,
+                    "visible": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "policyNumber",
+                    "label": "Policy Number",
+                    "visibleLabel": true,
+                    "visible": true,
+                    "type": "boldtext",
+                    "class": "col-12 col-md-6 col-lg-3",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "next",
+                    "label": "Next",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "type": "button",
+                    "class": "col-12 col-md-6 col-lg-2 next-btn",
+                    "methodName": "onSubmit"
+                },
+                {
+                    "name": "back",
+                    "label": "Back",
+                    "visibleLabel": false,
+                    "visible": true,
+                    "type": "button",
+                    "class": "col-12 col-md-6 col-lg-2 back-btn",
+                    "methodName": "onPrevious"
+                }
+            ]
       }
     ]
   }
