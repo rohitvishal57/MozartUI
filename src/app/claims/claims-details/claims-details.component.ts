@@ -366,9 +366,7 @@ convertBase64ToBlob(base64: string, fileType: string): Blob {
   return new Blob([byteArray], { type: fileType });
 }
 
-// A helper function to return MIME type from the document type
 getMimeType(documentType: string): string {
-  // You can expand this to handle different document types based on the 'documentType' field
   switch (documentType) {
     case 'Pdf':
       return 'application/pdf';
@@ -540,16 +538,20 @@ uploadFiles(files: File[], section: string): void {
             formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
        
     });
+    debugger
 
     this.claimsService.uploadFiles(formData).subscribe(
         (response: any) => {
             console.log('Upload response:', response);
-            if (response.success) {
+            if (response.isSuccess) {
                 this.uploadedFiles.forEach((file) => (file.status = "success"));
                 this.uploadSuccess = true;
                 this.uploadedFilesCount++;
             }
-            this.updateStatusLabel(section);
+            else{
+              this.uploadSuccess = false;
+            }
+            this.updateStatusLabel(section);  
             this.cdr.markForCheck();
         },
         (error: any) => {
