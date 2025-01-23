@@ -256,6 +256,7 @@ export class RugDynamicFormComponent {
                 this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
                 this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
                 this.formData.leadNumber = this.filteredPolicies[0]?.leadId || null;
+                this.formData.policyEmail = this.policyDetails.proposerDetails.proposerDetails.emailAddress || null
                 // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
                 this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
                 
@@ -298,6 +299,7 @@ export class RugDynamicFormComponent {
                 this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
                 this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
                 this.formData.leadNumber = this.filteredPolicies[0]?.leadId || null;
+                this.formData.policyEmail = this.policyDetails.proposerDetails.proposerDetails.email || null
                 // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
                 this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
                 
@@ -1190,6 +1192,7 @@ export class RugDynamicFormComponent {
               this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
               this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
               this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+              this.formData.policyEmail = this.policyDetails.proposerDetails.proposerDetails.emailAddress || null
               // this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
               // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
               // this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
