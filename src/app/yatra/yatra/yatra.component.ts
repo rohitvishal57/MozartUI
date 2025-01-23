@@ -4306,6 +4306,8 @@ export class YatraComponent {
               if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
                   control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+                  control.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                  control.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
                 })
               }
               this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
