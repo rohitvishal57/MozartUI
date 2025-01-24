@@ -4462,9 +4462,9 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI"
       );
       console.log(filteredData);
-      this.tsDetails.ghiPremium = filteredData[0].premium.toString();
-      this.tsDetails.productPlanName = "GHI";
-      this.tsDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+      this.bbdetails.ghiPremium = filteredData[0].premium.toString();
+      this.bbdetails.productPlanName = "GHI";
+      this.bbdetails.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
@@ -4532,11 +4532,11 @@ export class RugDynamicFormComponent {
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
       );
       console.log(filteredData);
-      this.tsDetails.deductibleAmount = filteredData[1].premium.toString();
-      this.tsDetails.productPlanName = "GHI-5L";
-      this.tsDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+      this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
+      this.bbdetails.productPlanName = "GHI-5L";
+      this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.get('deductibleAmount')?.setValue("500000");
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
@@ -4556,13 +4556,13 @@ export class RugDynamicFormComponent {
       console.log(filteredData);
       console.log(this.dynamicFormGroup.get('sumInsured')?.value);
       if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
-        this.tsDetails.deductibleAmount = filteredData[1].premium.toString();
-        this.tsDetails.productPlanName = "GHI-10L";
-        this.tsDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+        this.bbdetails.deductibleAmount = filteredData[1].premium.toString();
+        this.bbdetails.productPlanName = "GHI-10L";
+        this.bbdetails.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
         this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
   
-        this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+        this.dynamicFormGroup.get('deductibleAmount')?.setValue("1000000");
         this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
         this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
@@ -4596,10 +4596,10 @@ export class RugDynamicFormComponent {
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GPA" || item.combinationName === "GCI"
       );
-      this.tsDetails.gpaPremium = filteredData[0].premium.toString();
-      this.tsDetails.gciPremium = filteredData[1].premium.toString();
-      this.tsDetails.productPlanName = "GPA,GCI";
-      this.tsDetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+      this.bbdetails.gpaPremium = filteredData[0].premium.toString();
+      this.bbdetails.gciPremium = filteredData[1].premium.toString();
+      this.bbdetails.productPlanName = "GPA,GCI";
+      this.bbdetails.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
@@ -5909,7 +5909,7 @@ export class RugDynamicFormComponent {
             // }
 
           } else {
-            this.toast.success({ detail: "Success", summary: res.statusMessage, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
 
           }
 
@@ -8305,14 +8305,16 @@ export class RugDynamicFormComponent {
         }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
-        console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
-        this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
-
-        filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
-        console.log(filterArr);
-        this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
-        this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
-        this.getTSPremium(filterArr);
+        if(this.formSequence[this.getFormIndexValue()].formId != 9 && this.partnerId == "45"){
+          console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
+          this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
+  
+          filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.get('sumInsured')?.value)
+          console.log(filterArr);
+          this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
+          this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
+          this.getTSPremium(filterArr);
+        }
       },
       error: (err) => {
         console.error(err);
@@ -9254,12 +9256,21 @@ export class RugDynamicFormComponent {
   changeTsDobValidation(control: any, event: any){
     console.log(control.name);
   const dobValue = this.dynamicFormGroup.get(control.name)?.value;
+  const dobDate = new Date(dobValue);
+  const today = new Date();
   const dobArray = dobValue.split('-');
     if ((dobArray[0] as number >= 1800) && dobValue) {
+      console.log(dobDate);
+      console.log(today);
       let age = this.calculateAge(dobValue);
       let isKid = /^\d+days$/.test(age.toString());
       if(isKid == true){
         age = 1;
+      }
+      if (dobDate > today) {
+        age = 1;
+        console.log("Date of Birth cannot be in the future.");
+        this.updateDobValidator(Number(age), control.name);
       }
       if(Number(age) < 18 || Number(age) > 55){
         this.updateDobValidator(Number(age), control.name);
