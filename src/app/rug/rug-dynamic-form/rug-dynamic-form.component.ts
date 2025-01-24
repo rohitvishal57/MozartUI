@@ -1035,7 +1035,7 @@ export class RugDynamicFormComponent {
       console.log(this.formSequence);
       console.log(this.formSequence[this.getFormIndexValue()].formId);
       console.log(this.getFormIndexValue());
-      if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Confirmation" && this.agentCode == "467897"){
+      if(this.getFormIndexValue() == 7 && this.formSequence[this.getFormIndexValue()].formName == "Confirmation" && this.partnerId == "45"){
         console.log(this.form);
         console.log(this.tsDetails);
         this.isCustomerJourney = true;
@@ -1043,10 +1043,10 @@ export class RugDynamicFormComponent {
           console.log(section);
           if (section.sectionTitle == "Confirmation") {
             section.formControls.forEach((formControl: any) => {
-              if(formControl.name == "label1"){
+              if(formControl.name == "label1" && this.agentCode == "467897"){
                 formControl.visible = false;
               }
-              if(formControl.name == "label3"){
+              if(formControl.name == "label3" && this.agentCode == "467897"){
                 formControl.visible = true;
               }
               if(formControl.name == "leadID"){
