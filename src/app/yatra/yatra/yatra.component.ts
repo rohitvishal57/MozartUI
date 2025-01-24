@@ -3798,11 +3798,15 @@ export class YatraComponent {
   }
 
 
-  incrementMember(event: any, control: IFormControl, option: any) {
+  incrementMember(event: any, control: IFormControl, option: any) {   
     // Prevent event propagation to the checkbox
     event.stopPropagation();
     const formGroup = this.dynamicFormGroup.get(control.name) as FormGroup;
     let index = parseInt(option.value.slice(-1), 10);
+    if (index >= 4  && this.formData.productName === 'Active Secure') {
+      this.toast.warning({detail: "Warning",summary: "You can select a maximum of 4 sons or daughters for Active Secure.",duration: 3000});
+      return;
+    }
     index += 1;
     if ((index <= 4 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Individual') {
       const baseName = option.value.replace(/\d+$/, '');

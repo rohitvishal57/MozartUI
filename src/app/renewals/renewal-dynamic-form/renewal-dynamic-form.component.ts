@@ -102,11 +102,7 @@ export class RenewalDynamicFormComponent {
   changeDetectorRef: any;
 
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService,
-     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
-     private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,
-     private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,
-     private customerService: CustomersService) { }
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
 
   async ngOnInit() {
     this.showHtmlContent = false;
@@ -114,7 +110,6 @@ export class RenewalDynamicFormComponent {
       this.agentCode = localStorage.getItem('agentCode');
     }
     localStorage.getItem('formIndex');
-    this.formSequence = history.state.formSequence;
 
     // Extract data from history state
     const stateData = history.state;
@@ -1769,7 +1764,7 @@ export class RenewalDynamicFormComponent {
         this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
         this.renewalFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
       }
-      this.allJsonForm[this.getFormIndexValue()] = this.form;
+      // this.allJsonForm[this.getFormIndexValue()] = this.form;
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       console.log("formData", this.formData);
 
@@ -4136,13 +4131,13 @@ export class RenewalDynamicFormComponent {
       firstName: this.formData?.firstName,
       lastName: this.formData?.lastName,
       agentcode: this.agentCode,
-      emailId: this.formData.emailId,
+      emailId: "saisatya@monocept.com",
       productName: this.formData?.productName,
       businessType: "REN",
       pNumber: this.formData?.policyNumber,
       productCode: this.formData?.productCode,
       premiumAmount: this.formData?.totalPremium,
-      mobilenumber: this.formData.mobileNumber
+      mobilenumber: "7396201298"
     };
     this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
       next: (response: any) => {
@@ -4497,7 +4492,7 @@ export class RenewalDynamicFormComponent {
 
   skipKycURL(control:any){
     const skipKycRequestBody = {
-      proposalOrPolicyNumber: this.policyNumber,
+      proposalOrPolicyNumber: this.formData.policyNumber,
       businessType:"REN"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
