@@ -126,5 +126,10 @@ createLob(reqdata:any){
   const createLOB = this.configService.config.baseUrl + this.configService.config.createLob;
   return this.httpService.post(createLOB, reqdata)
 }
+
+getAllAvsByLocation(reqdata:any){
+  const getAllavsbyLocation = this.configService.config.baseUrl + this.configService.config.getAllAvsByLocation;
+  return this.httpService.post(getAllavsbyLocation, reqdata)
+}
 }
 

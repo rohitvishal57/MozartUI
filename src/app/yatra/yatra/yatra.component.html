@@ -616,6 +616,7 @@
                                 [hidden]="!subControl.visible">
                                   <div class="input-container inputField_SelectCD">
                                     <div class="checkbox-container" *ngIf="!subControl.disabled" [formGroupName]="subControl.name"
+                                    [attr.name]="subControl.name" [id]="subControl.name"
                                     aria-label="Default select example">
                                     <!-- <div class="selected-diseases">
                                       {{ getSelectedDiseases(control.name,i-1,subControl.name) }}

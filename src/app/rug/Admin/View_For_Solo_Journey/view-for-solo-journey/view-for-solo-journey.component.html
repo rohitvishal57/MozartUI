@@ -169,7 +169,7 @@
                                     <td>{{leads.latestModifiedDateTime}}</td>
                                     <td>{{leads.axisLocation}}</td>
                                     <td><button type="button" class="btn_reassign jsOpenPopup"
-                                            aria-label="modal-reAssign" (click)="ReassignAgent()">Re Assign</button>
+                                            aria-label="modal-reAssign" (click)="ReassignAgent(leads.axisLocation)">Re Assign</button>
                                     </td>
                                     <td><button type="button" (click)="auditLead(leads)" class="btn_audit jsOpenPopup"
                                             aria-label="modal-audit">Audit</button></td>

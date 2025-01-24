@@ -110,6 +110,7 @@ export class ClaimsViewComponent {
   policyNoChangeSubject = new Subject<string>();
   specialCovers: any;
   selectedCover: string = 'Hospitalisation'; 
+  isDisabled: boolean = true;
   // coverNames:any
   documentLabelOptions = [
     'govt/KYC ID',
@@ -318,7 +319,6 @@ export class ClaimsViewComponent {
       }
     });
   }
-
   handleCoverNameValidation(coverName: string): void {
     const stateControl = this.form.get('state');
     const cityControl = this.form.get('city');
@@ -1041,20 +1041,27 @@ export class ClaimsViewComponent {
     const missingTypes = this.requiredDocumentTypes.filter(
       type => !labelCounts[type]
     );
-
+    
     const duplicateTypes = Object.entries(labelCounts)
       .filter(([label, count]) => {
         const countValue = count as number;
         return countValue > 1 && this.requiredDocumentTypes.includes(label);
       })
       .map(([label]) => label);
+    
 
+    if (missingTypes.length === 0 && duplicateTypes.length === 0) {
+      this.isDisabled = false; 
+    } else {
+      this.isDisabled = true; 
+    }
+    
     if (missingTypes.length > 0) {
       this.errors.requiredDocs = `Please upload the following required documents: ${missingTypes.join(', ')}`;
     } else {
-      this.errors.requiredDocs = '';
+      this.errors.requiredDocs = ''; 
     }
-
+    
     if (duplicateTypes.length > 0) {
       this.errors.duplicateDocs = `Duplicate document types found for: ${duplicateTypes.join(', ')}. Please ensure only one document per type.`;
     } else {

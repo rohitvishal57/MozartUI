@@ -35,13 +35,13 @@ export class ViewForSoloJourneyComponent implements OnInit {
   dialog: any;
   item: any;
   AllAgentsNames:any;
+  avData:any = [];
   constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog) {
 
   }
   ngOnInit(): void {
     this.inItForm();
     this.getSoloJourneyDetails();
-    this.getAllAgent();
   }
 
   inItForm() {
@@ -140,85 +140,87 @@ export class ViewForSoloJourneyComponent implements OnInit {
       });
   }
 
-getAllAgent(){
-  this.agentCode = localStorage.getItem("agentCode");
+ReassignAgent(location:any){
     const reqdata = {
-      userId: this.agentCode,
-      isSoloJourney: true,
-      isUnverifiedLead: false,
-      isDualJourney: false,
-      isViewLead: false,
-      isViewCheckerLead: false,
-      pageNumber: this.page,
-      pageSize: this.extrarows
+      center:location
     };
-    this.adminService.getLead(reqdata).subscribe((res: any) => {
+   this.adminService.getAllAvsByLocation(reqdata).subscribe(async(res: any) => {
         const response = JSON.parse(res.data);
-        console.log('API Response Data:', response);
-        this.AllAgentsNames = response.data.leadDetails; 
-    }
-    );
-}
-
-  ReassignAgent() {
-    let AVdata: any = [];
-    this.AllAgentsNames.forEach((element: any) => {
-      if (AVdata.findIndex((item: any) => item.avId === element.avid) === -1 && element.avid !== '') {
+        console.log('my DAta:', response);
+        this.AllAgentsNames = response.data.allAvDetails;
+        var AVdata: any = [];
+      this.AllAgentsNames.forEach((element: any) => {
+      if (AVdata.findIndex((item: any) => item.avId === element.avId) === -1 && element.avId !== '') {
         AVdata.push({
           avName: element.avName,
-          avId: element.avid
+          avId: element.avId
         });
       }
     });
+    console.log('avdata', AVdata)
+    this.openReassign(AVdata)
+    }
+    );
+    
+}
 
-    console.log('AVdata:', AVdata);
-    const dialogRef = this.matdialogue.open(ReassignpopupComponent, {
-      data: {
-        AVData: AVdata
+ openReassign(data: any) {
+  console.log('AVdata:', data);
+  const dialogRef = this.matdialogue.open(ReassignpopupComponent, {
+    data: {
+      AVData: data
+    }
+  });
+
+  dialogRef.afterClosed().subscribe( (data: any) => {
+    console.log('Dialog closed with data:', data);
+
+    if (data) {
+      // Check for the correct property name (avId instead of avid)
+      const selectedLead = this.AllAgentsNames.find((lead: any) => lead.avId === data);
+      console.log('Selected Lead:', selectedLead);
+
+      if (!selectedLead) {
+        console.error('Lead not found for the selected AVID');
+        return;
       }
-    });
 
-    dialogRef.afterClosed().subscribe(async (data: any) => {
-      console.log('Dialog closed with data:', data);
+      const leadId = selectedLead.avId;
 
-      if (data) {
-        const selectedLead = this.getAllLeads.find((lead: any) => lead.avid === data);
-        const leadId = selectedLead ? selectedLead.refNo : null;
+      if (!leadId) {
+        console.error('Lead ID not found for the selected AVID');
+        return;
+      }
 
-        if (!leadId) {
-          console.error('Lead ID not found for the selected AVID');
-          return;
+      const request = {
+        leadId: String(leadId),
+        avId: String(data)
+      };
+
+      console.log('Request payload:', JSON.stringify(request));
+
+      this.adminService.assignToAv(request).subscribe(
+        (response: any) => {
+          console.log('API Response:', response);
+
+          const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+            width: "500px",
+            autoFocus: false,
+            data: "Successfully Reassigned"
+          });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            console.log(result);
+          });
+        },
+        (error: any) => {
+          console.error('API Error:', error);
+          console.error('Error Details:', error.error);
         }
+      );
+    }
+  });
+}
 
-        let request = {
-          leadId: String(leadId),
-          avId: String(data)
-        };
-
-        console.log('Request payload:', JSON.stringify(request));
-
-        this.adminService.assignToAv(request).subscribe(
-          (response: any) => {
-            console.log('API Response:', response);
-
-            const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
-              width: "500px",
-              autoFocus: false,
-              data: "Successfully Reassigned"
-            });
-            dialogRef.afterClosed().subscribe((result: any) => {
-              console.log(result);
-            });
-
-          },
-          (error: any) => {
-            console.error('API Error:', error);
-            console.error('Error Details:', error.error);
-          }
-        );
-      }
-    });
-  }
 
   onSelect(event: any) {
     this.itemsPerPage = event.target.value;
