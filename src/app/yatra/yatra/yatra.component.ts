@@ -2534,60 +2534,63 @@ export class YatraComponent {
     }
   }
 
-
-  ActiveSecureSIvalues:any;
-
-  // sumInsuredList(){
-  //   this.yatraService.getSumInsuredList().subscribe({
-  //     next: (res: any) => {
-  //       // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
-  //       const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
-  //       this.ActiveSecureSIvalues = sumInsuredListValue
-  //     },
-  //     error: (err: any) => {
-  //       console.error(err);
-  //     }
-  //   });
-  // }
-
-  // getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
-  //   console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
-  //   const isPos = agentCode.startsWith('pos') ? 1 : 0;
-  //   const coverTypeMap: { [key: string]: string } = {
-  //     accident: 'PA',
-  //     criticalIllness: 'CI',
-  //     cancerSecure: 'CC'
-  //   };
-  
-  //   const coverType = coverTypeMap[parentcontrol.name];
-  //   console.log("Cover Type:", coverType);
-  //   const data = JSON.parse(event.target.value);
-  //   console.log("form data in getSumInsuredValues",this.formData);
+  getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
+    // console.log("sum insured",event,parentcontrol,otherControl,agentCode);
     
-  //   if (coverType) {
-  //     const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
-  //       item.planType === data.name && 
-  //       item.isPos === isPos.toString() &&
-  //       item.coverType === coverType
-  //     );
-  //     console.log("Filtered Values:", filteredValues);
-  //     console.log(filteredValues[0].siList);
-  //     if (filteredValues.length > 0) {
-  //       const siList = filteredValues[0].siList;
-  //       this.formData.insuredMemberDetails.forEach((member:any) => {
-  //         const maxAllowedValue = parseInt(member.annualIncome) * 12;    
-  //         const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
-  //         otherControl.options = filteredSIList;
-  //         console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
-  //       })
-  //     } else {
-  //       console.log("No matching values found in ActiveSecureSIvalues.");
-  //       otherControl.options = []; // Clear options if no match is found
-  //     }
-  //   } else {
-  //     console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
-  //   }
-  // }
+    // const requestBody={
+    //   "coverType": "string",
+    //   "planType": "string",
+    //   "productId": "string",
+    //   "agentCode": "string",
+    //   "annualIncome": 0
+    // }
+    // this.yatraService.getSumInsuredList(requestBody).subscribe({
+    //   next: (res: any) => {
+    //     // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
+    //     const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
+    //     this.ActiveSecureSIvalues = sumInsuredListValue
+    //   },
+    //   error: (err: any) => {
+    //     console.error(err);
+    //   }
+    // });
+    // console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
+    // const isPos = agentCode.startsWith('pos') ? 1 : 0;
+    // const coverTypeMap: { [key: string]: string } = {
+    //   accident: 'PA',
+    //   criticalIllness: 'CI',
+    //   cancerSecure: 'CC'
+    // };
+  
+    // const coverType = coverTypeMap[parentcontrol.name];
+    // console.log("Cover Type:", coverType);
+    // const data = JSON.parse(event.target.value);
+    // console.log("form data in getSumInsuredValues",this.formData);
+    
+    // if (coverType) {
+    //   const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
+    //     item.planType === data.name && 
+    //     item.isPos === isPos.toString() &&
+    //     item.coverType === coverType
+    //   );
+    //   console.log("Filtered Values:", filteredValues);
+    //   console.log(filteredValues[0].siList);
+    //   if (filteredValues.length > 0) {
+    //     const siList = filteredValues[0].siList;
+    //     this.formData.insuredMemberDetails.forEach((member:any) => {
+    //       const maxAllowedValue = parseInt(member.annualIncome) * 12;    
+    //       const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
+    //       otherControl.options = filteredSIList;
+    //       console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
+    //     })
+    //   } else {
+    //     console.log("No matching values found in ActiveSecureSIvalues.");
+    //     otherControl.options = []; // Clear options if no match is found
+    //   }
+    // } else {
+    //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
+    // }
+  }
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
@@ -2691,10 +2694,43 @@ export class YatraComponent {
                             }
                           });
                       }
-                      // else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
-                      //   console.log("Core Control:", coreControl);
-                      //   this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
-                      // }
+                      else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
+                        console.log("sum insured",this.formData.insuredMemberDetails,selectedControl.name,event,parentControl,coreControl,agentCode);
+                        let insuredMemberDetails = this.formData.insuredMemberDetails;
+                        let annualIncome: any;
+                        let selfAnnualIncome:any;
+                        insuredMemberDetails.forEach((member:any) => {
+                          if (member.relation === "Self" && selectedControl.name=== "Self") {
+                            selfAnnualIncome = Number(member.annualIncome);
+                            annualIncome = selfAnnualIncome
+                          }
+                          else{
+                            if(member.annualIncome!= ""){
+                              annualIncome =  Number(member.annualIncome); 
+                            }
+                            else{
+                              annualIncome=selfAnnualIncome
+                            }
+                          }
+                        });                     
+                        const requestBody={
+                          "coverType": parentControl.name,
+                          "planType": JSON.parse(event.target.value).name,
+                          "productId": "35",
+                          "agentCode": agentCode,
+                          "annualIncome":annualIncome
+                        }
+                        this.yatraService.getSumInsuredList(requestBody).subscribe({
+                          next: (res: any) => {
+                            coreControl.options = res.data.siList;
+                            console.log("active secure si values",res.data.siList );
+                          },
+                          error: (err: any) => {
+                            console.error(err);
+                          }
+                        });
+                        // this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
+                      }
                       else if(innerControl.name == "memberCheckbox" && coreControl.name == "occupation" ){
                         if(selectedControl.name == "Self"){
                           coreControl.options =[{
@@ -2721,7 +2757,7 @@ export class YatraComponent {
                           {
                               "id": "2",
                               "value": "O490",
-                              "name": "STUDENT"
+                              "name": "Student"
                           },
                           {
                             "id": "6",
