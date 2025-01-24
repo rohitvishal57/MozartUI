@@ -576,15 +576,14 @@ export class YatraComponent {
           if (this.formData['hospiCashTab']) {
             this.hospiCashTab = this.formData['hospiCashTab'];
           }
+        }
+        //activeCare
+        if(this.formData['familyPair']){
+          this.familyPair = this.formData['familyPair'];
+        }
 
-          //activeCare
-          if(this.formData['familyPair']){
-            this.familyPair = this.formData['familyPair'];
-          }
-
-          if(this.formData['selectedFamilyPair']){
-            this.selectedFamilyPair = this.formData['selectedFamilyPair'];
-          }
+        if(this.formData['selectedFamilyPair']){
+          this.selectedFamilyPair = this.formData['selectedFamilyPair'];
         }
         console.log(this.form, this.formSequence, this.formData);
         if (this.getFormIndexValue() == 8) {
@@ -4137,7 +4136,7 @@ export class YatraComponent {
   }
 
   logSelection(event: Event | null, option: any, controls: any) {
-    console.log(option);
+    console.log(option,this.familyPair,this.selectedFamilyPair);
     // const checkbox = event.target as HTMLInputElement;
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     if (option.pairKey) {
