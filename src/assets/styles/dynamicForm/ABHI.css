@@ -3410,6 +3410,9 @@ margin: 0;
   .input-container.inputField_SelectCD .inputField_Select{
     line-height: normal !important;
   }
+  .input-container.inputField_SelectCD .checkbox-container .checkbox-options .input-checkbox-feild label {
+    pointer-events:auto;
+  }
 /*----Toggle switch checkbox end----*/
 
 .main_hospitalCashCover {
