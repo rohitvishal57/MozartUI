@@ -4160,7 +4160,7 @@ export class YatraComponent {
         checkbox.checked = false;
         console.log(controls);
         this.dynamicFormGroup.get(controls.name)?.get(option.name)?.setValue(false);
-        
+        this.toast.warning({ detail: "Warning", summary: "Invalid family combination", duration: 3000 });
         return;
       }
     }
