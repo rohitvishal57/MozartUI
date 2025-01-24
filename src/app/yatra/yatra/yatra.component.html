@@ -1111,7 +1111,7 @@
                                                   <select class="inputField_Select"
                                                     [formControlName]="innerControl.name" [name]="innerControl.name"
                                                     [id]="innerControl.name" aria-label="Default select example"
-                                                    (change)="onInputChange($event, innerControl,subControl,i-1)"
+                                                    (change)="onInputChange($event,subControl,control,i-1,null,innerControl,z-1)"
                                                     [attr.disabled]="innerControl.disabled ? 'disabled' : null"
                                                     [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}">
                                                     <ng-container *ngFor="let opt of innerControl.options">
@@ -1163,7 +1163,7 @@
                                                     formControlName="{{ innerControl.name }}" [name]="innerControl.name"
                                                     [id]="innerControl.name" [type]="innerControl.type"
                                                     [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
-                                                    (change)="onInputChange($event, innerControl,subControl)">
+                                                    (change)="onInputChange($event,subControl,control,i-1,null,innerControl,z-1)">
                                                   <input class="inputField_Text"
                                                     *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type === 'date'"
                                                     formControlName="{{ subControl.name }}" [name]="subControl.name"
@@ -1207,7 +1207,7 @@
                                                     [ngClass]="{'has-value': hasAnyActiveValue(innerControl, subControl, i , control , z-1)}"
                                                     [min]="getDate(innerControl.minDateLength)"
                                                     [max]="getDate(innerControl.maxDateLength)"
-                                                    (change)="onInputChange($event, innerControl,subControl,i-1)">
+                                                    (change)="onInputChange($event,subControl,control,i-1,null,innerControl,z-1)">
                                                   <input *ngIf="innerControl.disabled" class="inputField_Text"
                                                     formControlName="{{ innerControl.name }}" [name]="innerControl.name"
                                                     [id]="innerControl.name" [type]="innerControl.type"
