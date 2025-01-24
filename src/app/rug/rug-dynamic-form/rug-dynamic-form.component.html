@@ -514,15 +514,15 @@
                             
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible!=false">
-                                <div *ngIf="subControl.name == 'relation' && isD2C"
+                                <div *ngIf="subControl.name == 'relation' && (isD2C || isBB || isTS)"
                                 [class]="subControl.class"  class="form-boxHead" [hidden]="!control.visible">
                                 
-                                <div [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
+                                <div [ngClass]="{'input-containerError': (isD2C || isBB || isTS) && checkValidations(subControl,control,i-1)}">
                                   <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
                                     [name]="subControl.name" [id]="subControl.name" class="headBadge"
-                                    [type]="subControl.type" style="background: #404040;color: #fff;"
+                                    [type]="subControl.type" style="background: #404040;color: #fff;margin: 5px;"
                                     (change)="onInputChange($event, subControl,control,i-1)">
-                                  <input  *ngIf="subControl.disabled"style="background: #404040;color: #fff;"
+                                  <input  *ngIf="subControl.disabled"style="background: #404040;color: #fff;margin: 5px;"
                                     [formControlName]="subControl.name" [name]="subControl.name"
                                     [id]="subControl.name" class="headBadge" [type]="subControl.type"
                                     readonly>

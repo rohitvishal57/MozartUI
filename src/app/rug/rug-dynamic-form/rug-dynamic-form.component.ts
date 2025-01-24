@@ -5909,7 +5909,7 @@ export class RugDynamicFormComponent {
             // }
 
           } else {
-            this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+            this.toast.success({ detail: "Success", summary: halfQuoteResponse.message, duration: 3000 });
 
           }
 
