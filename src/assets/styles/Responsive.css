@@ -727,6 +727,10 @@
         text-align: left !important;
         inline-size: 100%;
     }
+    .uploadfile_Info {
+        word-break: break-all;
+        font-size: 11px;
+      }
 }
 @media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-container {

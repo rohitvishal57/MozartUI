@@ -3011,6 +3011,9 @@ margin: 0;
         width: 30%;
         margin-bottom:1rem;
     }
+    input#verifyOTP {
+        width: 35%;
+    }
     .main-container .right-panel .section-paragraph1, .main-container .right-panel .section-paragraph1 p {
         line-height: 1.2;
     }
@@ -3042,6 +3045,7 @@ margin: 0;
 }
 .main-container .right-panel .file-upload-btn{
     width: 100%;
+    height: 64px;
 }
 }
 .main-container .right-panel .next-btn:focus,

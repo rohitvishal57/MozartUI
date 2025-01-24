@@ -6999,4 +6999,10 @@ height: 0;
 .main-container .right-panel .main_hospitalCashCover .typecss {
   padding-bottom: 20px !important;
 }
+.uploadfile_Info , .uploaded_fileIno {
+  word-break: break-all;
+}
+.uploadfile_Info {
+  word-break: break-word;
+}
 /*--Hospital Cash Cover css end--*/
