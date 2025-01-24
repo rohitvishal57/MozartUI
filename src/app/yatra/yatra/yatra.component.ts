@@ -8269,7 +8269,8 @@ export class YatraComponent {
   allPreselectMember(control: any) {
     const PED = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get(control.name)?.value
     this.pedWaitingPeriod = PED;
-    this.changeOverLayDone();
+    // this.changeOverLayDone();
+    this.changeRecalculate(true);
   }
 
   checkNomineeAge(control: any, nomineeDob: any = null) {
