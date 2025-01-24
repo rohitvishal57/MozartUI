@@ -607,14 +607,18 @@
                                     </button>
                                 </div>
                                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;"
-                                    multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                                    multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />       
                             </div>
-
+                         
                             <!-- Error Messages Section -->
                             <div class="error-messages-container">
-                                <span *ngIf="errors.fileNotSelected" class="ui-error block-show">
+                                <!-- <span *ngIf="form.get('claimType')?.value === 'Reimbursement'" class="ui-error block-show">
+                                    {{ "Please upload all required documents" | translate }}
+                                  </span> -->
+
+                                <!-- <span *ngIf="errors.fileNotSelected" class="ui-error block-show">
                                 {{ "Please select a file to continue" | translate }}
-                              </span>
+                              </span> -->
 
                                 <span *ngIf="errors.invalidFormat" class="ui-error block-show">
                                     {{ "File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." |
@@ -719,7 +723,7 @@
                                             </li>
                                         </ul>
 
-                                    </div>
+                                    </div>                             
                                 </div>
                             </div>
                         </div>
@@ -731,8 +735,10 @@
             <div class="row">
                 <div class="col-12">
                     <button type="button" id="submitrequest" name="submitrequest" class="btn_red"
-                        (click)="submitRequest()" [ngClass]="{'disabled': form.invalid}"
-                        [disabled]="form.invalid">{{"Submit Request" | translate}}</button>
+                    (click)="submitRequest()" 
+                    [ngClass]="{'disabled': form.invalid || isDisabled }"
+                    [disabled]="form.invalid && isDisabled"
+                >{{"Submit Request" | translate}}</button>
                 </div>
             </div>
         </div>
