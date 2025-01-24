@@ -158,6 +158,12 @@ export class YatraComponent {
   showOptions: { [controlName: string]: { [index: number]: boolean } } = {};
   clickedInside = false;
 
+  //Activ Care variables
+  familyPair = '';
+  selectedFamilyPair: string[] = [];
+
+
+
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
@@ -569,6 +575,15 @@ export class YatraComponent {
 
           if (this.formData['hospiCashTab']) {
             this.hospiCashTab = this.formData['hospiCashTab'];
+          }
+
+          //activeCare
+          if(this.formData['familyPair']){
+            this.familyPair = this.formData['familyPair'];
+          }
+
+          if(this.formData['selectedFamilyPair']){
+            this.selectedFamilyPair = this.formData['selectedFamilyPair'];
           }
         }
         console.log(this.form, this.formSequence, this.formData);
@@ -2536,7 +2551,7 @@ export class YatraComponent {
 
   getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
     // console.log("sum insured",event,parentcontrol,otherControl,agentCode);
-    
+
     // const requestBody={
     //   "coverType": "string",
     //   "planType": "string",
@@ -2561,12 +2576,12 @@ export class YatraComponent {
     //   criticalIllness: 'CI',
     //   cancerSecure: 'CC'
     // };
-  
+
     // const coverType = coverTypeMap[parentcontrol.name];
     // console.log("Cover Type:", coverType);
     // const data = JSON.parse(event.target.value);
     // console.log("form data in getSumInsuredValues",this.formData);
-    
+
     // if (coverType) {
     //   const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
     //     item.planType === data.name && 
@@ -2694,8 +2709,8 @@ export class YatraComponent {
                           }
                         });
                       }
-                      else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
-                        console.log("sum insured",this.formData.insuredMemberDetails,selectedControl.name,event,parentControl,coreControl,agentCode);
+                      else if (innerControl.name == 'plan' && coreControl.name === "addOnSumInsured") {
+                        console.log("sum insured", this.formData.insuredMemberDetails, selectedControl.name, event, parentControl, coreControl, agentCode);
                         let insuredMemberDetails = this.formData.insuredMemberDetails;
                         let annualIncome: any;
                         insuredMemberDetails.forEach((member:any) => {
@@ -2711,8 +2726,8 @@ export class YatraComponent {
                               annualIncome=this.selfAnnualIncome
                             }
                           }
-                        });                     
-                        const requestBody={
+                        });
+                        const requestBody = {
                           "coverType": parentControl.name,
                           "planType": JSON.parse(event.target.value).name,
                           "productId": "35",
@@ -2722,16 +2737,16 @@ export class YatraComponent {
                         this.yatraService.getSumInsuredList(requestBody).subscribe({
                           next: (res: any) => {
                             coreControl.options = res.data.siList;
-                            console.log("active secure si values",res.data.siList );
+                            console.log("active secure si values", res.data.siList);
                           },
                           error: (err: any) => {
                             console.error(err);
                           }
                         });
                       }
-                      else if(innerControl.name == "memberCheckbox" && coreControl.name == "occupation" ){
-                        if(selectedControl.name == "Self"){
-                          coreControl.options =[{
+                      else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
+                        if (selectedControl.name == "Self") {
+                          coreControl.options = [{
                             "id": "1",
                             "value": "O464",
                             "name": "Retired"
@@ -2753,9 +2768,9 @@ export class YatraComponent {
                             "name": "Retired"
                           },
                           {
-                              "id": "2",
-                              "value": "O490",
-                              "name": "Student"
+                            "id": "2",
+                            "value": "O490",
+                            "name": "Student"
                           },
                           {
                             "id": "6",
@@ -3695,8 +3710,8 @@ export class YatraComponent {
                     (val: IValidator) => val.validatorName === 'required'
                   );
 
-                  console.log(this.formData,eventValue,childControl.validationRules);
-                  
+                  console.log(this.formData, eventValue, childControl.validationRules);
+
                   // Determine the appropriate validation rule based on eventValue
                   let rule;
                   if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue)) {
@@ -3708,7 +3723,7 @@ export class YatraComponent {
                     /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
                     rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
                   }
-                   else {
+                  else {
                     rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
                   }
 
@@ -4122,12 +4137,37 @@ export class YatraComponent {
   logSelection(event: Event | null, option: any, controls: any) {
     console.log(option);
     // const checkbox = event.target as HTMLInputElement;
+    const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
+    if (option.pairKey) {
+      if (this.familyPair == '' || option.pairKey == this.familyPair) {
+        if (checkbox.checked == true) {
+          this.familyPair = option.pairKey;
+          this.selectedFamilyPair.push(option.name);
+        }
+        else{
+          const labelIndex = this.selectedFamilyPair.indexOf(option.name);
+          if (labelIndex > -1) {
+            this.selectedFamilyPair.splice(labelIndex, 1);
+          }
+
+          if (this.selectedFamilyPair.length === 0) {
+            this.familyPair = '';
+          }
+        }
+      }
+      else {
+        checkbox.checked = false;
+        console.log(controls);
+        this.dynamicFormGroup.get(controls.name)?.get(option.name)?.setValue(false);
+        
+        return;
+      }
+    }
     if (event != null) {
       this.isQuote = false;
       this.quickQuoteRedirect = false;
       this.changeRecalculate(true);
     }
-    const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
       this.toast.warning({ detail: "Warning", summary: "Cannot select more than 4 childrens", duration: 3000 });
       checkbox.checked = false;
@@ -4525,7 +4565,7 @@ export class YatraComponent {
               }
             }
           });
-          if(controls.name == 'nextNotWork' && (control.dependentControls.includes('nextOffline') || control.dependentControls.includes('nextOnline'))){
+          if (controls.name == 'nextNotWork' && (control.dependentControls.includes('nextOffline') || control.dependentControls.includes('nextOnline'))) {
             controls.visible = false;
           }
         });
@@ -4753,7 +4793,7 @@ export class YatraComponent {
   }
   async onSubmit(event?: any) {
     this.changesMade = false;
-    console.log("dynamic form group", this.formData);
+    console.log("dynamic form group", this.formData,this.familyPair,this.selectedFamilyMembers);
     // console.log(this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
     // console.log(this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
@@ -4820,6 +4860,11 @@ export class YatraComponent {
 
       }
 
+    }
+
+    if(this.formData.productName.includes('Activ Care')){
+      this.dynamicFormGroup.get('familyPair')?.setValue(this.familyPair);
+      this.dynamicFormGroup.get('selectedFamilyPair')?.setValue(this.selectedFamilyPair);
     }
 
     if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
@@ -7927,96 +7972,96 @@ export class YatraComponent {
 
     // await this.yatraService.Getform(reqData).subscribe({
     //   next: async (res: any) => {
-      try {
-        const res: any = await this.yatraService.Getform(reqData).toPromise();
-        this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
-        console.log("form", this.questionFormData);
-        const dynamicValue = this.dynamicFormGroup.getRawValue();
-        // Iterate through each member in the insuredMemberDetails
-        await this.questionFormData.insuredMemberDetails.forEach((member: any) => {
-          delete member.productQuestionnaire;
-        })
-        await form.formSections.forEach((section: any) => {
-          section.formControls.forEach((controls: any) => {
-            if (controls.type == 'questionnaire') {
-              this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
-                // Initialize the optionsArray for each member
-                const productQuestionnaire: any[] = [];
-                const optionsArray: any[] = [];
-                let questionId: any;
-                let questionName: any
-                // Find the matching control based on member's relation
-                const matchingControl = controls.subControls.find((subControl: any) =>
-                  subControl.name === member.relation
-                );
-                questionId = controls.idProperty;
-                questionName = controls.name;
-                // If a matching control is found
-                if (matchingControl) {
-                  // Iterate through innerArrayControl to find the control with name 'dName'
-                  matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
-                    // Check if innerControl has a dName property
-                    if (innerControl && innerControl.name === 'diseaseName') {
-                      // Check if options exist in innerControl
-                      if (innerControl.options) {
-                        // Push options into the optionsArray
-                        optionsArray.push(...innerControl.options);
-                      }
+    try {
+      const res: any = await this.yatraService.Getform(reqData).toPromise();
+      this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
+      console.log("form", this.questionFormData);
+      const dynamicValue = this.dynamicFormGroup.getRawValue();
+      // Iterate through each member in the insuredMemberDetails
+      await this.questionFormData.insuredMemberDetails.forEach((member: any) => {
+        delete member.productQuestionnaire;
+      })
+      await form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.type == 'questionnaire') {
+            this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
+              // Initialize the optionsArray for each member
+              const productQuestionnaire: any[] = [];
+              const optionsArray: any[] = [];
+              let questionId: any;
+              let questionName: any
+              // Find the matching control based on member's relation
+              const matchingControl = controls.subControls.find((subControl: any) =>
+                subControl.name === member.relation
+              );
+              questionId = controls.idProperty;
+              questionName = controls.name;
+              // If a matching control is found
+              if (matchingControl) {
+                // Iterate through innerArrayControl to find the control with name 'dName'
+                matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
+                  // Check if innerControl has a dName property
+                  if (innerControl && innerControl.name === 'diseaseName') {
+                    // Check if options exist in innerControl
+                    if (innerControl.options) {
+                      // Push options into the optionsArray
+                      optionsArray.push(...innerControl.options);
+                    }
+                  }
+                });
+              }
+              // Initialize the productQuestionnaire array for the current member
+
+              // Iterate through the dynamicValue object
+              Object.keys(dynamicValue).forEach((item: any) => {
+                if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
+                  const innerValue = dynamicValue[item];
+
+                  // Iterate through the keys of the inner object
+                  Object.keys(innerValue).forEach((subItem: any) => {
+                    // Check if the member's relation matches the current subItem
+                    if (member.relation === subItem) {
+
+                      // Iterate through the array related to the matched subItem
+                      innerValue[subItem].forEach((innerArray: any) => {
+                        if (!innerArray.hasOwnProperty('subQuestionCode')) {
+                          innerArray.subQuestionCode = "";
+                        }
+
+                        if (innerArray.diseaseName) {
+                          // If optionsArray is not empty, find the corresponding option
+                          if (optionsArray.length > 0) {
+                            const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
+
+                            // Set subQuestionCode and dName based on the found option
+                            if (newOption) {
+                              innerArray.subQuestionCode = newOption.value;
+                              innerArray.diseaseName = newOption.name;
+                            }
+                          }
+                          const filteredInnerArray = innerArray;
+                          const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+
+                          if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                            innerArray.parentQuestionCode = questionId;
+                            productQuestionnaire.push(filteredInnerArray);
+                          }
+                        }
+                        else {
+                          const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+
+                          if (!allValuesEmpty) {
+                            innerArray.harmfulSubstances = true;
+                            innerArray.parentQuestionCode = questionId;
+                            productQuestionnaire.push(innerArray);
+                          }
+                        }
+                        // productQuestionnaire.push(filteredInnerArray);
+                      });
                     }
                   });
                 }
-                // Initialize the productQuestionnaire array for the current member
-
-                // Iterate through the dynamicValue object
-                Object.keys(dynamicValue).forEach((item: any) => {
-                  if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
-                    const innerValue = dynamicValue[item];
-
-                    // Iterate through the keys of the inner object
-                    Object.keys(innerValue).forEach((subItem: any) => {
-                      // Check if the member's relation matches the current subItem
-                      if (member.relation === subItem) {
-
-                        // Iterate through the array related to the matched subItem
-                        innerValue[subItem].forEach((innerArray: any) => {
-                          if (!innerArray.hasOwnProperty('subQuestionCode')) {
-                            innerArray.subQuestionCode = "";
-                          }
-
-                          if (innerArray.diseaseName) {
-                            // If optionsArray is not empty, find the corresponding option
-                            if (optionsArray.length > 0) {
-                              const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-
-                              // Set subQuestionCode and dName based on the found option
-                              if (newOption) {
-                                innerArray.subQuestionCode = newOption.value;
-                                innerArray.diseaseName = newOption.name;
-                              }
-                            }
-                            const filteredInnerArray = innerArray;
-                            const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-
-                            if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                              innerArray.parentQuestionCode = questionId;
-                              productQuestionnaire.push(filteredInnerArray);
-                            }
-                          }
-                          else {
-                            const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-
-                            if (!allValuesEmpty) {
-                              innerArray.harmfulSubstances = true;
-                              innerArray.parentQuestionCode = questionId;
-                              productQuestionnaire.push(innerArray);
-                            }
-                          }
-                          // productQuestionnaire.push(filteredInnerArray);
-                        });
-                      }
-                    });
-                  }
-                });
+              });
 
                 // Assign the populated productQuestionnaire to the member
                 if (member.productQuestionnaire) {
@@ -8044,61 +8089,61 @@ export class YatraComponent {
                 // If a matching control is found
                 // Initialize the productQuestionnaire array for the current member
 
-                // Iterate through the dynamicValue object
-                Object.keys(dynamicValue).forEach((item: any) => {
-                  if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
-                    const innerValue = dynamicValue[item];
+              // Iterate through the dynamicValue object
+              Object.keys(dynamicValue).forEach((item: any) => {
+                if (questionName == item && dynamicValue[item] != null && typeof dynamicValue[item] === 'object') {
+                  const innerValue = dynamicValue[item];
 
-                    // Iterate through the keys of the inner object
-                    Object.keys(innerValue).forEach((subItem: any) => {
-                      // Check if the member's relation matches the current subItem
-                      if (member.relation === subItem) {
-                        innerValue[subItem].parentQuestionCode = questionId;
-                        console.log(innerValue[subItem]);
-                        productQuestionnaire.push(innerValue[subItem]);
-                        // Iterate through the array related to the matched subItem
-                      }
-                    });
-                  }
-                });
-
-                // Assign the populated productQuestionnaire to the member
-                if (member.productQuestionnaire) {
-                  member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+                  // Iterate through the keys of the inner object
+                  Object.keys(innerValue).forEach((subItem: any) => {
+                    // Check if the member's relation matches the current subItem
+                    if (member.relation === subItem) {
+                      innerValue[subItem].parentQuestionCode = questionId;
+                      console.log(innerValue[subItem]);
+                      productQuestionnaire.push(innerValue[subItem]);
+                      // Iterate through the array related to the matched subItem
+                    }
+                  });
                 }
-                else {
-                  member.productQuestionnaire = productQuestionnaire;
-                }
-                // Log the final productQuestionnaire for debugging
               });
-            }
-          })
-        })
-        this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
 
-          if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
-            this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+              // Assign the populated productQuestionnaire to the member
+              if (member.productQuestionnaire) {
+                member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+              }
+              else {
+                member.productQuestionnaire = productQuestionnaire;
+              }
+              // Log the final productQuestionnaire for debugging
+            });
           }
-
-          const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-
-          // Ensure the FormArray has enough entries
-          while (dynamicform.length <= index) {
-            dynamicform.push(new FormGroup({}));
-          }
-
-          const dindex = dynamicform.at(index) as FormGroup;
-          Object.keys(member).forEach((key: string) => {
-            dindex.addControl(key, new FormControl(member[key]));
-          });
-          const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-          dindex.addControl('productQuestionnaire', '');
-
-          dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
         })
-      } catch (error) {
-        console.error(error);
-      }
+      })
+      this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
+
+        if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+          this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+        }
+
+        const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+        // Ensure the FormArray has enough entries
+        while (dynamicform.length <= index) {
+          dynamicform.push(new FormGroup({}));
+        }
+
+        const dindex = dynamicform.at(index) as FormGroup;
+        Object.keys(member).forEach((key: string) => {
+          dindex.addControl(key, new FormControl(member[key]));
+        });
+        const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
+        dindex.addControl('productQuestionnaire', '');
+
+        dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
+      })
+    } catch (error) {
+      console.error(error);
+    }
     //   },
     //   error: (err) => {
     //     console.log(err);
@@ -10885,12 +10930,67 @@ export class YatraComponent {
   }
 
   calculatePremium() {
-    console.log(this.dynamicFormGroup.valid);
+    console.log(this.dynamicFormGroup.valid,this.dynamicFormGroup);
     if (!this.dynamicFormGroup.valid) {
       this.toast.warning({ detail: "Warning", summary: "Please enter all the details.", duration: 5000 });
       return;
     }
     else {
+      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        const ageFlag = insuredMemberDetails.controls.every((person: any) => {
+          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
+        });
+        if (!ageFlag) {
+          insuredMemberDetails.controls.forEach((control: any, i: number) => {
+            const memberdobControl = control.get('memberdob');
+            if (memberdobControl) {
+              const age = this.calculateAge(memberdobControl.value);
+              if (age > "55") {
+                memberdobControl.setErrors(null);
+              } else {
+                memberdobControl.setValue('');
+                memberdobControl.setErrors({ required: true });
+                this.toast.warning({
+                  detail: 'Warning',
+                  summary: `All people are 55 years or older.`,
+                  duration: 3000
+                });
+              }
+            }
+          });
+          return;
+
+        }
+      }
+      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        const ageFlag = insuredMemberDetails.controls.some((person: any) => {
+          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
+        });
+
+        if (!ageFlag) {
+          insuredMemberDetails.controls.forEach((control: any, i: number) => {
+            const memberdobControl = control.get('memberdob');
+            if (memberdobControl) {
+              const age = this.calculateAge(memberdobControl.value);
+              if (age > "55") {
+                memberdobControl.setErrors(null);
+              } else {
+                memberdobControl.setValue('');
+                memberdobControl.setErrors({ required: true });
+                this.toast.warning({
+                  detail: 'Warning',
+                  summary: 'At least one person is 55 years or older.',
+                  duration: 3000
+                });
+              }
+            }
+          });
+          //event.stopPropogation();
+          return;
+        }
+      }
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
