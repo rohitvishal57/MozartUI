@@ -1367,16 +1367,16 @@
 
                                                       <label for="{{memberControl.name}}_{{z}}"
                                                         [innerHTML]="memberControl.label ? (memberControl.label | translate) : ''"
-                                                        class="">
+                                                        class=""></label>
                                                         <span *ngIf="memberControl.validators">*</span> -->
                                                         <input type="checkbox" [formControlName]="memberControl.name"
                                                         [name]="memberControl.name"
-                                                        id="{{memberControl.name}}_{{z}}" [value]="memberControl.value"
-                                                        class="checkbox-label" [ngStyle]="{'display': 'inline-block'}" (change)="onInputChange($event,subControl,control,i-1,memberControl,null,z)"/>
+                                                        id="{{memberControl.name}}_{{i}}_{{z}}" [value]="memberControl.value"
+                                                        class="input-check"  (change)="onInputChange($event,subControl,control,i-1,memberControl,null,z)"/>
                                                   
-                                                      <label for="{{memberControl.name}}_{{z}}"
+                                                      <label for="{{memberControl.name}}_{{i}}_{{z}}"
                                                         [innerHTML]="memberControl.label ? (memberControl.label | translate) : ''"
-                                                        class="checkboxes">
+                                                        class="">
                                                         <span *ngIf="memberControl.validators">*</span>
                                                       </label>
                                                     </div>
