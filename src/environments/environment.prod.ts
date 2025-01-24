@@ -220,5 +220,6 @@ export const environment = {
   getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
   insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
   createLob:"api/rug/CreateManageLob",
-  getsuminsuredlist:"api/yatra/getactivesecuresidetails"
+  getsuminsuredlist:"api/yatra/getactivesecuresidetails",
+  getAllAvsByLocation:"api/rug/GetAllAVsByLocation"
 };

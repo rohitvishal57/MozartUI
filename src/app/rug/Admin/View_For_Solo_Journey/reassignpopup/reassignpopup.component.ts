@@ -14,6 +14,7 @@ export class ReassignpopupComponent {
     }
     ngOnInit() {
       this.agentData = this.data.AVData;
+      console.log(this.agentData);
     }
     closeIcon(){
       this.dialogRef.close();
