@@ -1063,7 +1063,7 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.paymentMode);
         this.form.formSections.forEach((section: any) => {
           console.log(section);
-          if (section.sectionTitle == "Details of Your Proposal" && this.bbdetails.paymentMode == "yes") {
+          if (section.sectionTitle == "Details of Your Policy" && this.bbdetails.paymentMode == "yes") {
             section.visible = false;
           }
           if(section.sectionTitle == "details of links"){
