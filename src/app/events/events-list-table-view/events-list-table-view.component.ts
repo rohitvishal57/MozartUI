@@ -40,9 +40,7 @@ export class EventsListTableViewComponent implements OnInit {
     { name: 'Leads', selected: false },
     { name: 'Proposals', selected: false },
     { name: 'others', selected: false },
-
   ];
-
 
   toggleFilterDropdown() {
     if (this.toggeleSearchdropdown == true) {
@@ -55,6 +53,7 @@ export class EventsListTableViewComponent implements OnInit {
   cancel() {
     this.toggeledropdown = false;
   }
+
   clear() {
     this.startDate = null;
     this.endDate = null;
@@ -62,8 +61,10 @@ export class EventsListTableViewComponent implements OnInit {
     this.getEventReq.startDate = null;
     this.getEventReq.endDate = null;
     this.getEventReq.eventType = "";
+    this.staticEventTypes.forEach((eventType: any) => eventType.selected = false)
     this.loadEvents();
   }
+
   calculateAppliedFiltersCount() {
     const selectedEventTypesCount = this.staticEventTypes.filter(
       (eventType: any) => eventType.selected).length;
@@ -73,19 +74,17 @@ export class EventsListTableViewComponent implements OnInit {
     }
     this.appliedFiltersCount = count;
   }
+
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate('startDate');
     this.formatDate('endDate');
-    
     this.getEventReq.startDate = this.fromDate; 
     this.getEventReq.endDate = this.toDate; 
     
-    const selectedEventTypes = this.staticEventTypes
-    .filter((eventType) => eventType.selected)
-    .map((eventType) => eventType.name);
-  console.log("selected event types", selectedEventTypes);
-  this.getEventReq.eventType = selectedEventTypes.join(",");
+    const selectedEventTypes = this.staticEventTypes.filter((eventType) => eventType.selected).map((eventType) => eventType.name);
+    console.log("selected event types", selectedEventTypes);
+    this.getEventReq.eventType = selectedEventTypes.join(",");
     console.log("start date taken by request body", this.getEventReq.startDate);
     console.log("end date taken by request body", this.getEventReq.endDate);
     this.first = 0;
@@ -188,8 +187,7 @@ export class EventsListTableViewComponent implements OnInit {
       this.getEventReq.eventNumber = "";
       this.getEventReq.mobileNumber = "";
     }
-        //this.getEventReq.proposalNumber = ""
-    
+      //this.getEventReq.proposalNumber = ""
       // this.first = 0;
       // this.page = 1;
       this.loadEvents();
@@ -260,6 +258,7 @@ export class EventsListTableViewComponent implements OnInit {
   //     }
   //   );
   // }
+
   navigateToEditEvent(row: any) {
     let claimDetailsReqBody = {
       id: row.id,

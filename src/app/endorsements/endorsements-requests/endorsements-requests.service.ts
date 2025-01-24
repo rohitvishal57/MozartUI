@@ -59,4 +59,9 @@ export class EndorsementsRequestsService {
     const getPolicyMembersApi = this.configService.config.baseUrl + this.configService.config.getPolicyMembers;
     return this.httpService.post(getPolicyMembersApi, reqBody);
   }
+
+  endorsementDownlaodAllApi(reqBody: any) {
+    const endorsementDownlaodAllApi = this.configService.config.baseUrl + this.configService.config.endorsementDownloadAll;
+    return this.httpService.post(endorsementDownlaodAllApi, reqBody);
+  }
 }

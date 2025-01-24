@@ -9,6 +9,7 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { ExcelExportService } from 'src/app/services/excel-export.service';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-endorsements-requests',
   templateUrl: './endorsements-requests.component.html',
@@ -84,7 +85,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     private commonService: CommonService, 
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private excelExportService: ExcelExportService
+    private excelExportService: ExcelExportService,
+    private toast: NgToastService, 
   ) { }
 
   ngOnInit(): void {
@@ -190,7 +192,6 @@ export class EndorsementsRequestsComponent implements OnInit {
       }
     );
   }
-
   
   filterCounts(data: any) {
     this.totalRecords = (data?.[this.filterType] ?? 0);  // Use nullish coalescing to set 0 if null or undefined
@@ -199,7 +200,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.cancelledCount = (data?.cancelledCount ?? 0);
   }
   
-
   statusFilter(filter: string, filterRange: string) {
     if (filter === "All") {
       this.requestsListRequestBody.uiStatus = "";
@@ -225,9 +225,11 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.toggeledropdown = !this.toggeledropdown;
     this.maxDate = new Date().toISOString().split('T')[0];  
   }
+
   cancel() {
     this.toggeledropdown = false;
   }
+
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
     // const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
@@ -237,6 +239,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
     this.appliedFiltersCount = count;
   }
+
   clear(){
     // this.productsList.forEach((product:any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
@@ -249,6 +252,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.toDate = "";
     this.getRequestList();
   }
+
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("fromDate");
@@ -351,11 +355,27 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.excelExportService.exportToExcel([item], `Endorsement_${item.caseId}`);
   }
 
-  downloadAll(): void {
+  /* downloadAll(): void {
     this.excelExportService.exportToExcel(
       this.endorsementDetails,
       'All_Endorsements'
     );
+  } */
+
+  downloadAll(): void {
+    this.endorsementService.endorsementDownlaodAllApi(this.requestsListRequestBody).subscribe(
+      (response: any) => {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
+          const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
+        } else {
+          console.error("API request was not successful.");
+          this.toast.error({ detail: "Error", summary: response.message, duration: 5000 });
+        }
+      },
+      (error) => {
+        console.error("Error from API:", error);
+      }
+    );
   }
-  
 }

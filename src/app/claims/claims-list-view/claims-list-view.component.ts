@@ -10,7 +10,7 @@ import { searchValidationConfig } from 'src/app/interface/common-validation.inte
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { ExcelExportService } from 'src/app/services/excel-export.service';
-
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-claims-list-view',
@@ -74,7 +74,9 @@ export class ClaimsListViewComponent implements OnInit {
      private claimsService: ClaimsViewService, 
      private languageService: LanguageService, 
      private excelExportService: ExcelExportService,
-     private translateService: TranslateService) { }
+     private translateService: TranslateService,
+     private toast: NgToastService
+  ) { }
 
   ngOnInit() {
     window.scrollTo(0, 0);
@@ -322,10 +324,27 @@ export class ClaimsListViewComponent implements OnInit {
     this.excelExportService.exportToExcel([item], `Claims_${item.caseId}`);
   }
 
-  downloadAll(): void {
+  /* downloadAll(): void {
     this.excelExportService.exportToExcel(
       this.claims,
       'My_Claims'
+    );
+  } */
+
+  downloadAll(): void {
+    this.claimsService.claimDownlaodAllApi(this.claimsReqBody).subscribe(
+      (response: any) => {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
+          const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
+        } else {
+          console.error("API request was not successful.");
+          this.toast.error({ detail: "Error", summary: response.message, duration: 5000 });
+        }
+      },
+      (error) => {
+        console.error("Error from API:", error);
+      }
     );
   }
 

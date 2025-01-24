@@ -17,6 +17,7 @@ export class ClaimsViewService {
     const getClaimStatusCountsUrl = this.configService.config.baseUrl + this.configService.config.getClaimStatusCounts+`=${agentCode}`;
     return this.httpService.post(getClaimStatusCountsUrl, req);
   }
+
   getProposalDetails(agentCode: string) {
     const url = `${this.configService.config.baseUrl}${this.configService.config.getProposalDetails}=${agentCode}`;
     return this.httpService.get<any>(url);
@@ -25,19 +26,18 @@ export class ClaimsViewService {
   getMemberDetails(member:any){
     const getMemberDetails = this.configService.config.baseUrl + this.configService.config.getMemberDetails;
     return this.httpService.post(getMemberDetails, member)
-    // return this.httpService.post('https://localhost:7026/GetMemberDetails', member);
-
   }
+
   saveClaims(saveData: any) {
     const saveClaims = this.configService.config.baseUrl + this.configService.config.saveClaims;
     return this.httpService.post(saveClaims, saveData);
-
   }
+
   uploadFiles(formData: FormData) {
    const uploadFiles = this.configService.config.baseUrl + this.configService.config.uploadFiles;
     return this.httpService.post(uploadFiles, formData);
-
   }
+
   getStates(statesReqBody: any){
     const getStates = this.configService.config.baseUrl + this.configService.config.getStates;
     return this.httpService.post(getStates, statesReqBody);
@@ -61,7 +61,6 @@ export class ClaimsViewService {
   getClaimsHistory(claimHistoryReqBody:any, policyNo:any){
     const getClaimsHistory = this.configService.config.baseUrl + this.configService.config.getClaimHistory+`=${policyNo}`;
     return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
-   // return this.httpService.post('https://localhost:7026/api/getclaimHistory?policynumber='+policyNo, claimHistoryReqBody);
   }
 
   getBlackListedhospitals(claimsBlackListHspReqBody:any){
@@ -82,21 +81,25 @@ export class ClaimsViewService {
   getUploadedFiles(claimsFilesReqBody:any){
     const getUploadedFiles = this.configService.config.baseUrl + this.configService.config.getUploadedFiles
     return this.httpService.post(getUploadedFiles, claimsFilesReqBody)
-   // return this.httpService.post('https://localhost:7026/api/getclaimsdocument', claimsFilesReqBody);
   }
+
   updateClaim(UpdateClaimReqBody:any){
     const updateClaim = this.configService.config.baseUrl + this.configService.config.updateClaim
     return this.httpService.post(updateClaim, UpdateClaimReqBody)
-    //return this.httpService.post('https://localhost:7026/api/getclaimsdocument', UpdateClaimReqBody);
   }
+
   deleteFile(ClaimsDelBody:any){
     const deleteFile = this.configService.config.baseUrl + this.configService.config.deleteFile
     return this.httpService.post(deleteFile, ClaimsDelBody)
-
   }
+  
   getCoverNames(coverReqBody:any){
     const getCoverNames = this.configService.config.baseUrl + this.configService.config.getCoverNames
     return this.httpService.post(getCoverNames, coverReqBody)
+  }
 
+  claimDownlaodAllApi(reqBody: any) {
+    const claimDownloadAllApi = this.configService.config.baseUrl + this.configService.config.claimDownloadAll
+    return this.httpService.post(claimDownloadAllApi, reqBody)
   }
 }
