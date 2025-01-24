@@ -256,8 +256,8 @@ export class YatraService {
     return this.httpService.post(insertoptionalcoversjson,reqData);
   }
   getSumInsuredList(reqData:any){
-    // const suminsuredList = this.configService.config.baseUrl + this.configService.config.getsuminsuredlist;
-    const suminsuredList = `https://localhost:7070/getactivesecuresidetails`;
+    const suminsuredList = this.configService.config.baseUrl + this.configService.config.getsuminsuredlist;
+    // const suminsuredList = `https://localhost:7070/getactivesecuresidetails`;
     return this.httpService.post(suminsuredList,reqData);
   }
 }

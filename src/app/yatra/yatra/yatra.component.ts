@@ -2591,7 +2591,7 @@ export class YatraComponent {
     //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
     // }
   }
-
+  selfAnnualIncome:any;
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
     console.log(event.target.value);
@@ -2698,18 +2698,17 @@ export class YatraComponent {
                         console.log("sum insured",this.formData.insuredMemberDetails,selectedControl.name,event,parentControl,coreControl,agentCode);
                         let insuredMemberDetails = this.formData.insuredMemberDetails;
                         let annualIncome: any;
-                        let selfAnnualIncome:any;
                         insuredMemberDetails.forEach((member:any) => {
                           if (member.relation === "Self" && selectedControl.name=== "Self") {
-                            selfAnnualIncome = Number(member.annualIncome);
-                            annualIncome = selfAnnualIncome
+                            this.selfAnnualIncome = Number(member.annualIncome);
+                            annualIncome = this.selfAnnualIncome
                           }
-                          else{
+                          if(selectedControl.name!= "Self" && (selectedControl.name == member.relation)){
                             if(member.annualIncome!= ""){
                               annualIncome =  Number(member.annualIncome); 
                             }
                             else{
-                              annualIncome=selfAnnualIncome
+                              annualIncome=this.selfAnnualIncome
                             }
                           }
                         });                     
@@ -2718,7 +2717,7 @@ export class YatraComponent {
                           "planType": JSON.parse(event.target.value).name,
                           "productId": "35",
                           "agentCode": agentCode,
-                          "annualIncome":annualIncome
+                          "annualIncome":annualIncome || 0
                         }
                         this.yatraService.getSumInsuredList(requestBody).subscribe({
                           next: (res: any) => {
@@ -2729,7 +2728,6 @@ export class YatraComponent {
                             console.error(err);
                           }
                         });
-                        // this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
                       }
                       else if(innerControl.name == "memberCheckbox" && coreControl.name == "occupation" ){
                         if(selectedControl.name == "Self"){
