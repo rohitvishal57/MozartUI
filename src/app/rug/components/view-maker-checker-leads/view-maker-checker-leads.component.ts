@@ -76,13 +76,11 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     this.adminService.getLead(this.reqBody).subscribe({
       next: (res: any) => {
         console.log(res);
-        res = JSON.parse(res.data).data
+        res = JSON.parse(res.data);
+        this.allLeads = res.data.leadDetails;
         console.log(res);
-
-        this.totalRecords = res.leadDetails.length;
-        this.allLeads = res.leadDetails
-        console.log(res);
-        this.updateDisplayedData();
+        this.totalRecords = this.searchTerm ? this.allLeads.length : res.data.totalRecords;
+        this.displayedAVs = [...this.allLeads];
       },
       error: (err:any) => {
         console.error(err);
@@ -91,6 +89,14 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     
   }
 
+  onPageChange(event: any): void {
+    if (!this.searchTerm) {
+      this.first = event.first;
+      this.rows = event.rows;
+      this.page = Math.floor(this.first / this.rows) + 1;
+      this.getAllLeads();
+    }
+  }
   searchLeads(): void {
     this.getAllLeads();
   }
@@ -206,13 +212,6 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
           });
     
       }
-
-    onPageChange(event: any) {
-      this.first = event.first;
-      this.rows = event.rows;
-      this.page = Math.floor(this.first / this.rows) + 1;
-      this.getAllLeads();
-    }
 
     disableButton(lead: any) {
       // Implement your logic to disable the button

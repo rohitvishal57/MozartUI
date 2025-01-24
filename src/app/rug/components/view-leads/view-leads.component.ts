@@ -25,7 +25,7 @@ export class ViewLeadsComponent implements OnInit {
   filteredArray: any;
   viewLeadForm!: FormGroup;
   loading = false;
-  agentCode: any
+  agentCode: any;
   searchInputControl = new FormControl("");
   constructor(
     private router: Router,
@@ -56,7 +56,7 @@ export class ViewLeadsComponent implements OnInit {
       mobileNumber: [''],
       leadId: [''],
     });
-    this.displayedAVs = [...this.allLeads];
+
     this.getAllLeads();
   }
   getAllLeads() {
@@ -85,13 +85,13 @@ export class ViewLeadsComponent implements OnInit {
     this.rugService.getAllLeads(this.reqBody).subscribe({
       next: (res: any) => {
         console.log(res);
-        res = JSON.parse(res.data).data
+        res = JSON.parse(res.data);
+        this.allLeads = res.data.leadDetails;
         console.log(res);
-
-        this.totalRecords = res.leadDetails.length;
-        this.allLeads = res.leadDetails
+        this.totalRecords = this.searchTerm ? this.allLeads.length : res.data.totalRecords;
+   
+        this.displayedAVs = [...this.allLeads];
         console.log(res);
-        this.updateDisplayedData();
       },
       error: (err: any) => {
         console.error(err);
@@ -99,6 +99,14 @@ export class ViewLeadsComponent implements OnInit {
     });
   }
 
+  onPageChange(event: any): void {
+    if (!this.searchTerm) {
+      this.first = event.first;
+      this.rows = event.rows;
+      this.page = Math.floor(this.first / this.rows) + 1;
+      this.getAllLeads();
+    }
+  }
   searchLeads(): void {
     this.getAllLeads();
   }
@@ -136,11 +144,6 @@ export class ViewLeadsComponent implements OnInit {
     }
   }
 
-
-
-
-
-
   actionLead(lead: any) {
     console.log(lead);
     localStorage.setItem('leadId', lead.leadId)
@@ -172,13 +175,7 @@ export class ViewLeadsComponent implements OnInit {
     // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
 
   }
-  updateDisplayedData(): void {
-    const startIndex = this.first;
-    const endIndex = this.first + this.rows;
-    console.log(this.allLeads)
-    this.displayedAVs = this.allLeads.slice(startIndex, endIndex);
-    console.log(this.displayedAVs)
-  }
+
   auditLead(lead: any) {
     let reqObj = {
       leadId: lead.leadId
@@ -220,12 +217,7 @@ export class ViewLeadsComponent implements OnInit {
     this.itemsPerPage = event.target.value;
   }
 
-  onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
-    this.page = Math.floor(this.first / this.rows) + 1;
-    this.getAllLeads();
-  }
+  
 
   disableButton(lead: any) {
     // Implement your logic to disable the button
