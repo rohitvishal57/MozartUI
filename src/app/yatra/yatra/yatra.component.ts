@@ -4482,6 +4482,9 @@ export class YatraComponent {
               }
             }
           });
+          if(controls.name == 'nextNotWork' && (control.dependentControls.includes('nextOffline') || control.dependentControls.includes('nextOnline'))){
+            controls.visible = false;
+          }
         });
       });
     } else {
