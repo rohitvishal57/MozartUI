@@ -8043,13 +8043,22 @@ export class YatraComponent {
                           const filteredInnerArray = innerArray;
                           const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
-                          if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                            innerArray.parentQuestionCode = questionId;
-                            productQuestionnaire.push(filteredInnerArray);
+                            if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                              innerArray.parentQuestionCode = questionId;
+                              productQuestionnaire.push(filteredInnerArray);
+                            }
                           }
-                        }
-                        else {
-                          const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+                          else if(innerArray.conditionDetails){
+                            const filteredInnerArray = innerArray;
+                            const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+
+                            if (filteredInnerArray['conditionDetails'] !== "" && !allValuesEmpty) {
+                              innerArray.parentQuestionCode = questionId;
+                              productQuestionnaire.push(filteredInnerArray);
+                            }
+                          }
+                          else {
+                            const allValuesEmpty = Object.values(innerArray).every(value => value === "");
 
                           if (!allValuesEmpty) {
                             innerArray.harmfulSubstances = true;
