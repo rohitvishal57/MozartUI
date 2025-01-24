@@ -583,6 +583,7 @@ export class ClaimsViewComponent {
       this.selectedCover = "Hospitalisation"
       this.isFilenotSelected = false;
       this.showCashlessFields = true;
+      this.isDisabled = false;
 
       this.form.patchValue({
         coverName: "Hospitalization",
@@ -592,6 +593,7 @@ export class ClaimsViewComponent {
       this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showCashlessFields = false;
+      this.isDisabled = true;
       this.showReimbursementFields = true;
       this.isFilenotSelected = false;
 
