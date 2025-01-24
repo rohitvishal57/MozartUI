@@ -62,18 +62,24 @@ export class ViewLeadsComponent implements OnInit {
   getAllLeads() {
     // const endpoint='/TeleSales/GetLeads?pageNo=1&noOfRow=10'
     // if (localStorage.getItem("currentUser") !== null) {
-      this.agentCode = localStorage.getItem("agentCode");
-      // this.loginData = JSON.parse(this.localStorageData);
-    
+    this.agentCode = localStorage.getItem("agentCode");
+    // this.loginData = JSON.parse(this.localStorageData);
+
+    const filters = {
+      MobileNumber: [this.viewLeadForm.controls['mobileNumber'].value?.toString()].filter(value => value),
+      LeadId: [this.viewLeadForm.controls['leadId'].value?.toString()].filter(value => value),
+    };
+
     this.reqBody = {
-      "userId": this.agentCode,
-      "isSoloJourney": false,
-      "isUnverifiedLead": false,
-      "isDualJourney": false,
-      "isViewLead": true,
-      "isViewCheckerLead": false,
-      "pageNumber": this.page,
-      "pageSize": this.rows
+      userId: this.agentCode,
+      isSoloJourney: false,
+      isUnverifiedLead: false,
+      isDualJourney: false,
+      isViewLead: true,
+      isViewCheckerLead: false,
+      pageNumber: this.page,
+      pageSize: this.rows,
+      filters: filters,
     }
     this.loading = true;
     this.rugService.getAllLeads(this.reqBody).subscribe({
@@ -87,12 +93,15 @@ export class ViewLeadsComponent implements OnInit {
         console.log(res);
         this.updateDisplayedData();
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error(err);
       }
     });
   }
 
+  searchLeads(): void {
+    this.getAllLeads();
+  }
 
   onInput(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
@@ -103,13 +112,13 @@ export class ViewLeadsComponent implements OnInit {
       option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm) ||
       option?.latestModifiedDateTime?.toLowerCase().includes(this.searchTerm) ||
       option?.latestMappedDOName?.toLowerCase().includes(this.searchTerm) ||
-      option?.latestMappedAVName?.toLowerCase().includes(this.searchTerm)||
+      option?.latestMappedAVName?.toLowerCase().includes(this.searchTerm) ||
       option?.planName?.toLowerCase().includes(this.searchTerm) ||
       option?.netPremium?.toLowerCase().includes(this.searchTerm) ||
       option?.axisCenter?.toLowerCase().includes(this.searchTerm) ||
       option?.axisLob?.toLowerCase().includes(this.searchTerm) ||
       option?.disposition?.toLowerCase().includes(this.searchTerm) ||
-      option?.subDisposition?.toLowerCase().includes(this.searchTerm)||
+      option?.subDisposition?.toLowerCase().includes(this.searchTerm) ||
       option?.status?.toLowerCase().includes(this.searchTerm) ||
       option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm) ||
       option?.remark?.toLowerCase().includes(this.searchTerm)
@@ -118,31 +127,21 @@ export class ViewLeadsComponent implements OnInit {
   applySearch() {
     if (this.searchInputControl.valid) {
       const trimmedValue = this.searchInputControl.value?.trim();
-    // if (this.selected === "leadId") {
-    //     this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
-    // }
+      // if (this.selected === "leadId") {
+      //     this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
+      // }
       this.first = 0;
       this.page = 1;
-    this.getAllLeads();
-    }
-  }
-
-  searchLeads() {
-    const mobileNumber = this.viewLeadForm.value.mobileNumber;
-    const leadId = this.viewLeadForm.value.leadId;
-
-    if (mobileNumber || leadId) {
-      this.displayedAVs = this.allLeads.filter(item =>
-        (mobileNumber && item.mobileNumber === mobileNumber) ||
-        (leadId && item.leadId === leadId)
-      );
-    } else {
-      this.displayedAVs = [...this.allLeads]; // Reset to all leads
+      this.getAllLeads();
     }
   }
 
 
-  actionLead(lead: any){
+
+
+
+
+  actionLead(lead: any) {
     console.log(lead);
     localStorage.setItem('leadId', lead.leadId)
     let data = {
@@ -150,24 +149,24 @@ export class ViewLeadsComponent implements OnInit {
       productId: 26
     }
 
-    if(lead.planName == 'Health Pro'){
-      data.partnerId =  45
+    if (lead.planName == 'Health Pro') {
+      data.partnerId = 45
       data.productId = 26
-      
-    }else if(lead.planName == 'Health Pro Infinity'){
-      data.partnerId =  45
+
+    } else if (lead.planName == 'Health Pro Infinity') {
+      data.partnerId = 45
       data.productId = 27
-    }else if(lead.planName == 'Group Activ Secure'){
-      data.partnerId =  45
+    } else if (lead.planName == 'Group Activ Secure') {
+      data.partnerId = 45
       data.productId = 29
-    }else{
-      data.partnerId =  45
+    } else {
+      data.partnerId = 45
       data.productId = 29
     }
 
     this.router.navigate(['rug'], {
-      state: { productData: data}
-   });
+      state: { productData: data }
+    });
     // let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
     // let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
     // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
@@ -180,36 +179,36 @@ export class ViewLeadsComponent implements OnInit {
     this.displayedAVs = this.allLeads.slice(startIndex, endIndex);
     console.log(this.displayedAVs)
   }
-  auditLead(lead: any){
-   let reqObj = {
-         leadId: lead.leadId 
-       };
-   
-       this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
-         let res = JSON.parse(response.data);
-         console.log(res.data.allAudit)
-         const dialogRef = this.matdialogue.open(AuditpopupComponent, {
-           width: "1000px",
-           autoFocus: false,
-           data: res.data.allAudit
-         });
-         dialogRef.afterClosed().subscribe((result: any) => {
-           console.log(result);
-         });
-       },
-         error => {
-           console.error("API Error:", error);
-         }
-       );
-  }
-  onSubmit(){
-    if(this.viewLeadForm.get('leadId')?.value){
-      this.filteredArray = this.leadsArray.filter((option:any) =>{
-      return  option?.leadId == this.viewLeadForm.get('leadId')?.value  
+  auditLead(lead: any) {
+    let reqObj = {
+      leadId: lead.leadId
+    };
+
+    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
+      let res = JSON.parse(response.data);
+      console.log(res.data.allAudit)
+      const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+        width: "1000px",
+        autoFocus: false,
+        data: res.data.allAudit
       });
-    }else if(this.viewLeadForm.get('mobileNumber')?.value){
-      this.filteredArray = this.leadsArray.filter((option:any) => {
-       return option?.mobileNumber == this.viewLeadForm.get('mobileNumber')?.value
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+      });
+    },
+      error => {
+        console.error("API Error:", error);
+      }
+    );
+  }
+  onSubmit() {
+    if (this.viewLeadForm.get('leadId')?.value) {
+      this.filteredArray = this.leadsArray.filter((option: any) => {
+        return option?.leadId == this.viewLeadForm.get('leadId')?.value
+      });
+    } else if (this.viewLeadForm.get('mobileNumber')?.value) {
+      this.filteredArray = this.leadsArray.filter((option: any) => {
+        return option?.mobileNumber == this.viewLeadForm.get('mobileNumber')?.value
       });
     }
     this.currentPage = 1
@@ -217,20 +216,20 @@ export class ViewLeadsComponent implements OnInit {
   }
 
   //pagination
-  onSelect(event:any){
+  onSelect(event: any) {
     this.itemsPerPage = event.target.value;
-    }
-       
-    onPageChange(event: any) {
-      this.first = event.first;
-      this.rows = event.rows;
-      this.page = Math.floor(this.first / this.rows) + 1;
-      this.getAllLeads();
-    }
+  }
 
-    disableButton(lead: any) {
-      // Implement your logic to disable the button
-      // For example, update a property in the item itself that is used for disabling the button
-      lead.buttonDisabled = true;
-    }
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getAllLeads();
+  }
+
+  disableButton(lead: any) {
+    // Implement your logic to disable the button
+    // For example, update a property in the item itself that is used for disabling the button
+    lead.buttonDisabled = true;
+  }
 }

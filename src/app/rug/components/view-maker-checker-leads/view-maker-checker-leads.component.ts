@@ -56,16 +56,21 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     // if (localStorage.getItem("currentUser") !== null) {
       this.agentCode = localStorage.getItem("agentCode");
       // this.loginData = JSON.parse(this.localStorageData);
+      const filters = {
+        MobileNumber: [this.viewLeadForm.controls['mobileNumber'].value?.toString()].filter(value => value),
+        LeadId: [this.viewLeadForm.controls['leadId'].value?.toString()].filter(value => value),
+      };
     
     this.reqBody = {
-      "userId": this.agentCode,
-      "isSoloJourney": false,
-      "isUnverifiedLead": false,
-      "isDualJourney": false,
-      "isViewLead": false,
-      "isViewCheckerLead": true,
-      "pageNumber": this.page,
-      "pageSize": this.rows
+      userId: this.agentCode,
+      isSoloJourney: false,
+      isUnverifiedLead: false,
+      isDualJourney: false,
+      isViewLead: false,
+      isViewCheckerLead: true,
+      pageNumber: this.page,
+      pageSize: this.rows,
+      filters: filters,
     }
     this.loading = true;
     this.adminService.getLead(this.reqBody).subscribe({
@@ -83,30 +88,13 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
         console.error(err);
       }
     });
-    // this.apiService.postCall(environment.ENDPOINTS.GetLeads, this.reqBody)
-    //   .subscribe(
-    //     response => {
-    //       this.loading = false;
-    //       this.leadsArray = response.allLeads;
-    //       this.filteredArray = this.leadsArray;
-    //     },
-    //     error => {
-    //       console.log(error);
-    //       this.loading = false;
-    //     });
-  }
-  applySearch() {
-    if (this.searchInputControl.valid) {
-      const trimmedValue = this.searchInputControl.value?.trim();
-    // if (this.selected === "leadId") {
-    //     this.leadsInfoListRequestBody.leadNumber = trimmedValue || "";
-    // }
-      this.first = 0;
-      this.page = 1;
-    this.getAllLeads();
-    }
     
   }
+
+  searchLeads(): void {
+    this.getAllLeads();
+  }
+  
   actionLead(lead: any){
     console.log(lead);
     localStorage.setItem('leadId', lead.leadId)
@@ -196,19 +184,6 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     this.currentPage = 1
      }
 
-     searchLeads() {
-      const mobileNumber = this.viewLeadForm.value.mobileNumber;
-      const leadId = this.viewLeadForm.value.leadId;
-  
-      if (mobileNumber || leadId) {
-        this.displayedAVs = this.allLeads.filter(item =>
-          (mobileNumber && item.mobileNumber === mobileNumber) ||
-          (leadId && item.leadId === leadId)
-        );
-      } else {
-        this.displayedAVs = [...this.allLeads]; // Reset to all leads
-      }
-    }
 
     backToDo(lead: any) {
         let reqObj = {
