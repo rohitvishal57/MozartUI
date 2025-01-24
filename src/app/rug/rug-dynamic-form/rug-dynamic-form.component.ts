@@ -8314,6 +8314,7 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
           this.bbdetails.sumInsured = this.dynamicFormGroup.get('sumInsured')?.value;
           this.getTSPremium(filterArr);
+          this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
         }
       },
       error: (err) => {
