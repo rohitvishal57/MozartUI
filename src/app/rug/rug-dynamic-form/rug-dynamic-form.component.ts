@@ -3462,34 +3462,59 @@ export class RugDynamicFormComponent {
         insuredMembersArray.at(0).get('salutation')?.disable();
       }
     }
-    if(this.formSequence[0].formName == "Proposer Details" && (this.formSequence[this.getFormIndexValue()].formId == 2 || this.formSequence[this.getFormIndexValue()].formId == 9)){
+    if (this.formSequence[0].formName == "Proposer Details" && (this.formSequence[this.getFormIndexValue()].formId == 2 || this.formSequence[this.getFormIndexValue()].formId == 9)) {
       const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       console.log(insuredMembersArray.value);
-    if(insuredMembersArray.value.length === this.tsDetails.insuredMemberDetails.length){
-            this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
-      if(insuredMembersArray.value[index].relation = item.relation){
-        insuredMembersArray.at(index).patchValue({
-          salutation: item.salutation,
-          firstName: item.firstName,
-          lastName: item.lastName,
-          dob: item.dob,
-          gender: item.gender,
-          age: item.age,
-          weight: item.weight,
-          height: item.height,
-          heightInches: item.heightInches
+      if (insuredMembersArray.value.length === this.tsDetails.insuredMemberDetails.length) {
+        this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+          if (insuredMembersArray.value[index].relation = item.relation) {
+            insuredMembersArray.at(index).patchValue({
+              salutation: item.salutation,
+              firstName: item.firstName,
+              lastName: item.lastName,
+              dob: item.dob,
+              gender: item.gender,
+              age: item.age,
+              weight: item.weight,
+              height: item.height,
+              heightInches: item.heightInches,
+              mobileNumber: item.mobileNumber,
+              emailId: item.emailId
+            });
+          }
         });
+        insuredMembersArray.at(0).patchValue({
+          mobileNumber: this.tsDetails.proposerMobileNumber,
+          emailId: this.tsDetails.proposerEmailAddress
+        })
+        insuredMembersArray.at(0).get('gender')?.disable();
+        console.log(this.formSequence[this.getFormIndexValue()].formName);
+        if (this.formSequence[this.getFormIndexValue()].formId == 9 && this.partnerId == "45") {
+          this.dynamicFormGroup.get('occupation')?.disable();
+          this.dynamicFormGroup.get('sumInsured')?.disable();
+          this.dynamicFormGroup.get('preFix')?.disable();
+          this.dynamicFormGroup.get('proposerGender')?.disable();
+          this.dynamicFormGroup.get('relationWithProposer')?.disable();
+          this.dynamicFormGroup.get('nomineeGender')?.disable();
+          this.dynamicFormGroup.get('accType')?.disable();
+          this.dynamicFormGroup.get('bankAccountType')?.disable();
+          this.dynamicFormGroup.get('axisLob')?.disable();
+          this.dynamicFormGroup.get('disposition')?.disable();
+          this.dynamicFormGroup.get('subDisposition')?.disable();
+          if(this.dynamicFormGroup.get('disposition')?.value != "" || this.dynamicFormGroup.get('disposition')?.value != null || this.dynamicFormGroup.get('disposition')?.value != undefined ){
+            this.getSubDisposition(this.dynamicFormGroup.get('disposition')?.value);
+            // this.dynamicFormGroup.get('subDisposition')?.setValue(this.subDispositionList[0]?.value);
+          }
+          this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+            if (insuredMembersArray.value[index].relation = item.relation) {
+              insuredMembersArray.at(index).get('relation')?.disable();
+              insuredMembersArray.at(index).get('gender')?.disable();
+              insuredMembersArray.at(index).get('salutation')?.disable();
+            }
+          })
+        }
       }
-    });
-    insuredMembersArray.at(0).patchValue({
-      mobileNumber:this.tsDetails.proposerMobileNumber,
-      emailId:this.tsDetails.proposerEmailAddress
-    })
-    insuredMembersArray.at(0).get('gender')?.disable();
-    console.log(this.formSequence[this.getFormIndexValue()].formName);
     }
-    }
-
   }
   isStringifiedJson(value: string): boolean {
     try {
@@ -5844,7 +5869,7 @@ export class RugDynamicFormComponent {
   onTsCustomerSubmit(){
     console.log(this.dynamicFormGroup.get('decl2')?.value);
     console.log(this.dynamicFormGroup.get('decl3')?.value);
-    if (this.dynamicFormGroup.get('decl2')?.value == true) {
+    if (this.dynamicFormGroup.get('decl2')?.value == true && this.dynamicFormGroup.get('decl3')?.value == true) {
       let commonDraftRequest = {
         "leadId": this.tsDetails?.leadId
       }
