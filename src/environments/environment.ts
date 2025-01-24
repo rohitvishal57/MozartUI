@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   baseUrl: "https://usp.monocept.ai/",
-  baseUrl1: "https://upuat.adityabirlahealth.com/",
+  baseUrl1: "https://usp.monocept.ai/",
   axisBaseUrl: "https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api",
   getRenewalList: "api/renewal/getrenewallist",
   getRenewalInfo: "api/renewal/renewalinfo",

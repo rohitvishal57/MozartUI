@@ -220,46 +220,7 @@ export class ViewLeadsComponent implements OnInit {
   onSelect(event:any){
     this.itemsPerPage = event.target.value;
     }
-
-    // onInput(event:any){
-    //   this.searchTerm = event.target.value
-    //   this.filteredArray = this.leadsArray.filter((option:any) =>
-    //     option?.leadId?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||  option?.mobileNumber?.includes(this.searchTerm) || option?.proposalNo?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.customerName?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    // ||  option?.planName?.toLowerCase().includes(this.searchTerm.toLowerCase()) || option?.leadGenerationDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    //   || option?.policyIssuanceDate?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    // );
-    // this.currentPage = 1
-    //  }
-
-
-     backToDo(lead:any){
-      // let reqObj={
-      //   "leadId":lead.leadId
-      // }
-      // this.apiService.postCall('/TeleSales/AssignBackToDo',reqObj)
-      // .subscribe(
-      //   response=>{
-      //     // this.arr = this.arr.filter((l:any ) => l.refNo !== lead.refNo);
-      //     // this.filteredArray = this.filteredArray.filter((l: any) => l.refNo !== lead.refNo);
-      //     if(response.statusCode==200){
-           
-      //     const dialogRef=this.dialog.open(SuccessPopupComponent,{
-      //       width: "500px",
-      //       autoFocus: false,
-      //       data:"Successfully Assigned To DO"
-      //     });
-      //     dialogRef.afterClosed().subscribe((result:any)=>{
-      //       console.log(result)
-      //       lead.status='Success'
-      //       this.disableButton(lead)
-      //     });
-      //   }
-      // },
-      //   error=>{
-      //     console.log(error);
-      //   });
-  
-    }
+       
     onPageChange(event: any) {
       this.first = event.first;
       this.rows = event.rows;

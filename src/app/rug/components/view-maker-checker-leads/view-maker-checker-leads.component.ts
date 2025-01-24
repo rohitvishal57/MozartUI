@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RugService } from '../../rug.service';
+import { AdminService } from '../../Admin/admin.service';
+import { AuditpopupComponent } from '../auditpopup/auditpopup.component';
+import { SuccesspopupComponent } from '../successpopup/successpopup.component';
 @Component({
   selector: 'app-view-maker-checker-leads',
   templateUrl: './view-maker-checker-leads.component.html',
@@ -17,13 +20,16 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
   viewLeadForm!: FormGroup;
   loading = false;
   agentCode: any
+  mobileNumber: string = ""
+  leadId: string = '';
   searchInputControl = new FormControl("");
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    // private apiService: ApiService,
+ private adminService: AdminService,
     private formBuilder: FormBuilder,
-    private rugService: RugService
+    private rugService: RugService,
+    private matdialogue: MatDialog
   ) { }
   currentPage = 1;
   itemsPerPage = 10;
@@ -62,7 +68,7 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
       "pageSize": this.rows
     }
     this.loading = true;
-    this.rugService.getAllLeads(this.reqBody).subscribe({
+    this.adminService.getLead(this.reqBody).subscribe({
       next: (res: any) => {
         console.log(res);
         res = JSON.parse(res.data).data
@@ -140,33 +146,28 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     console.log(this.displayedAVs)
   }
   auditLead(lead: any){
-    // let reqObj = {
-    //   "leadId": lead.leadId,
-    // }
-    // this.apiService.postCall(environment.ENDPOINTS.GET_ALL_AUDIT, reqObj)
-    // .subscribe(
-    //   response => {
-    //     const dialogRef = this.dialog.open(AuditPopupComponent, {
-    //       width: "500px",
-    //       autoFocus: false,
-    //       data: response.allAudit
-    //     });
-    //     dialogRef.afterClosed().subscribe((result: any) => {
-    //       console.log(result);
-    //     })
-    //     // this.leadsArray = response.allLeads
-    //   },
-    //   error => {
-    //     console.log(error);
-    //     // this.loading = false;
-    //   });
+   let reqObj = {
+            leadId: lead.leadId 
+          };
+      
+          this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
+            let res = JSON.parse(response.data);
+            console.log(res.data.allAudit)
+            const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+              width: "1000px",
+              autoFocus: false,
+              data: res.data.allAudit
+            });
+            dialogRef.afterClosed().subscribe((result: any) => {
+              console.log(result);
+            });
+          },
+            (error:any) => {
+              console.error("API Error:", error);
+            }
+          );
   }
-  // actionLead(lead: any){
-  //   let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
-  //   let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
-  //   this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
-
-  // }
+  
   onSubmit(){
     if(this.viewLeadForm.get('leadId')?.value){
       this.filteredArray = this.leadsArray.filter((option:any) =>{
@@ -181,7 +182,6 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
 
   }
 
-  //pagination
   onSelect(event:any){
     this.itemsPerPage = event.target.value;
     }
@@ -196,35 +196,42 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     this.currentPage = 1
      }
 
-
-     backToDo(lead:any){
-      // let reqObj={
-      //   "leadId":lead.leadId
-      // }
-      // this.apiService.postCall('/TeleSales/AssignBackToDo',reqObj)
-      // .subscribe(
-      //   response=>{
-      //     // this.arr = this.arr.filter((l:any ) => l.refNo !== lead.refNo);
-      //     // this.filteredArray = this.filteredArray.filter((l: any) => l.refNo !== lead.refNo);
-      //     if(response.statusCode==200){
-           
-      //     const dialogRef=this.dialog.open(SuccessPopupComponent,{
-      //       width: "500px",
-      //       autoFocus: false,
-      //       data:"Successfully Assigned To DO"
-      //     });
-      //     dialogRef.afterClosed().subscribe((result:any)=>{
-      //       console.log(result)
-      //       lead.status='Success'
-      //       this.disableButton(lead)
-      //     });
-      //   }
-      // },
-      //   error=>{
-      //     console.log(error);
-      //   });
+     searchLeads() {
+      const mobileNumber = this.viewLeadForm.value.mobileNumber;
+      const leadId = this.viewLeadForm.value.leadId;
   
+      if (mobileNumber || leadId) {
+        this.displayedAVs = this.allLeads.filter(item =>
+          (mobileNumber && item.mobileNumber === mobileNumber) ||
+          (leadId && item.leadId === leadId)
+        );
+      } else {
+        this.displayedAVs = [...this.allLeads]; // Reset to all leads
+      }
     }
+
+    backToDo(lead: any) {
+        let reqObj = {
+          "leadId": lead.leadId
+        }
+        this.adminService.AssignBackToDo(reqObj).subscribe((response: any) => {
+          let res = JSON.parse(response.data)
+          console.log('SuccessPopUp', res)
+          const dialogRef = this.matdialogue.open(SuccesspopupComponent, {
+            width: "500px",
+            autoFocus: false,
+            data: res.message
+          });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            console.log(result)
+          });
+        },
+          error => {
+            console.log(error);
+          });
+    
+      }
+
     onPageChange(event: any) {
       this.first = event.first;
       this.rows = event.rows;
