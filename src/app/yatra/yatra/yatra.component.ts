@@ -7915,13 +7915,10 @@ export class YatraComponent {
     }
 
 
-    await this.yatraService.Getform(reqData).subscribe({
-      next: async (res: any) => {
-
-        // this.formSequence = JSON.parse(res.data.formConfig) || [];
-
-        // this.form = JSON.parse(res.data.jsonFormData);
-
+    // await this.yatraService.Getform(reqData).subscribe({
+    //   next: async (res: any) => {
+      try {
+        const res: any = await this.yatraService.Getform(reqData).toPromise();
         this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
         console.log("form", this.questionFormData);
         const dynamicValue = this.dynamicFormGroup.getRawValue();
@@ -7930,7 +7927,6 @@ export class YatraComponent {
           delete member.productQuestionnaire;
         })
         await form.formSections.forEach((section: any) => {
-
           section.formControls.forEach((controls: any) => {
             if (controls.type == 'questionnaire') {
               this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
@@ -7950,7 +7946,6 @@ export class YatraComponent {
                   // Iterate through innerArrayControl to find the control with name 'dName'
                   matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
                     // Check if innerControl has a dName property
-                    // innerControl.forEach((inner:any) => {
                     if (innerControl && innerControl.name === 'diseaseName') {
                       // Check if options exist in innerControl
                       if (innerControl.options) {
@@ -7958,7 +7953,6 @@ export class YatraComponent {
                         optionsArray.push(...innerControl.options);
                       }
                     }
-                    // })
                   });
                 }
                 // Initialize the productQuestionnaire array for the current member
@@ -7975,7 +7969,6 @@ export class YatraComponent {
 
                         // Iterate through the array related to the matched subItem
                         innerValue[subItem].forEach((innerArray: any) => {
-                          // innerArray.parentQuestionCode = questionId;
                           if (!innerArray.hasOwnProperty('subQuestionCode')) {
                             innerArray.subQuestionCode = "";
                           }
@@ -7992,9 +7985,6 @@ export class YatraComponent {
                               }
                             }
                             const filteredInnerArray = innerArray;
-                            // const filteredInnerArray = Object.fromEntries(
-                            //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                            // );
                             const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
                             if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
@@ -8010,15 +8000,6 @@ export class YatraComponent {
                               innerArray.parentQuestionCode = questionId;
                               productQuestionnaire.push(innerArray);
                             }
-
-                            // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                            //   innerArray.harmfulSubstances = false;
-                            // }
-                            // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                            //   innerArray.harmfulSubstances = true;
-                            // }
-
-                            // productQuestionnaire.push(innerArray);
                           }
                           // productQuestionnaire.push(filteredInnerArray);
                         });
@@ -8066,54 +8047,6 @@ export class YatraComponent {
                         console.log(innerValue[subItem]);
                         productQuestionnaire.push(innerValue[subItem]);
                         // Iterate through the array related to the matched subItem
-                        // innerValue[subItem].forEach((innerArray: any) => {
-                        //   // innerArray.parentQuestionCode = questionId;
-                        //   if (!innerArray.hasOwnProperty('subQuestionCode')) {
-                        //     innerArray.subQuestionCode = "";
-                        //   }
-
-                        //   if (innerArray.diseaseName) {
-                        //     // If optionsArray is not empty, find the corresponding option
-                        //     if (optionsArray.length > 0) {
-                        //       const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-
-                        //       // Set subQuestionCode and dName based on the found option
-                        //       if (newOption) {
-                        //         innerArray.subQuestionCode = newOption.value;
-                        //         innerArray.diseaseName = newOption.name;
-                        //       }
-                        //     }
-                        //     const filteredInnerArray = innerArray;
-                        //     // const filteredInnerArray = Object.fromEntries(
-                        //     //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                        //     // );
-                        //     const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-
-                        //     if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                        //       innerArray.parentQuestionCode = questionId;
-                        //       productQuestionnaire.push(filteredInnerArray);
-                        //     }
-                        //   }
-                        //   else {
-                        //     const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-
-                        //     if (!allValuesEmpty) {
-                        //       innerArray.harmfulSubstances = true;
-                        //       innerArray.parentQuestionCode = questionId;
-                        //       productQuestionnaire.push(innerArray);
-                        //     }
-
-                        //     // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //     //   innerArray.harmfulSubstances = false;
-                        //     // }
-                        //     // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //     //   innerArray.harmfulSubstances = true;
-                        //     // }
-
-                        //     // productQuestionnaire.push(innerArray);
-                        //   }
-                        //   // productQuestionnaire.push(filteredInnerArray);
-                        // });
                       }
                     });
                   }
@@ -8131,14 +8064,8 @@ export class YatraComponent {
             }
           })
         })
-        // this.formData.insuredMemberDetails.forEach((member: any) => {
-        //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
-        //   this.flattenObjectInsert(this.formData);
-        // })
         this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
-          // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-          // const dindex = dynamicform.at(index) as FormGroup;
-          // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
+
           if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
             this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
           }
@@ -8154,23 +8081,19 @@ export class YatraComponent {
           Object.keys(member).forEach((key: string) => {
             dindex.addControl(key, new FormControl(member[key]));
           });
-          // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-
           const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
           dindex.addControl('productQuestionnaire', '');
 
-          // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
-
           dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-
-          // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
-          // this.flattenObjectInsert(this.formData);
         })
-      },
-      error: (err) => {
-        console.log(err);
+      } catch (error) {
+        console.error(error);
       }
-    });
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   }
+    // });
   }
 
   backToleads() {
