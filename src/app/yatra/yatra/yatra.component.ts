@@ -8029,7 +8029,7 @@ export class YatraComponent {
               });
             }
             else if (controls.type == 'chronicquestionnaire') {
-              this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+              this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
                 // Initialize the optionsArray for each member
                 const productQuestionnaire: any[] = [];
                 const optionsArray: any[] = [];
