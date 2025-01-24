@@ -68,6 +68,7 @@ export const environment = {
   getClaimTracker: "api/claims/getclaimtracker",
   getUploadedFiles: "api/claims/getclaimsdocument",
   deleteFile: "api/claims/deleteclaimdocument",
+  claimDownloadAll: "api/claims/claimdownload",
   saveEvent: "api/yatra/insertevent",
   getEvents: "api/yatra/eventlist",
   getEventLead: "api/yatra/eventlead",
