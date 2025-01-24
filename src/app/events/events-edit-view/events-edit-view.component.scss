@@ -50,3 +50,31 @@
         padding-bottom: 6rem;
     }
   }
+
+/*----MAT Select Custom styles start----*/
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    font-size: 12px !important;
+    line-height: normal !important;
+  }
+  ::ng-deep .mat-mdc-option {
+    padding: 5px 10px !important;
+    background: #f5f5f5 !important;
+  }
+  ::ng-deep .mat-mdc-option:focus.mdc-list-item, ::ng-deep .mat-mdc-option.mat-mdc-option-active.mdc-list-item,
+  ::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
+    background-color: #056cdc !important;
+    color: #fff !important;
+  }
+  ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+  ::ng-deep .mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after, 
+  ::ng-deep .mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
+    color: #fff !important;
+  }
+  ::ng-deep .mat-mdc-select-value-text {
+    font-size: 12px;
+    color: #000;
+  }
+  ::ng-deep .mat-mdc-option.mdc-list-item {
+    min-height: initial;
+  }

@@ -95,7 +95,6 @@ export class LeadsListComponent {
     private datePipe: DatePipe,
     private toast: NgToastService,
     private productService: ProductsService,
-    private common: CommonService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
     private translateService: TranslateService,
@@ -558,7 +557,7 @@ export class LeadsListComponent {
               "productId": interestedProductItem.productId
       
             }
-            const res = await firstValueFrom(this.common.Getformsequence(reqData));
+            const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
             formSequence = JSON.parse(res.data.formSequence);
             if (formSequence != null && formSequence.length > 0) {
               formSequence.forEach(() => { this.allJsonFormData.push({}) });
@@ -620,7 +619,7 @@ export class LeadsListComponent {
 
   async generateProposalNumnberAndUpdateLeadInfor(leadNumber : any) {
     try {
-      const proposalGenerateResponse = await firstValueFrom(this.common.getProposalNumber());
+      const proposalGenerateResponse = await firstValueFrom(this.commonService.getProposalNumber());
       let proposalNumber = proposalGenerateResponse.data?.proposalNumber;
       const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
       const leadInformation = response?.data?.leadList[0];
@@ -649,8 +648,8 @@ export class LeadsListComponent {
     this.leadsService.downloadSingleLead(leadReqBody, item.leadNumber).subscribe(
       (response)=>{
         if(response.isSuccess){
-          const blob = this.base64ToBlob(response?.data?.downloadUrl,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-          this.saveAsExcelFile(blob, response?.data?.fileName) 
+          const blob = this.commonService.base64ToBlob(response?.data?.downloadUrl,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName) 
         }
       },
       (error)=>{
@@ -672,34 +671,13 @@ export class LeadsListComponent {
     this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
      (response)=>{
       if(response.isSuccess){
-        const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        this.saveAsExcelFile(blob, response?.data?.fileName);          
+        const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
       }
      },
      (error)=>{
       console.log('Exception',error);
      });
-  }
-
-  saveAsExcelFile(blob: any, fileName: string) {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  }
-
-  base64ToBlob(base64: string, type: string): Blob {
-    const binary = atob(base64);
-    const length = binary.length;
-    const arrayBuffer = new Uint8Array(length);
-    for (let i = 0; i < length; i++) {
-      arrayBuffer[i] = binary.charCodeAt(i);
-    }
-    return new Blob([arrayBuffer], { type });
   }
   
 }

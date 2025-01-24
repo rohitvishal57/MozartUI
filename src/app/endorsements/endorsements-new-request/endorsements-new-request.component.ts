@@ -6,7 +6,6 @@ import { Helper } from 'src/app/utilities/helper/helper';
 import { MatDialog } from '@angular/material/dialog';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
 import { NgToastService } from 'ng-angular-popup';
-import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
@@ -144,7 +143,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private endorsement_service: EndorsementsRequestsService,
-    private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
     private dialog: MatDialog,
@@ -667,18 +665,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
                       this.openModal(resp);
                     }
                     else if (Respevent?.message) {
-                      this.toast.error({
-                        detail: 'Error',
-                        summary: Respevent.message,
-                        duration: 5000,
-                      });
+                      this.toast.error({ detail: 'Error', summary: Respevent.message, duration: 5000 });
                       this.backToEndorsment();
                     }  else if (Respevent == null || Respevent?.message == undefined) {
-                      this.toast.error({
-                        detail: 'Error',
-                        summary: "File upload was not successfull. Try again later!",
-                        duration: 5000,
-                      });
+                      this.toast.error({ detail: 'Error', summary: "File upload was not successfull. Try again later!", duration: 5000, });
                       this.backToEndorsment();
                     }
                   }, (error: any) => {
