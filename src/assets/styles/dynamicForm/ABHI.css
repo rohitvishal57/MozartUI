@@ -3422,6 +3422,23 @@ margin: 0;
     font-weight: 600;
     padding-left: 25px !important;
 }
+
+.main_hospitalCashCover .input-checkbox-block{
+    width: 100%;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild {
+    display: flex;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild .checkbox-label {
+    margin-bottom: 0 !important;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild .checkboxes {
+    margin: 0 !important;
+    padding: 0 6px;
+}
+.main_hospitalCashCover .input-container label {
+    width: 60% !important;
+}
 @media (max-width:767px){
     .main-container .right-panel .typecss_proposalNumber .boldtext_input {
         padding: 0;
