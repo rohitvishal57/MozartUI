@@ -138,8 +138,8 @@ export class YatraComponent {
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
   requestId: string = "";
-  parsedValue: any;
-
+  parsedValue:any;
+  selfAnnualIncome:any;
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -2606,7 +2606,7 @@ export class YatraComponent {
     //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
     // }
   }
-  selfAnnualIncome:any;
+  
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
     console.log(event.target.value);
@@ -2660,11 +2660,11 @@ export class YatraComponent {
       if (innerControl.name != "memberCheckbox") {
         this.parsedValue = JSON.parse(event.target.value);
       }
-      const selectedControl = subControl;
-      const agentCode = this.agentCode
+      const selectedControl= subControl;
       this.form.formSections.forEach((section: any) => {
+       if(section.sectionTitle === "Optional Covers"){
         section.formControls.forEach((formControl: any) => {
-          if (formControl.subControls) {
+          if (formControl.subControls && parentControl.name == formControl.name) {
             formControl.subControls.forEach((subControl: any) => {
               if (subControl.innerSubControls) {
                 subControl.innerSubControls.forEach((innerSubControls: any) => {
@@ -2699,26 +2699,28 @@ export class YatraComponent {
                           "value": "ND0207",
                           "name": "Househusband"
                         }]
-                      } else if (innerControl.name == "occupation" && coreControl.name == "occupationRisk") {
-                        this.yatraService.getNatureOfDuty().subscribe({
-                          next: (res: any) => {
-                            coreControl.options = res.data;
-                          },
-                          error: (err: any) => {
-                            console.error(err);
-                          }
-                        });
+                      }else if(innerControl.name == "occupation" && coreControl.name == "occupationRisk"){
+                          this.yatraService.getNatureOfDuty().subscribe({
+                            next: (res: any) => {
+                              coreControl.options = res.data;
+                            },
+                            error: (err: any) => {
+                              console.error(err);
+                            }
+                          });
                       }
-                      else if (innerControl.name == 'plan' && coreControl.name === "addOnSumInsured") {
-                        console.log("sum insured", this.formData.insuredMemberDetails, selectedControl.name, event, parentControl, coreControl, agentCode);
+                      else if (innerControl.name ==='plan' && coreControl.name === "addOnSumInsured") {
                         let insuredMemberDetails = this.formData.insuredMemberDetails;
                         let annualIncome: any;
+                        if(selectedControl.name !== "Self"){
+                          insuredMemberDetails.forEach((member:any) => {
+                            if (member.relation === "Self") {
+                              this.selfAnnualIncome = Number(member.annualIncome);
+                            }
+                          }); 
+                        }
                         insuredMemberDetails.forEach((member:any) => {
-                          if (member.relation === "Self" && selectedControl.name=== "Self") {
-                            this.selfAnnualIncome = Number(member.annualIncome);
-                            annualIncome = this.selfAnnualIncome
-                          }
-                          if(selectedControl.name!= "Self" && (selectedControl.name == member.relation)){
+                          if(member.relation == selectedControl.name){
                             if(member.annualIncome!= ""){
                               annualIncome =  Number(member.annualIncome); 
                             }
@@ -2726,18 +2728,17 @@ export class YatraComponent {
                               annualIncome=this.selfAnnualIncome
                             }
                           }
-                        });
-                        const requestBody = {
-                          "coverType": parentControl.name,
-                          "planType": JSON.parse(event.target.value).name,
-                          "productId": "35",
-                          "agentCode": agentCode,
+                        });                     
+                        const requestBody={
+                          "coverType": parentControl.name || "",
+                          "planType": JSON.parse(event.target.value).name || "",
+                          "productId": (this.productId).toString()||"",
+                          "agentCode":this.agentCode,
                           "annualIncome":annualIncome || 0
                         }
                         this.yatraService.getSumInsuredList(requestBody).subscribe({
                           next: (res: any) => {
                             coreControl.options = res.data.siList;
-                            console.log("active secure si values", res.data.siList);
                           },
                           error: (err: any) => {
                             console.error(err);
@@ -2791,6 +2792,7 @@ export class YatraComponent {
             });
           }
         });
+       }
       });
     }
     if (control.name == 'physicalcopy' && control.type == 'radio') {
