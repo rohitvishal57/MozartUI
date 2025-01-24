@@ -65,9 +65,6 @@ export class AdminService {
   return this.httpService.post(BulkUpload, reqdata)
 }
 
-
-
-
   getAllBaseCaller(pageNo:number,noOfRecords:number){
     const headers = new HttpHeaders({
       'accept': '*/*'  
@@ -76,7 +73,7 @@ export class AdminService {
       .set('pageNo', pageNo.toString())
       .set('noOfRow', noOfRecords.toString());
     const getBaseCaller=this.configService.config.baseUrl+this.configService.config.getBaseCaller;
-    return this.httpService.get(getBaseCaller,{ headers, params })
+    return this.httpService.get(getBaseCaller,{ headers, params })      
   }
 
 getLead(reqdata: any) {

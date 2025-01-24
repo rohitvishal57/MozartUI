@@ -55,10 +55,6 @@ h6 {
 	align-items: center;
 }
 
-.tableSubMain .table td {
-	/*line-height: 10px;*/
-}
-
 .btn_quickFilter {
 	padding: 9px 9px 7px;
 }
@@ -280,8 +276,8 @@ h6 {
 	  }
 	  button {
 		position: absolute;
-		right: 10px;
-		top: 7px;
+		
+		top: 0px;
 		padding: 0;
 		img {
 		  position: initial;
@@ -364,4 +360,51 @@ h6 {
 	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
 		width: 30%;
 	}
+}
+.btn_reassign {
+    background: #FFFFFF;
+    border: 1px solid #c7222a;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: Lato-bold, sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #c7222a;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.btn_audit {
+    background: #606c76;
+    border:1px solid #606c76;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: Lato-bold, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #fff;
+    display: flex;
+    gap:10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn_audit:hover{
+    border:1px solid #c7222a;
+    background: #FFFFFF;
+    color: #c7222a;
+}
+#save{
+    padding-right: 40px;
+	padding: 10px;
+	position: relative;
+	bottom: 30px;
 }

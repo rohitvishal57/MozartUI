@@ -220,5 +220,5 @@ export const environment = {
   getforminfobyproposalNum:"api/yatra/getforminfobyproposalNum",
   insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
   createLob:"api/rug/CreateManageLob",
-  getsuminsuredlist:"api/yatra/getsuminsuredlist"
+  getsuminsuredlist:"api/yatra/getactivesecuresidetails"
 };

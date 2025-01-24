@@ -2534,60 +2534,63 @@ export class YatraComponent {
     }
   }
 
-
-  ActiveSecureSIvalues:any;
-
-  // sumInsuredList(){
-  //   this.yatraService.getSumInsuredList().subscribe({
-  //     next: (res: any) => {
-  //       // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
-  //       const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
-  //       this.ActiveSecureSIvalues = sumInsuredListValue
-  //     },
-  //     error: (err: any) => {
-  //       console.error(err);
-  //     }
-  //   });
-  // }
-
-  // getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
-  //   console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
-  //   const isPos = agentCode.startsWith('pos') ? 1 : 0;
-  //   const coverTypeMap: { [key: string]: string } = {
-  //     accident: 'PA',
-  //     criticalIllness: 'CI',
-  //     cancerSecure: 'CC'
-  //   };
-  
-  //   const coverType = coverTypeMap[parentcontrol.name];
-  //   console.log("Cover Type:", coverType);
-  //   const data = JSON.parse(event.target.value);
-  //   console.log("form data in getSumInsuredValues",this.formData);
+  getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
+    // console.log("sum insured",event,parentcontrol,otherControl,agentCode);
     
-  //   if (coverType) {
-  //     const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
-  //       item.planType === data.name && 
-  //       item.isPos === isPos.toString() &&
-  //       item.coverType === coverType
-  //     );
-  //     console.log("Filtered Values:", filteredValues);
-  //     console.log(filteredValues[0].siList);
-  //     if (filteredValues.length > 0) {
-  //       const siList = filteredValues[0].siList;
-  //       this.formData.insuredMemberDetails.forEach((member:any) => {
-  //         const maxAllowedValue = parseInt(member.annualIncome) * 12;    
-  //         const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
-  //         otherControl.options = filteredSIList;
-  //         console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
-  //       })
-  //     } else {
-  //       console.log("No matching values found in ActiveSecureSIvalues.");
-  //       otherControl.options = []; // Clear options if no match is found
-  //     }
-  //   } else {
-  //     console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
-  //   }
-  // }
+    // const requestBody={
+    //   "coverType": "string",
+    //   "planType": "string",
+    //   "productId": "string",
+    //   "agentCode": "string",
+    //   "annualIncome": 0
+    // }
+    // this.yatraService.getSumInsuredList(requestBody).subscribe({
+    //   next: (res: any) => {
+    //     // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
+    //     const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
+    //     this.ActiveSecureSIvalues = sumInsuredListValue
+    //   },
+    //   error: (err: any) => {
+    //     console.error(err);
+    //   }
+    // });
+    // console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
+    // const isPos = agentCode.startsWith('pos') ? 1 : 0;
+    // const coverTypeMap: { [key: string]: string } = {
+    //   accident: 'PA',
+    //   criticalIllness: 'CI',
+    //   cancerSecure: 'CC'
+    // };
+  
+    // const coverType = coverTypeMap[parentcontrol.name];
+    // console.log("Cover Type:", coverType);
+    // const data = JSON.parse(event.target.value);
+    // console.log("form data in getSumInsuredValues",this.formData);
+    
+    // if (coverType) {
+    //   const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
+    //     item.planType === data.name && 
+    //     item.isPos === isPos.toString() &&
+    //     item.coverType === coverType
+    //   );
+    //   console.log("Filtered Values:", filteredValues);
+    //   console.log(filteredValues[0].siList);
+    //   if (filteredValues.length > 0) {
+    //     const siList = filteredValues[0].siList;
+    //     this.formData.insuredMemberDetails.forEach((member:any) => {
+    //       const maxAllowedValue = parseInt(member.annualIncome) * 12;    
+    //       const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
+    //       otherControl.options = filteredSIList;
+    //       console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
+    //     })
+    //   } else {
+    //     console.log("No matching values found in ActiveSecureSIvalues.");
+    //     otherControl.options = []; // Clear options if no match is found
+    //   }
+    // } else {
+    //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
+    // }
+  }
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     console.log(event, control, parentControl, index, subControl, innerControl, indexj);
@@ -2691,10 +2694,43 @@ export class YatraComponent {
                             }
                           });
                       }
-                      // else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
-                      //   console.log("Core Control:", coreControl);
-                      //   this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
-                      // }
+                      else if (innerControl.name=='plan' && coreControl.name === "addOnSumInsured") {
+                        console.log("sum insured",this.formData.insuredMemberDetails,selectedControl.name,event,parentControl,coreControl,agentCode);
+                        let insuredMemberDetails = this.formData.insuredMemberDetails;
+                        let annualIncome: any;
+                        let selfAnnualIncome:any;
+                        insuredMemberDetails.forEach((member:any) => {
+                          if (member.relation === "Self" && selectedControl.name=== "Self") {
+                            selfAnnualIncome = Number(member.annualIncome);
+                            annualIncome = selfAnnualIncome
+                          }
+                          else{
+                            if(member.annualIncome!= ""){
+                              annualIncome =  Number(member.annualIncome); 
+                            }
+                            else{
+                              annualIncome=selfAnnualIncome
+                            }
+                          }
+                        });                     
+                        const requestBody={
+                          "coverType": parentControl.name,
+                          "planType": JSON.parse(event.target.value).name,
+                          "productId": "35",
+                          "agentCode": agentCode,
+                          "annualIncome":annualIncome
+                        }
+                        this.yatraService.getSumInsuredList(requestBody).subscribe({
+                          next: (res: any) => {
+                            coreControl.options = res.data.siList;
+                            console.log("active secure si values",res.data.siList );
+                          },
+                          error: (err: any) => {
+                            console.error(err);
+                          }
+                        });
+                        // this.getSumInsuredValues(event, parentControl, coreControl, agentCode);
+                      }
                       else if(innerControl.name == "memberCheckbox" && coreControl.name == "occupation" ){
                         if(selectedControl.name == "Self"){
                           coreControl.options =[{
@@ -2721,7 +2757,7 @@ export class YatraComponent {
                           {
                               "id": "2",
                               "value": "O490",
-                              "name": "STUDENT"
+                              "name": "Student"
                           },
                           {
                             "id": "6",
@@ -4482,6 +4518,9 @@ export class YatraComponent {
               }
             }
           });
+          if(controls.name == 'nextNotWork' && (control.dependentControls.includes('nextOffline') || control.dependentControls.includes('nextOnline'))){
+            controls.visible = false;
+          }
         });
       });
     } else {
@@ -7876,13 +7915,10 @@ export class YatraComponent {
     }
 
 
-    await this.yatraService.Getform(reqData).subscribe({
-      next: async (res: any) => {
-
-        // this.formSequence = JSON.parse(res.data.formConfig) || [];
-
-        // this.form = JSON.parse(res.data.jsonFormData);
-
+    // await this.yatraService.Getform(reqData).subscribe({
+    //   next: async (res: any) => {
+      try {
+        const res: any = await this.yatraService.Getform(reqData).toPromise();
         this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
         console.log("form", this.questionFormData);
         const dynamicValue = this.dynamicFormGroup.getRawValue();
@@ -7891,7 +7927,6 @@ export class YatraComponent {
           delete member.productQuestionnaire;
         })
         await form.formSections.forEach((section: any) => {
-
           section.formControls.forEach((controls: any) => {
             if (controls.type == 'questionnaire') {
               this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
@@ -7911,7 +7946,6 @@ export class YatraComponent {
                   // Iterate through innerArrayControl to find the control with name 'dName'
                   matchingControl.innerArrayControl[0].forEach((innerControl: any) => {
                     // Check if innerControl has a dName property
-                    // innerControl.forEach((inner:any) => {
                     if (innerControl && innerControl.name === 'diseaseName') {
                       // Check if options exist in innerControl
                       if (innerControl.options) {
@@ -7919,7 +7953,6 @@ export class YatraComponent {
                         optionsArray.push(...innerControl.options);
                       }
                     }
-                    // })
                   });
                 }
                 // Initialize the productQuestionnaire array for the current member
@@ -7936,7 +7969,6 @@ export class YatraComponent {
 
                         // Iterate through the array related to the matched subItem
                         innerValue[subItem].forEach((innerArray: any) => {
-                          // innerArray.parentQuestionCode = questionId;
                           if (!innerArray.hasOwnProperty('subQuestionCode')) {
                             innerArray.subQuestionCode = "";
                           }
@@ -7953,9 +7985,6 @@ export class YatraComponent {
                               }
                             }
                             const filteredInnerArray = innerArray;
-                            // const filteredInnerArray = Object.fromEntries(
-                            //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                            // );
                             const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
                             if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
@@ -7971,15 +8000,6 @@ export class YatraComponent {
                               innerArray.parentQuestionCode = questionId;
                               productQuestionnaire.push(innerArray);
                             }
-
-                            // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                            //   innerArray.harmfulSubstances = false;
-                            // }
-                            // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                            //   innerArray.harmfulSubstances = true;
-                            // }
-
-                            // productQuestionnaire.push(innerArray);
                           }
                           // productQuestionnaire.push(filteredInnerArray);
                         });
@@ -8027,54 +8047,6 @@ export class YatraComponent {
                         console.log(innerValue[subItem]);
                         productQuestionnaire.push(innerValue[subItem]);
                         // Iterate through the array related to the matched subItem
-                        // innerValue[subItem].forEach((innerArray: any) => {
-                        //   // innerArray.parentQuestionCode = questionId;
-                        //   if (!innerArray.hasOwnProperty('subQuestionCode')) {
-                        //     innerArray.subQuestionCode = "";
-                        //   }
-
-                        //   if (innerArray.diseaseName) {
-                        //     // If optionsArray is not empty, find the corresponding option
-                        //     if (optionsArray.length > 0) {
-                        //       const newOption = optionsArray.find((option: any) => option.value === innerArray.diseaseName);
-
-                        //       // Set subQuestionCode and dName based on the found option
-                        //       if (newOption) {
-                        //         innerArray.subQuestionCode = newOption.value;
-                        //         innerArray.diseaseName = newOption.name;
-                        //       }
-                        //     }
-                        //     const filteredInnerArray = innerArray;
-                        //     // const filteredInnerArray = Object.fromEntries(
-                        //     //   Object.entries(innerArray).filter(([key, value]) => value !== "")
-                        //     // );
-                        //     const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
-
-                        //     if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                        //       innerArray.parentQuestionCode = questionId;
-                        //       productQuestionnaire.push(filteredInnerArray);
-                        //     }
-                        //   }
-                        //   else {
-                        //     const allValuesEmpty = Object.values(innerArray).every(value => value === "");
-
-                        //     if (!allValuesEmpty) {
-                        //       innerArray.harmfulSubstances = true;
-                        //       innerArray.parentQuestionCode = questionId;
-                        //       productQuestionnaire.push(innerArray);
-                        //     }
-
-                        //     // if (allValuesEmpty && innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //     //   innerArray.harmfulSubstances = false;
-                        //     // }
-                        //     // else if (innerArray.hasOwnProperty('harmfulSubstances')) {
-                        //     //   innerArray.harmfulSubstances = true;
-                        //     // }
-
-                        //     // productQuestionnaire.push(innerArray);
-                        //   }
-                        //   // productQuestionnaire.push(filteredInnerArray);
-                        // });
                       }
                     });
                   }
@@ -8092,14 +8064,8 @@ export class YatraComponent {
             }
           })
         })
-        // this.formData.insuredMemberDetails.forEach((member: any) => {
-        //   member.productQuestionnaire = JSON.stringify(member.productQuestionnaire);
-        //   this.flattenObjectInsert(this.formData);
-        // })
         this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
-          // const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-          // const dindex = dynamicform.at(index) as FormGroup;
-          // dindex.addControl('productQuestionnaire',new FormControl(JSON.stringify(member.productQuestionnaire)));
+
           if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
             this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
           }
@@ -8115,23 +8081,19 @@ export class YatraComponent {
           Object.keys(member).forEach((key: string) => {
             dindex.addControl(key, new FormControl(member[key]));
           });
-          // const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
-
           const stringifiedProductQuestionnaire = JSON.stringify(member.productQuestionnaire);
           dindex.addControl('productQuestionnaire', '');
 
-          // dindex.addControl('productQuestionnaire', new FormControl(JSON.stringify(member.productQuestionnaire)));
-
           dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-
-          // member.productQuestionnaire = JSON.stringify(JSON.stringify(member.productQuestionnaire));
-          // this.flattenObjectInsert(this.formData);
         })
-      },
-      error: (err) => {
-        console.log(err);
+      } catch (error) {
+        console.error(error);
       }
-    });
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   }
+    // });
   }
 
   backToleads() {

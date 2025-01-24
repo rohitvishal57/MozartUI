@@ -18,6 +18,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
   page: number = 1;
   first: number = 0;
   rows: number = 10;
+  extrarows: number = 1000;
   totalRecords: number = 0;
   displayedLeads: any[] = [];
   agentCode: any;
@@ -26,19 +27,21 @@ export class ViewForSoloJourneyComponent implements OnInit {
   filterAllAvs = [];
   getAllLeads: any[] = [];
   filteredArray: any;
-  itemsPerPage = 10;
+  itemsPerPage = 100;
   currentPage = 1;
-  allLeads: any[] = []; 
+  allLeads: any[] = [];
   Location: any[] = ["Noida", "Hyderabad", "Bangalore", "Mumbai", "Kolkata"];
   AxisProcess: any[] = ["Inbound Phone Banking", "Outbound Call Center (OCC)"];
   dialog: any;
   item: any;
+  AllAgentsNames:any;
   constructor(private fb: FormBuilder, private adminService: AdminService, private excelService: ExcelServiceService, private matdialogue: MatDialog) {
 
   }
   ngOnInit(): void {
     this.inItForm();
     this.getSoloJourneyDetails();
+    this.getAllAgent();
   }
 
   inItForm() {
@@ -64,7 +67,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
       AxisProcess: [this.soloJourneyForm.controls['axisprocess'].value.toString()].filter(value => value),
       PolicyInsuraceDate: [this.soloJourneyForm.controls['pidate'].value.toString()].filter(value => value)
     };
-  
+
     const reqdata = {
       userId: this.agentCode,
       isSoloJourney: true,
@@ -72,43 +75,42 @@ export class ViewForSoloJourneyComponent implements OnInit {
       isDualJourney: false,
       isViewLead: false,
       isViewCheckerLead: false,
-      pageNumber: this.searchTerm ? 1 : this.page,
-      pageSize: this.searchTerm ? 10 : this.rows,
+      pageNumber: this.page,
+      pageSize: this.rows,
       filters: filters
     };
-  
+
     console.log('Request Data:', reqdata);
-  
-    this.adminService.getLead(reqdata).subscribe(
-      (res: any) => {
-        try {
-          const response = JSON.parse(res.data);
-          console.log('API Response Data:', response);
-          this.getAllLeads = response.data.leadDetails;
-          this.displayedLeads = [...this.getAllLeads];
-          this.totalRecords = this.searchTerm ? this.getAllLeads.length : response.data.totalRecords;
-  
-          if (this.getAllLeads.length === 0 && this.searchTerm) {
-            console.warn('No data found for the provided refNo:', this.searchTerm);
-            this.displayedLeads = [];
-          }
-        } catch (error) {
-          console.error('Error parsing response:', error);
+
+    this.adminService.getLead(reqdata).subscribe((res: any) => {
+      try {
+        const response = JSON.parse(res.data);
+        console.log('API Response Data:', response);
+        this.getAllLeads = response.data.leadDetails;
+        this.displayedLeads = [...this.getAllLeads];
+        this.totalRecords = this.searchTerm ? this.getAllLeads.length : response.data.totalRecords;
+
+        if (this.getAllLeads.length === 0 && this.searchTerm) {
+          console.warn('No data found for the provided refNo:', this.searchTerm);
+          this.displayedLeads = [];
         }
-      },
+      } catch (error) {
+        console.error('Error parsing response:', error);
+      }
+    },
       (error) => {
         console.error('API Error:', error);
       }
     );
   }
-  
-  
+
+
   onInput(event: any): void {
-    this.searchTerm = event.target.value.trim().toLowerCase(); 
+    this.searchTerm = event.target.value.trim().toLowerCase();
     console.log('Search Term:', this.searchTerm);
-    this.getSoloJourneyDetails(); 
+    this.getSoloJourneyDetails();
   }
-  
+
   onPageChange(event: any): void {
     if (!this.searchTerm) {
       this.first = event.first;
@@ -117,7 +119,7 @@ export class ViewForSoloJourneyComponent implements OnInit {
       this.getSoloJourneyDetails();
     }
   }
-  
+
   auditLead(lead: any) {
     let reqObj = {
       "leadId": lead.refNo,
@@ -138,9 +140,29 @@ export class ViewForSoloJourneyComponent implements OnInit {
       });
   }
 
+getAllAgent(){
+  this.agentCode = localStorage.getItem("agentCode");
+    const reqdata = {
+      userId: this.agentCode,
+      isSoloJourney: true,
+      isUnverifiedLead: false,
+      isDualJourney: false,
+      isViewLead: false,
+      isViewCheckerLead: false,
+      pageNumber: this.page,
+      pageSize: this.extrarows
+    };
+    this.adminService.getLead(reqdata).subscribe((res: any) => {
+        const response = JSON.parse(res.data);
+        console.log('API Response Data:', response);
+        this.AllAgentsNames = response.data.leadDetails; 
+    }
+    );
+}
+
   ReassignAgent() {
     let AVdata: any = [];
-    this.displayedLeads.forEach((element: any) => {
+    this.AllAgentsNames.forEach((element: any) => {
       if (AVdata.findIndex((item: any) => item.avId === element.avid) === -1 && element.avid !== '') {
         AVdata.push({
           avName: element.avName,
