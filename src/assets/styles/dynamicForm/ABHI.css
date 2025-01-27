@@ -2535,7 +2535,10 @@ input[type=checkbox]:checked {
     margin-bottom: 10px;
 }
 .proposalDetails .accordionCardBody .label-value-container .label-text {
-    margin-bottom: 5px !important;
+    margin-bottom: 2px !important;
+}
+.main-container .right-panel .accordionCard.thankyouSection .section-paragraph1 p {
+    line-height: 16px !important;
 }
 .proposalDetails .accordionCardBody .typecss {
     padding-bottom: 0px;
@@ -3212,7 +3215,7 @@ margin: 0;
     width: 180px;
 }
 .accordionCard.thankyouSection .accordionCardBody {
-    padding: 16px 16px 15px !important;
+    padding: 8px 16px 15px !important;
 }
 .main-container .right-panel .thankyouSection .thankYou {
     margin: 0 !important;
