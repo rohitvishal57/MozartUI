@@ -47,6 +47,7 @@ export interface ClaimData {
         relation: string;
       }
   export interface UploadErrors {
+        policyNumberRequired: any;
         fileNotSelected: boolean;
         invalidFormat: boolean;
         requiredDocs: string;
