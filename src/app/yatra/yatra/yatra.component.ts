@@ -7097,8 +7097,8 @@ export class YatraComponent {
                 //   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                 // }
                 
-                option.selected = true;                
-                if (this.dynamicFormGroup.getRawValue().totalPremium != null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
+                option.selected = true;                                
+                if (this.dynamicFormGroup.getRawValue().totalPremium == null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
                 
                   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                   // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
