@@ -4308,6 +4308,7 @@ export class YatraComponent {
 
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.markAsTouched();
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
@@ -4330,6 +4331,16 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableSumInsured')?.setValue(zoneWiseSI);
                 // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(zoneWiseSI);
+                // const ageControl = this.dynamicFormGroup.get(controls.idProperty);
+                // if(ageControl){
+                  // ageControl.value[index-1]['memberAge'] = this.dynamicFormGroup.get('memberAgeProposer')?.value;
+                  // this.dynamicFormGroup.get(controls.idProperty)?.patchValue(ageControl.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+                  
+
+                // }
+                
+                
               }
               if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
@@ -4799,14 +4810,10 @@ export class YatraComponent {
   async onSubmit(event?: any) {
     this.changesMade = false;
     console.log("dynamic form group", this.formData,this.familyPair,this.selectedFamilyMembers);
-    // console.log(this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-    // console.log(this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
     const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
     const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
-    if (this.dynamicFormGroup.invalid) {
-      this.scrollToFirstInvalidField();
-    }
+    
     if (insuredMembers < 2 && policyType == 'Family Floater') {
       this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
@@ -5184,6 +5191,9 @@ export class YatraComponent {
         });
         if (this.dynamicFormGroup.invalid) {
           this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+          
+          this.scrollToFirstInvalidField();
+          
           if (firstInvalidTabIndex !== null) {
             // Navigate to the first invalid tab
             this.activeMemberTabIndex = firstInvalidTabIndex;
@@ -9432,96 +9442,101 @@ export class YatraComponent {
     }
 
     this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((formControl: any, index: any) => {
-        if (formControl.name == 'insuredMemberDetails') {
-          if (this.formData[formControl.name]) {
+      if(section.sectionTitle == 'Previous Policy Documents'){
+        section.visible = isPortability;
+      }
+      else{
+        section.formControls.forEach((formControl: any, index: any) => {
+          if (formControl.name == 'insuredMemberDetails') {
             if (this.formData[formControl.name]) {
-              formControl.value = this.formData[formControl.name].length;
-            }
-            formControl.dynamicControls[0].forEach((dynamicControl: any) => {
-              if (dynamicControl.innerArrayControl) {
-                dynamicControl.visible = isPortability;
-                if (isPortability) {
-                  let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-                  dynamicControl.innerArrayControl.push(tempControl);
-                }
-
+              if (this.formData[formControl.name]) {
+                formControl.value = this.formData[formControl.name].length;
               }
-            })
-            formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
-            this.formData[formControl.name].forEach((member: any, index: number) => {
-              let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              formControl.dynamicControls.push(tempDynamicControl)
-              formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
-                if (innerControl.name == 'relation') {
-                  innerControl.value = member.relation
-                }
-                if (innerControl.name == 'covers') {
-                  innerControl.value = this.covers[index];
-                }
-                if (innerControl.name == 'zoneValue') {
-                  innerControl.options = member.upgradableZones;
-                }
-
-                if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
-                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
-                  console.log(innerControl.innerArrayControl);
-
-                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
-                    // Create a fresh template copy for each iteration
-                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-
-                    if (i === 0) {
-                      // For the first index, push the full template
-                      innerControl.innerArrayControl.push(freshTemplate);
-                    } else {
-                      // Create a customized version for subsequent indices
-                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
-                      customizedInnerArrayControl.forEach((controlElement: any) => {
-                        if (controlElement.name == 'policyIndex') {
-                          controlElement.label = 'Policy ' + (i + 1);
-                        }
-                        if (controlElement.name == 'selectYear') {
-                          controlElement.options = [];
-                          const currentYear = new Date().getFullYear();
-                          const startYear = currentYear - 4; // The starting year for your ranges
-                          const yearOptions = [];
-
-                          // Generate the year ranges
-                          for (let year = startYear; year < currentYear; year++) {
-                            yearOptions.push({
-                              value: `${year}-${year + 1}`,
-                              name: `${year}-${year + 1}`
-                            });
-                          }
-                          controlElement.options = yearOptions;
-                        }
-                      });
-                      console.log(customizedInnerArrayControl);
-
-                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
-                    }
+              formControl.dynamicControls[0].forEach((dynamicControl: any) => {
+                if (dynamicControl.innerArrayControl) {
+                  dynamicControl.visible = isPortability;
+                  if (isPortability) {
+                    let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                    dynamicControl.innerArrayControl.push(tempControl);
                   }
-                }
-
-                if (
-                  this.formData['ckycNo'] &&
-                  member.relation === 'Self' &&
-                  ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
-                ) {
-                  innerControl.disabled = true; // Disable the control
+  
                 }
               })
-            })
+              formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
+              this.formData[formControl.name].forEach((member: any, index: number) => {
+                let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+                formControl.dynamicControls.push(tempDynamicControl)
+                formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
+                  if (innerControl.name == 'relation') {
+                    innerControl.value = member.relation
+                  }
+                  if (innerControl.name == 'covers') {
+                    innerControl.value = this.covers[index];
+                  }
+                  if (innerControl.name == 'zoneValue') {
+                    innerControl.options = member.upgradableZones;
+                  }
+  
+                  if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
+                    innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                    console.log(innerControl.innerArrayControl);
+  
+                    for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                      // Create a fresh template copy for each iteration
+                      let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+  
+                      if (i === 0) {
+                        // For the first index, push the full template
+                        innerControl.innerArrayControl.push(freshTemplate);
+                      } else {
+                        // Create a customized version for subsequent indices
+                        let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                        customizedInnerArrayControl.forEach((controlElement: any) => {
+                          if (controlElement.name == 'policyIndex') {
+                            controlElement.label = 'Policy ' + (i + 1);
+                          }
+                          if (controlElement.name == 'selectYear') {
+                            controlElement.options = [];
+                            const currentYear = new Date().getFullYear();
+                            const startYear = currentYear - 4; // The starting year for your ranges
+                            const yearOptions = [];
+  
+                            // Generate the year ranges
+                            for (let year = startYear; year < currentYear; year++) {
+                              yearOptions.push({
+                                value: `${year}-${year + 1}`,
+                                name: `${year}-${year + 1}`
+                              });
+                            }
+                            controlElement.options = yearOptions;
+                          }
+                        });
+                        console.log(customizedInnerArrayControl);
+  
+                        innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                      }
+                    }
+                  }
+  
+                  if (
+                    this.formData['ckycNo'] &&
+                    member.relation === 'Self' &&
+                    ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
+                  ) {
+                    innerControl.disabled = true; // Disable the control
+                  }
+                })
+              })
+            }
           }
-        }
-        // if (formControl.name == 'recalculate' && isPortability) {
-        //   formControl.visible = isPortability;
-        // }
-        // if (formControl.name == 'next' && isPortability) {
-        //   formControl.visible = !isPortability;
-        // }
-      })
+          // if (formControl.name == 'recalculate' && isPortability) {
+          //   formControl.visible = isPortability;
+          // }
+          // if (formControl.name == 'next' && isPortability) {
+          //   formControl.visible = !isPortability;
+          // }
+        })
+      }
     })
   }
 
@@ -10947,65 +10962,129 @@ export class YatraComponent {
   calculatePremium() {
     console.log(this.dynamicFormGroup.valid,this.dynamicFormGroup);
     if (!this.dynamicFormGroup.valid) {
-      this.toast.warning({ detail: "Warning", summary: "Please enter all the details.", duration: 5000 });
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                if (nestedControl instanceof FormGroup) {
+                  nestedControl?.markAsDirty({ onlySelf: true });
+                  nestedControl?.markAsTouched({ onlySelf: true });
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+                    innerControl?.markAsTouched({ onlySelf: true });
+                  })
+                } else if (nestedControl instanceof FormArray) {
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+
+                    if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
+                      // Recursively mark inner controls as touched
+                      this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
+                    } else {
+                      innerControl?.markAsTouched({ onlySelf: true });
+                    }
+                  });
+                }
+
+                else
+                  nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+          const controlKeys = Object.keys(control.controls);
+
+          if (controlKeys.length > 0) {
+            controlKeys.forEach(key => {
+              const innerControl = control.controls[key];
+              if (innerControl instanceof FormGroup) {
+                Object.keys(innerControl.controls).forEach((innerField) => {
+                  const innControl = innerControl.get(innerField);
+                  innControl?.markAsTouched({ onlySelf: true });
+                })
+              }
+              else {
+                innerControl?.markAsDirty({ onlySelf: true });
+              }
+            });
+          }
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
+        }
+      });
+      if (this.dynamicFormGroup.invalid) {
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+        
+        this.scrollToFirstInvalidField();
+      }
       return;
     }
     else {
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
-        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.every((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
-        });
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: `All people are 55 years or older.`,
-                  duration: 3000
-                });
-              }
-            }
-          });
-          return;
+      console.log(this.formData.productName);
+      
+      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      //   const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      //   const ageFlag = insuredMemberDetails.controls.every((person: any) => {
+      //     return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
+      //   });
+      //   if (!ageFlag) {
+      //     insuredMemberDetails.controls.forEach((control: any, i: number) => {
+      //       const memberdobControl = control.get('memberdob');
+      //       if (memberdobControl) {
+      //         const age = this.calculateAge(memberdobControl.value);
+      //         if (age > "55") {
+      //           memberdobControl.setErrors(null);
+      //         } else {
+      //           memberdobControl.setValue('');
+      //           memberdobControl.setErrors({ required: true });
+      //           this.toast.warning({
+      //             detail: 'Warning',
+      //             summary: `All people are 55 years or older.`,
+      //             duration: 3000
+      //           });
+      //         }
+      //       }
+      //     });
+      //     return;
 
-        }
-      }
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.some((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
-        });
+      //   }
+      // }
+      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      //   const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      //   const ageFlag = insuredMemberDetails.controls.some((person: any) => {
+      //     return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
+      //   });
 
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: 'At least one person is 55 years or older.',
-                  duration: 3000
-                });
-              }
-            }
-          });
-          //event.stopPropogation();
-          return;
-        }
-      }
+      //   if (!ageFlag) {
+      //     insuredMemberDetails.controls.forEach((control: any, i: number) => {
+      //       const memberdobControl = control.get('memberdob');
+      //       if (memberdobControl) {
+      //         const age = this.calculateAge(memberdobControl.value);
+      //         if (age > "55") {
+      //           memberdobControl.setErrors(null);
+      //         } else {
+      //           memberdobControl.setValue('');
+      //           memberdobControl.setErrors({ required: true });
+      //           this.toast.warning({
+      //             detail: 'Warning',
+      //             summary: 'At least one person is 55 years or older.',
+      //             duration: 3000
+      //           });
+      //         }
+      //       }
+      //     });
+      //     //event.stopPropogation();
+      //     return;
+      //   }
+      // }
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
@@ -11182,5 +11261,55 @@ export class YatraComponent {
       memberGroupInnerControlGroup.get(innerControl.otherControlName)?.enable();
     }
   }
+
+  addMoreDocument() {
+    const formSections = this.form.formSections; // Assuming `formSections` is the structure of your form
+  
+    // Find the section with title "Previous Policy Documents"
+    const previousPolicySection = formSections.find(
+      (section: any) => section.sectionTitle === "Previous Policy Documents"
+    );
+  
+    if (!previousPolicySection) {
+      console.error("Previous Policy Documents section not found.");
+      return;
+    }
+  
+    // Traverse the formControls in the found section
+    const formControls = previousPolicySection.formControls;
+    if (formControls && Array.isArray(formControls)) {
+      // Count the currently visible "previousPolicyDocument" controls
+      const visibleDocumentsCount = formControls.filter(
+        (control: any) => control.name.startsWith("previousPolicyDocument") && control.visible
+      ).length;
+  
+      // Check if the limit of 8 is reached
+      if (visibleDocumentsCount >= 8) {
+        this.toast.warning({
+          detail: "Warning",
+          summary: "You cannot add more than 8 documents.",
+          duration: 5000,
+        });
+        return;
+      }
+  
+      // Find the next hidden "previousPolicyDocument" control
+      const nextHiddenControl = formControls.find(
+        (control: any) =>
+          control.name.startsWith("previousPolicyDocument") && !control.visible
+      );
+  
+      // If found, set its visibility to true
+      if (nextHiddenControl) {
+        nextHiddenControl.visible = true;
+      } else {
+        console.error("Unexpected state: No hidden control found, but limit not reached.");
+      }
+    } else {
+      console.error("No formControls found in the section.");
+    }
+  }
+  
+
 
 }

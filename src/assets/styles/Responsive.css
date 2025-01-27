@@ -815,4 +815,15 @@
         max-width: 120px;
         word-wrap: break-word;
     }
+    .siteHeader .logoMain .logoMainRight .logoRightNav{
+        gap: 2px;
+    }
+    .top_mainNavBar .navbar-toggler {
+        font-size: 11px;
+        padding: 8px 10px;
+    }
+    .header-right-cnt .language-selector select {
+        padding: 4px 12px;
+        font-size: 12px;
+    }
   }
