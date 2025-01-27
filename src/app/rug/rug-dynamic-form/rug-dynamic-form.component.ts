@@ -151,14 +151,10 @@ export class RugDynamicFormComponent {
       if (Object.keys(this.route.snapshot.params).length > 0) {
         console.log('Route has parameters:', params);
         this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
-        console.log(this.paramLeadId)
         this.paramLeadId = JSON.parse(this.paramLeadId)
         this.leadId = this.paramLeadId.LeadId;
         this.partnerId = this.paramLeadId.PartnerId;
         this.productId = this.paramLeadId.ProductId;
-        // this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
-        // console.log(this.formSequence);
-        console.log(this.paramLeadId.CurrentIndex);
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
@@ -169,126 +165,76 @@ export class RugDynamicFormComponent {
             productId: this.productId,
           };
           const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
-          console.log(res);
           this.formSequence = JSON.parse(res.data.formSequence);
-          console.log(this.formSequence);
-          if(this.agentCode != "467898" && this.partnerId == "16"){
+          if (this.agentCode != "467898" && this.partnerId == "16") {
             this.isD2C = false;
             this.isTS = false;
             this.isBB = true;
-          }else if(this.agentCode == "467898"){
+          } else if (this.agentCode == "467898") {
             this.isD2C = true;
             this.isBB = false;
             this.isTS = false
             this.rugService.changeStatus(true)
-          }else if(this.agentCode == "467896" || this.agentCode =="467897"){
+          } else if (this.agentCode == "467896" || this.agentCode == "467897") {
             this.isD2C = false;
             this.isBB = false;
             this.isTS = true;
           }
-          
-          console.log(this.formSequence[this.getFormIndexValue()].formName)
-          console.log(this.paramLeadId.CurrentIndex)
-          if(this.paramLeadId.CurrentIndex == 4 && this.formSequence[this.getFormIndexValue()].formName == "Policy Details"){
+          if (this.paramLeadId.CurrentIndex == 4 && this.formSequence[this.getFormIndexValue()].formName == "Policy Details") {
             let reqObj = {
               "leadId": this.leadId
             }
             this.yatraService.getd2cPolicyInfoByLeadId(reqObj).subscribe({
               next: (res: any) => {
-                console.log(res);
                 res = JSON.parse(res.data).data
-                console.log(res);
                 this.policyDetails = res;
-                console.log(this.policyDetails);
                 this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                // this.filteredPolicies = this.policyDetails.policyDetails.filter(
-                //   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
-                // );
-                
-                // console.log(this.filteredPolicies);
-
-                // console.log(this.dynamicFormGroup.value);
-                
-                // this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-                // this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
-                // this.formData.productName = this.filteredPolicies[0]?.productName || null;
-                // this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
-                // this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
-                // this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
-                // // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
-                // this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-                
-                // console.log(this.dynamicFormGroup.value);
-
-                // Merging updated formData with dynamicFormGroup values
               },
               error: (err) => {
                 console.error(err);
               }
             });
           }
-          else if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+          else if (this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary") {
             let reqObj = {
               "leadId": this.leadId
             }
             this.rugService.getBBPolicyInfoByLeadId(reqObj).subscribe({
               next: (res: any) => {
-                console.log(res);
                 res = JSON.parse(res.data).data
-                console.log(res);
                 this.policyDetails = res;
-                console.log(this.policyDetails);
                 this.filteredPolicies = this.policyDetails.policyDetails.filter(
                   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
                 );
-            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                
-                console.log(this.filteredPolicies);
-
-                console.log(this.dynamicFormGroup.value);
+                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                 const relations = this.policyDetails.proposerDetails.insuredDetails.map((detail: any) => detail.relationWithProposer).join(', ');
                 this.formData.members = relations;
                 this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
                 this.formData.productName = this.filteredPolicies[0]?.productName || null;
-                // if(this.policyDetails.proposerDetails.insuredDetails.length > 1){
-                //   this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[1]?.relationWithProposer;
-                // }
                 this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
                 this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
                 this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
                 this.formData.leadNumber = this.filteredPolicies[0]?.leadId || null;
                 this.formData.policyEmail = this.policyDetails.proposerDetails.proposerDetails.emailAddress || null
-                // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
                 this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-                
-                console.log(this.dynamicFormGroup.value);
-
-                // Merging updated formData with dynamicFormGroup values
               },
               error: (err) => {
                 console.error(err);
               }
             });
           }
-          else if(this.paramLeadId.CurrentIndex == 9 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+          else if (this.paramLeadId.CurrentIndex == 9 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary") {
             let reqObj = {
               "leadId": this.leadId
             }
             this.rugService.getTsPolicyInfoByLeadId(reqObj).subscribe({
               next: (res: any) => {
-                console.log(res);
                 res = JSON.parse(res.data).data
-                console.log(res);
                 this.policyDetails = res;
-                console.log(this.policyDetails);
                 this.filteredPolicies = this.policyDetails.policyDetails.filter(
                   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
                 );
-            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                
-                console.log(this.filteredPolicies);
-
-                console.log(this.dynamicFormGroup.value);
+                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                 const relations = this.policyDetails.proposerDetails.insuredDetails.map((detail: any) => detail.relationWithProposer).join(', ');
                 this.formData.members = relations;
                 this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
@@ -301,32 +247,22 @@ export class RugDynamicFormComponent {
                 this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
                 this.formData.leadNumber = this.filteredPolicies[0]?.leadId || null;
                 this.formData.policyEmail = this.policyDetails.proposerDetails.proposerDetails.email || null
-                // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
                 this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-                
-                console.log(this.dynamicFormGroup.value);
-
-                // Merging updated formData with dynamicFormGroup values
               },
               error: (err) => {
                 console.error(err);
               }
             });
           }
-          else{
+          else {
             this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           }
         } catch (err) {
           console.error(err);
         }
       } else {
-
         this.leadId = localStorage.getItem('leadId');
         this.formSequence = history.state.formSequence;
-        console.log(this.leadId);
-
-        console.log(this.formSequence);
-        console.log(history.state.productData);
         if (history.state.productData.productId)
           this.productId = history.state.productData.productId;
         if (history.state.productData.partnerId)
@@ -339,7 +275,6 @@ export class RugDynamicFormComponent {
         if (history.state.productData.tenure) {
           this.formData = { ...this.formData, tenure: history.state.productData.tenure }
         }
-        console.log(this.formData);
         if (history.state.productData.selectedAddons) {
           this.selectedAddons = history.state.productData.selectedAddons
         }
@@ -349,100 +284,59 @@ export class RugDynamicFormComponent {
         if (history.state.productName) {
           this.productName = history.state.productName;
         }
-        console.log('No route parameters found.');
-
-      if (localStorage.getItem('agentCode')){
-        this.agentCode = localStorage.getItem('agentCode');
-      }
-
-
-      if(this.agentCode != "467898" && this.partnerId == "16"){
-        this.isD2C = false;
-        this.isTS = false;
-        this.isBB = true;
-      }else if(this.agentCode == "467898"){
-        this.isD2C = true;
-        this.isBB = false;
-        this.isTS = false
-        this.rugService.changeStatus(true)
-      }else if(this.agentCode == "467896" || this.agentCode =="467897"){
-        this.isD2C = false;
-        this.isBB = false;
-        this.isTS = true
-      }
-      if (sessionStorage.getItem('allJsonForm'))
-      this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
-      if(this.leadId != null && (this.agentCode == "467896" || this.agentCode == "467897" || this.agentCode == "467895" || this.agentCode == "467894" || this.agentCode == "467895")){
-
-        const reqData = {
-          partnerId: this.partnerId,
-          productId: this.productId,
-        };
-        const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
-        this.formSequence = JSON.parse(res.data.formSequence);
-        localStorage.setItem("formIndex", "1");
- 
-        this.getFormDataFromFormSequence(this.formSequence[1].formId);
-      }else{
-
-        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-      }
+        if (localStorage.getItem('agentCode')) {
+          this.agentCode = localStorage.getItem('agentCode');
+        }
+        if (this.agentCode != "467898" && this.partnerId == "16") {
+          this.isD2C = false;
+          this.isTS = false;
+          this.isBB = true;
+        } else if (this.agentCode == "467898") {
+          this.isD2C = true;
+          this.isBB = false;
+          this.isTS = false
+          this.rugService.changeStatus(true)
+        } else if (this.agentCode == "467896" || this.agentCode == "467897") {
+          this.isD2C = false;
+          this.isBB = false;
+          this.isTS = true
+        }
+        if (sessionStorage.getItem('allJsonForm'))
+          this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
+        if (this.leadId != null && (this.agentCode == "467896" || this.agentCode == "467897" || this.agentCode == "467895" || this.agentCode == "467894" || this.agentCode == "467895")) {
+          const reqData = {
+            partnerId: this.partnerId,
+            productId: this.productId,
+          };
+          const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
+          this.formSequence = JSON.parse(res.data.formSequence);
+          localStorage.setItem("formIndex", "1");
+          this.getFormDataFromFormSequence(this.formSequence[1].formId);
+        } else {
+          this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        }
       }
     });
-    
     this.showHtmlContent = false;
-
-
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadId'];
       if (this.leadNumber) {
         this.quickQuoteRedirect = true;
       }
     });
-
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');
-    this.D2CproductCode = this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : this.productId == '31' ? "D03" : "D04"
-    // this.verticalCode = localStorage.getItem('verticalCode');
-    // this.insurancetypecode = history.state.productData.insurancetypecode;
-    // this.productid = history.state.productData.productid;
-    // this.productName = history.state.productData.productName;
-    // this.productEndDate = history.state.productData.productEndDate;
-    // this.productStartDate = history.state.productData.productStartDate;
-    // this.proposalNum = history.state.productData.proposalNumber;
-
-    // this.agencyCode = history.state.productData.agencyCode;
-
-
-
-
-
-    // this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
-    // console.log(this.formData)
-    // this.formData = { ...this.formData, ...{ productName: this.productName } }
-    // this.formData = { ...this.formData, ...{ productName: this.productName } }
-
-    // this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
-    // this.customerFeedbackForm = this.fb.group({
-    //   message: [''],
-    //   rating: [null, Validators.required], // Add rating to the form
-    // });
-
-
+    this.D2CproductCode = this.productId == '7' ? "D01" : this.productId == '8' ? "D02" : this.productId == '31' ? "D03" : "D04"
   }
-  getFamilyConstruct(){
-    console.log(this.formSequence[0].formName);
+  getFamilyConstruct() {
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
       let familyConstructObj = {
         productCode: this.bbdetails.productCode
       }
       this.yatraService.getFamilyConstructData(familyConstructObj).subscribe({
         next: (res: any) => {
-          console.log(res);
           res = JSON.parse(res.data).data
           this.familyConstructsData = res.familyConstructs
-          console.log(this.familyConstructsData);
-
         },
         error: (err) => {
           console.error(err);
@@ -455,11 +349,8 @@ export class RugDynamicFormComponent {
       }
       this.yatraService.getFamilyConstructData(familyConstructObj).subscribe({
         next: (res: any) => {
-          console.log(res);
           res = JSON.parse(res.data).data
           this.familyConstructsData = res.familyConstructs
-          console.log(this.familyConstructsData);
-
         },
         error: (err) => {
           console.error(err);
@@ -472,11 +363,8 @@ export class RugDynamicFormComponent {
       }
       this.yatraService.getFamilyConstructData(familyConstructObj).subscribe({
         next: (res: any) => {
-          console.log(res);
           res = JSON.parse(res.data).data
           this.familyConstructsData = res.familyConstructs
-          console.log(this.familyConstructsData);
-
         },
         error: (err) => {
           console.error(err);
@@ -486,9 +374,7 @@ export class RugDynamicFormComponent {
     this.yatraService.getProductCombinations().subscribe({
       next: (res: any) => {
         res = JSON.parse(res.data).data
-        console.log(res);
         this.productCombinationData = res.productCombinationModel
-        console.log(this.productCombinationData);
       },
       error: (err) => {
         console.error(err);
@@ -496,20 +382,17 @@ export class RugDynamicFormComponent {
     });
     this.rugService.getMasterData().subscribe({
       next: (res: any) => {
-        console.log(res);
         this.occupationList = JSON.parse(res?.data).data.occupation;
       },
       error: (err: any) => {
-      console.error(err)
+        console.error(err)
       }
     });
-    if(this.isTS == true){
+    if (this.isTS == true) {
       this.rugService.getDispositions().subscribe({
         next: (res: any) => {
-          console.log(res)
           res = JSON.parse(res.data).data
-          console.log(res);
-          this.dispositionList = res.allDisposition;           
+          this.dispositionList = res.allDisposition;
         },
         error: (err) => {
           console.error(err);
@@ -520,7 +403,6 @@ export class RugDynamicFormComponent {
       next: (response: any) => {
         response = JSON.parse(response.data).data;
         this.nomineeRelations = response;
-        console.log(this.nomineeRelations);
         this.nomineeRelations = this.nomineeRelations.relationShipModels;
       },
       error: (error) => {
