@@ -2675,11 +2675,11 @@ export class YatraComponent {
                           "value": "ND0410",
                           "name": "Retired"
                         }]
-                      } else if ((this.parsedValue && this.parsedValue.name === 'STUDENT') && coreControl.name == "occupationRisk") {
+                      } else if ((this.parsedValue && this.parsedValue.name === 'Student') && coreControl.name == "occupationRisk") {
                         coreControl.options = [{
                           "id": "2",
                           "value": "ND0277",
-                          "name": "STUDENT"
+                          "name": "Student"
                         }]
                       } else if ((this.parsedValue && this.parsedValue.name === 'Not Employed') && coreControl.name == "occupationRisk") {
                         coreControl.options = [{
@@ -2813,21 +2813,23 @@ export class YatraComponent {
       let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.value;
       console.log("member details", memberDetails)
       // Check if all member checkboxes are selected
-      let areAllSelected = Object.keys(memberDetails).every(
+      const isAnySelected = Object.keys(memberDetails).some(
         key => memberDetails[key][0].memberCheckbox === true
       );
-
-      if (areAllSelected) {
-        // Deselect all checkboxes
-        Object.keys(memberDetails).forEach(key => {
-          memberDetails[key][0].memberCheckbox = false;
-        });
-      } else {
-        // Select all checkboxes if not all are selected
-        Object.keys(memberDetails).forEach(key => {
-          memberDetails[key][0].memberCheckbox = true;
-        });
-      }
+      Object.keys(memberDetails).forEach(key => {
+        memberDetails[key][0].memberCheckbox = isAnySelected ? true : false;
+      });
+      // if (areAllSelected) {
+      //   // Deselect all checkboxes
+      //   Object.keys(memberDetails).forEach(key => {
+      //     memberDetails[key][0].memberCheckbox = false;
+      //   });
+      // } else {
+      //   // Select all checkboxes if not all are selected
+      //   Object.keys(memberDetails).forEach(key => {
+      //     memberDetails[key][0].memberCheckbox = true;
+      //   });
+      // }
       this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.setValue(memberDetails);
     }
 
@@ -4827,7 +4829,7 @@ export class YatraComponent {
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
         });
         if (hasEmptyRequiredCovers) {
-          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or ACCD(Personal Accident)) selected.", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or ACCD(Personal Accident)) selected.", duration: 4000 });
           return;
         }
       }
@@ -6126,7 +6128,7 @@ export class YatraComponent {
           }
 
           sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-
+          
           // After setting tenureAmount and discountList, call setPremiumAmount()
           this.setPremiumAmount();
 
@@ -7094,12 +7096,13 @@ export class YatraComponent {
                 //   radioOptionsControl.setValue(this.tenureAmount[this.selectedIndex], { emitEvent: true });
                 //   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                 // }
-                option.selected = true;
-                if (this.dynamicFormGroup.getRawValue().totalPremium) {
-
+                
+                option.selected = true;                
+                if (this.dynamicFormGroup.getRawValue().totalPremium != null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
+                
                   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                   // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
-                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
+                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);                  
                 }
                 // Update additional data
                 if (this.QuoteNumber.length > 0) {
