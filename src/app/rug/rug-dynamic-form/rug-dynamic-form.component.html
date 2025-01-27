@@ -640,6 +640,30 @@
                                       class="popup-checkbox-label"><span *ngIf="subControl.validators">*</span></label>
                                   </div>
                                 </div>
+                                <div *ngIf="subControl.type === 'checkbox'" class="typecss input-typecss">
+                                    <div [class]="subControl.class" >
+                                      <input type="checkbox" [formControlName]="subControl.name"
+                                        [name]="subControl.name" [id]="subControl.name" id="{{subControl.name}}_{{i-1}}"
+                                        [value]="subControl.value" class="checkbox-label" (change)="onTsChronicCheckboxSelect(subControl, subControl.value, i-1)" />
+                                      <label for="{{subControl.name}}_{{i}}"
+                                        [innerHTML]="subControl.label ? (subControl.label | translate) : ''"
+                                        class="checkboxes"><span *ngIf="subControl.validators">*</span></label>
+                                    </div>
+                                  </div>
+                                  <div *ngIf="subControl.type ==='radio'" class="radio-buttons"
+                                    style="font-size: 12px; font-weight: 600;">
+                                    <label class="inputField_Label" *ngIf="subControl.visibleLabel==true"
+                                      [innerHTML]="subControl.label ? (subControl.label | translate) : ''"> <span
+                                        *ngIf="subControl.validators">*</span></label>
+                                    <div class="radio-button">
+                                      <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
+                                        <input type="radio" [formControlName]="subControl.name" [name]="subControl.name"
+                                          [id]="subControl.name" [value]="option.value" style="margin-right: 10px;">
+                                        <label [innerHTML]="option.label">
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
                                 <div *ngIf="subControl.type === 'line' && subControl.visible === true" [class]="subControl.class">
                                   <hr />
                                 </div>

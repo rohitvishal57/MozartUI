@@ -1254,6 +1254,39 @@ export class RugDynamicFormComponent {
 
           });
         }
+        if (this.productId == "29" && this.partnerId == "45" && this.formSequence[this.getFormIndexValue()].formId == 2) {
+          this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+            const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+            const memberGroup = insuredMembersArray.at(index) as FormGroup;
+            if(insuredMembersArray.value[index].relation == item.relation){
+              memberGroup.get('isAsthma')?.setValue(item.isAsthma == true ? true : false)
+              memberGroup.get('isHypertension')?.setValue(item.isHypertension == true ? true : false)
+              memberGroup.get('isDiabetes')?.setValue(item.isDiabetes == true ? true : false)
+              memberGroup.get('isCholesterol')?.setValue(item.isCholesterol == true ? true : false)
+              if(memberGroup.get('isAsthma')?.value == true){
+                memberGroup.get('isHospitalized')?.setValue(item.isHospitalized == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isPulmonary')?.setValue(item.isPulmonary == 'yes' ? 'yes' : 'no');
+              }
+              if(memberGroup.get('isHypertension')?.value == true){
+                memberGroup.get('isReadings')?.setValue(item.isReadings == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isHighBloodPressure')?.setValue(item.isHighBloodPressure == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isMoreTypesOfMedicines')?.setValue(item.isMoreTypesOfMedicines == 'yes' ? 'yes' : 'no');
+              }
+              if(memberGroup.get('isDiabetes')?.value == true){
+                memberGroup.get('isType1Diabetic')?.setValue(item.isType1Diabetic == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isInsulinInjection')?.setValue(item.isInsulinInjection == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isBloodSugarExceed')?.setValue(item.isBloodSugarExceed == 'yes' ? 'yes' : 'no');
+                memberGroup.get('isDiabeticFoot')?.setValue(item.isDiabeticFoot == 'yes' ? 'yes' : 'no');
+              }
+              if(memberGroup.get('isCholesterol')?.value == true){
+                memberGroup.get('cholesterolReadings')?.setValue(item.cholesterolReadings == 'yes' ? 'yes' : 'no');
+                memberGroup.get('LDLReadings')?.setValue(item.LDLReadings == 'yes' ? 'yes' : 'no');
+                memberGroup.get('cholesterolHDLReadings')?.setValue(item.cholesterolHDLReadings == 'yes' ? 'yes' : 'no');
+                memberGroup.get('triglycridesReadings')?.setValue(item.triglycridesReadings == 'yes' ? 'yes' : 'no');
+              }
+            }
+          })
+        }
         if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
           // insuredMembersArray.at(0).get('firstName')?.disable();
           this.dynamicFormGroup.get('preFix')?.disable();
@@ -1556,6 +1589,9 @@ export class RugDynamicFormComponent {
           let initialValue = control.radioOptions.find((option) => option.selected === true)?.value;
           formGroup.addControl(control.name, new FormControl(initialValue, controlValidators));
         }
+        if (control.type === 'checkbox') {
+          formGroup.addControl(control.name, new FormControl(true, controlValidators));
+        }
         else {
           formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
         }
@@ -1633,7 +1669,36 @@ export class RugDynamicFormComponent {
       control.updateValueAndValidity();
     }
   }
-
+  onTsChronicCheckboxSelect(selectedControl: any, selectedControlValue: any, index: any){
+    const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+    const memberGroup = insuredMembersArray.at(index) as FormGroup;
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          if (section.formControls[1].dynamicControls) {
+            section.formControls[1].dynamicControls[index+1]
+            .forEach((control: IFormControl) => {
+                  const dependentControlNames = selectedControl.dependentControls.map((control: any) => control.name);
+                  if(memberGroup.get(selectedControl.name)?.value == true && dependentControlNames.includes(control.name)){
+                      control.visible = true;
+                      control.visibleLabel = true;
+                      if(this.formSequence[this.getFormIndexValue()].formId == 9){
+                        Object.entries(this.tsDetails.insuredMemberDetails[index]).forEach(([key, value]) => {
+                          if (key === control.name) {
+                            memberGroup.get(control.name)?.setValue(value);
+                            memberGroup.get(control.name)?.disable();
+                          }
+                        });
+                      }
+                  }
+                  if(memberGroup.get(selectedControl.name)?.value == false && dependentControlNames.includes(control.name)){
+                    control.visible = false;
+                    control.visibleLabel = false;
+                  }
+            })
+          }
+        }
+      });
+  }
   hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
     return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
   }
@@ -3295,6 +3360,9 @@ export class RugDynamicFormComponent {
           if(this.isD2C == false && controls.name == 'insuredMembers' && this.isFormLoaded == true && option.value != "Self"){
             this.calculateBBPremium();
           }
+          if(this.isTS == true && controls.name == 'insuredMembers' && this.isFormLoaded == true && option.value != "Self"){
+            this.calculateTSPremium();
+          }
 
         }
       });
@@ -3313,7 +3381,18 @@ export class RugDynamicFormComponent {
 
     }
     // }
-
+    if (this.productId == "29" && this.partnerId == "45") {
+      // this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
+        const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        insuredMembersArray.value.forEach((item: any, index: any) => {
+        const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        const memberGroup = insuredMembersArray.at(index) as FormGroup;
+          memberGroup.get('isAsthma')?.setValue(false)
+          memberGroup.get('isHypertension')?.setValue(false)
+          memberGroup.get('isDiabetes')?.setValue(false)
+          memberGroup.get('isCholesterol')?.setValue(false)
+      })
+    }
     this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
 
 
@@ -3510,6 +3589,38 @@ export class RugDynamicFormComponent {
               insuredMembersArray.at(index).get('relation')?.disable();
               insuredMembersArray.at(index).get('gender')?.disable();
               insuredMembersArray.at(index).get('salutation')?.disable();
+              if (this.productId == "29" && this.partnerId == "45") {
+                insuredMembersArray.at(index).get('isAsthma')?.disable();
+                insuredMembersArray.at(index).get('isHypertension')?.disable();
+                insuredMembersArray.at(index).get('isDiabetes')?.disable();
+                insuredMembersArray.at(index).get('isCholesterol')?.disable();
+                insuredMembersArray.at(index).get('isAsthma')?.setValue(item.isAsthma == true ? true : false)
+                insuredMembersArray.at(index).get('isHypertension')?.setValue(item.isHypertension == true ? true : false)
+                insuredMembersArray.at(index).get('isDiabetes')?.setValue(item.isDiabetes == true ? true : false)
+                insuredMembersArray.at(index).get('isCholesterol')?.setValue(item.isCholesterol == true ? true : false)
+                const trueControls = [
+                  'isAsthma',
+                  'isHypertension',
+                  'isDiabetes',
+                  'isCholesterol'
+                ].filter((controlName) => insuredMembersArray.at(index).get(controlName)?.value === true);
+                if(trueControls.length !== 0){
+                  trueControls.forEach((controlName: any) => {
+                    this.form.formSections.forEach((section: any) => {
+                      if (section.sectionTitle == "Insured Member Details") {
+                        if (section.formControls[1].dynamicControls) {
+                          section.formControls[1].dynamicControls[index+1]
+                          .forEach((control: IFormControl) => {
+                            if(control.name == controlName){
+                              this.onTsChronicCheckboxSelect(control, insuredMembersArray.at(index).get('isAsthma')?.value, index);
+                            }
+                          })
+                        }
+                      }
+                    })
+                  })
+                }
+              }
             }
           })
         }
@@ -4435,6 +4546,9 @@ export class RugDynamicFormComponent {
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
     let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
     console.log(ageRange);
+    if(this.productId == "29" && this.partnerId == "45"){
+      ageRange = "18-55";
+    }
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
     console.log(this.bbPremiumData)
     this.familyConstruct = familyConstruct;
@@ -4580,17 +4694,17 @@ export class RugDynamicFormComponent {
       this.updateValidators(this.dynamicFormGroup.get('planAvailable')?.value);
 
     }else{
-      this.tsDetails.ghiPremium = premiumObj[0].premium.toString();
-      this.tsDetails.gpPremium = premiumObj[1].premium.toString();
-      this.tsDetails.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
+      this.tsDetails.ghiPremium = premiumObj[0]?.premium.toString();
+      this.tsDetails.gpPremium = premiumObj[1]?.premium.toString();
+      this.tsDetails.totalPremium = (premiumObj[0]?.premium + premiumObj[1]?.premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0]?.premium.toString());
 
       // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
       // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
-      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1]?.premium.toString());
   
-      this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.value.totalPremium = (premiumObj[0]?.premium + premiumObj[1]?.premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value?.totalPremium);
     }
     if(this.tsDetails.productCode == "T04"){
       const filteredData = premiumObj.filter(
@@ -4609,10 +4723,23 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
       this.dynamicFormGroup.get('combiId')?.setValue('8');
     }    
-    if(this.tsDetails.productCode == "R03"){
-      this.tsDetails.productPlanName = "GHI,GP";
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
-      this.dynamicFormGroup.get('combiId')?.setValue('10');
+    if(this.tsDetails.productCode == "R06"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI"
+      );
+      this.bbdetails.ghiPremium = filteredData[0]?.premium.toString();
+      this.bbdetails.productPlanName = filteredData[0]?.combinationName;
+      this.bbdetails.totalPremium = (filteredData[0]?.premium).toFixed(2);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0]?.premium.toString());
+      this.dynamicFormGroup.get('productPlanName')?.setValue(filteredData[0]?.combinationName);
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.tsDetails.productCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
     }
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.tsDetails);
@@ -4852,7 +4979,7 @@ export class RugDynamicFormComponent {
                       relationCode: this.d2cDetails.childRelation == "son" ? "R003" : "R004" || "",
                       gender: this.d2cDetails.childgender,
                       height: null,
-                      weight: null,
+                      weight: null
                     }],
                     nomineeDetails: {
                       leadId: this.d2cDetails.leadId,
@@ -5617,6 +5744,7 @@ export class RugDynamicFormComponent {
                 });
               }
               console.log(this.selectedOccupationCode);
+              console.log(this.dynamicFormGroup.value);
                 const payloadObject = {
                     agentDetails: {
                       axisProcess: this.tsDetails.axisProcess,
@@ -5675,7 +5803,7 @@ export class RugDynamicFormComponent {
                       gciPremium: this.tsDetails.gciPremium,
                       gpPremium: this.tsDetails.gpPremium,
                       deductibleAmount: this.tsDetails.deductibleAmount,
-                      avid: this.agentCode.toString(),
+                      avid: this.agentCode == "467896" ? this.agentCode.toString() : null,
                       createdBy: this.agentCode.toString(),
                       currentUser: this.agentCode.toString(),
                       modeOfPayment: "Juspay",
@@ -5685,13 +5813,13 @@ export class RugDynamicFormComponent {
                       disposition: filteredDispositionData[0].dispositionName,
                       subDisposition: filteredSubDispositionData[0].subDispositionName,
                       allHealthDeclaration: [],
-                      accountNumber: this.tsDetails.accountNumber,
-                      ifscCode: this.tsDetails.ifscCode,
-                      branchName: this.tsDetails.branchName,
-                      bankName: this.tsDetails.bankName,
-                      bankAccountType: this.tsDetails.bankAccountType,
-                      micrCode: this.tsDetails.micrCode,
-                      accountType: this.tsDetails.accType,
+                      accountNumber: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('accountNumber')?.value : this.tsDetails.accountNumber,
+                      ifscCode: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('ifscCode')?.value : this.tsDetails.ifscCode,
+                      branchName: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('branchName')?.value : this.tsDetails.branchName,
+                      bankName: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('bankName')?.value : this.tsDetails.bankName,
+                      bankAccountType: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('bankAccountType')?.value : this.tsDetails.bankAccountType,
+                      micrCode: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('micrCode')?.value : this.tsDetails.micrCode,
+                      accountType: (this.getFormIndexValue() == 5 && this.agentCode == "467897") ? this.dynamicFormGroup.get('accType')?.value : this.tsDetails.accType,
                       isGoGreen: true,
                       productPlan: this.tsDetails.productPlanName,
                     },
