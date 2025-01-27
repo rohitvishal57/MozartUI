@@ -7098,10 +7098,13 @@ export class YatraComponent {
                 // }
                 
                 option.selected = true;                                
-                if (this.dynamicFormGroup.getRawValue().totalPremium == null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
+                if (this.dynamicFormGroup.getRawValue().totalPremium != null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
                 
                   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                   // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
+                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);                  
+                }
+                else if(this.formData.productName==='Active Secure' && this.dynamicFormGroup.getRawValue().totalPremium == null){
                   this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);                  
                 }
                 // Update additional data
