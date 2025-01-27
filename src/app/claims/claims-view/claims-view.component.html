@@ -619,7 +619,9 @@
                                 <!-- <span *ngIf="errors.fileNotSelected" class="ui-error block-show">
                                 {{ "Please select a file to continue" | translate }}
                               </span> -->
-
+                              <span *ngIf="errors.policyNumberRequired" class="ui-error block-show">
+                                {{ "Please select policy number before uploading documents" | translate }}
+                              </span>
                                 <span *ngIf="errors.invalidFormat" class="ui-error block-show">
                                     {{ "File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." |
                                     translate }}
