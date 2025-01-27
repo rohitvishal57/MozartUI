@@ -2524,12 +2524,18 @@ input[type=checkbox]:checked {
 }
 .proposalDetails h3.proposalDetails{
     font-family: "Anek Latin", sans-serif !important;
-    font-size: 22px !important;
+    font-size: 20px !important;
     font-weight: 600 !important;
     line-height: 24.2px !important;
     text-align: left;
     color: #000;
     padding-left: 8px;
+}
+.main-container .right-panel .accordionCard.thankyouSection{
+    margin-bottom: 10px;
+}
+.proposalDetails .accordionCardBody .label-value-container .label-text {
+    margin-bottom: 5px !important;
 }
 .proposalDetails .accordionCardBody .typecss {
     padding-bottom: 0px;
@@ -2714,8 +2720,15 @@ margin: 0;
 .proposalDetails h3.proposalDetails + .accordionArrow {
     display: none;
 }
+.proposalDetails.accordionCard {
+    margin-bottom: 10px !important;
+}
 .proposalDetails .accordionCardHeader {
     pointer-events: none;
+    padding: 8px 16px;
+}
+.proposalDetails .accordionCardBody {
+    padding: 8px 16px 18px !important;
 }
 .p-tabview .p-tabview-nav {
     background: #ffffff;
