@@ -9442,96 +9442,101 @@ export class YatraComponent {
     }
 
     this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((formControl: any, index: any) => {
-        if (formControl.name == 'insuredMemberDetails') {
-          if (this.formData[formControl.name]) {
+      if(section.sectionTitle == 'Previous Policy Documents'){
+        section.visible = isPortability;
+      }
+      else{
+        section.formControls.forEach((formControl: any, index: any) => {
+          if (formControl.name == 'insuredMemberDetails') {
             if (this.formData[formControl.name]) {
-              formControl.value = this.formData[formControl.name].length;
-            }
-            formControl.dynamicControls[0].forEach((dynamicControl: any) => {
-              if (dynamicControl.innerArrayControl) {
-                dynamicControl.visible = isPortability;
-                if (isPortability) {
-                  let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-                  dynamicControl.innerArrayControl.push(tempControl);
-                }
-
+              if (this.formData[formControl.name]) {
+                formControl.value = this.formData[formControl.name].length;
               }
-            })
-            formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
-            this.formData[formControl.name].forEach((member: any, index: number) => {
-              let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              formControl.dynamicControls.push(tempDynamicControl)
-              formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
-                if (innerControl.name == 'relation') {
-                  innerControl.value = member.relation
-                }
-                if (innerControl.name == 'covers') {
-                  innerControl.value = this.covers[index];
-                }
-                if (innerControl.name == 'zoneValue') {
-                  innerControl.options = member.upgradableZones;
-                }
-
-                if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
-                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
-                  console.log(innerControl.innerArrayControl);
-
-                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
-                    // Create a fresh template copy for each iteration
-                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-
-                    if (i === 0) {
-                      // For the first index, push the full template
-                      innerControl.innerArrayControl.push(freshTemplate);
-                    } else {
-                      // Create a customized version for subsequent indices
-                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
-                      customizedInnerArrayControl.forEach((controlElement: any) => {
-                        if (controlElement.name == 'policyIndex') {
-                          controlElement.label = 'Policy ' + (i + 1);
-                        }
-                        if (controlElement.name == 'selectYear') {
-                          controlElement.options = [];
-                          const currentYear = new Date().getFullYear();
-                          const startYear = currentYear - 4; // The starting year for your ranges
-                          const yearOptions = [];
-
-                          // Generate the year ranges
-                          for (let year = startYear; year < currentYear; year++) {
-                            yearOptions.push({
-                              value: `${year}-${year + 1}`,
-                              name: `${year}-${year + 1}`
-                            });
-                          }
-                          controlElement.options = yearOptions;
-                        }
-                      });
-                      console.log(customizedInnerArrayControl);
-
-                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
-                    }
+              formControl.dynamicControls[0].forEach((dynamicControl: any) => {
+                if (dynamicControl.innerArrayControl) {
+                  dynamicControl.visible = isPortability;
+                  if (isPortability) {
+                    let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                    dynamicControl.innerArrayControl.push(tempControl);
                   }
-                }
-
-                if (
-                  this.formData['ckycNo'] &&
-                  member.relation === 'Self' &&
-                  ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
-                ) {
-                  innerControl.disabled = true; // Disable the control
+  
                 }
               })
-            })
+              formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
+              this.formData[formControl.name].forEach((member: any, index: number) => {
+                let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+                formControl.dynamicControls.push(tempDynamicControl)
+                formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
+                  if (innerControl.name == 'relation') {
+                    innerControl.value = member.relation
+                  }
+                  if (innerControl.name == 'covers') {
+                    innerControl.value = this.covers[index];
+                  }
+                  if (innerControl.name == 'zoneValue') {
+                    innerControl.options = member.upgradableZones;
+                  }
+  
+                  if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
+                    innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                    console.log(innerControl.innerArrayControl);
+  
+                    for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                      // Create a fresh template copy for each iteration
+                      let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+  
+                      if (i === 0) {
+                        // For the first index, push the full template
+                        innerControl.innerArrayControl.push(freshTemplate);
+                      } else {
+                        // Create a customized version for subsequent indices
+                        let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                        customizedInnerArrayControl.forEach((controlElement: any) => {
+                          if (controlElement.name == 'policyIndex') {
+                            controlElement.label = 'Policy ' + (i + 1);
+                          }
+                          if (controlElement.name == 'selectYear') {
+                            controlElement.options = [];
+                            const currentYear = new Date().getFullYear();
+                            const startYear = currentYear - 4; // The starting year for your ranges
+                            const yearOptions = [];
+  
+                            // Generate the year ranges
+                            for (let year = startYear; year < currentYear; year++) {
+                              yearOptions.push({
+                                value: `${year}-${year + 1}`,
+                                name: `${year}-${year + 1}`
+                              });
+                            }
+                            controlElement.options = yearOptions;
+                          }
+                        });
+                        console.log(customizedInnerArrayControl);
+  
+                        innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                      }
+                    }
+                  }
+  
+                  if (
+                    this.formData['ckycNo'] &&
+                    member.relation === 'Self' &&
+                    ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
+                  ) {
+                    innerControl.disabled = true; // Disable the control
+                  }
+                })
+              })
+            }
           }
-        }
-        // if (formControl.name == 'recalculate' && isPortability) {
-        //   formControl.visible = isPortability;
-        // }
-        // if (formControl.name == 'next' && isPortability) {
-        //   formControl.visible = !isPortability;
-        // }
-      })
+          // if (formControl.name == 'recalculate' && isPortability) {
+          //   formControl.visible = isPortability;
+          // }
+          // if (formControl.name == 'next' && isPortability) {
+          //   formControl.visible = !isPortability;
+          // }
+        })
+      }
     })
   }
 
@@ -11256,5 +11261,55 @@ export class YatraComponent {
       memberGroupInnerControlGroup.get(innerControl.otherControlName)?.enable();
     }
   }
+
+  addMoreDocument() {
+    const formSections = this.form.formSections; // Assuming `formSections` is the structure of your form
+  
+    // Find the section with title "Previous Policy Documents"
+    const previousPolicySection = formSections.find(
+      (section: any) => section.sectionTitle === "Previous Policy Documents"
+    );
+  
+    if (!previousPolicySection) {
+      console.error("Previous Policy Documents section not found.");
+      return;
+    }
+  
+    // Traverse the formControls in the found section
+    const formControls = previousPolicySection.formControls;
+    if (formControls && Array.isArray(formControls)) {
+      // Count the currently visible "previousPolicyDocument" controls
+      const visibleDocumentsCount = formControls.filter(
+        (control: any) => control.name.startsWith("previousPolicyDocument") && control.visible
+      ).length;
+  
+      // Check if the limit of 8 is reached
+      if (visibleDocumentsCount >= 8) {
+        this.toast.warning({
+          detail: "Warning",
+          summary: "You cannot add more than 8 documents.",
+          duration: 5000,
+        });
+        return;
+      }
+  
+      // Find the next hidden "previousPolicyDocument" control
+      const nextHiddenControl = formControls.find(
+        (control: any) =>
+          control.name.startsWith("previousPolicyDocument") && !control.visible
+      );
+  
+      // If found, set its visibility to true
+      if (nextHiddenControl) {
+        nextHiddenControl.visible = true;
+      } else {
+        console.error("Unexpected state: No hidden control found, but limit not reached.");
+      }
+    } else {
+      console.error("No formControls found in the section.");
+    }
+  }
+  
+
 
 }
