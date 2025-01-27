@@ -42,7 +42,8 @@ export class ClaimsViewComponent {
     fileNotSelected: false,
     invalidFormat: false,
     requiredDocs: '',
-    duplicateDocs: ''
+    duplicateDocs: '',
+    policyNumberRequired: ''
   };
 
   // uploadedFiles: File[] = [];
@@ -109,7 +110,7 @@ export class ClaimsViewComponent {
   selectedCoverCode: string = '';
   policyNoChangeSubject = new Subject<string>();
   specialCovers: any;
-  selectedCover: string = 'Hospitalisation'; 
+  selectedCover: string = 'Hospitalisation';
   isDisabled: boolean = true;
   // coverNames:any
   documentLabelOptions = [
@@ -386,7 +387,7 @@ export class ClaimsViewComponent {
           this.filteredPolicyList = [...this.policyNumbers];
           this.cdr.markForCheck();
         }
-        else{
+        else {
           this.toast.error({
             detail: 'Error',
             summary: resp.message,
@@ -435,7 +436,7 @@ export class ClaimsViewComponent {
   //   if (value == "") {
   //     this.form.get('policyNumber')?.reset();
   //   }
-  
+
   //   this.getPolicyMembers(value)
   //   this.fetchCoverNames(value)
   // }
@@ -451,8 +452,7 @@ export class ClaimsViewComponent {
           this.policyMembersList = resp.data.policyMembersList
           this.getMemberIdList(this.policyMembersList)
         }
-        else
-        {
+        else {
           this.openErrorModal(resp.message)
         }
       },
@@ -470,8 +470,8 @@ export class ClaimsViewComponent {
   }
   filterList(event: any): void {
     const input = (event.target as HTMLInputElement).value.trim();
-   
-    
+
+
     this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
       item.policyNumber.includes(input)
     );
@@ -807,7 +807,7 @@ export class ClaimsViewComponent {
     this.selectedHospital = event.target.value;
     //const selectedValue = event.target.value;
     this.showCustomHospitalInput = this.selectedHospital === 'others';
-    
+
     if (!this.showCustomHospitalInput) {
       this.form.get('customHospitalName')?.reset();
     }
@@ -862,83 +862,116 @@ export class ClaimsViewComponent {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
 
-  // onFileSelected(event: any): void {
-  //   const inputElement = event.target;
-  //   const files = inputElement.files as File[];
-
-  //   this.totalFilesCount += files.length;
-  //   this.isFilenotSelected = false;
-
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  //     this.selectedFile = file;
-
-  //     const fileExists = this.uploadedFiles.some((uploadedFile) =>
-  //       uploadedFile.name === file.name && uploadedFile.size === file.size
-  //     );
-
-  //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-  //       const newFile = {
-  //         documentId: uuidv4(),
-  //         name: file.name,
-  //         type: file.type,
-  //         size: file.size,
-  //         label: "Label this document",
-  //         editableControl: new FormControl(""),
-  //         isEditing: true,
-  //         isEdited: false,
-  //         uploadDateTime: new Date(),
-  //         formattedUploadDateTime: this.formatDate(new Date()),
-  //         status: "pending",
-  //         file: file,
-  //         policyNumber: this.saveForm.value.policyNumber,
-  //         documentName: this.saveForm.value.documentName,
-  //         documentType: this.saveForm.value.documentType,
-  //         createdBy: this.saveForm.value.createdBy,
-  //         documentLabelForm: this.initializeDocumentLabelForm()
-  //       };
-
-  //       this.uploadedFiles.push(newFile);
-
-  //       this.clearSelectedLabel(newFile);
-
-  //     } else if (fileExists) {
-  //       console.warn('File already uploaded.');
-  //     } else {
-  //       this.uploadValidFormat = true;
-  //     }
-  //   }
-  //   this.updateStatusLabel();
-  //   this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
-  //   this.isFilenotSelected = false;
-  //   this.uploadValidFormat = false;
-  // }
-
   onFileSelected(event: any): void {
     this.resetErrors();
     const files = event.target.files as File[];
+
+    if (!this.form.get("policyNumber")?.value) {
+      this.errors.policyNumberRequired = "Please select policy number before uploading documents";
+      event.target.value = '';
+      return;
+    }
+
     this.totalFilesCount += files.length;
-    for (const file of files) {
+
+    // Filter valid files and create file objects
+    const validFiles = Array.from(files).filter(file => {
       if (!this.allowedFileTypes.includes(file.type)) {
         this.errors.invalidFormat = true;
-        continue;
+        return false;
       }
 
       const fileExists = this.uploadedFiles.some(
-        (uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size
+        uploadedFile => uploadedFile.name === file.name && uploadedFile.size === file.size
       );
 
       if (!fileExists) {
         const newFile = this.createNewFileObject(file);
         this.uploadedFiles.push(newFile);
         this.clearSelectedLabel(newFile);
+        return true;
       }
-    }
+      return false;
+    });
 
     this.validateRequiredDocuments();
-    this.uploadFiles(Array.from(files).filter(file => this.allowedFileTypes.includes(file.type)));
+
+    this.uploadFilesSequentially(validFiles);
   }
 
+  private uploadFilesSequentially(files: File[]): void {
+    const policyNumber = this.form.get("policyNumber")?.value;
+
+    if (!policyNumber) {
+      this.handleUploadFailure();
+      return;
+    }
+
+
+    files.reduce((promise, file) => {
+      return promise.then(() => {
+        const formData = new FormData();
+        const currentFile = this.uploadedFiles.find(f => f.file === file);
+
+        if (!currentFile) return Promise.resolve();
+
+        const metadata = {
+          policyNumber: policyNumber,
+          labelName: currentFile.label || "",
+          documentName: file.name,
+          documentType: file.type,
+          createdBy: currentFile.createdBy || "",
+          claimInfoId: "",
+          memberId: '',
+          documentId: currentFile.documentId
+        };
+
+
+        formData.append('fileDetails[0].documentId', metadata.documentId);
+        formData.append('fileDetails[0].AgentCode', metadata.createdBy);
+        formData.append('fileDetails[0].policyNumber', metadata.policyNumber);
+        formData.append('fileDetails[0].labelName', metadata.labelName);
+        formData.append('fileDetails[0].documentName', metadata.documentName);
+        formData.append('fileDetails[0].documentType', metadata.documentType);
+        formData.append('fileDetails[0].createdBy', metadata.createdBy);
+        formData.append('fileDetails[0].file', file, file.name);
+        formData.append('fileDetails[0].memberId', metadata.memberId);
+
+        return new Promise<void>((resolve) => {
+          this.claimsService.uploadFiles(formData).subscribe({
+            next: (response: any) => {
+              if (response.isSuccess) {
+                currentFile.status = "success";
+                this.uploadSuccess = true;
+                this.uploadedFilesCount++;
+              } else {
+                currentFile.status = "failed";
+                this.failedFilesCount++;
+              }
+              this.updateStatusLabel();
+              this.cdr.markForCheck();
+              resolve();
+            },
+            error: (_error) => {
+              currentFile.status = "failed";
+              this.failedFilesCount++;
+              this.updateStatusLabel();
+              this.cdr.markForCheck();
+              resolve();
+            }
+          });
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  private handleUploadFailure(): void {
+    this.uploadedFiles.forEach((file) => (file.status = "failed"));
+    this.uploadSuccess = false;
+    this.updateStatusLabel();
+    this.cdr.markForCheck();
+    console.warn("Policy number must be selected before uploading files.");
+  }
   private createNewFileObject(file: File) {
     return {
       documentId: this.generateUUID(),
@@ -973,12 +1006,12 @@ export class ClaimsViewComponent {
       fileNotSelected: false,
       invalidFormat: false,
       requiredDocs: '',
-      duplicateDocs: ''
+      duplicateDocs: '',
+      policyNumberRequired: ''
     };
   }
 
   private generateUUID(): string {
-    // Implement your UUID generation logic here
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       const r = Math.random() * 16 | 0;
       const v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -1043,92 +1076,32 @@ export class ClaimsViewComponent {
     const missingTypes = this.requiredDocumentTypes.filter(
       type => !labelCounts[type]
     );
-    
+
     const duplicateTypes = Object.entries(labelCounts)
       .filter(([label, count]) => {
         const countValue = count as number;
         return countValue > 1 && this.requiredDocumentTypes.includes(label);
       })
       .map(([label]) => label);
-    
 
     if (missingTypes.length === 0 && duplicateTypes.length === 0) {
-      this.isDisabled = false; 
+      this.isDisabled = false;
     } else {
-      this.isDisabled = true; 
+      this.isDisabled = true;
     }
-    
+
     if (missingTypes.length > 0) {
       this.errors.requiredDocs = `Please upload the following required documents: ${missingTypes.join(', ')}`;
     } else {
-      this.errors.requiredDocs = ''; 
+      this.errors.requiredDocs = '';
     }
-    
+
     if (duplicateTypes.length > 0) {
       this.errors.duplicateDocs = `Duplicate document types found for: ${duplicateTypes.join(', ')}. Please ensure only one document per type.`;
     } else {
       this.errors.duplicateDocs = '';
     }
     this.cdr.detectChanges();
-  }
-  uploadFiles(files: File[]): void {
-    const fileNames: string[] = files.map((file) => file.name);
-    const fileTypes: string[] = files.map((file) => file.type);
-    const policyNumber = this.form.get("policyNumber")?.value
-    if (!policyNumber) {
-      this.uploadedFiles.forEach((file) => (file.status = "failed"));
-      this.uploadSuccess = false;
-      this.updateStatusLabel();
-      this.cdr.markForCheck();
-      console.warn("Policy number must be selected before uploading files.");
-      return;
-    }
-    this.documentType = fileTypes;
-    this.namesVariable = fileNames;
-    const formData = new FormData();
-    this.uploadedFiles.forEach((file, index) => {
-      const metadata = {
-        policyNumber: this.form.get("policyNumber")?.value || "",
-        labelName: file.label || "",
-        documentName: this.namesVariable || "",
-        documentType: this.documentType || "",
-        createdBy: file.createdBy || "",
-        claimInfoId: "",
-        memberId: '',
-        documentId: file.documentId
-      };
-      formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-      formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-      formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-      formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-      formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-      formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
-      formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-    });
-
-    this.claimsService.uploadFiles(formData).subscribe(
-      (response: any) => {
-        if (response.isSuccess) {
-          this.uploadedFiles.forEach((file) => (file.status = "success"));
-          this.uploadSuccess = true;
-          this.uploadedFilesCount = files.length;
-        } else {
-          this.uploadedFiles.forEach((file) => (file.status = "failed"));
-          this.uploadSuccess = false;
-        }
-        this.updateStatusLabel();
-        this.cdr.markForCheck();
-      },
-      (_error) => {
-        this.uploadedFiles.forEach((file) => (file.status = "failed"));
-        this.uploadSuccess = false;
-        this.failedFilesCount = files.length;
-        this.updateStatusLabel();
-        this.cdr.markForCheck();
-      }
-    );
   }
 
   convertBytesToKB(bytes: number): string {
@@ -1144,7 +1117,7 @@ export class ClaimsViewComponent {
 
   updateStatusLabel(): void {
     // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
-    this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
+    this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
   }
 
   deleteFile(fileToDelete: any): void {
@@ -1230,10 +1203,10 @@ export class ClaimsViewComponent {
       this.navigateToListClaim();
     });
   }
-  openErrorModal(msg: string){
+  openErrorModal(msg: string) {
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       disableClose: true,
-      panelClass:"messageModal-mat",
+      panelClass: "messageModal-mat",
       data: {
         type: 'error',
         message: msg
@@ -1262,13 +1235,13 @@ export class ClaimsViewComponent {
       const saveClaimData = { ...this.form.value };
       let hospitalName: string;
 
-     if (this.form.get('hospitalName')?.value === 'others') {
-      saveClaimData.hospitalName = this.form.get('customHospitalName')?.value;
-      saveClaimData.hospitalCode = ''; 
-    } else {
-      saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-      saveClaimData.hospitalCode = this.selectedHospital;
-    }
+      if (this.form.get('hospitalName')?.value === 'others') {
+        saveClaimData.hospitalName = this.form.get('customHospitalName')?.value;
+        saveClaimData.hospitalCode = '';
+      } else {
+        saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+        saveClaimData.hospitalCode = this.selectedHospital;
+      }
 
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.formattedDate;
@@ -1280,8 +1253,8 @@ export class ClaimsViewComponent {
       saveClaimData.hospitalCode = this.selectedHospital;
       saveClaimData.customHospitalName = "";
       //saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-      
-      
+
+
       const coverNames = this.form.get('coverName')?.value;
       const coverCode = this.form.get('coverCode')?.value;
       if (coverNames && coverCode) {
@@ -1352,7 +1325,7 @@ export class ClaimsViewComponent {
             } else {
               this.toast.error({
                 detail: 'Error',
-                summary: response.data.message !== ""? response.data.message: "No response from Jarvis.",
+                summary: response.data.message !== "" ? response.data.message : "No response from Jarvis.",
                 duration: 0,
                 sticky: true
               });
