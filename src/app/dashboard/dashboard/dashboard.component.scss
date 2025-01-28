@@ -1459,7 +1459,8 @@ h2 {
     flex-direction: row !important;
     gap: 10px !important;
     .scroll_contentDashboard, .leads_newChart {
-        width: 50%;
+        /* width: 50%; */
+        width: 100%;
         @media (max-width:767px) {
             width: 100%;
         }

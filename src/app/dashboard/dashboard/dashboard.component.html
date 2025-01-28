@@ -404,7 +404,7 @@
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
-                       <div class="data_inscroll">
+                       <div class="data_inscroll_noneed">
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Leads'">
@@ -427,7 +427,7 @@
                          </ng-container>
                        </div>
                      </div>
-                     <div [ngSwitch]="tab.chart">
+                     <div [ngSwitch]="tab.chart" class="block-hide">
                        <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
                          <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
@@ -473,7 +473,7 @@
                     </header>
                     <div class="leads_content leads_contentDashboard leads_newService">
                       <div class="scroll_contentDashboard">
-                        <div class="data_inscroll">
+                        <div class="data_inscroll_noneed">
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                               <div *ngSwitchCase="'Renewal'">
@@ -485,19 +485,19 @@
                                 </div>
                               </div>
                               <div *ngSwitchCase="'Persistency'">
-                                <div class="leads_item leads_open">
+                                <!-- <div class="leads_item leads_open">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
                                   </header>
-                                </div>
+                                </div> -->
                                 <app-guage [halfProgress]="tab.totalCount" style="margin: auto;  width:100%" [guageType]="'half-moon'"></app-guage>
                               </div>
                             </div>
                           </ng-container>
                         </div>
                       </div>
-                      <div [ngSwitch]="tab.chart">
+                      <div [ngSwitch]="tab.chart" class="block-hide">
                         <div *ngSwitchCase="'Renewal'" class="chart-container" style="position: relative; width:100%">
                           <canvas #chartRenewCanvas style="margin: auto;  width:100%"></canvas>
                         </div>
@@ -522,7 +522,7 @@
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
-                       <div class="data_inscroll">
+                       <div class="data_inscroll_noneed">
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Customer'">
@@ -546,14 +546,14 @@
                          </ng-container>
                        </div>
                      </div>
-                     <div class="leads_newChart" [ngSwitch]="tab.chart">
+                     <div class="leads_newChart block-hide" [ngSwitch]="tab.chart">
                        <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
                          <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
                        <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
                  </div> -->
-                       <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
+                       <div *ngSwitchCase="'Claims'" class="chart-container block-hide" style="position: relative; width:100%">
                          <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
                      </div>
