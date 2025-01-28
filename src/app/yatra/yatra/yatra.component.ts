@@ -7734,7 +7734,11 @@ export class YatraComponent {
           deductibleAmount: member?.deductibleAmount || '',
           previousPolicyDetails: member?.previousPolicyDetails || [],
           hospiCashCoverDetails: member?.hospiCashCoverDetails || [],
-          activePolicyDetails: member?.activePolicyDetails || []
+          activePolicyDetails: member?.activePolicyDetails || [],
+          personalHabitDetail : member?.personalHabitDetail || '',
+          isSmoking: member.isSmoking || '',
+          isTobacco: member.isTobacco || '',
+          alcohol: member.alcohol || '',
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',

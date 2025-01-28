@@ -108,6 +108,10 @@ export interface InsuredMemberDetail {
     memberRoomCategory:string
     pedWaitingPeriod:string
     hospiCashCoverDetails: []
+    personalHabitDetail : string
+    isSmoking: string
+    isTobacco: string
+    alcohol: string
 }
 
 export interface Cover {
