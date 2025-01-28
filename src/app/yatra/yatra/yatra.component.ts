@@ -559,8 +559,8 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
+        console.log(this.formData);
         if (this.form.formTitle == 'Insurance Details') {
-          console.log(this.formData);
 
           if (this.formData['familyGroup']) {
             this.familyGroup = this.formData['familyGroup'];
@@ -1836,7 +1836,9 @@ export class YatraComponent {
     }
     else if (parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
-      myControl = parentArray.controls[index].get(control.name);
+      if(parentArray){
+        myControl = parentArray.controls[index].get(control.name);
+      }
     } else {
       myControl = this.dynamicFormGroup.get(control.name);
     }
@@ -1946,7 +1948,12 @@ export class YatraComponent {
     subControl: any = null
   ): boolean {
     if (parentControl != null && index != null) {
+      console.log(parentControl);
+      console.log(this.dynamicFormGroup);
+      
       const parentFormArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      console.log(parentFormArray);
+      
       const childControl = parentFormArray.controls[index].get(control.name);
 
       // If innerControl is not null, check its value
@@ -9501,7 +9508,7 @@ export class YatraComponent {
                           if (controlElement.name == 'policyIndex') {
                             controlElement.label = 'Policy ' + (i + 1);
                           }
-                          if (controlElement.name == 'selectYear') {
+                          if (controlElement.name == 'previousSelectYear') {
                             controlElement.options = [];
                             const currentYear = new Date().getFullYear();
                             const startYear = currentYear - 4; // The starting year for your ranges
@@ -11106,7 +11113,7 @@ export class YatraComponent {
     const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
     console.log(memberGroupInnerControlGroup);
 
-    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+    const selectedYear = memberGroupInnerControlGroup.get('previousSelectYear')?.value;
 
     console.log(selectedYear.length);
     if (selectedYear.length == 0) {
@@ -11169,7 +11176,7 @@ export class YatraComponent {
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
 
-    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+    const selectedYear = memberGroupInnerControlGroup.get('previousSelectYear')?.value;
 
     if (!selectedYear || selectedYear.length === 0) {
       this.toast.warning({ detail: "Warning", summary: "Please select previous policy year", duration: 3000 });
