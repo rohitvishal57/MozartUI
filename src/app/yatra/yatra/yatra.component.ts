@@ -2752,44 +2752,50 @@ export class YatraComponent {
                         });
                       }
                       else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
-                        if (selectedControl.name == "Self") {
-                          coreControl.options = [{
-                            "id": "1",
-                            "value": "O464",
-                            "name": "Retired"
-                          },
+                        this.formData.insuredMemberDetails.forEach((member:any) => {
+                          if(selectedControl.name == member.relation)
                           {
-                            "id": "3",
-                            "value": "O553",
-                            "name": "Salaried"
-                          },
-                          {
-                            "id": "6",
-                            "value": "O556",
-                            "name": "Self Employed"
-                          }]
-                        } else {
-                          coreControl.options = [{
-                            "id": "1",
-                            "value": "O464",
-                            "name": "Retired"
-                          },
-                          {
-                            "id": "2",
-                            "value": "O490",
-                            "name": "Student"
-                          },
-                          {
-                            "id": "6",
-                            "value": "O554",
-                            "name": "Not Employed"
-                          },
-                          {
-                            "id": "3",
-                            "value": "O555",
-                            "name": "HouseWife/Husband"
-                          }]
-                        }
+                            if (member.annualIncome!="") {
+                              coreControl.options = [{
+                                "id": "1",
+                                "value": "O464",
+                                "name": "Retired"
+                              },
+                              {
+                                "id": "3",
+                                "value": "O553",
+                                "name": "Salaried"
+                              },
+                              {
+                                "id": "6",
+                                "value": "O556",
+                                "name": "Self Employed"
+                              }]
+                            }
+                            else{
+                              coreControl.options = [{
+                                "id": "1",
+                                "value": "O464",
+                                "name": "Retired"
+                              },
+                              {
+                                "id": "2",
+                                "value": "O490",
+                                "name": "Student"
+                              },
+                              {
+                                "id": "6",
+                                "value": "O554",
+                                "name": "Not Employed"
+                              },
+                              {
+                                "id": "3",
+                                "value": "O555",
+                                "name": "HouseWife/Husband"
+                              }]
+                            }
+                          }
+                        }); 
                       }
                     });
                   }
