@@ -22,6 +22,9 @@ import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-base
 import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
 import { ManageLobComponent } from "./Admin/lob/manage-lob/manage-lob.component";
 import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component";
+import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renewal-do-home.component";
+import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
+import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
 
 
 
@@ -53,7 +56,10 @@ const routes: Routes = [
     {path:'extract_base_agent_av_master', component:ExtractBaseAndAvMasterComponent},
     {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent},
     {path:'create_lob', component:CreateLobComponent},
-    {path:'update_lob/:lobName', component:CreateLobComponent}
+    {path:'update_lob/:lobName', component:CreateLobComponent},
+    {path:'renewal', component:GroupRenewalDoHomeComponent},
+    {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
+    {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent}
     
 ];
 

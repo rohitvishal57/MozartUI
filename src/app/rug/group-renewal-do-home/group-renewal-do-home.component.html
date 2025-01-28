@@ -1,0 +1,140 @@
+    <!--Content area start-->
+    <main class="siteBody siteBody_padding">
+        <div class="contentBody bodyColumns-1">
+            <div class="bodyColumn body_flex_column">
+                <div class="mainPanel">
+                    <div class="itemPanel singlePanel">
+                        <!-- <header class="panelHeader panelPadding48 hideBlock">
+                            <span class="headBadge m-b-1">PRODUCT</span>
+                            <h1 class="heading1 m-b-0">Group Renewal</h1>
+                        </header> -->
+                        <div class="continar-fluid contentPadding">
+                            <form [formGroup]="groupRenewalFormCheck" (ngSubmit)="onSubmit()">
+                            <!--Accordio start-->
+                            <section class="accordionMain">
+                                <!--Group Renewal start-->
+                                <div class="accordionItem ">
+                                    <header class="accordionHeader"
+                                    
+                                    [ngClass]="{'active': accordionStates.isPolicyAccordionOpen}">
+                                        <h2 class="heading2">{{agentDesignation == 'RenewalGroup' ? 'Group' : agentDesignation == 'RenewalRetail' ? 'Retail' : agentDesignation == 'renewal_admin' ? '' : ''}} Renewal</h2>
+                                        <button type="button" class="accordionButton" (click)="toggleAccordion('isPolicyAccordionOpen')"></button>
+                                    </header>
+                                    <div class="accordionBody" [ngClass]="{'open': accordionStates.isPolicyAccordionOpen}">
+                                        <div class="form-box">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                                                    <div class="input-block" *ngIf="adminuserRole == 'renewal_admin'">
+                                                        <label for="" class="m-b-1">Renewal Options</label>
+                                                        <div class="input-radio-block">
+                                                            <label class="input-radiolabel ">
+                                                                <input type="radio" name="renewalType" formControlName="renewalType" (change)="changeRenewalType($event)" value="retail">
+                                                                <span>Retail</span>
+                                                            </label>
+                                                            <label class="input-radiolabel">
+                                                                <input type="radio" name="renewalType" formControlName="renewalType" (change)="changeRenewalType($event)" value="group">
+                                                                <span>Group</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngIf="agentDesignation != 'RenewalGroup'">
+                                                    <div class="input-block input-preFilled">
+                                                        <label for="">Enter AV ID <span class="mandatory">*</span></label>
+                                                        <input type="text" name="avId" formControlName="avId" placeholder="" class="input-textBox" readonly>
+                                                        <span class="ui-error">Please enter AV ID </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" >
+                                                    <div class="input-block input-preFilled">
+                                                        <label for="">Digital Officer ID <span class="mandatory">*</span></label>
+                                                        <input type="text" name="officerId" formControlName="officerId" placeholder="" class="input-textBox" readonly>
+                                                        <span class="ui-error">Please enter Digital Officer ID </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" >
+                                                    <div class="input-block input-preFilled">
+                                                        <label for="">Location <span class="mandatory">*</span></label>
+                                                        <input type="text" name="location" formControlName="location" placeholder="" class="input-textBox" readonly>
+                                                        <span class="ui-error">Please enter Location </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" >
+                                                    <div class="input-block " [ngClass]="{'input-blockError': groupRenewalFormCheck.get('oldCOINumber')?.invalid && submitted}">
+                                                        <label for="">Old COI Number <span class="mandatory">*</span></label>
+                                                        <input type="text" name="oldCOINumber" formControlName="oldCOINumber" (change)="checKPolicyStatus($event)" placeholder="" class="input-textBox">
+                                                        <span class="ui-error" *ngIf = "groupRenewalFormCheck.get('oldCOINumber')?.hasError('required')">Please enter Old COI Number </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngIf="agentDesignation != 'RenewalGroup'">
+                                                    <div class="input-block" [ngClass]="{'input-blockError': groupRenewalFormCheck.get('mobileNumber')?.invalid && submitted}">
+                                                        <label for="">Mobile Number </label>
+                                                        <input type="text" name="mobileNumber" formControlName="mobileNumber" (change)="checKRetailPolicyStatus($event)" placeholder="" class="input-textBox">
+                                                        <span class="ui-error" *ngIf = "groupRenewalFormCheck.get('mobileNumber')?.hasError('required')">Please enter Mobile Number </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" >
+                                                    <div class="input-block input-preFilled">
+                                                        <label for="">Renewal Status </label>
+                                                        <input type="text" name="renewalStatus" formControlName="renewalStatus" placeholder="" class="input-textBox" readonly>
+                                                        <span class="ui-error">Please enter Old COI Number </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngIf="agentDesignation == 'RenewalGroup'">
+                                                    <!--By Default it is not editiable Based on COI number this filed is editable-->
+                                                    <div class="input-block ">
+                                                        <label for="">Select Disposition <span class="mandatory">*</span></label>
+                                                        <select name="disposition" formControlName="disposition" (change)="changeDisposition($event)" class="input-selectBox">
+                                                            <option value="">Select Disposition</option> 
+                                                            <option [value]="disposition.dispositionId" *ngFor="let disposition of dispositionOptions">{{disposition.dispositionName}}</option> 
+                                                        </select>
+                                                        <span class="ui-error">Please select Disposition </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngIf="agentDesignation == 'RenewalGroup'">
+                                                    
+                                                    <div class="input-block ">
+                                                        <label for="">Select Subdisposition <span class="mandatory">*</span></label>
+                                                        <select name="subDisposition" formControlName="subDisposition" class="input-selectBox" id="ssd-in">
+                                                            <option value="0">Select Subdisposition</option>
+                                                            <option [value]="subDisposition.subDispositionId" *ngFor="let subDisposition of subDispositionOptions">{{subDisposition.subDispositionName}}</option>
+                                                        </select>
+                                                        <span class="ui-error">Please select Salutation </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-12 col-lg-12 col-xl-6" *ngIf="agentDesignation == 'RenewalGroup'">
+                                                    <div class="input-block ">
+                                                        <label for="">Remark <span class="mandatory">*</span></label>
+                                                        <input type="text" name="remark" formControlName="remark" placeholder="" class="input-textBox">
+                                                        <span class="ui-error">Please enter Remark </span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-12 col-sm-6 col-md-12 col-lg-12 col-xl-6" >
+                                                    <!--Select Disposition: Interested below two buttons aviable-->
+                                                    <!--Select Disposition: Junk below 'Proceed For Renewal' button only aviable-->
+                                                   <button type="submit" *ngIf="agentDesignation == 'RenewalGroup' && groupRenewalFormCheck.get('subDisposition')?.value=== '48' && groupRenewalFormCheck.get('renewalStatus')?.value == 'Open for renewal'" id="proceed-renewal" name="agentDetailsSave" class="btn_Default btn_red btn_accordion_save_full">Proceed For Renewal</button>
+                                                    <button type="button" *ngIf="agentDesignation == 'RenewalGroup' && groupRenewalFormCheck.get('subDisposition')?.value=== '49' && groupRenewalFormCheck.get('renewalStatus')?.value == 'Open for renewal'" id="send-renewallink" name="agentDetailsSave" class="btn_Default btn_red btn_accordion_save_full" (click)="sendRenewalLink()">Send Renewal Link</button>
+                                                    
+                                                    <!--Select Disposition: Other values below Submit button only aviable-->
+                                                   <button type="button" *ngIf="agentDesignation != 'RenewalGroup'" id="proceed-submit" name="agentDetailsSave" value="submit" class="btn_Default btn_red btn_accordion_save_full button-margin" (click)="saveAndRedierct()" [disabled]="isButtonDisabled">Send Payment Link</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="agentDesignation != 'RenewalGroup'">
+                                    <app-retails-renewal-leads></app-retails-renewal-leads>
+                                </ng-container>
+                             
+                                <!--Group Renewal end-->
+                            </section>
+                            <!--Accordio end-->
+                        </form>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </main>
+

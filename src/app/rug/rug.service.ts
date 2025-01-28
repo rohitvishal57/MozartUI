@@ -70,4 +70,47 @@ export class RugService {
       const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getMasterData;
       return this.httpService.get(getProposerOccupation);
     }
+
+    checkGroupRenewalData(reqData: any) {
+      const halfQuoteData = this.configService.config.baseUrl1 + this.configService.config.checkGroupRenewalData;
+      return this.httpService.post(halfQuoteData, reqData);
+    }
+
+    getProfileDetails(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.profileDetails;
+      return this.httpService.post(req,reqData);
+    }
+    SaveRenewalProposalData(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.SaveRenewalProposalData;
+      return this.httpService.post(req,reqData);
+    }
+    getRetailRenewalRedirectUrl(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.getRetailRenewalRedirectUrl;
+      return this.httpService.post(req,reqData);
+    }
+    sendLinkToCustomer(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.sendLinkToCustomer;
+      return this.httpService.post(req,reqData);
+    }
+    sendRetailLinkToCustomer(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.sendRetailLinkToCustomer;
+      return this.httpService.post(req,reqData);
+    }
+    getRetailRenewalPhaseTwoLeads(reqData : any) {
+      const req = this.configService.config.baseUrl + this.configService.config.getRetailRenewalPhaseTwoLeads;
+      return this.httpService.post(req,reqData);
+    }
+    getRenewalPolicyData(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.getRenewalPolicyData;
+      return this.httpService.post(req,reqData);
+    }
+    getGroupRenewalPhaseTwoLeads(reqData : any) {
+      const req = this.configService.config.baseUrl1 + this.configService.config.getGroupRenewalPhaseTwoLeads;
+      return this.httpService.post(req,reqData);
+    }
+
+    getDispositionsRenewal(){
+      const  getAllDispositions = this.configService.config.baseUrl1 + this.configService.config.getAllDispositionsRenewal;
+      return this.httpService.get(getAllDispositions);
+    }
 }

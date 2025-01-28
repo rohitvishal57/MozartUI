@@ -1,0 +1,189 @@
+
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>Renewal Retail Leads</h2>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    (input)="onInput($event)"> -->
+                                    <form [formGroup]="retailRenewalForm">
+                                        <section class="white_container mb-3">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" type="date" name="grplmdFrom" placeholder=""  formControlName="grplmdFrom"  class="input-textBox input-date">
+                                                        <label for="">Last Modified Date: From </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" type="date" name="grplmdTo" placeholder=""  formControlName="grplmdTo" class="input-textBox input-date">
+                                                        <label for="">Last Modified Date: To </label>
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" type="text" name="grpocccenter"  placeholder="" formControlName="grpocccenter" class="input-textBox">
+                                                        <label for="">OCC Center </label>
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <select  class="form-select input-selectBox" placeholder="" name="grdisposition" class="input-selectBox" formControlName="grdisposition">
+                                                            <option value="">Select Status</option> 
+                                                            <option *ngFor="let disposition of DispositionOption" value="{{disposition}}">{{disposition}}</option>
+                                                            <!-- <option value="1">Disposition Saved</option> 
+                                                            <option value="5">Renewal Link Triggered</option> 
+                                                            <option value="4">Pending For Verification</option> 
+                                                            <option value="51">Policy Renewed</option> 
+                                                            <option value="47">Regenerate Lead</option> 
+                                                            <option value="renewed_from_other_mode">Renewed From Other Mode</option>  -->
+                                                        </select>
+                                                        <label for="">Current Status</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <input class="form-control input-textBox" type="text"  name="grpoldcoi" placeholder=""  formControlName="grpoldcoi" class="input-textBox">
+                                                        <label for="">Old Policy Number/COI </label>
+                                                       
+    
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-1">
+                                                    <div class="btn-group-customer btn-group-mt">
+                                                        <button type="button" name="grp-clear" (click)="onSubmit()" value="grpclear" class="btn_Default btn_red btn_accordion_save">Apply</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-1">
+                                                    <div class="btn-group-customer btn-group-mt">
+                                                        <button type="button" name="grp-cleafr" (click)="clearFilter()" value="grpclear" class="btn_Default btn_white btn_accordion_save btn_accordion_clear">Clear</button>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                    <div class="input-block form-floating input-block-renew">
+                                                        <button type="submit" id="save" name="save" (click)="clearFilter()"
+                                                            class="btn_red">Clear
+                                                            Filter</button>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </section>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="quotes-list" class="tableMain quoteView block-show">
+                <div class="tableSubMain">
+                    <section class="quickFilterMain">
+                        <div class="quickFilterRight">
+                            <div class="body_flex_row leads_searchWraper">
+                                <div class="field_searchMain">
+                                    <div class="filterFieldGroup">
+                                        <button type="submit" id="save" name="save"
+                                        class="btn_red"><img src="" alt="" (click)="exportToxl()"> Export </button>
+                                        <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                             (input)="onsearch($event)"> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th >Seq No</th>
+                                    <th>Reference ID</th>
+                                    <th>SP/AV Code</th>
+                                    <th>Do Code</th>
+                                    <th>Occ Center</th>
+                                    <th>Product Type</th>
+                                    <th>Old Policy Number/COI</th>
+                                    <th>Current Status</th>
+                                    <th>Gross Premium</th>
+                                    <th>Net Premium</th>
+                                    <th>Issuance Date and Time</th>
+                                    <th>Last Modified Date and Time</th>
+                                    <th class="disableFilterBy">Retrigger</th>
+                                    <th>Renewed COI/Policy No</th>
+                                    <th>Latest Link Triggered Date And Time</th>
+                                    <th>Payment Received Date and Time</th>
+                                    <th>Policy Issued Date And Time</th>
+                                    <th>Rroduct Plan Name (Diamond/Platinum)</th>
+                                    <th>Policy Status</th>
+                                    <th>Policy Payment Status</th>
+                                    <th>Payment ID/Trasaction ID</th>
+                                    <!-- <th>New IMD Post Renewal</th>
+                                    <th>HR Amount</th>
+                                    <th>HR Flag</th>
+                                    <th>Cumulative Attempts</th>
+                                    <th>Cumulative Connects</th> -->
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr  *ngFor="let item of arr ; let i = index">
+                                    <td class="text-center">{{ (currentPage-1)*itemsPerPage+(i+1)}}</td>
+                                    <td class="text-center">{{ item.leadId }}</td>
+                                    <td class="text-center">{{ item.spavCode }}</td>
+                                    <td class="text-center">{{ item.doCode }}</td>
+                                    <td class="text-center">{{ item.occCenter }}</td>
+                                    <td class="text-center">{{ item.productType }}</td>
+                                    <td class="text-center">{{ item.oldPolicyNumber }}</td>
+                                    <td class="text-center">{{ item.currentStatus }}</td>
+                                    <td class="text-center">{{ item.grossPremium }}</td>
+                                    <td class="text-center">{{ item.netPremium }}</td>
+                                    <td class="text-center">{{ item.issuanceDateTime }}</td>
+                                    <td class="text-center">{{ item.lastModifiedDate }}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger" (click)="reTrigger(item)">Retrigger Link</button>
+                                        <button type="button" class="btn btn-light jsOpenPopup" aria-label="modal-audit" (click)="openAudit(item)">Audit</button>
+                                    </td>
+                                    <td class="text-center">{{ item.renewedPolicyNumber }}</td>
+                                    <td class="text-center">{{ item.latestLinkTriggeredDateTime }}</td>
+                                    
+                                    <td class="text-center">{{ item.paymentReceiveDateTime }}</td>
+                                    <td class="text-center">{{ item.policyIssuanceDateTime }}</td>
+                                    <td class="text-center">{{ item.productPlanName }}</td>
+                                    <td class="text-center">{{ item.policyStatus }}</td>
+                                    <td class="text-center">{{ item.policyPaymentStatus }}</td>
+                                    <td class="text-center">{{ item.paymentId }}</td>
+                                    <!-- <td class="text-center">{{ item.paymentId }}</td> -->
+                                    <!-- <td class="text-center">{{ item.hrAmount }}</td>
+                                    <td class="text-center">{{ item.hrFlag }}</td>
+                                    <td class="text-center">{{ item.cumulativeAttempts }}</td>
+                                    <td class="text-center">{{ item.cumulativeConnects }}</td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="tableNav" *ngIf="allArray.length > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="allArray"
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > allArray ?
+                                    allArray : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{allArray}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>                   -->
+            </section>
+        </div>
+    </div>

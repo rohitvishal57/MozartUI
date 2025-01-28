@@ -39,6 +39,10 @@ import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component"
 import { CancelPopupComponent } from "./Admin/lob/cancel-popup/cancel-popup.component";
 import { ConfirmPopupComponent } from "./Admin/lob/confirm-popup/confirm-popup.component";
 import { UpdatedPopupComponent } from "./Admin/lob/updated-popup/updated-popup.component";
+import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renewal-do-home.component";
+import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
+import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
+import { RetailsRenewalLeadsComponent } from "./retails-renewal-leads/retails-renewal-leads.component";
 
 
 
@@ -70,7 +74,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         CreateLobComponent,
         CancelPopupComponent,
         ConfirmPopupComponent,
-        UpdatedPopupComponent
+        UpdatedPopupComponent,
+        GroupRenewalDoHomeComponent,
+        GroupRenewalModifyViewComponent,
+        GroupRenewalPhase2LeadsComponent,
+        RetailsRenewalLeadsComponent
     ],
     
     imports: [

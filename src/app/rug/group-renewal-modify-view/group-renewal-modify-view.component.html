@@ -1,0 +1,952 @@
+<!--Content area start-->
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="mainPanel">
+                <div class="itemPanel singlePanel">
+                    <header class="panelHeader panelPadding48 hideBlock">
+                        <span class="headBadge m-b-1">PRODUCT</span>
+                        <h1 class="heading1 m-b-0">Group Renewal</h1>
+                    </header>
+                    <div class="continar-fluid contentPadding">
+                        <form [formGroup]="policyDetailsForm" (ngSubmit)="onSubmit()">
+                            <!--Accordio start-->
+                            <section class="accordionMain">
+                                <!--Policy Renewal start-->
+                                <div class="accordionItem ">
+                                    <header class="accordionHeader active">
+                                        <h2 class="heading2">Policy Renewal</h2>
+                                        <button type="button" class="accordionButton hideBlock"></button>
+                                    </header>
+                                    <div class="accordionBody">
+                                        <div class="form-box">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                    <!--Checkbox sestion start-->
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-8 col-xl-9">
+                                                            <label for="" class="m-b-1">Have you reported any claim in the previous
+                                                                policy with ABHI or any other insurer?</label>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                                                            <div class="input-radio-block m-b-3">
+                                                                <label class="input-radiolabel ">
+                                                                    <input type="radio" name="anyClaimReported" formControlName="anyClaimReported" [value]="true" class="">
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                                <label class="input-radiolabel">
+                                                                    <input type="radio" name="anyClaimReported" formControlName="anyClaimReported" [value]="false" class="">
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Checkbox sestion end-->
+                                                    <!--Checkbox sestion start-->
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-8 col-xl-9">
+                                                            <label for="" class="m-b-1">Does any of the insured member has got any
+                                                                PED/Chronic history within 1 year of policy purchase?</label>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                                                            <div class="input-radio-block m-b-3">
+                                                                <label class="input-radiolabel ">
+                                                                    <input type="radio" name="anyChronicHistory" formControlName="anyChronicHistory" [value]="true" class="">
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                                <label class="input-radiolabel">
+                                                                    <input type="radio" name="anyChronicHistory" formControlName="anyChronicHistory" [value]="false" class="">
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Checkbox sestion end-->
+                                                </div>
+            
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                    <div class="policy_products">
+                                                        <div class="pp_item">
+                                                            Group Health Insurance 
+                                                            <!-- <span class="pp_icon"><img *ngIf="isPlanIncluded('GHI')"
+                                                                    src="assets/images/check_circle.svg"></span> -->
+                                                        </div>
+                                                        <div class="pp_item">
+                                                            Group Personal Accident
+                                                             <!-- <span class="pp_icon"><img *ngIf="isPlanIncluded('GPA')"
+                                                                    src="assets/images/check_circle.svg"></span> -->
+                                                        </div>
+                                                        <div class="pp_item">
+                                                            Group Critical Illness 
+                                                            <!-- <span class="pp_icon"><img *ngIf="isPlanIncluded('GCI')"
+                                                                    src="assets/images/check_circle.svg"></span> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-5">
+                                                    <!--Accordio start-->
+                                                    <section class="accordionMain">
+                                                        <!--Policy Details start-->
+                                                        <div class="accordionItem " formGroupName="policyDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isPolicyAccordionOpen}">
+                                                                <h2 class="heading2">Policy Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isPolicyAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isPolicyAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Existing Master Policy No </label>
+                                                                                <input type="text" name="existingMasterPolicyNumber"
+                                                                                    formControlName="existingMasterPolicyNumber" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Existing Master
+                                                                                    Policy No </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Existing COI </label>
+                                                                                <input type="text" name="existingCOI"
+                                                                                    formControlName="existingCOI" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Existing COI
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Proposal No </label>
+                                                                                <input type="text" name="proposalNo"
+                                                                                    formControlName="proposalNo" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Proposal No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Existing COI Start Date </label>
+                                                                                <input type="text" name="existingCOIStartDate"
+                                                                                    formControlName="existingCOIStartDate" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Existing COI
+                                                                                    Start Date </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Existing COI End Date </label>
+                                                                                <input type="text" name="existingCOIEndDate"
+                                                                                    formControlName="existingCOIEndDate" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Existing COI End
+                                                                                    Date </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Lead ID </label>
+                                                                                <input type="text" name="leadId"
+                                                                                    formControlName="leadId" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Lead ID </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Product Name </label>
+                                                                                <input type="text" name="gr-productname"
+                                                                                    formControlName="productName" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Product Name
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Renewed Master Policy No </label>
+                                                                                <input type="text" name="gr-rmpno"
+                                                                                    formControlName="renewedMasterPolicyNo" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Product Name
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Policy Details start-->
+                                                        <!--Customer Details start-->
+                                                        <div class="accordionItem " formGroupName="customerDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isCustomerAccordionOpen}">
+                                                                <h2 class="heading2">Customer Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isCustomerAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isCustomerAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Salutation </label>
+                                                                                <input type="text" name="gr-salutation" formControlName="salutation"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">First Name </label>
+                                                                                <input type="text" name="gr-fname" formControlName="firstName"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Last Name </label>
+                                                                                <input type="text" name="gr-lname" formControlName="lastName"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Proposal No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Gender </label>
+                                                                                <input type="text" name="gr-gender" formControlName="gender"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Date Of Birth </label>
+                                                                                <input type="text" name="gr-dob" formControlName="dob"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Mobile No </label>
+                                                                                <input type="text" name="gr-mobileno"
+                                                                                    formControlName="mobileNumber" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Email ID </label>
+                                                                                <input type="text" name="gr-email"
+                                                                                    formControlName="emailId"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Address </label>
+                                                                                <input type="text" name="gr-address" formControlName="address"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">City </label>
+                                                                                <input type="text" name="gr-city" formControlName="city"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">State </label>
+                                                                                <input type="text" name="state" formControlName="state"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-2 col-xl-2">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Pincode </label>
+                                                                                <input type="text" name="gr-pincode" formControlName="pincode"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-2 col-xl-2">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">NRI </label>
+                                                                                <input type="text" name="gr-state" formControlName="nri"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-2 col-xl-2">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Tenure </label>
+                                                                                <input type="text" name="gr-tenure" formControlName="tenure"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Occupation </label>
+                                                                                <input type="text" name="gr-occupation" formControlName="occupation"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Annual Income </label>
+                                                                                <input type="text" name="gr-annualincome" formControlName="annualIncome"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Customer Details end-->
+                                                        <!--Member Details start-->
+                                                        <div class="accordionItem " formGroupName="memberDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isMemberAccordionOpen}">
+                                                                <h2 class="heading2">Member Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isMemberAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'active': accordionStates.isMemberAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Sum Insured </label>
+                                                                                <!-- <select name="gr-suminsured" formControlName="sumInsured"
+                                                                                    class="input-selectBox">
+                                                                                    <option value="0">Select Sum Insured</option>
+                                                                                    <option value="5000000">5000000</option>
+                                                                                    <option value="2000000">2000000</option>
+                                                                                </select> -->
+                                                                                <input type="text" name="sumInsured"
+                                                                                formControlName="sumInsured" placeholder=""
+                                                                                class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Family Construct </label>
+                                                                                <!-- <select name="gr-familyconstruct" formControlName="familyConstruct"
+                                                                                    class="input-selectBox">
+                                                                                    <option value="0">Select Fmaily Construct
+                                                                                    </option>
+                                                                                    <option value="1" selected>2A</option>
+                                                                                    <option value="2">1A</option>
+                                                                                </select> -->
+                                                                                <input type="text" name="familyConstruct"
+                                                                                formControlName="familyConstruct" placeholder=""
+                                                                                class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+            
+                                                                        <!--Family Construct main start-->
+                                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                            <!--Self start-->
+                                                                            <div class="fc_Main" formArrayName="members">
+                                                                                <div *ngFor="let member of members.controls; let i = index" [formGroupName]="i">
+                                                                                <span class="headBadge">{{members.controls[i].get('relationWithProposer')?.value}}</span>
+                                                                                    <div class="row">
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Saluation </label>
+                                                                                                <input type="text"
+                                                                                                    name="salutation" formControlName="salutation"
+                                                                                                    placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Relation with Proposer
+                                                                                                </label>
+                                                                                                <input type="text" name="relationWithProposer"
+                                                                                                    formControlName="relationWithProposer" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">First Name </label>
+                                                                                                <input type="text" name="firstName"
+                                                                                                    formControlName="firstName" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Last Name </label>
+                                                                                                <input type="text" name="lastName"
+                                                                                                    formControlName="lastName" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Gender </label>
+                                                                                                <input type="text" name="gr-self-gender"
+                                                                                                formControlName="gender" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Date Of Birth </label>
+                                                                                                <input type="text" name="gr-self-dob"
+                                                                                                    formControlName="dob" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div class="input-block input-preFilled">
+                                                                                                <label for="">Age </label>
+                                                                                                <input type="text" name="gr-self-age"
+                                                                                                    formControlName="age" placeholder=""
+                                                                                                    class="input-textBox">
+                                                                                                <span class="ui-error">Please enter
+                                                                                                    Policy No </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                            <div
+                                                                                                class="input-block input-preFilledRadio">
+                                                                                                <label for="">Chronic Disease </label>
+                                                                                                <div
+                                                                                                    class="input-radio-block toggle-checkbox toggle-declaration">
+                                                                                                    <label
+                                                                                                        class="input-radiolabel  labelflex-auto">
+                                                                                                        <input type="radio"
+                                                                                                        [attr.name]="'isChronicDisease' + i"
+                                                                                                            formControlName="isChronicDisease" [value]="true"
+                                                                                                            id="gr-self-cd-yes">
+                                                                                                        <span>YES</span>
+                                                                                                    </label>
+                                                                                                    <label
+                                                                                                        class="input-radiolabel labelflex-auto">
+                                                                                                        <input type="radio"
+                                                                                                        [attr.name]="'isChronicDisease' + i"
+                                                                                                            formControlName="isChronicDisease" [value]="false"
+                                                                                                            id="gr-self-cd-no" checked>
+                                                                                                        <span>NO</span>
+                                                                                                    </label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!--Self end-->
+                                                                            <!--Spouse start-->
+                                                                            <!-- <div class="fc_Main">
+                                                                                <span class="headBadge">Spouse</span>
+                                                                                <div class="row">
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Saluation </label>
+                                                                                            <input type="text"
+                                                                                                name="gr-spouse-saluation"
+                                                                                                value="Mrs" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Relation with Proposer
+                                                                                            </label>
+                                                                                            <input type="text" name="gr-spouse-rwp"
+                                                                                                value="Self" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">First Name </label>
+                                                                                            <input type="text"
+                                                                                                name="gr-spouse-fname"
+                                                                                                value="Indira" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Last Name </label>
+                                                                                            <input type="text"
+                                                                                                name="gr-spouse-lname" value="Gupta"
+                                                                                                placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Gender </label>
+                                                                                            <input type="text"
+                                                                                                name="gr-spouse-gender"
+                                                                                                value="Female" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Date Of Birth </label>
+                                                                                            <input type="text" name="gr-spouse-dob"
+                                                                                                value="07/10/1971" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div class="input-block input-preFilled">
+                                                                                            <label for="">Age </label>
+                                                                                            <input type="text" name="gr-spouse-age"
+                                                                                                value="52" placeholder=""
+                                                                                                class="input-textBox">
+                                                                                            <span class="ui-error">Please enter
+                                                                                                Policy No </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                                        <div
+                                                                                            class="input-block input-preFilledRadio">
+                                                                                            <label for="">Chronic Disease </label>
+                                                                                            <div
+                                                                                                class="input-radio-block toggle-checkbox toggle-declaration">
+                                                                                                <label
+                                                                                                    class="input-radiolabel  labelflex-auto">
+                                                                                                    <input type="radio"
+                                                                                                        name="gr-spouse-chronicdisease"
+                                                                                                        value="yes"
+                                                                                                        id="gr-spouse-cd-yes">
+                                                                                                    <span>YES</span>
+                                                                                                </label>
+                                                                                                <label
+                                                                                                    class="input-radiolabel labelflex-auto">
+                                                                                                    <input type="radio"
+                                                                                                        name="gr-spouse-chronicdisease"
+                                                                                                        value="no"
+                                                                                                        id="gr-spouse-cd-no"
+                                                                                                        checked>
+                                                                                                    <span>NO</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div> -->
+                                                                            <!--Spouse end-->
+            
+                                                                        </div>
+                                                                        <!--Family Construct main end-->
+            
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Member Details end-->
+                                                        <!--Premium Details start-->
+                                                        <div class="accordionItem " formGroupName="premiumDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isPremiumAccordionOpen}">
+                                                                <h2 class="heading2">Premium Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isPremiumAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isPremiumAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Old Policy Premium </label>
+                                                                                <input type="text" name="gr-old-pp" formControlName="oldPolicyPremium"
+                                                                                    placeholder="" class="input-textBox" >
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Total Health Returns </label>
+                                                                                <input type="text" name="gr-thr" formControlName="totalHealthReturns" 
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Renewal Premium </label>
+                                                                                <input type="text" name="gr-renewal-premium"
+                                                                                    formControlName="renewalPremium" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Renewal Premium To Pay </label>
+                                                                                <input type="text" name="gr-renewal-premium-pay"
+                                                                                    formControlName="renewalPremiumToPay" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block">
+                                                                                <div class="input-checkbox-block">
+                                                                                    <div class="input-checkbox-feild">
+                                                                                        <input type="checkbox" id="gr-include-hr" (click)="includeHealthReturn()"
+                                                                                            formControlName="includeHealthReturns" values="" class="input-check"
+                                                                                            >
+                                                                                        <label for="gr-include-hr">Include Health
+                                                                                            Returns</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block">
+                                                                                <div class="input-checkbox-block">
+                                                                                    <div class="input-checkbox-feild">
+                                                                                        <input type="checkbox" id="gr-exclude-hr" (click)="excludeHealthreturn()"
+                                                                                            formControlName="excludeHealthReturns" values="" class="input-check"
+                                                                                            >
+                                                                                        <label for="gr-exclude-hr">Exclude Health
+                                                                                            Returns</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> -->
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block " [ngClass]="{'input-blockError': policyDetailsForm.get('includeHealthReturns')?.invalid && policyDetailsForm.get('includeHealthReturns')?.touched }">
+                                                                                <!-- <label for=""><b>Role Type</b> <span class="mandatory">*</span></label> -->
+                                                                                <div class="input-radio-block">
+                                                                                    <label class="input-radiolabel ">
+                                                                                        <input type="radio" formControlName="includeHealthReturns" value='true' (change)="includeHealthReturn($event)"/>
+                                                                                        <span>Include Health
+                                                                                            Returns</span>
+                                                                                    </label>
+                                                    
+                                                                                    
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block " [ngClass]="{'input-blockError': policyDetailsForm.get('includeHealthReturns')?.invalid && policyDetailsForm.get('includeHealthReturns')?.touched }">
+                                                                                <div class="input-radio-block">
+                                                                                    <label class="input-radiolabel ">
+                                                                                        <input type="radio" formControlName="includeHealthReturns" value='false' (change)="includeHealthReturn($event)" />
+                                                                                        <span>Exclude Health
+                                                                                            Returns</span>
+                                                                                    </label>
+                                                                                    <span class="ui-error" *ngIf="policyDetailsForm.get('includeHealthReturns')?.hasError('required')">This field is required</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                            <span class="headBadge">Premium Breakup</span>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                            <div class="pb_Info">
+                                                                                <div class="pb_info_productName">
+                                                                                    <span class="pb_info_name">Group Health
+                                                                                        Insurance <em>(SI - {{this.policyData?.proposalDetails?.sumInsured}})</em></span>
+                                                                                </div>
+                                                                                <span class="pb_info_premium">₹{{policyDetailsForm.get('premiumDetails.renewalPremiumToPay')?.value | number: '1.2-2'}} <em>Premium
+                                                                                        (Inc.Tax)</em></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Premium Details end-->
+                                                        <!--Nominee Details start-->
+                                                        <div class="accordionItem " formGroupName="nomineeDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isNomineeAccordionOpen}">
+                                                                <h2 class="heading2">Nominee Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isNomineeAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isNomineeAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Relation with Proposer </label>
+                                                                                <input type="text" name="gr-nd-relation"
+                                                                                    formControlName="relationWithProposer" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">First Name </label>
+                                                                                <input type="text" name="gr-nd-fname" formControlName="firstName"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Last Name </label>
+                                                                                <input type="text" name="gr-nd-lname"
+                                                                                formControlName="lastName" placeholder=""
+                                                                                    class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Contact No </label>
+                                                                                <input type="text" name="contactNo" formControlName="contactNo"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Nominee Details end-->
+                                                        <!--Dispositions Details start-->
+                                                        <div class="accordionItem " formGroupName="dispositionDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isDispositionAccordionOpen}">
+                                                                <h2 class="heading2">Dispositions Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isDispositionAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isDispositionAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Disposition </label>
+                                                                                <input type="text" name="disposition" formControlName="disposition"
+                                                                                placeholder="" class="input-textBox">
+                                                                                <!-- <select name="gr-disposition" formControlName="disposition"
+                                                                                    class="input-selectBox">
+                                                                                    <option value="">Select Disposition</option>
+                                                                                    <option [value]="disposition.dispositionId" *ngFor="let disposition of dispositionOptions">{{disposition.dispositionName}}</option> 
+                                                                                </select> -->
+                                                                                <span class="ui-error">Please select Disposition
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Subdisposition </label>
+                                                                                <input type="text" name="subDisposition" formControlName="subDisposition"
+                                                                                placeholder="" class="input-textBox">
+                                                                                <!-- <select name="gr-disposition" formControlName="subDisposition"
+                                                                                    class="input-selectBox">
+                                                                                    <option value="0">Select Subdisposition</option>
+                                                                                    <option [value]="subDisposition.subDispositionId" *ngFor="let subDisposition of subDispositionOptions">{{subDisposition.subDispositionName}}</option>
+            
+                                                                                </select> -->
+                                                                                <span class="ui-error">Please select Disposition
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-6">
+                                                                            <div class="input-block input-preFilled">
+                                                                                <label for="">Remarks </label>
+                                                                                <input type="text" name="gr-dd-remark"
+                                                                                formControlName="remarks"
+                                                                                    placeholder="" class="input-textBox">
+                                                                                <span class="ui-error">Please enter Policy No
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Dispositions Details end-->
+                                                        <!--Declaration Details start-->
+                                                        <div class="accordionItem " formGroupName="declarationDetails">
+                                                            <header class="accordionHeader"
+                                                                [ngClass]="{'active': accordionStates.isDeclarationAccordionOpen}">
+                                                                <h2 class="heading2">Declaration Details</h2>
+                                                                <button type="button" class="accordionButton"
+                                                                    (click)="toggleAccordion('isDeclarationAccordionOpen')"></button>
+                                                            </header>
+                                                            <div class="accordionBody"
+                                                                [ngClass]="{'open': accordionStates.isDeclarationAccordionOpen}">
+                                                                <div class="form-box">
+                                                                    <div class="row">
+                                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                            <div class="input-block mb-3" [ngClass]="{'input-blockError': policyDetailsForm.get('declarationDetails.declaration')?.invalid && submitted}">
+                                                                                <div
+                                                                                    class="input-checkbox-block input-checkbox-declaration">
+                                                                                    <div class="input-checkbox-feild">
+                                                                                        <input type="checkbox" id="pr-disclaimer"
+                                                                                            formControlName="declaration"
+                                                                                            class="input-check">
+                                                                                        <label for="pr-disclaimer"></label>
+                                                                                    </div>
+                                                                                    <div class="input-checkbox-info">
+                                                                                        I here by declare, on my behalf and on
+                                                                                        behalf of all persons proposed to be
+                                                                                        insured, that the above statements, answers
+                                                                                        and or particulars given by me are true and
+                                                                                        complete in all respects to the best of my
+                                                                                        knowledge and that I am authorized to
+                                                                                        propose on behalf of these other persons. I
+                                                                                        also understand that the information
+                                                                                        provided by me will form the basis of the
+                                                                                        insurance policy. I have also gone through
+                                                                                        all medical and lifestyle questions and
+                                                                                        filled details which are true and to the
+                                                                                        best of my knowledge. Please disclose all
+                                                                                        fads and mention each information that may
+                                                                                        affect our decision to issue a policy or its
+                                                                                        pflee, terms, conditions, exclusions,
+                                                                                        truthfully and accurately as incorrect
+                                                                                        information may lead to policy cancellation
+                                                                                        claim rejection.
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span class="ui-error" *ngIf="policyDetailsForm.get('declarationDetails.declaration')?.invalid && submitted">Declaration to be selected mandatorily to proceed with the journey</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Declaration Details end-->
+            
+                                                    </section>
+                                                    <!--Accordio end-->
+                                                </div>
+            
+                                            </div>
+                                            <div class="row m-t-3 mobile_premiumBlock ">
+                                                <div class="col-6 col-sm-6 col-md-6 col-lg-8 col-xl-8 text-right">
+            
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 text-right">
+                                                    <span class="main_buyNow">
+                                                        <button type="submit" name="pr-sendrenewallink"
+                                                            class="btn_Default btn_red btn_buyNow btn_width_f">
+                                                            Send Renewal Link
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Policy Renewal end-->
+                            </section>
+                            <!--Accordio end-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+<!--Content area end-->
+<!-- <div class="pageLoaderMain active" *ngIf="loading">
+    <div class="pageLoaderSubMain">
+      <img src="assets/images/loader-axis.gif">
+    </div>
+</div> -->

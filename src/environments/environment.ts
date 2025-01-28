@@ -223,5 +223,14 @@ export const environment = {
   insertoptionalcoversjson:"api/yatra/insertoptionalcoversjson",
   createLob:"api/rug/CreateManageLob",
   getsuminsuredlist:"api/yatra/getactivesecuresidetails",
-  getAllAvsByLocation:"api/rug/GetAllAVsByLocation"
+  getAllAvsByLocation:"api/rug/GetAllAVsByLocation",
+  checkGroupRenewalData:"api/rug/CheckGroupRenewalData",  
+  getAllDispositionsRenewal: "api/rug/getAllDisposition?appName=RENEWAL",
+  SaveRenewalProposalData: "api/rug/SaveRenewalProposalData",
+  getRetailRenewalRedirectUrl: "api/rug/GetRetailRenewalRedirectUrl",
+  sendLinkToCustomer: "api/rug/SendLinkToCustomer",
+  sendRetailLinkToCustomer: "api/rug/SendRetailLinkToCustomer",
+  getRetailRenewalPhaseTwoLeads: "api/rug/GetRetailRenewalPhaseTwoLeads",
+  getRenewalPolicyData: "api/rug/GetRenewalPolicyData",
+  getGroupRenewalPhaseTwoLeads: "api/rug/GetGroupRenewalPhaseTwoLeads"
 };

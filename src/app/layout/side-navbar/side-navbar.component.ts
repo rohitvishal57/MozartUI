@@ -95,12 +95,21 @@ export class SideNavbarComponent {
     //   ];
     // }
     // Fetch allowed pages from AuthService
-    const allowedPages = this.authService.getAllowedModules();
+    if(this.agentCode == "467892"){
+      this.sideMenuList = [
+        { id: 1, displayName: 'Group Renewal', path: 'rug/group_renewal', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 2, displayName: 'Reneal Phase 2 Leads', path: 'rug/group-renewal-phase-2-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
     
-    if (allowedPages.length > 0) {
-      //this.sideMenuList = this.sideMenuList.filter(menuItem => allowedPages.includes(menuItem.displayName));
-      this.sideMenuList=[];
-      this.sideMenuList = allowedPages;
+      ];
+    }else{
+      
+      const allowedPages = this.authService.getAllowedModules();
+      
+      if (allowedPages.length > 0) {
+        //this.sideMenuList = this.sideMenuList.filter(menuItem => allowedPages.includes(menuItem.displayName));
+        this.sideMenuList=[];
+        this.sideMenuList = allowedPages;
+      }
     }
 
     // Check initial expansion based on window width

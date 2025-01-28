@@ -1,0 +1,11 @@
+input[type="date"]::-webkit-input-placeholder {
+    color: transparent; /* Webkit browsers like Chrome */
+  }
+  
+  input[type="date"]::-moz-placeholder {
+    color: transparent; /* Firefox */
+  }
+  
+  input[type="date"]::-ms-input-placeholder {
+    color: transparent; /* IE/Edge */
+  }

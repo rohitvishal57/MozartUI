@@ -85,7 +85,27 @@ export class TokenInterceptor implements HttpInterceptor {
     "https://upuat.adityabirlahealth.com/api/rug/GetAllBaseCallers",
     "https://usp.monocept.ai/api/rug/GetAllAVsByLocation",
     "https://upuat.adityabirlahealth.com/api/rug/GetAllAVsByLocation",
-    "https://upuat.adityabirlahealth.com/api/rug/GetTSPolicyInfoByLeadId"
+    "https://upuat.adityabirlahealth.com/api/rug/GetTSPolicyInfoByLeadId",
+    "https://upuat.adityabirlahealth.com/api/rug/CheckGroupRenewalData",
+    "https://usp.monocept.ai/api/rug/CheckGroupRenewalData",
+    "https://upuat.adityabirlahealth.com/api/rug/getAllDisposition?appName=RENEWAL",
+    "https://usp.monocept.ai/api/rug/getAllDisposition?appName=RENEWAL",
+    "https://upuat.adityabirlahealth.com/api/rug/SaveRenewalProposalData",
+    "https://usp.monocept.ai/api/rug/SaveRenewalProposalData",
+    "https://upuat.adityabirlahealth.com/api/rug/GetRetailRenewalRedirectUrl",
+    "https://usp.monocept.ai/api/rug/GetRetailRenewalRedirectUrl",
+    "https://upuat.adityabirlahealth.com/api/rug/SendLinkToCustomer",
+    "https://usp.monocept.ai/api/rug/SendLinkToCustomer",
+    "https://upuat.adityabirlahealth.com/api/rug/SendRetailLinkToCustomer",
+    "https://usp.monocept.ai/api/rug/SendRetailLinkToCustomer",
+    "https://upuat.adityabirlahealth.com/api/rug/GetRetailRenewalPhaseTwoLeads",
+    "https://usp.monocept.ai/api/rug/GetRetailRenewalPhaseTwoLeads",
+    "https://usp.monocept.ai/api/rug/SendRetailLinkToCustomer",
+    "https://upuat.adityabirlahealth.com/api/rug/GetRenewalPolicyData",
+    "https://usp.monocept.ai/api/rug/GetRenewalPolicyData",
+    "https://usp.monocept.ai/api/rug/SendRetailLinkToCustomer",
+    "https://upuat.adityabirlahealth.com/api/rug/GetGroupRenewalPhaseTwoLeads",
+    "https://usp.monocept.ai/api/rug/GetGroupRenewalPhaseTwoLeads",
   ];
 
   intercept(
