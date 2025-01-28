@@ -50,7 +50,7 @@
         </form>
 
         <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
-          <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
+          <label class="otp-text-wrap">The OTP has been sent to {{ maskedUserCode }}</label>
           <div class="otp-container">
             <input type="password" id="otp0" class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)" inputmode="numeric">
             <input type="password" id="otp1" class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)" inputmode="numeric">

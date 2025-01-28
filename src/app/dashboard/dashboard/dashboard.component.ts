@@ -61,7 +61,8 @@ export class DashboardComponent {
   performanceFilter = 'Quarterly';
   performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
   businessFilter = 'Last7Days';
-  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  renewalFilter = 'Last7Days'
+  commonFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
   widgetArr = [
     {
       name: 'QuickAction', isFilter: false
@@ -71,6 +72,9 @@ export class DashboardComponent {
     },
     {
       name: 'Business', isFilter: true, filterType: this.businessFilter
+    },
+    {
+      name: 'Renewal', isFilter: true, filterType: this.renewalFilter
     },
     {
       name: 'Customer', isFilter: false
@@ -244,7 +248,6 @@ export class DashboardComponent {
       }
     });
     this.fetchWidgets();
-    this.createRenewChart();
     this.getPoductList();
     this.checkScreenSize();
   }
@@ -542,6 +545,9 @@ export class DashboardComponent {
             return this.tabsInfo;
           })
           break;
+
+        case 'Renewal': this.createRenewChart()
+        break;
 
         default:
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
@@ -1345,6 +1351,7 @@ export class DashboardComponent {
 
   filterText: string = '';
   isDropdownOpen: boolean = false;
+  isAllSelected = false;
 
   items = [
     { name: 'Team 1', selected: false },
@@ -1371,6 +1378,20 @@ export class DashboardComponent {
 
   deselectAll() {
     this.items.forEach(item => (item.selected = false));
+  }
+
+  onInputChange() {
+    this.updateButtonStates();
+  }
+
+  toggleSelectAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.items.forEach(item => (item.selected = this.isAllSelected));
+  }
+
+  updateButtonStates() {
+    const checkedItems = this.items.filter(item => item.selected).length;
+    this.isAllSelected = checkedItems > 0;
   }
 
   submit() {

@@ -284,7 +284,7 @@
                               <div class="teamView_dropdown_body">
                                 <div class="input-checkbox-block">
                                     <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
-                                      <input type="checkbox" id="{{ item.name }}-{{i}}" [(ngModel)]="item.selected" class="input-check" />
+                                      <input type="checkbox" id="{{ item.name }}-{{i}}" [(ngModel)]="item.selected" (change)="onInputChange()" class="input-check" />
                                       <label for="{{ item.name }}-{{i}}">{{ item.name }}</label>
                                     </div>
                                 </div>
@@ -296,7 +296,7 @@
                           
                               <!-- Footer -->
                               <div class="teamView_dropdown_footer">
-                                <span class="deselect-all" (click)="deselectAll()">Deselect all</span>
+                                <span class="deselect-all" (click)="toggleSelectAll()">{{ isAllSelected ? 'Clear All' : 'Select All' }}</span>
                                 <button (click)="submit()">Submit</button>
                               </div>
                             </div>
@@ -384,7 +384,7 @@
                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
                          (change)="onSelectFilter('Business', businessFilter)">
-                         <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                         <option *ngFor="let opt of commonFilterList" [value]="opt">
                            {{ opt | translate }}
                          </option>
                        </select>
@@ -451,9 +451,9 @@
                     <div class="filterfields_input">
                       <div class="input-block input-block-renew compare_inputblock">
                         <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
-                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
-                          (change)="onSelectFilter('Business', businessFilter)">
-                          <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                          [(ngModel)]='renewalFilter' id="renewalFilter" name="renewalFilter"
+                          (change)="onSelectFilter('Renewal', businessFilter)">
+                          <option *ngFor="let opt of commonFilterList" [value]="opt">
                             {{ opt | translate }}
                           </option>
                         </select>
@@ -833,7 +833,7 @@
                         <div class="input-block input-block-renew compare_inputblock">
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                             [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
-                            <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                            <option *ngFor="let opt of commonFilterList" [value]="opt">
                               {{ opt | translate }}
                             </option>
                           </select>
