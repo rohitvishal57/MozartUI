@@ -27,6 +27,8 @@ import { LoadingService } from './services/loading.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';  // Import LocationStrategy and PathLocationStrategy
 import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
@@ -75,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    AndroidPermissions,
     ConfigService,
     File,
     LoadingService,
