@@ -3730,15 +3730,18 @@ export class YatraComponent {
 
                   // Determine the appropriate validation rule based on eventValue
                   let rule;
-                  if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue)) {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-                  }
-                  else if ((/^nephew\d*$/i.test(eventValue) ||
+                  if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
                     /^niece\d*$/i.test(eventValue) ||
                     /^grand-son\d*$/i.test(eventValue) ||
-                    /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                    /^grand-daughter\d*$/i.test(eventValue)) {
                     rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
                   }
+                  // else if ((/^nephew\d*$/i.test(eventValue) ||
+                  //   /^niece\d*$/i.test(eventValue) ||
+                  //   /^grand-son\d*$/i.test(eventValue) ||
+                  //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                  //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  // }
                   else {
                     rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
                   }
