@@ -1647,16 +1647,17 @@ h2 {
 /*---dahboard new sections styles end---*/
 
 /*--- Styles for Team View ---*/
-.team-view-container {
+.teamView_container {
     position: relative;
     display: inline-block;
   
-    .team-view-btn {
+    .teamView_btn {
       background: #fff;
-      border: 1px solid #ccc;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
+      border: 1px solid #e6e6e6;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 400;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -1664,34 +1665,42 @@ h2 {
       transition: all 0.3s ease;
   
       &:hover {
-        background: #f1f1f1;
+        background: #fff;
       }
     }
+    .teamView_icon {
+        img {
+            width: 16px;
+        }
+    }
   
-    .dropdown-container {
+    .teamView_dropdown_container {
       position: absolute;
-      top: 40px;
+      top: 32px;
       right: 0;
-      width: 280px;
+      width: 200px;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
+      z-index: 1;
       padding: 12px;
     }
   
-    .dropdown-header {
+    .teamView_dropdown_header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-bottom: 8px;
       border-bottom: 1px solid #ddd;
   
-      input {
+      .teamView_inputText {
         width: 85%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        border-radius: 20px;
+        border: 1px solid var(--bg-verylight-grey);
+        background: #efefef;
+        font-size: 12px;
+        font-weight: 400;
+        padding: 4px 35px 4px 16px;
       }
   
       .close-btn {
@@ -1708,58 +1717,69 @@ h2 {
       }
     }
   
-    .dropdown-body {
+    .teamView_dropdown_body {
       max-height: 200px;
       overflow-y: auto;
       padding: 8px 0;
-  
+       .input-checkbox-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        .input-checkbox-feild {
+            .input-check + label {
+                font-size: 14px;
+                font-weight: 300;
+            }
+        }
+       }
       .item {
         display: flex;
         justify-content: space-between;
         padding: 8px;
         border-radius: 6px;
         transition: background 0.3s ease;
-        cursor: pointer;
-  
-        &:hover {
-          background: #f1f1f1;
-        }
-  
         input[type='checkbox'] {
           width: 16px;
           height: 16px;
-          accent-color: #d32f2f;
+          accent-color: #C7222A;
+          cursor: pointer;
         }
       }
     }
   
-    .dropdown-footer {
+    .teamView_dropdown_footer {
       text-align: center;
       padding-top: 10px;
-  
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
       button {
-        width: 100%;
-        padding: 10px;
+        padding: 8px 20px;
         border: none;
         border-radius: 8px;
-        background: #d32f2f;
-        color: white;
-        font-weight: bold;
+        background: #C7222A;
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
         cursor: pointer;
         transition: background 0.3s ease;
-  
+        flex: auto;
         &:hover {
-          background: #b71c1c;
+          color: #fff;
+          background: #a61d24;
         }
       }
   
       .deselect-all {
-        display: block;
-        margin-top: 8px;
+        flex: auto;
         color: #d32f2f;
         font-size: 14px;
         cursor: pointer;
-        text-decoration: underline;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
       }
     }
 }

@@ -265,37 +265,45 @@
                   <div class="filter_performanceOverview">
                     <div class="filterfields_PO">
                       <div class="filterfields_input">
-                        <div class="input-block input-block-renew compare_inputblock"> 
-                          <div class="team-view-container block-hide">
+                        <div class="teamView_container">
                             <!-- Team View Button -->
-                            <button class="team-view-btn" (click)="toggleDropdown()">
-                              Team View <span class="icon">☰</span>
+                            <button class="teamView_btn" (click)="toggleDropdown()">
+                              Team View <span class="teamView_icon"><img
+                                src="assets/Img/icon_teamview.svg"></span>
                             </button>
                           
                             <!-- Dropdown (Shown When Clicked) -->
-                            <div *ngIf="isDropdownOpen" class="dropdown-container" #dropdown>
+                            <div *ngIf="isDropdownOpen" class="teamView_dropdown_container" #dropdown>
                               <!-- Header with Search Bar & Close Button -->
-                              <div class="dropdown-header">
-                                <input type="text" placeholder="Find something" [(ngModel)]="filterText" (input)="filterItems()" />
-                                <button class="close-btn" (click)="closeDropdown()">✖</button>
+                              <div class="teamView_dropdown_header">
+                                <input type="text" placeholder="Find something" [(ngModel)]="filterText" (input)="filterItems()" class="teamView_inputText" />
+                                <button class="btn-close" (click)="closeDropdown()"></button>
                               </div>
                           
                               <!-- Dropdown Items -->
-                              <div class="dropdown-body">
-                                <div *ngFor="let item of filteredItems" class="item">
+                              <div class="teamView_dropdown_body">
+                                <div class="input-checkbox-block">
+                                    <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
+                                      <input type="checkbox" id="{{ item.name }}-{{i}}" [(ngModel)]="item.selected" class="input-check" />
+                                      <label for="{{ item.name }}-{{i}}">{{ item.name }}</label>
+                                    </div>
+                                </div>
+                                <!-- <div *ngFor="let item of filteredItems" class="item">
                                   <label>{{ item.name }}</label>
                                   <input type="checkbox" [(ngModel)]="item.selected" />
-                                </div>
+                                </div> -->
                               </div>
                           
                               <!-- Footer -->
-                              <div class="dropdown-footer">
+                              <div class="teamView_dropdown_footer">
                                 <span class="deselect-all" (click)="deselectAll()">Deselect all</span>
                                 <button (click)="submit()">Submit</button>
                               </div>
                             </div>
                           </div>
-  
+                      </div>
+                      <div class="filterfields_input"> 
+                        <div class="input-block input-block-renew compare_inputblock">
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                             [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)"
                             id="performanceFilter" name="performanceFilter">
