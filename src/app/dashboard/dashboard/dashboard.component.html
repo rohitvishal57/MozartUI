@@ -265,7 +265,37 @@
                   <div class="filter_performanceOverview">
                     <div class="filterfields_PO">
                       <div class="filterfields_input">
-                        <div class="input-block input-block-renew compare_inputblock">
+                        <div class="input-block input-block-renew compare_inputblock"> 
+                          <div class="team-view-container block-hide">
+                            <!-- Team View Button -->
+                            <button class="team-view-btn" (click)="toggleDropdown()">
+                              Team View <span class="icon">☰</span>
+                            </button>
+                          
+                            <!-- Dropdown (Shown When Clicked) -->
+                            <div *ngIf="isDropdownOpen" class="dropdown-container" #dropdown>
+                              <!-- Header with Search Bar & Close Button -->
+                              <div class="dropdown-header">
+                                <input type="text" placeholder="Find something" [(ngModel)]="filterText" (input)="filterItems()" />
+                                <button class="close-btn" (click)="closeDropdown()">✖</button>
+                              </div>
+                          
+                              <!-- Dropdown Items -->
+                              <div class="dropdown-body">
+                                <div *ngFor="let item of filteredItems" class="item">
+                                  <label>{{ item.name }}</label>
+                                  <input type="checkbox" [(ngModel)]="item.selected" />
+                                </div>
+                              </div>
+                          
+                              <!-- Footer -->
+                              <div class="dropdown-footer">
+                                <span class="deselect-all" (click)="deselectAll()">Deselect all</span>
+                                <button (click)="submit()">Submit</button>
+                              </div>
+                            </div>
+                          </div>
+  
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                             [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)"
                             id="performanceFilter" name="performanceFilter">

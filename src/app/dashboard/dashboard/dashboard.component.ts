@@ -1343,4 +1343,38 @@ export class DashboardComponent {
     });
   }
 
+  filterText: string = '';
+  isDropdownOpen: boolean = false;
+
+  items = [
+    { name: 'Team 1', selected: false },
+    { name: 'Team 2', selected: false },
+    { name: 'Team 3', selected: false },
+    { name: 'Team 4', selected: false },
+  ];
+
+  filteredItems = [...this.items];
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
+
+  filterItems() {
+    this.filteredItems = this.items.filter(item =>
+      item.name.toLowerCase().includes(this.filterText.toLowerCase())
+    );
+  }
+
+  deselectAll() {
+    this.items.forEach(item => (item.selected = false));
+  }
+
+  submit() {
+    console.log('Selected Items:', this.items.filter(item => item.selected));
+    this.isDropdownOpen = false;
+  }
 }
