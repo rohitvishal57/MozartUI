@@ -2679,7 +2679,7 @@ export const combinedForms = {
             },
             {
               "name": "label1",
-              "label": "Congratulations! Policy Application Renewed Successfully",
+              "label": "Congratulations! Policy Renewed Successfully",
               "visibleLabel": true,
               "visible": true,
               "type": "paragraph",
@@ -2694,13 +2694,6 @@ export const combinedForms = {
               "type": "paragraph",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
             },
-            // {
-            //   "name": "backToRenewalList",
-            //   "label": "",
-            //   "type": "paragraph",
-            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
-            //   "visible": false,
-            // },
             {
               "name": "backToRenewalList",
               "label": "Back To Renewal List",
@@ -2709,17 +2702,10 @@ export const combinedForms = {
               "visible": false,
               "methodName": "backToRenewalList"
             },
-            // {
-            //   "name": "backToRenewalList",
-            //   "label": "",
-            //   "type": "paragraph",
-            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container",
-            //   "visible": false,
-            // }
           ]
         },
         {
-          "sectionTitle": "Details of Your Proposal",
+          "sectionTitle": "Details of Your Policy",
           "visible": true,
           "visibleLabel": true,
           "class": "section-title proposalDetails",
