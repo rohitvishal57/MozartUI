@@ -3627,7 +3627,7 @@ export class YatraComponent {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
           if (formControl.name == 'insuredMembers') {
-            if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS') && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS')) {
+            if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS' || this.formData.productVariant == "Preferred 1") && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS' && this.formData.productVariant != "Preferred 1")) {
               this.resetInsuredMembers(control, planType);
               this.getProposerRelationship(formControl);
             }
