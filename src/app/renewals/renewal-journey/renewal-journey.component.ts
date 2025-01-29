@@ -446,7 +446,7 @@ export class RenewalJourneyComponent {
               }
             }
             let controlValidators: any = [];
-            if (control.validators && control.visible == true) {
+            if (control.validators && control.visible == true && section.visible == true) {
               control.validators.forEach((val: IValidator) => {
                 if (val.validatorName === 'required') controlValidators.push(Validators.required);
                 if (val.validatorName === 'email') controlValidators.push(Validators.email);
@@ -3767,10 +3767,15 @@ export class RenewalJourneyComponent {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
           section.visible = isVisible;
-          this.form.formSections[1].visible = !isVisible;
-          this.form.formSections[2].visible = !isVisible;
+          // if(isVisible == false){
+          //   control.name = "personalDetails";
+          //   this.checkNomineeDetail(control);
+          // }
+          // if(isVisible == false){
+          //   control.name = "proposerName";
+          //   this.checkBankDetail(control);
+          // }
           this.form.formSections[3].visible = !isVisible;
-
         }
       });
     });
@@ -4105,11 +4110,6 @@ export class RenewalJourneyComponent {
     this.bankDetail = false;
     if(this.formData.bankName){
       this.bankDetail = false;
-      if(this.formData?.accountNumber){
-        const val = {accountNo: ""}
-        this.formData={...this.formData,...val}
-        this.formData.accountNo = this.formData?.accountNumber
-      }
     }else {
       this.bankDetail = true;
     }

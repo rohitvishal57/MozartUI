@@ -71,7 +71,7 @@ export const payment = {
     },
     {
       "sectionTitle": "Nominee Details",
-      "visible": true,
+      "visible": false,
       "visibleLabel": true,
       "class": "section-title",
       "formControls": [
@@ -385,7 +385,7 @@ export const payment = {
     },
     {
       "sectionTitle": "Bank Account Details",
-      "visible": true,
+      "visible": false,
       "visibleLabel": true,
       "class": "section-title",
       "formControls": [
@@ -1153,15 +1153,6 @@ export const payment = {
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "redirectToJustPay"
         },
-        // {
-        //   "name": "nextnominee",
-        //   "label": "Next",
-        //   "visibleLabel": false,
-        //   "visible": false,
-        //   "type": "button",
-        //   "class": "col-12 col-md-6 col-lg-2 next-btn",
-        //   "methodName": "nomineeUpdate"
-        // },
         {
           "name": "back",
           "label": "Back",
