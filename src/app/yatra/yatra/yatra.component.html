@@ -1147,7 +1147,7 @@
                                                     <input type="radio" [formControlName]="innerControl.name"
                                                       [name]="innerControl.name" [id]="innerControl.name"
                                                       [value]="option.value" style="margin-right: 10px;"
-                                                      (change)="onInputChange($event,innerControl,subControl,i)">
+                                                      (change)="onInputChange($event,subControl,control,i-1,null,innerControl,z-1)">
                                                     <label [innerHTML]="option.label">
                                                     </label>
                                                   </div>
