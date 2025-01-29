@@ -148,24 +148,24 @@ export class ViewLeadsComponent implements OnInit {
     console.log(lead);
     localStorage.setItem('leadId', lead.leadId)
     let data = {
-      partnerId: 45,
-      productId: 26
+      partnerId: lead.partnerId,
+      productId: lead.productId
     }
 
-    if (lead.planName == 'Health Pro') {
-      data.partnerId = 45
-      data.productId = 26
+    // if (lead.planName == 'Health Pro') {
+    //   data.partnerId = 45
+    //   data.productId = 26
 
-    } else if (lead.planName == 'Health Pro Infinity') {
-      data.partnerId = 45
-      data.productId = 27
-    } else if (lead.planName == 'Group Activ Secure') {
-      data.partnerId = 45
-      data.productId = 29
-    } else {
-      data.partnerId = 45
-      data.productId = 29
-    }
+    // } else if (lead.planName == 'Health Pro Infinity') {
+    //   data.partnerId = 45
+    //   data.productId = 27
+    // } else if (lead.planName == 'Group Activ Secure') {
+    //   data.partnerId = 45
+    //   data.productId = 29
+    // } else {
+    //   data.partnerId = 45
+    //   data.productId = 29
+    // }
 
     this.router.navigate(['rug'], {
       state: { productData: data }
