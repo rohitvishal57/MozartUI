@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay } from 'date-fns';
 import { EventsService } from '../events-new/events.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -41,6 +41,7 @@ export class BirthdayWishesComponent implements OnInit {
 
   ngOnInit(): void {
     this.setView(this.currentView);
+    
   }
 
   
@@ -105,14 +106,15 @@ export class BirthdayWishesComponent implements OnInit {
 
   setView(view: string): void {
     this.currentView = view;
-    if (view === 'day') {
-        this.filterDayBirthdays(this.selectedDate);
-    }
     this.setDates();
     this.loadBirthdayData();
+    if (view === 'day') {
+      this.filterDayBirthdays(this.selectedDate);
+    }
 }
 
 navigateToDayView(date: Date): void {
+  this.birthdays = []
     this.selectedDate = date;
     this.setView('day');
 }
@@ -121,6 +123,7 @@ filterDayBirthdays(date: Date): void {
     const dayData = this.weekData.find((day) => this.isSameDate(day.date, date));
     this.selectedDayBirthdays = dayData ? dayData.birthdays : [];
 }
+
 
 isSameDate(date1: Date, date2: Date): boolean {
     return (
@@ -139,15 +142,16 @@ isSameDate(date1: Date, date2: Date): boolean {
   
   setDates(): void {
     const today = this.selectedDate;
+    const weekDate = new Date()
     switch (this.currentView) {
       case 'day':
         this.startDate = format(today, 'yyyy-MM-dd');
         this.endDate = format(today, 'yyyy-MM-dd');
         break;
       case 'week':
-        this.startDate = format(today, 'yyyy-MM-dd');
-        const endDate = new Date(today);
-        endDate.setDate(today.getDate() + 6);
+        this.startDate = format(weekDate, 'yyyy-MM-dd');
+        const endDate = new Date(weekDate);
+        endDate.setDate(weekDate.getDate() + 6);
         this.endDate = format(endDate, 'yyyy-MM-dd');
         break;
       case 'month':
@@ -172,9 +176,9 @@ isSameDate(date1: Date, date2: Date): boolean {
           customerID: item.customerID,
           mobileNumber: item.mobileNumber
         }));
-        console.log('this.selectedDayBirthdays', this.selectedDayBirthdays);
-        this.filterBirthdays();
-        this.loadWeekData();
+      console.log('this.brda', this.birthdays);
+          this.filterBirthdays();
+          this.loadWeekData();
       },
       error: (error) => {
         console.error('Error loading birthday data', error);
@@ -259,7 +263,7 @@ isSameDate(date1: Date, date2: Date): boolean {
 
 loadWeekData(): void {
   this.weekData = [];
-  const startDate = new Date(this.startDate);
+  let startDate = startOfDay(new Date(this.startDate));
   const endDate = new Date(this.endDate);
 
   console.log('Loading week data with birthdays:', this.selectedDayBirthdays);
@@ -268,6 +272,8 @@ loadWeekData(): void {
     const dayIndex = date.getDay();
     const day = this.weekDays[dayIndex];
     const currentDateStr = format(date, 'MM-dd');
+    const currentYear = new Date().getFullYear();
+
 
     // Find birthdays for the current day
     console.log(this.selectedDayBirthdays, "birthdays")
@@ -279,7 +285,7 @@ loadWeekData(): void {
 
     // Create week data item with full birthday information
     const weekDataItem: { date: Date; day: string; birthdays: Birthday[] } = {
-      date: new Date(currentDateStr), // Convert string to Date object
+      date: startOfDay(new Date(`${currentYear}-${currentDateStr}`)),
       day,
       birthdays: birthdaysForDay.map(birthday => ({
           name: birthday.name,
@@ -287,12 +293,13 @@ loadWeekData(): void {
           customerID: birthday.customerID,
           mobileNumber: birthday.mobileNumber
       }))
+     
   };
-  
   this.weekData.push(weekDataItem);
   console.log(`Added week data for ${currentDateStr}:`, weekDataItem);
   console.log('Final week data:', this.weekData);
 }
+
 }
 
   getBirthdaysForDay(day: WeekDay): Birthday[] {

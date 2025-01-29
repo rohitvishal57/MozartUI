@@ -79,7 +79,7 @@
                                 <h4 class="day-title">
                                     {{ day.date | date: 'EEEE, MMM d' }}
                                     <button class="nav-btn" (click)="navigateToDayView(day.date)">
-                                        <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                                        <img src="assets/navigate.png" alt="" style="width: 20px; height: 20px;">
                                     </button>
                                 </h4>
                             </header>
@@ -99,7 +99,7 @@
             
 
 
-                <div *ngIf="currentView === 'month'" class="month-view">
+                <!-- <div *ngIf="currentView === 'month'" class="month-view">
                     <h3>{{"Birthday Wishes for This Month" | translate}}</h3>
                     <div class="month-grid">
                         <div *ngFor="let day of getMonthDays()" class="day">
@@ -111,7 +111,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </section>
           </div>
       </div>
