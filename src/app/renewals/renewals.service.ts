@@ -148,5 +148,17 @@ export class RenewalsService {
     const getpaymentstatus= this.configService.config.baseUrl1 + this.configService.config.getpaymentdetailsbypolicyno;
     return this.httpService.post(getpaymentstatus,reqData);
   }
+  updateBankDetailApi(reqData:any){
+    const updateBankDetail= this.configService.config.baseUrl1 + this.configService.config.updateBankDetailApi;
+    return this.httpService.post(updateBankDetail,reqData);
+  }
+  updateNomineeDetailApi(reqData:any){
+    const updateNomineeDetail= this.configService.config.baseUrl1 + this.configService.config.updateNomineeDetail;
+    return this.httpService.post(updateNomineeDetail,reqData);
+  }
+  getbasequoteApi(reqData:any){
+    const getbasequote= this.configService.config.baseUrl1 + this.configService.config.getbasequote;
+    return this.httpService.post(getbasequote,reqData);
+  }
 
 }

@@ -43,6 +43,7 @@ export class RenewalDynamicFormComponent {
   verticalCode: any;
   Code: any;
   proposalNum: any;
+  formIndex:any = 0;
 
 
   idProofType: string = '';
@@ -421,7 +422,7 @@ export class RenewalDynamicFormComponent {
     }
   }
 
-  async getFormDataFromFormSequence(formId: any) {
+  async getFormDataFromFormSequence(formId?: any) {
     this.initializeRequiredData();
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
@@ -514,6 +515,10 @@ export class RenewalDynamicFormComponent {
     //       ...this.formData,  // existing form data
     //       ...JSON.parse(res.data.formData)  // parsed response data
     //     };
+    console.log(this.form);
+    
+    this.form = this.formSequence[this.getFormIndexValue()];
+
         if (this.form.formTitle == 'Insurance Details') {
           console.log(this.formData);
 
@@ -555,6 +560,8 @@ export class RenewalDynamicFormComponent {
   async initializeForm() {
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
+    console.log(this.form);
+    
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
@@ -3379,18 +3386,6 @@ export class RenewalDynamicFormComponent {
         tap((res: any) => {
           console.log(res, "API Response Received");
 
-          // Prepare form group
-          // const controlGroup = this.fb.group({});
-
-          // // For each relationship option, add a control
-          // res.data.relationShip.forEach((option: any) => {
-          //   controlGroup.addControl(option.value, new FormControl(false));
-          // });
-
-          // Remove previous insuredMembers control
-          // this.renewalFormGroup.removeControl('insuredMembers');
-
-          // Add validators
           let controlValidators: any = [];
           control.validators?.forEach((val: IValidator) => {
             if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -3400,17 +3395,6 @@ export class RenewalDynamicFormComponent {
             if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
           });
 
-          // Adding the custom validation if required
-          // controlGroup.setValidators([...controlValidators, this.addCustomValidation()]);
-          // controlGroup.updateValueAndValidity();
-
-          // Add the new insuredMembers control
-          // this.renewalFormGroup.addControl(control.name, controlGroup);
-
-          // Update control with the fetched options
-          // control.selectCheckboxOptions = res.data.relationShip;
-
-          // Process formData.insuredMembers for additional relations
           const formDataRelations = Object.keys(this.formData.insuredMembers)
             .filter(
               (relation) =>
@@ -3486,26 +3470,6 @@ export class RenewalDynamicFormComponent {
           this.renewalFormGroup.addControl(control.name, controlGroup);
 
           console.log(control);
-
-          // this.form.formSections.forEach((section: any) => {
-          //   section.formControls.forEach((control: any) => {
-          //     if (control.name === 'insuredMembers') {
-          //       // Loop the options and see if the option has value true in the insuredMembers in formData
-          //       control.selectCheckboxOptions.forEach((option: any) => {
-          //         if (this.formData.insuredMembers[option.value] === true) {
-          //           // Call memberSelected function (pass null for event if not triggering through UI)
-          //           console.log(this.renewalFormGroup.get('insuredMemberDetails'));
-          //           (this.renewalFormGroup.get('insuredMemberDetails') as FormArray).controls.forEach((member : any)=>{
-          //             if(member.get('relation')== option.value){
-          //               member.get('relationshipType')?.setValue(JSON.stringify(option));
-          //             }
-          //           })
-
-          //         }
-          //       });
-          //     }
-          //   });
-          // });
           console.log(this.formData, this.form, this.renewalFormGroup);
 
           this.flattenObject(this.formData);
@@ -3864,10 +3828,13 @@ export class RenewalDynamicFormComponent {
   incrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
+    this.formIndex=currentIndex+1;
   }
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);
+    this.formIndex=currentIndex-1;
+
   }
 
   onPrevious(control: any) {
@@ -4511,7 +4478,7 @@ export class RenewalDynamicFormComponent {
             // Call getFormDataFromFormSequence only after insert/update is completed
             if (this.getFormIndexValue() < this.formSequence.length - 1) {
               this.incrementIndex();
-              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              this.getFormDataFromFormSequence();
             }
 
         //   },
@@ -6618,26 +6585,30 @@ export class RenewalDynamicFormComponent {
   closeIsFeedBackModalVisible() {
     let reqData = {
       "proposalNum": this?.formData?.proposalNumber,
-      "partnerId": this.partnerId,
+      // "partnerId": this.partnerId,
       "agentCode": this.agentCode,
       "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
       "formName": this.formSequence[this.getFormIndexValue()].formName,
       "formConfig": JSON.stringify(this.formSequence),
-      "productId": this.productId.toString(),
+      // "productId": this.productId.toString(),
       "formId": this.formSequence[this.getFormIndexValue()].formId,
       "jsonForm": JSON.stringify(this.form),
       "formSequence": this.getFormIndexValue(),
-      "leadNumber": this.leadnumber,
-      "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+      // "leadNumber": this.leadnumber,
+      // "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
     };
-    this.yatraService.Insertorupdateformdata(reqData).subscribe({
-      next: (res: any) => {
-        this.leadnumber = res.data;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+
+    // console.log(reqData, this.dynamicFormGroup.getRawValue());
+
+    // this.yatraService.Insertorupdateformdata(reqData).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     // this.leadnumber = res.data;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
     this.isFeedBackModalVisible = false;
   }
 

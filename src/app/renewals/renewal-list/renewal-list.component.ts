@@ -747,6 +747,7 @@ export class RenewalListComponent {
               state: {
                 formData: this.encryptionService.encrypt(renewalInfoResponse.data),
                 proposalNum: this.encryptionService.encrypt(this.proposalNum),
+                fromList: this.encryptionService.encrypt("list"),
                 policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
                 formIndex: "0",

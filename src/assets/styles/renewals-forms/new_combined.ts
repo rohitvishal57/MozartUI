@@ -995,33 +995,33 @@ export const new_combinedForms = {
               }
             ]
           },
-          // {
-          //   "name": "ifscCode",
-          //   "label": "IFSC Code",
-          //   "visibleLabel": true,
-          //   "visible": true,
-          //   "type": "text",
-          //   "disabled": true,
-          //   "value": "",
-          //   "class": "col-12 col-md-6 col-lg-4",
-          //   "validators": [
-          //     {
-          //       "validatorName": "required",
-          //       "required": true,
-          //       "message": "IFSC is required field"
-          //     }
-          //   ]
-          // },
-          // {
-          //   "name": "micrCode",
-          //   "label": "MICR Code",
-          //   "visibleLabel": true,
-          //   "disabled": true,
-          //   "type": "text",
-          //   "value": "",
-          //   "visible": true,
-          //   "class": "col-12 col-md-6 col-lg-4"
-          // }
+          {
+            "name": "ifscCode",
+            "label": "IFSC Code",
+            "visibleLabel": true,
+            "visible": true,
+            "type": "text",
+            "disabled": true,
+            "value": "",
+            "class": "col-12 col-md-6 col-lg-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "required": true,
+                "message": "IFSC is required field"
+              }
+            ]
+          },
+          {
+            "name": "micrCode",
+            "label": "MICR Code",
+            "visibleLabel": true,
+            "disabled": true,
+            "type": "text",
+            "value": "",
+            "visible": true,
+            "class": "col-12 col-md-6 col-lg-4"
+          }
         ]
       },
       {

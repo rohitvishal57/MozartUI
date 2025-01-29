@@ -83,6 +83,10 @@ export class RenewalJourneyComponent {
   retrievedDocuments: any;
   verifyKYCStatus:boolean = false;
   isFullQuote:boolean=true;
+  fromList:string="";
+  nomineeDetail: boolean | undefined;
+  tempFormData: any;
+  bankDetail: any;
 
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
@@ -109,21 +113,28 @@ export class RenewalJourneyComponent {
         //   const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
         //   this.formData = { ...this.formData, ...response.data,...decryptedFormData };
         // }
+        if (stateData.fromList) {
+          this.fromList = this.encryptionService.decrypt(stateData.fromList);
+        }
         try {
           if ( decryptedFormData.policyNumber &&
             !['SUCCESS', 'INITIATED', 'PENDING', 'INPROGRESS'].includes(decryptedFormData.paymentStatus) &&
             !(decryptedFormData?.paymentStatus?.startsWith('IN')) &&
-            (decryptedFormData?.fullQuoteStatus === undefined || (decryptedFormData?.isFullQuoteSuccess !== true && decryptedFormData?.isFullQuoteSuccess !== false))) {
-            const renewalInfoRequestBody = {
-              policy_Number: decryptedFormData.policyNumber
-            };
-            const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-            this.formData = { ...this.formData, ...decryptedFormData, ...response.data };
+            (decryptedFormData?.fullQuoteStatus === undefined || (decryptedFormData?.isFullQuoteSuccess !== true && decryptedFormData?.isFullQuoteSuccess !== false)) && 
+            (this.fromList != "list"))
+            {
+              const renewalInfoRequestBody = {
+                policy_Number: decryptedFormData.policyNumber
+              };
+              const response: any = await firstValueFrom(this.renewalService.getbasequoteApi(renewalInfoRequestBody));
+              this.formData = { ...this.formData, ...decryptedFormData, ...response.data };
+              
           }
         } catch (error) {
           console.error('Error fetching renewal info:');
         }
         this.formData = {  ...decryptedFormData ,...this.formData,};
+        this.tempFormData=this.formData
       }
       if (stateData.formSequence) {
         this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
@@ -207,6 +218,8 @@ export class RenewalJourneyComponent {
       section.formControls.forEach((control: any) => {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
+        console.log(control.name, this.formData);
+        
         if (control.dynamicControls) {
           console.log(control.name, control, this.formData);
 
@@ -567,6 +580,25 @@ export class RenewalJourneyComponent {
             }
 
           }
+          
+          console.log(control , control.value);
+          // const bank = true;
+          // const nominee = true;
+          // let formGroup: any = this.fb.group({})
+          // if(section.sectionTitle == "Bank Account Details" || section.sectionTitle == "Nominee Details" ){
+          //   if(section.sectionTitle == "Bank Account Details" && bank){
+          //     control.disabled=true;
+          //      formGroup.get(control.name)?.disable();
+          //   } else if(section.sectionTitle == "Bank Account Details" && bank && control.name == "updateBank"){
+          //     control.visible =false;
+          //   }            
+          //   if(section.sectionTitle == "Nominee Details" && nominee){
+          //     control.disabled=true;
+          //     formGroup.get(control.name)?.disable();
+          //   } else if(section.sectionTitle == "Nominee Details" && nominee && control.name == "updateNominee"){
+          //     control.visible =false;
+          //   }
+          // }
         });
       });
       // this.renewalFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
@@ -651,6 +683,11 @@ export class RenewalJourneyComponent {
           formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
         }
       }
+      if(control.name != "relationshipType"){
+        if (control.disabled) {
+         formGroup.get(control.name)?.disable();
+        }
+       }
     })
 
     return formGroup;
@@ -979,7 +1016,7 @@ export class RenewalJourneyComponent {
     }
 
     if (control.onChangeMethod && control.type == 'date') {
-      await this.resolveMethod(control.methodName, control, event.target.value);
+      await this.resolveMethod(control.onChangeMethod, control, event.target.value);
     }
 
   }
@@ -2969,6 +3006,11 @@ export class RenewalJourneyComponent {
       this.getFormDataFromFormSequence();
     }
   }
+  async nomineeUpdate(): Promise<void> {
+
+  }
+
+
   async getFullQuoteViaOfflinePayment(): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = this.renewalFormGroup.value;
@@ -3726,6 +3768,9 @@ export class RenewalJourneyComponent {
         if (formControl.name === control.name) {
           section.visible = isVisible;
           this.form.formSections[1].visible = !isVisible;
+          this.form.formSections[2].visible = !isVisible;
+          this.form.formSections[3].visible = !isVisible;
+
         }
       });
     });
@@ -4029,4 +4074,109 @@ export class RenewalJourneyComponent {
     );
   }
 
+  checkNomineeDetail(control: any): void {
+    // this.formData.nomineeDob = "";
+    console.log(control);
+    this.nomineeDetail = false;
+    if(this.formData.nomineeDob){
+      this.nomineeDetail = false;
+    }else {
+      this.nomineeDetail = true;
+    }
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name == control.name && this.formData.isKycCompleted) {
+          console.log(formControl);
+          this.form.formSections[1].visible = this.nomineeDetail;
+          if(this.nomineeDetail){
+            const val = {appointeeName: "",appointeeContactNo:"",appointeeRelationWithNominee:""}
+            this.formData={...this.formData,...val}
+            console.log(this.formData);
+            
+          }
+        }
+      });
+    });
+  }
+
+  checkBankDetail(control: any): void {
+    // this.formData.bankName = "";
+    console.log(control);
+    this.bankDetail = false;
+    if(this.formData.bankName){
+      this.bankDetail = false;
+    }else {
+      this.bankDetail = true;
+    }
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name == control.name && this.formData.isKycCompleted) {
+          this.form.formSections[2].visible = this.bankDetail;
+        }
+      });
+    });
+  }
+
+  updateNomineeDetails(control: any){
+    const data = this.renewalFormGroup.value;
+    const nomiData = {
+      "nominee_first_name": data.nomineeFirstName,
+      "nominee_last_name": data.nomineeLastName,
+      "nominee_dob": data.nominee_dob,
+      "nominee_relationship_code": data.nomineeRelationWithProposer,
+      "Nominee_Name": data.nomineeFirstName + data.nomineeLastName,
+      "Nominee_Address": data.nomineeAddress,
+      "Nominee_Gender": data.gender,
+      "Nominee_Contact_No": data.nomineeContactNo,
+      "Relationship": data.nomineeRelationWithProposer,
+      "Appointee_Name": data.appointeeName,
+      "Appointee_Relation": data.appointeeRelationWithNominee,
+      "Appointee_Age": "",
+      "Appointee_Mobile_Np": data.appointeeContactNo
+    }
+    const bankDetail = {
+      proposalOrPolicyNumber: this.policyNumber,
+      bankDetails:JSON.stringify(nomiData)
+    };
+    this.renewalService.updateNomineeDetailApi(bankDetail).subscribe(
+      (res: any) => {
+        this.toast.success({ detail: "", summary: "BankDetail Updated Successfully.", duration: 3000 });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  updateBankDetails(control: any){
+    const data = this.renewalFormGroup.value;
+    console.log(data);
+    
+  const bankData = {
+    "Bank_acc_no": data.accountNumber,
+    "Confirm_Bank_acc_no": data.accountNumber,
+    "Ifsc_code": this.formData.ifscCode || "",
+    "Micr_code": this.formData.micrCode || "",
+    "Bank_name": data.bankName,
+    "Bank_branch_name": data.bankBranch,
+    "Bank_account_type": "SAVINGS",
+    "Dr_gl_code": "",
+    "Cr_gl_code": "",
+    "Primary_secondary": "",
+    "paymentOption": "",  
+    "paymentBankName": data.bankName
+  };  
+  const bankDetail = {
+    proposalOrPolicyNumber: this.policyNumber,
+    bankDetails: JSON.stringify(bankData)
+  };
+  this.renewalService.updateBankDetailApi(bankDetail).subscribe(
+      (res: any) => {
+        this.toast.success({ detail: "", summary: "BankDetail Updated Successfully.", duration: 3000 });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }
