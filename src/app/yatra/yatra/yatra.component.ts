@@ -149,6 +149,7 @@ export class YatraComponent {
   pennyDropVerficationByOCRDetails: any;
   uploadInfo: { name: any; data: any; }[] | null = null;
   fullQuoteDocRelated: any;
+  fullQuoteDocRelatedWithOutOffline: any[]=[];
 
   //hospiCashCoverVariables
   familyGroup = '';
@@ -4508,11 +4509,12 @@ export class YatraComponent {
     //     });
     //   });
     // }
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton && !['offline', 'loanPayment', 'bankFundTransfer'].includes(this.selectedButton)) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
-          if (controls.name === 'offline' && controls.dependentControls) {
-            controls.dependentControls.forEach((item: any) => {
+          // if (controls.name === 'offline' && controls.dependentControls) {
+            if ((controls.name === 'offline' || controls.name === 'loanPayment' || controls.name === 'bankFundTransfer') && controls.dependentControls) {
+              controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
                 .find((ctrl: any) => ctrl.name === item);
@@ -4532,7 +4534,7 @@ export class YatraComponent {
     } else {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
-          if (controls.name !== 'offline' && controls.dependentControls) {
+          if ((controls.name !== 'offline' || controls.name !== 'loanPayment' || controls.name !== 'bankFundTransfer') && controls.dependentControls) {
             controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
@@ -4714,7 +4716,39 @@ export class YatraComponent {
               summary: `Communication has been sent Successfully`,
               duration: 3000,
             });
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.dependentControls) {
+                  controls.dependentControls.forEach((item: any) => {
+                    const controlToHide = section.formControls.find((c: any) => c.name === item);
+                    if (controlToHide && controlToHide.name != "sendLink") {
+                      controlToHide.visible = false; // Hide all dependent controls initially
+                    }
+                  });
+                }
+              });
+            });
+        
+            // Show the dependent controls for the currently clicked button
+            if (control.dependentControls) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((controls: any) => {
+                  control.dependentControls.forEach((item: any) => {
+                    if (controls.name === item) {
+                      controls.visible = true; // Show the dependent controls for this button
+                    }
+                  });
+                });
+              });
+            }
           }
+        }
+        else{
+          this.toast.error({
+            detail: "Error",
+            summary: res.message,
+            duration: 3000,
+          });
         }
       },
       (error) => {
@@ -4722,31 +4756,7 @@ export class YatraComponent {
 
       });
 
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((controls: any) => {
-        if (controls.dependentControls) {
-          controls.dependentControls.forEach((item: any) => {
-            const controlToHide = section.formControls.find((c: any) => c.name === item);
-            if (controlToHide && controlToHide.name != "sendLink") {
-              controlToHide.visible = false; // Hide all dependent controls initially
-            }
-          });
-        }
-      });
-    });
-
-    // Show the dependent controls for the currently clicked button
-    if (control.dependentControls) {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          control.dependentControls.forEach((item: any) => {
-            if (controls.name === item) {
-              controls.visible = true; // Show the dependent controls for this button
-            }
-          });
-        });
-      });
-    }
+    
   }
 
 
@@ -7830,24 +7840,51 @@ export class YatraComponent {
   async getFullQuoteViaOfflinePayment(documentId: any): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = this.dynamicFormGroup.getRawValue();
+      console.log(this.selectedButton,data,this.formData,this.fullQuoteDocRelated,this.fullQuoteDocRelatedWithOutOffline);
       const formData = {
         policyType: 'New Business',
-        paymentMethod: (this.selectedButton || '').toString(),
+        paymentMethod: 'offline',
         premiumAmount: (this.formData?.totalPremium || '').toString(),
-        instrumentNo: (this.formData?.chequeNumber || '').toString(),
-        instrumentDate: (this.formData?.chequeDate || '').toString(),
+        instrumentNo: (this.selectedButton === 'loanPayment' 
+          ? this.formData?.loanAccountNumber 
+          : this.selectedButton === 'bankFundTransfer' 
+            ? this.formData?.transactionReferanceId 
+            : this.formData?.chequeNumber || ''
+        ).toString(),
+        instrumentDate: (this.formData?.chequeDate || this.formData?.transactionDate || '').toString(),
         policyNumber: "".toString(),
         agentCode: (this.agentCode || '').toString(),
         bankName: (this.formData?.bankName).toString(),
         bankAccountNumber: (this.formData?.accountNumber).toString(),
         IFSC: (this.formData?.ifscCode || '').toString(),
         micrNo: (this.formData?.micrCode || '').toString(),
-        instrumentType: (this.formData.paymentOption || '').toString(),
+        instrumentType: (this.selectedButton === 'offline' 
+          ? this.formData?.paymentOption 
+          : 'RTGS/ NEFT'
+        ).toString(),
         source: "Retail".toString(),
         documentId: (this.fullQuoteDocRelated || '').toString(),
         proposalNum: this.proposalNum.toString(),
         productName: this.formData.productName || ''
       };
+      // const formData = {
+      //   policyType: 'New Business',
+      //   paymentMethod: (this.selectedButton || '').toString(),
+      //   premiumAmount: (this.formData?.totalPremium || '').toString(),
+      //   instrumentNo: (this.formData?.chequeNumber || '').toString(),
+      //   instrumentDate: (this.formData?.chequeDate || '').toString(),
+      //   policyNumber: "".toString(),
+      //   agentCode: (this.agentCode || '').toString(),
+      //   bankName: (this.formData?.bankName).toString(),
+      //   bankAccountNumber: (this.formData?.accountNumber).toString(),
+      //   IFSC: (this.formData?.ifscCode || '').toString(),
+      //   micrNo: (this.formData?.micrCode || '').toString(),
+      //   instrumentType: (this.formData.paymentOption || '').toString(),
+      //   source: "Retail".toString(),
+      //   documentId: (this.fullQuoteDocRelated || '').toString(),
+      //   proposalNum: this.proposalNum.toString(),
+      //   productName: this.formData.productName || ''
+      // };
       this.yatraService.getFullQuoteViaOfflinePayment(formData).subscribe({
         next: (res: any) => {
           if (res?.isSuccess) {
