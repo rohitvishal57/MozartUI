@@ -74,7 +74,7 @@ export class BirthdayWishesComponent implements OnInit {
   sendWishesToAll(): void {
     if (this.isSendingAllWishes) return;
     this.isSendingAllWishes = true;
-    const SendWishesAllPayload = this.birthdays.map(birthday => ({
+    const SendWishesAllPayload = this.selectedDayBirthdays.map(birthday => ({
       customerId: birthday.customerID,
       fullName: birthday.name,
       mobileNumber: birthday.mobileNumber
@@ -120,7 +120,6 @@ navigateToDayView(date: Date): void {
 filterDayBirthdays(date: Date): void {
     const dayData = this.weekData.find((day) => this.isSameDate(day.date, date));
     this.selectedDayBirthdays = dayData ? dayData.birthdays : [];
-    this.birthdays = [];
 }
 
 isSameDate(date1: Date, date2: Date): boolean {
@@ -139,8 +138,7 @@ isSameDate(date1: Date, date2: Date): boolean {
 
   
   setDates(): void {
-    const today = new Date();
-  
+    const today = this.selectedDate;
     switch (this.currentView) {
       case 'day':
         this.startDate = format(today, 'yyyy-MM-dd');
@@ -168,15 +166,15 @@ isSameDate(date1: Date, date2: Date): boolean {
   
     this.eventsService.getBirthdays(payload).subscribe({
       next: (response:any) => {
-        this.birthdays = response.data.map((item:any) => ({
+        this.selectedDayBirthdays = response.data.map((item:any) => ({
           name: item.fullName.trim(),
           date: this.transformDateFormat(item.birthday),
           customerID: item.customerID,
           mobileNumber: item.mobileNumber
         }));
-      console.log('this.brda', this.birthdays);
-          this.filterBirthdays();
-          this.loadWeekData();
+        console.log('this.selectedDayBirthdays', this.selectedDayBirthdays);
+        this.filterBirthdays();
+        this.loadWeekData();
       },
       error: (error) => {
         console.error('Error loading birthday data', error);
@@ -191,7 +189,7 @@ isSameDate(date1: Date, date2: Date): boolean {
   }
 
   // filterBirthdays(): void {
-  //   this.filteredBirthdays = this.birthdays.filter((b) => {
+  //   this.filteredBirthdays = this.selectedDayBirthdays.filter((b) => {
   //     const birthDate = new Date(b.date);
   //     return (
   //       birthDate.getTime() >= new Date(this.startDate).getTime() &&
@@ -206,9 +204,9 @@ isSameDate(date1: Date, date2: Date): boolean {
   filterBirthdays(): void {
     
     // Ensure birthdays are loaded before filtering
-    if (!this.birthdays) return;
+    if (!this.selectedDayBirthdays) return;
   
-    this.filteredBirthdays = this.birthdays.filter((b) => {
+    this.filteredBirthdays = this.selectedDayBirthdays.filter((b) => {
       const birthDate = new Date(b.date);
       const startDate = new Date(this.startDate);
       const endDate = new Date(this.endDate);
@@ -264,7 +262,7 @@ loadWeekData(): void {
   const startDate = new Date(this.startDate);
   const endDate = new Date(this.endDate);
 
-  console.log('Loading week data with birthdays:', this.birthdays);
+  console.log('Loading week data with birthdays:', this.selectedDayBirthdays);
 
   for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
     const dayIndex = date.getDay();
@@ -272,8 +270,8 @@ loadWeekData(): void {
     const currentDateStr = format(date, 'MM-dd');
 
     // Find birthdays for the current day
-    console.log(this.birthdays, "birthdays")
-    const birthdaysForDay = this.birthdays.filter(birthday => {
+    console.log(this.selectedDayBirthdays, "birthdays")
+    const birthdaysForDay = this.selectedDayBirthdays.filter(birthday => {
       const birthdayDate = format(new Date(birthday.date), 'MM-dd');
       return birthdayDate === currentDateStr;
     });

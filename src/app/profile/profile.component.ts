@@ -5,6 +5,7 @@ import { LanguageService } from '../services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from '../login/login/login.service';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -39,7 +40,7 @@ export class ProfileComponent implements OnInit {
     private performanceService: PerformanceService, private languageService: LanguageService,
     private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService,
     private loginService: LoginService,
-
+    private datePipe: DatePipe,
   ) { }
   ngOnInit(): void {
     this.languageService.language$.subscribe(lang => {
@@ -79,6 +80,22 @@ export class ProfileComponent implements OnInit {
           value: key === 'dateOfBirth' ? new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
         this.profileDetails = output;
+        this.profileDetails = this.profileDetails.map((item: { heading: string; value: string | number | Date | null; }) => {
+          if (item.heading === 'Irda License Number' || item.heading === 'Sp Certificate Status') {
+            item.heading = item.heading.replace('Sp', 'SP').replace('Irda', 'IRDA');
+          }
+          if (item.heading === 'Irda License Expiry Date') {
+            item.heading = 'SP Expiry Date';
+          }
+          if (item.heading === 'SP Expiry Date' && item.value) {
+            if (item.value == '0001-01-01T00:00:00') {
+              item.value = '';
+            } else {
+              item.value = this.datePipe.transform(item.value, 'dd-MM-yyyy');
+            }
+          }
+          return item;
+        });
         this.profileLink = res.data.profileLink;
         this.profileDetails = output.filter(item => item.heading !== 'Profile Link' && item.heading !== 'Profile QRCode');
         this.profileQRCode = res.data.profileQRCode;
