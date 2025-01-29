@@ -11073,6 +11073,14 @@ export class YatraComponent {
     else {
       console.log(this.formData.productName);
 
+      const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
+      const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
+    
+    if (insuredMembers < 2 && policyType == 'Family Floater') {
+      this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+      return;
+    }
+
       // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
       //   const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       //   const ageFlag = insuredMemberDetails.controls.every((person: any) => {
