@@ -16,7 +16,7 @@
                                             <div class="bodyColumn body_flex_column">
                                                 <section class="white_container mobilePad_container">
                                                     <div class="row mb-5 qrCode_mr_0">
-                                                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                        <div class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2">
                                                             <div class="userProfilePic">
                                                                 <img src="../../assets/images/img_profile.png" />
                                                             </div>
@@ -24,13 +24,13 @@
                                                     
                                                             </div>
                                                         </div>
-                                                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                             <div class="profile_changePassword">
                                                                 <button type="button" id="profile_changePassword" name="profile_changePassword" class="btn_profile_changePassword" (click)="handlePassword()">
                                                                     <span><img src="./assets/Img/icon_changePassword.svg"></span> Change/Reset Password
                                                                 </button>
                                                             </div>
-                                                            <div class="language-selector" tabindex="0">
+                                                            <div class="language-selector profile-language-selector" tabindex="0">
                                                                 <label for="" class="lbl_preferredLang">{{'Preferred Language' | translate}}:</label>
                                                                <div class="d-flex selectedLanguage-wrapper">
                                                                 <select class="dropdown" [(ngModel)]="selectedLanguage">
@@ -45,7 +45,7 @@
                                                         </div>
 
                                                         <div class="col-12 col-sm-12 col-md-10 col-lg-6 col-xl-6">
-                                                            <div class="userProfile_qrCode">
+                                                            <div class="userProfile_qrCode userProfile_qrCodeUser">
                                                                 <div class="img_qrCode" *ngIf="profileQRCode">
                                                                     <img [src]="qrCodeImage" />
                                                                 </div>
