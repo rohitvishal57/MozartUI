@@ -3030,7 +3030,7 @@ export class RenewalJourneyComponent {
         "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
         "micrNo": data.micrCode ||"",
-        "bankAccountNumber": data.accountNumber || "",
+        "bankAccountNumber": data.accountNo || "",
         "documentId": this.documentId,
         "productName": this.formData.productName
       };
@@ -4105,6 +4105,11 @@ export class RenewalJourneyComponent {
     this.bankDetail = false;
     if(this.formData.bankName){
       this.bankDetail = false;
+      if(this.formData?.accountNumber){
+        const val = {accountNo: ""}
+        this.formData={...this.formData,...val}
+        this.formData.accountNo = this.formData?.accountNumber
+      }
     }else {
       this.bankDetail = true;
     }
@@ -4135,13 +4140,16 @@ export class RenewalJourneyComponent {
       "Appointee_Mobile_Np": data.appointeeContactNo
     }
     const bankDetail = {
-      proposalOrPolicyNumber: this.policyNumber,
-      bankDetails:JSON.stringify(nomiData)
+      policyNumber: this.policyNumber,
+      nomineeDetails:JSON.stringify(nomiData)
     };
     this.renewalService.updateNomineeDetailApi(bankDetail).subscribe(
       (res: any) => {
-        this.toast.success({ detail: "", summary: "BankDetail Updated Successfully.", duration: 3000 });
-      },
+        if(res.data.isUpdated){
+          this.toast.success({ detail: "Success", summary: "Nominee Updated Successfully.", duration: 3000 });
+        } else {
+        this.toast.error({ detail: "Error", summary: "Failed to update Nominee Details", duration: 3000 });
+        }      },
       (err) => {
         console.log(err);
       }
@@ -4167,12 +4175,16 @@ export class RenewalJourneyComponent {
     "paymentBankName": data.bankName
   };  
   const bankDetail = {
-    proposalOrPolicyNumber: this.policyNumber,
+    policyNumber: this.policyNumber,
     bankDetails: JSON.stringify(bankData)
   };
   this.renewalService.updateBankDetailApi(bankDetail).subscribe(
       (res: any) => {
-        this.toast.success({ detail: "", summary: "BankDetail Updated Successfully.", duration: 3000 });
+        if(res.data.isUpdated){
+          this.toast.success({ detail: "Success", summary: "BankDetail Updated Successfully.", duration: 3000 });
+        } else {
+        this.toast.error({ detail: "Error", summary: "Failed to update Bank Details", duration: 3000 });
+        }
       },
       (err) => {
         console.log(err);

@@ -646,7 +646,7 @@ export const payment = {
             "totalPremium",
             "chequeNumber",
             "chequeDate",
-            "accountNumber",
+            "accountNo",
             "ifscCode",
             "paymentBankName",
             "chequeCopy",
@@ -696,7 +696,7 @@ export const payment = {
                   "visibility": true
                 },
                 {
-                  "name": "accountNumber",
+                  "name": "accountNo",
                   "visibility": true
                 },
                 {
@@ -863,8 +863,8 @@ export const payment = {
           ]
         },
         {
-          "name": "accountNumber",
-          "label": "Account No",
+          "name": "accountNo",
+          "label": "Account Number",
           "visible": false,
           "visibleLabel": true,
           "type": "number",
