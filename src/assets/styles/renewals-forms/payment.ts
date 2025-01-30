@@ -102,8 +102,8 @@ export const payment = {
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,15}$",
-              "message": "Maxmium Length for FirstName is 15"
+              "pattern": "^[a-zA-Z ]{1,25}$",
+              "message": "Maxmium Length for FirstName is 25"
             }
           ]
         },
@@ -134,8 +134,8 @@ export const payment = {
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,15}$",
-              "message": "Maxmium Length for LastName is 15"
+              "pattern": "^[a-zA-Z ]{1,25}$",
+              "message": "Maxmium Length for LastName is 25"
             }
           ]
         },
