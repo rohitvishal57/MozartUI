@@ -3765,15 +3765,7 @@ export class RenewalJourneyComponent {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
           section.visible = isVisible;
-          this.form.formSections[3].visible = !isVisible;
-          if(!isVisible == true){
-            if(this.formData.nomineeDob == ""){
-              this.form.formSections[1].visible = !isVisible;
-            }
-            if(this.formData.bankName == ""){
-              this.form.formSections[2].visible = !isVisible;
-            }
-          }
+          this.form.formSections[1].visible = !isVisible;
         }
       });
     });
@@ -4068,6 +4060,16 @@ export class RenewalJourneyComponent {
         if (res.data.kycStatus) {
           this.toast.success({detail: "Success",summary: res.message,duration: 3000,});
           this.verifyKYCStatus = res.data.kycStatus;
+          if(this.verifyKYCStatus){
+            const currentState = this.router.getCurrentNavigation()?.extras.state || {};
+            this.tempFormData.isKycCompleted = true
+            this.router.navigate([], {
+              state: {
+                ...currentState,
+                formData: this.encryptionService.encrypt(this.tempFormData),
+              },
+            });
+          }
           this.checkKycDetail(control);
         }
       },
