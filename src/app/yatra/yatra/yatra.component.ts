@@ -2612,9 +2612,6 @@ export class YatraComponent {
   }
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
-    console.log(event, control, parentControl, index, subControl, innerControl, indexj);
-    console.log(event.target.value);
-    console.log(typeof event);
 
     this.changesMade = true;
     let eventValue = typeof event == 'boolean' ? event : event.target.value;
