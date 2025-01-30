@@ -43,6 +43,8 @@ import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renew
 import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
 import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
 import { RetailsRenewalLeadsComponent } from "./retails-renewal-leads/retails-renewal-leads.component";
+import { HdfcCustomerRegistrationComponent } from './components/hdfc-customer-registration/hdfc-customer-registration.component';
+import { HdfcValidationPopupComponent } from './components/hdfc-validation-popup/hdfc-validation-popup.component';
 
 
 
@@ -78,7 +80,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         GroupRenewalDoHomeComponent,
         GroupRenewalModifyViewComponent,
         GroupRenewalPhase2LeadsComponent,
-        RetailsRenewalLeadsComponent
+        RetailsRenewalLeadsComponent,
+        HdfcCustomerRegistrationComponent,
+        HdfcValidationPopupComponent
     ],
     
     imports: [

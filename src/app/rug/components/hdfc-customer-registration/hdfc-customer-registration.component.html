@@ -1,0 +1,113 @@
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <!-- <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
+                </h2> -->
+            </div>
+            <form *ngIf="showCustomerValidation" (ngSubmit)="onCustomerValidationSubmit()" [formGroup]="customerValidations">
+                <section class="white_container mb-3">
+                    <div class="col-12 mb-4">
+                        <h6 class="heading-16-red">{{"Customer Contact Details" | translate}}</h6>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber"
+                                    placeholder="" formControlName="mobilenumber" type="text"
+                                    (keypress)="isNumber($event)" maxlength="10"
+                                    [ngClass]="{ 'is-invalid': isCustomerValidated && customerValidations.get('mobilenumber')?.errors }">
+                                <label for="mobilenumber">{{"Mobile Number" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="isCustomerValidated && customerValidations.get('mobilenumber')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="isCustomerValidated && customerValidations.get('mobilenumber')?.invalid && !customerValidations.get('mobilenumber')?.errors?.['pattern']">{{"Mobile
+                                        number cannot be blank." | translate}}</span>
+                                </span>
+                                <span class="ui-error block-show"
+                                    *ngIf="customerValidations.get('mobilenumber')?.invalid && customerValidations.get('mobilenumber')?.errors?.['pattern']">{{"Enter
+                                    a valid 10-digit mobile number." | translate}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="email" name="email" placeholder=""
+                                    formControlName="email" type="text" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': isCustomerValidated && customerValidations.get('email')?.errors }">
+                                <label for="email">{{"Email" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="isCustomerValidated && customerValidations.get('email')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="isCustomerValidated && customerValidations.get('email')?.invalid && !customerValidations.get('email')?.errors?.['pattern']">{{"Email
+                                        cannot be blank." | translate}}</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="isCustomerValidated && customerValidations.get('email')?.errors?.['pattern']">{{"Please
+                                        enter valid email id." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button type="submit" id="save" name="save" class="btn_red col-md-3">{{"Submit" |
+                                translate}}</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+            <form *ngIf="showCustomerForm" (ngSubmit)="onCustomerFormSubmit()" [formGroup]="customerForm">
+                <section class="white_container mb-3">
+                    <div class="col-12 mb-4">
+                        <h6 class="heading-16-red">{{"Customer ConRegistration" | translate}}</h6>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber"
+                                    placeholder="" formControlName="mobilenumber" type="text"
+                                    (keypress)="isNumber($event)" maxlength="10"
+                                    [ngClass]="{ 'is-invalid': isCustomerFormValidated && customerForm.get('mobilenumber')?.errors }">
+                                <label for="mobilenumber">{{"Mobile Number" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="isCustomerFormValidated && customerForm.get('mobilenumber')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="isCustomerFormValidated && customerForm.get('mobilenumber')?.invalid && !customerForm.get('mobilenumber')?.errors?.['pattern']">{{"Mobile
+                                        number cannot be blank." | translate}}</span>
+                                </span>
+                                <span class="ui-error block-show"
+                                    *ngIf="customerForm.get('mobilenumber')?.invalid && customerForm.get('mobilenumber')?.errors?.['pattern']">{{"Enter
+                                    a valid 10-digit mobile number." | translate}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="dob" name="dob" placeholder=""
+                                    formControlName="dob" type="date" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': isCustomerFormValidated && customerForm.get('dob')?.errors }">
+                                <label for="dob">{{"DOB" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="isCustomerFormValidated && customerForm.get('dob')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="isCustomerFormValidated && customerForm.get('dob')?.invalid && !customerForm.get('dob')?.errors?.['pattern']">{{"Dob
+                                        cannot be blank." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button type="submit" id="save" name="save" class="btn_red col-md-3">{{"Submit" |
+                                translate}}</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+</main>

@@ -25,6 +25,7 @@ import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component"
 import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renewal-do-home.component";
 import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
 import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
+import { HdfcCustomerRegistrationComponent } from "./components/hdfc-customer-registration/hdfc-customer-registration.component";
 
 
 
@@ -59,8 +60,8 @@ const routes: Routes = [
     {path:'update_lob/:lobName', component:CreateLobComponent},
     {path:'renewal', component:GroupRenewalDoHomeComponent},
     {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
-    {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent}
-    
+    {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
+    {path:'customerDetails', component:HdfcCustomerRegistrationComponent}    
 ];
 
 @NgModule({
