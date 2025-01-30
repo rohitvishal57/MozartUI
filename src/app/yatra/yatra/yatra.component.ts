@@ -138,8 +138,10 @@ export class YatraComponent {
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
   requestId: string = "";
-  parsedValue: any;
-  selfAnnualIncome: any;
+  parsedValue:any;
+  selfAnnualIncome:any;
+  selfCoverSumInsured:any;
+  selectedInnerControl: any;
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -1511,11 +1513,13 @@ export class YatraComponent {
         }
         formGroup.addControl(subControls.name, tempFormArray);
       }
-
-
       else
-        formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
+        formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators));
+        // if (subControls.postControlCreationMethod) {
+        //   this.resolveMethod(subControls.postControlCreationMethod, subControls);
+        // }
       // return new FormControl(subControls.value,controlValidators);
+
     }
 
 
@@ -2552,67 +2556,59 @@ export class YatraComponent {
         return control;
     }
   }
-
-  getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
-    // console.log("sum insured",event,parentcontrol,otherControl,agentCode);
-
-    // const requestBody={
-    //   "coverType": "string",
-    //   "planType": "string",
-    //   "productId": "string",
-    //   "agentCode": "string",
-    //   "annualIncome": 0
-    // }
-    // this.yatraService.getSumInsuredList(requestBody).subscribe({
-    //   next: (res: any) => {
-    //     // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
-    //     const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
-    //     this.ActiveSecureSIvalues = sumInsuredListValue
-    //   },
-    //   error: (err: any) => {
-    //     console.error(err);
-    //   }
-    // });
-    // console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
-    // const isPos = agentCode.startsWith('pos') ? 1 : 0;
-    // const coverTypeMap: { [key: string]: string } = {
-    //   accident: 'PA',
-    //   criticalIllness: 'CI',
-    //   cancerSecure: 'CC'
-    // };
-
-    // const coverType = coverTypeMap[parentcontrol.name];
-    // console.log("Cover Type:", coverType);
-    // const data = JSON.parse(event.target.value);
-    // console.log("form data in getSumInsuredValues",this.formData);
-
-    // if (coverType) {
-    //   const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
-    //     item.planType === data.name && 
-    //     item.isPos === isPos.toString() &&
-    //     item.coverType === coverType
-    //   );
-    //   console.log("Filtered Values:", filteredValues);
-    //   console.log(filteredValues[0].siList);
-    //   if (filteredValues.length > 0) {
-    //     const siList = filteredValues[0].siList;
-    //     this.formData.insuredMemberDetails.forEach((member:any) => {
-    //       const maxAllowedValue = parseInt(member.annualIncome) * 12;    
-    //       const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
-    //       otherControl.options = filteredSIList;
-    //       console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
-    //     })
-    //   } else {
-    //     console.log("No matching values found in ActiveSecureSIvalues.");
-    //     otherControl.options = []; // Clear options if no match is found
-    //   }
-    // } else {
-    //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
-    // }
+  defaultSumInsured(control:any){
+    control.subControls.forEach((subControl: any) => {
+      if (subControl.innerSubControls) {
+        subControl.innerSubControls.forEach((innerSubControls: any) => {
+          if (innerSubControls.coreControls && innerSubControls.name != "demoType") {
+            innerSubControls.coreControls.forEach((coreControl: any) => { 
+              if(coreControl.name === "addOnSumInsured"){
+                console.log(coreControl);
+                let insuredMemberDetails = this.formData.insuredMemberDetails;
+                let annualIncome: any;
+                if(innerSubControls.name !== "Self"){
+                  insuredMemberDetails.forEach((member:any) => {
+                    if (member.relation === "Self") {
+                      this.selfAnnualIncome = Number(member.annualIncome);
+                    }
+                  }); 
+                }
+                insuredMemberDetails.forEach((member:any) => {
+                  if(member.relation == innerSubControls.name){
+                    if(member.annualIncome!= ""){
+                      annualIncome =  Number(member.annualIncome); 
+                    }
+                    else{
+                      annualIncome=this.selfAnnualIncome
+                    }
+                  }
+                });
+                const requestBody={
+                  "coverType": control.name,
+                  "planType": "P1",
+                  "productId": (this.productId).toString()||"",
+                  "agentCode": this.agentCode,
+                  "annualIncome": annualIncome
+                }
+                this.yatraService.getSumInsuredList(requestBody).subscribe({
+                  next: (res: any) => {
+                    coreControl.options = res.data.siList
+                    console.log("coreControl.options ",coreControl.options );
+                    
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
-
     this.changesMade = true;
     let eventValue = typeof event == 'boolean' ? event : event.target.value;
     if (control.name == 'totalPremium') {
@@ -2728,88 +2724,195 @@ export class YatraComponent {
                               console.error(err);
                             }
                           });
+                      }else if(innerControl.name == "addOnSumInsured"){
+                        if(selectedControl.name=='Self'){
+                          this.selfCoverSumInsured=Number(event.target.value)
                         }
-                        else if (innerControl.name === 'plan' && coreControl.name === "addOnSumInsured") {
-                          let insuredMemberDetails = this.formData.insuredMemberDetails;
-                          let annualIncome: any;
-                          if (selectedControl.name !== "Self") {
-                            insuredMemberDetails.forEach((member: any) => {
-                              if (member.relation === "Self") {
-                                this.selfAnnualIncome = Number(member.annualIncome);
-                              }
-                            });
-                          }
+                      }else if(innerControl.name == "occupation"){
+                        if(selectedControl.name!='Self'){
+                          this.selectedInnerControl=event.target.value
+                        }
+                      }
+                      else if (innerControl.name === 'plan'  && coreControl.name === "addOnSumInsured") {
+                        let insuredMemberDetails = this.formData.insuredMemberDetails;
+                        let annualIncome: any;
+                        if (selectedControl.name !== "Self") {
                           insuredMemberDetails.forEach((member: any) => {
-                            if (member.relation == selectedControl.name) {
-                              if (member.annualIncome != "") {
-                                annualIncome = Number(member.annualIncome);
-                              }
-                              else {
-                                annualIncome = this.selfAnnualIncome
-                              }
+                            if (member.relation === "Self") {
+                              this.selfAnnualIncome = Number(member.annualIncome);
                             }
                           });
-                          const requestBody = {
-                            "coverType": parentControl.name || "",
-                            "planType": JSON.parse(event.target.value).name || "",
-                            "productId": (this.productId).toString() || "",
-                            "agentCode": this.agentCode,
-                            "annualIncome": annualIncome || 0
+                        }
+                        insuredMemberDetails.forEach((member: any) => {
+                          if (member.relation == selectedControl.name) {
+                            if (member.annualIncome != "") {
+                              annualIncome = Number(member.annualIncome);
+                            }
+                            else {
+                              annualIncome = this.selfAnnualIncome
+                            }
                           }
-                          this.yatraService.getSumInsuredList(requestBody).subscribe({
-                            next: (res: any) => {
+                        });
+                        const requestBody = {
+                          "coverType": parentControl.name || "",
+                          "planType": JSON.parse(event.target.value).name || "",
+                          "productId": (this.productId).toString() || "",
+                          "agentCode": this.agentCode,
+                          "annualIncome": annualIncome || 0
+                        }
+                        this.yatraService.getSumInsuredList(requestBody).subscribe({
+                          next: (res: any) => {
+                            if(selectedControl.name=='Self'){
                               coreControl.options = res.data.siList;
-                            },
-                            error: (err: any) => {
-                              console.error(err);
                             }
-                          });
-                        }
-                        else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
-                          this.formData.insuredMemberDetails.forEach((member: any) => {
-                            if (selectedControl.name == member.relation) {
-                              if (member.annualIncome != "") {
-                                coreControl.options = [{
-                                  "id": "1",
-                                  "value": "O464",
-                                  "name": "Retired"
-                                },
-                                {
-                                  "id": "3",
-                                  "value": "O553",
-                                  "name": "Salaried"
-                                },
-                                {
-                                  "id": "6",
-                                  "value": "O556",
-                                  "name": "Self Employed"
-                                }]
-                              }
-                              else {
-                                coreControl.options = [{
-                                  "id": "1",
-                                  "value": "O464",
-                                  "name": "Retired"
-                                },
-                                {
-                                  "id": "2",
-                                  "value": "O490",
-                                  "name": "Student"
-                                },
-                                {
-                                  "id": "6",
-                                  "value": "O554",
-                                  "name": "Not Employed"
-                                },
-                                {
-                                  "id": "3",
-                                  "value": "O555",
-                                  "name": "HouseWife/Husband"
-                                }]
-                              }
+                            else if(selectedControl.name!='Self'){ 
+                              insuredMemberDetails.forEach((member:any) => {
+                                if(member.relation == selectedControl.name){
+                                  if(member.annualIncome!= ""){   //earning                            
+                                    const memberAnnualIncome = Number(member.annualIncome)
+                                    const occupationValue =this.selectedInnerControl? JSON.parse(this.selectedInnerControl).name: ''               
+                                    if(occupationValue == 'Self Employed'){
+                                      console.log("occupation value",occupationValue,"member anuual income",memberAnnualIncome);
+                                      const filteredSiList = res.data.siList.filter(
+                                        (item: any) =>
+                                          item.value <= 10000000 ||
+                                          (item.value > 10000000 && item.value <= memberAnnualIncome * 20)
+                                      );
+                                      console.log("Filtered siList for Self Employed:", filteredSiList);
+                                      coreControl.options = filteredSiList;                                    
+                                    }
+                                    if (this.selfCoverSumInsured && (occupationValue != 'Self Employed' || occupationValue == '')) {
+                                      let maxLimit = 0;                   
+                                      switch (parentControl.name) {                                        
+                                        case 'accident': 
+                                          switch (selectedControl.name) {
+                                            case 'Spouse':
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
+                                              break;
+                                            default:
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
+                                              break;
+                                          }
+                                          break;                                          
+                                        default:
+                                          maxLimit = Math.min(this.selfCoverSumInsured);
+                                          break;
+                                        }
+                                      const filteredSiList = res.data.siList.filter((item: any) => item.value <= maxLimit);
+                                      console.log("Filtered siList for other occupation in earning case:", filteredSiList);
+                                      coreControl.options = filteredSiList; 
+                                    }
+                                    else{
+                                      coreControl.options = res.data.siList;
+                                    }                                 
+                                  }
+                                  else{  //non earning
+                                    if (this.selfCoverSumInsured) {
+                                      let maxLimit = 0;
+                                      console.log("relation",selectedControl.name);    
+                                      console.log("parentcontrol name", parentControl.name);
+                                      switch (parentControl.name) {
+                                        case 'accident': 
+                                          switch (true) {
+                                            case selectedControl.name.includes('Son'):
+                                            case selectedControl.name.includes('Daughter'):
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
+                                              break;
+                                            default:
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
+                                              break;
+                                          }
+                                          break;
+                                        case 'criticalIllness': 
+                                          switch (true) {
+                                            case selectedControl.name=='Spouse':
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
+                                              break;
+                                            case selectedControl.name.includes('Son'):
+                                            case selectedControl.name.includes('Daughter'):
+                                               maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
+                                               break;
+                                            default:
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 1000000);
+                                              break;
+                                          }
+                                          break;
+                                        case 'cancerSecure': 
+                                          switch (true) {
+                                            case selectedControl.name=='Spouse':
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
+                                              break;
+                                            case selectedControl.name.includes('Son'):
+                                            case selectedControl.name.includes('Daughter'):
+                                               maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
+                                               break;
+                                            default:
+                                              maxLimit = Math.min(this.selfCoverSumInsured, 1000000);
+                                              break;
+                                          }
+                                          break;
+                                      }                                      
+                                      const filteredSiList = res.data.siList.filter((item: any) => item.value <= maxLimit);
+                                      console.log("Filtered siList: in non earning case", filteredSiList);
+                                      coreControl.options = filteredSiList; 
+                                    }else{
+                                      console.log("self sum insured is mandatory if member is non earning",this.selfCoverSumInsured);
+                                    }                                  
+                                  }
+                                }
+                              }); 
                             }
-                          });
-                        }
+                          },
+                          error: (err: any) => {
+                            console.error(err);
+                          }
+                        });
+                      }
+                      else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
+                        this.formData.insuredMemberDetails.forEach((member: any) => {
+                          if (selectedControl.name == member.relation) {
+                            if (member.annualIncome != "") {
+                              coreControl.options = [{
+                                "id": "1",
+                                "value": "O464",
+                                "name": "Retired"
+                              },
+                              {
+                                "id": "3",
+                                "value": "O553",
+                                "name": "Salaried"
+                              },
+                              {
+                                "id": "6",
+                                "value": "O556",
+                                "name": "Self Employed"
+                              }]
+                            }
+                            else {
+                              coreControl.options = [{
+                                "id": "1",
+                                "value": "O464",
+                                "name": "Retired"
+                              },
+                              {
+                                "id": "2",
+                                "value": "O490",
+                                "name": "Student"
+                              },
+                              {
+                                "id": "6",
+                                "value": "O554",
+                                "name": "Not Employed"
+                              },
+                              {
+                                "id": "3",
+                                "value": "O555",
+                                "name": "HouseWife/Husband"
+                              }]
+                            }
+                          }
+                        });
+                      }
                       });
                     }
                   });
@@ -6732,6 +6835,8 @@ export class YatraComponent {
         modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
+            let weeklyCashLimit:any;
+            let noOfDays:any;
             if (parentControl.name == 'deductible') {
               addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
                 if (addOnDetail.addOnSumInsured) {
@@ -6755,6 +6860,12 @@ export class YatraComponent {
                 else if (addOnDetail.roomType) {
                   addOnSumInsured = addOnDetail.roomType;
                 }
+                else if(addOnDetail.weeklyCashLimit){
+                  weeklyCashLimit = addOnDetail.weeklyCashLimit
+                }
+                else if(addOnDetail.noOfDays){
+                  noOfDays = addOnDetail.noOfDays
+                }
                 if (coverName.includes('Personal Accident') && addOnDetail.occupation) {
                   member.occupationCode = JSON.parse(addOnDetail.occupation).value;
                 }
@@ -6775,6 +6886,8 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  weeklyCashLimit:weeklyCashLimit,
+                  noOfDays:noOfDays
                 });
               }
 
@@ -6790,6 +6903,8 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  weeklyCashLimit:weeklyCashLimit,
+                  noOfDays:noOfDays
                 });
               }
 
