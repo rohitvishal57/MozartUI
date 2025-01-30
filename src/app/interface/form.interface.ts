@@ -133,6 +133,7 @@ export interface ISubControl {
   toolTipMessage?:string;
   onChangeMethod?: string;
   methodName?: string;
+  allowedRelations?:string[];
 }
 
 export interface ITab {

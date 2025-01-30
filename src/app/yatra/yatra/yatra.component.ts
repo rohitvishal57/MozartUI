@@ -733,7 +733,7 @@ export class YatraComponent {
             //     })
             //   }
             // })
-            if (control.type == 'questionnaire') {
+            if (control.type == 'questionnaire') { 
               let demoMember: any;
               let demoTypeIndex: any;
               let doneButton: any;
@@ -751,6 +751,16 @@ export class YatraComponent {
                   let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
                   let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
                   const tempRelationshipType = JSON.parse(member.relationshipType);
+                  if (control.label && control.label.toLowerCase().includes('pregnant'))
+                    {
+                    // Check if 'Spouse' is selected in insuredMemberDetails
+                    const isSpouseSelected = tempInnerControl.innerArrayControl[0][0].allowedRelations.includes(tempRelationshipType.value) && member.memberGender == 'F';
+                
+                    if (!isSpouseSelected) {
+                      control.visible = false;
+                      return; // Stop further execution
+                    }
+                  }
                   tempMemberControl.label = tempRelationshipType.value;
                   tempMemberControl.name = tempRelationshipType.value.toLowerCase();
                   tempInnerControl.label = tempRelationshipType.value;
@@ -4855,13 +4865,6 @@ export class YatraComponent {
         if (res.isSuccess) {
           if (res.message == 'Success') {
             this.otpRequestId = res.data.requestId;
-            control.visible = false;
-
-            this.toast.success({
-              detail: "Success",
-              summary: `Communication has been sent Successfully`,
-              duration: 3000,
-            });
             this.form.formSections.forEach((section: any) => {
               section.formControls.forEach((controls: any) => {
                 if (controls.dependentControls) {
@@ -4887,6 +4890,13 @@ export class YatraComponent {
                 });
               });
             }
+            
+            this.toast.success({
+              detail: "Success",
+              summary: `Communication has been sent Successfully`,
+              duration: 3000,
+            });
+            control.visible = false;
           }
         }
         else {
