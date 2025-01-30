@@ -9,7 +9,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { thankYou} from 'src/assets/styles/renewals-forms/combined_forms';
-import { payment } from 'src/assets/styles/renewals-forms/payment';
+import { leads, payment } from 'src/assets/styles/renewals-forms/payment';
 import { RenewalsService } from '../renewals.service';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -56,7 +56,7 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
   rowData: any={};
-  formSequence: any[] = [payment, thankYou];
+  formSequence: any[] = [leads,payment,thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
@@ -145,9 +145,9 @@ export class RenewalJourneyComponent {
       if (stateData.formIndex) {
         localStorage.setItem('formIndex', stateData.formIndex);
       }
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-      }
+      // if (stateData.proposalNum) {
+      //   this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
+      // }
       try {
         if (stateData.policyNumber) {
           this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
@@ -155,22 +155,43 @@ export class RenewalJourneyComponent {
       } catch (error) {
         console.error(error);
       }
-      if (this.formData?.insuredMemberDetails?.length > 0) {
-        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-          if (member.covers) {
-            this.covers[index] = member.covers;
-          }
-          if (member.relation) {
-            this.existingRelations.push(member.relation);
-          }
-        });
-      }
+      // if (this.formData?.insuredMemberDetails?.length > 0) {
+      //   this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+      //     if (member.covers) {
+      //       this.covers[index] = member.covers;
+      //     }
+      //     if (member.relation) {
+      //       this.existingRelations.push(member.relation);
+      //     }
+      //   });
+      // }
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
-      this.formSequence = [payment, thankYou];
+      this.formSequence = [leads,payment,thankYou];
     }
     console.log(this.formData, this.proposalNum, this.policyNumber);
+    const transFormData={nomineeFirstName: this.formData.nomineeDetails?.nominee_first_name || "",
+      nomineeMiddleName: this.formData.nomineeDetails?.nominee_middle_name || "",
+      nomineeLastName: this.formData.nomineeDetails?.nominee_last_name || "",
+      nomineeDob: this.formatDates(this.formData.nomineeDetails?.nominee_dob || ""),
+      nomineeRelationWithProposer: this.formData.nomineeRelationWithProposer || "",
+      gender: this.formData.gender || "",
+      nomineeAddress: this.formData.nomineeDetails?.nominee_Address || "",
+      nomineeContactNo: this.formData.nomineeDetails?.nominee_Contact_No || "",
+      policyNumber: this.formData.policyNumber || "",
+      productCode: this.formData.productCode || "",
+      isKycCompleted: this.formData.isKycCompleted || false,
+      bankName: this.formData.bankDetails?.bank_name || "",
+      accountNumber: this.formData.bankDetails?.bank_acc_no || "",
+      confirmBankAccountNumber: this.formData.bankDetails?.confirm_Bank_acc_no || "",
+      ifscCode: this.formData.bankDetails?.ifsc_code || "",
+      micrCode: this.formData.bankDetails?.micr_code || "",
+      bankBranchName: this.formData.bankDetails?.bank_branch_name || "",
+      bankAccountType: this.formData.bankDetails?.bank_account_type || "",
+      primarySecondary: this.formData.bankDetails?.primary_secondary || ""
+    }
+    this.formData = { ...this.formData, ...transFormData };
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
     this.customerFeedbackForm = this.fb.group({
@@ -189,16 +210,10 @@ export class RenewalJourneyComponent {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
       this.showHtmlContent = false;
     }
-
-    // this.form = totalPremium;
-    // this.form = new_combinedForms;
-    // this.form = payment;
-    // this.form = active_health_covers;
-
     this.form = JSON.parse(JSON.stringify(this.formSequence[this.getFormIndexValue()]));
     console.log(this.form);
 
-    if (this.journeyProcess == 0) {
+    if (this.getFormIndexValue() == 0) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'back') {
@@ -582,23 +597,27 @@ export class RenewalJourneyComponent {
           }
           
           console.log(control , control.value);
-          // const bank = true;
-          // const nominee = true;
-          // let formGroup: any = this.fb.group({})
-          // if(section.sectionTitle == "Bank Account Details" || section.sectionTitle == "Nominee Details" ){
-          //   if(section.sectionTitle == "Bank Account Details" && bank){
-          //     control.disabled=true;
-          //      formGroup.get(control.name)?.disable();
-          //   } else if(section.sectionTitle == "Bank Account Details" && bank && control.name == "updateBank"){
-          //     control.visible =false;
-          //   }            
-          //   if(section.sectionTitle == "Nominee Details" && nominee){
-          //     control.disabled=true;
-          //     formGroup.get(control.name)?.disable();
-          //   } else if(section.sectionTitle == "Nominee Details" && nominee && control.name == "updateNominee"){
-          //     control.visible =false;
-          //   }
-          // }
+          const bank = this.formData.accountNumber?.trim() && this.formData.ifscCode?.trim() && this.formData.bankName?.trim();
+          const nominee = this.formData.nomineeFirstName?.trim() && this.formData.nomineeDob?.trim() && this.formData.nomineeRelationWithProposer?.trim();
+            if (section.sectionTitle === "Bank Account Details" || section.sectionTitle === "Nominee Details") {
+                if (section.sectionTitle === "Bank Account Details") {
+                    if (bank) {
+                        control.disabled = true;
+                    }
+                    if (bank && control.methodName === "checkleadValidation") {
+                        control.visible = false;
+                    }
+                }
+                if (section.sectionTitle === "Nominee Details") {
+                    if (nominee) {
+                        control.disabled = true;
+                    }
+                    if (nominee && control.methodName === "checkleadValidation") {
+                        control.visible = false;
+                    }
+                }
+            }
+
         });
       });
       // this.renewalFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
@@ -1324,19 +1343,15 @@ export class RenewalJourneyComponent {
     console.log(this.renewalFormGroup.value, this.form, this.renewalFormGroup);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-      console.log("formData", this.formData);
-
-
-
-      this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-
+      // console.log("formData", this.formData);
+      // this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       if (this.form.saveBtnFunction) {
         await this.resolveMethod(this.form.saveBtnFunction);
       } else if (control != null && control.onClickMethod) {
         await this.resolveMethod(control.onClickMethod);
       }
 
-      if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      if (this.getFormIndexValue() < this.formSequence.length - 1 && this.form.saveBtnFunction != "generatehalfqoute") {
         this.incrementIndex();
         this.getFormDataFromFormSequence();
       }
@@ -3865,6 +3880,12 @@ export class RenewalJourneyComponent {
     return `${day}-${month}-${year}`;
   }
 
+  formatDates(dateString: string): string {
+    if (!dateString) return "";
+    const [day, month, year] = dateString.split("/");
+    return `${year}-${month}-${day}`; // Convert from DD/MM/YYYY to YYYY-MM-DD
+  }
+
   copyText(control: any) {
     console.log(control);
     this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
@@ -4189,4 +4210,53 @@ export class RenewalJourneyComponent {
       }
     );
   }
+
+  checkleadValidation(controls: any) {
+    let result = false;
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (section.sectionTitle === controls.name) {
+          const control = this.renewalFormGroup.get(formControl.name);
+          if (control) {
+            if (control instanceof FormGroup) {
+              control.markAsDirty({ onlySelf: true });
+            } else {
+              control.markAsTouched({ onlySelf: true });
+              if (control.status == "INVALID") {
+                result = true;
+                this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+              }
+            }
+          }
+        }
+      });
+    });
+    if(controls.name == "Bank Account Details" && !result){
+      this.updateBankDetails(controls);
+    } else if(controls.name == "Nominee Details" && !result){
+      this.updateNomineeDetails(controls);
+    }
+    result= false
+  }
+
+  generatehalfqoute(control:any){
+    const halfQuote = {
+      policy_Number: this.policyNumber,
+    };
+    this.renewalService.generatehalfqoute(halfQuote).subscribe(
+        (res: any) => {
+          if(res.data.isSuccess){
+            this.incrementIndex();
+            this.getFormDataFromFormSequence();
+            this.toast.success({ detail: "Success", summary: res.data.messsage || "half quote generated successfully.", duration: 3000 });
+          } else {
+          this.toast.error({ detail: "Error", summary: res.data.messsage || "Failed to create half quote generateds", duration: 3000 });
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+    );
+  }
+
 }

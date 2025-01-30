@@ -20,6 +20,7 @@ export const environment = {
   updateNomineeDetail:"api/renewal/updateNomineeDetails",
   updateBankDetailApi:"api/renewal/updateBankDetails",
   getbasequote:"api/renewal/getbasequote",
+  generatehalfqoute:"api/renewal/generatehalfqoute",
   sharekyclink: "api/quote/sharekyclink",
   skipkyclink: "api/quote/forcedkycupdate",
   getPaymentDetails: "api/yatra/getpaymentdetails",

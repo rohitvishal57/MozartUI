@@ -19,6 +19,7 @@ export const environment = {
   kycUpdate: "api/renewal/kycUpdate",
   updateNomineeDetail:"api/renewal/updateNomineeDetails",
   updateBankDetailApi:"api/renewal/updateBankDetails",
+  generatehalfqoute:"api/renewal/generatehalfqoute",
   getbasequote:"api/renewal/getbasequote",
   sharekyclink: "api/quote/sharekyclink",
   skipkyclink: "api/quote/forcedkycupdate",

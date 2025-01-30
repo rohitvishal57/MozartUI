@@ -709,25 +709,25 @@ export const leads = {
   "prevBtnTitle": "Back",
   "resetBtnTitle": "",
   "calculateBtnTitle": "",
-  "saveBtnFunction": "",
+  "saveBtnFunction": "generatehalfqoute",
   "themeFile": "ABHI.css",
   "formSections": [
     {
       "sectionTitle": "Nominee Details",
-      "visible": false,
+      "visible": true,
       "visibleLabel": true,
       "class": "section-title",
       "formControls": [
-        {
-          "name": "personalDetails",
-          "label": "Nominee Personal Details",
-          "visibleLabel": true,
-          "visible": true,
-          "value": "",
-          "type": "paragraph",
-          "methodName": "checkNomineeDetail",
-          "class": "col-12 col-md-6 col-lg-12 section-paragraph"
-        },
+        // {
+        //   "name": "personalDetails",
+        //   "label": "Nominee Personal Details",
+        //   "visibleLabel": true,
+        //   "visible": true,
+        //   "value": "",
+        //   "type": "paragraph",
+        //   // "methodName": "checkNomineeDetail",
+        //   "class": "col-12 col-md-6 col-lg-12 section-paragraph"
+        // },
         {
           "name": "nomineeFirstName",
           "label": "First Name",
@@ -782,25 +782,6 @@ export const leads = {
             }
           ]
         },
-        // {
-        //   "name": "nomineeDob",
-        //   "label": "Date of Birth",
-        //   "visibleLabel": true,
-        //   "visible": true,
-        //   "type": "date",
-        //   "dependentControls":['appointeeName','appointeeAge'],
-        //   "methodName": "checkNomineeAge",
-        //   "onChangeMethod": "checkNomineeAge",
-        //   "value": "",
-        //   "class": "col-12 col-md-6 col-lg-4",
-        //   "validators": [
-        //     {
-        //       "validatorName": "required",
-        //       "required": true,
-        //       "message": "DOB is required field"
-        //     }
-        //   ]
-        // },
         {
           "name": "nomineeDob",
           "label": "Date of Birth",
@@ -840,28 +821,6 @@ export const leads = {
               "validatorName": "required",
               "required": true,
               "message": "Nominee Relationship is required field"
-            }
-          ]
-        },
-        {
-          "name": "gender",
-          "label": "Gender",
-          "visibleLabel": true,
-          "type": "select",
-          "class": "col-md-4 control",
-          "value": "",
-          "disabled": false,
-          "visible": false,
-          "options": [
-            {
-              "id": 1,
-              "name": "Male",
-              "value": "M"
-            },
-            {
-              "id": 2,
-              "name": "Female",
-              "value": "F"
             }
           ]
         },
@@ -973,16 +932,6 @@ export const leads = {
           ]
         },
         {
-          "name": "emailId",
-          "label": "Email Id",
-          "visibleLabel": true,
-          "visible": false,
-          "type": "email",
-          "value": "",
-          "disabled": false,
-          "class": "col-12 col-md-6 col-lg-4",
-        },
-        {
           "name": "gender",
           "label": "Gender",
           "visibleLabel": true,
@@ -1015,20 +964,20 @@ export const leads = {
           ]
         },
         {
-          "name": "updateNominee",
+          "name": "Nominee Details",
           "label": "Save",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
           "disabled": false,
           "class": " col-12 send-link-btn send-btn",
-          "methodName": "updateNomineeDetails"
+          "methodName": "checkleadValidation"
         },
       ]
     },
     {
       "sectionTitle": "Bank Account Details",
-      "visible": false,
+      "visible": true,
       "visibleLabel": true,
       "class": "section-title",
       "formControls": [
@@ -1040,7 +989,7 @@ export const leads = {
           "visible": true,
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
-          "methodName":"checkBankDetail",
+          // "methodName":"checkBankDetail",
           "validators": [
             {
               "validatorName": "required",
@@ -1167,13 +1116,30 @@ export const leads = {
           // ]
         },
         {
-          "name": "updateBank",
+          "name": "ifscCode",
+          "label": "IFSC Code",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "disabled": true,
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "IFSC is required field"
+            }
+          ]
+        },
+        {
+          "name": "Bank Account Details",
           "label": "Save",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
           "class": "col-12 send-link-btn send-btn",
-          "methodName": "updateBankDetails"
+          "methodName": "checkleadValidation"
         },
       ]
     },
@@ -1224,10 +1190,10 @@ export const leads = {
           "disabled": true
         },
         {
-          "name": "nextOffline",
+          "name": "next",
           "label": "Next",
           "visibleLabel": false,
-          "visible": false,
+          "visible": true,
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "onSubmit",

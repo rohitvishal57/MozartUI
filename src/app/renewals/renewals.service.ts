@@ -160,5 +160,9 @@ export class RenewalsService {
     const getbasequote= this.configService.config.baseUrl1 + this.configService.config.getbasequote;
     return this.httpService.post(getbasequote,reqData);
   }
+  generatehalfqoute(reqData:any){
+    const generatehalfqoute= this.configService.config.baseUrl1 + this.configService.config.generatehalfqoute;
+    return this.httpService.post(generatehalfqoute,reqData);
+  }
 
 }
