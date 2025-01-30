@@ -70,6 +70,9 @@
     .mobile-block {
         display: block !important;
     }
+    .filter-desktop-block-top {
+        display: block !important;
+      }
     .siteSidenav {
         display: none;
     }
@@ -396,6 +399,12 @@
     }
 }
 @media (max-width:767px) {
+    .filter-desktop-hide {
+        display: block !important;
+      }
+      .filter-desktop-block-top {
+        display: none !important;
+      }
     .customiseDashboard_bodyColumns {
         flex-direction: column;
     }
@@ -731,6 +740,85 @@
         word-break: break-all;
         font-size: 11px;
       }
+    .siteBody_searchMobile {
+        background: #fff;
+        padding: 11rem 2rem 12rem;
+    }
+    .siteBody_searchMobile .btn_newRequest,
+    .siteBody_searchMobile .btn_newRequest:hover,
+    .siteBody_searchMobile .btn_newRequest:focus{
+        border: 1px solid #c7222a;
+        padding: 8px;
+        line-height: normal;
+    }
+    .siteBody_searchMobile .body_flex_column {
+        gap: 10px;
+    }
+    .siteBody_searchMobile .quickFilterMain, .siteBody_searchMobile .quickFilterMain_claims{
+        padding: 0 !important;
+    }
+    .siteBody_searchMobile  .pageHeading_align-items-center h2, .siteBody_searchMobile .pageHeading h2{
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .leads_searchWraper .field_searchMain.field_searchMainMobile {
+		flex-direction: row;
+	}
+	.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch {
+		width: 150px !important;
+		height: 31px;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile {
+		flex-direction: row;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterFieldGroup {
+		width: 100%;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper {
+		min-width: 20px !important;
+        width: 20px !important;
+		margin-top: 8px;
+
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter,
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .common_searchWraper .field_searchMain button #filter-count {
+		border-width: 0 !important;
+		padding: 0 !important;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter #filter-count,
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .common_searchWraper .field_searchMain button #filter-count{
+		display: none;
+	}
+    .leads_searchWraperMobile .common_searchWraper .field_searchMain button{
+        bottom: 3px !important;
+        right: 0;
+    }
+    .leads_searchWraperMobile .common_searchWraper_proposals {
+        padding-bottom: 5px !important;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .field_searchMain {
+        flex-direction: row !important;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .field_searchMain div {
+        flex:auto;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .field_searchMain div:first-child {
+        width: 150px;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .common_searchWraper_proposals{
+        padding-bottom: 0 !important;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .common_searchWraper .field_searchMain .btn_filter {
+        position: initial !important;
+        border-width: 0;
+        width: 20px;
+    }
+    .quickFilterMain_claims .leads_searchWraperMobile .leads_searchWraper.filterWraper {
+        margin-top: 0 !important;
+    }
+    .cardViewMain .cardViewWraper  {
+        margin-top: 0px !important;
+    }
 }
 @media (min-width:539px) and (max-width:540px){
     .custom_toastStyles .toast-container {

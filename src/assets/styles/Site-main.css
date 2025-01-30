@@ -248,6 +248,15 @@ button {
 .block-hide {
   display: none !important;
 }
+.filter-desktop-hide {
+  display: none !important;
+}
+.filter-desktop-block {
+  display: block !important;
+}
+.filter-desktop-block-top {
+  display: block !important;
+}
 .block-position-relative {
   position: relative;
 }

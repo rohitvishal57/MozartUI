@@ -1,5 +1,5 @@
 <!--All Requests Start-->
-<main class="siteBody siteBody_padding">
+<main class="siteBody siteBody_padding siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between pageHeading_align-items-center">
@@ -17,10 +17,10 @@
                         <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled', 'cancelledCount')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li> -->
                     </ul>
                 </div>
-                <div class="quickFilterRight" >
+                <div class="quickFilterRight leads_searchWraperMobile" >
                     <!--Search section start-->
-                    <div class="common_searchWraper common_searchWraper_proposals">
-                        <div class="field_searchMain">
+                    <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                        <div class="field_searchMain field_searchMainMobile">
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">{{"Select an option" | translate}}</option>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"><span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >

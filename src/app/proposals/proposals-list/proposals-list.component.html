@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between head_myProposals pageHeading_align-items-center">
@@ -52,9 +52,9 @@
                                             translate}} ({{countsList.createdIn60To90DaysCount}})</button></li>
                                 </ul>
                             </div>
-                            <div class="quickFilterRight">
-                                <div class="common_searchWraper common_searchWraper_proposals">
-                                    <div class="field_searchMain">
+                            <div class="quickFilterRight leads_searchWraperMobile">
+                                <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                                    <div class="field_searchMain field_searchMainMobile">
                                         <div>
                                             <select id="filterSearchOption" name="filterSearchOption" class="filterSearch"
                                                 [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null"
@@ -117,9 +117,9 @@
                                     <button type="button" id="productFilter" name="productFilter" value="filter"
                                         (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick"
                                         [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img
-                                            src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" |
+                                            src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" |
                                         translate}}
-                                        ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                                        ({{appliedFiltersCount}})</span></button>
                                     <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
                                         [ngClass]="{'active': toggeledropdown}">
                                         <div class="fw_form mobile_popupMain">
@@ -477,9 +477,9 @@
                                         translate}} ({{countsList.createdIn60To90DaysCount}})</button></li>
                             </ul>
                         </div>
-                        <div class="quickFilterRight">
-                            <div class="common_searchWraper common_searchWraper_proposals">
-                                <div class="field_searchMain">
+                        <div class="quickFilterRight leads_searchWraperMobile">
+                            <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                                <div class="field_searchMain field_searchMainMobile">
                                     <div>
                                         <select id="filterSearchOption" name="filterSearchOption" class="filterSearch"
                                             [(ngModel)]="selected" (change)="selected === '' ? quoteCancelSearch() : null"
@@ -535,9 +535,9 @@
                                 <button type="button" id="productFilter" name="productFilter" value="filter"
                                     (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick"
                                     [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img
-                                        src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" |
+                                        src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" |
                                     translate}}
-                                    ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                                    ({{appliedFiltersCount}})</span></button>
                                 <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
                                     [ngClass]="{'active': toggeledropdown}">
                                     <div class="fw_form mobile_popupMain">
