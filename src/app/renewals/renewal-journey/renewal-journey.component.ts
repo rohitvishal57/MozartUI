@@ -3759,23 +3759,21 @@ export class RenewalJourneyComponent {
       isVisible = false;
     }else {
       isVisible = !(this.formData.isKycCompleted);
-      console.log("log",isVisible);
-      
     }
     // const isVisible=true;
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
           section.visible = isVisible;
-          // if(isVisible == false){
-          //   control.name = "personalDetails";
-          //   this.checkNomineeDetail(control);
-          // }
-          // if(isVisible == false){
-          //   control.name = "proposerName";
-          //   this.checkBankDetail(control);
-          // }
           this.form.formSections[3].visible = !isVisible;
+          if(!isVisible == true){
+            if(this.formData.nomineeDob == ""){
+              this.form.formSections[1].visible = !isVisible;
+            }
+            if(this.formData.bankName == ""){
+              this.form.formSections[2].visible = !isVisible;
+            }
+          }
         }
       });
     });
@@ -4095,9 +4093,7 @@ export class RenewalJourneyComponent {
           this.form.formSections[1].visible = this.nomineeDetail;
           if(this.nomineeDetail){
             const val = {appointeeName: "",appointeeContactNo:"",appointeeRelationWithNominee:""}
-            this.formData={...this.formData,...val}
-            console.log(this.formData);
-            
+            this.formData={...this.formData,...val}            
           }
         }
       });
