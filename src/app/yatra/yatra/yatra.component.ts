@@ -3886,8 +3886,102 @@ export class YatraComponent {
     }
   }
 
+  // setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
+  //   const eventValue = childControl.value;
+  //   this.form.formSections.forEach((section: any) => {
+  //     section.formControls.forEach((formControl: any) => {
+  //       if (formControl.dynamicControls && formControl.visible) {
+  //         // Check if dynamicControls[index] exists
+  //         if (formControl.dynamicControls[index]) {
+  //           formControl.dynamicControls[index].forEach((control: any) => {
+  //             if (control.name == childControl.otherControlName) {
+  //               if (control.validators && childControl.validationRules) {
+  //                 // Create a new array for validators to avoid mutating the original
+  //                 const newValidators: IValidator[] = control.validators.filter(
+  //                   (val: IValidator) => val.validatorName === 'required'
+  //                 );
+
+  //                 console.log(this.formData, eventValue, childControl.validationRules);
+
+  //                 // Determine the appropriate validation rule based on eventValue
+  //                 let rule;
+  //                 if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
+  //                   /^niece\d*$/i.test(eventValue) ||
+  //                   /^grand-son\d*$/i.test(eventValue) ||
+  //                   /^grand-daughter\d*$/i.test(eventValue)) {
+  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+  //                 }
+  //                 // else if ((/^nephew\d*$/i.test(eventValue) ||
+  //                 //   /^niece\d*$/i.test(eventValue) ||
+  //                 //   /^grand-son\d*$/i.test(eventValue) ||
+  //                 //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+  //                 //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+  //                 // }
+  //                 else {
+  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
+  //                 }
+
+  //                 if (rule) {
+  //                   newValidators.push(rule);
+  //                 }
+
+  //                 const formControlInstance = this.dynamicFormGroup.get(control.name);
+  //                 control.validators = newValidators;
+  //                 if (formControlInstance) {
+  //                   const validators = newValidators
+  //                     .map(val => {
+  //                       if (val.validatorName === 'pattern' && val.pattern) {
+  //                         return Validators.pattern(val.pattern);
+  //                       }
+  //                       if (val.validatorName === 'required') {
+  //                         return Validators.required;
+  //                       }
+  //                       return null;
+  //                     })
+  //                     .filter((v): v is ValidatorFn => v !== null);
+
+  //                   formControlInstance.setValidators(validators);
+  //                   formControlInstance.updateValueAndValidity();
+  //                 }
+  //               }
+  //             }
+  //           });
+  //         }
+  //       }
+  //     });
+  //   });
+
+  //   // You can now set validators for the control using Angular's Form API, if needed
+  //   // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
+  //   // if (memberAgeControl) {
+  //   //   memberAgeControl.setValidators(newValidators.map(val => /* mapping logic to Angular Validators */));
+  //   //   memberAgeControl.updateValueAndValidity();
+  //   // }
+  // }
+
+
+  //different Implementation
   setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
     const eventValue = childControl.value;
+    let rule : any = null;
+
+    this.form.formSections.forEach((innerSection: any) => {
+      innerSection.formControls.forEach((innerControl: any) => {
+        if (innerControl.name === 'insuredMembers' && innerControl.selectCheckboxOptions) {
+          const matchingOption = innerControl.selectCheckboxOptions.find(
+            (option: any) => option.name === eventValue
+          );
+          if (matchingOption && matchingOption.validationRule) {
+            rule = JSON.parse(matchingOption.validationRule);
+          }
+        }
+      });
+    });
+
+    console.log(rule);
+    
+
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.dynamicControls && formControl.visible) {
@@ -3904,22 +3998,22 @@ export class YatraComponent {
                   console.log(this.formData, eventValue, childControl.validationRules);
 
                   // Determine the appropriate validation rule based on eventValue
-                  let rule;
-                  if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
-                    /^niece\d*$/i.test(eventValue) ||
-                    /^grand-son\d*$/i.test(eventValue) ||
-                    /^grand-daughter\d*$/i.test(eventValue)) {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-                  }
-                  // else if ((/^nephew\d*$/i.test(eventValue) ||
+                  
+                  // if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
                   //   /^niece\d*$/i.test(eventValue) ||
                   //   /^grand-son\d*$/i.test(eventValue) ||
-                  //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                  //   /^grand-daughter\d*$/i.test(eventValue)) {
                   //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
                   // }
-                  else {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
-                  }
+                  // // else if ((/^nephew\d*$/i.test(eventValue) ||
+                  // //   /^niece\d*$/i.test(eventValue) ||
+                  // //   /^grand-son\d*$/i.test(eventValue) ||
+                  // //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                  // //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  // // }
+                  // else {
+                  //   rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
+                  // }
 
                   if (rule) {
                     newValidators.push(rule);
@@ -3958,7 +4052,6 @@ export class YatraComponent {
     //   memberAgeControl.updateValueAndValidity();
     // }
   }
-
 
   increment(controlName: any, childControlName: any) {
     const currentValue = this.dynamicFormGroup.get(controlName)?.value;
