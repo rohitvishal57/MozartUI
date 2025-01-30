@@ -45,8 +45,8 @@
                                                         </div>
 
                                                         <div class="col-12 col-sm-12 col-md-10 col-lg-6 col-xl-6">
-                                                            <div class="userProfile_qrCode userProfile_qrCodeUser">
-                                                                <div class="img_qrCode" *ngIf="profileQRCode">
+                                                            <div class="userProfile_qrCode userProfile_qrCodeUser" *ngIf="profileQRCode && profileLink">
+                                                                <div class="img_qrCode">
                                                                     <img [src]="qrCodeImage" />
                                                                 </div>
                                                                 <div class="qrCode_agentInfo">
@@ -54,7 +54,7 @@
                                                                     <h6>Copy or scan your Agent Code/QR here.</h6>
                                                                     <div class="copy_qrCode">
                                                                         <div class="copy_qrCode_url">
-                                                                            <span id="qrCodeUrl" *ngIf="profileLink">
+                                                                            <span id="qrCodeUrl">
                                                                               {{ profileLink }}
                                                                               </span>
                                                                         </div>
