@@ -11,9 +11,7 @@ import { HdfcValidationPopupComponent } from '../hdfc-validation-popup/hdfc-vali
 export class HdfcCustomerRegistrationComponent implements OnInit {
   customerValidations!: FormGroup;
   customerForm!: FormGroup;
-  isCustomerValidated: boolean = false;
-  isCustomerFormValidated: boolean = false;
-  showCustomerValidation: boolean = true;
+  submitted: boolean = false;
   showCustomerForm: boolean = false;
   constructor(private dialog: MatDialog, private formBuilder: FormBuilder) {}
 
@@ -37,11 +35,9 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
     }
   }
   async onCustomerValidationSubmit() {
-    this.isCustomerValidated = true;
+    this.submitted = true;
     console.log(this.customerValidations.value)
     if (this.customerValidations.valid) {
-      this.showCustomerValidation = false;
-      // this.showCustomerForm = true;
       const dialogRef = this.dialog.open(HdfcValidationPopupComponent, {
         width: "800px",
         autoFocus: false,
@@ -50,12 +46,6 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
       })
-    }
-  }
-  async onCustomerFormSubmit() {
-    this.isCustomerFormValidated = true;
-    console.log(this.customerValidations.value)
-    if (this.customerValidations.invalid) {
     }
   }
 }
