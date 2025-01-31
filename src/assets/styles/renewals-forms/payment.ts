@@ -181,14 +181,14 @@ export const payment = {
             "totalPremium",
             "chequeNumber",
             "chequeDate",
-            "accountNo",
-            "ifscCode",
+            "paymentAccountNumber",
+            "paymentIfscCode",
             "paymentBankName",
             "chequeCopy",
             "documentProofUpload",
-            "paymentBankCity",
-            "paymentBankBranch",
-            "micrCode",
+            "paymentBankCityName",
+            "paymentBankBranchName",
+            "paymentMicrCode",
             "nextOffline"
           ]
         },
@@ -227,27 +227,27 @@ export const payment = {
                   "visibility": true
                 },
                 {
-                  "name": "ifscCode",
+                  "name": "paymentIfscCode",
                   "visibility": true
                 },
                 {
-                  "name": "accountNo",
+                  "name": "paymentAccountNumber",
                   "visibility": true
                 },
                 {
-                  "name": "bankName",
+                  "name": "paymentBankName",
                   "visibility": true
                 },
                 {
-                  "name": "bankCity",
+                  "name": "paymentBankCityName",
                   "visibility": true
                 },
                 {
-                  "name": "bankBranch",
+                  "name": "paymentBankBranchName",
                   "visibility": true
                 },
                 {
-                  "name": "micrCode",
+                  "name": "paymentMicrCode",
                   "visibility": true
                 },
                 {
@@ -398,7 +398,7 @@ export const payment = {
           ]
         },
         {
-          "name": "accountNo",
+          "name": "paymentAccountNumber",
           "label": "Account Number",
           "visible": false,
           "visibleLabel": true,
@@ -519,7 +519,7 @@ export const payment = {
           "visibleLabel": true,
           "getAllOption": "getAllBankDetails",
           "onChangeMethod": "getBankCity",
-          "otherControlName": "paymentBankCity",
+          "otherControlName": "paymentBankCityName",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -533,12 +533,12 @@ export const payment = {
           ]
         },
         {
-          "name": "paymentBankCity",
+          "name": "paymentBankCityName",
           "label": "Bank City",
           "visible": false,
           "visibleLabel": true,
           "onChangeMethod": "getBranchDetails",
-          "otherControlName": "paymentBankBranch",
+          "otherControlName": "paymentBankBranchName",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -552,13 +552,13 @@ export const payment = {
           ]
         },
         {
-          "name": "paymentBankBranch",
+          "name": "paymentBankBranchName",
           "label": "Bank Branch",
           "visible": false,
           "visibleLabel": true,
           "type": "select",
           "onChangeMethod": "setIfscCode",
-          "otherControlName": "ifscCode",
+          "otherControlName": "paymentIfscCode",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
           "options": [],
@@ -571,7 +571,7 @@ export const payment = {
           ]
         },
         {
-          "name": "ifscCode",
+          "name": "paymentIfscCode",
           "label": "IFSC Code",
           "visibleLabel": true,
           "visible": false,
@@ -588,7 +588,7 @@ export const payment = {
           ]
         },
         {
-          "name": "micrCode",
+          "name": "paymentMicrCode",
           "label": "MICR Code",
           "visibleLabel": true,
           "disabled": true,

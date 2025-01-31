@@ -175,7 +175,7 @@
                                             [disabled]="control.disabled ?? false">
                                             <!-- <option value="" disabled selected>Select {{ control.label }}</option> -->
                                             <ng-container *ngFor="let opt of control.options" [class]="control.class">
-                                                <option [value]="opt.id ? stringifyObject(opt) : opt.value"
+                                                <option [value]="opt.id ? stringifyObject(opt) : opt.value" [selected]="(opt.name === control.value)"
                                                     [class]="opt.class">
                                                     {{ opt.name ? (opt.name | translate) : ''}}</option>
                                             </ng-container>

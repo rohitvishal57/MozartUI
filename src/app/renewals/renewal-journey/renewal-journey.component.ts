@@ -87,6 +87,7 @@ export class RenewalJourneyComponent {
   nomineeDetail: boolean | undefined;
   tempFormData: any;
   bankDetail: any;
+  bankName:any;
 
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
@@ -175,7 +176,7 @@ export class RenewalJourneyComponent {
       nomineeMiddleName: this.formData.nomineeDetails?.nominee_middle_name || "",
       nomineeLastName: this.formData.nomineeDetails?.nominee_last_name || "",
       nomineeDob: this.formatDates(this.formData.nomineeDetails?.nominee_dob || ""),
-      nomineeRelationWithProposer: this.formData.nomineeRelationWithProposer || "",
+      nomineeRelationWithProposer: this.formData.nomineeDetails?.relationship || "",
       gender: this.formData.gender || "",
       nomineeAddress: this.formData.nomineeDetails?.nominee_Address || "",
       nomineeContactNo: this.formData.nomineeDetails?.nominee_Contact_No || "",
@@ -189,7 +190,16 @@ export class RenewalJourneyComponent {
       micrCode: this.formData.bankDetails?.micr_code || "",
       bankBranchName: this.formData.bankDetails?.bank_branch_name || "",
       bankAccountType: this.formData.bankDetails?.bank_account_type || "",
-      primarySecondary: this.formData.bankDetails?.primary_secondary || ""
+      primarySecondary: this.formData.bankDetails?.primary_secondary || "",
+      appointeeName: this.formData.nomineeDetails?.appointee_Name || "",
+      appointeeContactNo : this.formData.nomineeDetails?.appointee_Mobile_Np || "",
+      appointeeRelationWithNominee : this.formData.nomineeDetails?.appointee_Relation || "",
+      // paymentAccountNumber : "",
+      // paymentBankName: "",
+      // paymentBankBranchName : "",
+      // paymentBankCityName : "",
+      // paymentIfscCode : "",
+      // paymentMicrCode : ""
     }
     this.formData = { ...this.formData, ...transFormData };
     // Call the function to handle form data and sequence
@@ -500,10 +510,10 @@ export class RenewalJourneyComponent {
                 this.resolveMethod(control.methodName, control)
               }
             }
-            if (control.type === 'select' && control.options) {
+            if ((control.type === 'select') && control.options) {
               // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
-                this.callMethod(control.getAllOption, control);
+                await this.callMethod(control.getAllOption, control);
               }
               else if (control.options.length === 0 && control.name == 'zoneValue') {
                 control.options = this.formData['upgradableZones'];
@@ -679,7 +689,7 @@ export class RenewalJourneyComponent {
           });
 
         }
-        if (control.type == 'select' && control.getAllOption) {
+        if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
             this.callMethod(control.getAllOption, control);
           }
@@ -734,7 +744,7 @@ export class RenewalJourneyComponent {
           });
         }
 
-        if (control.type == 'select' && control.getAllOption) {
+        if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
             this.callMethod(control.getAllOption, control);
           }
@@ -2766,12 +2776,14 @@ export class RenewalJourneyComponent {
   // getall bank details
   getAllBankDetails(control: any) {
     if (control.options.length <= 0) {
-
-      // }
-      // else{
-
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
+        // const matchingOption = res.data.find((opt:any) => opt.value === control.value);
+        // if (matchingOption) {
+        //   control.value = JSON.stringify(matchingOption);
+        //   console.log(control.value, JSON.stringify(matchingOption));
+          
+        // }
           control.options = res.data;
         },
         error: (err) => {
@@ -2779,7 +2791,8 @@ export class RenewalJourneyComponent {
         }
       });
     }
-  }
+  } 
+  
 
   getBankCity(event: any, otherControl: any) {
     otherControl.value = "";
@@ -2830,8 +2843,15 @@ export class RenewalJourneyComponent {
 
   setIfscCode(event: any, otherControl: any) {
     const data = JSON.parse(event.target.value);
+    console.log(otherControl);
+    
+    if(otherControl.name == "paymentIfscCode"){
+      this.renewalFormGroup.get('paymentIfscCode')?.setValue(data.id);
+      this.renewalFormGroup.get('paymentMicrCode')?.setValue(data.value);
+    }
     this.renewalFormGroup.get('ifscCode')?.setValue(data.id);
     this.renewalFormGroup.get('micrCode')?.setValue(data.value);
+
   }
 
   triggerFileInput(controlName: string) {
@@ -3043,9 +3063,9 @@ export class RenewalJourneyComponent {
         "proposalNum": "",
         "agentCode": this.agentCode,
         "bankName": JSON.parse(data.paymentBankName).value,
-        "ifsc": data.ifscCode,
-        "micrNo": data.micrCode ||"",
-        "bankAccountNumber": data.accountNo || "",
+        "ifsc": data.paymentIfscCode,
+        "micrNo": data.paymentMicrCode ||"",
+        "bankAccountNumber": data.paymentAccountNumber || "",
         "documentId": this.documentId,
         "productName": this.formData.productName
       };

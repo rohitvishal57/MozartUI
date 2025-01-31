@@ -141,7 +141,7 @@
                                     </td>
                                     <td>{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</td>
                                     <td>{{ row.policyEndDate }}</td>
-                                    <td>{{ row.renewalStatus }}</td>
+                                    <td>{{ row.renewalStatusDescription }}</td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_edit_grey.svg"></button>
@@ -235,7 +235,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Status" | translate}}</div>
-                                <div class="item_value">{{ row.renewalStatus }}</div>
+                                <div class="item_value">{{ row.renewalStatusDescription }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Mobile Number" | translate}}</div>
