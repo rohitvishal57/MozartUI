@@ -193,13 +193,15 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   raiseServiceRequest() {
-    let requestBody: any = {};
-    requestBody.agentCode = this.agentCode;
+    let requestBody: any = {
+      "emailID": this.agentCode,
+      "password": ''
+    };
 
     this.notificationService.serviceRequest(requestBody).subscribe(
       (response) => {
         if (response.isSuccess) {
-          window.location.href = response?.data?.requestURL;
+          window.location.href = response?.data?.ssoUrl;
         }
       },
       (error) => {

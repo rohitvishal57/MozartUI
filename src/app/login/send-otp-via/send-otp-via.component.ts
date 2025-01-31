@@ -69,7 +69,7 @@ export class SendOtpViaComponent implements OnInit{
               localStorage.setItem("requestId", res?.data?.requestId);
               this.dialogRef.close({data:data, status:'Success'});
             } else {
-              // this.dialogRef.close({data: res.message, status:'Failure'});
+              this.dialogRef.close({data: res.message, status:'Failure'});
               this.isSkipEnabled = true;
             }
           },
