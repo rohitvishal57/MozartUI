@@ -756,10 +756,10 @@
                                 </div>
                             </div>
                         </div> -->
-                        <div class="uploadDocument_main">
+                        <div class="uploadDocument_main uploadDocument_mainClaims">
                             <div class="document-sections">
                                 <ng-container *ngFor="let section of documentSections">
-                                    <div class="upload-section mb-4">
+                                    <div class="upload-section">
                                         <h4 class="section-title">{{ section.label }}</h4>
 
                                         <!-- Upload Area - Show only if no file is uploaded -->
@@ -784,30 +784,30 @@
                                         <!-- Uploaded File Display -->
                                         <div class="uploadDocument_listMain" *ngIf="section.file">
                                             <div class="uploadDocument_filesList">
-                                                <div class="filesList_head">
-                                                    <div class="filesList_headLeft"></div>
-                                                    <div class="headInfo_item">
-                                                        <div class="upload-success"
-                                                            *ngIf="section.file.status === 'success'">
-                                                            <img src="assets/Img/icon_check_circle.svg">
-                                                            <span class="success-text">Success</span>
-                                                        </div>
-                                                        <div class="upload-fail"
-                                                            *ngIf="section.file.status === 'failed'">
-                                                            <img src="assets/Img/icon_failure.svg">
-                                                            <span class="failed-text">Failed</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div class="filesList_body">
                                                     <div class="uploadedFiles_main">
                                                         <div class="uploadedFiles_item">
+                                                            <div class="filesList_head filesList_headClaim">
+                                                                <div class="headInfo_item">
+                                                                    <div class="upload-success"
+                                                                        *ngIf="section.file.status === 'success'">
+                                                                        <img src="assets/Img/icon_check_circle.svg">
+                                                                        <span class="success-text">Success</span>
+                                                                    </div>
+                                                                    <div class="upload-fail"
+                                                                        *ngIf="section.file.status === 'failed'">
+                                                                        <img src="assets/Img/icon_failure.svg">
+                                                                        <span class="failed-text">Failed</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="uploadDocument_file">
                                                                 <div class="uploadedFiles_infoItem">
                                                                     <h4>{{ section.file.name }}</h4>
                                                                     <p>{{ section.file.type }}</p>
                                                                 </div>
-                                                                <div class="uploadedFiles_infoItem">
+                                                                <div class="uploadedFiles_infoItem uploadedFiles_infoItem_size">
                                                                     <button type="button" id="deletefile"
                                                                         class="delete-button"
                                                                         (click)="deleteFile(section.id)">

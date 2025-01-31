@@ -43,7 +43,7 @@ border-radius: 17px;
       background:#F1F3F6;
       border: 2px dashed #D5D7DE;
       display: flex;
-      gap:288px;
+      gap:8px;
       align-items: center;
       cursor: pointer;
     }
@@ -166,9 +166,63 @@ border-radius: 17px;
 ::ng-deep .mat-mdc-option .mat-pseudo-checkbox {
   display: none;
 }
+.uploadDocument_mainClaims .section-title {
+  margin-bottom: 5px;
+}
+.uploadDocument_mainClaims .document-sections {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 10px;
+}
+.uploadDocument_mainClaims  .filesList_headClaim {
+
+}
+.uploadDocument_mainClaims .btn_uploadDocument .upload_icon {
+  padding: 7px 10px;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem h4{
+  margin-bottom: 5px !important;
+  font-size: 13px;
+  line-height: normal;
+  word-break: break-word;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size{
+    min-width: 100px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+.uploadDocument_mainClaims .uploadDocument_file {
+  min-height: 115px;
+  justify-content: space-between;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size .size-align p {
+  margin: 0;
+}
+.filesList_head.filesList_headClaim {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+}
+.filesList_head.filesList_headClaim  .headInfo_item > div {
+  display: flex;
+  gap: 5px;
+}
+.uploadDocument_mainClaims .uploadedFiles_item {
+  position: relative;
+  width: 100%;
+}
 @media (max-width: 767px) {
   .siteBody {
       padding-bottom: 6rem;
+  }
+  .uploadDocument_mainClaims .document-sections {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
+  .uploadDocument_mainClaims .uploadedFiles_item {
+    width: 100%;
+  }
+  .uploadDocument_mainClaims .uploadedFiles_infoItem h4 {
+    word-break: break-word;
   }
 }
 /*----MAT Select Custom styles end----*/
