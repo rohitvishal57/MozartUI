@@ -22,6 +22,35 @@ border-radius: 17px;
   gap: 8px;
   cursor: default;
 }
+
+    .document-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .section-title {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .submit-section {
+      margin-top: 20px;
+      text-align: right;
+    }
+  
+    .uploadDocument_file {
+      padding:16px;
+      border-radius: 16px;
+      background:#F1F3F6;
+      border: 2px dashed #D5D7DE;
+      display: flex;
+      gap:288px;
+      align-items: center;
+      cursor: pointer;
+    }
+    .delete-button{
+      border: none;
+      background-color: none;
+    }
 /*---Common css start---*/
 .btn_red {
   padding: 10px 32px;

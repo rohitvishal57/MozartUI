@@ -18,9 +18,12 @@
                                     name="policyNumber" formControlName="policyNumber" (keyup)="filterList($event)"
                                     placeholder="Search Policy Number"/>
                                 <label for="policyNumber">{{"Search Policy Number" | translate}} *</label> -->
-                                <input class="form-control input-textBox" value="" (keyup)="filterList($event)" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber"  [placeholder]="'Search Policy Number' | translate">
-                                <label for="policyNumber">{{"Search Policy Number" | translate}}<span class="text-danger">*</span></label>
-                
+                                <input class="form-control input-textBox" value="" (keyup)="filterList($event)"
+                                    [matAutocomplete]="auto" id="policyNumber" name="policyNumber"
+                                    formControlName="policyNumber" [placeholder]="'Search Policy Number' | translate">
+                                <label for="policyNumber">{{"Search Policy Number" | translate}}<span
+                                        class="text-danger">*</span></label>
+
                                 <div
                                     *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
                                     <small class="ui-error block-show"
@@ -35,7 +38,7 @@
                                         *ngIf="form.get('policyNumber')?.hasError('minlength') || form.get('policyNumber')?.hasError('maxlength')">
                                         {{"Policy Number must be 16 characters long." | translate}}
                                     </small>
-                                    
+
                                 </div>
                             </div>
                             <mat-autocomplete #auto="matAutocomplete"
@@ -53,33 +56,33 @@
                                     <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
                                   </select> -->
                                 <select class="form-select input-selectBox" id="memberName" name="memberName"
-                                    (change)="memberIdChange($event)" formControlName="memberId"
-                                  >
+                                    (change)="memberIdChange($event)" formControlName="memberId">
                                     <option value="" disabled selected>{{"Select Member" |
                                         translate}}</option>
-                                        
+
                                     <!-- <option class="dropdown-options" *ngFor="let member of memberNames"
                                         [value]="member.memberId">{{ member.memberName | translate }}
                                         ({{member.relationWithProposer}})</option> 
                                 </select>-->
-                                <ng-container *ngIf="memberNames && memberNames.length > 0; else noRecords">
-                                    <option *ngFor="let member of memberNames" [value]="member.memberId">
-                                      {{ member.memberName | translate }} ({{ member.relationWithProposer }})
-                                    </option>
-                                  </ng-container>
+                                    <ng-container *ngIf="memberNames && memberNames.length > 0; else noRecords">
+                                        <option *ngFor="let member of memberNames" [value]="member.memberId">
+                                            {{ member.memberName | translate }} ({{ member.relationWithProposer }})
+                                        </option>
+                                    </ng-container>
                                 </select>
-                
+
                                 <ng-template #noRecords>
-                                  <option value="" disabled>{{"No members were found" | translate}}</option>
+                                    <option value="" disabled>{{"No members were found" | translate}}</option>
                                 </ng-template>
 
-                                <label for="member">{{"Select Member" | translate}} <span class="text-danger">*</span></label>
+                                <label for="member">{{"Select Member" | translate}} <span
+                                        class="text-danger">*</span></label>
 
                                 <small class="ui-error block-show"
-                                *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
-                                {{"Member name is required." | translate}}
-                              </small>
-                                    
+                                    *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
+                                    {{"Member name is required." | translate}}
+                                </small>
+
                                 <!-- <small class="ui-error block-show"
                                         *ngIf="form.get('policyNumber')?.hasError('noMemberDetails')">
                                         {{"No member details found for this policy." | translate}}
@@ -94,7 +97,8 @@
                                     <option value="Cashless">{{"Cashless" | translate}}</option>
                                     <option value="Reimbursement">{{"Reimbursement" | translate}}</option>
                                 </select>
-                                <label for="claimtype">{{"Claim Type" | translate}}<span class="text-danger">*</span></label>
+                                <label for="claimtype">{{"Claim Type" | translate}}<span
+                                        class="text-danger">*</span></label>
                                 <small class="ui-error block-show"
                                     *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
                                     {{"Claim type is required" | translate}}
@@ -107,7 +111,8 @@
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" [(ngModel)]="selectedCover">
+                                        <select class="form-select input-selectBox" id="coverName" name="coverName"
+                                            formControlName="coverName" [(ngModel)]="selectedCover">
                                             <option class="dropdown-options" value="Hospitalisation">
                                                 {{"Hospitalisation"}}
                                             </option>
@@ -115,7 +120,8 @@
                                                 {{"Day Care Treatments"}}
                                             </option>
                                         </select>
-                                        <label for="coverName">{{"Cover Name" | translate}}<span class="text-danger">*</span></label>
+                                        <label for="coverName">{{"Cover Name" | translate}}<span
+                                                class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -124,7 +130,8 @@
                                             name="claimedAmount" formControlName="claimedAmount" type="number"
                                             id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)"
                                             maxlength="12" [attr.max]="999999999999">
-                                        <label for="claimamount">{{"Claim Amount" | translate}} <span class="text-danger">*</span></label>
+                                        <label for="claimamount">{{"Claim Amount" | translate}} <span
+                                                class="text-danger">*</span></label>
                                         <div
                                             *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
                                             <small class="ui-error block-show"
@@ -162,6 +169,16 @@
                                     </div>
                                 </div>
 
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="input-block form-floating input-block-renew">
+                                        <input type="date" class="form-control input-textBox" id="dischargeDate"
+                                            name="dischargeDate" formControlName="dischargeDate"
+                                            placeholder="Date of Discharge" [(ngModel)]="toDate"
+                                            (change)="dateFormat('toDate')" [min]="fromDate" />
+                                        <label for="dischargeDate">{{"Date of Discharge" | translate}}</label>
+                                    </div>
+                                </div> -->
+
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <input type="date" class="form-control input-textBox" id="dischargeDate"
@@ -169,6 +186,9 @@
                                             placeholder="Date of Discharge" [(ngModel)]="toDate"
                                             (change)="dateFormat('toDate')" [min]="fromDate" />
                                         <label for="dischargeDate">{{"Date of Discharge" | translate}}</label>
+                                        <div class="invalid-feedback" *ngIf="dischargeDateError">
+                                            Discharge date cannot be earlier than admission date
+                                        </div>
                                     </div>
                                 </div>
 
@@ -190,7 +210,8 @@
                                             <option *ngFor="let state of states" [value]="state.stateID">{{
                                                 state.stateName | translate }}</option>
                                         </select>
-                                        <label for="state">{{"Select State" | translate}}<span class="text-danger">*</span></label>
+                                        <label for="state">{{"Select State" | translate}}<span
+                                                class="text-danger">*</span></label>
                                         <small class="ui-error block-show"
                                             *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
                                             {{"State is required" | translate}}
@@ -209,7 +230,8 @@
                                             <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName |
                                                 translate }}</option>
                                         </select>
-                                        <label for="city">{{"Select City" | translate}}<span class="text-danger">*</span></label>
+                                        <label for="city">{{"Select City" | translate}}<span
+                                                class="text-danger">*</span></label>
                                         <!-- <span class="ui-error">{{"Please select city" | translate}}</span> -->
                                         <small class="ui-error block-show"
                                             *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
@@ -228,13 +250,14 @@
                                             name="hospitalName" formControlName="hospitalName"
                                             [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                             <option class="dropdown-options" value="" disabled selected>
-                                                {{"Select Hospitals" | translate}} 
+                                                {{"Select Hospitals" | translate}}
                                             </option>
                                             <option *ngFor="let hospital of hospitals" [value]="hospital.hospitalId">
                                                 {{ hospital.hospitalName | translate }}
                                             </option>
                                         </select>
-                                        <label for="city">{{"Select Hospital" | translate}}<span class="text-danger">*</span></label>
+                                        <label for="city">{{"Select Hospital" | translate}}<span
+                                                class="text-danger">*</span></label>
                                         <small class="ui-error block-show"
                                             *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
                                             {{"Hospital Name is required" | translate}}
@@ -279,7 +302,8 @@
                                             name="claimedAmount" formControlName="claimedAmount" type="number"
                                             id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)"
                                             maxlength="12" [attr.max]="999999999999">
-                                        <label for="claimamount">{{"Claim Amount" | translate}} <span class="text-danger">*</span></label>
+                                        <label for="claimamount">{{"Claim Amount" | translate}} <span
+                                                class="text-danger">*</span></label>
                                         <div
                                             *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
                                             <small class="ui-error block-show"
@@ -300,7 +324,8 @@
                                             name="claimedAmount" formControlName="claimedAmount" type="number"
                                             id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)"
                                             maxlength="12" [attr.max]="999999999999">
-                                        <label for="claimamount">{{"Claim Amount" | translate}} <span class="text-danger">*</span></label>
+                                        <label for="claimamount">{{"Claim Amount" | translate}} <span
+                                                class="text-danger">*</span></label>
                                         <div
                                             *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
                                             <small class="ui-error block-show"
@@ -324,10 +349,10 @@
                                         <input type="date" class="form-control input-textBox"
                                             formControlName="admissionDate" id="admissionDate" name="admissionDate"
                                             placeholder="Date of Admission" [(ngModel)]="fromDate"
-                                            (dateChange)="dateFormat('fromDate')" (blur)="validateDate('admissionDate')" [max]="maxDate" />
+                                            (dateChange)="dateFormat('fromDate')" (blur)="validateDate('admissionDate')"
+                                            [max]="maxDate" />
                                         <label for="admissionDate">Date of Admission</label>
-                                        <small
-                                            class="ui-error block-show"
+                                        <small class="ui-error block-show"
                                             *ngIf="form.get('admissionDate')?.errors?.['incorrect']">
                                             Date cannot be in the future
                                         </small>
@@ -348,7 +373,8 @@
                                                 <input type="text" class="form-control input-textBox"
                                                     placeholder="Bill No" formControlName="billNo" id="billNo"
                                                     name="billNo" />
-                                                <label for="addnotes">Bill No. <span class="text-danger">*</span></label>
+                                                <label for="addnotes">Bill No. <span
+                                                        class="text-danger">*</span></label>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
@@ -357,8 +383,7 @@
                                                     formControlName="billDate" id="billDate" name="billDate"
                                                     (blur)="validateDate('billDate')" [max]="maxDate" />
                                                 <label for="addnotes">Date</label>
-                                                <small 
-                                                    class="ui-error block-show"
+                                                <small class="ui-error block-show"
                                                     *ngIf="form.get('billDate')?.errors?.['incorrect']">
                                                     Date cannot be in the future
                                                 </small>
@@ -369,7 +394,8 @@
                                                 <input class="form-control input-textBox" formControlName="billAmount"
                                                     type="number" id="billAmount" name="billAmount"
                                                     placeholder="Bill Amount" (keyup)="onInput($event)">
-                                                <label for="billamount">Bill Amount <span class="text-danger">*</span></label>
+                                                <label for="billamount">Bill Amount <span
+                                                        class="text-danger">*</span></label>
                                                 <div
                                                     *ngIf="form.get('billAmount')?.invalid && (form.get('billAmount')?.touched || form.get('billAmount')?.dirty)">
                                                     <small class="ui-error block-show"
@@ -412,10 +438,11 @@
                                             <input type="date" class="form-control input-textBox"
                                                 formControlName="dischargeDate" id="dischargeDate" name="dischargeDate"
                                                 placeholder="Date of Discharge" [(ngModel)]="toDate"
-                                                (dateChange)="dateFormat('toDate')" (blur)="validateDate('dischargeDate')" [min]="fromDate" [max]="maxDate" />
+                                                (dateChange)="dateFormat('toDate')"
+                                                (blur)="validateDate('dischargeDate')" [min]="fromDate"
+                                                [max]="maxDate" />
                                             <label for="dischargeDate">Date of Discharge</label>
-                                            <small 
-                                                class="ui-error block-show"
+                                            <small class="ui-error block-show"
                                                 *ngIf="form.get('dischargeDate')?.errors?.['incorrect']">
                                                 Date cannot be in the future
                                             </small>
@@ -483,14 +510,13 @@
                                     </div> -->
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select class="form-select input-selectBox" 
-                                                    formControlName="hospitalName"
-                                                    id="hospitalName" 
-                                                    name="hospitalName" 
-                                                    [disabled]="!selectedCity"
-                                                    (change)="fetchBlackListedHsp($event)">
-                                                <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
-                                                <option *ngFor="let hospital of hospitals" [value]="hospital.hospitalId">
+                                            <select class="form-select input-selectBox" formControlName="hospitalName"
+                                                id="hospitalName" name="hospitalName" [disabled]="!selectedCity"
+                                                (change)="fetchBlackListedHsp($event)">
+                                                <option class="dropdown-options" value="" disabled selected>Select
+                                                    Hospitals</option>
+                                                <option *ngFor="let hospital of hospitals"
+                                                    [value]="hospital.hospitalId">
                                                     {{ hospital.hospitalName }}
                                                 </option>
                                                 <option value="others">Others</option>
@@ -502,14 +528,14 @@
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showCustomHospitalInput">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"
+                                        *ngIf="showCustomHospitalInput">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" 
-                                                   class="form-control input-textBox"
-                                                   id="customHospitalName"
-                                                   formControlName="customHospitalName"
-                                                   placeholder="Enter Hospital Name">
-                                            <label for="customHospitalName">Enter Hospital Name<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control input-textBox"
+                                                id="customHospitalName" formControlName="customHospitalName"
+                                                placeholder="Enter Hospital Name">
+                                            <label for="customHospitalName">Enter Hospital Name<span
+                                                    class="text-danger">*</span></label>
                                             <small class="ui-error block-show"
                                                 *ngIf="form.get('customHospitalName')?.invalid && form.get('customHospitalName')?.touched">
                                                 {{"Hospital Name is required" | translate}}
@@ -521,8 +547,8 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" class="form-control input-textBox"
                                                 formControlName="hospitalAddress" id="hospitalAddress"
-                                                name="hospitalAddress" placeholder="{ 'Hospital Address' | translate }"
-                                                 />
+                                                name="hospitalAddress"
+                                                placeholder="{ 'Hospital Address' | translate }" />
                                             <label for="addnotes">Hospital Address</label>
                                             <small class="ui-error block-show"
                                                 *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">
@@ -539,7 +565,8 @@
                                 <textarea class="form-control input-textBox" formControlName="ailmentDescription"
                                     id="ailmentDescription" name="ailmentDescription"
                                     placeholder="Description of the Ailment" maxlength="250"></textarea>
-                                <label for="ailmentDescription">{{"Description of the Ailment" | translate}} <span class="text-danger">*</span></label>
+                                <label for="ailmentDescription">{{"Description of the Ailment" | translate}} <span
+                                        class="text-danger">*</span></label>
                                 <small class="ui-error block-show"
                                     *ngIf="form.get('ailmentDescription')?.hasError('required') && form.get('ailmentDescription')?.touched">
                                     Description of ailment is required.
@@ -592,7 +619,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="uploadDocument_main">
+                        <!-- <div class="uploadDocument_main">
                             <div class="uploadDocument_area" (click)="fileInput.click()">
                                 <div class="ud_area_left">
                                     <h6>{{ "Upload Documents" | translate }}</h6>
@@ -610,15 +637,15 @@
                                     multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />       
                             </div>
                          
-                            <!-- Error Messages Section -->
+                            <!-- Error Messages Section 
                             <div class="error-messages-container">
                                 <!-- <span *ngIf="form.get('claimType')?.value === 'Reimbursement'" class="ui-error block-show">
                                     {{ "Please upload all required documents" | translate }}
                                   </span> -->
 
-                                <!-- <span *ngIf="errors.fileNotSelected" class="ui-error block-show">
+                        <!-- <span *ngIf="errors.fileNotSelected" class="ui-error block-show">
                                 {{ "Please select a file to continue" | translate }}
-                              </span> -->
+                              </span> 
                               <span *ngIf="errors.policyNumberRequired" class="ui-error block-show">
                                 {{ "Please select policy number before uploading documents" | translate }}
                               </span>
@@ -657,7 +684,7 @@
                                                             </ng-container>
                                                             <ng-container *ngIf="file.isEditing">
                                                                 <input type="text" [formControl]="editableControl" (blur)="stopEditing(file)" (keydown)="onLabelKeyDown($event, file)" autofocus />
-                                                            </ng-container> -->
+                                                            </ng-container> 
                                                             <ng-container *ngIf="file.isEditing">
                                                                 <div class="label-editing-container">
                                                                     <form [formGroup]="file.documentLabelForm">
@@ -728,20 +755,113 @@
                                     </div>                             
                                 </div>
                             </div>
+                        </div> -->
+                        <div class="uploadDocument_main">
+                            <div class="document-sections">
+                                <ng-container *ngFor="let section of documentSections">
+                                    <div class="upload-section mb-4">
+                                        <h4 class="section-title">{{ section.label }}</h4>
+
+                                        <!-- Upload Area - Show only if no file is uploaded -->
+                                        <div class="uploadDocument_area" (click)="triggerFileInput(section.id)"
+                                            *ngIf="!section.file">
+                                            <div class="ud_area_left">
+                                                <p>{{ "JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)" | translate }}</p>
+                                            </div>
+                                            <div class="ud_area_right">
+                                                <button type="button" class="btn_uploadDocument">
+                                                    <span class="upload_icon">
+                                                        <img src="assets/Img/icon_upload_white.svg">
+                                                    </span>
+                                                    {{ "Upload" | translate }}
+                                                </button>
+                                            </div>
+                                            <input type="file" [id]="'fileInput_' + section.id"
+                                                (change)="onFileSelected($event, section.id)" style="display:none;"
+                                                accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                                        </div>
+
+                                        <!-- Uploaded File Display -->
+                                        <div class="uploadDocument_listMain" *ngIf="section.file">
+                                            <div class="uploadDocument_filesList">
+                                                <div class="filesList_head">
+                                                    <div class="filesList_headLeft"></div>
+                                                    <div class="headInfo_item">
+                                                        <div class="upload-success"
+                                                            *ngIf="section.file.status === 'success'">
+                                                            <img src="assets/Img/icon_check_circle.svg">
+                                                            <span class="success-text">Success</span>
+                                                        </div>
+                                                        <div class="upload-fail"
+                                                            *ngIf="section.file.status === 'failed'">
+                                                            <img src="assets/Img/icon_failure.svg">
+                                                            <span class="failed-text">Failed</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="filesList_body">
+                                                    <div class="uploadedFiles_main">
+                                                        <div class="uploadedFiles_item">
+                                                            <div class="uploadDocument_file">
+                                                                <div class="uploadedFiles_infoItem">
+                                                                    <h4>{{ section.file.name }}</h4>
+                                                                    <p>{{ section.file.type }}</p>
+                                                                </div>
+                                                                <div class="uploadedFiles_infoItem">
+                                                                    <button type="button" id="deletefile"
+                                                                        class="delete-button"
+                                                                        (click)="deleteFile(section.id)">
+                                                                        <img src="assets/Img/icon_delete_red2.svg">
+                                                                    </button>
+                                                                    <div class="size-align">
+                                                                        <p>{{ convertBytesToKB(section.file.size) }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <!-- Error Messages Section -->
+                            <!-- <div class="error-messages-container">
+                              <span *ngIf="errors.policyNumberRequired" class="ui-error block-show">
+                                {{ "Please select policy number before uploading documents" | translate }}
+                              </span>
+                              <span *ngIf="errors.invalidFormat" class="ui-error block-show">
+                                {{ "File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate }}
+                              </span>
+                              <span *ngIf="errors.requiredDocs" class="ui-error block-show">
+                                {{ errors.requiredDocs }}
+                              </span>
+                            </div> -->
+                            <div class="error-messages-container">
+                                <span *ngIf="errors.missingDocuments" class="ui-error block-show">
+                                    {{ "Please upload documents for all sections before submitting" | translate }}
+                                </span>
+                            </div>
                         </div>
-
                     </div>
-
                 </form>
             </section>
             <div class="row">
                 <div class="col-12">
                     <button type="button" id="submitrequest" name="submitrequest" class="btn_red"
-                    (click)="submitRequest()" 
-                    [ngClass]="{'disabled': form.invalid || isDisabled }"
-                    [disabled]="form.invalid && isDisabled"
-                >{{"Submit Request" | translate}}</button>
+                        (click)="submitRequest()" [ngClass]="{'disabled': form.invalid || isSubmitDisabled()}"
+                        [disabled]="form.invalid && isSubmitDisabled()">{{"Submit Request" | translate}}</button>
                 </div>
+                <!-- <div *ngIf="!areAllSectionsComplete()" class="missing-sections mt-2">
+                  <p>{{ "Missing documents in sections:" | translate }}</p>
+                  <ul>
+                    <li *ngFor="let section of getMissingSections()">
+                      {{ section.label }}
+                    </li>
+                  </ul>
+                </div> -->
             </div>
         </div>
     </div>
