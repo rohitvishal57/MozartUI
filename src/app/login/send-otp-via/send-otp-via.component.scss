@@ -82,3 +82,30 @@
     width: 100%;
 }
 }
+
+.skip-btn {
+    background-color: #C7222A; /* Orange color */
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Hover effect */
+  .skip-btn:hover {
+    background-color: #C7222A; /* Darker orange */
+    transform: scale(1.05);
+  }
+  
+  /* Disabled state */
+  .skip-btn:disabled {
+    background-color: #ddd; /* Light grey */
+    color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  

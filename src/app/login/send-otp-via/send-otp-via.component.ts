@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from '../login/login.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,8 +12,10 @@ import { LoginService } from '../login/login.service';
 })
 export class SendOtpViaComponent implements OnInit{
   // searchQuery: string = '';
+  isSkipEnabled = true;
+
   filteredContacts: any[] = []; 
-  constructor( public dialogRef: MatDialogRef<SendOtpViaComponent>, private loginService: LoginService, private toast: NgToastService,
+  constructor( public dialogRef: MatDialogRef<SendOtpViaComponent>, private loginService: LoginService, private router: Router, private toast: NgToastService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any){
 
   }
@@ -66,7 +69,8 @@ export class SendOtpViaComponent implements OnInit{
               localStorage.setItem("requestId", res?.data?.requestId);
               this.dialogRef.close({data:data, status:'Success'});
             } else {
-              this.dialogRef.close({data: res.message, status:'Failure'});
+              // this.dialogRef.close({data: res.message, status:'Failure'});
+              this.isSkipEnabled = true;
             }
           },
           error: (err => {
@@ -78,5 +82,10 @@ export class SendOtpViaComponent implements OnInit{
   }
   close(){
     this.dialogRef.close();
+  }
+
+  onSkip() {
+    this.dialogRef.close({ data: null, status: 'Skipped' });
+    this.router.navigate(["dashboard"]);
   }
 }

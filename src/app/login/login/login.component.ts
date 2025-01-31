@@ -219,6 +219,7 @@ export class LoginComponent implements OnInit {
         if (res?.data?.contactInfo?.length > 0) {
           this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
           localStorage.setItem('agentCode', res.data.agentId);
+          localStorage.setItem('parentCode', res.data.agentId);
           this.openModal(this.contactInfoData);
         } else {
           this.userErrorMsg = res.message;
