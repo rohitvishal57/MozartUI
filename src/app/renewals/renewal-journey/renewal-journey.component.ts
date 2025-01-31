@@ -14,6 +14,7 @@ import { RenewalsService } from '../renewals.service';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CustomersService } from 'src/app/customers/customers.service';
+import { detailsForms } from 'src/assets/styles/renewals-forms/customer_payment';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -56,7 +57,7 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
   rowData: any={};
-  formSequence: any[] = [leads,payment,thankYou];
+  formSequence: any[] = [detailsForms,leads,payment,thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
@@ -169,7 +170,7 @@ export class RenewalJourneyComponent {
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
-      this.formSequence = [leads,payment,thankYou];
+      this.formSequence = [detailsForms,leads,payment,thankYou];
     }
     console.log(this.formData, this.proposalNum, this.policyNumber);
     const transFormData={nomineeFirstName: this.formData.nomineeDetails?.nominee_first_name || "",

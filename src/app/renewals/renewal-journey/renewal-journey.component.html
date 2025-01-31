@@ -2,7 +2,7 @@
 
     <div class="main-subContainer">
 
-        <div class="left-nav left-nav-hideMobile" *ngIf="formIndex != 3">
+        <div class="left-nav left-nav-hideMobile" *ngIf="formIndex != 4">
             <!-- <div class="left-navInner left-main-cnt">
                 <div class="yourProgress bcl_main">
                     <h1>{{"Your Progress" | translate}}</h1>
@@ -870,6 +870,23 @@
                                         </ng-container>
                                     </div>
                                 </div>
+
+                                <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">
+                                    <div [class]="control.class" style="display: -webkit-box;">
+                                      <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
+                                        [name]="control.name" id="{{control.name}}" class="checkbox-label"
+                                       />
+                                      <label [for]="control.name"
+                                        [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
+                                        class="checkboxes"><span *ngIf="control.validators">*</span></label>
+                                    </div>
+                                    <small
+                                      *ngIf="renewalFormGroup.get(control.name)?.invalid && (renewalFormGroup.get(control.name)?.touched)"
+                                      class="text-danger"> {{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
+                                      ''
+                                      }}
+                                    </small>
+                                  </div>
 
                                 <!--type combinedCheckbox-->
                                 <div *ngIf="control.type === 'combinedCheckbox'" [class]="control.class"

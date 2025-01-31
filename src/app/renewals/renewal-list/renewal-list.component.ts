@@ -790,7 +790,7 @@ export class RenewalListComponent {
               proposalNum: this.encryptionService.encrypt(""),
               policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
               journeyProcess: this.encryptionService.encrypt(0),
-              formIndex: "2",
+              formIndex: "3",
             },
           });
         } else {
@@ -802,7 +802,7 @@ export class RenewalListComponent {
             state: {
               formData: this.encryptionService.encrypt(formData),
               policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
-              formIndex: "2",
+              formIndex: "3",
             },
           });
         }
@@ -814,7 +814,7 @@ export class RenewalListComponent {
             formData: this.encryptionService.encrypt(formData),
             policyNumber: this.encryptionService.encrypt(paymentDetail?.oldPolicyNumber),
             paymentStatus: this.encryptionService.encrypt(paymentDetail?.paymentStatus),
-            formIndex: "2",
+            formIndex: "3",
           },
         });
       }

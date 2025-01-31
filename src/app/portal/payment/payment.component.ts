@@ -7,7 +7,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { thankYou, thankYouFQFailed, thankYouPending } from 'src/assets/styles/renewals-forms/combined_forms';
 import { leads, payment } from 'src/assets/styles/renewals-forms/payment';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
+import { customer_payment, detailsForms } from 'src/assets/styles/renewals-forms/customer_payment';
 
 @Component({
   selector: 'app-payment',
@@ -294,8 +294,8 @@ export class PaymentComponent {
             state: {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
-              formSequence: this.encryptionService.encrypt([leads,payment, thankYou]),
-              formIndex: "1",
+              formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+              formIndex: "2",
             }
           });
           }  
@@ -308,8 +308,8 @@ export class PaymentComponent {
                 proposalNum: this.encryptionService.encrypt(""),
                 // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([leads,payment, thankYou]),
-                formIndex: "2",
+                formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+                formIndex: "3",
               },
             });
           } else {
@@ -319,7 +319,7 @@ export class PaymentComponent {
               state: {
                 formData: this.encryptionService.encrypt(formData),
                 // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
-                formIndex: "2",
+                formIndex: "3",
               },
             });
           }
@@ -342,8 +342,8 @@ export class PaymentComponent {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
               // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
-              formSequence: this.encryptionService.encrypt([leads, payment, thankYou]),
-              formIndex: "1",
+              formSequence: this.encryptionService.encrypt([detailsForms,leads, payment, thankYou]),
+              formIndex: "2",
             }
           });
         }

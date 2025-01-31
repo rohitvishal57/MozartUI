@@ -7,7 +7,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { kycThankYou, thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
-import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
+import { customer_payment, detailsForms } from 'src/assets/styles/renewals-forms/customer_payment';
 import { leads, payment } from 'src/assets/styles/renewals-forms/payment';
 
 @Component({
@@ -239,9 +239,9 @@ export class KycComponent {
                     proposalNum: this.encryptionService.encrypt(""),
                     policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                     journeyProcess: this.encryptionService.encrypt(0),
-                    formSequence: this.encryptionService.encrypt([leads,payment, thankYou]),
+                    formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
                     kycStatus: this.encryptionService.encrypt(res.data.kycStatus),
-                    formIndex: "1",
+                    formIndex: "2",
                   },
                 });
               } catch (err) {
@@ -259,9 +259,9 @@ export class KycComponent {
                   proposalNum: this.encryptionService.encrypt(""),
                   policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                   journeyProcess: this.encryptionService.encrypt(0),
-                  formSequence: this.encryptionService.encrypt([leads,payment, thankYou]),
+                  formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
                   kycStatus: this.encryptionService.encrypt(res.data.kycStatus),
-                  formIndex: "1",
+                  formIndex: "2",
                 }
               });
             }
