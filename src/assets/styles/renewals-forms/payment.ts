@@ -718,16 +718,6 @@ export const leads = {
       "visibleLabel": true,
       "class": "section-title",
       "formControls": [
-        // {
-        //   "name": "personalDetails",
-        //   "label": "Nominee Personal Details",
-        //   "visibleLabel": true,
-        //   "visible": true,
-        //   "value": "",
-        //   "type": "paragraph",
-        //   // "methodName": "checkNomineeDetail",
-        //   "class": "col-12 col-md-6 col-lg-12 section-paragraph"
-        // },
         {
           "name": "nomineeFirstName",
           "label": "First Name",
@@ -745,7 +735,7 @@ export const leads = {
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,25}$",
+              "pattern": "^[a-zA-Z ]{1,35}$",
               "message": "Maxmium Length for FirstName is 25"
             }
           ]
@@ -777,7 +767,7 @@ export const leads = {
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,25}$",
+              "pattern": "^[a-zA-Z ]{1,35}$",
               "message": "Maxmium Length for LastName is 25"
             }
           ]
@@ -885,7 +875,7 @@ export const leads = {
             },
             {
               "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,25}$",
+              "pattern": "^[a-zA-Z ]{1,35}$",
               "message": "Maxmium Length for AppointeeName is 25"
             }
           ]
@@ -995,11 +985,6 @@ export const leads = {
               "validatorName": "required",
               "required": true,
               "message": "Account Holder name is required field"
-            },
-            {
-              "validatorName": "pattern",
-              "pattern": "^[a-zA-Z ]{1,25}$",
-              "message": "Maxmium Length for Name is 25"
             }
           ]
         },

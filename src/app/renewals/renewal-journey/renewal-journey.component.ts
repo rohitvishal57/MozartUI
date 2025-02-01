@@ -195,12 +195,6 @@ export class RenewalJourneyComponent {
       appointeeName: this.formData.nomineeDetails?.appointee_Name || "",
       appointeeContactNo : this.formData.nomineeDetails?.appointee_Mobile_Np || "",
       appointeeRelationWithNominee : this.formData.nomineeDetails?.appointee_Relation || "",
-      // paymentAccountNumber : "",
-      // paymentBankName: "",
-      // paymentBankBranchName : "",
-      // paymentBankCityName : "",
-      // paymentIfscCode : "",
-      // paymentMicrCode : ""
     }
     this.formData = { ...this.formData, ...transFormData };
     // Call the function to handle form data and sequence
@@ -209,10 +203,8 @@ export class RenewalJourneyComponent {
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
     });
-    console.log("form",this.form);
-    
+    console.log("form",this.form);  
   }
-
 
   async getFormDataFromFormSequence() {
     console.log(this.formSequence, this.getFormIndexValue(), this.form);
@@ -514,7 +506,7 @@ export class RenewalJourneyComponent {
             if ((control.type === 'select') && control.options) {
               // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
-                await this.callMethod(control.getAllOption, control);
+                await this.resolveMethod(control.getAllOption, control);
               }
               else if (control.options.length === 0 && control.name == 'zoneValue') {
                 control.options = this.formData['upgradableZones'];
@@ -627,26 +619,16 @@ export class RenewalJourneyComponent {
                         control.visible = false;
                     }
                 }
+            }          
+            if (control.disabled) {
+              this.renewalFormGroup.get(control.name)?.disable();
             }
-
         });
-      });
-      // this.renewalFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
-      //dynamic css
-      // this.showHtmlContent = true;
-      console.log(this.form);
-      console.log(this.renewalFormGroup.value, this.formData);
-
-
-
-      // this.flattenObject(this.formData);
-      // this.spinner.hide();
+      });      
     }
-
     if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
       this.isFeedBackModalVisible = true;
     }
-
   }
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null) {
@@ -714,6 +696,8 @@ export class RenewalJourneyComponent {
         }
       }
       if(control.name != "relationshipType"){
+        console.log(control.name);
+        
         if (control.disabled) {
          formGroup.get(control.name)?.disable();
         }
@@ -2779,12 +2763,11 @@ export class RenewalJourneyComponent {
     if (control.options.length <= 0) {
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-        // const matchingOption = res.data.find((opt:any) => opt.value === control.value);
-        // if (matchingOption) {
-        //   control.value = JSON.stringify(matchingOption);
-        //   console.log(control.value, JSON.stringify(matchingOption));
-          
-        // }
+        const matchingOption = res.data.find((opt:any) => opt.value === control.value);
+        if (matchingOption) {
+          control.value = JSON.stringify(matchingOption);
+          console.log(control.value, JSON.stringify(matchingOption));
+        }
           control.options = res.data;
         },
         error: (err) => {
@@ -3125,9 +3108,11 @@ export class RenewalJourneyComponent {
     this.yatraService.getNomineeRelationship().subscribe({
       next: (res: any) => {
         control.options = res.data;
-        control.options.forEach((option: any) => {
-          // if(option.name == this.formData)
-        })
+        const matchingOption = res.data.find((opt:any) => opt.name === control.value);
+        if (matchingOption) {
+          control.value = JSON.stringify(matchingOption);
+          console.log(control.value, JSON.stringify(matchingOption));
+        }
       },
       error: (err) => {
         console.error(err);
@@ -4233,6 +4218,7 @@ export class RenewalJourneyComponent {
   }
 
   checkleadValidation(controls: any) {
+    const data = this.renewalFormGroup.value;
     let result = false;
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
@@ -4252,6 +4238,10 @@ export class RenewalJourneyComponent {
         }
       });
     });
+    if (Number(this.calculateAge(data.nomineeDob)) < 18 && (!data.appointeeName || !data.appointeeRelationWithNominee)) {
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory appointee fields", duration: 3000 });
+      return;
+    }    
     if(controls.name == "Bank Account Details" && !result){
       this.updateBankDetails(controls);
     } else if(controls.name == "Nominee Details" && !result){
@@ -4261,6 +4251,11 @@ export class RenewalJourneyComponent {
   }
 
   generatehalfqoute(control:any){
+    const data = this.renewalFormGroup.value;
+    if (Number(this.calculateAge(data.nomineeDob)) < 18 && (!data.appointeeName || !data.appointeeRelationWithNominee)) {
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory appointee fields", duration: 3000 });
+      return;
+    }  
     const halfQuote = {
       policy_Number: this.policyNumber,
     };
@@ -4269,9 +4264,9 @@ export class RenewalJourneyComponent {
           if(res.data.isSuccess){
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-            this.toast.success({ detail: "Success", summary: res.data.messsage || "half quote generated successfully.", duration: 3000 });
+            this.toast.success({ detail: "Success", summary: res.data.message || "half quote generated successfully.", duration: 3000 });
           } else {
-          this.toast.error({ detail: "Error", summary: res.data.messsage || "Failed to create half quote generateds", duration: 3000 });
+          this.toast.error({ detail: "Error", summary: res.data.message || "Failed to create half quote generateds", duration: 4000 });
           }
         },
         (err) => {
