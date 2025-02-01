@@ -278,6 +278,34 @@
                   </small>
                 </div>
 
+                <div *ngIf="control.type==='customizeSelect'" [class]="control.class" class="typecss" [hidden]="!control.visible">
+                  <div class="input-container custom-dropdown">
+                    <!-- Label -->
+                    <label *ngIf="control.visibleLabel">
+                      {{ control.label ? (control.label | translate) : '' }}
+                      <span *ngIf="control.validators">*</span>
+                    </label>
+                
+                    <!-- Input field with datalist -->
+                    <input type="text" formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                      list="agentIdList" class="inputField_Select pointer-cursor" (change)="onInputChange($event, control)"
+                      [ngClass]="{'has-value': hasAnyValue(control)}" placeholder="{{ control.label }}">
+                
+                      <datalist id="agentIdList">
+                        <ng-container *ngFor="let opt of control.options" [class]="control.class">
+                          <option [value]="opt.value" [disabled]="opt.disabled" [class]="opt.class">
+                            {{ opt.name ? (opt.name | translate) : '' }}
+                          </option>
+                        </ng-container>
+                      </datalist>                
+                  </div>
+                  <!-- Validation Error Message -->
+                  <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                    class="text-danger">
+                    {{ getValidationErrors(control) ? (getValidationErrors(control) | translate) : '' }}
+                  </small>
+                </div>
+
                 <div *ngIf="control.type === 'captcha'">
                   <img *ngIf="control.imagesrc" [src]="control.imagesrc" alt="captcha" [class]="control.class">
                 </div>

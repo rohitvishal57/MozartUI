@@ -260,4 +260,10 @@ export class YatraService {
     // const suminsuredList = `https://localhost:7070/getactivesecuresidetails`;
     return this.httpService.post(suminsuredList,reqData);
   }
+
+  getFlsCodeViaAgentCode(reqData:any){
+    const flsCode = this.configService.config.baseUrl + this.configService.config.getParentCodeViaAgentId;
+    // const flsCode =`https://upuat.monocept.ai/api/yatra/getflsagents`
+    return this.httpService.post(flsCode,reqData);
+  }
 }

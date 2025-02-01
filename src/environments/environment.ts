@@ -236,5 +236,6 @@ export const environment = {
   sendRetailLinkToCustomer: "api/rug/SendRetailLinkToCustomer",
   getRetailRenewalPhaseTwoLeads: "api/rug/GetRetailRenewalPhaseTwoLeads",
   getRenewalPolicyData: "api/rug/GetRenewalPolicyData",
-  getGroupRenewalPhaseTwoLeads: "api/rug/GetGroupRenewalPhaseTwoLeads"
+  getGroupRenewalPhaseTwoLeads: "api/rug/GetGroupRenewalPhaseTwoLeads",
+  getParentCodeViaAgentId:"api/yatra/getflsagents"
 };
