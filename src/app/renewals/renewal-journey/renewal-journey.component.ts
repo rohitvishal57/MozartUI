@@ -3,7 +3,7 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -89,6 +89,8 @@ export class RenewalJourneyComponent {
   tempFormData: any;
   bankDetail: any;
   bankName:any;
+  nomineeRelationList :any;
+  bankNameList :any;
 
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
@@ -674,7 +676,7 @@ export class RenewalJourneyComponent {
         }
         if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
-            this.callMethod(control.getAllOption, control);
+            this.resolveMethod(control.getAllOption, control);
           }
         }
 
@@ -731,7 +733,7 @@ export class RenewalJourneyComponent {
 
         if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
-            this.callMethod(control.getAllOption, control);
+            this.resolveMethod(control.getAllOption, control);
           }
         }
         if (control.innerArrayControl) {
@@ -782,7 +784,7 @@ export class RenewalJourneyComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.callMethod(subControls.getAllOption, subControls);
+          this.resolveMethod(subControls.getAllOption, subControls);
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -2759,23 +2761,47 @@ export class RenewalJourneyComponent {
   }
 
   // getall bank details
-  getAllBankDetails(control: any) {
-    if (control.options.length <= 0) {
+  async getAllBankDetails(control: any) {
+    if (!this.bankNameList) { 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-        const matchingOption = res.data.find((opt:any) => opt.value === control.value);
-        if (matchingOption) {
-          control.value = JSON.stringify(matchingOption);
-          console.log(control.value, JSON.stringify(matchingOption));
-        }
-          control.options = res.data;
+          this.bankNameList = res.data;
+          this.setBankOptions(control);
         },
         error: (err) => {
           console.error(err);
         }
       });
+    } else {
+      this.setBankOptions(control);
     }
-  } 
+  }
+  
+  private setBankOptions(control: any) {
+    control.options = this.bankNameList;
+    const matchingOption = this.bankNameList.find((opt: any) => opt.value?.toString().toLowerCase() === control.value?.toString().toLowerCase());    
+    if (matchingOption) {
+      control.value = JSON.stringify(matchingOption);
+    }
+    this.renewalFormGroup.get(control.name)?.setValue(control.value);
+  }
+  
+// async getAllBankDetails(control: any) {
+//   if (control.options.length > 0) return;
+//   try {
+//     const res: any = await lastValueFrom(this.yatraService.getAllBankDetails());
+
+//     const matchingOption = res.data.find((opt: any) => opt.value === control.value);
+//     if (matchingOption) {
+//       control.value = JSON.stringify(matchingOption);
+//       console.log(control.value, JSON.stringify(matchingOption));
+//     }
+//     control.options = res.data;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
+ 
   
 
   getBankCity(event: any, otherControl: any) {
@@ -3104,21 +3130,44 @@ export class RenewalJourneyComponent {
     control.value = a;
   }
 
-  getNomineeRelationShip(control: any) {
-    this.yatraService.getNomineeRelationship().subscribe({
-      next: (res: any) => {
-        control.options = res.data;
-        const matchingOption = res.data.find((opt:any) => opt.name === control.value);
-        if (matchingOption) {
-          control.value = JSON.stringify(matchingOption);
-          console.log(control.value, JSON.stringify(matchingOption));
+  async getNomineeRelationShip(control: any) {
+    if (!this.nomineeRelationList) {
+      this.yatraService.getNomineeRelationship().subscribe({
+        next: (res: any) => {
+          this.nomineeRelationList = res.data;
+          this.setNomineeOptions(control);
+        },
+        error: (err) => {
+          console.error(err);
         }
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+      });
+    } else {
+      this.setNomineeOptions(control);
+    }
   }
+  
+  private setNomineeOptions(control: any) {
+    control.options = this.nomineeRelationList;
+    const matchingOption = this.nomineeRelationList.find((opt: any) => opt.name?.toString().toLowerCase() === control.value?.toString().toLowerCase());
+        if (matchingOption) {
+      control.value = JSON.stringify(matchingOption);
+    }
+    this.renewalFormGroup.get(control.name)?.setValue(control.value);
+  }
+   
+// async getNomineeRelationShip(control: any) {
+//   try {
+//     const res: any = await lastValueFrom(this.yatraService.getNomineeRelationship());
+//     control.options = res.data;
+//     const matchingOption = res.data.find((opt: any) => opt.name === control.value);
+//     if (matchingOption) {
+//       control.value = JSON.stringify(matchingOption);
+//       console.log(control.value, JSON.stringify(matchingOption));
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
 
   getNatureOfDuty(control: any) {
     this.yatraService.getNatureOfDuty().subscribe({
@@ -4149,6 +4198,10 @@ export class RenewalJourneyComponent {
 
   updateNomineeDetails(control: any){
     const data = this.renewalFormGroup.value;
+    console.log(data);
+    console.log(this.renewalFormGroup.value,this.form,this.formData);
+    
+
     const nomiData = {
       "nominee_first_name": data.nomineeFirstName,
       "nominee_last_name": data.nomineeLastName,
