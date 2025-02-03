@@ -2732,13 +2732,13 @@ export class YatraComponent {
                           coreControl.options = [{
                             "id": "1",
                             "value": "ND0410",
-                            "name": "Retired"
+                            "name": "Retired "
                           }]
                         } else if ((this.parsedValue && this.parsedValue.name === 'Student') && coreControl.name == "occupationRisk") {
                           coreControl.options = [{
                             "id": "2",
                             "value": "ND0277",
-                            "name": "Student"
+                            "name": "Student "
                           }]
                         } else if ((this.parsedValue && this.parsedValue.name === 'Not Employed') && coreControl.name == "occupationRisk") {
                           coreControl.options = [{
