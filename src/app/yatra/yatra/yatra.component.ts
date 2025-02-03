@@ -6967,7 +6967,6 @@ export class YatraComponent {
             else {
               const coverId = addOnData.addOnId;
               const coverName = addOnData.optionalCoverName || addOnData.additionalCoverName;
-              const coverValue = addOnData.isCoverValue;
               let coverFound = false;
 
               if (!member.covers) {
@@ -7009,7 +7008,6 @@ export class YatraComponent {
                   coverName: coverName,
                   weeklyCashLimit:weeklyCashLimit,
                   noOfDays:noOfDays,
-                  coverValue:coverValue
                 });
               }
 
@@ -7027,7 +7025,6 @@ export class YatraComponent {
                   coverName: coverName,
                   weeklyCashLimit:weeklyCashLimit,
                   noOfDays:noOfDays,
-                  coverValue:coverValue
                 });
               }
 
