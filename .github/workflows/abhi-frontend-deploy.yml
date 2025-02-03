@@ -1,12 +1,12 @@
 name: Build and Deploy Angular App to Azure VM
 
 on:
-  # push:
-  #   branches:
+   push:
+     branches:
        - RV_abhi_frontend_deploy
       # - Dev
       # - release
-   workflow_dispatch:
+  # workflow_dispatch:
   #   inputs:
   #     environment:
   #       description: 'Deployment environment'
@@ -86,7 +86,7 @@ jobs:
     #     ls -la MozartUI-Dev
       
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: angular-artifacts
         path: ./dist/*
@@ -203,7 +203,7 @@ jobs:
       run: mkdir -p ./my-artifacts
       
     - name: Download build artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: angular-artifacts
         path: ./my-artifacts
