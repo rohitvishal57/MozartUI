@@ -1833,9 +1833,9 @@
                                                       </div>
                                                     </div>
                                                     <div *ngIf="['text'].includes(innerControl.type)"
-                                                    [class]="innerControl.class" class="typecss" [hidden]="!control.visible">
+                                                    [class]="innerControl.class" class="typecss" [hidden]="!innerControl.visible">
                                                     <div class="input-container">
-                                                      <input *ngIf="!innerControl.disabled"formControlName="{{ innerControl.name }}"
+                                                      <input *ngIf="!innerControl.disabled" formControlName="{{ innerControl.name }}"
                                                         [name]="innerControl.name" [id]="innerControl.name" class="inputField_Text"
                                                         [type]="innerControl.type"
                                                         [ngClass]="{'has-value': hasSubValue(control,subControl,innerSubForm,innerControl,l)}"

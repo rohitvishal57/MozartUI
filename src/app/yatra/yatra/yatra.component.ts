@@ -10730,7 +10730,7 @@ export class YatraComponent {
     }
   }
   disableControlForAllOtherMembers(control:any){
-    if(control.name=='burnBenefit'){
+    if(control.name=='burnBenefit' || control.name=='brokenBonesBenefit'){
      const addOnControlGroup = this.dynamicFormGroup.get(control.name);
      if ( addOnControlGroup) {
        const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
@@ -10739,7 +10739,7 @@ export class YatraComponent {
          if (index != 0) {
            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
            memberArray.controls.forEach((member: any) => {
-             const memberDaysControl = member.get('burnBenefit');
+             const memberDaysControl = member.get('addOnSumInsured');
              if (memberDaysControl) {
                memberDaysControl.disable();
              }
@@ -10764,27 +10764,10 @@ export class YatraComponent {
          }
        })
      }
-    }else if(control.name=='brokenBonesBenefit'){
-     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
-     if ( addOnControlGroup) {
-       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
-       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
-         console.log(Key, index);
-         if (index != 0) {
-           const memberArray = addOnDetailsControl?.get(Key) as FormArray;
-           memberArray.controls.forEach((member: any) => {
-             const memberDaysControl = member.get('bonesBenefit');
-             if (memberDaysControl) {
-               memberDaysControl.disable();
-             }
-           })
-         }
-       })
-     }
     }
    }
   autoSelectControlValueForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any){
-    if(parentControl.name=='burnBenefit'){
+    if(parentControl.name=='burnBenefit' || parentControl.name=='brokenBonesBenefit'){
       console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
       const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
       if (addOnControlGroup) {
@@ -10796,7 +10779,7 @@ export class YatraComponent {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;  
             memberArray.controls.forEach((member: any) => {
               console.log(member);
-              const memberControlCheckbox = member.get('burnBenefit');  
+              const memberControlCheckbox = member.get('addOnSumInsured');  
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
               }
@@ -10818,27 +10801,6 @@ export class YatraComponent {
             memberArray.controls.forEach((member: any) => {
               console.log(member);
               const memberControlCheckbox = member.get('noOfDays');  
-              if (memberControlCheckbox) {
-                memberControlCheckbox.setValue(event.target.value);
-              }
-            })
-          }
-  
-        })
-      }
-    }else if(parentControl.name=='brokenBonesBenefit'){
-      console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
-      const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
-      if (addOnControlGroup) {
-        const addOnDetailsControl = addOnControlGroup.get(subControl.name);
-        console.log("addOnDetailsControl",addOnDetailsControl?.getRawValue());
-        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
-          console.log(Key, index);
-          if (index != 0) {
-            const memberArray = addOnDetailsControl?.get(Key) as FormArray;  
-            memberArray.controls.forEach((member: any) => {
-              console.log(member);
-              const memberControlCheckbox = member.get('bonesBenefit');  
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
               }
