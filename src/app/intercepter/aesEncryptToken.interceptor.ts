@@ -100,7 +100,8 @@ export class EncryptionInterceptor implements HttpInterceptor {
     "https://usp.monocept.ai/api/rug/GetRenewalPolicyData",
     "https://usp.monocept.ai/api/rug/SendRetailLinkToCustomer",
     "https://upuat.adityabirlahealth.com/api/rug/GetGroupRenewalPhaseTwoLeads",
-    "https://usp.monocept.ai/api/rug/GetGroupRenewalPhaseTwoLeads"
+    "https://usp.monocept.ai/api/rug/GetGroupRenewalPhaseTwoLeads",
+    "https://upuat.adityabirlahealth.com/api/rug/CreateManageLob"
   ];
   
 
