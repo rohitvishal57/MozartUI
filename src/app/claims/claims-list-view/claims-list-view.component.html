@@ -266,7 +266,7 @@
                                         <td><span class="text-break-w100">{{row?.mobileNumber}}<br />{{row?.email}}</span></td>
                                         <td>{{ designationName }}</td>
                                         <td>{{ row?.memberName }}<br/>{{ row?.memberRelation }}</td>
-                                        <td>{{ row?.requestType }}</td>
+                                        <td>{{ row?.claimType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                         <td>{{ row?.reportedDateTime | datepipe }}</td>
                                         <td>
@@ -334,7 +334,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Claim Type" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.requestType | translate}}</div>
+                                <div class="item_value">{{ gridClaims?.claimType | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Raised Date" | translate}}</div>

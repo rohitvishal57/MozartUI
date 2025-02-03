@@ -64,6 +64,7 @@ export interface IFormControl {
   validationRules?: any[];
   disabled?: boolean;
   dynamicControls?: IDynamicControl[][];
+  innerArrayControl?:IDynamicControl[][];
   bannerText?: string;
   image?: Image;
   additionalCovers?: IAdditionalCover[];
