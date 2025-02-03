@@ -1,0 +1,155 @@
+<div class="main-container" *ngIf="isHtmlrender==true">
+    <div class="main-subContainer">
+        <!--MOBILE: Form Step Process Start-->
+
+        <!--MOBILE: Form Step Process End-->
+        <div class="right-panel">
+            <form [formGroup]="sharecontentForm" style="margin-bottom: 20%;">
+                <ng-container *ngFor="let section of sharecontent.formSections">
+                    <div *ngIf="section.visible" class="card-body accordionCard" [class]="section.class">
+                        <!-- <div class="line" style="display: none;"></div> -->
+                        <div class="accordionCardHeader" *ngIf="section.visibleLabel == true">
+                            <h3 [innerHTML]="section.sectionTitle | translate" [class]="section.class"></h3>
+                            <span class="accordionArrow"></span>
+                        </div>
+                        <div class="accordionCardBody">
+                            <ng-container *ngFor="let control of section.formControls; index as h">
+                                <div *ngIf="['text', 'email', 'password', 'time'].includes(control.type)"
+                                    [class]="control.class" class="typecss" [hidden]="!control.visible">
+                                    <div class="input-container">
+                                        <input *ngIf="!control.disabled" class="inputField_Text"
+                                            formControlName="{{ control.name }}" [type]="control.type"
+                                            [id]="control.name" [name]="control.name" />
+                                        <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                                            formControlName="{{ control.name }}" [type]="control.type"
+                                            [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
+                                            [id]="control.name" [name]="control.name" readonly />
+                                        <label *ngIf="control.visibleLabel">
+                                            {{ control.label ? (control.label | translate) : '' }}
+                                            <span *ngIf="control.validators">*</span>
+                                            <div class="tooltip-wrapper">
+                                                <span class="info-icon" *ngIf="control.toolTipMessage">
+                                                    <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                                </span>
+                                                <span class="tooltip-text tooltip-textidnumber">{{
+                                                    control.toolTipMessage }}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="control.type === 'paragraph'" [class]="control.class"
+                                    [hidden]="!control.visible">
+                                    <ng-container *ngIf="control.name === 'consentBell'; else defaultParagraph">
+                                        <div class="tipInfo_org tipInfo_buyflow">
+                                            <img src="./assets/Img/icon_bell_org.svg" alt="Bell Icon"
+                                                style="width: 15px;" />
+                                            <span
+                                                [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #defaultParagraph>
+                                        <p
+                                            [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''">
+                                        </p>
+                                    </ng-template>
+                                    <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                                </div>
+                                <input *ngIf="control.type==='button' && control.visible == true" type="button"
+                                    (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
+                                    [ngClass]="[control.class, getButtonClass(control)]" [name]="control.name"
+                                    [id]="control.name"
+                                    value="{{ control.label ? (control.label | translate) : '' }}" />
+
+                                <div *ngIf="control.type === 'summary'" [class]="control.class"
+                                    class="typecss typecss_summary plandetails_summary" [hidden]="!control.visible">
+                                    <div class="label-value-container"
+                                        (click)="control.name === 'plandetails' && openPlanSummary()">
+                                        <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ?
+                                            (control.label | translate) : '' }}</label>
+                                        <div class="value-text"
+                                            [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible && control.name === 'plandetails'}">
+                                            {{ control.value }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="control.type === 'displaycovers'" [class]="control.class"
+                                    class="typecss typecss_summary" [hidden]="!control.visible">
+                                    <div class="label-value-container">
+                                        <label *ngIf="control.visibleLabel && control.value?.length > 0"
+                                            class="label-text">
+                                            {{ control.label ? (control.label | translate) : '' }}
+                                        </label>
+                                        <ul class="ul_addon_policySummary" *ngIf="control.value?.length > 0">
+                                            <li *ngFor="let coverName of control.value" class="value-text">
+                                                {{ coverName }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div *ngIf="control.type === 'banner'" [class]="control.class" class="banner-container">
+                                    <ng-container [formArrayName]="control.name">
+                                        <ng-container *ngFor="let allSubForm of control.dynamicControls; index as i">
+                                            <ng-container *ngIf="i > 0">
+                                                <ng-container [formGroupName]="i - 1">
+                                                    <div class="col-md-6 col-lg-4 banner-card">
+                                                        <ng-container *ngFor="let subControl of allSubForm">
+                                                            <ng-container *ngIf="subControl.visible !== false">
+                                                                <div class="block-proposer"
+                                                                    *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'">
+                                                                    <div
+                                                                        class="common-badge common-badge-rounded common-badge-align-top-right bg-dark-org">
+                                                                        Proposer
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                                                                    [class]="subControl.class" class="display-container"
+                                                                    [hidden]="!subControl.visible">
+                                                                    <label class="display_label"
+                                                                        *ngIf="subControl.visibleLabel === true">
+                                                                        {{ subControl.label?(subControl.label |
+                                                                        translate):'' }}
+                                                                        <span *ngIf="subControl.validators">*</span>
+                                                                    </label>
+                                                                    <div *ngIf="subControl.disabled"
+                                                                        class="view_Text more_view_Text">
+                                                                        {{
+                                                                        formData?.[control.name]?.[i-1]?.[subControl.name]
+                                                                        }}
+                                                                    </div>
+                                                                    <div *ngIf="subControl.disabled && subControl.questionCondition"
+                                                                        class="view_Text more_view_Text">
+                                                                        <span
+                                                                            *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length === 0">No
+                                                                        </span>
+                                                                        <span
+                                                                            *ngIf="parseJson(formData?.[control.name]?.[i-1]?.productQuestionnaire).length > 0">Yes</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngIf="subControl.relationDisabled && formData?.[control.name]?.[i-1]?.[subControl.name] === 'Self'"
+                                                                    class="display-container col-12 col-lg-12 col-md-6">
+                                                                    <label class="display_label">PAN Number</label>
+                                                                    <div class="view_Text more_view_Text">{{
+                                                                        formData?.panNo }}</div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                        <div *ngIf="allSubForm[0].relationDisabled && formData?.[control.name]?.[i-1]?.[allSubForm[0].name] === 'Self'"
+                                                            class="display-container col-12 col-lg-12 col-md-6">
+                                                            <label class="display_label">PAN Number</label>
+                                                            <div class="view_Text more_view_Text">{{ formData?.panNo }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+        </div>
+    </div>
+</div>

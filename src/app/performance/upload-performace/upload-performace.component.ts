@@ -32,11 +32,15 @@ export class UploadPerformaceComponent implements OnInit{
     // this.getActiveCampaignList();
   }
   continueFileUpload() {
+    console.log(this.selectedFile);
+    if(this.selectedFile == undefined){
+      this.isFilenotSelected = true;
+    }
     let file = this.selectedFile;
     let fileExt = file.name.replace(/^.*\./, '');
     const data = new FormData();
     console.log(this.performanceUploadForm.get('selectedView')?.value);
-    if(this.performanceUploadForm.get('')?.value == "performance"){
+    if(this.performanceUploadForm.get('selectedView')?.value == "performance"){
       this.isPerformance = true
       this.isDetailedView = false
     }else{
@@ -49,16 +53,22 @@ export class UploadPerformaceComponent implements OnInit{
          data.append('Performace', this.isPerformance)
          data.append('DetailedView', this.isDetailedView)
          data.append('AgentCode', this.AgentCode)
-         data.append('uploadrange', "null")
+         data.append('uploadrange', `${file.size}`);
        }
         this.performanceService.uploadPerformancefile(data).subscribe(
           (response: any) => { 
             console.log(response);
             if (response) {
               console.log(response);
-              this.toast.success({ detail: response.statusName });
-            } 
-            else {console.error("API request was not successful.");}
+              this.toast.success({
+                detail: 'Success',
+                summary: response.data.fileUploadMessage,
+              });
+            }
+            else {
+              this.toast.error({ detail: "Error", summary:"API request was not successful.", duration: 5000 });
+              console.error("API request was not successful.");
+            }
           },
           (error: any) => {
             console.error("Error from getRenewalsList API:", error);
@@ -89,6 +99,8 @@ export class UploadPerformaceComponent implements OnInit{
     }
   }
   viewSelected(event: any){
+    this.selectedFile = undefined;
+    this.selctedFileName = "";
     console.log(event.target.value);
   }
   onSubmit(){

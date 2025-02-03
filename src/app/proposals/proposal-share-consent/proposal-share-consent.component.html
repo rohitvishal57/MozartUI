@@ -1,0 +1,69 @@
+<div class="main-container" *ngIf="isHtmlrender==true">
+
+  <div class="main-subContainer">
+    <!--MOBILE: Form Step Process Start-->
+
+    <!--MOBILE: Form Step Process End-->
+    <div class="right-panel">
+
+      <form [formGroup]="sharecontentForm" style="margin-bottom: 20%;">
+        <ng-container *ngFor="let section of sharecontent.formSections">
+          <div *ngIf="section.visible" class="card-body accordionCard" [class]="section.class">
+
+            <!-- <div class="line" style="display: none;"></div> -->
+            <div class="accordionCardHeader" *ngIf="section.visibleLabel == true">
+              <h3 [innerHTML]="section.sectionTitle | translate" [class]="section.class"></h3>
+              <span class="accordionArrow"></span>
+            </div>
+            <div class="accordionCardBody">
+              <ng-container *ngFor="let control of section.formControls; index as h">
+                <div *ngIf="['text', 'email', 'password', 'time'].includes(control.type)" [class]="control.class"
+                  class="typecss" [hidden]="!control.visible">
+                  <div class="input-container">
+                    <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                      [type]="control.type" [id]="control.name" [name]="control.name">
+                    <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                      formControlName="{{ control.name }}" [type]="control.type" [id]="control.name"
+                      [name]="control.name" readonly>
+                    <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}
+                      <span *ngIf="control.validators">*</span>
+                      <div class="tooltip-wrapper">
+                        <span class="info-icon" *ngIf="control.toolTipMessage">
+                          <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                        </span>
+                        <span class="tooltip-text tooltip-textidnumber">{{ control.toolTipMessage }}</span>
+                      </div>
+                    </label>
+                  </div>
+                  <!-- <small
+                    *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                    class="text-danger">
+                    {{ getValidationErrors(control) ? (getValidationErrors(control) | translate) : '' }}
+                  </small> -->
+                </div>
+                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
+                  <ng-container *ngIf="control.name === 'consentBell'; else defaultParagraph">
+                    <div class="tipInfo_org tipInfo_buyflow">
+                      <img src="./assets/Img/icon_bell_org.svg" alt="Bell Icon" style="width: 15px;">
+                      <span
+                        [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></span>
+                    </div>
+                  </ng-container>
+                  <ng-template #defaultParagraph>
+                    <p [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"></p>
+                  </ng-template>
+                  <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                </div>
+                <input *ngIf="control.type==='button' && control.visible == true" type="button"
+                (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
+                [ngClass]="[control.class, getButtonClass(control)]" [name]="control.name" [id]="control.name"
+                value="{{ control.label ? (control.label | translate) : '' }}">
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+
+      </form>
+    </div>
+  </div>
+</div>

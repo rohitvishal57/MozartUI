@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay } from 'date-fns';
 import { EventsService } from '../events-new/events.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -41,6 +41,7 @@ export class BirthdayWishesComponent implements OnInit {
 
   ngOnInit(): void {
     this.setView(this.currentView);
+    
   }
 
   
@@ -74,7 +75,7 @@ export class BirthdayWishesComponent implements OnInit {
   sendWishesToAll(): void {
     if (this.isSendingAllWishes) return;
     this.isSendingAllWishes = true;
-    const SendWishesAllPayload = this.birthdays.map(birthday => ({
+    const SendWishesAllPayload = this.selectedDayBirthdays.map(birthday => ({
       customerId: birthday.customerID,
       fullName: birthday.name,
       mobileNumber: birthday.mobileNumber
@@ -105,14 +106,15 @@ export class BirthdayWishesComponent implements OnInit {
 
   setView(view: string): void {
     this.currentView = view;
-    if (view === 'day') {
-        this.filterDayBirthdays(this.selectedDate);
-    }
     this.setDates();
     this.loadBirthdayData();
+    if (view === 'day') {
+      this.filterDayBirthdays(this.selectedDate);
+    }
 }
 
 navigateToDayView(date: Date): void {
+  this.birthdays = []
     this.selectedDate = date;
     this.setView('day');
 }
@@ -120,8 +122,8 @@ navigateToDayView(date: Date): void {
 filterDayBirthdays(date: Date): void {
     const dayData = this.weekData.find((day) => this.isSameDate(day.date, date));
     this.selectedDayBirthdays = dayData ? dayData.birthdays : [];
-    this.birthdays = [];
 }
+
 
 isSameDate(date1: Date, date2: Date): boolean {
     return (
@@ -139,17 +141,17 @@ isSameDate(date1: Date, date2: Date): boolean {
 
   
   setDates(): void {
-    const today = new Date();
-  
+    const today = this.selectedDate;
+    const weekDate = new Date()
     switch (this.currentView) {
       case 'day':
         this.startDate = format(today, 'yyyy-MM-dd');
         this.endDate = format(today, 'yyyy-MM-dd');
         break;
       case 'week':
-        this.startDate = format(today, 'yyyy-MM-dd');
-        const endDate = new Date(today);
-        endDate.setDate(today.getDate() + 6);
+        this.startDate = format(weekDate, 'yyyy-MM-dd');
+        const endDate = new Date(weekDate);
+        endDate.setDate(weekDate.getDate() + 6);
         this.endDate = format(endDate, 'yyyy-MM-dd');
         break;
       case 'month':
@@ -161,14 +163,14 @@ isSameDate(date1: Date, date2: Date): boolean {
 
   loadBirthdayData(): void {
     const payload = {
-      agentCode: '5100003',
+      agentCode: localStorage.getItem('agentCode'),
       startDate: this.startDate,
       endDate: this.endDate
     };
   
     this.eventsService.getBirthdays(payload).subscribe({
       next: (response:any) => {
-        this.birthdays = response.data.map((item:any) => ({
+        this.selectedDayBirthdays = response.data.map((item:any) => ({
           name: item.fullName.trim(),
           date: this.transformDateFormat(item.birthday),
           customerID: item.customerID,
@@ -191,7 +193,7 @@ isSameDate(date1: Date, date2: Date): boolean {
   }
 
   // filterBirthdays(): void {
-  //   this.filteredBirthdays = this.birthdays.filter((b) => {
+  //   this.filteredBirthdays = this.selectedDayBirthdays.filter((b) => {
   //     const birthDate = new Date(b.date);
   //     return (
   //       birthDate.getTime() >= new Date(this.startDate).getTime() &&
@@ -206,9 +208,9 @@ isSameDate(date1: Date, date2: Date): boolean {
   filterBirthdays(): void {
     
     // Ensure birthdays are loaded before filtering
-    if (!this.birthdays) return;
+    if (!this.selectedDayBirthdays) return;
   
-    this.filteredBirthdays = this.birthdays.filter((b) => {
+    this.filteredBirthdays = this.selectedDayBirthdays.filter((b) => {
       const birthDate = new Date(b.date);
       const startDate = new Date(this.startDate);
       const endDate = new Date(this.endDate);
@@ -261,19 +263,21 @@ isSameDate(date1: Date, date2: Date): boolean {
 
 loadWeekData(): void {
   this.weekData = [];
-  const startDate = new Date(this.startDate);
+  let startDate = startOfDay(new Date(this.startDate));
   const endDate = new Date(this.endDate);
 
-  console.log('Loading week data with birthdays:', this.birthdays);
+  console.log('Loading week data with birthdays:', this.selectedDayBirthdays);
 
   for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
     const dayIndex = date.getDay();
     const day = this.weekDays[dayIndex];
     const currentDateStr = format(date, 'MM-dd');
+    const currentYear = new Date().getFullYear();
+
 
     // Find birthdays for the current day
-    console.log(this.birthdays, "birthdays")
-    const birthdaysForDay = this.birthdays.filter(birthday => {
+    console.log(this.selectedDayBirthdays, "birthdays")
+    const birthdaysForDay = this.selectedDayBirthdays.filter(birthday => {
       const birthdayDate = format(new Date(birthday.date), 'MM-dd');
       return birthdayDate === currentDateStr;
     });
@@ -281,7 +285,7 @@ loadWeekData(): void {
 
     // Create week data item with full birthday information
     const weekDataItem: { date: Date; day: string; birthdays: Birthday[] } = {
-      date: new Date(currentDateStr), // Convert string to Date object
+      date: startOfDay(new Date(`${currentYear}-${currentDateStr}`)),
       day,
       birthdays: birthdaysForDay.map(birthday => ({
           name: birthday.name,
@@ -289,12 +293,13 @@ loadWeekData(): void {
           customerID: birthday.customerID,
           mobileNumber: birthday.mobileNumber
       }))
+     
   };
-  
   this.weekData.push(weekDataItem);
   console.log(`Added week data for ${currentDateStr}:`, weekDataItem);
   console.log('Final week data:', this.weekData);
 }
+
 }
 
   getBirthdaysForDay(day: WeekDay): Birthday[] {

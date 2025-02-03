@@ -1,19 +1,40 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClaimData } from 'src/app/interface/claims.interface';
 import { DatePipe, formatDate } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
-import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { EndorsementsRequestsService } from 'src/app/endorsements/endorsements-requests/endorsements-requests.service';
-import { CoverDetail } from 'src/app/interface/claims.interface';
+import { CoverDetail, UploadErrors } from 'src/app/interface/claims.interface';
 import { debounceTime, Subject } from 'rxjs';
-import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 
+interface FileObject {
+  documentId: string;
+  name: string;
+  type: string;
+  size: number;
+  uploadDateTime: Date;
+  status: 'pending' | 'success' | 'failed';
+  file: File;
+}
+interface DocumentSection {
+  id: string;
+  label: string;
+  uploadStatus: string;
+  file: FileObject | null;
+}
+
+interface Errors {
+  policyNumberRequired: string;
+  invalidFormat: boolean;
+  requiredDocs: string;
+  fileNotSelected: boolean;
+  missingDocuments: boolean;
+}
 @Component({
   selector: "app-claims-view",
   templateUrl: "./claims-view.component.html",
@@ -41,6 +62,14 @@ export class ClaimsViewComponent {
     createdBy?: string;
     documentLabelForm: FormGroup
   }[] = [];
+  errors: Errors = {
+    policyNumberRequired: '',
+    invalidFormat: false,
+    requiredDocs: '',
+    fileNotSelected: false,
+    missingDocuments: false
+
+  };
   // uploadedFiles: File[] = [];
   form!: FormGroup;
   activePolicyNumbers: string[] = [];
@@ -59,15 +88,16 @@ export class ClaimsViewComponent {
   uploadDateTime: Date | null = null;
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
-  selectedMember:any;
+  selectedMember: any;
   uploadedFilesCount = 0;
+  showCustomHospitalInput = false;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
   uploadSuccess: boolean = true;
   namesVariable: any;
   documentType: any;
   response: any;
-  selectedMemberName:any;
+  selectedMemberName: any;
   uploadedFile: any;
   agentCode: any;
   selectMemberData: any = {};
@@ -92,17 +122,20 @@ export class ClaimsViewComponent {
   isFocused: boolean = false;
   selectedFile: any;
   fromDate: any;
-  hospitalId:any;
+  hospitalId: any;
   toDate: any;
+  claimSubmitted: boolean = false;
   maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
   MemberIdList: any;
-  policiesListData:any
+  policiesListData: any
   coverNames: CoverDetail[] = [];
   selectedCoverCode: string = '';
   policyNoChangeSubject = new Subject<string>();
   specialCovers: any;
+  selectedCover: string = 'Hospitalisation';
+  isDisabled: boolean = true;
   // coverNames:any
   documentLabelOptions = [
     'govt/KYC ID',
@@ -115,37 +148,35 @@ export class ClaimsViewComponent {
     'Claim form',
     'Others'
   ];
-
+  private requiredDocumentTypes = [
+    'govt/KYC ID',
+    'Hospital bill invoice',
+    'Investigation report',
+    'Doctor’s Prescription',
+    'NEFT/ Cancelled cheque/ Passbook',
+    'Hospital discharge form',
+    'Consultation form',
+    'Claim form'
+  ];
+  documentSections: DocumentSection[] = [
+    { id: 'nursing_breakup', label: 'Nursing Breakup', uploadStatus: '', file: null },
+    { id: 'room_category', label: 'Room Category', uploadStatus: '', file: null },
+    { id: 'package_breakup', label: 'Package Breakup', uploadStatus: '', file: null },
+    { id: 'discharge', label: 'Discharge Summary', uploadStatus: '', file: null },
+    { id: 'investigation', label: 'Investigation Reports', uploadStatus: '', file: null },
+    { id: 'consultation', label: 'Consultation Papers', uploadStatus: '', file: null },
+    { id: 'pharmacy', label: 'Pharmacy Bills', uploadStatus: '', file: null },
+    { id: 'other', label: 'Other Documents', uploadStatus: '', file: null }
+  ];
   documentLabelForm!: FormGroup;
-
-  // coverNames = [
-  //   "AYUSH Treatment",
-  //   "Domiciliary Hospitalization",
-  //   "Day Care Treatments",
-  //   "Home Health Care",
-  //   "HIV / AIDS and STD Cover",
-  //   "Health AssessmentTM",
-  //   "HealthReturnsTM",
-  //   "In-patient Hospitalization",
-  //   "Mental Illness Hospitalization",
-  //   "Modern Procedures/Treatments",
-  //   "Obesity Treatment",
-  //   "Organ Donor Expenses",
-  //   "Post-Hospitalization Expenses",
-  //   "Pre-Hospitalization Expenses",
-  //   "Road Ambulance Cover (per hospitalization)",
-  //   "Super Reload",
-  //   "Claim Protect (Non-Medical Expense Waiver)",
-  //   "Super Credit (increases irrespective of claim)",
-  // ];
   billGroup: any;
   billsForm!: FormGroup;
   claimInfoId: any;
   documentId: any;
   filteredPolicyList: any[] = [];
   hospitalCode: any;
-  selectedHospitalObj: any ;
-  formattedDate:any
+  selectedHospitalObj: any;
+  formattedDate: any
 
   constructor(
     private fb: FormBuilder,
@@ -158,7 +189,7 @@ export class ClaimsViewComponent {
     private languageService: LanguageService,
     private translateService: TranslateService,
     private _router: Router,
-    private dialog : MatDialog
+    private dialog: MatDialog
   ) {
     this.billsForm = this.fb.group({
       billsArray: this.fb.array([]),
@@ -177,17 +208,17 @@ export class ClaimsViewComponent {
   }
 
   ngOnInit(): void {
+
     const currentDate = new Date();
 
     // Get the month, day, and year
     const month = currentDate.getMonth() + 1;  // getMonth() is zero-based, so add 1
     const day = currentDate.getDate();
     const year = currentDate.getFullYear();
-    
+
     // Format to "MM/dd/yyyy"
-     this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
-    
-    console.log(this.formattedDate);
+    this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+
     this.documentLabelForm = this.fb.group({
       documentLabel: [''],
       customLabel: ['']
@@ -207,6 +238,7 @@ export class ClaimsViewComponent {
         }
       });
     }
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -215,19 +247,25 @@ export class ClaimsViewComponent {
       });
     });
 
+
     this.createForm();
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
-      const policyNumberControl = this.form.get('policyNumber');
-  }
+    const policyNumberControl = this.form.get('policyNumber');
 
-  initializeDocumentLabelForm(): FormGroup {
-    return this.fb.group({
-      documentLabel: [''],
-      customLabel: [{ value: '', disabled: true }]
+    this.form.get('claimType')?.valueChanges.subscribe(claimType => {
+      this.onClaimTypeChange(claimType);
     });
   }
+
+  private initializeDocumentLabelForm(): FormGroup {
+    return new FormGroup({
+      documentLabel: new FormControl(''),
+      customLabel: new FormControl({ value: '', disabled: true })
+    });
+  }
+
   navigateToListClaim() {
     this.router.navigate(['claims/claimsList'])
   }
@@ -258,14 +296,15 @@ export class ClaimsViewComponent {
       policyNumber: ["", [Validators.required, Validators.pattern("^[0-9]+-[0-9]+-[0-9]+-[0-9]+$"), Validators.minLength(16), Validators.maxLength(16)]],
       proposalNumber: [""],
       memberName: [""],
-      memberId:[""],
-      memberRelation:[""],
+      memberId: [""],
+      memberRelation: [""],
       productName: [""],
       fullName: [""],
       claimStatus: [""],
       raisedDate: [""],
       coverCode: [""],
       hospitalName: ["", Validators.required],
+      customHospitalName: [""],
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
       proposerName: [""],
@@ -276,15 +315,15 @@ export class ClaimsViewComponent {
       coPayAmount: [""],
       reasonForCoPay: [""],
       coverName: [""],
-      raisedBy:[""],
+      raisedBy: [""],
       AgentCode: localStorage.getItem("agentCode"),
       claimType: ["", Validators.required],
       notes: [""],
       state: ["", Validators.required],
       city: ["", Validators.required],
       hospitalAddress: [""],
-      admissionDate: null,
-      dischargeDate: null,
+      admissionDate: [null],
+      dischargeDate: [null],
       admissionTime: [""],
       dischargeTime: [""],
       ailmentDescription: ["", Validators.required],
@@ -300,13 +339,12 @@ export class ClaimsViewComponent {
       ]),
       documentsArray: this.fb.array([
         this.fb.group({
-            documentId: [""],
-            documentName: [""],
-            status: [""],
-            labelName: [""]
-       
-          }),
-        ]),
+          documentId: [""],
+          documentName: [""],
+          status: [""],
+          labelName: [""]
+        }),
+      ]),
     });
     this.form.get('coverName')?.valueChanges.subscribe(coverName => {
       const selectedCover = this.coverNames.find(cover => cover.cover_Name === coverName);
@@ -316,7 +354,6 @@ export class ClaimsViewComponent {
       }
     });
   }
-
   handleCoverNameValidation(coverName: string): void {
     const stateControl = this.form.get('state');
     const cityControl = this.form.get('city');
@@ -372,7 +409,7 @@ export class ClaimsViewComponent {
     const uniqueValues = new Set(data.map(item => item[key]));
     return Array.from(uniqueValues).filter(value => value != null);
   }
-  
+
   getProposalDetails(): void {
     let data = {
       AgentCode: localStorage.getItem("agentCode")
@@ -383,7 +420,14 @@ export class ClaimsViewComponent {
           this.policyNumbers = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.filteredPolicyList = [...this.policyNumbers];
           this.cdr.markForCheck();
-
+        }
+        else {
+          this.toast.error({
+            detail: 'Error',
+            summary: resp.message,
+            duration: 0,
+            sticky: true
+          });
         }
       },
       (err) => {
@@ -397,28 +441,6 @@ export class ClaimsViewComponent {
     });
   }
 
-
-  // handleDropdownChange(value: string): void {
-  //      this.form.patchValue({
-  //     "memberName": "",
-  //   });
-  //   const selectedPolicyNumber = value;
-  //   this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
-  //     if (!policyValue) {
-  //       this.form.get('memberName')?.setValue('');
-  //       this.memberNames = [];
-  //     }
-  //   });
-  //   const filteredMembers = this.policyNumbers.filter(
-  //     (item: any) => item.policyNumber === selectedPolicyNumber
-  //   );
-  //   //this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-  //   this.form.get("memberName")?.setValue("");
-  //   this.cdr.markForCheck();
-  //   this.getPolicyMembers(value)
-  //   this.fetchCoverNames()
-
-  // }
   handleDropdownChange(value: string): void {
     this.form.patchValue({
       "memberId": value,
@@ -427,30 +449,45 @@ export class ClaimsViewComponent {
     this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
         this.form.get('memberId')?.setValue('');
-        this.memberNames = [];
+        //this.memberNames = [];
+        //this.form.get('policyNumber')?.setErrors(null);
       }
     });
     const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
+    // if (!filteredMembers || filteredMembers.length === 0) {      // If no members are found
+    //   this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    // } else {
+    //   this.form.get('policyNumber')?.setErrors(null);
+    // }
     this.form.get("memberId")?.setValue("");
     this.cdr.markForCheck();
     this.getPolicyMembers(value)
     this.fetchCoverNames(value)
   }
+  // handleDropdownChange(value: string): void {
+  //   if (value == "") {
+  //     this.form.get('policyNumber')?.reset();
+  //   }
+
+  //   this.getPolicyMembers(value)
+  //   this.fetchCoverNames(value)
+  // }
   getPolicyMembers(value: string) {
     const membersReq = {
-      "AgentCode": localStorage.getItem("agentCode"),
+      "agentCode": localStorage.getItem("agentCode"),
       "policyNumber": value
     }
 
     this.claimsService.getMemberDetails(membersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp.data.policyMembersList          
-          this.getMemberIdList(this.policyMembersList)    
-          console.log(this.policyMembersList);
-                
+          this.policyMembersList = resp.data.policyMembersList
+          this.getMemberIdList(this.policyMembersList)
+        }
+        else {
+          this.openErrorModal(resp.message)
         }
       },
       (err) => {
@@ -458,51 +495,40 @@ export class ClaimsViewComponent {
       });
   }
   getMemberIdList(membersList: Array<any>) {
-    // const uniqueMembers = membersList.filter((value, index, self) =>
-    //   index === self.findIndex((t) => (
-    //     t.fullName === value.fullName || t.memberId === value.memberId
-    //   ))
-    // );
-    this.memberNames = membersList.filter((value, index, self) =>
+    /* this.memberNames = membersList.filter((value, index, self) =>
       index === self.findIndex((t) => (
-        t.memberName === value.memberName // Assuming memberName is the unique identifier
+        t.memberId === value.memberId
       ))
-    );
-   // this.memberNames = uniqueMembers;
+    ); */
+    this.memberNames = membersList;
   }
   filterList(event: any): void {
-    const input = (event.target as HTMLInputElement).value.trim(); 
-    this.form.patchValue({
-      "memberName": "",
-    });
+    const input = (event.target as HTMLInputElement).value.trim();
+
 
     this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
       item.policyNumber.includes(input)
     );
-
-    if(input.length >=16) {
+    this.form.patchValue({
+      "memberId": "",
+    });
+    this.memberNames = [];
+    if (input.length >= 16) {
       this.policyNoChangeSubject.next(input);
     }
-
-    // const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    // const regex = /^[0-9-]$/;
-
-    // if (allowedKeys.includes(event.key)) {
-    //   return;
+    // if (!this.filteredPolicyList || this.filteredPolicyList.length === 0) {      // If no members are found
+    //   this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
+    // } else {
+    //   this.form.get('policyNumber')?.setErrors(null);
     // }
-
-    // Prevent default if the key is not allowed
-    // if (regex.test(event.key)) {
-    //   event.preventDefault();
-    // }
-}
+  }
 
 
   onChange(value: string) {
     this.selectedPolicyNumber = value;
-    if (value == "") {
-      // this.form.get('policyNumber').reset();
-    }
+    // if (value == "") {
+    //   // this.form.get('policyNumber').reset();
+    // }
     this.getPolicyMembers(value);
   }
   onInput(event: any): void {
@@ -546,6 +572,29 @@ export class ClaimsViewComponent {
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
+    const admissionDateTime = new Date(
+      this.form.get('admissionDate')?.value
+    )
+    const dischargeDateTime = new Date(
+      this.form.get('dischargeDate')?.value
+    )
+
+    if (dischargeDateTime < admissionDateTime) {
+      return { dischargeDateInvalid: true };
+    }
+
+    return null;
+
+  }
+  get dischargeDateError(): boolean {
+    return this.form.errors?.['dischargeDateInvalid'] &&
+      this.form.get('dischargeDate')?.touched;
+  }
+
+  validateDate(controlName: string): void {
+    const control = this.form.get(controlName);
+    console.log(control?.value, this.maxDate);
+    control?.value > this.maxDate ? control?.setErrors({ incorrect: true }) : control?.setErrors(null);
   }
 
   // ngAfterViewInit() {
@@ -573,31 +622,45 @@ export class ClaimsViewComponent {
       "ailmentDescription": "",
       "dischargeDate": "",
       "admissionDate": ""
-    })
+    });
 
     const selectedType = event.target.value;
+
     if (selectedType === "Cashless") {
+      // Clear file upload validators for Cashless
+      this.form.get('isFileUploadRequired')?.clearValidators();
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showReimbursementFields = false;
+      this.selectedCover = "Hospitalisation"
+      this.isFilenotSelected = false;
       this.showCashlessFields = true;
+      this.isDisabled = false;
+
       this.form.patchValue({
         coverName: "Hospitalization",
       });
     } else if (selectedType === "Reimbursement") {
+      // Set file upload as required for Reimbursement
+      this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
+      this.form.get('isFileUploadRequired')?.updateValueAndValidity();
       this.showCashlessFields = false;
-      this.showSecondScenario = false;
-      this.showFirstScenario = false;
+      this.isDisabled = true;
+      this.showReimbursementFields = true;
+      this.isFilenotSelected = false;
+
       this.form.patchValue({
         coverName: "",
       });
-      this.showReimbursementFields = true;
+
     } else {
       this.showCashlessFields = true;
       this.showReimbursementFields = false;
     }
   }
 
+
   fetchCoverNames(value: string): void {
-     const coverReqBody =  {
+    const coverReqBody = {
       "memberId": value,
       "policyNumber": this.form.value.policyNumber,
       "familyID": "",
@@ -644,9 +707,9 @@ export class ClaimsViewComponent {
   //   }
   // }
   onCoverNameChange(event: any): void {
-     this.selectedCoverName = event.target.value;
+    this.selectedCoverName = event.target.value;
     const selectedCover = this.coverNames.find(cover => cover.cover_Name === this.selectedCoverName);
-
+    this.billsArray.clear();
     if (selectedCover) {
       this.form.patchValue({
         coverName: selectedCover.cover_Name,
@@ -654,16 +717,16 @@ export class ClaimsViewComponent {
       });
 
       this.selectedCoverCode = selectedCover.cover_Code;
-
-       this.specialCovers = [
-        "AYUSH Treatment",
-        "Day Care Treatments",
-        "In-patient Hospitalization",
-        "Inpatient Hospitalization Treatment",
-        "Mental Illness Hospitalization"
+      this.specialCovers = [
+        "52214106", "42214106", "42214101", "52214101", "42254109", "42214111", "52214111", "62124104",
+        "62124110", "62124111", "62124139", "62124101", "42284101", "42284106", "52234101", "52234104",
+        "52234108", "42234101", "42234104", "42234108", "42204122", "42264122", "42194122", "42274101",
+        "42274106", "42274111", "42274112", "42274122", "42264106", "42264111", "42264112", "42204101",
+        "42204106", "42204111", "42204112", "42264101", "42254101", "42254106", "42124101", "42124104",
+        "42124123", "42194101", "42194106", "42194111", "42194112"
       ];
 
-      if (this.specialCovers.includes(this.selectedCoverName)) {
+      if (this.specialCovers.includes(this.selectedCoverCode)) {
         this.showSecondScenario = true;
         this.billsArray.clear();
         this.addBillRow();
@@ -671,8 +734,7 @@ export class ClaimsViewComponent {
       } else {
         this.showFirstScenario = true;
         this.showSecondScenario = false;
-        let coverName = this.form.get('coverName')?.value;
-        this.handleCoverNameValidation(coverName);
+        this.handleCoverNameValidation(this.form.get('coverName')?.value);
       }
     }
   }
@@ -700,7 +762,6 @@ export class ClaimsViewComponent {
     };
     this.claimsService.getStates(statesReqBody).subscribe(
       (info: any) => {
-        console.log("resp", info);
         if (info.isSuccess) {
           this.states = info.data.response;
         } else {
@@ -752,7 +813,7 @@ export class ClaimsViewComponent {
     this.form.patchValue({
       "hospitalName": "",
       "hospitalAddress": "",
-      "hospitalId": "" 
+      "hospitalId": ""
     })
     if (this.selectedCity !== null) {
       this.fetchHospitals();
@@ -767,7 +828,7 @@ export class ClaimsViewComponent {
       city: cityNameArr[0]?.cityName,
       state: stateNameArr[0]?.stateName
     };
-  
+
     this.claimsService.getHospitalsByCities(hospitalsReqBody).subscribe(
       (response: any) => {
         if (response?.isSuccess && response?.data?.partyLists) {
@@ -775,12 +836,12 @@ export class ClaimsViewComponent {
             const nameDetail = partyList.partydetails.find((detail: any) => detail.name === 'Party Name');
             const partyCodeDetail = partyList.partydetails.find((detail: any) => detail.name === 'Party Code');
             const AddressDetail = partyList.partydetails.find((detail: any) => detail.name === 'Address Line 1')
-            
+
             return {
               hospitalName: nameDetail ? nameDetail.value : '',
               hospitalId: partyCodeDetail ? partyCodeDetail.value : '',
-            //  hospitalCode: partyCodeDetail ? partyCodeDetail.value : '',
-              hospitalAddress: AddressDetail ? AddressDetail.value: ''
+              //  hospitalCode: partyCodeDetail ? partyCodeDetail.value : '',
+              hospitalAddress: AddressDetail ? AddressDetail.value : ''
               //address: this.extractAddress(partyList.partydetails)
             };
           });
@@ -798,18 +859,24 @@ export class ClaimsViewComponent {
 
   fetchBlackListedHsp(event: any) {
     this.selectedHospital = event.target.value;
+    //const selectedValue = event.target.value;
+    this.showCustomHospitalInput = this.selectedHospital === 'others';
+
+    if (!this.showCustomHospitalInput) {
+      this.form.get('customHospitalName')?.reset();
+    }
     if (this.selectedHospital) {
       this.selectedHospitalObj = this.hospitals.find(h => h.hospitalId === this.selectedHospital);
-      
+
       if (this.selectedHospitalObj) {
         this.hospitalAddress = this.selectedHospitalObj.hospitalAddress;
         this.hospitalId = this.selectedHospitalObj.hospitalId;
-        this.hospitalCode = this.selectedHospitalObj.hospitalCode;      
+        this.hospitalCode = this.selectedHospitalObj.hospitalCode;
       } else {
         this.hospitalAddress = '';
         this.hospitalId = '';
       }
-  
+
       this.form.patchValue({
         hospitalAddress: this.hospitalAddress,
         hospitalId: this.hospitalId
@@ -844,286 +911,433 @@ export class ClaimsViewComponent {
       });
   }
   //-------------- Method to handle file upload------------------//
-  
-  
-  
-  
+
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
-
-  // onFileSelected(event: any): void {
-  //   const inputElement = event.target;
-  //   const files = inputElement.files as File[];
-  //   this.totalFilesCount += files.length;
-  //   this.isFilenotSelected = false;
-
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  //     this.selectedFile = file;
-  //     // Check if the file was previously deleted and re-uploaded
-  //     const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
-
-  //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-  //       // Initialize label with an empty value for new files
-  //       this.uploadedFiles.push({
-  //         documentId: uuidv4(),
-  //         name: file.name,
-  //         type: file.type,
-  //         size: file.size,
-  //         label: "Label this document",
-  //         isEditing: false,
-  //         isEdited: false,
-  //         uploadDateTime: new Date(),
-  //         editableControl: new FormControl(""),
-  //         formattedUploadDateTime: this.formatDate(new Date()),
-  //         status: "pending",
-  //         file: file,
-  //         policyNumber: this.saveForm.value.policyNumber,
-  //         documentName: this.saveForm.value.documentName,
-  //         documentType: this.saveForm.value.documentType,
-  //         createdBy: this.saveForm.value.createdBy,
-  //       });
-  //       this.uploadValidFormat = false;
-  //     } else if (fileExists) {
-  //       console.warn('File already uploaded.');
-  //     } else {
-  //       this.uploadValidFormat = true;
-  //     }
-  //   }
-
-  //   this.updateStatusLabel();
-  //   this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
-  // }
-
-  onFileSelected(event: any): void {
-    const inputElement = event.target;
-    const files = inputElement.files as File[];
-
-    this.totalFilesCount += files.length;
-    this.isFilenotSelected = false;
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      this.selectedFile = file;
-
-      const fileExists = this.uploadedFiles.some((uploadedFile) =>
-        uploadedFile.name === file.name && uploadedFile.size === file.size
-      );
-
-      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-        const newFile = {
-          documentId: uuidv4(),
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          label: "Label this document",
-          editableControl: new FormControl(""),
-          isEditing: true,
-          isEdited: false,
-          uploadDateTime: new Date(),
-          formattedUploadDateTime: this.formatDate(new Date()),
-          status: "pending",
-          file: file,
-          policyNumber: this.saveForm.value.policyNumber,
-          documentName: this.saveForm.value.documentName,
-          documentType: this.saveForm.value.documentType,
-          createdBy: this.saveForm.value.createdBy,
-          documentLabelForm: this.initializeDocumentLabelForm()
-        };
-
-        this.uploadedFiles.push(newFile);
-
-        this.clearSelectedLabel(newFile);
-
-      } else if (fileExists) {
-        console.warn('File already uploaded.');
-      } else {
-        this.uploadValidFormat = true;
-      }
-    }
-    this.updateStatusLabel();
-    this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
+  triggerFileInput(sectionId: string): void {
+    document.getElementById('fileInput_' + sectionId)?.click();
   }
 
-  clearSelectedLabel(file: any): void {
-    file.documentLabelForm.reset({
-      documentLabel: '',
-      customLabel: ''
-    });
+  onFileSelected(event: Event, sectionId: string): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-    const documentLabelControl = file.documentLabelForm.get('documentLabel');
-    const customLabelControl = file.documentLabelForm.get('customLabel');
-
-    if (documentLabelControl && customLabelControl) {
-      documentLabelControl.valueChanges.subscribe((selectedLabel: any) => {
-        if (selectedLabel === 'Others') {
-          customLabelControl.enable();  // Enable the custom label field
-        } else {
-          customLabelControl.disable(); // Disable it if not 'Others'
-        }
-      });
-    }
-  }
-
-  onCustomLabelBlur(file: any) {
-    const documentLabelControl = file.documentLabelForm.get('documentLabel');
-    const customLabelControl = file.documentLabelForm.get('customLabel');
-
-    if (documentLabelControl && customLabelControl) {
-      const selectedLabel = documentLabelControl.value;
-      const customLabel = customLabelControl.value;
-
-      file.label = selectedLabel === 'Others'
-        ? (customLabel || 'Others')
-        : (selectedLabel || 'Label this document');
-
-      if (file.label !== "Label this document") {
-        file.isEditing = false;
-        file.isEdited = true;
-      }
-    }
-  }
-
-
-  uploadFiles(files: File[]): void {
-    const fileNames: string[] = files.map((file) => file.name);
-    const fileTypes: string[] = files.map((file) => file.type);
-    const policyNumber = this.form.get("policyNumber")?.value
-    if (!policyNumber) {
-      this.uploadedFiles.forEach((file) => (file.status = "failed"));
-      this.uploadSuccess = false;
-      this.updateStatusLabel();
-      this.cdr.markForCheck();
-      console.warn("Policy number must be selected before uploading files.");
+    if (!this.form.get("policyNumber")?.value) {
+      this.errors.policyNumberRequired = "Please select policy number before uploading documents";
+      input.value = '';
       return;
     }
-    this.documentType = fileTypes;
-    this.namesVariable = fileNames;
-    const formData = new FormData();
-    this.uploadedFiles.forEach((file, index) => {
-      const metadata = {
-        policyNumber: this.form.get("policyNumber")?.value || "",
-        labelName: file.label || "",
-        documentName: this.namesVariable || "",
-        documentType: this.documentType || "",
-        createdBy: file.createdBy || "",
-        claimInfoId: "",
-        memberId: '',
-        documentId: file.documentId
-      };
-      formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-      formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-      formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-      formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-      formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-      formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
-      formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-    });
 
-    this.claimsService.uploadFiles(formData).subscribe(
+    const file = input.files[0];
+    const section = this.documentSections.find(s => s.id === sectionId);
+
+    if (!file || !section) return;
+
+    if (!this.allowedFileTypes.includes(file.type)) {
+      this.errors.invalidFormat = true;
+      input.value = '';
+      return;
+    }
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      this.errors.invalidFormat = true;
+      input.value = '';
+      return;
+    }
+    const fileObject: FileObject = {
+      documentId: this.generateUUID(),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      uploadDateTime: new Date(),
+      status: 'pending',
+      file: file
+    };
+
+    section.file = fileObject;
+    this.uploadFile(fileObject, sectionId);
+    this.cdr.detectChanges();
+  }
+
+  private uploadFile(fileObject: FileObject, sectionId: string): void {
+    const policyNumber = this.form.get("policyNumber")?.value;
+    if (!policyNumber) {
+      this.handleUploadFailure(sectionId);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('fileDetails[0].documentId', fileObject.documentId);
+    formData.append('fileDetails[0].policyNumber', policyNumber);
+    formData.append('fileDetails[0].documentType', sectionId);
+    formData.append('fileDetails[0].documentName', fileObject.name);
+    formData.append('fileDetails[0].file', fileObject.file);
+
+    this.claimsService.uploadFiles(formData).subscribe({
+      next: (response: any) => {
+        const section = this.documentSections.find(s => s.id === sectionId);
+        if (section?.file && response.isSuccess) {
+          section.file.status = 'success';
+          // this.isDisabled = false;
+        } else if (section?.file) {
+          section.file.status = 'failed';
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        const section = this.documentSections.find(s => s.id === sectionId);
+        if (section?.file) {
+          section.file.status = 'failed';
+        }
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  deleteFile(sectionId: string): void {
+    const section = this.documentSections.find(s => s.id === sectionId);
+    if (!section?.file) return;
+
+    const payload = {
+      policyNumber: this.form.get("policyNumber")?.value,
+      documentId: section.file.documentId,
+      documentType: sectionId
+    };
+
+    this.claimsService.deleteFile(payload).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.uploadedFiles.forEach((file) => (file.status = "success"));
-          this.uploadSuccess = true;
-          this.uploadedFilesCount = files.length;
-        } else {
-          this.uploadedFiles.forEach((file) => (file.status = "failed"));
-          this.uploadSuccess = false;
+          section.file = null;
+          this.cdr.detectChanges();
         }
-        this.updateStatusLabel();
-        this.cdr.markForCheck();
-      },
-      (_error) => {
-        this.uploadedFiles.forEach((file) => (file.status = "failed"));
-        this.uploadSuccess = false;
-        this.failedFilesCount = files.length;
-        this.updateStatusLabel();
-        this.cdr.markForCheck();
       }
     );
+  }
+
+
+  private handleUploadFailure(sectionId: string): void {
+    const section = this.documentSections.find(s => s.id === sectionId);
+    if (section?.file) {
+      section.file.status = "failed";
+    }
+    this.cdr.detectChanges();
+  }
+
+  isAnyFileUploaded(): boolean {
+    return this.documentSections.some(section =>
+      section.file && section.file.status === 'success'
+    );
+  }
+
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 
   convertBytesToKB(bytes: number): string {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
   }
-
-  onLabelKeyDown(event: KeyboardEvent, file: any): void {
-    if (event.key === 'Enter') {
-      this.stopEditing(file);
-    }
+  areAllSectionsComplete(): boolean {
+    return this.documentSections.length === 8 &&
+      this.documentSections.every(section =>
+        section.file !== null && section.file.status === 'success'
+      );
   }
 
-  updateStatusLabel(): void {
-    // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
-    this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
-  }
-
-  deleteFile(fileToDelete: any): void {
-    const payload = {
-      policyNumber: this.form.get("policyNumber")?.value,
-      documentId: fileToDelete.documentId,
-      claimNumber: ""
-    };
-
-    this.claimsService.deleteFile(payload).subscribe(
-      (response: any) => {
-        if (response.isSuccess) {
-          this.uploadedFiles = this.uploadedFiles.filter(
-            (file) => file.documentId !== fileToDelete.documentId
-          );
-          this.totalFilesCount = this.uploadedFiles.length;
-          this.updateStatusLabel();
-          this.cdr.detectChanges();
-          console.log('Updated uploadedFiles list:', this.uploadedFiles);
-        } else {
-          console.error('Failed to delete file:', response.message);
-        }
-      },
-      (error) => {
-        console.error('Error deleting file:', error);
-      }
+  getMissingSections(): DocumentSection[] {
+    return this.documentSections.filter(section =>
+      section.file === null || section.file.status !== 'success'
     );
   }
-  ////////////////////file upload input label //////////////////
-  //   startEditing(file: any) {
-  //     file.isEditing = true;
-  //     if (!file.editableControl) {
-  //       file.editableControl = new FormControl(file.label);
-  //     }
-  //     this.editableControl.setValue("");
+  // onFileSelected(event: any): void {
+  //   this.resetErrors();
+  //   const files = event.target.files as File[];
+
+  //   if (!this.form.get("policyNumber")?.value) {
+  //     this.errors.policyNumberRequired = "Please select policy number before uploading documents";
+  //     event.target.value = '';
+  //     return;
   //   }
 
-  //  stopEditing(file: any) {
-  //     if (this.editableControl.value !== this.label) {
-  //       file.label = this.editableControl.value; 
+  //   this.totalFilesCount += files.length;
+
+  //   // Filter valid files and create file objects
+  //   const validFiles = Array.from(files).filter(file => {
+  //     if (!this.allowedFileTypes.includes(file.type)) {
+  //       this.errors.invalidFormat = true;
+  //       return false;
   //     }
-  //     file.isEditing = false;
-  //     file.isEdited = true;
-  //   }
 
-  // startEditing(file: any) {
-  //   file.isEditing = true;
-  //   const documentLabelControl = this.documentLabelForm.get('documentLabel');
-  //   const customLabelControl = this.documentLabelForm.get('customLabel');
-
-  //   if (documentLabelControl && customLabelControl) {
-  //     // Initialize form with current label
-  //     documentLabelControl.setValue(
-  //       this.documentLabelOptions.includes(file.label) ? file.label : 'Others'
+  //     const fileExists = this.uploadedFile.some(
+  //       uploadedFile => uploadedFile.name === file.name && uploadedFile.size === file.size
   //     );
 
-  //     if (documentLabelControl.value === 'Others') {
-  //       customLabelControl.enable();
-  //       customLabelControl.setValue(
-  //         this.documentLabelOptions.includes(file.label) ? '' : file.label
-  //       );
+  //     if (!fileExists) {
+  //       const newFile = this.createNewFileObject(file);
+  //       this.uploadedFiles.push(newFile);
+  //       this.clearSelectedLabel(newFile);
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+
+  //   this.validateRequiredDocuments();
+
+  //   this.uploadFilesSequentially(validFiles);
+  // }
+
+  // private uploadFilesSequentially(files: File[]): void {
+  //   const policyNumber = this.form.get("policyNumber")?.value;
+
+  //   if (!policyNumber) {
+  //     this.handleUploadFailure();
+  //     return;
+  //   }
+
+
+  //   files.reduce((promise, file) => {
+  //     return promise.then(() => {
+  //       const formData = new FormData();
+  //       const currentFile = this.uploadedFiles.find(f => f.file === file);
+
+  //       if (!currentFile) return Promise.resolve();
+
+  //       const metadata = {
+  //         policyNumber: policyNumber,
+  //         labelName: currentFile.label || "",
+  //         documentName: file.name,
+  //         documentType: file.type,
+  //         createdBy: currentFile.createdBy || "",
+  //         claimInfoId: "",
+  //         memberId: '',
+  //         documentId: currentFile.documentId
+  //       };
+
+
+  //       formData.append('fileDetails[0].documentId', metadata.documentId);
+  //       formData.append('fileDetails[0].AgentCode', metadata.createdBy);
+  //       formData.append('fileDetails[0].policyNumber', metadata.policyNumber);
+  //       formData.append('fileDetails[0].labelName', metadata.labelName);
+  //       formData.append('fileDetails[0].documentName', metadata.documentName);
+  //       formData.append('fileDetails[0].documentType', metadata.documentType);
+  //       formData.append('fileDetails[0].createdBy', metadata.createdBy);
+  //       formData.append('fileDetails[0].file', file, file.name);
+  //       formData.append('fileDetails[0].memberId', metadata.memberId);
+
+  //       return new Promise<void>((resolve) => {
+  //         this.claimsService.uploadFiles(formData).subscribe({
+  //           next: (response: any) => {
+  //             if (response.isSuccess) {
+  //               currentFile.status = "success";
+  //               this.uploadSuccess = true;
+  //               this.uploadedFilesCount++;
+  //             } else {
+  //               currentFile.status = "failed";
+  //               this.failedFilesCount++;
+  //             }
+  //             this.updateStatusLabel();
+  //             this.cdr.markForCheck();
+  //             resolve();
+  //           },
+  //           error: (_error) => {
+  //             currentFile.status = "failed";
+  //             this.failedFilesCount++;
+  //             this.updateStatusLabel();
+  //             this.cdr.markForCheck();
+  //             resolve();
+  //           }
+  //         });
+  //       });
+  //     });
+  //   }, Promise.resolve());
+  // }
+
+  // private handleUploadFailure(): void {
+  //   this.uploadedFiles.forEach((file) => (file.status = "failed"));
+  //   this.uploadSuccess = false;
+  //   this.updateStatusLabel();
+  //   this.cdr.markForCheck();
+  //   console.warn("Policy number must be selected before uploading files.");
+  // }
+  // private createNewFileObject(file: File) {
+  //   return {
+  //     documentId: this.generateUUID(),
+  //     name: file.name,
+  //     type: file.type,
+  //     size: file.size,
+  //     label: "Label this document",
+  //     isEditing: true,
+  //     isEdited: false,
+  //     uploadDateTime: new Date(),
+  //     formattedUploadDateTime: this.formatDate(new Date()),
+  //     status: "pending",
+  //     file: file,
+  //     documentLabelForm: this.initializeDocumentLabelForm()
+  //   };
+  // }
+
+  // private validateRequiredDocuments(): { isValid: boolean; message: string } {
+  //   this.validateAndUpdateErrors();
+  //   if (this.errors.requiredDocs || this.errors.duplicateDocs) {
+  //     return {
+  //       isValid: false,
+  //       message: this.errors.requiredDocs || this.errors.duplicateDocs
+  //     };
+  //   }
+
+  //   return { isValid: true, message: '' };
+  // }
+
+  // private resetErrors(): void {
+  //   this.errors = {
+  //     fileNotSelected: false,
+  //     invalidFormat: false,
+  //     requiredDocs: '',
+  //     duplicateDocs: '',
+  //     policyNumberRequired: ''
+  //   };
+  // }
+
+  // private generateUUID(): string {
+  //   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  //     const r = Math.random() * 16 | 0;
+  //     const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  //     return v.toString(16);
+  //   });
+  // }
+  // clearSelectedLabel(file: any): void {
+  //   file.documentLabelForm.reset({
+  //     documentLabel: '',
+  //     customLabel: ''
+  //   });
+
+  //   const documentLabelControl = file.documentLabelForm.get('documentLabel');
+  //   const customLabelControl = file.documentLabelForm.get('customLabel');
+
+  //   if (documentLabelControl && customLabelControl) {
+  //     documentLabelControl.valueChanges.subscribe((selectedLabel: any) => {
+  //       if (selectedLabel === 'Others') {
+  //         customLabelControl.enable();  // Enable the custom label field
+  //       } else {
+  //         customLabelControl.disable(); // Disable it if not 'Others'
+  //         // Validate documents whenever label changes
+  //         this.validateAndUpdateErrors();
+  //       }
+  //     });
+  //   }
+  // }
+
+  // onCustomLabelBlur(file: any) {
+  //   const documentLabelControl = file.documentLabelForm.get('documentLabel');
+  //   const customLabelControl = file.documentLabelForm.get('customLabel');
+
+  //   if (documentLabelControl && customLabelControl) {
+  //     const selectedLabel = documentLabelControl.value;
+  //     const customLabel = customLabelControl.value;
+
+  //     file.label = selectedLabel === 'Others'
+  //       ? (customLabel || 'Others')
+  //       : (selectedLabel || 'Label this document');
+
+  //     if (file.label !== "Label this document") {
+  //       file.isEditing = false;
+  //       file.isEdited = true;
+  //       this.validateAndUpdateErrors();
   //     }
   //   }
   // }
+  // private validateAndUpdateErrors(): void {
+  //   if (this.form.get('claimType')?.value !== 'Reimbursement') {
+  //     return;
+  //   }
+
+  //   const uploadedLabels = this.uploadedFiles
+  //     .map(file => file.documentLabelForm?.get('documentLabel')?.value)
+  //     .filter(label => label);
+
+  //   const labelCounts = uploadedLabels.reduce((acc: { [key: string]: number }, label: string) => {
+  //     acc[label] = (acc[label] || 0) + 1;
+  //     return acc;
+  //   }, {});
+
+  //   const missingTypes = this.requiredDocumentTypes.filter(
+  //     type => !labelCounts[type]
+  //   );
+
+  //   const duplicateTypes = Object.entries(labelCounts)
+  //     .filter(([label, count]) => {
+  //       const countValue = count as number;
+  //       return countValue > 1 && this.requiredDocumentTypes.includes(label);
+  //     })
+  //     .map(([label]) => label);
+
+  //   if (missingTypes.length === 0 && duplicateTypes.length === 0) {
+  //     this.isDisabled = false;
+  //   } else {
+  //     this.isDisabled = true;
+  //   }
+
+  //   if (missingTypes.length > 0) {
+  //     this.errors.requiredDocs = `Please upload the following required documents: ${missingTypes.join(', ')}`;
+  //   } else {
+  //     this.errors.requiredDocs = '';
+  //   }
+
+  //   if (duplicateTypes.length > 0) {
+  //     this.errors.duplicateDocs = `Duplicate document types found for: ${duplicateTypes.join(', ')}. Please ensure only one document per type.`;
+  //   } else {
+  //     this.errors.duplicateDocs = '';
+  //   }
+  //   this.cdr.detectChanges();
+  // }
+
+  // convertBytesToKB(bytes: number): string {
+  //   const kb = bytes / 1024;
+  //   return `${kb.toFixed(2)} KB`;
+  // }
+
+  // onLabelKeyDown(event: KeyboardEvent, file: any): void {
+  //   if (event.key === 'Enter') {
+  //     this.stopEditing(file);
+  //   }
+  // }
+
+  // updateStatusLabel(): void {
+  //   // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
+  //   this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
+  // }
+
+  // deleteFile(fileToDelete: any): void {
+  //   const payload = {
+  //     policyNumber: this.form.get("policyNumber")?.value,
+  //     documentId: fileToDelete.documentId,
+  //     claimNumber: ""
+  //   };
+
+  //   this.claimsService.deleteFile(payload).subscribe(
+  //     (response: any) => {
+  //       if (response.isSuccess) {
+  //         this.uploadedFiles = this.uploadedFiles.filter(
+  //           (file) => file.documentId !== fileToDelete.documentId
+  //         );
+  //         this.totalFilesCount = this.uploadedFiles.length;
+  //         this.updateStatusLabel();
+  //         this.cdr.detectChanges();
+  //       } else {
+  //         console.error('Failed to delete file:', response.message);
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error deleting file:', error);
+  //     }
+  //   );
+  // }
+  ////////////////////file upload input label //////////////////
   startEditing(file: any) {
     file.isEditing = true;
     const documentLabelControl = file.documentLabelForm.get('documentLabel');
@@ -1150,24 +1364,16 @@ export class ClaimsViewComponent {
     }
   }
 
-  // memberIdChange(event:any){    
-  //   this.selectedMemberName = event.target.value;
-  //   const selectedMember = this.policyMembersList.find(member => member.memberName === this.selectedMemberName);
-  
-  //   if (selectedMember) {
-  //     this.form.get('memberId')?.setValue(selectedMember.memberId);  
-  //   }
-  
-  // }
-memberIdChange(event: any): void {
-  const memberId = event.target.value;
-  const selectedMember = this.memberNames.find(member => member.memberId === memberId);
-  if (selectedMember) {
-    this.form.get('memberName')?.setValue(selectedMember.memberName);
-  }
-  this.fetchCoverNames(memberId);
 
-}
+  memberIdChange(event: any): void {
+    const memberId = event.target.value;
+    const selectedMember = this.memberNames.find(member => member.memberId === memberId);
+    if (selectedMember) {
+      this.form.get('memberName')?.setValue(selectedMember.memberName);
+    }
+    this.fetchCoverNames(memberId);
+
+  }
 
   ///////current date and time
   formatUploadDateTime() {
@@ -1176,46 +1382,96 @@ memberIdChange(event: any): void {
     }
   }
   openModal(resp: any) {
-    const dialogRef = this.dialog.open(SuccessModalComponent, {
-      width: '400px',
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       disableClose: true,
       data: {
-        title: 'Claims',
-        id: `Claim Id: ${resp.data.claim_Number}`,
+        type: 'success',
+        title: 'Claim',
+        message: `Claim No: ${resp.data.claim_Number}`,
       },
     });
- 
+
     dialogRef.afterClosed().subscribe(() => {
       this.navigateToListClaim();
     });
   }
+  openErrorModal(msg: string) {
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+      disableClose: true,
+      panelClass: "messageModal-mat",
+      data: {
+        type: 'error',
+        message: msg
+      },
+    });
+  }
+  isSubmitDisabled(): boolean {
+    const claimType = this.form.get('claimType')?.value;
+
+    if (claimType === 'Cashless') {
+      return false;
+    }
+    if (claimType === 'Reimbursement') {
+      return !this.areAllSectionsComplete();
+    }
+    return true;
+  }
   submitRequest(): void {
+    // if (this.form.get('claimType')?.value === 'Reimbursement') {
+    // if (this.uploadedFiles.length === 0) {
+    //   this.isFilenotSelected = true;
+    //   this.errors.fileNotSelected = true;
+    //   return;
+    // }
+
+    // const validationResult = this.validateRequiredDocuments();
+    // if (!validationResult.isValid) {
+    //   // this.toast.error({ 
+    //   //   detail: validationResult.message,
+    //   //   duration: 5000
+    //   // });
+    //   this.errors.requiredDocs = `Please upload the following required documents`;
+    //   return;
+    // }
+    //}
+    this.claimSubmitted = true;
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
+      if (this.form.get('hospitalName')?.value === 'others') {
+        saveClaimData.hospitalName = this.form.get('customHospitalName')?.value;
+        saveClaimData.hospitalCode = '';
+      } else {
+        saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+        saveClaimData.hospitalCode = this.selectedHospital;
+      }
+
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.formattedDate;
       saveClaimData.admissionTime = saveClaimData.admissionTime ? saveClaimData.admissionTime : "6:00";
       saveClaimData.dischargeTime = saveClaimData.dischargeTime ? saveClaimData.dischargeTime : "7:00";
 
-     saveClaimData.memberId = this.form.get('memberId')?.value;  
-     saveClaimData.memberName = this.form.get('memberName')?.value;
-     saveClaimData.hospitalCode = this.selectedHospital;
-     saveClaimData.hospitalName =this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-     const coverNames = this.form.get('coverName')?.value;
-     const coverCode = this.form.get('coverCode')?.value;
-     if (coverNames && coverCode) {
-       saveClaimData.coverName = coverNames;
-       saveClaimData.coverCode = coverCode;
-     }
+      saveClaimData.memberId = this.form.get('memberId')?.value;
+      saveClaimData.memberName = this.form.get('memberName')?.value;
+      saveClaimData.hospitalCode = this.selectedHospital;
+      saveClaimData.customHospitalName = "";
+      //saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
+
+
+      const coverNames = this.form.get('coverName')?.value;
+      const coverCode = this.form.get('coverCode')?.value;
+      if (coverNames && coverCode) {
+        saveClaimData.coverName = coverNames;
+        saveClaimData.coverCode = coverCode;
+      }
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
       }));
 
-      if (!this.selectedFile) {
-        this.isFilenotSelected = true;
-        return;
-      }
+      // if (!this.selectedFile) {
+      //   this.isFilenotSelected = true;
+      //   return;
+      // }
 
       // if (!saveClaimData.claimedAmount) {
       //   saveClaimData.claimedAmount = 0;
@@ -1235,6 +1491,14 @@ memberIdChange(event: any): void {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
+      const uploadedDocuments = this.documentSections
+        .filter(section => section.file?.status === 'success')
+        .map(section => ({
+          documentId: section.file!.documentId,
+          documentType: section.id,
+          uploadedFilesName: section.file!.name
+        }));
+
       // const documentsArray = this.uploadedFiles.map((file) => ({
       //   documentId: file.documentId,
       //   documentName: file.name,
@@ -1244,15 +1508,15 @@ memberIdChange(event: any): void {
       const documentsArray = this.uploadedFiles.map((file) => {
         const documentLabelControl = file.documentLabelForm.get('documentLabel');
         const customLabelControl = file.documentLabelForm.get('customLabel');
-        
+
         let labelName = file.label;
-        
+
         if (documentLabelControl && customLabelControl && documentLabelControl.value === 'Others') {
           labelName = customLabelControl.value || 'Others';
         } else if (documentLabelControl) {
           labelName = documentLabelControl.value || file.label;
         }
-      
+
         return {
           documentId: file.documentId,
           documentName: file.name,
@@ -1265,39 +1529,29 @@ memberIdChange(event: any): void {
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-            if(response.data.claim_Number !== ""){
+            if (response.data.claim_Number !== "") {
               this.openModal(response);
             } else {
               this.toast.error({
-                detail: 'ERROR',
-                summary: response.data.message,
+                detail: 'Error',
+                summary: response.data.message !== "" ? response.data.message : "No response from Jarvis.",
                 duration: 0,
                 sticky: true
               });
               // this.toast.error({ response.data.message: "Failed to submit claims" });
             }
-          //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
+            //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
-            this.toast.error({ detail: "No response from Jarvis.",
-              duration:0, 
-              sticky: true
-            });
+            this.openErrorModal(response.message)
           }
-          this.updateStatusLabel();
+          // this.updateStatusLabel();
         },
         (_error: any) => {
-          this.toast.error({
-            detail: "Error occurred during claims submission",
-            duration:0, 
-            sticky: true
-          });
+          this.openErrorModal(_error);
         }
       );
     } else {
-      this.toast.error({ detail: "Please fill in the required form fields." });
+      this.toast.error({ detail: "Warning", summary: "Please fill in the required form fields." });
     }
   }
 }
-
-
-

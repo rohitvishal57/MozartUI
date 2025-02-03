@@ -1,0 +1,44 @@
+<div class="popup-modal active" id="modal-audit">
+    <div class="popup-modal-dialog popup-modal-dialog-audit">
+        <!-- <button type="button" (click)="closeDialog()" class="mobile-popup-btn-close jsClosePopup"
+            aria-label="modal-audit"></button> -->
+        <div class="popup-modal-content">
+            <div class="popup-modal-header">
+                <h5 class="popup-modal-title">Audit</h5>
+                <button type="button" (click)="closeDialog()" class="popup-btn-close jsClosePopup"
+                    data-bs-dismiss="modal-selfDetails" aria-label="modal-audit"></button>
+            </div>
+            <section id="quotes-list" class="tableMain quoteView block-show ">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th>SEQ NO</th>
+                                    <th>AV ID</th>
+                                    <th>AV NAME</th>
+                                    <th>CENTER</th>
+                                    <th>AXIS PROCESS</th>
+                                    <th>STATUS</th>
+                                    <th>LICENSE EXPIRY FROM DATE</th>
+                                    <th>LICENSE EXPIRY TO DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">{{auditValue.avId}}</td>
+                                    <td class="text-center">{{auditValue.avName}}</td>
+                                    <td class="text-center">{{auditValue.center}}</td>
+                                    <td class="text-center">{{auditValue.axisProcess}}</td>
+                                    <td class="text-center">{{auditValue.status}}</td>
+                                    <td class="text-center">{{auditValue.licenseExpiryFromDate}}</td>
+                                    <td class="text-center">{{auditValue.licenseExpiryToDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, interval, map, Observable, startWith, Subject, take } from 'rxjs';
@@ -6,11 +6,11 @@ import { Helper } from 'src/app/utilities/helper/helper';
 import { MatDialog } from '@angular/material/dialog';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
 import { NgToastService } from 'ng-angular-popup';
-import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
-import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -36,6 +36,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isFilenotSelected: boolean | any;
   selectedFile: any;
   showNote: boolean = false;
+  fileSizeError: boolean = false;
   namesVariable: any;
   documentType: any;
   showDocInfo: boolean = false;
@@ -111,25 +112,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       CtstID:"ABHI_Endorsement_Request21"
     }, */
   ];
-  relationships = [
-    "Brother",
-    "Brother in-law",
-    "Daughter in-law",
-    "Dependent Daughter",
-    "Dependent Son",
-    "Father",
-    "Father-In-Law",
-    "Granddaughter",
-    "Grandfather",
-    "Grandmother",
-    "Grandson",
-    "Mother",
-    "Mother-In-Law",
-    "Nephew",
-    "Sister",
-    "Sister in-law",
-    "Son in-law"
-  ];
+  relationships: any = [];
   filteredActivity: Observable<any[]> | any;
   selectedPolicyNumber: any;
   MemberIdList: any;
@@ -160,10 +143,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private endorsement_service: EndorsementsRequestsService,
-    private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
     private dialog: MatDialog,
+    private ngZone: NgZone,
+    private yatraService: YatraService,
     private languageService: LanguageService,
     private translateService: TranslateService) {
       this.policyNoChangeSubject.pipe(
@@ -239,10 +223,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policiesListData = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.getActivityType();
+        } else {
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
       });
   }
 
@@ -290,18 +277,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   getPolicyMembers(value: string) {
     const policyMembersReq = {
-      "policyNumber": value
+      "policyNumber": value,
+      "agentCode": this.agentCode
     }
 
     this.endorsement_service.getPolicyMembersApi(policyMembersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp?.data?.policyMembersList
-          this.getMemberIdList(this.policyMembersList)
+          this.policyMembersList = resp?.data?.policyMembersList;
+          this.getMemberIdList(this.policyMembersList);
+          this.isPolicyExistsForAgent(value);
+        } else {
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
     });
   }
 
@@ -334,6 +326,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
     return value.replace(/[^\d.-]/g, '');
   }
 
+  isPolicyExistsForAgent(policyNo: string) {
+    const isPolicyPresent = this.policiesListData.some(
+      (policy) => policy.policyNumber === policyNo
+    );
+    if(!isPolicyPresent) {
+      this.MemberIdList = [];  // Handle New Endorsement Requests for Policies Not Associated with the Agent
+      const msg = `No Members were found for the given Policy Number: ${policyNo}`
+      this.openErrorModal(msg);
+    }
+  }
+
   endorsementChange(event: any) {
     const value = event.target.value;
     // this.caseCreationForm.get('endorsementDetails').setValue("");
@@ -345,7 +348,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'aadharNumber') {
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').setValidators([Validators.required, Validators.pattern('^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.aadharCradNo || "No policy data available");
     }
     if (value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
@@ -371,9 +374,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      if (this.externalPolicyData?.policyData?.[0]) {
-        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No || "No policy data available");
-      }
+      this.getNomineeRelationShipData();
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.currentNomineeDetails());
     }
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -411,7 +413,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'panNumber') {
       this.caseCreationForm.get("endorsementDetails").get('panNumber').setValidators([Validators.required, Validators.pattern('^([A-Z]){5}([0-9]){4}([A-Z]){1}$')]);
       this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.panNumber || "No policy data available");
     }
 
     if (value === 'panNumber' || value === 'aadharNumber') {
@@ -437,6 +439,51 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = false;
     }
   }
+
+  getNomineeRelationShipData() {
+    this.yatraService.getNomineeRelationship().subscribe({
+      next: (res: any) => {
+        this.relationships = res?.data
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  currentNomineeDetails(): string {
+    const nomineeFirstName = this.externalPolicyData?.nomineeFirstName || "";
+    const nomineeMiddleName = this.externalPolicyData?.nomineeMiddleName || "";
+    const nomineeLastName = this.externalPolicyData?.nomineeLastName || "";    
+    const relationship = this.externalPolicyData?.nomineeRelation;
+    const nomineeContactNo = this.externalPolicyData?.nomineeContactNumber;
+
+    const fullName = [nomineeFirstName, nomineeMiddleName, nomineeLastName].filter(name => name).join(" ");
+  
+    let policyDetails = "";
+  
+    if (fullName || relationship || nomineeContactNo) {
+      if (fullName) {
+        policyDetails += fullName;
+      }
+      if (fullName && (relationship || nomineeContactNo)) {
+        policyDetails += ", ";
+      }
+      if (relationship) {
+        policyDetails += relationship;
+      }
+      if ((relationship || fullName) && nomineeContactNo) {
+        policyDetails += ", ";
+      }
+      if (nomineeContactNo) {
+        policyDetails += nomineeContactNo;
+      }
+    } else {
+      policyDetails = "No policy data available";
+    }
+  
+    return policyDetails;
+  }  
 
   onKeydown(e: any) {
     return Helper.isNumberValidation(e);
@@ -618,27 +665,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
                       this.openModal(resp);
                     }
                     else if (Respevent?.message) {
-                      this.toast.error({
-                        detail: 'ERROR',
-                        summary: Respevent.message,
-                        duration: 5000,
-                      });
+                      this.toast.error({ detail: 'Error', summary: Respevent.message, duration: 5000 });
                       this.backToEndorsment();
                     }  else if (Respevent == null || Respevent?.message == undefined) {
-                      this.toast.error({
-                        detail: 'ERROR',
-                        summary: "File upload was not successfull. Try again later!",
-                        duration: 5000,
-                      });
+                      this.toast.error({ detail: 'Error', summary: "File upload was not successfull. Try again later!", duration: 5000, });
                       this.backToEndorsment();
                     }
                   }, (error: any) => {
-                    console.log(error);
-                    this.toast.error({
-                      detail: 'ERROR',
-                      summary: "Some Other Error Happened!",
-                      duration: 5000,
-                    });
+                    this.openErrorModal(error);
                   });
               }
             }
@@ -647,16 +681,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
             }
           }
           else {
-            this.toast.error({
-              detail: 'ERROR',
-              summary: resp.message,
-              duration: 5000,
-            });
-            this.backToEndorsment();
+            this.openErrorModal(resp?.message);
           }
       },
       (err) => {
         console.log(err);
+        this.openErrorModal(err);
         this.selctedFileName = "";
       });
   }
@@ -666,12 +696,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   openModal(resp: any) {
-    const dialogRef = this.dialog.open(SuccessModalComponent, {
-      width: '400px',
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+      //width: '400px',
       disableClose: true,
-      data: { 
+      panelClass:"messageModal-mat",
+      data: {
+        type: 'success', 
         title: 'Endorsement',
-        id: `Endorsement Id: ${resp.data.response.caseId}`
+        message: `Endorsement No: ${resp.data.response.caseId}`
       },
     });
 
@@ -680,17 +712,39 @@ export class EndorsementsNewRequestComponent implements OnInit {
     });
   }
 
+  openErrorModal(msg: string){
+    const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+      //width: '400px',
+      disableClose: true,
+      panelClass:"messageModal-mat",
+      data: {
+        type: 'error',
+        message: msg
+      },
+    });
+  }
+
   newfile(e: any) {
     let files;
     let file;
     let fileExt;
     this.isFilenotSelected = false;
+    this.fileSizeError = false;
+    
     if (e) {
       files = e.target.files;
       file = files[0];
       if (!file) {
         return;
       }
+  
+      if (file.size > 10 * 1024 * 1024) {
+        this.fileSizeError = true;
+        e.target.value = '';
+        this.showNote = false;
+        return;
+      }
+  
       this.selectedFile = file;
       this.selctedFileName = this.selectedFile.name;
       fileExt = this.selectedFile.name.replace(/^.*\./, '');
@@ -699,7 +753,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = file.name;
     this.documentType = file.type;
     this.documentSize = this.convertBytesToKB(file.size);
-
+  
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
       this.showNote = false;
       this.showDocInfo = true;
@@ -749,21 +803,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
         else {
           this.sendOtptDisabled = false;
-          this.toast.error({
-            detail: 'ERROR',
-            summary: resp.message,
-            duration: 5000
-          });
+          this.openErrorModal(resp?.message);
         }
       },
       (err) => {
         console.log(err);
         this.sendOtptDisabled = false;
-        this.toast.error({
-          detail: 'ERROR',
-          summary: "Something went wrong! Please try again later.",
-          duration: 5000
-        });
+        this.openErrorModal(err);
       });
   }
 
@@ -782,7 +828,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (resp: any) => {
           if (resp && resp?.statusCode == "200" && resp?.isSuccess) {
             this.toast.success({
-              detail: 'SUCCESS',
+              detail: 'Success',
               summary: resp.message,
               duration: 5000
             });
@@ -823,23 +869,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (resp: any) => {
           if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
             this.policyInfoDetails = resp.data;
-            this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
+            this.externalPolicyData = this.policyInfoDetails.nomineeDetails;
           }
           else {
-            this.toast.error({
-              detail: 'ERROR',
-              summary: resp.message,
-              duration: 5000
-            });
+            this.openErrorModal(resp?.message);
           }
         },
         (err) => {
-          console.log(err);
-          this.toast.error({
-            detail: 'ERROR',
-            summary: "Something went wrong! Please try again later.",
-            duration: 5000
-          });
+          this.openErrorModal(err);
         });
     }
   }
@@ -894,16 +931,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
-    const target = event.target as HTMLInputElement;
   
     if (event.key >= '0' && event.key <= '9') {
-      this.otp[index] = event.key;  // Store digit
+      this.otp[index] = event.key;
   
       if (index < 5) {
-        setTimeout(() => {
-          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-          nextInput && nextInput.focus();
-        }, 50);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
+          }, 50);
+        });
       } else {
         const btnElement = document.getElementById('verify') as HTMLButtonElement;
         btnElement && btnElement.focus();
@@ -911,36 +949,40 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
   
     else if (event.key === 'Backspace') {
-      this.otp[index] = '';  // Clear current box
+      this.otp[index] = '';
   
       if (index > 0) {
-        setTimeout(() => {
-          const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
-          previousInput && previousInput.focus();
-        }, 50);
-      }
-    }
-  
-    else if (event.key === 'Tab') {
-      if (event.shiftKey) {
-        if (index > 0) {
+        this.ngZone.run(() => {
           setTimeout(() => {
             const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
             previousInput && previousInput.focus();
           }, 50);
-        }
-      } else {
-        if (index < 5) {
-          setTimeout(() => {
-            const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
-            nextInput && nextInput.focus();
-          }, 50);
-        } else {
-          const btnElement = document.getElementById('verify') as HTMLButtonElement;
-          btnElement && btnElement.focus();
-        }
+        });
       }
     }
-  }
   
+    else if (event.key === 'Tab') {
+      event.preventDefault();
+      this.ngZone.run(() => {
+        if (event.shiftKey) {
+          if (index > 0) {
+            setTimeout(() => {
+              const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
+              previousInput && previousInput.focus();
+            }, 50);
+          }
+        } else {
+          if (index < 5) {
+            setTimeout(() => {
+              const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
+              nextInput && nextInput.focus();
+            }, 50);
+          } else {
+            const btnElement = document.getElementById('verify') as HTMLButtonElement;
+            btnElement && btnElement.focus();
+          }
+        }
+      });
+    }
+  }  
 }

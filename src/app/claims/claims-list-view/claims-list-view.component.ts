@@ -10,7 +10,7 @@ import { searchValidationConfig } from 'src/app/interface/common-validation.inte
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { ExcelExportService } from 'src/app/services/excel-export.service';
-
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-claims-list-view',
@@ -74,7 +74,9 @@ export class ClaimsListViewComponent implements OnInit {
      private claimsService: ClaimsViewService, 
      private languageService: LanguageService, 
      private excelExportService: ExcelExportService,
-     private translateService: TranslateService) { }
+     private translateService: TranslateService,
+     private toast: NgToastService
+  ) { }
 
   ngOnInit() {
     window.scrollTo(0, 0);
@@ -91,9 +93,10 @@ export class ClaimsListViewComponent implements OnInit {
     });
 
     this.fetchData();
-    this.getProducts();
     //this.fetchClaimStatusCounts(this.agentCode);
-    this.checkView();
+    this.fetchData();
+
+    this.checkView(); //Screen View check
   }
 
   claimsView(view: string) {
@@ -145,7 +148,8 @@ export class ClaimsListViewComponent implements OnInit {
     "pageSize": 10,
     "mobileNumber": "",
     "filterType": "",
-    "memberId": ""
+    "memberId": "",
+    "memberName": ""
   }
 
   fetchData(): void {
@@ -167,7 +171,6 @@ export class ClaimsListViewComponent implements OnInit {
         console.error("API request was not successful.");
       }
     });
-
   }
 
   toggleFilterDropdown() {
@@ -197,18 +200,18 @@ export class ClaimsListViewComponent implements OnInit {
     })
   }
 
-
   calculateAppliedFiltersCount() {
-    const selectedProductsCount = this.productsList.filter(
-      (product: any) => product.selected).length;
+    // const selectedProductsCount = this.productsList.filter(
+    //   (product: any) => product.selected).length;
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (policyType: any) => policyType.selected).length;
-    let count = selectedProductsCount + selectedPolicyTypesCount;
+    let count = selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
       count++;
     }
     this.appliedFiltersCount = count;
   }
+  
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.fromDate) {
       this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
@@ -231,12 +234,12 @@ export class ClaimsListViewComponent implements OnInit {
     
     console.log("start date taken by request body", this.claimsReqBody.startDate);
     console.log("end date taken by request body", this.claimsReqBody.endDate);
-      const selectedProducts = this.productsList
-      .filter((product: any) => product.selected)
-      .map((product: any) => product.productName);
-    console.log("selectedProducts", selectedProducts);
-    this.claimsReqBody.productVarientName = selectedProducts.join(", ");
-    console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
+    //   const selectedProducts = this.productsList
+    //   .filter((product: any) => product.selected)
+    //   .map((product: any) => product.productName);
+    // console.log("selectedProducts", selectedProducts);
+    // this.claimsReqBody.productVarientName = selectedProducts.join(", ");
+    // console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
   
     const selectedPolicyTypes = this.StaticRequestTypes
       .filter((policyType) => policyType.selected)
@@ -253,23 +256,26 @@ export class ClaimsListViewComponent implements OnInit {
   cancel() {
     this.toggeledropdown = false;
   }
+
   clear() {
-    this.productsList.forEach((product: any) => (product.selected = false));
+    // this.productsList.forEach((product: any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    this.claimsReqBody.productVarientName = "";
+    //this.claimsReqBody.productVarientName = "";
     this.claimsReqBody.requestType = "";
     this.claimsReqBody.startDate = null;
     this.claimsReqBody.endDate = null;
     this.fetchData();
   }
+  
   onSelectChanges(event: any): void {
     if (this.selected === "") {
       this.claimsReqBody.filterType = "";
       this.claimsReqBody.policyNumber = "";
       this.claimsReqBody.memberId = "";
+      this.claimsReqBody.memberName = "";
       this.claimsReqBody.requestId = "";
       this.claimsReqBody.mobileNumber = ""
       // this.claimsReqBody.searchString = []
@@ -287,6 +293,8 @@ export class ClaimsListViewComponent implements OnInit {
       return 'Enter Policy Number';
     } else if (this.selected === 'requestId') {
       return 'Enter Claim No.';
+    } else if (this.selected === 'memberName') {
+      return 'Enter Member Name';
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
     } else if (this.selected === 'mobileNumber') {
@@ -296,6 +304,7 @@ export class ClaimsListViewComponent implements OnInit {
       return 'Search...';
     }
   }
+
   resetFilters(): void {
     this.claimsReqBody.filterType = '';
     //this.claimsReqBody.searchString = [];
@@ -315,18 +324,35 @@ export class ClaimsListViewComponent implements OnInit {
     this.excelExportService.exportToExcel([item], `Claims_${item.caseId}`);
   }
 
-  downloadAll(): void {
+  /* downloadAll(): void {
     this.excelExportService.exportToExcel(
       this.claims,
       'My_Claims'
     );
+  } */
+
+  downloadAll(): void {
+    this.claimsService.claimDownlaodAllApi(this.claimsReqBody).subscribe(
+      (response: any) => {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
+          const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
+        } else {
+          console.error("API request was not successful.");
+          this.toast.error({ detail: "Error", summary: response.message, duration: 5000 });
+        }
+      },
+      (error) => {
+        console.error("Error from API:", error);
+      }
+    );
   }
 
   applySearch() {
-
     let searchValue = this.searchInputControl.value?.trim();
     if (!searchValue) {
       this.claimsReqBody.memberId = "";
+      this.claimsReqBody.memberName = "";
       this.claimsReqBody.requestId = "";
       this.claimsReqBody.mobileNumber = "";
       this.claimsReqBody.policyNumber = "";
@@ -337,21 +363,31 @@ export class ClaimsListViewComponent implements OnInit {
     if (searchValue && this.searchInputControl.valid) {
       if (this.selected === "policyNumber") {
         this.claimsReqBody.policyNumber = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.mobileNumber = ""
+      }  else if (this.selected === "memberName") {
+        this.claimsReqBody.memberName = searchValue;
+        this.claimsReqBody.memberId = "";
+        this.claimsReqBody.mobileNumber = "";
+        this.claimsReqBody.requestId = "";
+        this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "memberId") {
         this.claimsReqBody.memberId = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.mobileNumber = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "requestId") {
         this.claimsReqBody.requestId = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.mobileNumber = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.policyNumber = ""
       } else if (this.selected === "mobileNumber") {
         this.claimsReqBody.mobileNumber = searchValue;
+        this.claimsReqBody.memberName = "";
         this.claimsReqBody.memberId = "";
         this.claimsReqBody.requestId = "";
         this.claimsReqBody.policyNumber = ""
@@ -365,12 +401,12 @@ export class ClaimsListViewComponent implements OnInit {
   navigateToViewClaim(row: any) {
     let claimDetailsReqBody = {
       "id": row.id,
-      "claimNumber": row.claimInfoId,
+      "claimNumber": row.claimNumber,
       "policyNumber": row.policyNumber
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
-        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimInfoId}/${row.policyNumber}`]);
+        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimNumber}/${row.policyNumber}`]);
       },
       (error) => {
         console.error('Error fetching claim details', error);

@@ -1,0 +1,138 @@
+<!--Content area start-->
+
+<!--Content area end-->
+
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>View Leads</h2>
+            </div>
+
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    (input)="onInput($event)"> -->
+                                <form [formGroup]="viewLeadForm" (ngSubmit)="searchLeads()">
+                                    <section class="white_container mb-3">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" style="width: 300px;">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="mobileNumber"
+                                                        name="mobileNumber" placeholder="Mobile Number"
+                                                        formControlName="mobileNumber" type="number" [(ngModel)]="mobileNumber">
+                                                    <label for="mobileNumber">Enter Mobile Number</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" style="width: 300px;">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="leadId" name="leadId"
+                                                        placeholder="Lead Id" formControlName="leadId" type="text" [(ngModel)]="leadId">
+                                                    <label for="leadId">Enter Lead Id</label>
+
+                                                </div>
+                                            </div>  
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" style="width: 300px;">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <button type="submit" id="search" name="search" 
+                                                        class="btn_search" >Search</button>
+                                                </div>
+                                            </div>                 
+                                        </div>
+                                    </section>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="quotes-list" class="tableMain quoteView block-show">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th class="disableSort" nowrap>Seq No</th>
+                                    <th nowrap>Lead No</th>
+                                    <th nowrap>Proposer No</th>
+                                    <th nowrap>Customer Name</th>
+                                    <th nowrap>Lead Generation Date and Time</th>
+                                    <th nowrap>Last Modified Date and Time</th>
+                                    <th nowrap>Latest Mapped DO Name</th>
+                                    <th nowrap>Latest Mapped AV Name</th>
+                                    <th nowrap>Product/Plan Name</th>
+                                    <th nowrap>Net Premium</th>
+                                    <th nowrap>Axis Center/Location</th>
+                                    <th nowrap>LOB</th>
+                                    <th nowrap>Disposition</th>
+                                    <th nowrap>Sub-Disposition</th>
+                                    <th nowrap>Status</th>
+                                    <th nowrap>Issuance Date and Time</th>
+                                    <th nowrap>Remark</th>
+                                    <th class="disableFilterBy" nowrap>Action</th>
+                                    <th class="disableFilterBy">Audit</th>
+                                    <th class="disableFilterBy" nowrap>Retrigger PG</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let item of displayedAVs ; let i = index">
+                                    <td class="text-center" nowrap>{{(first + i + 1)}}</td>
+                                    <td class="text-center" nowrap>{{item.leadId}}</td>
+                                    <td class="text-center">{{item.proposalNo}}</td>
+                                    <td class="text-center" nowrap>{{item.customerName}}</td>
+                                    <td class="text-center" nowrap>{{item.leadGenerationDate}}</td>
+                                    <td class="text-center" nowrap>{{item.latestModifiedDateTime}}</td>
+                                    <td class="text-center" nowrap>{{item.latestMappedDOName}}</td>
+                                    <td class="text-center" nowrap>{{item.latestMappedAVName}}</td>
+                                    <td class="text-center" nowrap>{{item.planName}}</td>
+                                    <td class="text-center" nowrap>{{item.netPremium}}</td>
+                                    <td class="text-center" nowrap>{{item.axisCenter}}</td>
+                                    <td class="text-center" nowrap>{{item.axisLob}}</td>
+                                    <td class="text-center" nowrap>{{item.disposition}}</td>
+                                    <td class="text-center" nowrap>{{item.subDisposition}}</td>
+                                    <td class="text-center" nowrap>{{item.status}}</td>
+                                    <td class="text-center" nowrap>{{item.policyIssuanceDate}}</td>
+                                    <td class="text-center" nowrap>{{item.remark}}</td>
+                                    <td nowrap><button type="button" [disabled]="item.status === 'Payment Done'"
+                                            class="btn_reassign" (click)="actionLead(item)">Action</button><button
+                                            type="button"
+                                            [disabled]="item.buttonDisabled || item.status === 'Payment Done'"
+                                            (click)="backToDo(item)" class="btn_reassign">Back To Do</button>
+                                    <td><button type="button" (click)="auditLead(item)" class="btn_audit jsOpenPopup"
+                                            aria-label="modal-audit">Audit</button></td>
+
+                                    <td class="text-center" nowrap>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>

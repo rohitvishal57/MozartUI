@@ -224,7 +224,6 @@
     line-height: normal;
     border-radius: 5px;
 }
-
 @media (max-width:767px){
   ::ng-deep{
     .calendar-grid .cal-week-view, .calendar-grid .cal-month-view {
@@ -233,6 +232,9 @@
   }
   .buttons_div {
     margin-top: 15px;
+  }
+  .siteBody {
+      padding-bottom: 6rem;
   }
 }
   

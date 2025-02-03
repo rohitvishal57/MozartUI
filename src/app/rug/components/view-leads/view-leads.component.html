@@ -1,119 +1,138 @@
-<!--Content area start-->
-<div class="mainPanel">
-    <div class="itemPanel singlePanel">
-        <div class="continar-fluid contentPadding">
-            <!--Accordio start-->
-            <section class="accordionMain">
-                <!--Create Lead start-->
-                <div class="accordionItem ">
-                    <header class="accordionHeader active">
-                        <h2 class="heading2">View Lead Details</h2>
-                        <button type="button" class="accordionButton"></button>
-                    </header>
-                    <div class="accordionBody">
-                        <div class="form-box">
-                            <form [formGroup]="viewLeadForm">
-                            <div class="row">
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                                    <div class="input-block ">
-                                        <label for="">Enter Mobile Number </label>
-                                        <input type="text" name="mcd-mobileno" formControlName="mobileNumber" placeholder=""
-                                            class="input-textBox">
-                                        <span class="ui-error">Please enter mobile no </span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                                    <div class="input-block ">
-                                        <label for="">Enter Lead Id </label>
-                                        <input type="text" name="mcd-leadid" formControlName="leadId" placeholder=""
-                                            class="input-textBox">
-                                        <span class="ui-error">Please enter Lead Id </span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                                    <div class="btn-group-customer btn_mt-28">
-                                        <button type="submit" name="logsearch" value="logsearch" (click)="onSubmit()"
-                                            class="btn_Default btn_red btn_accordion_save">Search</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4" >
-                                    <div class="main-container">
-                                        <div class="table-container">
-                                            <div id="for_numrows" class="for_numrows" style="display: inline;">
-                                                <label for="numrows">Rows Per Page: </label>
-                                                <select (change)="onSelect($event)" id="numrows">
-                                                    <!-- <option value="5">5</option> -->
-                                                    <option value="10">10</option>
-                                                    <option value="20">20</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select>
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>View Lead Details</h2>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    (input)="onInput($event)"> -->
+                                <form [formGroup]="viewLeadForm" (ngSubmit)="searchLeads()">
+                                    <section class="white_container mb-3">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="mobileNumber"
+                                                        name="mobileNumber" placeholder="Mobile Number"
+                                                        formControlName="mobileNumber" type="number" [(ngModel)]="mobileNumber">
+                                                    <label for="mobileNumber">Enter Mobile Number</label>
+                                                </div>
                                             </div>
-                                            <div id="for_filter_by" (input)="onInput($event)" class="for_filter_by" style="display: inline;">
-                                                <!-- <label for="filter_by">Filter By: </label>
-                                                <select
-                                                    id="filter_by">
-                                                    <option value="1">AV Id</option>
-                                                    <option value="2">AV Name</option>
-                                                    <option value="3">Center</option>
-                                                    <option value="4">Axis Process</option>
-                                                    <option value="5">Status</option>
-                                                    <option value="6">License Expiry From Date</option>
-                                                    <option value="7">License Expiry To Date</option>
-                                                    <option value="8">Audit</option>
-                                                </select>  -->
-                                                <input id="filter_input" type="text" placeholder="Filter...">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="leadId" name="leadId"
+                                                        placeholder="Lead Id" formControlName="leadId" type="text" [(ngModel)]="leadId">
+                                                    <label for="leadId">Enter Lead Id</label>
+
+                                                </div>
+                                            </div>                    
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <button type="submit" id="search" name="search" 
+                                                        class="btn_red" >Search</button>
+                                                </div>
                                             </div>
-                                            <table class="tablemanager commontable">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="disableSort" nowrap>Seq No</th>
-                                                        <th  nowrap>Lead No</th>
-                                                        <th nowrap>Proposer No</th>
-                                                        <th nowrap>Customer Name</th>
-                                                        <th nowrap>Lead Generation Date and Time</th>
-                                                        <th nowrap>Last Modified Date and Time</th>
-                                                        <th nowrap>Latest Mapped DO Name</th>
-                                                        <th nowrap>Latest Mapped AV Name</th>
-                                                        <th nowrap>Product/Plan Name</th>
-                                                        <th nowrap>Net Premium</th>
-                                                        <th nowrap>Axis Center/Location</th>
-                                                        <th nowrap>LOB</th>
-                                                        <th nowrap>Disposition</th>
-                                                        <th nowrap>Sub-Disposition</th>
-                                                        <th nowrap>Status</th>
-                                                        <th nowrap>Issuance Date and Time</th>
-                                                        <th nowrap>Remark</th>
-                                                        <th class="disableFilterBy" nowrap>Action</th>
-                                                        <th class="disableFilterBy">Audit</th>
-                                                        <th class="disableFilterBy" nowrap>Retrigger PG</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                            <div id="pagesControllers" class="pagesControllers">
-                                                <!-- <pagination-controls (pageChange)="currentPage = $event"></pagination-controls> -->
-                                            </div>
-                                            
                                         </div>
-                                    </div>
-                                </div>
+                                    </section>
+                                </form>
                             </div>
-                        </form>
                         </div>
                     </div>
                 </div>
-                <!--Create Lead end-->
             </section>
-            <!--Accordio end-->
+           
+            <section id="quotes-list" class="tableMain quoteView block-show">
+                <div class="tableSubMain">
+                    <section class="quickFilterMain">
+                        <div class="quickFilterRight">
+                            <div class="body_flex_row leads_searchWraper">
+                                <div class="field_searchMain">
+                                    <div class="filterFieldGroup">
+                                        
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                            [(ngModel)]="searchTerm" (input)="onInput($event)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th class="disableSort" nowrap>SEQ No</th>
+                                    <th  nowrap>Lead No</th>
+                                    <th nowrap>PROPOSER NO</th>
+                                    <th nowrap>CUSTOMER NAME</th>
+                                    <th nowrap>LEAD GENERATION DATE AND TIME</th>
+                                    <th nowrap>LAST MODIFIED DATE AND TIME</th>
+                                    <th nowrap>LATEST MAPPED DO NAME</th>
+                                    <th nowrap>LATEST MAPPED AV NAME</th>
+                                    <th nowrap>PRODUCT/PLAN NAME</th>
+                                    <th nowrap>NET PREMIUM</th>
+                                    <th nowrap>AXIS CENTER/LOCATION</th>
+                                    <th nowrap>LOB</th>
+                                    <th nowrap>DISPOSITION</th>
+                                    <th nowrap>SUB-DISPOSITION</th>
+                                    <th nowrap>STATUS</th>
+                                    <th nowrap>ISSUANCE DATE AND TIME</th>
+                                    <th nowrap>REMARK</th>
+                                    <th class="disableFilterBy" nowrap>ACTION</th>
+                                    <th class="disableFilterBy">AUDIT</th>
+                                    <th class="disableFilterBy" nowrap>RETRIGGER PG</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let item of displayedAVs; let i = index">
+                                    <td class="text-center" nowrap>{{(first + i + 1)}}</td>
+                                    <td class="text-center" nowrap>{{item.leadId}}</td>
+                                    <td class="text-center" >{{item.proposalNo}}</td>
+                                    <td class="text-center" nowrap>{{item.customerName}}</td>
+                                    <td class="text-center" nowrap>{{item.leadGenerationDate}}</td>
+                                    <td class="text-center" nowrap>{{item.latestModifiedDateTime}}</td>
+                                    <td class="text-center" nowrap>{{item.latestMappedDOName}}</td>
+                                    <td class="text-center" nowrap>{{item.latestMappedAVName}}</td>
+                                    <td class="text-center" nowrap>{{item.planName}}</td>
+                                    <td class="text-center" nowrap>{{item.netPremium}}</td>
+                                    <td class="text-center" nowrap>{{item.axisCenter}}</td>
+                                    <td class="text-center" nowrap>{{item.axisLob}}</td>
+                                    <td class="text-center" nowrap>{{item.disposition}}</td>
+                                    <td class="text-center" nowrap>{{item.subDisposition}}</td>
+                                    <td class="text-center" nowrap>{{item.status}}</td>
+                                    <td class="text-center" nowrap>{{item.policyIssuanceDate}}</td>
+                                    <td class="text-center" nowrap>{{item.remark}}</td>
+                                    <td nowrap><button type="button" [disabled]="item.status === 'Payment Done'" class="btn_reassign" (click)="actionLead(item)">Action</button>
+                                    </td>
+                                    <td><button type="button"  class="btn_audit jsOpenPopup"
+                                        aria-label="modal-audit" (click)="auditLead(item)">Audit</button></td>
+                                   
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>                  
+            </section>
         </div>
     </div>
-</div>
-<!--Content area end-->
-
-<div class="pageLoaderMain active" *ngIf="loading">
-    <div class="pageLoaderSubMain">
-      <img src="assets/images/loader-axis.gif">
-    </div>
-  </div>
+</main>

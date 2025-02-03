@@ -2649,7 +2649,7 @@ export const combinedForms = {
     }
 
     export const thankYou = {
-      "formTitle": "Confirmation",
+      "formTitle": "thankYou",
       "saveBtnTitle": "Save",
       "prevBtnTitle": "Prev",
       "resetBtnTitle": "",
@@ -2679,10 +2679,11 @@ export const combinedForms = {
             },
             {
               "name": "label1",
-              "label": "Congratulations! Policy Application Renewed Successfully",
+              "label": "Congratulations! Policy Renewed Successfully",
               "visibleLabel": true,
               "visible": true,
               "type": "paragraph",
+              "methodName": "checkPaymentStatus",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
             },
             {
@@ -2692,11 +2693,19 @@ export const combinedForms = {
               "visible": true,
               "type": "paragraph",
               "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
-            }
+            },
+            {
+              "name": "backToRenewalList",
+              "label": "Back To Renewal List",
+              "type": "button",
+              "class": "col-12 col-md-6 col-lg-3 backToRen",
+              "visible": false,
+              "methodName": "backToRenewalList"
+            },
           ]
         },
         {
-          "sectionTitle": "Details of Your Proposal",
+          "sectionTitle": "Details of Your Policy",
           "visible": true,
           "visibleLabel": true,
           "class": "section-title proposalDetails",
@@ -2768,6 +2777,16 @@ export const combinedForms = {
               "type": "summary",
               "value": "",
               "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "downloadWithParagraph",
+              "label": "Share the Insurance Policy Kit with your customer",
+              "visibleLabel": true,
+              "type": "paragraphWithBtns",
+              "value": "",
+              "class": "col-12 col-md-12 mt-3",
               "visible": true,
               "disabled": true
             }
@@ -2961,3 +2980,193 @@ export const combinedForms = {
         }
       ]
     }  
+
+    export const kycThankYou = {
+      "formTitle": "kycThankYou",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "methodName":"checkKycDetail",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Congratulations! KYC Completed Successfully",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        },
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            // {
+            //   "name": "Failed",
+            //   "label": "",
+            //   "class": "col-12 col-md-6 col-lg-10 thankYou",
+            //   "visibleLabel": false,
+            //   "type": "image",
+            //   "images": [
+            //     {
+            //       "id": 1,
+            //       "src": "assets/Img/icon_success_green_tick.gif",
+            //       "alt": "Failed image",
+            //       "width": "150",
+            //       "height": "150",
+            //       "label": "Failed"
+            //     }
+            //   ]
+            // },
+            {
+              "name": "label1",
+              "label": "Sorry! KYC Failed",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            // {
+            //   "name": "label2",
+            //   "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+            //   "visibleLabel": true,
+            //   "visible": true,
+            //   "type": "paragraph",
+            //   "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            // }
+          ]
+        }
+      ]
+    }  
+    export const thankYouPending = {
+      "formTitle": "thankYou",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Payment pending; please wait for processing",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        }
+      ]
+    }
+    export const thankYouFQFailed = {
+      "formTitle": "thankYou",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Payment completed successfully; policy issuance pending",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        }
+      ]
+    }
+    

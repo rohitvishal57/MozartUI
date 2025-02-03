@@ -22,3 +22,8 @@
 .btn_red {
     padding: 10px 32px;
 }
+@media (max-width: 767px) {
+    .siteBody {
+        padding-bottom: 6rem;
+    }
+  }

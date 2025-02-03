@@ -33,7 +33,7 @@ export class BbTestPageComponent implements OnInit{
          window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
@@ -49,7 +49,7 @@ export class BbTestPageComponent implements OnInit{
   postd2CResirection(){
     const data = new FormData();
     data.append('data', this.encryptedString.trim())
-    this.http.post<any>('https://upuat.adityabirlahealth.com/api/v1/', data)
+    this.http.post<any>(this.configService.config.baseUrl + this.configService.config.d2cAxisRedirection, data)
       .subscribe(response => {
         console.log(response);
         response = JSON.parse(response.data)
@@ -58,7 +58,7 @@ export class BbTestPageComponent implements OnInit{
          window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
@@ -92,7 +92,7 @@ export class BbTestPageComponent implements OnInit{
          window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
@@ -106,7 +106,7 @@ export class BbTestPageComponent implements OnInit{
         //  window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
-import { Item } from 'src/app/interface/modal-popup.interface';
+import { Item, MenuItem } from 'src/app/interface/modal-popup.interface';
 
 @Component({
   selector: 'app-login',
@@ -37,12 +37,13 @@ export class LoginComponent implements OnInit {
   captchaErrorMsg = '';
   captchaCode = '';
   isSubmitted = false;
-
   sendOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   contactDetailsReqBody: any = { userId: '' };
   loginResetReqBody: any = { userName: '' };
   validateOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   items: Item[] = [];
+  menuItems: MenuItem[] = [];
+  currentRoute:string=''
 
   constructor(
     private fb: FormBuilder,
@@ -54,7 +55,8 @@ export class LoginComponent implements OnInit {
     public dialog: MatDialog,
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private ngZone: NgZone
   ) {
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required]],
@@ -128,7 +130,7 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200' && res.data.requestId !== null) {
           localStorage.setItem("requestId", res?.data.requestId);
-          this.toast.success({ detail: "SUCCESS", summary: `Sent OTP again to ${this.maskedUserCode}`, duration: 5000 });
+          this.toast.success({ detail: "Success", summary: `Sent OTP again to ${this.maskedUserCode}`, duration: 5000 });
           this.startTimer();
         } else {
           this.errorMessage = res.message;
@@ -203,7 +205,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err => {
         console.log(err);
-        this.toast.error({ detail: "ERROR", summary: err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary: err, duration: 5000 });
         this.refreshCaptcha();
       })
     });
@@ -217,13 +219,14 @@ export class LoginComponent implements OnInit {
         if (res?.data?.contactInfo?.length > 0) {
           this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
           localStorage.setItem('agentCode', res.data.agentId);
+          localStorage.setItem('parentCode', res.data.agentId);
           this.openModal(this.contactInfoData);
         } else {
           this.userErrorMsg = res.message;
         }
       },
       error: (err => {
-        this.toast.error({ detail: "ERROR", summary: err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary: err, duration: 5000 });
         this.refreshCaptcha();
       })
     });
@@ -241,7 +244,7 @@ export class LoginComponent implements OnInit {
       },
       error: ((err:any) => {
         console.log(err);
-        this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
+        this.toast.error({ detail: "Error", summary:err, duration: 5000 });
         this.refreshCaptcha();
       })
     })
@@ -280,15 +283,21 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.items = this.authService.getUserInfo()?.repotingMembers;
             this.updatePreferredLanguage();
-            if(res.data.agentCode === "467896"){
-              this.router.navigate(['rug'])
-            }else if(res.data.agentCode === "467895"){
-              this.router.navigate(['rug/av-upload'])
-            }else if(res.data.agentCode === "467894"){
-              this.router.navigate(['rug/base-caller-upload'])
-            }else{
-              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
+            this.menuItems=this.authService.getUserInfo()?.moduleAccessList;
+            if(this.menuItems.length>0){
+              this.currentRoute=this.menuItems[0].routePath;
             }
+            // if(res.data.agentCode === "467896"){
+            //   this.router.navigate(['products'])
+            // }else if(res.data.agentCode === "467897"){
+            //   this.router.navigate(['products'])
+            // }else if(res.data.agentCode === "467895"){
+            //   this.router.navigate(['rug/av-list'])
+            // }else if(res.data.agentCode === "467894"){
+            //   this.router.navigate(['rug/base-caller-upload'])
+            //}else{
+              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate([this.currentRoute||'dashboard']);
+            //}
           } else {
             this.errorMessage = res.message;
             res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
@@ -304,16 +313,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onKey(event: KeyboardEvent, index: number) {
-    event.preventDefault();
+  onKey(event: KeyboardEvent, index: number): void {
+    event.preventDefault();  
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;
   
       if (index < 5) {
-        setTimeout(() => {
-          const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-          nextInput && nextInput.focus();
-        }, 50);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+            nextInput && nextInput.focus();
+          }, 50);
+        });
       } else {
         const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
         btnElement && btnElement.focus();
@@ -324,33 +335,36 @@ export class LoginComponent implements OnInit {
       this.otp[index] = '';
   
       if (index > 0) {
-        setTimeout(() => {
-          const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
-          previousInput && previousInput.focus();
-        }, 50);
-      }
-
-    } else if (event.key === 'Tab') {
-      event.preventDefault();
-  
-      if (event.shiftKey) {
-        if (index > 0) {
+        this.ngZone.run(() => {
           setTimeout(() => {
             const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
             previousInput && previousInput.focus();
           }, 50);
-        }
-      } else {
-        if (index < 5) {
-          setTimeout(() => {
-            const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
-            nextInput && nextInput.focus();
-          }, 50);
-        } else {
-          const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
-          btnElement && btnElement.focus();
-        }
+        });
       }
+  
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      this.ngZone.run(() => {
+        if (event.shiftKey) {
+          if (index > 0) {
+            setTimeout(() => {
+              const previousInput = document.querySelectorAll('.otp-input')[index - 1] as HTMLInputElement;
+              previousInput && previousInput.focus();
+            }, 50);
+          }
+        } else {
+          if (index < 5) {
+            setTimeout(() => {
+              const nextInput = document.querySelectorAll('.otp-input')[index + 1] as HTMLInputElement;
+              nextInput && nextInput.focus();
+            }, 50);
+          } else {
+            const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
+            btnElement && btnElement.focus();
+          }
+        }
+      });
     }
   }
 

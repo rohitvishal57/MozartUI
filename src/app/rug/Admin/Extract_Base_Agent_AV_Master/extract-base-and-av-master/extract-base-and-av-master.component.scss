@@ -1,0 +1,183 @@
+.commontable tr td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #E2E2E2;
+    padding: 10px;
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+.text-center {
+    text-align: center !important;
+}
+.btn_white{
+    background: white;
+    border: 1px solid #c7222a;
+}
+.btn_white:hover{
+    background-color: #C7222A;
+    color: white;
+}
+.img{
+	height: 20px;
+	width: 20px;
+
+}
+.btn_reassign {
+    background: #FFFFFF;
+    border: 1px solid #c7222a;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: Lato-bold, sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #c7222a;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.field_searchMain .filterSearch {
+    width: 100%;
+    background: var(--site-body-bg);
+    border-width: 0;
+    padding: 12px 16px 12px 35px;
+    margin-left: 55rem;
+    width: 250px;
+}
+#save{
+    padding-right: 40px;
+}
+#save img{
+    padding-left: 70px;
+    color: white;
+}
+.btn_audit {
+    background: #606c76;
+    border: 1px solid #606c76;
+    border-radius: 4px;
+    padding: 5px;
+    font-family: sans-serif;
+    font-size: 8x;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 1px;
+    color: #fff;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+//pagination css start
+.tableNav .pagination {
+	flex-direction: column;
+
+	::ng-deep .p-paginator {
+		background-color: transparent;
+	}
+
+	::ng-deep .p-paginator .p-paginator-page {
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+		color: black !important;
+		border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+		background: var(--Neutral-Additional-White100, #FFFFFF) !important;
+		padding: 8px 12px;
+		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
+	}
+
+	::ng-deep .p-paginator .p-paginator-first,
+	::ng-deep .p-paginator .p-paginator-prev,
+	::ng-deep .p-paginator .p-paginator-next,
+	::ng-deep .p-paginator .p-paginator-last {
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+		color: black !important;
+		border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+		background-color: white;
+		padding: 8px 12px;
+		margin: 0 5px;
+		@media (max-width:767px) {
+			margin: 0 0;
+			padding: 8px 8px; 
+		  }
+	}
+
+	::ng-deep .p-paginator .p-paginator-page:hover,
+	::ng-deep .p-paginator .p-highlight:not(.p-highlight),
+	::ng-deep .p-paginator .p-paginator-first:hover,
+	::ng-deep .p-paginator .p-paginator-prev:hover,
+	::ng-deep .p-paginator .p-paginator-next:hover,
+	::ng-deep .p-paginator .p-paginator-last:hover {
+		background-color: #C7222A !important;
+		border-color: #C7222A !important;
+		color: #fff !important;
+	}
+
+	::ng-deep .my-paginator .p-highlight {
+		background: var(--Brand-Primary-CapitalRed, #C7222A) !important;
+		color: white !important;
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+	}
+
+	::ng-deep .my-paginator .p-dropdown {
+		display: flex;
+		align-items: center !important;
+		justify-content: center !important;
+	}
+
+	::ng-deep .p-paginator .p-paginator-pages .p-paginator-page,
+	::ng-deep .p-paginator .p-paginator-first,
+	::ng-deep .p-paginator .p-paginator-prev,
+	::ng-deep .p-paginator .p-paginator-next,
+	::ng-deep .p-paginator .p-paginator-last {
+		min-width: initial;
+		padding: 4px;
+		width: 32px;
+		height: 32px;
+	}
+
+	::ng-deep .p-paginator .p-dropdown {
+		height: 32px;
+		width: fit-content;
+	}
+
+	::ng-deep .p-dropdown .p-dropdown-trigger {
+		width: 2rem;
+	}
+
+	::ng-deep .p-dropdown-label {
+		padding: 0 0 0 10px !important;
+	}
+
+	::ng-deep .p-icon {
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	::ng-deep .mat-mdc-menu-panel {
+		overflow: hidden !important;
+	}
+}

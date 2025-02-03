@@ -50,8 +50,18 @@ export class EndorsementsRequestsService {
     return this.httpService.post(endorsementCaseDetailsApi, formData);
   }
 
+  getEndorsementStatusApi(formData: any) {
+    const getEndorsementStatusApi = this.configService.config.baseUrl + this.configService.config.getEndorsementStatus;
+    return this.httpService.post(getEndorsementStatusApi, formData);
+  }
+
   getPolicyMembersApi(reqBody: any) {
     const getPolicyMembersApi = this.configService.config.baseUrl + this.configService.config.getPolicyMembers;
     return this.httpService.post(getPolicyMembersApi, reqBody);
+  }
+
+  endorsementDownlaodAllApi(reqBody: any) {
+    const endorsementDownlaodAllApi = this.configService.config.baseUrl + this.configService.config.endorsementDownloadAll;
+    return this.httpService.post(endorsementDownlaodAllApi, reqBody);
   }
 }

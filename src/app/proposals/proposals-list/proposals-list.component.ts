@@ -11,6 +11,8 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { GalleriaThumbnails } from 'primeng/galleria';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-proposals-list',
@@ -162,6 +164,13 @@ export class ProposalsListComponent {
     this.getProposalList();
   }
 
+  onQuotePageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.floor(this.first / this.rows) + 1;
+    this.getQuoteList(false);
+  }
+
 
   getProposal(){
     this.countsList = [];
@@ -171,12 +180,25 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
+    this.searchInputControl.reset();
+    this.selected ='';
+    this.selectedView = 'list';
+    this.first = 0;
+    this.rows = 10;
+    this.page =1;
     this.proposalListRequestBody.pageNumber = this.page;
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalListRequestBody.productVarientName= "";
     this.proposalListRequestBody.startDate = null;
     this.proposalListRequestBody.endDate = null;
+    this.proposalListRequestBody.mobileNumber = "";
+    this.proposalListRequestBody.proposer="";
+    this.proposalListRequestBody.proposalNumber="";
+    this.proposalListRequestBody.email="";
+    this.proposalListRequestBody.leadId="";
+    this.proposalListRequestBody.proposalStatus="";
     this.getProposalList() ;
+    this.checkView();  
   }
 
   getProposalList() {
@@ -197,7 +219,7 @@ export class ProposalsListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "", summary: "Failed to get proposals list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get proposals list.", duration: 2000 });
       }
     );
   }
@@ -210,12 +232,23 @@ export class ProposalsListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    this.quoteListRequestBody.pageNumber = this.page;
-    this.quoteListRequestBody.pageSize = this.rows;
+    this.searchInputControl.reset("");
+    this.selected ='';
+    this.selectedView = 'list';
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     this.quoteListRequestBody.productVarientName= "";
     this.quoteListRequestBody.startDate = null;
     this.quoteListRequestBody.endDate = null;
-    }
+    this.quoteListRequestBody.mobileNumber = "";
+    this.quoteListRequestBody.proposalNumber = "";
+    this.quoteListRequestBody.name = "";
+    this.quoteListRequestBody.quoteId = "";
+  this.checkView();  
+  }
+  this.quoteListRequestBody.pageNumber = this.page;
+  this.quoteListRequestBody.pageSize = this.rows;
 
     this.proposalService.getQuoteListApi(this.quoteListRequestBody).subscribe(
       (response) => {
@@ -228,7 +261,7 @@ export class ProposalsListComponent {
            this.totalRecords = response.data[this.filterType];
         }
       }, (error) => {
-        this.toast.error({ detail: "", summary: "Failed to get quote list.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get quote list.", duration: 2000 });
       });
   }
 
@@ -269,7 +302,7 @@ export class ProposalsListComponent {
         this.productsList = res.data
       },
       error: (err) => {
-        this.toast.error({ detail: "", summary: "Failed to get Product Names.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Failed to get Product Names.", duration: 2000 });
       }
     })
   }
@@ -370,6 +403,7 @@ export class ProposalsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
+  
   restrictInput(event: KeyboardEvent): void {
     if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
       event.preventDefault();
@@ -386,6 +420,8 @@ export class ProposalsListComponent {
       return "Enter Proposal Number";
     } else if (this.selected === "leadId") {
       return "Enter Lead ID";
+    } else if (this.selected === "email") {
+      return "Enter Email ID";  
     } else if (this.selected === "proposalStatus") {
       return "Enter Proposal Status";
     }
@@ -399,8 +435,9 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposer = "";
     this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber = "",
-      this.proposalListRequestBody.proposalStatus = "",
-      this.searchInputControl.reset();
+    this.proposalListRequestBody.email = "",
+    this.proposalListRequestBody.proposalStatus = "",
+    this.searchInputControl.reset();
     this.searchApplied = false;
     this.getProposalList();
   }
@@ -410,7 +447,7 @@ export class ProposalsListComponent {
     this.quoteListRequestBody.name = "";
     this.quoteListRequestBody.quoteId = "";
     this.quoteListRequestBody.proposalNumber = "",
-      this.searchInputControl.reset();
+    this.searchInputControl.reset();
     this.searchApplied = false;
     this.getQuoteList(false);
   }
@@ -421,34 +458,45 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.mobileNumber = trimmedValue || "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
       } else if (this.selected === "proposalNumber") {
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.email = "";
+      } else if (this.selected == "email") {
+        this.proposalListRequestBody.email = trimmedValue || "";
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalStatus = "";
+        this.proposalListRequestBody.proposalNumber = "";
       }
       else if (this.selected === "proposalStatus") {
-        console.log("seleted", this.selected);
         this.proposalListRequestBody.proposalStatus = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.email = "";
       }
       this.first = 0;
       this.page = 1;
@@ -529,6 +577,35 @@ export class ProposalsListComponent {
         console.warn('Unknown action:', event);
     }
   }
+
+   async redirectQuote(quoteInformation : any){
+    console.log(quoteInformation);
+
+    try {
+      const reqData = {
+        partnerId: quoteInformation.partnerId,
+        productId: quoteInformation.productId,
+        formId: quoteInformation.formId??"0",
+        proposalNum: quoteInformation.proposalNum,
+        agentCode: this.agentCode,
+        currentFormSequence: quoteInformation.currentFormSequence??"0",
+        leadId: quoteInformation.leadId,
+        firstName: quoteInformation.proposerName,
+        proposerGender: ""
+      }
+      localStorage.setItem("formIndex",  (quoteInformation.currentFormSequence ??0).toString());
+      const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+
+      this.router.navigate(['yatra'], {
+        queryParams: { data: encodedEncryptedData }
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
   async redirect(proposalDetails: any) {
 
     console.log(proposalDetails);
@@ -543,7 +620,7 @@ export class ProposalsListComponent {
         currentFormSequence: proposalDetails.formSequence,
         leadId: proposalDetails.leadId
       }
-      localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
+      localStorage.setItem("formIndex",   proposalDetails.formSequence.toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
       this.router.navigate(['yatra'], {
@@ -594,7 +671,7 @@ export class ProposalsListComponent {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
 
@@ -612,12 +689,142 @@ export class ProposalsListComponent {
     }
   }
   maskEmail(email: any): string {
+    if(email){ 
     const [localPart, domain] = email.split('@');
     const maskedLocal = localPart[0] + '*'.repeat(localPart.length - 1);
     return `${maskedLocal}@${domain}`;
+    }else{
+      return "";
+    }
   }
   
   maskMobileNumber(mobileNumber: any): string {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
+
+
+  downloadQuote(proposalNum : any , isProposal : any){
+    let requestBody : any ={};
+    requestBody.proposalID = proposalNum;
+    requestBody.generationType = "";
+    requestBody.isDownload = "";
+    requestBody.isProposal = isProposal;
+
+    this.proposalService.quoteDownloadPdf(requestBody).subscribe(
+      (response)=>{
+        if(response.isSuccess){
+          let  blob :any = '';
+          try{
+             blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
+          }catch(exception){
+            this.toast.error({ detail: "Error", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+          }
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = proposalNum +".pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          this.toast.success({ detail: "Success", summary: 'Quote Information has Successfully Downloaded and  Shared.', duration: 2000 }); 
+        }else{
+          this.toast.error({ detail: "Error", summary: response.message, duration: 2000 }); 
+        }
+      },(error)=>{
+        console.log('failed to generate PDF ',error);
+      });
+  }
+
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
+  }
+
+  shareKyc(proposalInformation : any){
+    let requestPayload: any = {};
+    requestPayload.policyNumber = "";
+    requestPayload.proposerNumber = proposalInformation.proposalNumber;
+    requestPayload.fullName = proposalInformation.firstName  + proposalInformation.lastName ;
+    requestPayload.panNumber = "";
+    requestPayload.dob = "";
+    requestPayload.pepCheck = "No";
+    requestPayload.businessType = "NB";
+    requestPayload.emailId = proposalInformation.emailId;
+    requestPayload.agentCode = this.agentCode;
+    requestPayload.MobileNumber = proposalInformation.mobileNumber;
+    requestPayload.ProductName = proposalInformation.productVarientName;
+    requestPayload.ProductCode = "";
+  }
+
+  shareProposalSummary(proposalDetails: any) {
+    let requestBody: any = {};
+    requestBody.emailId = proposalDetails.proposerEmail;
+    requestBody.mobileNumber = proposalDetails.mobileNo;
+    requestBody.name = proposalDetails.firstName + " " + proposalDetails.lastName;
+    requestBody.agentCode = this.agentCode;
+    requestBody.proposalNumber = proposalDetails.proposalNumber;
+    requestBody.premiumAmount = proposalDetails.totalPremiumInt.toString();
+    requestBody.productName = proposalDetails.productVarientName;
+
+    this.proposalService.shareSummary(requestBody).subscribe(
+      (response) => {
+        if(response.isSuccess){
+          this.toast.success({ detail: "Success", summary: 'Proposal Summary Info Shared Successfully.', duration: 2000 }); 
+        }
+      },
+      (error) => {
+        console.log('failed to Share Proposal Summary Info',error);
+
+      });
+  }
+
+  async insurenow(item: any) {
+    console.log(item);
+    item.tenureAmounts = [];
+    this.formData = {
+      ...JSON.parse(item.quoteData), productName: item.productName, totalPremium: item.selectedPremiumAmount,
+      firstName: item.proposerName, quoteId: item.quoteNumber, proposalNumber: item.proposalNum
+    }
+    console.log(this.formData);
+    try {
+      await this.getFormSequence(item);
+      for (let i = 1; i <= 3; i++) {
+        const premiumKey = `t${i}PremiumAmount`;
+        console.log(item[premiumKey]);
+        if (item.selectedPremiumAmount == item[premiumKey]) {
+          item.tenure = i;
+        }
+        item.tenureAmounts[i - 1] = item[premiumKey]
+      }
+      this.formData = {
+        ...this.formData, tenure: item.tenure + ' years'
+      }
+      console.log(item, this.formData)
+      const productData = {
+        partnerId: item.partnerId,
+        productId: item.productId,
+        tenureAmounts: item.tenureAmounts,
+        selectedAddons: item.selectedAddons,
+        proposalNum: item.proposalNum,
+        tenure: item.tenure
+      }
+      sessionStorage.setItem("isQuote", true.toString());
+      console.log(productData)
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.router.navigate(['yatra'], {
+          state: { productData: productData, formSequence: this.formSequence }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 }

@@ -1,0 +1,72 @@
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToAvList()" title="Back To List"></a>{{"Upload Bulk File" }}</h2>
+            </div>
+            <form (ngSubmit)="onSubmit()" [formGroup]="bulkUploadForm" novalidate autocomplete="false">
+                <section class="white_container">
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
+                    <div class="sample_uploadDocument">
+                      <a href="assets/Admin_assets/Av_upload_sample.xlsx">Click to download sample template file.</a>
+                    </div>
+                    <div class="uploadDocument_main">
+                      <div class="uploadDocument_area" (click)="file.click()">
+                        <div class="ud_area_left">
+                          <h6>{{ "Upload Documents" }}</h6>
+                          <p>.xlsx/.xls/.csv Files</p>
+                          {{ selctedFileName }}
+                        </div>
+                        <div class="ud_area_right">
+                          <button type="button" id="uploadfiles" name="uploadfiles" class="btn_uploadDocument">
+                            <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span>
+                            Upload
+                          </button>
+                        </div>
+                        <input type="file" accept=".xlsx, .xls, .csv" id="file" #file style="display: none" (change)="onFileChange($event)">
+                      </div>
+                    </div>
+                    <span *ngIf="isFilenotSelected" class="ui-error block-show">
+                      Please select a file to continue.
+                    </span>
+                    <span class="ui-error block-show" *ngIf="showNote">
+                      File format not supported! Please upload .xls, .xlsx or .csv files.
+                    </span>
+                  </div>
+              
+                  <div class="uploadDocument_listMain" *ngIf="fileList.length > 0">
+                    <div class="uploadDocument_filesList">
+                      <div class="filesList_head">
+                        <div class="filesList_headLeft">{{ "Uploads:" }}</div>
+                      </div>
+                      <div class="filesList_body">
+                        <ul class="uploadedFiles_main">
+                          <li class="uploadedFiles_item" *ngFor="let item of fileList">
+                            <div class="uploadedFiles_info">
+                              <div class="uploadedFiles_infoItem">
+                                <h6>{{ item.file.name }}</h6>
+                                <p>Type: .{{ item.fileExt }}</p>
+                              </div>
+                              <div class="uploadedFiles_infoItem uploadedFiles_infoSize">
+                                <button type="button" class="delete-button" (click)="removeFile(item)">
+                                  <img src="assets/Img/icon_delete_red2.svg">
+                                </button>
+                                <div class="size-align">
+                                  <p>{{ item.file.size }} bytes</p>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div class="col-12 mt-5">
+                    <button type="submit" class="btn_red" [disabled]="isContinueButtonDisabled">Continue</button>
+                  </div>
+                </section>
+              </form>   
+        </div>
+    </div>
+</main>

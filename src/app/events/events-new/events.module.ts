@@ -12,20 +12,25 @@ import { MyMaterialModule } from 'src/app/material.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
-
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { PrimeNgModule } from 'src/app/prime-ng.module';
+import { BirthdayWishesComponent } from '../birthday-wishes/birthday-wishes.component';
+import { EventsListTableViewComponent } from '../events-list-table-view/events-list-table-view.component';
+import { EventsEditViewComponent } from '../events-edit-view/events-edit-view.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
-import { BirthdayWishesComponent } from '../birthday-wishes/birthday-wishes.component';
 @NgModule({
-  declarations: [EventsListComponent, EventsNewComponent, BirthdayWishesComponent],
+  declarations: [EventsListComponent, EventsNewComponent, BirthdayWishesComponent, EventsListTableViewComponent, EventsEditViewComponent],
   imports: [
     CommonModule,
     MyMaterialModule,
     EventsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    SlickCarouselModule,
+    PrimeNgModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

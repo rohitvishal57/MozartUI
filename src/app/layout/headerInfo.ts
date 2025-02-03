@@ -2,10 +2,26 @@ import { Injectable } from "@angular/core";
 
 
 export default class HeaderInformation {
-  marketingContent : any[] = [
+  marketingContent : any[] =[
+    // {
+    //   "name": "Aarambh",
+    //   "redirectURL": "https://aarambh.adityabirlacapital.com/Lead/Dashboard"
+    // },
     {
       "name": "Content Hub Portal",
-      "redirectURL": "https://www.abhimarketingcontenthub.com/contenthub/index.php/home/api_login?code="
+      "redirectURL": "https://abhimarketingcontenthub.com/contenthub/index.php/home/index"
+    },
+    {
+      "name": "Learning App",
+      "redirectURL": "https://abclearning.adityabirlacapital.com/login"
+    },
+    {
+      "name": "ABC Learning",
+      "redirectURL": "https://abclearning.adityabirlacapital.com/login"
+    },
+    {
+      "name": "ABHIDeep",
+      "redirectURL": "https://abclearning.adityabirlacapital.com/login"
     },
     {
       "name": "Customer Testimonials",
@@ -18,8 +34,8 @@ export default class HeaderInformation {
     {
       "name": "KMS",
       "redirectURL": "https://abclearning.adityabirlacapital.com/login"
-    }           
-];
+    }
+  ];
 
 downloadBrowcher : any[] =[
   { "productName": "Activ One Max", "browcherURL": "assets/browcher/Active_One_Max-Brochure.pdf" },

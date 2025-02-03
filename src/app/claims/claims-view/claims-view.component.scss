@@ -17,6 +17,40 @@ color: var(--white-color);
 border: 1px solid var(--primary-red-color);
 border-radius: 17px;
 }
+.ul_withIcon li {
+  display: flex;
+  gap: 8px;
+  cursor: default;
+}
+
+    .document-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .section-title {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .submit-section {
+      margin-top: 20px;
+      text-align: right;
+    }
+  
+    .uploadDocument_file {
+      padding:16px;
+      border-radius: 16px;
+      background:#F1F3F6;
+      border: 2px dashed #D5D7DE;
+      display: flex;
+      gap:8px;
+      align-items: center;
+      cursor: pointer;
+    }
+    .delete-button{
+      border: none;
+      background-color: none;
+    }
 /*---Common css start---*/
 .btn_red {
   padding: 10px 32px;
@@ -44,7 +78,6 @@ border-radius: 17px;
     }
   }
 }
-
 // .form-selecte{   opacity: 1;
 //   transform: scale(.85) translateY(-2.5rem) translateX(.15rem) !important;
 //   color: var(--text-black-4c);
@@ -96,6 +129,100 @@ border-radius: 17px;
 //     background: rgb(255, 255, 255);
 //     background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(242, 243, 246, 0.1) 100%);
 // }
-
+@media (max-width: 767px) {
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+}
 /*---Common css end---*/
 
+/*----MAT Select Custom styles start----*/
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+  font-size: 12px !important;
+  line-height: normal !important;
+}
+::ng-deep .mat-mdc-option {
+  padding: 5px 10px !important;
+  background: #f5f5f5 !important;
+}
+::ng-deep .mat-mdc-option:focus.mdc-list-item, ::ng-deep .mat-mdc-option.mat-mdc-option-active.mdc-list-item,
+::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
+  background-color: #056cdc !important;
+  color: #fff !important;
+}
+::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+::ng-deep .mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after,
+::ng-deep .mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
+  color: #fff !important;
+}
+::ng-deep .mat-mdc-select-value-text {
+  font-size: 12px;
+  color: #000;
+}
+::ng-deep .mat-mdc-option.mdc-list-item {
+  min-height: initial;
+}
+::ng-deep .mat-mdc-option .mat-pseudo-checkbox {
+  display: none;
+}
+.uploadDocument_mainClaims .section-title {
+  margin-bottom: 5px;
+}
+.uploadDocument_mainClaims .document-sections {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 10px;
+}
+.uploadDocument_mainClaims  .filesList_headClaim {
+
+}
+.uploadDocument_mainClaims .btn_uploadDocument .upload_icon {
+  padding: 7px 10px;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem h4{
+  margin-bottom: 5px !important;
+  font-size: 13px;
+  line-height: normal;
+  word-break: break-word;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size{
+    min-width: 100px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+.uploadDocument_mainClaims .uploadDocument_file {
+  min-height: 115px;
+  justify-content: space-between;
+}
+.uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size .size-align p {
+  margin: 0;
+}
+.filesList_head.filesList_headClaim {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+}
+.filesList_head.filesList_headClaim  .headInfo_item > div {
+  display: flex;
+  gap: 5px;
+}
+.uploadDocument_mainClaims .uploadedFiles_item {
+  position: relative;
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+  .uploadDocument_mainClaims .document-sections {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
+  .uploadDocument_mainClaims .uploadedFiles_item {
+    width: 100%;
+  }
+  .uploadDocument_mainClaims .uploadedFiles_infoItem h4 {
+    word-break: break-word;
+  }
+}
+/*----MAT Select Custom styles end----*/

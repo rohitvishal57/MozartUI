@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PerformanceService } from '../performance.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
+import { ActivatedRoute } from '@angular/router';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-my-performace',
@@ -36,12 +38,14 @@ export class MyPerformaceComponent {
       "value": "END"
     }
   ];
-
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   constructor(
+    private activatedRoute : ActivatedRoute,
     private performanceService: PerformanceService, private languageService: LanguageService,
     private translateService: TranslateService,private formBuilder: FormBuilder,private toast: NgToastService
   ) { }
   ngOnInit(): void {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     const currentYear = new Date().getFullYear();
     this.years = [currentYear, currentYear - 1]
     this.inItForm();
@@ -60,6 +64,14 @@ export class MyPerformaceComponent {
     this.getPerformanceDetailedViewCount();
     this.getPerformanceDetailedList();
   }
+
+  ngAfterViewInit(){
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeLeadStatus  = params['status'];
+      this.tabGroup.selectedIndex = routeLeadStatus;
+    });
+  }
+
 
   inItForm() {
     this.commissionForm = this.formBuilder.group({
@@ -149,15 +161,15 @@ export class MyPerformaceComponent {
           if(commissionDetails.fileName && commissionDetails.omniDocIndex){
             this.downloadStatement(commissionDetails.omniDocIndex, commissionDetails.fileName);
           }else{
-            this.toast.warning({ detail: "", summary: 'There are no commission statements to download.', duration: 2000 }); 
+            this.toast.warning({ detail: "Warning", summary: 'There are no commission statements to download.', duration: 2000 }); 
           }
         }else{
-          this.toast.warning({ detail: "", summary: 'Failed to fetch commission statement.', duration: 2000 });
+          this.toast.warning({ detail: "Warning", summary: 'Failed to fetch commission statement.', duration: 2000 });
         }
       },
       (error) => {
         console.log('Failed to fetch commission statement', error);
-        this.toast.error({ detail: "", summary: 'Failed to fetch commission statement.', duration: 2000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to fetch commission statement.', duration: 2000 });
       });
   }
 
@@ -182,16 +194,16 @@ export class MyPerformaceComponent {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-            this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
+            this.toast.success({ detail: "Success", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
           }else{
-            this.toast.warning({ detail: "", summary: 'Failed to download commission statement.', duration: 2000 });
+            this.toast.warning({ detail: "Warning", summary: 'Failed to download commission statement.', duration: 2000 });
           }
         }catch(error){
           console.log('errror download pdf',error);
         }
       }, (error) => {
         console.log('Failed to download commission statement', error);
-        this.toast.error({ detail: "", summary: 'Failed to download commission statement.', duration: 2000 });
+        this.toast.error({ detail: "Error", summary: 'Failed to download commission statement.', duration: 2000 });
       });
 
   }

@@ -7,6 +7,9 @@
     display: flex;
     gap: 24px;
     margin-right: -34px;
+    &.userProfile_qrCodeUser{
+      padding: 10px 10px;
+    }
 }
 .img_qrCode {
     border-radius: 5px;
@@ -25,6 +28,9 @@
     display: flex;
     flex-direction: column;
     gap:6px;
+    @media (max-width:767px) {
+      width: 100%;
+    }
     h5{
         font-weight: 600;
         font-size: 16px;
@@ -524,10 +530,43 @@
   font-weight: 500;
   font-size: 16px;
 }
+.profile_changePassword{
+  margin-top: 15px;
+}
 .language-selector{
-  padding: 10px 0px;
+  padding: 0px 0px 10px;
   display: flex;
   flex-direction: column;
+  &.profile-language-selector {
+    margin-top: 10px;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    @media (max-width:767px) {
+      justify-content: center;
+    }
+    .lbl_preferredLang {
+      line-height: normal;
+      margin: 0;
+      border-radius: 0;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 400;
+    }
+    .selectedLanguage-wrapper {
+      .dropdown{
+        padding: 5px 10px;
+      }
+      .btn_slectedLang{
+        margin-left: 5px;
+        padding: 3px 15px;
+      }
+      .dropdown, .btn_slectedLang{
+        height: 30px;
+      }
+    }
+  }
   @media (max-width:767px) {
     justify-content: center;
     align-items: center;
@@ -546,15 +585,51 @@
   margin-bottom: 3px;
 }
 
+.shareIcon Img{
+  width: 12px;
+  height: 10px;
+}
+.siteBody{
+  padding-bottom: 6rem;
+}
+.btn_profile_changePassword {
+  background: transparent;
+  border-width: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: #C7222A;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 0;
+  text-decoration: underline;
+  span {
+    background: #C7222A;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    img {
+      filter: brightness(0) invert(1);
+    }
+  }
+  &:hover {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+@media(max-width:820px) {
+  .qrCode_agentInfo {
+    width: 273px;
+  }
+}
 @media (max-width:767px) {
   .userProfilePic{
     margin: auto;
   }
   .userProfile_qrCode{
-  right: 0;
-  flex-wrap: wrap;
-  margin-right:0px;
-
+    right: 0;
+    flex-wrap: wrap;
+    margin-right:0px;
+    padding: 10px 0;
   }
   .language-selector{
     bottom: 0px;
@@ -579,5 +654,13 @@
   }
   .selectedLanguage-wrapper{
     justify-content: center;
+  }
+  .mobilePad_container {
+    padding: 16px 8px;
+  }
+  .profile_changePassword{
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
   }
 }

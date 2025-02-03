@@ -5,6 +5,9 @@
 .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
 	width: 48%;
 }
+.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+	width: 23%;
+}
 
 .searchWraperForm {
 	padding: 10px 20px;
@@ -194,10 +197,6 @@ h6 {
 	float: left;
 }
 
-.filterWraperForm {
-	padding: 15px 24px;
-}
-
 .filterWraperForm .fw_form header {
 	font-size: 21px;
 }
@@ -241,13 +240,13 @@ h6 {
 .lead-sub-menu{
 	display: inline-flex !important;
 }
-.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
 	background: var(--primary-red-color) !important;
 	color: white;
 	img{
 		filter: brightness(0) invert(1);
 	}
-  }
+  } */
   .btn_container_leads{
 	display: flex;
     justify-content: end;
@@ -332,7 +331,7 @@ h6 {
 		}
 	}
 	img {
-		opacity: 0.5;
+		opacity: 0.3;
 	}
   }
   .btn_assignTo {
@@ -345,13 +344,99 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
-  @media only screen and (max-width: 767px) {
-	.filterWraperForm{
-		padding: 0px;
-	}
-}
+  .cardViewMain .cardViewWraper .cardViewItem header .card_btnGroup {
+	max-width: 124px;
+  }
 @media only screen and (max-width: 1024) {
 	.filterWraperForm{
 		padding: 0px;
 	}
 }
+@media (max-width: 1093px) {
+    .siteBody {
+        padding: 11rem 2rem 12rem;
+    }
+}
+  @media only screen and (max-width: 767px) {
+	.filterWraperForm{
+		padding: 0px;
+	}
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
+	}
+	.filterWraperForm .fw_form .fw_checkboxWraper.fw_checkboxWraper_leads .input-checkbox-block {
+		width: 30%;
+	}
+    .siteBody {
+        padding-bottom: 6rem;
+    }
+	.btn_newRequest {
+		line-height: normal;
+	}
+	.leads_searchWraper .field_searchMain.field_searchMainMobile {
+		flex-direction: row;
+	}
+	.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch {
+		width: 150px;
+		height: 31px;
+	}
+	.field_searchMain.field_searchMainMobile .filterFieldGroup .ui-error-proposal {
+		position: relative;
+	}
+	.bodyColumn h2 {
+		font-size: 14px;
+		font-weight: 600;
+	}
+	.btn_newRequest {
+		border: 1px solid #c7222a;
+	}
+	.btn_newRequest:hover {
+		border: 0px solid #c7222a;
+	}
+	.quickFilterMain {
+		padding: 0;
+	}
+	.siteBody {
+		background: #fff;
+	}
+	.body_flex_column {
+		gap: 10px;
+	}
+	.leads_searchWraperMobile.leads_searchWraper .field_searchMain.field_searchMainMobile select.filterSearch{
+		min-width: 150px;
+        max-width: 150px;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile {
+		flex-direction: row;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterFieldGroup {
+		width: 100%;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper {
+		min-width: 20px;
+        width: 20px;
+		margin-top: 8px;
+
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter {
+		border-width: 0 !important;
+		padding: 0 !important;
+	}
+	.quickFilterMain .quickFilterRight.leads_searchWraperMobile .filterWraper .btn_filter #filter-count {
+		display: none;
+	}
+  }
+  @media (max-width: 360px) {
+	.siteBody {
+		padding: 12rem 2rem 12rem;
+	}
+	.btn_newRequest{
+		font-size: 11px;
+	}
+	.btn_quickFilter {
+		padding: 9px 6px 7px;
+	}
+	.cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems.cv_bodyItems_45 {
+		width: 46%;
+	}
+  }

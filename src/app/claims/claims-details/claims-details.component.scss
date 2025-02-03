@@ -126,7 +126,11 @@
   color: var(--white-color);
   border: 1px solid var(--primary-red-color);
   }
-
+  .ul_withIcon li {
+    display: flex;
+    gap: 8px;
+    cursor: default;
+  }
   /*-----Claims Details start-----*/
   .details_claimsInfo {
     display: flex;
@@ -452,5 +456,43 @@
   }
   .details_claimsInfo  .sub_claimsInfo h6 {
     font-size: 16px;
+    min-height: 17px;
+  }
+  ::ng-deep .table>:not(caption)>*>* {
+    background: hidden;
+  }
+  ::ng-deep .table .p-element {
+    padding: 0; // Set padding to 0 for p-element
+  }
+  ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #f1f3f67a !important;
+    display: contents;
+  }
+.tableSubMain .table thead tr, .tableSubMain .table thead tr th,
+.tableSubMain .table tbody td {
+  background: transparent;
+  cursor: auto;
+}
+.tableSubMain .table td.card_insureInfo{
+  vertical-align: top;
+  color: #2e2e2e;
+}
+.tableNav .pagination {
+  flex-direction: column;
+}
+
+.list-detailsInfo li .label {
+  width: 60%;
+  line-height: normal;
+}
+.list-detailsInfo li .value {
+  width: 40%;
+  text-align: right;
+  line-height: normal;
+}
+  @media (max-width: 767px) {
+    .siteBody {
+        padding-bottom: 6rem;
+    }
   }
   /*-----Claims Details start-----*/

@@ -8,8 +8,67 @@
 
 
 /*----Site css files----*/
-@import '../src/assets/styles/Site-main.css';
-@import '../src/assets/styles/Responsive.css';
 @import 'node_modules/angular-calendar/css/angular-calendar.css';
 @import '~flatpickr/dist/flatpickr.css';
+@import '../src/assets/styles/Site-main.css';
+@import '../src/assets/styles/Responsive.css';
+// @import "~ngx-slick-carousel/styles/slick.css";
+// @import "~ngx-slick-carousel/styles/slick-theme.css";
+.carousel {
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  
+  .carousel .slick-slide {
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .carousel .slick-dots {
+    bottom: -20px !important; /* Adjust to control the position of the dots */
+  }
+  
+  .slick-prev, .slick-next {
+    display: block !important; /* Ensure they are visible */
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10 !important;
+}
+
+.slick-prev {
+    left: 10px !important; /* Adjust as necessary */
+}
+
+.slick-next {
+    right: 10px !important; /* Adjust as necessary */
+}
+
+.slick-prev, .slick-next {
+  display: block !important; /* Ensure they are visible */
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  background-color: green !important;
+}
+
+.slick-prev {
+  left: 10px !important; /* Adjust as necessary */
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 15px !important;
+  background-color: #C91429 !important;
+  color: #FFFFFF !important;
+}
+
+.slick-next {
+  right: 10px !important; /* Adjust as necessary */
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 15px !important;
+  background-color: #C91429 !important;
+  color: #FFFFFF !important;
+}
+
 

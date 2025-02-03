@@ -14,7 +14,9 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 declare var bootstrap: any;
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
-import { ExcelExportService } from 'src/app/services/excel-export.service';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-leads-list',
@@ -93,12 +95,10 @@ export class LeadsListComponent {
     private datePipe: DatePipe,
     private toast: NgToastService,
     private productService: ProductsService,
-    private common: CommonService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private excelExportService: ExcelExportService
   ) { }
 
   leadsInfoListRequestBody ={
@@ -439,7 +439,7 @@ export class LeadsListComponent {
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response: any) => {
-        this.agentCodes = response != null ? response?.data : [];
+        this.agentCodes = response != null ? response?.data[0].split(",") : [];
         if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
@@ -459,11 +459,10 @@ export class LeadsListComponent {
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
         if (response.message == "Success") {
-
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: "", summary: 'Leads has been successfully assigned.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Leads has been successfully assigned.', duration: 5000 });
           } else {
-            this.toast.success({ detail: "", summary: 'Lead has been successfully assigned.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Lead has been successfully assigned.', duration: 5000 });
           }
           this.filterQuotes('all','totalRecords');
         }
@@ -520,7 +519,7 @@ export class LeadsListComponent {
 
     if (this.startDate > new Date().toISOString().split('T')[0]) {
       this.startDate = ''; 
-      this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
+      this.toast.warning({ detail: "Warning", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
 
   }
@@ -558,7 +557,7 @@ export class LeadsListComponent {
               "productId": interestedProductItem.productId
       
             }
-            const res = await firstValueFrom(this.common.Getformsequence(reqData));
+            const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
             formSequence = JSON.parse(res.data.formSequence);
             if (formSequence != null && formSequence.length > 0) {
               formSequence.forEach(() => { this.allJsonFormData.push({}) });
@@ -567,7 +566,7 @@ export class LeadsListComponent {
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
             localStorage.setItem("formIndex", lead.formSequence);
           } catch (err) {
-            this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+            this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
           }
           const reqData = {
             partnerId : interestedProductItem.partnerId,
@@ -620,7 +619,7 @@ export class LeadsListComponent {
 
   async generateProposalNumnberAndUpdateLeadInfor(leadNumber : any) {
     try {
-      const proposalGenerateResponse = await firstValueFrom(this.common.getProposalNumber());
+      const proposalGenerateResponse = await firstValueFrom(this.commonService.getProposalNumber());
       let proposalNumber = proposalGenerateResponse.data?.proposalNumber;
       const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
       const leadInformation = response?.data?.leadList[0];
@@ -642,7 +641,20 @@ export class LeadsListComponent {
   }
 
   downloadSingleItem(item: any): void {
-    this.excelExportService.exportToExcel([item], `Lead_${item.leadNumber}`);
+    const leadReqBody = {
+      leadNumber: item.leadNumber
+    }
+
+    this.leadsService.downloadSingleLead(leadReqBody, item.leadNumber).subscribe(
+      (response)=>{
+        if(response.isSuccess){
+          const blob = this.commonService.base64ToBlob(response?.data?.downloadUrl,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName) 
+        }
+      },
+      (error)=>{
+       console.log('Exception',error);
+    });
   }
 
   maskEmail(email: any): string {
@@ -655,40 +667,17 @@ export class LeadsListComponent {
     return mobileNumber.slice(0, 2) + '*'.repeat(mobileNumber.length - 4) + mobileNumber.slice(-2);
   }
 
-  downloadAllLeads(){
+  downloadAllLeads() {
     this.leadsService.downloadAllLeads(this.leadsInfoListRequestBody).subscribe(
      (response)=>{
-     debugger;
-     if(response.isSuccess){
-      //this.downloadExcel(  response.fileContentBase64 ,    response.fileName);
-      const blob = this.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = response?.data?.fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
-
-     }
+      if(response.isSuccess){
+        const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
+      }
      },
      (error)=>{
       console.log('Exception',error);
      });
-  }
-
-
-
-  base64ToBlob(base64: string, type: string): Blob {
-    const binary = atob(base64);
-    const length = binary.length;
-    const arrayBuffer = new Uint8Array(length);
-    for (let i = 0; i < length; i++) {
-      arrayBuffer[i] = binary.charCodeAt(i);
-    }
-    return new Blob([arrayBuffer], { type });
   }
   
 }

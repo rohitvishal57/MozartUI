@@ -8,62 +8,24 @@ import { MatDialog } from '@angular/material/dialog';
   providedIn: 'root',
 })
 export class CommonService {
-  private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
-  dialogRef: any;
-
   private toggleSidebarSubject = new Subject<boolean>();
   sidebarState$ = this.toggleSidebarSubject.asObservable();
   selectedSideBarFlag: any;
-
-  // private baseUrl: string = 'http://20.235.250.168:8086/';
+  dialogRef: any;
 
   constructor(private http: HttpClient, private configService: ConfigService, public dialog: MatDialog,
     private router: Router
   ) { }
-
-
-  // For All PartnerApi
 
   getPinCodeByCity(reqdata: any) {
     const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
     return this.http.post<any>(PinCodeByCity, reqdata);
   }
 
-  // getHealthPlans(year: any, adultCount: any, childCount: any) {
-  //   return this.http.get<any>(`${this.apiUrl}`);
-  // }
-
-  // CreateProposal(reqData: any) {
-  //   return this.http.post<any>(`${this.baseUrl}Banca/PartnerApi/CreateProposal`, reqData);
-  // }
-  // convertToRDBMS(data: any) {
-  //   const data1 = JSON.stringify(data);
-  //   const headers = { 'content-type': 'application/json' }
-  //   return this.http.post(`${this.baseUrl}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
-  // }
-  //For ICICI
-  // getOccupations() {
-  //   return this.http.get<any>(`${this.apiUrl1}`);
-  // }
-
-  //For ABHI
-
-
-
-
-
-
-
-
-
-
-
-  //yatra
-
-
-
-
-
+  getCommonPinCodeByCity(reqdata: any) {
+    const PinCodeByCityQuote = this.configService.config.baseUrl + this.configService.config.pinCodeDetailsQuote;
+    return this.http.post<any>(PinCodeByCityQuote, reqdata);
+  }
 
   getProposalNumber() {
     const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalNumber;
@@ -82,30 +44,19 @@ export class CommonService {
 
   GetSingleProductQuote(reqData: any) {;
     const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
-    // const singleProductQuote = 'https://localhost:7188/getquoteforsingleproduct';
     return this.http.post<any>(singleProductQuote, reqData);
   }
+  
   UpdateAgentAllFormData(reqData:any){
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData";
     return this.http.post<any>(saveCommonDraftData,reqData);
   }
 
-
-  // storeToken(token: string) {
-  //   localStorage.setItem('token', token);
-  // }
-  // isLoggedIn(): boolean {
-  //   if (!!localStorage.getItem('token')) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
   signOut() {
     localStorage.clear();
     sessionStorage.clear();
     this.router.navigate(['']);
   }
-
 
   checkNullOrUndefined(val: any) {
     if (val === null || val === undefined || val === "null") {
@@ -114,6 +65,7 @@ export class CommonService {
       return false;
     }
   }
+
   openDialog(obj: any, callBack: any) {
     this.dialogRef = this.dialog.open(obj?.template, {
       disableClose: true,
@@ -122,7 +74,6 @@ export class CommonService {
       data: obj.data ? obj.data : null,
       panelClass: obj.customClass ? obj.customClass : 'rounded-dialog'
     });
-
     this.dialogRef.afterClosed().subscribe((result: any) => {
       callBack(result)
     });
@@ -133,6 +84,7 @@ export class CommonService {
       this.dialogRef.close()
     }
   }
+
   uploadDocument(reqData:any){
     const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
     return this.http.post(uploadDocument,reqData);
@@ -150,5 +102,29 @@ export class CommonService {
     return this.selectedSideBarFlag;
   }
 
-  
+  getkycstatus(reqData:any){
+    const getkycstatus = this.configService.config.baseUrl + this.configService.config.getkycstatus;
+    return this.http.post<any>(getkycstatus, reqData)
+  }
+
+  saveAsExcelFile(blob: any, fileName: string) {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
+  }
 }

@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core'; // Import TranslateServi
 import { NotificationService } from 'src/app/notifications/notification.service';
 import { error } from 'jquery';
 import HeaderInformation from '../headerInfo';
+import { ConfigService } from 'src/app/services/config.service';
+import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
   selector: 'app-header',
@@ -24,13 +26,14 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   unReadNotificaitons : any[]=[];
   showNotifications : Boolean = false;
   agentCode : any;
+  showD2cHeader:any = false;
   @Input() isLoggedIn: any;
 
 
   
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
-    ,public headerInformation : HeaderInformation
+    ,public headerInformation : HeaderInformation,private configService: ConfigService, private rugService: RugService
   ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
@@ -38,19 +41,18 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   ngOnInit() {
+    this.rugService.currentStatus.subscribe(flag => this.showD2cHeader = flag);
     this.languageService.language$.subscribe(lang => {
       this.currentLanguage = lang;
+      this.agentCode = localStorage.getItem('agentCode');
+      this.notificationInfo();
       this.translateService.use(lang).subscribe({
         error: () => {
           this.translateService.use('en'); // Fallback to English if translation file is missing
         }
       });
     });
-    
     this.currentLanguage = this.getLanguage();
-    this.agentCode = localStorage.getItem('agentCode') 
-    this.notificationInfo();
-
   }
 
   
@@ -60,7 +62,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   logOut() {
-    this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });
+    this.toast.success({ detail: "Success", summary: "Agent Logout successfully!!", duration: 2000 });
     this.loginService.signOut();
     this.router.navigate(['']);
   }
@@ -142,8 +144,6 @@ export class HeaderComponent implements OnInit ,OnDestroy {
         this.notifications = response?.data;
         this.unReadNotificaitons =  this.notifications.filter(notification => notification?.isRead === false);
         this.notificationCount = this.unReadNotificaitons.length;
-        console.log('notifications',this.notifications)
-
       }
     },
     error => {
@@ -155,7 +155,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.notificationService.markAllNotification(this.agentCode).subscribe(
       (response) => {
         if (response?.isSuccess) {
-          this.toast.success({ detail: "", summary: 'Successfully marked all notifications as read.', duration: 5000 });
+          this.toast.success({ detail: "Success", summary: 'Successfully marked all notifications as read.', duration: 5000 });
           this.notificationInfo();
           this.showNotifications = false;
         }
@@ -166,11 +166,11 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   routeNotification(notification: any) {
-  this.notificationService.markNotification(notification.id).subscribe(
+   this.notificationService.markNotification(notification.id).subscribe(
     (response)=>{
       if (response?.isSuccess) {
-      //  this.closePopup();
-        this.router.navigate([notification.redirectionURL]);
+        const redirectionURL =  window.location.origin + "/"+ notification.redirectionURL;
+        window.location.href = redirectionURL;
         this.notificationInfo();
       }
     },
@@ -191,7 +191,22 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     link.download = fileNameWithExtension; 
     link.click();
   }
-  
 
+  raiseServiceRequest() {
+    let requestBody: any = {
+      "emailID": this.agentCode,
+      "password": ''
+    };
+
+    this.notificationService.serviceRequest(requestBody).subscribe(
+      (response) => {
+        if (response.isSuccess) {
+          window.location.href = response?.data?.ssoUrl;
+        }
+      },
+      (error) => {
+        console.log('Failed to Raise request', error);
+      });
+  }
 }
 

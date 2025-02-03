@@ -1,0 +1,25 @@
+ <!--LOB Status Confirm Popup start-->  
+ <div class="popup-modal " id="modal-statusConfirm">
+    <div class="popup-modal-dialog">
+      <div class="popup-modal-content sorryError">
+        <div class="popup-modal-header hideBlock">
+        </div>
+        <div class="popup-modal-body text-center ">
+          <div class="sorryErrorImg sorryErrorImg_mobile mb-4 mt-4">
+              <img src="assets/Img/error_info_icon.svg" class="img_grey" width="50">  
+          </div>
+          <h6 class="popup-content-title">Are you sure?</h6>
+            <p>You want to change status of this LOB?</p>
+          
+        </div>
+        <div class="popup-modal-footer justify-content-center">
+            <div class="btn_group btn_group_wfull">
+              <button type="button" class="btn_Default btn_white btn_save btn_width_f jsClosePopupLOB" aria-label="modal-statusCancelled" (click)="onCancel()">No</button>
+              <button type="button" class="btn_Default btn_red btn_save btn_width_f jsOpenPopupLOB" aria-label="modal-statusUpdate" (click)="onConfim()">Yes</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--LOB Status Confirm Popup end-->
+  

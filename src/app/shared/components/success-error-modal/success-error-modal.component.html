@@ -1,0 +1,36 @@
+<div class="messageModal">
+  <div class="modal-content" [ngClass]="data.type">
+    <div class="modal-header">
+      <h5 class="modal-title" id="roomModalLabel">
+        {{ data.type === 'success' ? 'Success' : 'Error' }}
+      </h5>
+    </div>
+    <div class="modal-body">
+      <div class="icon_infoMsg">
+        <img
+        [src]="data.type === 'success' ? 'assets/Img/icon_white_tick.svg' : 'assets/Img/icon_white_close.svg'"
+        [alt]="data.type === 'success' ? 'Success Icon' : 'Error Icon'"
+      />
+      </div>
+      <div class="row">
+          <div class="col-12 text-center">
+            <p *ngIf="data.type === 'success'">{{ 'Your ' + data.title + ' Request was created Successfully'}}</p>
+            <p [style.font-weight]="data.type === 'success' ? 'bold' : 'normal'">
+              {{ data.message }}
+            </p>
+          </div>
+      </div>
+        
+    </div>
+    <div class="modal-footer messageModal_button">
+      <button
+      id="continue"
+      name="continue"
+      [ngClass]="data.type"
+      (click)="onClose()"
+    >
+      {{ data.type === 'success' ? 'Continue' : 'I Understand' }}
+    </button>
+    </div>
+  </div>
+</div>

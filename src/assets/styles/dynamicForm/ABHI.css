@@ -1,12 +1,15 @@
 body {
     background: #F1F3F6;
 }
-
+.p-component {
+    font-family: "Anek Latin", sans-serif !important;
+}
 .main-container {
     padding-top: 11rem;
     display: flex;
     flex-direction: row;
     /*background-color: #F1F3F6;*/
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .left-nav {
@@ -87,7 +90,7 @@ body {
 
 .main-container .left-nav .details p {
     color: #656565;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
@@ -117,6 +120,11 @@ body {
     bottom: -3px;
     width: 75%;
 }
+.main-container .right-panel .bottom-section-axis {
+    position: fixed;
+    bottom: -3px;
+    width: 75%;
+}
 
 .main-container .right-panel .typecss {
     display: inline-table;
@@ -140,7 +148,7 @@ body {
     border-radius: 18px;
     border: 0;
     font-weight: 400;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .right-panel .inputField_Text,
@@ -218,7 +226,7 @@ body {
 .main-container .right-panel .inputField_Select,
 .main-container .right-panel .inputField_Text_disabled {
     font-weight: 500;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 15px;
     height: 48px;
     border-radius: 12px;
@@ -244,13 +252,15 @@ body {
     left: 12px;
     transform: translateY(-50%);
     font-size: 14px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     color: #aaa;
     transition: all 0.2s ease;
     pointer-events: none;
     background-color: #f2f3f6;
     padding: 0 5px;
-    padding-right: 35px;
+    /* padding-right: 35px; */
+    padding-right: 20px;
+    /* width: 53%; */
 }
 
 .main-container .right-panel .boldtext_input:focus {
@@ -282,6 +292,7 @@ body {
     /* z-index: 1; */
     padding: 0 3px;
     border-radius: 2px;
+    width: 100%;
 }
 
 .main-container .right-panel .inputField_Text.disabled-has-value+label,
@@ -311,7 +322,7 @@ body {
 .autoDebitLabel1{
     font-size: larger;
     font-weight: 600;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     padding-left: 28px;
     padding-top: 20px;
 }
@@ -319,7 +330,7 @@ body {
 .autoDebitLabel2{
     font-size: medium;
     font-weight: 400;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     padding-left: 28px;
     padding-top: 5px;
 }
@@ -327,7 +338,7 @@ body {
 .autoDebitLabel3{
     font-size: medium;
     font-weight: 400;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     padding-left: 28px;
     padding-top: 20px;
 }
@@ -349,7 +360,7 @@ body {
 }
 
 .abhaLabel1, .abhaLabel1 p{
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     color: #c72229;
     padding-left: 15px;
 }
@@ -358,7 +369,7 @@ body {
     font-size: x-large;
     font-weight: 600;
     padding-left: 15px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
 }
 .abhaLabel1 p, .abhaLabel2 p {
     padding: 0;
@@ -368,7 +379,7 @@ body {
     font-size: large;
     font-weight: 300;
     padding-top: 3px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     padding-left: 15px;
 }
 .abhaIDImage{
@@ -379,7 +390,7 @@ body {
 .abhaquestion{
     font-size: large;
     font-weight: 400;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     padding-left: 15px;
     margin-top: -15%;
 }
@@ -406,14 +417,14 @@ body {
   
   .label-value-container .label-text {
     font-weight: 500;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     color: #4C4C4C;
   }
   
   .label-value-container .value-text {
     font-weight: 600;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 16px;
     color: #000;
   }
@@ -481,27 +492,29 @@ body {
 }
 
 .main-container .right-panel .incrementbtn {
-    background-color: rgb(205, 9, 9);
+    background-color: #c72229;
     border: none;
     color: white;
     font-size: 16px;
     margin-left: auto;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 16px;
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    width: 22px;
 }
 
 .main-container .right-panel .incrementbtn:hover {
-    color: #ff4d4d;
+    color: #c72229;
+    background: #FFE7E5;
 }
 
 .main-container .right-panel .section-title {
     font-size: large;
     font-weight: 450;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     margin-bottom: 25px;
     position: static;
     width: auto;
@@ -557,7 +570,7 @@ body {
 }
 .main-container .right-panel .file-upload-btn {
     width: 315px;
-    text-align-last: center;
+    text-align: center;
     font-family: 'Anek Latin';
     font-weight: 500;
     line-height: 20px;
@@ -567,12 +580,60 @@ body {
     padding: 5px 3px 3px 3px;
     font-size: 14px;
     color: #5d5d5d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
-
+.field_fileUpload {
+    width: 100%;
+    position: absolute;
+    opacity: 0;
+}
+.file-location {
+    font-weight: 400;
+    font-size: 14px;
+    color: #313131;
+    line-height: normal;
+    margin-top: 10px;
+    display: inline-block;
+}
+.uploadfile-location {
+    font-weight: 400;
+    font-size: 14px;
+    color: #313131;
+    line-height: normal;
+    border-radius: 5px;
+    background: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px;
+}
+.uploadfile_delete {
+    min-width: 22px;
+    height: 22px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+    cursor: pointer;
+}
+.uploadfile_delete img {
+    width: 13px;
+}
 .main-container .right-panel .section-title {
     font-size: large;
     font-weight: 450;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     margin-bottom: 20px;
 }
 
@@ -842,7 +903,7 @@ body {
     background-color: #f7a500;
     justify-content: center;
     border: 1px solid #fff;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     box-shadow: #fff;
     outline: none;
     border-radius: 10px;
@@ -892,14 +953,14 @@ body {
     font-size: 30px;
     margin-left: 11%;
     color: #000;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     margin-top: 8%;
 }
 
 .main-container .right-panel .declaration-paragraph{
     font-size: 14px;
     color: #292929;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .right-panel .sendEmail{
@@ -941,7 +1002,7 @@ body {
     color: #292929;
     margin-top: 0px;
     margin-bottom: 16px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .right-panel .section-paragraph2 {
@@ -949,7 +1010,7 @@ body {
     font-weight: 500;
     color: #292929;
     margin-top: 10px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     margin-top: 0px;
     margin-bottom: 10px;
 }
@@ -965,14 +1026,14 @@ body {
     font-size: 30px;
     margin-left: 7%;
     color: #000;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .right-panel .forChoosing {
     font-size: 14px;
     color: #6c7174;
     line-height: 18px;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-weight: 400;
 }
 
@@ -1065,6 +1126,15 @@ body {
     color: #ffe2dc;
     float: right;
 }
+.main-container .right-panel .duplicate-btn{
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0px 24px;
+    color: #ffe2dc;
+}
 .main-container .right-panel .add-btn {
     background-color: #c72229;
     padding: 1%;
@@ -1077,12 +1147,16 @@ body {
 }
 .main-container .right-panel .field-btn {
     background-color: #c72229;
-    padding: 10px 31px;
+    padding: 10px 21px;
     border: none;
     border-radius: 14px;
     width: auto;
-    margin: 0px 24px;
+    margin: 0px;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 14px;
+    font-weight: 500;
     color: #ffe2dc;
+    border-width: 0 !important;
 }
 .main-container .right-panel .send-btn {
     background-color: #c72229;
@@ -1101,6 +1175,19 @@ body {
     width: 100%;
     background: #E6E6E6;
     height: 1px;
+}
+.main-container .right-panel .custom-line2 {
+    border-bottom: 1px solid #E6E6E6;
+    margin: 15px 0 15px;
+    padding: 0 0 10px;
+    opacity: 1;
+    width: 100%;
+    position: relative;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.8px;
+    color: #2e2e2e;
 }
 
 .main-container .right-panel .back-btn {
@@ -1198,13 +1285,13 @@ body {
     font-size: 15px;
     /* Adjust font size */
     color: green;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     /* Adjust color */
 }
 
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
-    margin-top: 28px;
+    margin-top: 12px;
     min-height: 100px;
     min-width: 380px;
 }
@@ -1248,7 +1335,7 @@ body {
     background-color: #f7a500;
     justify-content: center;
     border: 1px solid #fff;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     box-shadow: #fff;
     outline: none;
     border-radius: 10px;
@@ -1297,7 +1384,7 @@ body {
 }
 
 .main-container .right-panel .multi-premium-opt-cov-chk-txt {
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 15px !important;
     font-style: normal;
     font-stretch: normal;
@@ -1363,6 +1450,7 @@ body {
     margin: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    position: relative;
 }
 
 .main-container .right-panel .banner-container .banner-card .display-container {
@@ -1504,14 +1592,14 @@ body {
 .left-nav-mobileMain .left-nav-mobileSubMain .stepTitle {
     font-size: 16px;
     font-weight: 600;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     color: #282828;
 }
 
 .left-nav-mobileMain .left-nav-mobileSubMain .stepCountMain {
     font-size: 14px;
     font-weight: 600;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
     color: #C91429;
     text-transform: uppercase;
 }
@@ -1544,10 +1632,12 @@ body {
 }
 
 .main-container .right-panel .next-btn,
+.main-container .right-panel .duplicate-btn,
 .main-container .right-panel .add-btn,
 .main-container .right-panel .back-btn,
 .main-container .right-panel .field-btn {
     padding: 10px 21px;
+    margin-right: 5px;
 }
 
 /*===AUGUST 16th styles start===*/
@@ -1577,7 +1667,7 @@ body {
     background-color: #fff;
     border-radius: 12px;
     padding: 12px 14px 38px 14px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 400;
     line-height: 15.6px;
@@ -1601,7 +1691,7 @@ body {
 }
 
 .main-container .main-subContainer .left-nav .yourProgress h1 {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     font-weight: 500;
     line-height: 24px;
@@ -1617,7 +1707,7 @@ body {
 }
 
 .main-container .main-subContainer .left-nav .yourProgress .details {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 18px;
@@ -1631,7 +1721,7 @@ body {
 }
 
 .main-container .main-subContainer .left-nav .yourProgress .details .step-count {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 10px;
     font-weight: 500;
     line-height: 11px;
@@ -1701,7 +1791,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 15px;
@@ -1742,7 +1832,7 @@ body {
 }
 
 .main-container .right-panel .input-container label {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 12px;
@@ -1776,7 +1866,7 @@ body {
 }
 
 .main-container .right-panel .text-danger {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 11px;
     font-weight: 500;
     line-height: 12px;
@@ -1789,7 +1879,7 @@ body {
 }
 
 /* .main-container .right-panel .text-danger {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 11px;
     font-weight: 500;
     line-height: normal;
@@ -1843,6 +1933,7 @@ body {
     background: url(../../../assets/Img/icon_select_downarrow.svg) no-repeat center;
     background-size: 12px;
     cursor: pointer;
+    transform: rotate(180deg);
 }
 
 .accordionCard .accordionCardBody {
@@ -1855,7 +1946,7 @@ body {
 }
 
 .accordionCard .accordionCardHeader .accordionArrow.rotated {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
     transition: transform 0.3s ease;
 }
 
@@ -1886,7 +1977,7 @@ body {
     background-color: #F1F3F6;
     transition: background-color 0.2s, border-color 0.2s;
     margin-right: 0;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     line-height: 24px;
@@ -1927,6 +2018,21 @@ body {
     border-radius: 12px;
     width: auto;
     margin: 0px 0 0 5px;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+}
+
+.main-container .right-panel .duplicate-btn {
+    background-color: #c72229;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    margin: 0px 0 0 5px;
     font-family: Anek Latin;
     font-size: 18px;
     font-weight: 500;
@@ -1942,7 +2048,7 @@ body {
     border-radius: 12px;
     width: auto;
     margin: 0px 0 0 5px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 18px;
     font-weight: 500;
     line-height: 24px;
@@ -1959,15 +2065,16 @@ body {
     line-height: 20px;
     color: #313131;
     border: 1px dashed #AFB3C0;
+    background: #ececec;
 }
 
 .fileUploadInfo {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 400;
     line-height: 13.2px;
     text-align: left;
-    color: #000;
+    color: #675c5c;
     margin-top: 6px;
 }
 
@@ -1977,7 +2084,7 @@ body {
     border-radius: 19px;
     margin-top: 0px;
     background: #f7f7f7;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
@@ -1987,7 +2094,7 @@ body {
 }
 
 .main-container .right-panel .expandable-label {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
@@ -2004,11 +2111,11 @@ body {
 .main-container .right-panel .banner-container .banner-card {
     background-color: #F9FAFB;
     border: none;
-    padding: 12px 10px;
-    margin: 10px;
+    padding: 22px 10px 12px;
+    margin: 10px 10px 0 0;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
 }
 
 .main-container .right-panel .banner-container .banner-card .display-container .display_label {
@@ -2023,16 +2130,16 @@ body {
     background: transparent;
     border: none;
     padding: 0;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 24px;
     text-align: left;
     color: #4c4c4c;
 }
 
 .main-container .right-panel .thankYou .img1Popup {
-    width: 110px !important;
-    height: 110px !important;
+    width: 100px !important;
+    height: 100px !important;
     margin: 0 !important;
 }
 
@@ -2056,7 +2163,7 @@ body {
 }
 
 .nav-tabs.custom-tab .nav-link {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
@@ -2069,7 +2176,7 @@ body {
 
 .nav-tabs.custom-tab .nav-link.active,
 .nav-tabs.custom-tab .nav-link:hover {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
@@ -2091,7 +2198,7 @@ a:not([href]) {
 .main-container .right-panel .send-btn.send-link-btn {
     border-radius: 12px;
     padding: 9px 46px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 19.8px;
@@ -2103,11 +2210,11 @@ a:not([href]) {
 }
 .main-container .right-panel .custom-line {
     position: relative;
-    font-family: Anek Latin;
-    font-size: 18px;
-    font-weight: 700;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 16px;
+    font-weight: 600;
     line-height: 19.8px;
-    color: #797979;
+    color: #2e2e2e;
     margin: 0;
 } 
 .main-container .right-panel .custom-line.custom-line-or:before{
@@ -2127,7 +2234,7 @@ a:not([href]) {
     margin: 0px 1% 3% 0;
     padding: 16px 11px 16px 10px;
     box-shadow: 0px 6px 16px 0px #00000014;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 15px;
     font-weight: 500;
     line-height: 24px;
@@ -2177,7 +2284,7 @@ a:not([href]) {
     width: 95%;
     margin-bottom: 0px;
     margin-top: 4px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 24px;
@@ -2194,7 +2301,7 @@ a:not([href]) {
     position: relative;
     cursor: pointer;
     padding: 0;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
@@ -2241,7 +2348,7 @@ a:not([href]) {
     margin-bottom: 0 !important;
 }
 .addMember p, .insureMember p {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     color: #000;
 }
 .addMember p {
@@ -2259,6 +2366,18 @@ a:not([href]) {
     margin: 0 0 20px;
 }
 .main-container .right-panel .bottom-section {
+    width: 100%;
+    max-width: 808px;
+    position: fixed;
+    left: auto;
+    bottom: 0;
+    margin-bottom: 0 !important;
+    box-shadow: 0px -4px 36px 0px #0000000D;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 0 0;
+    z-index: 1;
+}
+.main-container .right-panel .bottom-section-axis {
     width: 100%;
     max-width: 808px;
     position: fixed;
@@ -2289,10 +2408,19 @@ input[type=checkbox]:checked {
 .bottom-section .accordionCardBody > .typecss {
     padding: 0;
 }
+.bottom-section-axis.accordionCardBody > .typecss {
+    padding: 0;
+}
 .bottom-section .accordionCardBody > .typecss:first-child {
     display: none;
 }
+.bottom-section-axis .accordionCardBody > .typecss:first-child {
+    display: block;
+}
 .accordionCard.bottom-section .accordionCardBody{
+    padding: 6px 16px 5px !important;
+}
+.accordionCard.bottom-section-axis .accordionCardBody{
     padding: 6px 16px 5px !important;
 }
 .bottom-section .label-value-container {
@@ -2300,7 +2428,7 @@ input[type=checkbox]:checked {
     flex-direction: column;
     margin-bottom: 16px;
     text-align: center;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     line-height: 12px;
@@ -2310,7 +2438,31 @@ input[type=checkbox]:checked {
     position: relative;
     display: none;
 }
+.bottom-section-axis .label-value-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0px;
+    text-align: center;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    color: #2e2e2e;
+    position: relative;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
 .bottom-section .label-value-container .label-text {
+    text-transform: uppercase;
+    color: #2e2e2e;
+    font-size: 12px;
+    font-weight: 600;
+}
+.bottom-section-axis .label-value-container .label-text {
     text-transform: uppercase;
     color: #2e2e2e;
     font-size: 12px;
@@ -2325,8 +2477,20 @@ input[type=checkbox]:checked {
     left: 48%;
     display: none;
 }
+.bottom-section-axis .label-value-container .value-text {
+    width: 32px;
+    height: 5px;
+    background: url(../../../assets/Img/icon_plan_details_arrow.svg) no-repeat;
+    position: absolute;
+    top: -9px;
+    left: 48%;
+    display: block;
+}
+.planDetails_iconActive {
+    transform: rotate(180deg);
+}
 .main-container .right-panel .bottom-product .boldtext_input {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 18px;
     font-weight: 500;
     line-height: 19.8px;
@@ -2341,7 +2505,7 @@ input[type=checkbox]:checked {
 }
 .main-container .right-panel .bottom-product .boldtext_input + span, 
 .main-container .right-panel .bottom-total-premium .boldtext-label {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 300;
     line-height: 13.2px;
@@ -2350,7 +2514,7 @@ input[type=checkbox]:checked {
     color: #2e2e2e;
 }
 .main-container .right-panel .bottom-total-premium .boldtext_input {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 22px;
     font-weight: 500;
     line-height: 24.2px;
@@ -2359,13 +2523,22 @@ input[type=checkbox]:checked {
     color: #c7222a;    
 }
 .proposalDetails h3.proposalDetails{
-    font-family: Anek Latin;
-    font-size: 22px !important;
+    font-family: "Anek Latin", sans-serif !important;
+    font-size: 18px !important;
     font-weight: 600 !important;
     line-height: 24.2px !important;
     text-align: left;
     color: #000;
     padding-left: 8px;
+}
+.main-container .right-panel .accordionCard.thankyouSection{
+    margin-bottom: 10px;
+}
+.proposalDetails .accordionCardBody .label-value-container .label-text {
+    margin-bottom: 2px !important;
+}
+.main-container .right-panel .accordionCard.thankyouSection .section-paragraph1 p {
+    line-height: 16px !important;
 }
 .proposalDetails .accordionCardBody .typecss {
     padding-bottom: 0px;
@@ -2374,7 +2547,7 @@ input[type=checkbox]:checked {
     margin-bottom: 6px;
 }
 .proposalDetails .accordionCardBody .label-value-container .label-text {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 15.4px;
@@ -2383,7 +2556,7 @@ input[type=checkbox]:checked {
     margin-bottom: 10px;
 }
 .proposalDetails .accordionCardBody .label-value-container .value-text {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 18px;
     font-weight: 600;
     line-height: 19.8px;
@@ -2455,7 +2628,7 @@ input[type=checkbox]:checked {
     }
 }
 .autoDebitLabel1 p {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 26px;
     font-weight: 600;
     line-height: 28.6px;
@@ -2464,7 +2637,7 @@ input[type=checkbox]:checked {
     margin: 0;
 }
 .autoDebitLabel2 p {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 16px;
     font-weight: 300;
     line-height: 17.6px;
@@ -2477,7 +2650,7 @@ input[type=checkbox]:checked {
 .autoDebitLabel3 {
     font-size: 14px;
     font-weight: 400;
-    font-family: "Anek Latin", sans-serif;
+    font-family: "Anek Latin", sans-serif !important;
      padding-left: 0; 
     padding-top: 10px;
     line-height: 20px;
@@ -2495,7 +2668,7 @@ input[type=checkbox]:checked {
 }
 .debitButton, .abhaButton {
     margin: 0;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
 font-size: 16px;
 font-weight: 400;
 line-height: 17.6px;
@@ -2510,7 +2683,7 @@ color: #fff;
     margin-left: 11px;
 }
 .abhaquestion p {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
 font-size: 14px;
 font-weight: 400;
 line-height: 18px;
@@ -2519,7 +2692,7 @@ color: #4c4c4c;
 }
 .abhaLabel2 {
     width: 30%;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
 font-size: 22px;
 font-weight: 600;
 line-height: 24.2px;
@@ -2532,7 +2705,7 @@ padding-left: 11px;
 }
 .simpleEasyStyle p {
     padding-left: 11px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
 font-size: 16px;
 font-weight: 400;
 line-height: 36px;
@@ -2550,8 +2723,15 @@ margin: 0;
 .proposalDetails h3.proposalDetails + .accordionArrow {
     display: none;
 }
+.proposalDetails.accordionCard {
+    margin-bottom: 10px !important;
+}
 .proposalDetails .accordionCardHeader {
     pointer-events: none;
+    padding: 4px 16px;
+}
+.proposalDetails .accordionCardBody {
+    padding: 6px 16px 18px !important;
 }
 .p-tabview .p-tabview-nav {
     background: #ffffff;
@@ -2566,7 +2746,7 @@ margin: 0;
 }
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link span, 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link span {
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     line-height: 24px;
@@ -2585,7 +2765,7 @@ margin: 0;
     height: 40px;
     min-width: 100px;
     padding: 8px 16px 8px 8px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     line-height: 24px;
@@ -2610,7 +2790,7 @@ margin: 0;
     border-radius: 12px !important;
     border: 1px solid #f1f3f6 !important;
     background-color: #f1f3f6 !important;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px !important;
     font-weight: 500;
     line-height: 12px;
@@ -2638,6 +2818,10 @@ margin: 0;
     }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
+    .main-container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
     .main-container .right-panel .case-referred {
         width: 100%;
         text-align: center;
@@ -2656,6 +2840,11 @@ margin: 0;
     left: 5%;
     }
     .main-container .right-panel .bottom-section-summary {
+        max-width: initial;
+    width: 90%;
+    left: 5%;
+    }
+    .main-container .right-panel .bottom-section-axis {
         max-width: initial;
     width: 90%;
     left: 5%;
@@ -2685,6 +2874,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
@@ -2695,6 +2885,7 @@ margin: 0;
 @media (max-width:768px) {
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
@@ -2720,7 +2911,7 @@ margin: 0;
         margin: 15px auto;
     }
     .main-container .main-subContainer .right-panel {
-        width: 90%;
+        width: 100%;
         margin: 0 auto 15px;
     }
     .main-container .right-panel .bottom-section {
@@ -2731,7 +2922,10 @@ margin: 0;
         margin: 0 -21px;
         width: 100%;
     }
-
+    .main-container .right-panel .bottom-section-axis {
+        margin: 0 -21px;
+        width: 100%;
+    }
     .main-container .left-nav {
         display: flex;
         flex-direction: row;
@@ -2788,6 +2982,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .duplicate-btn,
     .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
@@ -2832,6 +3027,9 @@ margin: 0;
         width: 30%;
         margin-bottom:1rem;
     }
+    input#verifyOTP {
+        width: 35%;
+    }
     .main-container .right-panel .section-paragraph1, .main-container .right-panel .section-paragraph1 p {
         line-height: 1.2;
     }
@@ -2857,6 +3055,13 @@ margin: 0;
 }
 .main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
     background-position: top;
+}
+.left-nav-mobileMain{
+    width: 100%;
+}
+.main-container .right-panel .file-upload-btn{
+    width: 100%;
+    height: 64px;
 }
 }
 .main-container .right-panel .next-btn:focus,
@@ -2902,7 +3107,7 @@ margin: 0;
     border-radius: 12px;
     width: auto;
     margin: 0px 0 0 14px;
-    font-family: Anek Latin;
+    font-family: "Anek Latin", sans-serif !important;
     font-size: 12px;
     font-weight: 500;
     line-height: 24px;
@@ -3001,6 +3206,53 @@ margin: 0;
         margin-bottom: 6px !important;
     }
 }
+.main-container .right-panel .typecss.typecss_proposalNumber {
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.main-container .right-panel .typecss_proposalNumber .boldtext_input{
+    width: 180px;
+}
+.accordionCard.thankyouSection .accordionCardBody {
+    padding: 8px 16px 10px !important;
+}
+.main-container .right-panel .thankyouSection .thankYou {
+    margin: 0 !important;
+}
+.main-container .right-panel .thankyouSection .section-paragraph1 {
+    margin-bottom: 5px;
+}
+.main-container .right-panel .thankyouSection .section-paragraph2, 
+.main-container .right-panel .thankyouSection .section-paragraph1 p {
+    margin-bottom: 0px;
+}
+
+/*---Questions: selected members css start---*/
+.questionnaire_space {
+    padding-bottom: 10px !important;
+    margin-top: 0 !important;
+}
+.questionnaire_space .typecss {
+    padding-bottom: 10px !important;
+}
+.selectedMembers_Quiestions, .list_selectedMembers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.selectedMembers_Quiestions {
+    padding: 0 10px;
+    gap: 25px;
+}
+.list_selectedMembers {
+    font-weight: 600;
+    font-size: 14px;
+}
+/*---Questions: selected members css start---*/
+.input-checkbox-feild .input-check:checked + label:after {
+    bottom: 6px;
+}
 @media (max-width:767px){
     .main-container .right-panel .banner-container .banner-card {
         display: flex;
@@ -3015,11 +3267,220 @@ margin: 0;
     }
     .main-container .right-panel .typecss.bottom-product {
         width: 50%;
+        padding-bottom: 5px;
     }
     .main-container .right-panel .typecss.bottom-total-premium {
         width: 40%;
+        padding-bottom: 5px;
+    }
+    .main-container .right-panel .typecss.bottom-product .boldtext_input,
+    .main-container .right-panel .typecss.bottom-total-premium .boldtext_input {
+        width: 100%;
     }
     .main-container .right-panel .bottom_proposalNumber {
         margin-bottom: 10px;
+    }
+    .typecss_summary {
+        width: 50%;
+    }
+    .typecss_summary.typecss_summary_addon {
+        width: 100%;
+    }
+    .bottom-section-axis .plandetails_summary {
+        width: 100%;
+    }
+    .typecss_proposalNumber {
+        padding-bottom: 5px !important;
+    }
+    .main-container .right-panel .acceptTermsCheck .checkboxes {
+        width: 90%;
+    }
+}
+.accordionCard.thankyouSection .accordionCardBody {
+    text-align: center;
+}
+.accordionCard.thankyouSection .accordionCardBody .backToRen{
+    margin-top: 15px;
+    float: initial !important;
+}
+.main-container .right-panel .backToRen{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    height: 46px;
+    font-size: 14px;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+.block-proposer {
+    width: 100%;
+    /* padding: 0 0 22px; */
+}
+.main-container .right-panel input[type="checkbox"]:disabled {
+    background-color: #0075ff !important;
+    border: 1px solid #0075ff;
+    filter: invert(0%) sepia(70%) saturate(7414%) hue-rotate(180deg) brightness(79%) contrast(117%) !important;
+    opacity: 0.5;
+}
+/*----Toggle switch checkbox start----*/
+.toggle-checkbox {
+    border: 1px solid #E2E2E2;
+    background: #FFFFFF;
+    border-radius: 6px;
+    padding: 2px;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.toggle-checkbox span {
+    border-width: 0px;
+    font-family: Lato-bold, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #c72229;
+    border-radius: 4px;
+    padding: 4px 8px;
+    height: 24px;
+    border: 0px solid #c72229 !important;
+}
+
+.toggle-checkbox span:before {
+    display: none;
+}
+
+.toggle-checkbox input:checked+span {
+    background: #c72229;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.toggle-checkbox .input-radiolabel {
+    margin-bottom: 0;
+}
+
+.toggle-declaration span {
+    justify-content: center;
+    height: auto !important;
+}
+
+.checkbox-selector {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .checkbox-options {
+    position: absolute;
+    background-color: #ffffff;
+    border: 0px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 25%;
+    box-shadow: 0 3px 10px #00000026;
+    border-radius: 10px;
+  }
+  
+  .checkbox-options div {
+    margin-bottom: 5px;
+  }
+  
+  .checkbox-options input {
+    margin-right: 10px;
+  }
+  .checkbox-options input[type="checkbox"] {
+    display: block !important;
+  }
+  .checkbox-options label {
+    display: contents;
+  }
+  .multi-label{
+    top: 1px !important;
+    color: #4C4C4C !important;
+    background: rgb(255, 255, 255) !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(242, 243, 246, 0.1) 100%) !important;
+  }
+  .checkbox-options.input-checkbox-block {
+    flex-direction: column;
+  }
+  .checkbox-options.input-checkbox-block .input-checkbox-feild label {
+    background: transparent !important;
+    padding: 1px 0 0 25px !important;
+    transform: translateY(0%) !important;
+    left: 2px !important;
+    color: #2a2a2a;
+  }
+  .checkbox-options.input-checkbox-block .input-checkbox-feild .input-check:checked + label:after {
+    bottom: auto;
+    top: 2px;
+  }
+  .input-container.inputField_SelectCD {
+    top: -2px;
+  }
+  .input-container.inputField_SelectCD .inputField_Select{
+    line-height: normal !important;
+  }
+  .input-container.inputField_SelectCD .checkbox-container .checkbox-options .input-checkbox-feild label {
+    pointer-events:auto;
+  }
+/*----Toggle switch checkbox end----*/
+
+.main_hospitalCashCover {
+    margin: 0 0 10px;
+    background: #fafafb;
+    border-radius: 10px;
+    padding: 15px;
+}
+.main_hospitalCashCover .input-checkbox-feild .input-check + label {
+    font-weight: 600;
+    padding-left: 25px !important;
+}
+
+.main_hospitalCashCover .input-checkbox-block{
+    width: 100%;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild {
+    display: flex;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild .checkbox-label {
+    margin-bottom: 0 !important;
+}
+.main_hospitalCashCover .input-checkbox-block .input-checkbox-feild .checkboxes {
+    margin: 0 !important;
+    padding: 0 6px;
+}
+.main_hospitalCashCover .input-container label {
+    width: 60% !important;
+}
+@media (max-width:767px){
+    .main-container .right-panel .typecss_proposalNumber .boldtext_input {
+        padding: 0;
+        width: 190px;
+    }
+    .main-container .right-panel input[type="date"].inputField_Text {
+        min-width: 95%;
+    }
+    input[type="date"]::-webkit-date-and-time-value {
+        margin-top: 0px;
+        text-align: left !important;
+        inline-size: 100%;
+    }
+    .main-container .right-panel .send-btn.send-link-btn {
+        margin-bottom: 5px;
+        width: 93%;
+    }
+    .main-container .right-panel .typecss.bottom-product span {
+        line-height: normal;
+    }
+}
+@media (max-width:360px){
+    .main-container .right-panel .bottom-section, .main-container .right-panel .bottom-section-axis{
+        margin: 0 -16px -1px !important;
     }
 }

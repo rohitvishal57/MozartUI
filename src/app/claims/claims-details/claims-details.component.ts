@@ -18,10 +18,11 @@ export class ClaimsDetailsComponent {
   claimId: string | null = null;
   claimsHistory: any[] = [];
   policyNumber: string | any;
-  claimInfoId: string | any;
+  claimNumber: string | any;
   filesUploaded: any[] = [];
   saveForm!: FormGroup;
   claims: any;
+  designationName: string | any;
   @Input() label: string = "Label this document";
   files: { name: string; label: string }[] = [];
   editableControl: FormControl = new FormControl("");
@@ -99,6 +100,7 @@ export class ClaimsDetailsComponent {
   fileUploads: { 
     name: string,
     type: string,
+    createdDateTime: string,
     base64: string,
     fileBlob?: Blob,
     documentId: string;
@@ -121,13 +123,18 @@ export class ClaimsDetailsComponent {
 
   ) {
     this.route.queryParams.subscribe((params) => {
+
       this.claimId = this.route.snapshot.paramMap.get("id");
       this.policyNumber = this.route.snapshot.paramMap.get("policyNumber");
-      this.claimInfoId = this.route.snapshot.paramMap.get("claimInfoId");
+      this.claimNumber = this.route.snapshot.paramMap.get("claimInfoId");
     });
   }
 
   ngOnInit() {
+    this.designationName = localStorage.getItem('designation')
+    if(this.designationName === 'DIRECT'){
+      this.designationName = 'Agent'
+    }
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -135,13 +142,13 @@ export class ClaimsDetailsComponent {
         }
       });
     });
-    this.fetchfileUploads(this.claimInfoId, this.policyNumber)
-    if (this.claimId && this.policyNumber && this.claimInfoId) {
-      this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
+    this.fetchfileUploads(this.claimNumber, this.policyNumber)
+    if (this.claimId && this.policyNumber && this.claimNumber) {
+      this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimNumber);
       this.updateStatusLabel("fileUpload");
     }
-    this.fetchClaimStatus(this.claimInfoId);
-    this.fetchClaimTracker(this.claimInfoId);
+    this.fetchClaimStatus(this.claimNumber);
+    this.fetchClaimTracker(this.claimNumber);
     this.fetchClaimHistory(this.policyNumber);
 
     // this.claimId = this.route.snapshot.paramMap.get('id');
@@ -149,18 +156,16 @@ export class ClaimsDetailsComponent {
     // this.fetchClaimDetails(this.claimId);
     // this.updateStatusLabel();
   }
-  fetchClaimStatus(claimInfoId: string): void {
+  fetchClaimStatus(claimNumber: string): void {
     const claimsReqBody = {
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
     };
  
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
-        this.status = response.data;
-      //  this.statusMessage = response.data.notes;
-        console.log('ststu', this.status, response, this.statusMessage);
-        
-        (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
+        this.status = response?.data;
+        this.statusMessage = response?.data?.notes;        
+        (response?.data?.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
       },
       (error: any) => {
         console.error("Error fetching claim details", error);
@@ -168,14 +173,14 @@ export class ClaimsDetailsComponent {
     );
   }
 
-  fetchClaimTracker(claimInfoId: string): void {
+  fetchClaimTracker(claimNumber: string): void {
     const claimsReqBody = {
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
     };
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data;        
+        this.customeStepperStatuses = response?.data;        
         this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
@@ -189,11 +194,11 @@ export class ClaimsDetailsComponent {
   fetchClaimDetails(
     claimId: string,
     policyNumber: string,
-    claimInfoId: string
+    claimNumber: string
   ): void {
     let claimDetailsReqBody = {
       id: claimId,
-      claimNumber: claimInfoId,
+      claimNumber: claimNumber,
       policyNumber: policyNumber,
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
@@ -309,36 +314,22 @@ export class ClaimsDetailsComponent {
 //     return new Blob([byteArray], { type: fileType });
 //   }
   
-//   downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
-//     if (!file.fileBlob) {
-//       console.error("File blob is not available for download.");
-//       return;
-//     }
-//     const url = window.URL.createObjectURL(file.fileBlob);
-//     const anchor = document.createElement('a');
-//     anchor.href = url;
-//     anchor.download = file.name;
-//     document.body.appendChild(anchor);
-//     anchor.click();
-//     document.body.removeChild(anchor);
-//     window.URL.revokeObjectURL(url);
-//   }
-  
-fetchfileUploads(claimInfoId: string, policyNumber: string) {
+fetchfileUploads(claimNumber: string, policyNumber: string) {
   let claimsFilesReqBody = {
     "documentId": "",
     "policyNumber": policyNumber,
-    "claimNumber": claimInfoId
+    "claimNumber": claimNumber
   };
 
   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
     (response: any) => {
       if (response.isSuccess) {
         if (response.data.length > 0) {
-          this.noFilesFound = false;
-          this.fileUploads = response.data.map((file: any) => ({
+            this.noFilesFound = false;
+            this.fileUploads = response.data.map((file: any) => ({
             name: file.documentName,  
             type: file.documentType, 
+            createdDateTime: file.createdDateTime,
             base64: file.base64Document,
             fileBlob: this.convertBase64ToBlob(file.base64Document, this.getMimeType(file.colour)),
             documentId: file.documentId  
@@ -361,7 +352,6 @@ fetchfileUploads(claimInfoId: string, policyNumber: string) {
 
 
 convertBase64ToBlob(base64: string, fileType: string): Blob {
-  // Remove data URI prefix if it's present (e.g., "data:application/pdf;base64,")
   const base64Data = base64.startsWith('data:') ? base64.split(',')[1] : base64;
 
   // Convert the base64 string to a byte array
@@ -376,16 +366,14 @@ convertBase64ToBlob(base64: string, fileType: string): Blob {
   return new Blob([byteArray], { type: fileType });
 }
 
-// A helper function to return MIME type from the document type
 getMimeType(documentType: string): string {
-  // You can expand this to handle different document types based on the 'documentType' field
   switch (documentType) {
     case 'Pdf':
       return 'application/pdf';
     case 'Image':
-      return 'image/png';  // Example, adjust based on your document types
+      return 'image/png';  
     default:
-      return 'application/octet-stream'; // fallback MIME type
+      return 'application/octet-stream'; 
   }
 }
 
@@ -467,7 +455,7 @@ downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
       documentType: [this.documentType],
       createdBy: [localStorage.getItem("agentCode")],
       file: ["/D:/Downloads/ABHI_06_Ma"],
-      claimInfoId: this.claimInfoId || "",
+      claimNumber: this.claimNumber || "",
       memberId: "",
       documentId: "",
     });
@@ -534,7 +522,7 @@ uploadFiles(files: File[], section: string): void {
                 documentName: file.name || "",
                 documentType: file.type || "",
                 createdBy: file.createdBy || "",
-                claimInfoId: "",  
+                claimNumber: "",  
                 memberId: "", 
                 documentId: file.documentId, 
             }
@@ -544,22 +532,26 @@ uploadFiles(files: File[], section: string): void {
             formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
             formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
             formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-            formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+            formData.append(`fileDetails[${index}].claimNumber`, metadata.claimNumber);
             formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
             formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
             formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
        
     });
+    debugger
 
     this.claimsService.uploadFiles(formData).subscribe(
         (response: any) => {
             console.log('Upload response:', response);
-            if (response.success) {
+            if (response.isSuccess) {
                 this.uploadedFiles.forEach((file) => (file.status = "success"));
                 this.uploadSuccess = true;
                 this.uploadedFilesCount++;
             }
-            this.updateStatusLabel(section);
+            else{
+              this.uploadSuccess = false;
+            }
+            this.updateStatusLabel(section);  
             this.cdr.markForCheck();
         },
         (error: any) => {
@@ -629,7 +621,7 @@ convertBytesToKB(bytes: number): string {
   }
 
   fetchClaimHistory(policyNumber: string) {
-    console.log(this.claimInfoId);
+    console.log(this.claimNumber);
     const claimHistoryReqBody = { policyNumber };
 
     this.claimsService.getClaimsHistory(claimHistoryReqBody, policyNumber).subscribe(
@@ -663,7 +655,7 @@ convertBytesToKB(bytes: number): string {
   updateClaim(): void {
     const UpdateClaimReqBody = {
       agentCode: localStorage.getItem('agentCode'),
-      claimNumber: this.claimInfoId,
+      claimNumber: this.claimNumber,
       policyNumber: this.policyNumber,
       documentsArray: this.uploadedFiles.map(file => ({
         documentId: file.documentId,

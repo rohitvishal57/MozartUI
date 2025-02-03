@@ -1,0 +1,17 @@
+.accordionBody {
+    border-top: 1px solid #E2E2E2;
+    padding: 0 16px; /* Adjust padding */
+    margin-bottom: 20px; /* Adjust margin */
+    overflow: hidden;
+    max-height: 0;
+    // transition: max-height 0.3s ease-out; /* Smooth transition */
+}
+
+.accordionBody.open {
+    max-height: max-content; /* Adjust max height as per your content */
+    padding: 24px 16px; /* Adjust padding */
+}
+
+.button-margin{
+    margin-top: 6%;
+}

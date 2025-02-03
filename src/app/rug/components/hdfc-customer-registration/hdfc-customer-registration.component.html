@@ -1,0 +1,148 @@
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <!-- <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
+                </h2> -->
+            </div>
+            <form (ngSubmit)="onCustomerValidationSubmit()" [formGroup]="customerValidations">
+                <section class="white_container mb-3">
+                    <div class="col-12 mb-4">
+                        <h6 class="heading-16-red">{{"Customer Contact Details" | translate}}</h6>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber"
+                                    placeholder="" formControlName="mobilenumber" type="text"
+                                    (keypress)="isNumber($event)" maxlength="10"
+                                    [ngClass]="{ 'is-invalid': submitted && customerValidations.get('mobilenumber')?.errors }">
+                                <label for="mobilenumber">{{"Mobile Number" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && customerValidations.get('mobilenumber')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && customerValidations.get('mobilenumber')?.invalid && !customerValidations.get('mobilenumber')?.errors?.['pattern']">{{"Mobile
+                                        number cannot be blank." | translate}}</span>
+                                </span>
+                                <span class="ui-error block-show"
+                                    *ngIf="customerValidations.get('mobilenumber')?.invalid && customerValidations.get('mobilenumber')?.errors?.['pattern']">{{"Enter
+                                    a valid 10-digit mobile number." | translate}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="email" name="email" placeholder=""
+                                    formControlName="email" type="text" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && customerValidations.get('email')?.errors }">
+                                <label for="email">{{"Email" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && customerValidations.get('email')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && customerValidations.get('email')?.invalid && !customerValidations.get('email')?.errors?.['pattern']">{{"Email
+                                        cannot be blank." | translate}}</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && customerValidations.get('email')?.errors?.['pattern']">{{"Please
+                                        enter valid email id." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button type="submit" id="save" name="save" class="btn_red col-md-3">{{"Submit" |
+                                translate}}</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+            <section class="white_container mb-3">
+                <div class="col-12 mb-4">
+                    <h6 class="heading-16-red">{{"Customer Details" | translate}}</h6>
+                </div>
+                <div class="row">
+                    <div class="col-12 ">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="claims_member_info">
+                                    <ul class="list-detailsInfo">
+                                        <li>
+                                            <span class="label">Customer Cust ID :</span>
+                                            <span class="value">XXXXXXXXX4510</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Customer Last Name:</span>
+                                            <span class="value">Bhatia</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Customer Gender :</span>
+                                            <span class="value">Male</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Address 1:</span>
+                                            <span class="value">51/1901 Amber CHS</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Address 3 :</span>
+                                            <span class="value">Ghatkopar-East</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">State:</span>
+                                            <span class="value">Maharashtra</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Email :</span>
+                                            <span class="value">tejas.bhatia1@hdfcbank.com</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="claims_member_info">
+                                    <ul class="list-detailsInfo">
+                                        <li>
+                                            <span class="label">Customer First Name:</span>
+                                            <span class="value">Tejas</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Date of Birth:</span>
+                                            <span class="value">1985-06-08</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">PAN:</span>
+                                            <span class="value">AIMPT5658Z</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Address 2:</span>
+                                            <span class="value">pantanagar</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">City:</span>
+                                            <span class="value">Mumbai</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Pin code:</span>
+                                            <span class="value">400071</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">Mobile No:</span>
+                                            <span class="value">9819108855</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12" style="text-align: center;">
+                        <button type="button" id="save" name="save" class="btn_red col-md-3">{{"Ok" |
+                            translate}}</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

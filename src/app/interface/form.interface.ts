@@ -1,7 +1,7 @@
 export interface IForm {
-  value(arg0: string, value: any): unknown;
-  valid: any;
-  get(field: any): unknown;
+  value?(arg0: string, value: any): unknown;
+  valid?: any;
+  get?(field: any): unknown;
   formTitle: string;
   saveBtnTitle?: string;
   saveBtnFunction?: string;
@@ -53,6 +53,7 @@ export interface IFormControl {
   options?: IOptions[];
   idProperty?: any;
   nameProperty?: any;
+  restrictKeyPress?: boolean;
   class?: string;
   cssClass?: string;
   showBorder?: boolean;
@@ -93,6 +94,12 @@ export interface IFormControl {
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  minLength?: any;
+  inputMaxLength?: any;
+  visibleToolTip?:boolean;
+  toolTipMessage?:string;
+  isDefault?:boolean;
+  postControlCreationMethod?: string;
 }
 export interface ISubControl {
   name: string;
@@ -112,6 +119,7 @@ export interface ISubControl {
   innerSubControls?: ISubControl[];
   displayOnly?: boolean;
   coreControls?: ISubControl[];
+  extraBenefitsControls?: ISubControl[];
   bigFont?: boolean;
   dependentControls?: string[];
   getAllOption?: string;
@@ -123,6 +131,9 @@ export interface ISubControl {
   maxLength?: any;
   visibleToolTip?:boolean;
   toolTipMessage?:string;
+  onChangeMethod?: string;
+  methodName?: string;
+  allowedRelations?:string[];
 }
 
 export interface ITab {
@@ -147,10 +158,12 @@ export interface IRadioOption {
   selected?: boolean;
   year?: string;
   discount?: string;
+  dependentControls?: any[];
+  visible:boolean
 }
 
 export interface ISelectCheckboxOption {
-  label?: string;
+  label?: string;   
   value: string;
   button?: boolean;
   imagePath?: string;
@@ -204,7 +217,10 @@ export interface IDynamicControl {
   value?: any;
   apiEndpoint?: any;
   disabled?: boolean;
+  relationDisabled?:boolean;
+  questionCondition?:boolean;
   class?: string;
+  restrictKeyPress?: boolean;
   methodName?: any;
   visible?: boolean;
   options?: IOptions[];
@@ -213,12 +229,17 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
+  innerArrayControl?: IDynamicControl[][];
+  innerControls?: ISubControl[];
   image?:IImage;
   tabs?:ITab[];
+  onChangeMethod?: string;
   getAllOption?: string;
   maxDateLength?: any;
   minDateLength?:any;
   maxLength?: any;
+  minLength?: any;
+  inputMaxLength?: any;
 }
 export interface IValidator {
   validatorName?: string;
@@ -237,4 +258,5 @@ export interface IOptions {
   class?: string;
   selected?: boolean;
   dependentControls?: any[];
+  disabled?: boolean;
 }

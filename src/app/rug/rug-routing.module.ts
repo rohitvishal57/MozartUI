@@ -5,23 +5,63 @@ import { ViewLeadsComponent } from "./components/view-leads/view-leads.component
 import { ProductDownloadComponent } from "./components/product-download/product-download.component";
 import { BbTestPageComponent } from "./bb-test-page/bb-test-page.component";
 import { D2cTestPageComponent } from "./d2c-test-page/d2c-test-page.component";
+import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
+import { CreateAVComponent } from "./Admin/AV_Upload/create-av/create-av.component";
+import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-for-solo-journey/view-for-solo-journey.component";
+import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
+import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
+import { VerificationScriptComponent } from "./Admin/Verification_Script/verification-script/verification-script.component";
+import { ExtractBaseAndAvMasterComponent } from "./Admin/Extract_Base_Agent_AV_Master/extract-base-and-av-master/extract-base-and-av-master.component";
+import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
+import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
+import { AuditComponent } from "./Admin/AV_Upload/audit/audit.component";
+import { ViewMakerCheckerLeadsComponent } from "./components/view-maker-checker-leads/view-maker-checker-leads.component";
+import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
+import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
+import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
+import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
+import { ManageLobComponent } from "./Admin/lob/manage-lob/manage-lob.component";
+import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component";
+import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renewal-do-home.component";
+import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
+import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
+import { HdfcCustomerRegistrationComponent } from "./components/hdfc-customer-registration/hdfc-customer-registration.component";
+
+
 
 const routes: Routes = [
     { path:'', component: RugDynamicFormComponent },
-    { path:'web', component: ViewLeadsComponent },
-    { path:'verification-script', component: ViewLeadsComponent },
-    { path:'view-checker-leads', component: ViewLeadsComponent },
+    { path:'view-leads', component: ViewLeadsComponent },
+    { path:'view-checker-leads', component: ViewMakerCheckerLeadsComponent },
     { path:'productdownload', component: ProductDownloadComponent },
-    { path:'base-caller-upload', component: ProductDownloadComponent },
-    { path:'av-upload', component: ProductDownloadComponent },
-    { path:'view-for-solo-journey', component: ProductDownloadComponent },
-    { path:'view-unVerified-leads', component: ProductDownloadComponent },
-    { path:'view-for-dual-journey', component: ProductDownloadComponent },
+    { path:'base-caller-upload', component: ProductDownloadComponent }, 
     { path:'extract-base-agent', component: ProductDownloadComponent },
-    { path:'manage-LOB', component: ProductDownloadComponent },
+    { path:'manage-LOB', component: ManageLobComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
     { path:'test-page', component: BbTestPageComponent },
-    { path:'bb-test-page', component: BbTestPageComponent }
+    { path:'bb-test-page', component: BbTestPageComponent },
+    {path:'basecaller',component:BasecallerListComponent},
+    {path:'upload_basecaller',component:BulkUploadBasecallerComponent},
+    {path:'create_baseCaller',component:CreateBasecallerComponent},
+    {path:'update_baseCaller/:domainId',component:CreateBasecallerComponent},
+    { path:'av-list', component:AVListComponent},
+    { path:'bulk_upload', component:BulkUploadComponent},
+    { path:'create_AV', component:CreateAVComponent},
+    { path:'update_AV/:avId', component:CreateAVComponent},
+    {path:'audit', component:AuditComponent},
+    { path:'view-for-solo-journey', component:ViewForSoloJourneyComponent},
+    {path:'view-unverified-leads', component:ViewUnverifiedLeadsComponent},
+    {path:'view-for-dual-journey', component:ViewForDualJourneyComponent},
+    {path:'verification_script', component: VerificationScriptComponent},
+    {path:'product_details', component:ProductDetailsComponent},
+    {path:'extract_base_agent_av_master', component:ExtractBaseAndAvMasterComponent},
+    {path:'proposal_policy_view_details', component:ProposalPolicyViewDetailsComponent},
+    {path:'create_lob', component:CreateLobComponent},
+    {path:'update_lob/:lobName', component:CreateLobComponent},
+    {path:'renewal', component:GroupRenewalDoHomeComponent},
+    {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
+    {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
+    {path:'customerDetails', component:HdfcCustomerRegistrationComponent}    
 ];
 
 @NgModule({

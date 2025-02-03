@@ -1,7 +1,7 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <div class="body_flex_row justify-content-between">
+            <div class="body_flex_row justify-content-between pageHeading_align-items-center">
                 <h2>{{"My Claims" | translate}}
                 </h2 >
                 <!-- <span class="heading-16-red">({{"Raised by:" | translate}} {{ designationName | translate }})</span> -->
@@ -66,14 +66,16 @@
                     </div>
 
 
-                    <div class="quickFilterRight">
+                    <div class="quickFilterRight leads_searchWraperMobile">
 
-                        <div class="filterWraper">
+                        <div class="filterWraper leads_searchWraper">
+                            <span class="filter-desktop-block-top">
                             <button type="button" id="productFilter" name="productFilter" value="filter"
                                 (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"
                                 aria-label="filterForm"><span id="filter-count"></span><img
                                     src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" |
                                 translate}} ({{appliedFiltersCount}})</button>
+                                </span>
                             <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
                                 [ngClass]="{'active': toggeledropdown}">
                                 <div class="fw_form mobile_popupMain">
@@ -87,7 +89,7 @@
                                         <div class="fw_formRow">
                                             <h6>{{"Date Range" | translate}}</h6>
                                             <div class="row">
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                     <div class="input-block form-floating input-block-dob m-0">
                                                         <input type="date" id="fromDate" name="fromDate" value=""
                                                             placeholder="Select Start Date"
@@ -98,7 +100,7 @@
                                                             translate}}</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                     <div class="input-block form-floating input-block-dob m-0">
                                                         <input type="date" id="toDate" name="toDate" value=""
                                                             placeholder="Select End Date"
@@ -112,7 +114,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                        <!-- <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                             <h6>{{"Products" | translate}}</h6>
                                             <div class="fw_checkboxWraper">
                                                 <div class="input-checkbox-block"
@@ -127,7 +129,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="fw_formRow">
                                             <h6>{{"Claim Type" | translate}}</h6>
                                             <div class="fw_checkboxWraper">
@@ -174,7 +176,7 @@
                                 src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                     </div>
                 </div>
-                <div class="claims_searchWraper">
+                <div class="claims_searchWraper leads_searchWraperMobile">
                     <!--Search section start-->
                     <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
@@ -185,6 +187,7 @@
                                     <option value="" selected>{{"Select an option" | translate}}</option>
                                     <option value="requestId">{{"Claim No." | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                    <option value="memberName">{{"Member Name" | translate}}</option>
                                     <option value="memberId">{{"Member Id" | translate}}</option>
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
 
@@ -218,10 +221,18 @@
                                         *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter
                                         Valid Mobile Number." | translate}}</small>
                                     <small
+                                        *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter
+                                        Valid Member Name." | translate}}</small>
+                                    <small
                                         *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter
                                         Valid Member Id." | translate}}</small>
                                 </span>
                             </div>
+                            <button type="button" id="productFilter" name="productFilter" value="filter"
+                                (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick filter-desktop-hide "
+                                aria-label="filterForm"><img
+                                    src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"><span id="filter-count">{{"Filter" |
+                                translate}} ({{appliedFiltersCount}})</span></button>
                         </div>
                     </div>
                 </div>
@@ -236,6 +247,7 @@
                                     <th scope="col">{{"Policy No." | translate}}</th>
                                     <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
+                                    <th scope="col" nowrap>{{"Raised By" | translate}}</th>
                                     <th scope="col" nowrap>{{"Member Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                     <th scope="col">{{"Status" | translate}}</th>
@@ -251,8 +263,9 @@
                                         <td class="card_insureInfo">{{ row?.claimNumber | translate}}</td>
                                         <td>{{ row?.policyNumber }}</td>
                                         <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
-                                        <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
-                                        <td>{{ row?.memberId }}<br/>{{ row?.memberRelation }}</td>
+                                        <td><span class="text-break-w100">{{row?.mobileNumber}}<br />{{row?.email}}</span></td>
+                                        <td>{{ designationName }}</td>
+                                        <td>{{ row?.memberName }}<br/>{{ row?.memberRelation }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                         <td>{{ row?.reportedDateTime | datepipe }}</td>
@@ -312,8 +325,12 @@
                                 <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Raised By" | translate}}</div>
+                                <div class="item_value">{{ designationName | translate}}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Member Info" | translate}}</div>
-                                <div class="item_value">{{ gridClaims.memberId | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
+                                <div class="item_value">{{ gridClaims.memberName | translate}}<br/> {{ gridClaims.memberRelation | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Claim Type" | translate}}</div>

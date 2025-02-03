@@ -11,13 +11,14 @@ import { LoadingService } from "src/app/services/loading.service";
 import { LanguageService } from "src/app/services/language.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ProductsService } from "src/app/product/products/products.service";
+import HeaderInformation from "src/app/layout/headerInfo";
 
 
 @Component({
   selector: 'app-quote-products',
   templateUrl: './quote-products.component.html',
   styleUrls: ['./quote-products.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService, HeaderInformation]
 })
 export class QuoteProductsComponent implements OnInit {
   stylesList: any[] = [];
@@ -62,9 +63,10 @@ export class QuoteProductsComponent implements OnInit {
     private service: CommonService, private encryptionService: EncryptionService, private spinner: LoadingService,
     private confirmationService: ConfirmationService, private aesEncryptService: AesEncryptionService, private languageService: LanguageService,
     private translateService: TranslateService,
-    private productService: ProductsService, private quoteservices: QuoteService
+    private productService: ProductsService, private quoteservices: QuoteService, public headerInformation : HeaderInformation
   ) { }
   ngOnInit(): void {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -110,26 +112,31 @@ export class QuoteProductsComponent implements OnInit {
     this.quoteService.Getproductlist2(reqData).subscribe({
       next: (res: any) => {
         console.log(res)
-        this.Getagentcartdetails();
-        this.partnerId = res.data.partnerId
-        this.ProductList = res.data.products
-        console.log(this.ProductList);
-        this.ProductList.forEach((prod: any) => {
-          // Parse keyFeatures and initialize selectedAddon
-          prod.keyFeatures = JSON.parse(prod.keyFeatures);
-          prod.selectedAddon = [];
-
-          // Round tenure premiums
-          prod.tenure1Premium = Math.round(prod.tenure1Premium);
-          prod.tenure2Premium = Math.round(prod.tenure2Premium);
-          prod.tenure3Premium = Math.round(prod.tenure3Premium);
-
-          // Optionally, log the updated product
-          console.log(prod);
-        });
-
-        this.selectedPlans = Array(this.ProductList.length).fill(3);
-        this.addonView = Array(this.ProductList.length).fill(false);
+        if(res.isSuccess){
+          this.Getagentcartdetails();
+          this.partnerId = res.data.partnerId
+          this.ProductList = res.data.products
+          console.log(this.ProductList);
+          this.ProductList.forEach((prod: any) => {
+            // Parse keyFeatures and initialize selectedAddon
+            prod.keyFeatures = JSON.parse(prod.keyFeatures);
+            prod.selectedAddon = [];
+  
+            // Round tenure premiums
+            prod.tenure1Premium = Math.round(prod.tenure1Premium);
+            prod.tenure2Premium = Math.round(prod.tenure2Premium);
+            prod.tenure3Premium = Math.round(prod.tenure3Premium);
+  
+            // Optionally, log the updated product
+            console.log(prod);
+          });
+  
+          this.selectedPlans = Array(this.ProductList.length).fill(3);
+          this.addonView = Array(this.ProductList.length).fill(false);
+        }
+        else{
+          this.toast.error({detail: "Error",summary: res.message,duration: 3000});
+        }
       },
       error: (err) => {
         // this.spinner.hide();
@@ -296,7 +303,7 @@ export class QuoteProductsComponent implements OnInit {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
   async insertorupdateagentcartdetails(item: any) {
@@ -324,7 +331,7 @@ export class QuoteProductsComponent implements OnInit {
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
       "quoteNumber": item.QuoteNumber,
-      "mobileNumber": this.formData.mobileNumber
+      "mobileNumber": this.formData.mobileNumber.toString()
     }
     console.log(reqdata);
     await this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
@@ -342,7 +349,7 @@ export class QuoteProductsComponent implements OnInit {
   async Getagentcartdetails() {
     let reqdata = {
       "agentCode": this.agentCode,
-      "customerMobileNumber": this.formData.mobileNumber
+      "customerMobileNumber": this.formData.mobileNumber.toString()
     }
     await this.quoteService.Getagentcartdetails(reqdata).subscribe({
       next: (res: any) => {
@@ -479,7 +486,10 @@ export class QuoteProductsComponent implements OnInit {
         this.compareItems.push(res.data);
       },
       error: (err) => {
-        this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
+        this.toast.error({
+          detail: 'Error',
+          summary: 'Failed to Add Product for Comparison'
+        });
         console.error(err);
       }
     });
@@ -488,5 +498,72 @@ export class QuoteProductsComponent implements OnInit {
   backToProducts(){
     this.router.navigate(['/dashboard'], {
     });
+  }
+
+  donwloadBrowcher(productName : any){
+    const downloadBrowcherProduct = this.headerInformation.downloadBrowcher.find((element: any) =>
+      element.productName.includes(productName));
+    
+      if (downloadBrowcherProduct) {
+        const URL = downloadBrowcherProduct.browcherURL;
+        const link = document.createElement('a');
+        link.href = URL;
+        link.download = URL.split('/').pop() || 'download.pdf';     
+      // First, try downloading by clicking the link
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+   
+      window.open(URL, '_blank');  // Open in a new tab for Chrome
+        
+      } else {
+        console.error('Invalid or missing URL.');
+      }
+   
+  }
+
+  donwloadQuote(quoteInfo : any){
+   let requestBody : any  ={};
+   requestBody.quoteInformation = JSON.stringify(quoteInfo);
+   requestBody.agentCode =  this.agentCode;
+   requestBody.formData =  JSON.stringify(this.formData);
+   requestBody.tenure = this.selectedPlans[this.ProductList.indexOf(quoteInfo)];
+
+   this.quoteService.downloadQuote(requestBody).subscribe(
+    (response: any)=>{
+      if(response.isSuccess){
+        let  blob :any = '';
+        try{
+           blob = this.base64ToBlob(JSON.parse(JSON.parse(response.data)).byteArray, 'application/pdf');
+        }catch(exception){
+          this.toast.error({ detail: "Error", summary: 'Failed to Generate Quote PDF.', duration: 2000 }); 
+        }
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        debugger;
+        link.download = quoteInfo.tenure1QuoteNumber +".pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        this.toast.success({ detail: "Success", summary: 'Quote Information has Successfully Downloaded.', duration: 2000 }); 
+      }else{
+        this.toast.error({ detail: "Error", summary: response.message, duration: 2000 }); 
+      }
+    },(error)=>{
+      console.error('Failed to download Quote',error);
+      this.toast.error({ detail: "Error", summary: "Failed to download quoteInformation.", duration: 2000 }); 
+    }
+  )};
+  
+  base64ToBlob(base64: string, type: string): Blob {
+    const binary = atob(base64);
+    const length = binary.length;
+    const arrayBuffer = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+      arrayBuffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type });
   }
 }

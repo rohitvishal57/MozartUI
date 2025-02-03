@@ -158,7 +158,7 @@ export class ProductDetailsComponent {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
 

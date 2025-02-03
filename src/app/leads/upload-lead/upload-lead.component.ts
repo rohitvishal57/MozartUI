@@ -82,7 +82,7 @@ export class UploadLeadComponent implements OnInit{
       for (let i = 0; i < files.length; i++) {
         const isDuplicateFile: boolean = this.fileList.some((item: any) => item.file.name === files[i].name);
         if (isDuplicateFile) {
-          this.toast.warning({ detail: "", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
+          this.toast.warning({ detail: "Warning", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
           return;
         } 
         this.selectedFile = files[i];
@@ -167,9 +167,9 @@ export class UploadLeadComponent implements OnInit{
             if (response.data) {
               if(response.isSuccess){              
                 window.open(response.data.url, '_blank');
-                this.toast.success({ detail: "", summary:response.data.status, duration: 5000 });
+                this.toast.success({ detail: "Success", summary:response.data.status, duration: 5000 });
               }else{
-                this.toast.error({ detail: "", summary:response.message, duration: 5000 });
+                this.toast.error({ detail: "Error", summary:response.message, duration: 5000 });
               }
             } 
             else {console.error("API request was not successful.");}

@@ -5,12 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModalComponent } from './components/shared-modal/shared-modal.component';
 import { MyMaterialModule } from '../material.module';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-import { SuccessModalComponent } from './components/success-modal/success-modal.component';
 import { BankbranchModalComponent } from './components/bankbranch-modal/bankbranch-modal.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { SuccessErrorModalComponent } from './components/success-error-modal/success-error-modal.component';
 
 @NgModule({
   declarations: [
-    SharedModalComponent, ConfirmModalComponent, SuccessModalComponent, BankbranchModalComponent],
+    SharedModalComponent, ConfirmModalComponent, BankbranchModalComponent, FileUploadComponent, SuccessErrorModalComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -25,6 +26,7 @@ import { BankbranchModalComponent } from './components/bankbranch-modal/bankbran
     ReactiveFormsModule,
     SharedModalComponent,
     ConfirmModalComponent,
+    FileUploadComponent,
     MyMaterialModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -18,7 +18,7 @@
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count">
-                <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
+                <button *ngIf="i < getFormIndexValue()" (click)="onDrillDown(i, case)" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
                 <button *ngIf="i == getFormIndexValue() " class="btn btn-default" class="nav-last">
@@ -73,7 +73,8 @@
                   <div class="input-container" [ngClass]="{'input-containerError': isD2C && dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)}">
                     <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
                       [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}" [id]="control.name"
-                      [name]="control.name" (change)="onInputChange($event, control)">
+                      [name]="control.name" (change)="onInputChange($event, control)"
+                      (keypress)="control.restrictKeyPress || control.inputMaxLength ? restrictKeyPress($event, control) : null">
                     <input *ngIf="control.disabled" class="inputField_Text_disabled"
                       formControlName="{{ control.name }}" [type]="control.type" [id]="control.name"
                       [name]="control.name" [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
@@ -120,46 +121,103 @@
                           Plan Details
                     </button>
                 </div> -->
-                  <div class="label-value-container" (click)="planSummary()">
+                  <div [ngClass]="{'label-value-container': control.name != 'policyEmail'}" (click)="(!isD2C && control.name == 'plandetails') ? planBBSummary() : planSummary()">
                     <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
                       translate) : '' }}</label>
-                    <div class="value-text">{{ control.value }}</div>
+                    <div class="value-text" *ngIf="control.name != 'policyEmail'" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}">{{ control.value }}</div>
+                    <div class="value-text" *ngIf="control.name == 'policyEmail'" [ngClass]="{'planDetails_iconActive': isBBPlanDetailsVisible}"><a href='mailto:{{ control.value }}' class='btn_link'>{{ control.value }}</a></div>
                     
                   </div>
                   <div *ngIf="isPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
                     <div class="bottom_planDetails_sub body_flex_column">
                         <div class="common_ProductInfo">
                             <div class="common_ppi_info">
-                                <h4>Health Pro</h4>
+                                <h4>{{d2cDetails.productName}}</h4>
                                 <h5>Axis Bank - Open Insurance</h5>
                             </div>
                         </div>
                         <div class="bottom_planSummary">
-                            <div class="info_planSummary">
-                              <h5>Base plan premium<span>Sum insured</span></h5>
-                                <h6>₹1000000</h6>
-                            </div>
-                            <div class="info_planSummary">
-                                <h5>Group Health Insurance</h5>
-                                <h6>₹14520</h6>
-                            </div>
-                            <div class="info_planSummary">
-                                <h5>Group Personal Accident</h5>
-                                <h6>₹720</h6>
-                            </div>
-                            <!-- <div class="info_planSummary">
-                                <h5>Accidental Cover</h5>
-                                <h6>₹840</h6>
-                            </div>
-                            <div class="info_planSummary">
-                                <h5>GST (18%)</h5>
-                                <h6>₹422.68</h6>
-                            </div> -->
-                            <div class="info_planSummary total_planSummary">
-                                <h5>Total premium (incl. GST)</h5>
-                                <h6>₹15240</h6>
-                            </div>
+                          <div class="info_planSummary">
+                            <h5>Base plan premium<span>Sum insured</span></h5>
+                            <h6>₹{{d2cDetails.sumInsured}}</h6>
+                          </div>
+                          <div class="info_planSummary"
+                            *ngIf="d2cDetails.productPlanName == 'GHI,GPA,GCI' || d2cDetails.productPlanName == 'GHI,GPA' || d2cDetails.productPlanName == 'GHI' || d2cDetails.productPlanName == 'GHI,GP'">
+                            <h5>Group Health Insurance</h5>
+                            <h6>₹{{d2cDetails.ghiPremium}}</h6>
+                          </div>
+                          <div class="info_planSummary"
+                            *ngIf="d2cDetails.productPlanName == 'GHI,GPA,GCI' || d2cDetails.productPlanName == 'GHI,GPA' || d2cDetails.productPlanName == 'GPA,GCI'">
+                            <h5>Group Personal Accident</h5>
+                            <h6>₹{{d2cDetails.gpaPremium}}</h6>
+                          </div>
+                          <div class="info_planSummary" *ngIf="d2cDetails.productPlanName == 'GHI,GPA,GCI' || d2cDetails.productPlanName == 'GPA,GCI'">
+                            <h5>Group Critical Illness</h5>
+                            <h6>₹{{d2cDetails.gciPremium}}</h6>
+                          </div>
+                          <div class="info_planSummary" *ngIf="d2cDetails.productPlanName == 'GHI-5L'">
+                            <h5>Group Health Indemnity</h5>
+                            <h6>₹{{d2cDetails.deductibleAmount}}</h6>
+                          </div>
+                          <div class="info_planSummary" *ngIf="d2cDetails.productPlanName == 'GHI-10L'">
+                            <h5>Group Health Indemnity</h5>
+                            <h6>₹{{d2cDetails.deductibleAmount}}</h6>
+                          </div>
+                          <!-- <div class="info_planSummary" *ngIf="d2cDetails.productPlanName == 'GHI,GP'">
+                            <h5>Group Protect</h5>
+                            <h6>₹{{d2cDetails.gpPremium}}</h6>
+                          </div> -->
+                          <div class="info_planSummary total_planSummary">
+                            <h5>Total premium (incl. GST)</h5>
+                            <h6>₹{{d2cDetails.totalPremium}}</h6>
+                          </div>
                         </div>
+                    </div>
+                  </div>
+                  <div *ngIf="isBBPlanDetailsVisible" class="bottom_planDetails" id="bottom_planDetails">
+                    <div class="bottom_planDetails_sub body_flex_column">
+                      <div class="common_ProductInfo">
+                        <div class="common_ppi_info">
+                          <h4>{{bbdetails.productName}}</h4>
+                          <!-- <h5>Axis Bank - Open Insurance</h5> -->
+                        </div>
+                      </div>
+                      <div class="bottom_planSummary">
+                        <div class="info_planSummary">
+                          <h5>Base plan premium<span>Sum insured</span></h5>
+                          <h6>₹{{bbdetails.sumInsured}}</h6>
+                        </div>
+                        <div class="info_planSummary"
+                          *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GHI,GPA' || bbdetails.productPlanName == 'GHI' || bbdetails.productPlanName == 'GHI,GP'">
+                          <h5>Group Health Insurance</h5>
+                          <h6>₹{{bbdetails.ghiPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary"
+                          *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GHI,GPA' || bbdetails.productPlanName == 'GPA,GCI'">
+                          <h5>Group Personal Accident</h5>
+                          <h6>₹{{bbdetails.gpaPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI,GPA,GCI' || bbdetails.productPlanName == 'GPA,GCI'">
+                          <h5>Group Critical Illness</h5>
+                          <h6>₹{{bbdetails.gciPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI-5L'">
+                          <h5>Group Health Indemnity</h5>
+                          <h6>₹{{bbdetails.deductibleAmount}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI-10L'">
+                          <h5>Group Health Indemnity</h5>
+                          <h6>₹{{bbdetails.deductibleAmount}}</h6>
+                        </div>
+                        <div class="info_planSummary" *ngIf="bbdetails.productPlanName == 'GHI,GP'">
+                          <h5>Group Protect</h5>
+                          <h6>₹{{bbdetails.gpPremium}}</h6>
+                        </div>
+                        <div class="info_planSummary total_planSummary">
+                          <h5>Total premium (incl. GST)</h5>
+                          <h6>₹{{bbdetails.totalPremium}}</h6>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -176,6 +234,23 @@
                       formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
                       [type]="control.type" [placeholder]="control.label" (change)="onInputChange($event, control)"
                       readonly>
+                  </div>               
+
+                  <span style="font-size: 12px; font-family: b-Bold, sans-serif !important;">{{ control.text ? (control.text | translate) : '' }}</span>
+                </div>
+                <div *ngIf="control.type == 'smalltextarea'" [class]="control.class" class="typecss"
+                  [hidden]="!control.visible">
+                  <div class="label-value-container" >
+
+                    <label *ngIf="control.visibleLabel==true" class="label-text">
+                      {{ control.label ? (control.label | translate) : '' }}
+                      <!-- <span *ngIf="control.validators">*</span> -->
+                    </label>
+                    <textarea *ngIf="control.disabled" class="value-text no-border no-background"
+                      formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                     [placeholder]="control.label" (change)="onInputChange($event, control)"
+                      readonly>
+                    </textarea>
                   </div>
 
                  
@@ -215,9 +290,9 @@
                 </div>
 
                 <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
-                  <p *ngIf="!isD2C" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
-                  <p *ngIf="control.value && !isD2C" [innerHTML]="control.value"></p>
-                  <div *ngIf="isD2C" [ngClass]="{'form-box declarationBox':  isD2C && control.name === 'd2cDeclarationLabel1' }">
+                  <p *ngIf="!isD2C && !isBB" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                  <p *ngIf="control.value && !isD2C && !isBB" [innerHTML]="control.value"></p>
+                  <div *ngIf="isD2C || isBB" [ngClass]="{'form-box declarationBox':  (isD2C || isBB) && control.name === 'd2cDeclarationLabel1' }">
                     <div class="row">
                       <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9" *ngIf="control.name === 'd2cDeclarationLabel1'">
                         <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
@@ -228,11 +303,11 @@
                       <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 text-center">
                         <div *ngIf="control.name === 'd2cDeclarationLabel1'" class="input-radio-block toggle-checkbox toggle-declaration">
                           <label class="input-radiolabel  labelflex-auto">
-                            <input type="radio" name="declaration" value="yes" id="declaration-yes">
+                            <input type="radio" name="isDeclarationSelected" [formControl]="isDeclarationSelected" value="yes" id="declaration-yes">
                             <span>YES</span>
                           </label>
                             <label class="input-radiolabel labelflex-auto">
-                                <input type="radio" name="declaration" value="no" id="declaration-no" checked="">
+                                <input type="radio" name="isDeclarationSelected" [formControl]="isDeclarationSelected" value="no" id="declaration-no" checked="">
                                 <span>NO</span>
                             </label>
                         </div>
@@ -392,7 +467,7 @@
                 <div *ngIf="control.type === 'multiSelectCheckbox'">
                   <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}<span
                       *ngIf="control.validators">*</span></label>
-                  <div [formGroupName]="control.name" class="checkbox-container"
+                  <div [formGroupName]="control.name" class="checkbox-container" [ngStyle]="{ 'display': isCustomerJourney ? 'none' : 'flex' }" 
                     *ngIf="dynamicFormGroup.get(control.name)">
                     <div *ngFor="let option of control.selectCheckboxOptions"
                       class="checkbox-wrapper col-6 col-md-6 col-lg-3">
@@ -436,12 +511,31 @@
                         <div [ngClass]="{'form-box': isD2C}">
                         <ng-container [formGroupName]="i-1">
                           <div class="details-element">
-                            <div class="form-boxHead" *ngIf="isD2C">
-                              <span class="headBadge">{{i == 1 ? "Self" : "" || i == 2 ? "Spouse" : ""}}</span>
-                            </div>
+                            
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible!=false">
-                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                                <div *ngIf="subControl.name == 'relation' && (isD2C || isBB || isTS)"
+                                [class]="subControl.class"  class="form-boxHead" [hidden]="!control.visible">
+                                
+                                <div [ngClass]="{'input-containerError': (isD2C || isBB || isTS) && checkValidations(subControl,control,i-1)}">
+                                  <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                    [name]="subControl.name" [id]="subControl.name" class="headBadge"
+                                    [type]="subControl.type" style="background: #404040;color: #fff;margin: 5px;"
+                                    (change)="onInputChange($event, subControl,control,i-1)">
+                                  <input  *ngIf="subControl.disabled"style="background: #404040;color: #fff;margin: 5px;"
+                                    [formControlName]="subControl.name" [name]="subControl.name"
+                                    [id]="subControl.name" class="headBadge" [type]="subControl.type"
+                                    readonly>
+                                  <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
+                                    translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                </div>
+                                <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
+                                  getValidationErrors(subControl,control,i-1)?
+                                  (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                </small>
+
+                              </div>
+                              <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type) && isD2C && subControl.name != 'relation'"
                                   [class]="subControl.class" class="typecss input-typecss" [hidden]="!control.visible">
                                   
                                   <div class="input-container" [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
@@ -450,6 +544,30 @@
                                       [type]="subControl.type"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       (change)="onInputChange($event, subControl,control,i-1)">
+                                    <input  *ngIf="subControl.disabled"
+                                      [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
+                                      [formControlName]="subControl.name" [name]="subControl.name"
+                                      [id]="subControl.name" class="inputField_Text_disabled" [type]="subControl.type"
+                                      readonly>
+                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
+                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                  </div>
+                                  <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
+                                    getValidationErrors(subControl,control,i-1)?
+                                    (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                  </small>
+
+                                </div>
+                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)&& !isD2C"
+                                  [class]="subControl.class" class="typecss input-typecss" [hidden]="!control.visible">
+                                  
+                                  <div class="input-container" [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
+                                    <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                      [name]="subControl.name" [id]="subControl.name" class="inputField_Text"
+                                      [type]="subControl.type"
+                                      [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
+                                      (change)="onInputChange($event, subControl,control,i-1)"
+                                      (keypress)="subControl.type == 'number' ? restrictKeyPress($event, subControl) : null">
                                     <input  *ngIf="subControl.disabled"
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
                                       [formControlName]="subControl.name" [name]="subControl.name"
@@ -521,6 +639,33 @@
                                     <label [for]="subControl.name" [innerHTML]="subControl.label"
                                       class="popup-checkbox-label"><span *ngIf="subControl.validators">*</span></label>
                                   </div>
+                                </div>
+                                <div *ngIf="subControl.type === 'checkbox'" class="typecss input-typecss">
+                                    <div [class]="subControl.class" >
+                                      <input type="checkbox" [formControlName]="subControl.name"
+                                        [name]="subControl.name" [id]="subControl.name" id="{{subControl.name}}_{{i-1}}"
+                                        [value]="subControl.value" class="checkbox-label" (change)="onTsChronicCheckboxSelect(subControl, subControl.value, i-1)" />
+                                      <label for="{{subControl.name}}_{{i}}"
+                                        [innerHTML]="subControl.label ? (subControl.label | translate) : ''"
+                                        class="checkboxes"><span *ngIf="subControl.validators">*</span></label>
+                                    </div>
+                                  </div>
+                                  <div *ngIf="subControl.type ==='radio'" class="radio-buttons"
+                                    style="font-size: 12px; font-weight: 600;">
+                                    <label class="inputField_Label" *ngIf="subControl.visibleLabel==true"
+                                      [innerHTML]="subControl.label ? (subControl.label | translate) : ''"> <span
+                                        *ngIf="subControl.validators">*</span></label>
+                                    <div class="radio-button">
+                                      <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
+                                        <input type="radio" [formControlName]="subControl.name" [name]="subControl.name"
+                                          [id]="subControl.name" [value]="option.value" style="margin-right: 10px;">
+                                        <label [innerHTML]="option.label">
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <div *ngIf="subControl.type === 'line' && subControl.visible === true" [class]="subControl.class">
+                                  <hr />
                                 </div>
                               </ng-container>
                             </ng-container>
@@ -832,19 +977,23 @@
                     <span *ngIf="control.validators">*</span>
                   </label>
                   <div class="input-radio-block">
-                    <label  class="input-radiolabel input-radiolabel-upto100" *ngFor="let option of control.radioOptions">
-                      <input type="radio" [formControlName]="control.name" [name]="control.name" [id]="control.name"
-                        [value]="option.value" style="margin-right: 10px;" (change)="onInputChange($event, control)">
-                      <!-- <span [innerHTML]="option.label"></span> -->
-                      <span>
-                        <div>{{option.label}} 
-                          <!-- <em>(SI - 10L Lac)</em> -->
-                            <div class="gah-si-premium">
-                                <!-- <label>₹15240</label><em>Premium(Inc.Tax)</em> -->
-                              </div>
-                        </div>
-                    </span>
-                    </label>
+                    <ng-container *ngFor="let option of control.radioOptions">
+
+                      <label  class="input-radiolabel input-radiolabel-upto100"  *ngIf="option.visible">
+                      <!-- <label  class="input-radiolabel input-radiolabel-upto100" > -->
+                        <input type="radio" [formControlName]="control.name" [name]="control.name" [id]="control.name"
+                          [value]="option.value" style="margin-right: 10px;" (change)="onInputChange($event, control)">
+                        <!-- <span [innerHTML]="option.label"></span> -->
+                        <span>
+                          <div>{{option.label}} 
+                            <!-- <em>(SI - 10L Lac)</em> -->
+                              <div class="gah-si-premium">
+                                  <!-- <label>₹15240</label><em>Premium(Inc.Tax)</em> -->
+                                </div>
+                          </div>
+                      </span>
+                      </label>
+                    </ng-container>
                   </div>
                 </div>
 

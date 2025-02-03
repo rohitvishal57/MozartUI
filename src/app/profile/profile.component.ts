@@ -4,6 +4,8 @@ import { PerformanceService } from 'src/app/performance/performance.service';
 import { LanguageService } from '../services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
+import { LoginService } from '../login/login/login.service';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -30,11 +32,15 @@ export class ProfileComponent implements OnInit {
   showmsg: boolean = false;
   selectedLanguage: string = '';
   profileLink:any = '';
+  isShareOptionsVisible = false;
+  qrCodeImage: any;
+  profileQRCode:any = '';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
-    private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService
-
+    private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService,
+    private loginService: LoginService,
+    private datePipe: DatePipe,
   ) { }
   ngOnInit(): void {
     this.languageService.language$.subscribe(lang => {
@@ -68,17 +74,36 @@ export class ProfileComponent implements OnInit {
     }
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
-        // this.profileDetails = res.data;
         const output = Object.keys(res.data).map(key => ({
           heading: key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
           icon: this.getIcons(key),
           value: key === 'dateOfBirth' ? new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
         this.profileDetails = output;
-        this.profileDetails = output.filter(item => item.heading !== 'Profile Link');
+        this.profileDetails = this.profileDetails.map((item: { heading: string; value: string | number | Date | null; }) => {
+          if (item.heading === 'Irda License Number' || item.heading === 'Sp Certificate Status') {
+            item.heading = item.heading.replace('Sp', 'SP').replace('Irda', 'IRDA');
+          }
+          if (item.heading === 'Irda License Expiry Date') {
+            item.heading = 'SP Expiry Date';
+          }
+          if (item.heading === 'SP Expiry Date' && item.value) {
+            if (item.value == '0001-01-01T00:00:00') {
+              item.value = '';
+            } else {
+              item.value = this.datePipe.transform(item.value, 'dd-MM-yyyy');
+            }
+          }
+          return item;
+        });
         this.profileLink = res.data.profileLink;
+        this.profileDetails = output.filter(item => item.heading !== 'Profile Link' && item.heading !== 'Profile QRCode');
+        this.profileQRCode = res.data.profileQRCode;
+        if (this.profileQRCode) {
+          this.qrCodeImage = `data:image/png;base64,${this.profileQRCode}`;
+        }   
       }
-    })
+    });
   }
 
   getIcons(key: string) {
@@ -132,6 +157,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  // toggleShareOptions(): void {
+  //   this.isShareOptionsVisible = !this.isShareOptionsVisible;
+  // }
+
   updatePreferredLanguage(): void {
     const reqData = {
       AgentCode: this.agentCode,
@@ -143,14 +172,14 @@ export class ProfileComponent implements OnInit {
     this.profileService.updatePreferredLanguage(reqData).subscribe({
       next: (response: any) => {
         console.log('Language preference updated successfully:', response);
-        this.toast.success({ detail: 'SUCCESS', summary: response.message, duration: 3000 });
+        this.toast.success({ detail: 'Success', summary: response.message, duration: 3000 });
         const userData = localStorage.getItem('userData');
         if (userData) {
           const parsedUserData = JSON.parse(userData);
           parsedUserData.preferredLanguage = this.selectedLanguage;
           localStorage.setItem('userData', JSON.stringify(parsedUserData));
         }
-        this.toast.success({ detail: "SUCCESS", summary: "Success", duration: 3000 })
+        this.toast.success({ detail: "Success", summary: "Success", duration: 3000 })
       },
       error: (error) => {
         console.error('Error updating language preference:', error);
@@ -188,7 +217,7 @@ export class ProfileComponent implements OnInit {
       navigator.clipboard.writeText(urlText).then(
         () => {
           console.log('URL copied to clipboard:', urlText);
-          this.toast.success({ detail: "SUCCESS", summary: "URL copied to clipboard!", duration: 3000 })
+          this.toast.success({ detail: "Success", summary: "URL copied to clipboard!", duration: 3000 })
         },
         (error) => {
           console.error('Failed to copy URL:', error);
@@ -218,6 +247,11 @@ export class ProfileComponent implements OnInit {
         }
       }
     }
+  }
+  openEmail(): void {
+    const subject = encodeURIComponent('Check this out');
+    const body = encodeURIComponent('Here is the content to share.');
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 
   getPerformanceData() {
@@ -288,8 +322,26 @@ export class ProfileComponent implements OnInit {
     this.docType = key;
   }
 
-
-  // Personal Info code
-
-
+  handlePassword() {
+    const payload = {
+      userName: localStorage.getItem("agentCode")
+    }
+    this.loginService.resetPasswordRequestApi(payload)
+    .subscribe({  
+      next: (res:any)=>{
+        if (res.data && res.isSuccess && res.statusCode == '200') {
+          window.open(res.data.redirectUrl, "_self");
+        } else {
+          this.toast.error({
+            detail: 'Error',
+            summary: res.message,
+            duration: 5000,
+          });
+        }
+      },
+      error: ((err:any) => {
+        console.log(err);
+      })
+    })
+  }
 }

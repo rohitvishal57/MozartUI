@@ -67,6 +67,12 @@ export interface IFullQuoteMapping {
     tenure:string
     bankAccountType:string
     familySize:string
+    appointeeName:string
+    appointeeMobileNumber:string
+    appointeeRelationCode:string
+    lrFlag:string
+    deductibleAmount:string
+    gstIn:string
 }
 
 export interface InsuredMemberDetail {
@@ -101,6 +107,11 @@ export interface InsuredMemberDetail {
     covers: Cover[]
     memberRoomCategory:string
     pedWaitingPeriod:string
+    hospiCashCoverDetails: []
+    personalHabitDetail : string
+    isSmoking: string
+    isTobacco: string
+    alcohol: string
 }
 
 export interface Cover {

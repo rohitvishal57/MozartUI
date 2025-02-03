@@ -9,7 +9,7 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { ExcelExportService } from 'src/app/services/excel-export.service';
-
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-endorsements-requests',
   templateUrl: './endorsements-requests.component.html',
@@ -28,6 +28,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   resolvedCount: number = 0;
   cancelledCount: number = 0;
   selectedView: string = "list";
+  filterType: string = "totalRecords"
   isSearch: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("");
@@ -84,7 +85,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     private commonService: CommonService, 
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private excelExportService: ExcelExportService
+    private excelExportService: ExcelExportService,
+    private toast: NgToastService, 
   ) { }
 
   ngOnInit(): void {
@@ -147,7 +149,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       "toDate": "",
       "start": 0,
       "length": this.rows,
-      "sortColumn": "RaisedOn",
+      "sortColumn": "",
       "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
@@ -168,13 +170,19 @@ export class EndorsementsRequestsComponent implements OnInit {
       (response: any) => {
         if (response.data && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
+            if (!obj.raisedOn || isNaN(Date.parse(obj.raisedOn))) {
+              return {
+                ...obj,
+                raisedOn: 'NA',
+              };
+            }
             const date = new Date(obj.raisedOn);
             const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
             return {
               ...obj, raisedOn:formattedDate
             }
           });
-          this.filterCounts(response);
+          this.filterCounts(response?.data);
         } else {
           console.error("API request was not successful.");
         }
@@ -184,15 +192,15 @@ export class EndorsementsRequestsComponent implements OnInit {
       }
     );
   }
-
-  filterCounts(resp: any) {
-    this.totalRecords = resp.data.totalRecords;
-    this.activeCount = resp.data.activeCount;
-    this.resolvedCount = resp.data.resolvedCount;
-    this.cancelledCount = resp.data.cancelledCount;
+  
+  filterCounts(data: any) {
+    this.totalRecords = (data?.[this.filterType] ?? 0);  // Use nullish coalescing to set 0 if null or undefined
+    this.activeCount = (data?.activeCount ?? 0);
+    this.resolvedCount = (data?.resolvedCount ?? 0);
+    this.cancelledCount = (data?.cancelledCount ?? 0);
   }
-
-  statusFilter(filter: string) {
+  
+  statusFilter(filter: string, filterRange: string) {
     if (filter === "All") {
       this.requestsListRequestBody.uiStatus = "";
     } else {
@@ -202,6 +210,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.first = 0;
     this.getRequestList();
     this.activeFilter = filter;
+    this.filterType = filterRange;
   }
 
   formatDate(dateType: "fromDate" | "toDate") {
@@ -216,9 +225,11 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.toggeledropdown = !this.toggeledropdown;
     this.maxDate = new Date().toISOString().split('T')[0];  
   }
+
   cancel() {
     this.toggeledropdown = false;
   }
+
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
     // const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
@@ -228,6 +239,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
     this.appliedFiltersCount = count;
   }
+
   clear(){
     // this.productsList.forEach((product:any) => (product.selected = false));
     this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
@@ -240,6 +252,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.toDate = "";
     this.getRequestList();
   }
+
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("fromDate");
@@ -281,7 +294,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   getPlaceholder(): string {
     if (this.selected === "caseId") {
-      return "Enter Endorsement Id";
+      return "Enter Endorsement No.";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
     } else if (this.selected === "policyNumber") {
@@ -342,11 +355,27 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.excelExportService.exportToExcel([item], `Endorsement_${item.caseId}`);
   }
 
-  downloadAll(): void {
+  /* downloadAll(): void {
     this.excelExportService.exportToExcel(
       this.endorsementDetails,
       'All_Endorsements'
     );
+  } */
+
+  downloadAll(): void {
+    this.endorsementService.endorsementDownlaodAllApi(this.requestsListRequestBody).subscribe(
+      (response: any) => {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
+          const blob = this.commonService.base64ToBlob(response?.data?.fileContentBase64,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.commonService.saveAsExcelFile(blob, response?.data?.fileName);          
+        } else {
+          console.error("API request was not successful.");
+          this.toast.error({ detail: "Error", summary: response.message, duration: 5000 });
+        }
+      },
+      (error) => {
+        console.error("Error from API:", error);
+      }
+    );
   }
-  
 }

@@ -3,21 +3,18 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { combinedForms, thankYou, renewals_summary } from 'src/assets/styles/renewals-forms/combined_forms';
-import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
-import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
-import { payment } from 'src/assets/styles/renewals-forms/payment';
-import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
+import { thankYou} from 'src/assets/styles/renewals-forms/combined_forms';
+import { leads, payment } from 'src/assets/styles/renewals-forms/payment';
 import { RenewalsService } from '../renewals.service';
-import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
-import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CustomersService } from 'src/app/customers/customers.service';
+import { detailsForms } from 'src/assets/styles/renewals-forms/customer_payment';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -59,133 +56,169 @@ export class RenewalJourneyComponent {
   selectedFile: any;
   documentId: any;
   agentCode: any;
-
-  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
+  rowData: any={};
+  formSequence: any[] = [detailsForms,leads,payment,thankYou];
   // formSequence: any[] = [];
   journeyProcess: any;
   currentDate = new Date().toISOString().split('T')[0];
   futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
-  
-
   activeSection: string = "primary";
-
   // activeSection: string = "primary";
   formIndex: number = 0;
-
-  existingRelations: any [] = [];
-
-
+  existingRelations: any[] = [];
   QuoteNumber: any = [];
   tenureAmount: any[] = [0, 0, 0];
   discountList: number[] = [];
   displayTaxList: any[] = [];
+  customerFeedbackForm !: FormGroup;
+  formIndexValue: number = 0;
+  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
+  rating: number = 0; // Holds the current selected rating
+  feedbackImpressedValues: String[] = ['Seamless payment', 'Ease of policy modification', 'Speedy Policy renewal', 'Payment receipt & confirm']
+  feedBackMessage: boolean = false;
+  impressedValues: boolean = false;
+  feedbackSubmit: boolean = false;
+  impressedLable: String = "";
+  feedbackImpressedValue: String = '';
+  isFeedBackModalVisible: Boolean = false;
+  retrievedDocuments: any;
+  verifyKYCStatus:boolean = false;
+  isFullQuote:boolean=true;
+  fromList:string="";
+  nomineeDetail: boolean | undefined;
+  tempFormData: any;
+  bankDetail: any;
+  bankName:any;
+  nomineeRelationList :any;
+  bankNameList :any;
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router,private clipboard: Clipboard) {
 
-  }
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router, private clipboard: Clipboard,private customerService: CustomersService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.showHtmlContent = false;
-  
     // Fetch agentCode from localStorage if present
     if (localStorage.getItem('agentCode')) {
       this.agentCode = localStorage.getItem('agentCode');
     }
-  
     // Extract data from history state
     const stateData = history.state;
-  
     if (stateData && Object.keys(stateData).length > 0) {
-      console.log('State Data:', stateData);
-  
       // Decrypt and assign each piece of data if present
       if (stateData.formData) {
         const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
-        this.formData = { ...this.formData, ...decryptedFormData };
-        console.log(this.formData);
-        
+        if ('isFullQuoteSuccess' in decryptedFormData) {
+          this.rowData = decryptedFormData;
+        }
+        // if (decryptedFormData.policyNumber) {
+        //   const renewalInfoRequestBody = {
+        //     policy_Number: decryptedFormData.policyNumber
+        //   };
+        //   const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+        //   this.formData = { ...this.formData, ...response.data,...decryptedFormData };
+        // }
+        if (stateData.fromList) {
+          this.fromList = this.encryptionService.decrypt(stateData.fromList);
+        }
+        try {
+          if ( decryptedFormData.policyNumber &&
+            !['SUCCESS', 'INITIATED', 'PENDING', 'INPROGRESS'].includes(decryptedFormData.paymentStatus) &&
+            !(decryptedFormData?.paymentStatus?.startsWith('IN')) &&
+            (decryptedFormData?.fullQuoteStatus === undefined || (decryptedFormData?.isFullQuoteSuccess !== true && decryptedFormData?.isFullQuoteSuccess !== false)) && 
+            (this.fromList != "list"))
+            {
+              const renewalInfoRequestBody = {
+                policy_Number: decryptedFormData.policyNumber
+              };
+              const response: any = await firstValueFrom(this.renewalService.getbasequoteApi(renewalInfoRequestBody));
+              this.formData = { ...this.formData, ...decryptedFormData, ...response.data };
+              
+          }
+        } catch (error) {
+          console.error('Error fetching renewal info:');
+        }
+        this.formData = {  ...decryptedFormData ,...this.formData,};
+        this.tempFormData=this.formData
       }
-  
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-        console.log(this.proposalNum);
-        
+      if (stateData.formSequence) {
+        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
       }
-  
-      if (stateData.policyNumber) {
-        this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-        console.log(this.policyNumber);
-        
-      }
-  
       if (stateData.journeyProcess) {
         this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-        console.log(this.journeyProcess);
-        
       }
-  
-      // Set formSequence if provided in state; otherwise, use default
-      if (stateData.formSequence) {
-        // this.formSequence = [];
-        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
-        console.log(this.formSequence);
-        
-      } 
-      // else {
-      //   console.log('inside else');
-        
-      //   this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
-      // }
-  
-      // Set formIndex in localStorage if present in state
       if (stateData.formIndex) {
-        // const decryptedFormIndex = this.encryptionService.decrypt(stateData.formIndex);
         localStorage.setItem('formIndex', stateData.formIndex);
       }
-  
-      // Process insuredMemberDetails if present in the formData
-      if (this.formData?.insuredMemberDetails?.length > 0) {
-        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-          if (member.covers) {
-            this.covers[index] = member.covers;
-          }
-          if (member.relation) {
-            this.existingRelations.push(member.relation);
-          }
-        });
+      // if (stateData.proposalNum) {
+      //   this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
+      // }
+      try {
+        if (stateData.policyNumber) {
+          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
+        }
+      } catch (error) {
+        console.error(error);
       }
-  
-      console.log('Covers:', this.covers);
+      // if (this.formData?.insuredMemberDetails?.length > 0) {
+      //   this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+      //     if (member.covers) {
+      //       this.covers[index] = member.covers;
+      //     }
+      //     if (member.relation) {
+      //       this.existingRelations.push(member.relation);
+      //     }
+      //   });
+      // }
     } else {
       // If no data is present in the history state, use default configurations
       console.warn("No data found in history state.");
-      this.formSequence = [new_combinedForms, active_health_covers, payment, thankYou];
+      this.formSequence = [detailsForms,leads,payment,thankYou];
     }
-  
     console.log(this.formData, this.proposalNum, this.policyNumber);
-  
+    const transFormData={nomineeFirstName: this.formData.nomineeDetails?.nominee_first_name || "",
+      nomineeMiddleName: this.formData.nomineeDetails?.nominee_middle_name || "",
+      nomineeLastName: this.formData.nomineeDetails?.nominee_last_name || "",
+      nomineeDob: this.formatDates(this.formData.nomineeDetails?.nominee_dob || ""),
+      nomineeRelationWithProposer: this.formData.nomineeDetails?.relationship || "",
+      gender: this.formData.gender || "",
+      nomineeAddress: this.formData.nomineeDetails?.nominee_Address || "",
+      nomineeContactNo: this.formData.nomineeDetails?.nominee_Contact_No || "",
+      policyNumber: this.formData.policyNumber || "",
+      productCode: this.formData.productCode || "",
+      isKycCompleted: this.formData.isKycCompleted || false,
+      bankName: this.formData.bankDetails?.bank_name || "",
+      accountNumber: this.formData.bankDetails?.bank_acc_no || "",
+      confirmBankAccountNumber: this.formData.bankDetails?.confirm_Bank_acc_no || "",
+      ifscCode: this.formData.bankDetails?.ifsc_code || "",
+      micrCode: this.formData.bankDetails?.micr_code || "",
+      bankBranchName: this.formData.bankDetails?.bank_branch_name || "",
+      bankAccountType: this.formData.bankDetails?.bank_account_type || "",
+      primarySecondary: this.formData.bankDetails?.primary_secondary || "",
+      appointeeName: this.formData.nomineeDetails?.appointee_Name || "",
+      appointeeContactNo : this.formData.nomineeDetails?.appointee_Mobile_Np || "",
+      appointeeRelationWithNominee : this.formData.nomineeDetails?.appointee_Relation || "",
+    }
+    this.formData = { ...this.formData, ...transFormData };
     // Call the function to handle form data and sequence
     this.getFormDataFromFormSequence();
+    this.customerFeedbackForm = this.fb.group({
+      message: [''],
+      rating: [null, Validators.required], // Add rating to the form
+    });
+    console.log("form",this.form);  
   }
-  
 
   async getFormDataFromFormSequence() {
-    console.log(this.formSequence,this.getFormIndexValue(),this.form);
+    console.log(this.formSequence, this.getFormIndexValue(), this.form);
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
       this.showHtmlContent = false;
     }
-
-    // this.form = totalPremium;
-    // this.form = new_combinedForms;
-    // this.form = payment;
-    // this.form = active_health_covers;
-
     this.form = JSON.parse(JSON.stringify(this.formSequence[this.getFormIndexValue()]));
     console.log(this.form);
-    
-    if (this.journeyProcess == 0) {
+
+    if (this.getFormIndexValue() == 0) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'back') {
@@ -205,6 +238,8 @@ export class RenewalJourneyComponent {
       section.formControls.forEach((control: any) => {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
+        console.log(control.name, this.formData);
+        
         if (control.dynamicControls) {
           console.log(control.name, control, this.formData);
 
@@ -431,7 +466,7 @@ export class RenewalJourneyComponent {
               }
             }
             let controlValidators: any = [];
-            if (control.validators && control.visible == true) {
+            if (control.validators && control.visible == true && section.visible == true) {
               control.validators.forEach((val: IValidator) => {
                 if (val.validatorName === 'required') controlValidators.push(Validators.required);
                 if (val.validatorName === 'email') controlValidators.push(Validators.email);
@@ -462,7 +497,7 @@ export class RenewalJourneyComponent {
             //   });
             //   this.renewalFormGroup.addControl(control.name, controlGroup);
             // }
-            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary','paragraph'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -470,10 +505,10 @@ export class RenewalJourneyComponent {
                 this.resolveMethod(control.methodName, control)
               }
             }
-            if (control.type === 'select' && control.options) {
+            if ((control.type === 'select') && control.options) {
               // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
-                this.callMethod(control.getAllOption, control);
+                await this.resolveMethod(control.getAllOption, control);
               }
               else if (control.options.length === 0 && control.name == 'zoneValue') {
                 control.options = this.formData['upgradableZones'];
@@ -565,18 +600,36 @@ export class RenewalJourneyComponent {
             }
 
           }
+          
+          console.log(control , control.value);
+          const bank = this.formData.accountNumber?.trim() && this.formData.ifscCode?.trim() && this.formData.bankName?.trim();
+          const nominee = this.formData.nomineeFirstName?.trim() && this.formData.nomineeDob?.trim() && this.formData.nomineeRelationWithProposer?.trim();
+            if (section.sectionTitle === "Bank Account Details" || section.sectionTitle === "Nominee Details") {
+                if (section.sectionTitle === "Bank Account Details") {
+                    if (bank) {
+                        control.disabled = true;
+                    }
+                    if (bank && control.methodName === "checkleadValidation") {
+                        control.visible = false;
+                    }
+                }
+                if (section.sectionTitle === "Nominee Details") {
+                    if (nominee) {
+                        control.disabled = true;
+                    }
+                    if (nominee && control.methodName === "checkleadValidation") {
+                        control.visible = false;
+                    }
+                }
+            }          
+            if (control.disabled) {
+              this.renewalFormGroup.get(control.name)?.disable();
+            }
         });
-      });
-      // this.renewalFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
-      //dynamic css
-      // this.showHtmlContent = true;
-      console.log(this.form);
-      console.log(this.renewalFormGroup.value, this.formData);
-
-
-
-      // this.flattenObject(this.formData);
-      // this.spinner.hide();
+      });      
+    }
+    if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
+      this.isFeedBackModalVisible = true;
     }
   }
 
@@ -621,9 +674,9 @@ export class RenewalJourneyComponent {
           });
 
         }
-        if (control.type == 'select' && control.getAllOption) {
+        if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
-            this.callMethod(control.getAllOption, control);
+            this.resolveMethod(control.getAllOption, control);
           }
         }
 
@@ -644,6 +697,13 @@ export class RenewalJourneyComponent {
           formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
         }
       }
+      if(control.name != "relationshipType"){
+        console.log(control.name);
+        
+        if (control.disabled) {
+         formGroup.get(control.name)?.disable();
+        }
+       }
     })
 
     return formGroup;
@@ -671,9 +731,9 @@ export class RenewalJourneyComponent {
           });
         }
 
-        if (control.type == 'select' && control.getAllOption) {
+        if ((control.type == 'select') && control.getAllOption) {
           if (control.options?.length == 0) {
-            this.callMethod(control.getAllOption, control);
+            this.resolveMethod(control.getAllOption, control);
           }
         }
         if (control.innerArrayControl) {
@@ -724,7 +784,7 @@ export class RenewalJourneyComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.callMethod(subControls.getAllOption, subControls);
+          this.resolveMethod(subControls.getAllOption, subControls);
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -972,7 +1032,7 @@ export class RenewalJourneyComponent {
     }
 
     if (control.onChangeMethod && control.type == 'date') {
-      await this.resolveMethod(control.methodName, control, event.target.value);
+      await this.resolveMethod(control.onChangeMethod, control, event.target.value);
     }
 
   }
@@ -1050,6 +1110,10 @@ export class RenewalJourneyComponent {
     } else {
       this.renewalFormGroup.get(control.name)?.setValue(value);
     }
+  }
+
+  currentDateValue(control:any){
+    control.value=this.currentDate;
   }
 
   getAllProposerOccupation(control: any) {
@@ -1273,22 +1337,18 @@ export class RenewalJourneyComponent {
   }
 
   async onSubmit(control: any) {
-    console.log(this.renewalFormGroup.value, this.form,this.renewalFormGroup);
+    console.log(this.renewalFormGroup.value, this.form, this.renewalFormGroup);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-      console.log("formData", this.formData);
-
-
-
-      this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-
+      // console.log("formData", this.formData);
+      // this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       if (this.form.saveBtnFunction) {
         await this.resolveMethod(this.form.saveBtnFunction);
       } else if (control != null && control.onClickMethod) {
         await this.resolveMethod(control.onClickMethod);
       }
 
-      if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      if (this.getFormIndexValue() < this.formSequence.length - 1 && this.form.saveBtnFunction != "generatehalfqoute") {
         this.incrementIndex();
         this.getFormDataFromFormSequence();
       }
@@ -1369,7 +1429,7 @@ export class RenewalJourneyComponent {
 
 
   resetInsuredMembers(control: any, planType: any) {
-    console.log(this.form, control, planType);
+    console.log("member ->",this.form, control, planType,"member <-");
 
     this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(0);
     // this.renewalFormGroup.removeControl('insuredMemberDetails');
@@ -1379,53 +1439,53 @@ export class RenewalJourneyComponent {
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
 
 
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = true;
-      //     if (section.formControls[1]) {
-      //       section.formControls[1].visible = false;
-      //       while (section.formControls[1].dynamicControls.length > 1) {
-      //         section.formControls[1].dynamicControls.pop();
-      //       }
-      //     }
-      //     section.visible = false;
-      //   }
-      // });
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = true;
+          if (section.formControls[1]) {
+            section.formControls[1].visible = false;
+            while (section.formControls[1].dynamicControls.length > 1) {
+              section.formControls[1].dynamicControls.pop();
+            }
+          }
+          section.visible = false;
+        }
+      });
     }
     else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
-      console.log(this.form);
+      // console.log(this.form);
 
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = false;
-      //     section.formControls[1].visible = true;
-      //     while (section.formControls[0].dynamicControls.length > 1) {
-      //       section.formControls[0].dynamicControls.pop();
-      //     }
-      //     section.visible = false;
-      //   }
-      // });
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = true;
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
+          section.visible = false;
+        }
+      });
     }
     else {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-      // this.form.formSections.forEach((section: any) => {
-      //   if (section.sectionTitle == "Insured Member Details") {
-      //     section.formControls[0].visible = false;
-      //     section.formControls[1].visible = false;
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = false;
 
-      //     while (section.formControls[0].dynamicControls.length > 1) {
-      //       section.formControls[0].dynamicControls.pop();
-      //     }
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
 
-      //     while (section.formControls[1].dynamicControls.length > 1) {
-      //       section.formControls[1].dynamicControls.pop();
-      //     }
+          while (section.formControls[1].dynamicControls.length > 1) {  
+            section.formControls[1].dynamicControls.pop();
+          }
 
-      //   }
-      // });
+        }
+      });
     }
   }
 
@@ -1523,7 +1583,7 @@ export class RenewalJourneyComponent {
                 control.visible = dependentVisibility;
                 if (dependentVisibility) {
                   console.log(control.name);
-                  
+
                   let controlValidators: any = [];
                   control.validators?.forEach((val: IValidator) => {
                     if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -1533,7 +1593,7 @@ export class RenewalJourneyComponent {
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
                   console.log(controlValidators);
-                  
+
                   this.renewalFormGroup.get(control.name)?.setValidators(controlValidators);
                   console.log(control);
                   if (control.name == 'zoneValue' && control.type == 'select') {
@@ -1589,10 +1649,10 @@ export class RenewalJourneyComponent {
     // if (event != null) {
     //   this.isQuote = false;
     // }
-    console.log(option,this.existingRelations);
+    console.log(option, this.existingRelations);
 
-    if(event !=null){
-      if(this.existingRelations.some(relation => relation.includes(option.value))){
+    if (event != null) {
+      if (this.existingRelations.some(relation => relation.includes(option.value))) {
         const selectedCheckbox = event.target as HTMLInputElement;
         selectedCheckbox.checked = true;
         return;
@@ -2577,7 +2637,7 @@ export class RenewalJourneyComponent {
   }
 
   //tab-view methods
-  generateHeader(control: any, i: any) {
+  generateHeader(control: any, i: any) {  
     console.log(control, this.renewalFormGroup);
 
     // console.log(this.formData[control.name][i-1].relationshipType,control,i);
@@ -2660,11 +2720,11 @@ export class RenewalJourneyComponent {
                   const validators = controls.validators.map((val: any) => {
                     if (val.validatorName === 'required') {
                       return Validators.required;
-                    }else if (val.validatorName === 'pattern') {
+                    } else if (val.validatorName === 'pattern') {
                       return Validators.pattern(val.pattern); // Add pattern validator
-                    }else if (val.validatorName === 'maxlength' && val.maxLength) {
+                    } else if (val.validatorName === 'maxlength' && val.maxLength) {
                       return Validators.maxLength(val.maxLength);
-                    }else if (val.validatorName === 'minlength' && val.minLength) {
+                    } else if (val.validatorName === 'minlength' && val.minLength) {
                       return Validators.minLength(val.minLength);
                     }
                     return null;
@@ -2701,22 +2761,48 @@ export class RenewalJourneyComponent {
   }
 
   // getall bank details
-  getAllBankDetails(control: any) {
-    if (control.options.length <= 0) {
-
-      // }
-      // else{
-
+  async getAllBankDetails(control: any) {
+    if (!this.bankNameList) { 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-          control.options = res.data;
+          this.bankNameList = res.data;
+          this.setBankOptions(control);
         },
         error: (err) => {
           console.error(err);
         }
       });
+    } else {
+      this.setBankOptions(control);
     }
   }
+  
+  private setBankOptions(control: any) {
+    control.options = this.bankNameList;
+    const matchingOption = this.bankNameList.find((opt: any) => opt.value?.toString().toLowerCase() === control.value?.toString().toLowerCase());    
+    if (matchingOption) {
+      control.value = JSON.stringify(matchingOption);
+    }
+    this.renewalFormGroup.get(control.name)?.setValue(control.value);
+  }
+  
+// async getAllBankDetails(control: any) {
+//   if (control.options.length > 0) return;
+//   try {
+//     const res: any = await lastValueFrom(this.yatraService.getAllBankDetails());
+
+//     const matchingOption = res.data.find((opt: any) => opt.value === control.value);
+//     if (matchingOption) {
+//       control.value = JSON.stringify(matchingOption);
+//       console.log(control.value, JSON.stringify(matchingOption));
+//     }
+//     control.options = res.data;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
+ 
+  
 
   getBankCity(event: any, otherControl: any) {
     otherControl.value = "";
@@ -2724,8 +2810,8 @@ export class RenewalJourneyComponent {
     const data = JSON.parse(event.target.value);
     this.bankCode = data.id;
     const reqData = {
-      "cityCode": "",
-      "bankCode": this.bankCode
+      "cityName": "",
+      "bankName": this.bankCode
     };
     this.yatraService.getBankCity(reqData).subscribe({
       next: (res: any) => {
@@ -2748,8 +2834,8 @@ export class RenewalJourneyComponent {
     console.log(this.bankCity);
 
     const reqData = {
-      "bankCode": this.bankCode,
-      "cityCode": this.bankCity
+      "bankName": this.bankCode,
+      "cityName": this.bankCity
     };
 
     console.log(reqData);
@@ -2767,8 +2853,15 @@ export class RenewalJourneyComponent {
 
   setIfscCode(event: any, otherControl: any) {
     const data = JSON.parse(event.target.value);
+    console.log(otherControl);
+    
+    if(otherControl.name == "paymentIfscCode"){
+      this.renewalFormGroup.get('paymentIfscCode')?.setValue(data.id);
+      this.renewalFormGroup.get('paymentMicrCode')?.setValue(data.value);
+    }
     this.renewalFormGroup.get('ifscCode')?.setValue(data.id);
     this.renewalFormGroup.get('micrCode')?.setValue(data.value);
+
   }
 
   triggerFileInput(controlName: string) {
@@ -2814,78 +2907,123 @@ export class RenewalJourneyComponent {
     }
   }
 
-  uploadSelectedDocument(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      if (this.selectedButton) {
-        try {
-          const policyNum = this.proposalNum.replace(/-/g, "");
-          console.log("kjsdajlkda", policyNum);
+  async onUploadFile(event: any, control: any) {
+    if (event[0]) {
+      if (this.renewalFormGroup?.get(control.name)) {
+        this.selectedFile = event[0];
+        this.renewalFormGroup?.get(control.name)?.setValue(event[0].name);
+      } else {
+        this.renewalFormGroup?.get(control.name)?.markAsTouched();
+        this.selectedFile = null;
+      }
+    }
 
-          const formData = new FormData();
-          formData.append("Files", this.selectedFile);
-          formData.append("UniqueNumber", policyNum);
+    const formData = new FormData();
+    const policyNum = this.formData.policyNumber.replace(/-/g, "");
+    formData.append("Files", event[0]);
+    formData.append("UniqueNumber", policyNum);
 
-          console.log(formData, this.selectedFile, this.policyNumber);
-
-          this.commonService.uploadDocument(formData).subscribe(
-            async (res: any) => {
-              if (res.isSuccess) {
-                console.log("response after success", res);
-                console.log("unique id", res.data.uploadResponse[0].globalId);
-                this.documentId = res.data.uploadResponse[0].globalId;
-
-                try {
-                  console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
-
-                  this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
-
-                  // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                  // await this.getFullQuoteViaOfflinePayment();
-                  resolve(); // Resolve the promise once everything completes
-                } catch (error) {
-                  console.error("Error in full quote generation:", error);
-                  reject(error); // Reject the promise to prevent further flow
-                }
-              } else {
-                const errorMessage = "Document upload failed.";
-                console.error(errorMessage, res);
-                this.toast.error({
-                  detail: "ERROR",
-                  summary: errorMessage,
-                  duration: 3000,
-                });
-                reject(new Error(errorMessage));
-              }
-
-            },
-            (err) => {
-              console.error("Error during upload:", err);
+        this.commonService.uploadDocument(formData).subscribe(
+          async (res: any) => {
+            if (res.isSuccess) {
+              this.documentId = res.data.uploadResponse[0].globalId
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+            } else {
               this.toast.error({
                 detail: "Error",
-                summary: err.message || "Document upload failed.",
-                duration: 1500,
+                summary: res.message,
+                duration: 3000,
               });
-              reject(err); // Reject the promise on upload error
             }
-          );
-        } catch (error) {
-          console.error("Error preparing upload:", error);
-          this.toast.error({
-            detail: "Error",
-            summary: "An unexpected error occurred while preparing the upload.",
-            duration: 3000,
-          });
-          reject(error); // Reject the promise on preparation error
-        }
-      } else {
-        this.toast.warning({
-          detail: "WARNING",
-          summary: "Please select Payment Mode.",
-          duration: 3000,
-        });
-      }
-    });
+
+          },
+          (err) => {
+            console.error("Error during upload:", err);
+            this.toast.error({
+              detail: "Error",
+              summary: err.message || "Document upload failed.",
+              duration: 1500,
+            });
+          }
+        );
   }
+
+  // uploadSelectedDocument(): Promise<void> {
+  //   return new Promise(async (resolve, reject) => {
+  //     if (this.selectedButton) {
+  //       try {
+  //         if (this.formData.chequeDate && this.formData.chequeDate !== this.currentDate) {
+  //           this.toast.warning({ detail: "WARNING", summary: "Invalid chequeDate", duration: 3000 });
+  //           return;
+  //         }
+  //         // const policyNum = this.proposalNum.replace(/-/g, "");
+  //         const policyNum = this.formData.policyNumber.replace(/-/g, "");
+  //         console.log("kjsdajlkda", policyNum);
+
+  //         const formData = new FormData();
+  //         formData.append("Files", this.selectedFile);
+  //         formData.append("UniqueNumber", policyNum);
+
+  //         console.log(formData, this.selectedFile, this.policyNumber);
+
+  //         this.commonService.uploadDocument(formData).subscribe(
+  //           async (res: any) => {
+  //             if (res.isSuccess) {
+  //               console.log("response after success", res);
+  //               console.log("unique id", res.data.uploadResponse[0].globalId);
+  //               this.documentId = res.data.uploadResponse[0].globalId;
+  //               try {
+  //                 console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
+
+  //                 this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
+
+  //                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+  //                 // await this.getFullQuoteViaOfflinePayment();
+  //                 resolve(); // Resolve the promise once everything completes
+  //               } catch (error) {
+  //                 console.error("Error in full quote generation:", error);
+  //                 reject(error); // Reject the promise to prevent further flow
+  //               }
+  //             } else {
+  //               const errorMessage = "Document upload failed.";
+  //               console.error(errorMessage, res);
+  //               this.toast.error({
+  //                 detail: "ERROR",
+  //                 summary: errorMessage,
+  //                 duration: 3000,
+  //               });
+  //               reject(new Error(errorMessage));
+  //             }
+
+  //           },
+  //           (err) => {
+  //             console.error("Error during upload:", err);
+  //             this.toast.error({
+  //               detail: "Error",
+  //               summary: err.message || "Document upload failed.",
+  //               duration: 1500,
+  //             });
+  //             reject(err); // Reject the promise on upload error
+  //           }
+  //         );
+  //       } catch (error) {
+  //         console.error("Error preparing upload:", error);
+  //         this.toast.error({
+  //           detail: "Error",
+  //           summary: "An unexpected error occurred while preparing the upload.",
+  //           duration: 3000,
+  //         });
+  //         reject(error); // Reject the promise on preparation error
+  //       }
+  //     } else {
+  //       this.toast.warning({
+  //         detail: "WARNING",
+  //         summary: "Please select Payment Mode.",
+  //         duration: 3000,
+  //       });
+  //     }
+  //   });
+  // }
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
@@ -2913,6 +3051,11 @@ export class RenewalJourneyComponent {
       this.getFormDataFromFormSequence();
     }
   }
+  async nomineeUpdate(): Promise<void> {
+
+  }
+
+
   async getFullQuoteViaOfflinePayment(): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = this.renewalFormGroup.value;
@@ -2927,71 +3070,108 @@ export class RenewalJourneyComponent {
         "instrumentNo": data.chequeNumber,
         "instrumentDate": data.chequeDate,
         "policyNumber": this.policyNumber,
-        "proposalNum": this.proposalNum,
+        "proposalNum": "",
         "agentCode": this.agentCode,
         "bankName": JSON.parse(data.paymentBankName).value,
-        "ifsc": data.ifscCode,
-        "micrNo": data.micrCode,
-        "bankAccountNumber": data.accountNumber,
-        "documentId": this.documentId
+        "ifsc": data.paymentIfscCode,
+        "micrNo": data.paymentMicrCode ||"",
+        "bankAccountNumber": data.paymentAccountNumber || "",
+        "documentId": this.documentId,
+        "productName": this.formData.productName
       };
-      console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res: any) => {
-          if (res.isSuccess) {
+          if (res.isSuccess && res.statusCode === 200 && res.data.isFullQuoteSuccess) {
+            this.isFullQuote = res.data.isFullQuoteSuccess;
+            this.formData.status = res.data.status || null;
+            this.formData.policyNumber = res.data.policyNumber || this.policyNumber
+            this.formData.policyStartDate = res.data.policyStartDate || null;
+            this.formData.policyEndDate = res.data.policyEndDate || null;
+            this.formData.receiptID = res.data.receiptID || null;
+            this.formData.customerId = res.data.customerId || null;
+            this.formData.premiumPaid = res.data.premiumPaid || null;
+            this.rowData.paymentStatus = "";
+            this.rowData.isFullQuoteSuccess =res.data.isFullQuoteSuccess;
+            if(res.data.errorMessage){
+              this.toast.success({ detail: 'Success', summary: res.data.errorMessage || 'Success', duration: 3000 });
+            }
+            this.incrementIndex();
+            this.getFormDataFromFormSequence();
+          }else if (res.isSuccess && res.statusCode === 200 && !res.data.isFullQuoteSuccess) {
+            this.isFullQuote = res.data.isFullQuoteSuccess;
             this.formData.status = res.data.status || null;
             this.formData.policyStartDate = res.data.policyStartDate || null;
             this.formData.policyEndDate = res.data.policyEndDate || null;
             this.formData.receiptID = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
+            this.formData.premiumPaid = res.data.premiumPaid || null;
+            this.rowData.paymentMessage = "Policy Issuance Pending";
+            if(res.data.errorMessage){
+              this.toast.warning({ detail: 'Warning', summary: res.data.errorMessage || 'policy issuance failed.', duration: 3000 });
+            }
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-
-            // this.fullQuoteResponse=res.data;          
-            // this.setSection('thankyou')
-            // this.hideSection=false
-            // this.isFeedBackModalVisible = true;
-            console.log(res.data);
-
           }
           else {
-            this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+            this.toast.warning({ detail: "Warning", summary: res.message || "Payment and policy issuance failed", duration: 5000 });
           }
         },
         (err) => {
           this.toast.error({ detail: '', summary: 'Failed to do offline payment.', duration: 3000 });
-          console.log("error is coming from fullquote api");
         })
     });
   }
+  
 
   mergeMember(control: any) {
     const a = Object.keys(this.formData.insuredMembers).filter(
       key => this.formData.insuredMembers[key] === true
     );
     control.value = a;
-    console.log(control, this.formData, a);
   }
 
-  getNomineeRelationShip(control: any) {
-    this.yatraService.getNomineeRelationship().subscribe({
-      next: (res: any) => {
-        console.log(res);
-        control.options = res.data;
-        control.options.forEach((option: any) => {
-          // if(option.name == this.formData)
-        })
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+  async getNomineeRelationShip(control: any) {
+    if (!this.nomineeRelationList) {
+      this.yatraService.getNomineeRelationship().subscribe({
+        next: (res: any) => {
+          this.nomineeRelationList = res.data;
+          this.setNomineeOptions(control);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    } else {
+      this.setNomineeOptions(control);
+    }
   }
+  
+  private setNomineeOptions(control: any) {
+    control.options = this.nomineeRelationList;
+    const matchingOption = this.nomineeRelationList.find((opt: any) => opt.name?.toString().toLowerCase() === control.value?.toString().toLowerCase());
+        if (matchingOption) {
+      control.value = JSON.stringify(matchingOption);
+    }
+    this.renewalFormGroup.get(control.name)?.setValue(control.value);
+  }
+   
+// async getNomineeRelationShip(control: any) {
+//   try {
+//     const res: any = await lastValueFrom(this.yatraService.getNomineeRelationship());
+//     control.options = res.data;
+//     const matchingOption = res.data.find((opt: any) => opt.name === control.value);
+//     if (matchingOption) {
+//       control.value = JSON.stringify(matchingOption);
+//       console.log(control.value, JSON.stringify(matchingOption));
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
 
   getNatureOfDuty(control: any) {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
-        console.log(res);
         control.options = res.data;
       },
       error: (err: any) => {
@@ -3003,7 +3183,6 @@ export class RenewalJourneyComponent {
   getInsuredOccupation(control: any) {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
-        console.log(res);
         control.options = res.data;
       },
       error: (err: any) => {
@@ -3578,27 +3757,40 @@ export class RenewalJourneyComponent {
   }
 
   sendPaymentLink(control: any) {
-    console.log("inside sendPaymentLink",control);
-
-    // this.router.navigate(['renewal/customerRenewalJourney'], {
-    //   state: {
-    //     formData: this.encryptionService.encrypt(this.formData),
-    //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
-    //     policyNumber: this.encryptionService.encrypt(this.policyNumber),
-    //     journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-    //     formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
-    //     formIndex:"0"
-    //   }
-    // });
-
-    this.changeMainFormDependentControls(control.dependentControls,true);
-
+    console.log("inside sendPaymentLink", control);
+    const sendPaymentRequestBody = {
+      firstName: this.formData?.firstName,
+      lastName: this.formData?.lastName,
+      agentcode: this.agentCode,
+      emailId: this.formData.emailId,
+      productName: this.formData?.productName,
+      businessType: "REN",
+      pNumber: this.formData?.policyNumber,
+      productCode: this.formData?.productCode,
+      premiumAmount: this.formData?.totalPremium,
+      mobilenumber: this.formData.mobileNumber
+    };
+    this.renewalService.sharePaymentLinkApi(sendPaymentRequestBody).subscribe({
+      next: (response: any) => {
+        console.log("sharePaymentLinkApi", response);
+        if (response.data) {
+          this.toast.success({ detail: "SUCCESS", summary: response.data.message || "Link has been sent successfully", duration: 3000 });
+          if(response.data.paymentLink){
+            this.changeMainFormDependentControls(control.dependentControls, true);
+            this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+          }
+        } else {
+          this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+        }
+      },
+      error: (error) => {
+        this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+      }
+    });
   }
 
   redirectToJustPay(control: any) {
     console.log(control, "redirectToJustPay");
-
-    // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
         agentcode: this.agentCode,
@@ -3608,46 +3800,37 @@ export class RenewalJourneyComponent {
         policyType: 'Renewal',
         policyNumber: this.formData.policyNumber,
         quoteNumber: '',
-        OrderID: ''
+        ProductName: this.formData.productName,
+        userType: "Agent",
       };
-      this.yatraService.justPayRedirection(reqData).subscribe({
+      this.renewalService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
-          console.log('Juspay API Response:', response);
-
           if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
             if (this.selectedButton == 'sendLinkButton') {
-              console.log(response);
               this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-              // res = response.data.paymentURL;
             }
             else {
-              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+              window.location.href = response.data.paymentURL;
             }
           } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-            console.error('Invalid payment link received:', response);
+            this.toast.warning({ detail: "WARNING", summary: response.message || "Invalid payment link received", duration: 3000 });
           }
         },
         error: (error) => {
           this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
         }
       });
-    
-      // this.router.navigate(['/renewal/paymentstatus'],{
-      //   queryParams: {
-      //     orderid: 'UP_241209_ef1cf656',
-      //     token: 'aa59deee594c4c90abd5737929d0302e'
-      //     // ,
-      //     // agentCode: '500013'
-      //   }
-      // });
-    
     }
   }
-  checkKycDetail(control: any): void {
-    const isVisible = !(this.formData.ckycNo !== "" && this.formData.isKYCComplete);
 
+  checkKycDetail(control: any): void {
+    var isVisible = true;
+    if(this.verifyKYCStatus){
+      isVisible = false;
+    }else {
+      isVisible = !(this.formData.isKycCompleted);
+    }
+    // const isVisible=true;
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
@@ -3658,15 +3841,35 @@ export class RenewalJourneyComponent {
     });
   }
 
-  initiateKycURL(){
+  checkPaymentStatus(control: any): void {
+    console.log(this.isFullQuote,"isFullQuote");
+    
+    if(!this.isFullQuote || this.rowData.paymentStatus == "PENDING" || !this.rowData.isFullQuoteSuccess){
+      this.form.formSections.forEach((section, sectionIndex) => {
+        if (sectionIndex === 0) {
+          section.formControls.forEach((formControl: IFormControl) => {
+            if (formControl.name === "label1") formControl.label = this.rowData.paymentMessage 
+            else if(formControl.name == "backToRenewalList") formControl.visible=true
+          });
+        } else {
+          section.visible = false;
+        }
+      });
+   }
+  }
+
+  initiateKycURL() {
     const kycRequestBody = {
-      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No",businessType: "REN"
+      policyNumber: this.policyNumber,
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "",
+      dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No",
+      businessType: "REN",
+      userType: "Agent"
     };
     this.renewalService.getkycURL(kycRequestBody).subscribe(
-      (res:any) => {
-        console.log("kycRequestBody",res);
+      (res: any) => {
         window.open(res.data.kycUrl, '_blank');
       },
       (err) => {
@@ -3675,25 +3878,41 @@ export class RenewalJourneyComponent {
     );
   }
 
-  shareKycURL(){
+  shareKycURL(control: any) {
     const kycRequestBody = {
-      policyNumber: this.policyNumber, fullName: this.formData.proposerName,
-      panNumber: this.formData.panNo || "", dob: this.formatDate(this.formData.memberDobProposer) || "",
-      pepCheck: "No",businessType: "REN",emailId:this.formData.emailId,agentCode:this.agentCode
+      policyNumber: this.policyNumber,
+      proposerNumber: "",
+      fullName: this.formData.proposerName,
+      panNumber: this.formData.panNo || "",
+      dob: this.formatDate(this.formData.memberDobProposer) || "",
+      pepCheck: "No",
+      businessType: "REN",
+      emailId: this.formData.emailId,
+      agentCode: this.agentCode,
+      MobileNumber: this.formData.mobileNumber,
+      ProductName: this.formData.productName,
+      ProductCode: this.formData.productCode
     };
-    this.renewalService.getkycURL(kycRequestBody).subscribe(
-      (res:any) => {
-        console.log("kycRequestBody",res);
-        this.toast.success({
-          detail: "SUCCESS",
-          summary: res.message,
-          duration: 3000,
-        });
+    this.renewalService.sharekyclinkApi(kycRequestBody).subscribe(
+      (res: any) => {
+        if (res.data.isShareKyc) {
+          this.toast.success({ detail: "SUCCESS", summary: "Link has been sent successfully", duration: 3000 });
+        }
+        this.changeMainFormDependentControls(control.dependentControls, true);
+        this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
         console.log(err);
       }
     );
+  }
+
+  backToRenewalList(){
+    this.router.navigate(['renewal/renewalList'], { 
+      state: {
+        formData: this.encryptionService.encrypt(this.policyNumber),
+      }
+    });
   }
 
   getDate(dateType: any): string {
@@ -3704,21 +3923,24 @@ export class RenewalJourneyComponent {
     } else if (dateType === 'pastDate') {
       // return this.pastDate;
     }
-    return ''; 
+    return '';
   }
   formatDate(dateString: string | Date): string {
     if (!dateString) return "";
-    
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return ""; // Return empty string if invalid date
-  
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const year = date.getFullYear();
-  
     return `${day}-${month}-${year}`;
   }
-  
+
+  formatDates(dateString: string): string {
+    if (!dateString) return "";
+    const [day, month, year] = dateString.split("/");
+    return `${year}-${month}-${day}`; // Convert from DD/MM/YYYY to YYYY-MM-DD
+  }
+
   copyText(control: any) {
     console.log(control);
     this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
@@ -3726,5 +3948,384 @@ export class RenewalJourneyComponent {
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
 
+
+  setRating(star: number) {
+    this.rating = star;
+    this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+    this.feedbackSubmit = true;
+    this.impressedValues = true;
+    if (star > 3) {
+      this.impressedLable = 'What Impressed you ?';
+      this.feedBackMessage = false;
+    } else {
+      this.impressedLable = 'Why aren\'t you happy?';
+      this.feedBackMessage = true;
+    }
+  }
+  submitFeedback() {
+    let reqData: any = {};
+    reqData.agentCode = this.agentCode;
+    reqData.rating = this.customerFeedbackForm.value.rating;
+    reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
+    reqData.customerId = "";
+    // this.yatraService.submitFeedback(reqData).subscribe((response) => {
+    //   this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+    // }, (error) => {
+    //   this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+    // });
+    // this.customerFeedbackModule.hide();
+    this.isFeedBackModalVisible = false;
+  }
+
+  closeIsFeedBackModalVisible() {
+    let reqData = {
+      "proposalNum": this?.formData?.proposalNumber,
+      // "partnerId": this.partnerId,
+      "agentCode": this.agentCode,
+      "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+      "formName": this.formSequence[this.getFormIndexValue()].formName,
+      "formConfig": JSON.stringify(this.formSequence),
+      // "productId": this.productId.toString(),
+      "formId": this.formSequence[this.getFormIndexValue()].formId,
+      "jsonForm": JSON.stringify(this.form),
+      "formSequence": this.getFormIndexValue(),
+      // "leadNumber": this.leadnumber,
+      // "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+    };
+
+    // console.log(reqData, this.dynamicFormGroup.getRawValue());
+
+    // this.yatraService.Insertorupdateformdata(reqData).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     // this.leadnumber = res.data;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // });
+    this.isFeedBackModalVisible = false;
+  }
+
+  onSelectValue(value: String) {
+    this.feedbackImpressedValue = value;
+  }
+
+  onClickDownloadFromConfirmation() {
+    this.onSearchDocumentFromConfirmation();
+    if (this.retrievedDocuments) {
+      const downloadPolicyKitRequestBody = {
+        agentCode: this.agentCode,
+        referenceId: this.agentCode,
+        eventName: "Download policy kit request from customers",
+        proposalNumber: this.policyNumber,
+        downloadRequest: [
+          {
+            omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
+            fileName: this.retrievedDocuments[0].fileName,
+          },
+        ],
+        sourceSystemName: "",
+        identifier: "",
+      };
+      this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+        (response: any) => {
+          if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+            const file = response.data.downloadResponse[0];
+            if (file.byteArray && file.fileName) {
+              const byteArray = new Uint8Array(
+                atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+              );
+              const blob = new Blob([byteArray], { type: "application/pdf" });
+              const fileURL = window.URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = fileURL;
+              link.download = file.fileName;
+              document.body.appendChild(link)
+              link.click();
+              document.body.removeChild(link)
+              window.open(fileURL, "_blank");
+            }
+          } else {
+            this.toast.warning({ detail: "Warning", summary: response.message || "No file found to download.", duration: 3000 });
+          }
+        },
+        (error: any) => {
+          console.error("Download Policy Kit Error:", error);
+          this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+        }
+      );
+    }
+  }
+
+  onSearchDocumentFromConfirmation() {
+    const searchDocumentRequestBody = {
+      referenceId: this.agentCode,
+      searchRequest: [
+        {
+          categoryID: "",
+          description: "",
+          dataClassParam: [
+            {
+              docSearchParamId: "2",
+              value: this.policyNumber
+            },
+            {
+              docSearchParamId: "15",
+              value: "PS_04",
+            },
+          ],
+        },
+      ],
+      agentCode: this.agentCode,
+      eventName: "Search policy kit request from customers",
+      sourceSystemName: "",
+      searchOperator: "AND",
+    };
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          const searchResponse = response.data.searchResponse;
+          this.retrievedDocuments = searchResponse;
+          if (searchResponse && searchResponse[0]?.error?.length > 0) {
+            this.toast.success({ detail: "", summary: "No documents are available to download.", duration: 2000 });
+            return;
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+        }
+      },
+      (error: any) => {
+        console.error("Search document error", error);
+        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+      }
+    );
+  }
+
+  getLabels(control: any) {
+    let startIdx = control.indexOf('{{');
+    let endIdx = control.indexOf('}}');
+    let string: any;
+    if (startIdx !== -1 && endIdx !== -1) {
+      string = control.slice(startIdx + 2, endIdx).trim();
+    }
+
+    switch (string) {
+      case 'actName':
+        return control.replace('{{actName}}', this.formData?.accountNumber);
+      case 'emailId':
+        const emailId = this.formData?.emailId;
+        if (emailId) {
+          const anchorTag = `<a href="mailto:${emailId}">${emailId}</a>`;
+          return control.replace('{{emailId}}', anchorTag);
+        }
+        return control;
+      default:
+        return control;
+    }
+  }
+
+  skipKycURL(control:any){
+    const skipKycRequestBody = {
+      proposalOrPolicyNumber: this.policyNumber,
+      businessType:"REN"
+    };
+    this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
+      (res: any) => {
+        console.log("skipKycResponseBody", res);
+        if (res.data.kycStatus) {
+          this.toast.success({detail: "Success",summary: res.message,duration: 3000,});
+          this.verifyKYCStatus = res.data.kycStatus;
+          if(this.verifyKYCStatus){
+            const currentState = this.router.getCurrentNavigation()?.extras.state || {};
+            this.tempFormData.isKycCompleted = true
+            this.router.navigate([], {
+              state: {
+                ...currentState,
+                formData: this.encryptionService.encrypt(this.tempFormData),
+              },
+            });
+          }
+          this.checkKycDetail(control);
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  checkNomineeDetail(control: any): void {
+    // this.formData.nomineeDob = "";
+    console.log(control);
+    this.nomineeDetail = false;
+    if(this.formData.nomineeDob){
+      this.nomineeDetail = false;
+    }else {
+      this.nomineeDetail = true;
+    }
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name == control.name && this.formData.isKycCompleted) {
+          console.log(formControl);
+          this.form.formSections[1].visible = this.nomineeDetail;
+          if(this.nomineeDetail){
+            const val = {appointeeName: "",appointeeContactNo:"",appointeeRelationWithNominee:""}
+            this.formData={...this.formData,...val}            
+          }
+        }
+      });
+    });
+  }
+
+  checkBankDetail(control: any): void {
+    // this.formData.bankName = "";
+    console.log(control);
+    this.bankDetail = false;
+    if(this.formData.bankName){
+      this.bankDetail = false;
+    }else {
+      this.bankDetail = true;
+    }
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name == control.name && this.formData.isKycCompleted) {
+          this.form.formSections[2].visible = this.bankDetail;
+        }
+      });
+    });
+  }
+
+  updateNomineeDetails(control: any){
+    const data = this.renewalFormGroup.value;
+    console.log(data);
+    console.log(this.renewalFormGroup.value,this.form,this.formData);
+    
+
+    const nomiData = {
+      "nominee_first_name": data.nomineeFirstName,
+      "nominee_last_name": data.nomineeLastName,
+      "nominee_dob": data.nominee_dob,
+      "nominee_relationship_code": data.nomineeRelationWithProposer,
+      "Nominee_Name": data.nomineeFirstName + data.nomineeLastName,
+      "Nominee_Address": data.nomineeAddress,
+      "Nominee_Gender": data.gender,
+      "Nominee_Contact_No": data.nomineeContactNo,
+      "Relationship": data.nomineeRelationWithProposer,
+      "Appointee_Name": data.appointeeName,
+      "Appointee_Relation": data.appointeeRelationWithNominee,
+      "Appointee_Age": "",
+      "Appointee_Mobile_Np": data.appointeeContactNo
+    }
+    const bankDetail = {
+      policyNumber: this.policyNumber,
+      nomineeDetails:JSON.stringify(nomiData)
+    };
+    this.renewalService.updateNomineeDetailApi(bankDetail).subscribe(
+      (res: any) => {
+        if(res.data.isUpdated){
+          this.toast.success({ detail: "Success", summary: "Nominee Updated Successfully.", duration: 3000 });
+        } else {
+        this.toast.error({ detail: "Error", summary: "Failed to update Nominee Details", duration: 3000 });
+        }      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  updateBankDetails(control: any){
+    const data = this.renewalFormGroup.value;
+    console.log(data);
+    
+  const bankData = {
+    "Bank_acc_no": data.accountNumber,
+    "Confirm_Bank_acc_no": data.accountNumber,
+    "Ifsc_code": this.formData.ifscCode || "",
+    "Micr_code": this.formData.micrCode || "",
+    "Bank_name": data.bankName,
+    "Bank_branch_name": data.bankBranch,
+    "Bank_account_type": "SAVINGS",
+    "Dr_gl_code": "",
+    "Cr_gl_code": "",
+    "Primary_secondary": "",
+    "paymentOption": "",  
+    "paymentBankName": data.bankName
+  };  
+  const bankDetail = {
+    policyNumber: this.policyNumber,
+    bankDetails: JSON.stringify(bankData)
+  };
+  this.renewalService.updateBankDetailApi(bankDetail).subscribe(
+      (res: any) => {
+        if(res.data.isUpdated){
+          this.toast.success({ detail: "Success", summary: "BankDetail Updated Successfully.", duration: 3000 });
+        } else {
+        this.toast.error({ detail: "Error", summary: "Failed to update Bank Details", duration: 3000 });
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  checkleadValidation(controls: any) {
+    const data = this.renewalFormGroup.value;
+    let result = false;
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (section.sectionTitle === controls.name) {
+          const control = this.renewalFormGroup.get(formControl.name);
+          if (control) {
+            if (control instanceof FormGroup) {
+              control.markAsDirty({ onlySelf: true });
+            } else {
+              control.markAsTouched({ onlySelf: true });
+              if (control.status == "INVALID") {
+                result = true;
+                this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+              }
+            }
+          }
+        }
+      });
+    });
+    if (Number(this.calculateAge(data.nomineeDob)) < 18 && (!data.appointeeName || !data.appointeeRelationWithNominee)) {
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory appointee fields", duration: 3000 });
+      return;
+    }    
+    if(controls.name == "Bank Account Details" && !result){
+      this.updateBankDetails(controls);
+    } else if(controls.name == "Nominee Details" && !result){
+      this.updateNomineeDetails(controls);
+    }
+    result= false
+  }
+
+  generatehalfqoute(control:any){
+    const data = this.renewalFormGroup.value;
+    if (Number(this.calculateAge(data.nomineeDob)) < 18 && (!data.appointeeName || !data.appointeeRelationWithNominee)) {
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory appointee fields", duration: 3000 });
+      return;
+    }  
+    const halfQuote = {
+      policy_Number: this.policyNumber,
+    };
+    this.renewalService.generatehalfqoute(halfQuote).subscribe(
+        (res: any) => {
+          if(res.data.isSuccess){
+            this.incrementIndex();
+            this.getFormDataFromFormSequence();
+            this.toast.success({ detail: "Success", summary: res.data.message || "half quote generated successfully.", duration: 3000 });
+          } else {
+          this.toast.error({ detail: "Error", summary: res.data.message || "Failed to create half quote generateds", duration: 4000 });
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+    );
+  }
 
 }

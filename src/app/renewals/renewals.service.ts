@@ -44,7 +44,7 @@ export class RenewalsService {
     this.policyState.next({ policyNo, activeSection });
   }
   getRenewalListApi(reqBody: any) {
-    const getRenewalList = this.configService.config.baseUrl + this.configService.config.getRenewalList;
+    const getRenewalList = this.configService.config.baseUrl1 + this.configService.config.getRenewalList;
     return this.httpService.post(getRenewalList, reqBody);
   }
   sendRenewalWhatsappApi(reqBody: any) {
@@ -64,7 +64,7 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(requestBody: any) {
-    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
+    const getrenewalinfo = this.configService.config.baseUrl1 + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
@@ -131,6 +131,38 @@ export class RenewalsService {
   sharekyclinkApi(reqBody:any){
     const sharekyclink = this.configService.config.baseUrl1 + this.configService.config.sharekyclink;
     return this.httpService.post(sharekyclink, reqBody);
+  }
+  skipKycLinkApi(reqBody:any){
+    const skipkyclink = this.configService.config.baseUrl1 + this.configService.config.skipkyclink;
+    return this.httpService.post(skipkyclink, reqBody);
+  }
+  justPayRedirection(reqData:any){
+    const paymentRedirection= this.configService.config.baseUrl1 + this.configService.config.justPayRedirection;
+    return this.httpService.post(paymentRedirection,reqData);
+  }
+  sharePaymentLinkApi(reqData:any){
+    const sharePaymentLink= this.configService.config.baseUrl1 + this.configService.config.sharePaymentLink;
+    return this.httpService.post(sharePaymentLink,reqData);
+  }
+  getpaymentdetailsbypolicynoApi(reqData:any){
+    const getpaymentstatus= this.configService.config.baseUrl1 + this.configService.config.getpaymentdetailsbypolicyno;
+    return this.httpService.post(getpaymentstatus,reqData);
+  }
+  updateBankDetailApi(reqData:any){
+    const updateBankDetail= this.configService.config.baseUrl1 + this.configService.config.updateBankDetailApi;
+    return this.httpService.post(updateBankDetail,reqData);
+  }
+  updateNomineeDetailApi(reqData:any){
+    const updateNomineeDetail= this.configService.config.baseUrl1 + this.configService.config.updateNomineeDetail;
+    return this.httpService.post(updateNomineeDetail,reqData);
+  }
+  getbasequoteApi(reqData:any){
+    const getbasequote= this.configService.config.baseUrl1 + this.configService.config.getbasequote;
+    return this.httpService.post(getbasequote,reqData);
+  }
+  generatehalfqoute(reqData:any){
+    const generatehalfqoute= this.configService.config.baseUrl1 + this.configService.config.generatehalfqoute;
+    return this.httpService.post(generatehalfqoute,reqData);
   }
 
 }

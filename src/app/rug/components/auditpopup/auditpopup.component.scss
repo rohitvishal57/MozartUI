@@ -1,0 +1,67 @@
+.popup-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    padding: 48px 32px;
+    outline: 0;
+}
+
+.popup-modal-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: end;
+    justify-content: end;
+    padding: 0;
+    border-bottom: 0px solid #dee2e6;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+}
+
+div.popup-modal-header {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.popup-modal-header .popup-modal-title {
+    font-family: Lato-Bold, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #282828;
+    margin-bottom: 0;
+    line-height: 26px;
+    margin-bottom: 13px;
+    margin-right: 84rem;
+
+}
+.mat-h5, .mat-typography .mat-h5, .mat-typography h5 {
+    font: 400 calc(14px* 0.83) / 20px Roboto, sans-serif;
+    margin: 0 0 12px;
+}
+.popup-btn-close {
+    box-sizing: content-box;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: #000;
+    background: url(/assets/Img/close.svg) no-repeat;
+    border: 0;
+    border-radius: 0;
+    z-index: 1;
+}
+.popup-modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 0 16px;
+    margin: 2rem 0 0;
+    font-family: Lato-Regular, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #282828;
+}

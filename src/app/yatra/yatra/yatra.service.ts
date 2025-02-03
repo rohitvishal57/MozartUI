@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { retry } from 'rxjs';
+import { map, retry } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -9,197 +10,260 @@ import { HttpService } from 'src/app/services/http.service';
 export class YatraService {
   policyDetails: any;
   constructor(private configService: ConfigService,
-    private httpService: HttpService) { }
+    private httpService: HttpService, private http:HttpClient) { }
 
   Getform(reqData: any) {
     const getform = this.configService.config.baseUrl + this.configService.config.getForm
     return this.httpService.post(getform, reqData)
   }
-  getSalutation(){
-    const  Salutation = this.configService.config.baseUrl + this.configService.config.getSalutation;
+  getSalutation() {
+    const Salutation = this.configService.config.baseUrl + this.configService.config.getSalutation;
     console.log(Salutation);
     return this.httpService.get(Salutation);
   }
-  getNatureOfDuty(){
+  getNatureOfDuty() {
     const natureOfDuties = this.configService.config.baseUrl + this.configService.config.getNatureOfDuty;
     return this.httpService.get(natureOfDuties);
   }
-  getInsurerData(){
+  getInsurerData() {
     const getInsurerData = this.configService.config.baseUrl + this.configService.config.getInsurerData;
     return this.httpService.get(getInsurerData);
   }
-  getInsuredOccupation(){
+  getInsuredOccupation() {
     const getOccupation = this.configService.config.baseUrl + this.configService.config.getOccupation;
     return this.httpService.get(getOccupation);
   }
-  getIdentification(){
+  getIdentification() {
     const getId = this.configService.config.baseUrl + this.configService.config.getId;
     return this.httpService.get(getId);
   }
-  getProposerOccupation(){
+  getProposerOccupation() {
     const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
     return this.httpService.get(getProposerOccupation);
   }
-  getNationality(){
+  getNationality() {
     const getNationality = this.configService.config.baseUrl + this.configService.config.getNationality;
     return this.httpService.get(getNationality);
   }
-  getGstRegistrationStatus(){
+  getGstRegistrationStatus() {
     const getGstRegistrationStatus = this.configService.config.baseUrl + this.configService.config.getGstRegistrationStatus;
     return this.httpService.get(getGstRegistrationStatus);
   }
-  getMaritalStatus(){
-    const  getMaritalStatus = this.configService.config.baseUrl + this.configService.config.getMaritalStatus;
+  getMaritalStatus() {
+    const getMaritalStatus = this.configService.config.baseUrl + this.configService.config.getMaritalStatus;
     return this.httpService.get(getMaritalStatus);
   }
-  getEducationType(){
-    const  getEducationType = this.configService.config.baseUrl + this.configService.config.getEducationType;
+  getEducationType() {
+    const getEducationType = this.configService.config.baseUrl + this.configService.config.getEducationType;
     return this.httpService.get(getEducationType);
   }
 
-  getNomineeRelationship(){
-    const  getNomineeRelationShip = this.configService.config.baseUrl + this.configService.config.getNomineeRelationShip;
+  getNomineeRelationship() {
+    const getNomineeRelationShip = this.configService.config.baseUrl + this.configService.config.getNomineeRelationShip;
     return this.httpService.get(getNomineeRelationShip);
   }
-  getAllBankDetails(){
-    const  getAllBankDetails = this.configService.config.baseUrl + this.configService.config.getAllBankDetails;
+  getAllBankDetails() {
+    const getAllBankDetails = this.configService.config.baseUrl + this.configService.config.getAllBankDetails;
     return this.httpService.get(getAllBankDetails);
   }
 
-  getRelationship(){
-    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelationship;
+  getRelationship() {
+    const getRelationship = this.configService.config.baseUrl + this.configService.config.getRelationship;
     return this.httpService.get(getRelationship);
   }
-  GetProposerRelationships(reqData:any){
-    const  GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.getProposerRelationships;
-    return this.httpService.post(GetProposerRelationships,reqData)
+  GetProposerRelationships(reqData: any) {
+    const GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.getProposerRelationships;
+    return this.httpService.post(GetProposerRelationships, reqData)
   }
-  Insertorupdateformdata(reqdata:any){
-    const  insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertOrUpdateFormData;
-    return this.httpService.post(insertorupdateformdata,reqdata)
+  Insertorupdateformdata(reqdata: any) {
+    const insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertOrUpdateFormData;
+    return this.httpService.post(insertorupdateformdata, reqdata)
   }
-  Insertorupdatejourneydetails(reqData:any){
-    const  insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateJourneyDetails;
-    return this.httpService.post(insertorupdatejourneydetails,reqData)
+  Insertorupdatejourneydetails(reqData: any) {
+    const insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateJourneyDetails;
+    return this.httpService.post(insertorupdatejourneydetails, reqData)
   }
 
-  getAddOnPremium(reqData: any){
-    const  CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.calculateAddOnValue;
-    return this.httpService.post(CalculateAddonValue,reqData);
+  getAddOnPremium(reqData: any) {
+    const CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.calculateAddOnValue;
+    return this.httpService.post(CalculateAddonValue, reqData);
   }
-  getHalfQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
-    return this.httpService.post(GetHalfQuote,reqData);
+  getHalfQuote(reqData: any) {
+    const GetHalfQuote = this.configService.config.baseUrl1 + this.configService.config.getHalfQuote;
+    // const  GetHalfQuote = 'https://localhost:7070/gethalfquote';
+    return this.httpService.post(GetHalfQuote, reqData);
   }
-  getFullQuote(reqData: any){
-    const  GetFullQuote = this.configService.config.baseUrl1 + this.configService.config.getFullQuote;
+  getFullQuote(reqData: any) {
+    const GetFullQuote = this.configService.config.baseUrl1 + this.configService.config.getFullQuote;
     // const getFullQuoteUrl='https://localhost:7070/api/getfullquote';
-    return this.httpService.post(GetFullQuote,reqData);
+    return this.httpService.post(GetFullQuote, reqData);
   }
-  GetKycDetails(reqData:any){
-    const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
+  GetKycDetails(reqData: any) {
+    const getKycDetails = this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
     // const getKycDetails='https://localhost:7188/getkycdetails';
-    return this.httpService.post<any>(getKycDetails,reqData);
+    return this.httpService.post<any>(getKycDetails, reqData);
   }
-  GetCustomerDetailsViaPolicyNumber(reqData:any){
-    const policyNumber=this.configService.config.baseUrl+this.configService.config.getPolicyNumberDetails;
-    return this.httpService.post(policyNumber,reqData);
+  GetCustomerDetailsViaPolicyNumber(reqData: any) {
+    const policyNumber = this.configService.config.baseUrl + this.configService.config.getPolicyNumberDetails;
+    return this.httpService.post(policyNumber, reqData);
   }
-  getBankCity(reqData:any){
-    const getBankCity=this.configService.config.baseUrl+this.configService.config.getBankCity;
-    return this.httpService.post(getBankCity,reqData);
+  getBankCity(reqData: any) {
+    const getBankCity = this.configService.config.baseUrl + this.configService.config.getBankCity;
+    return this.httpService.post(getBankCity, reqData);
   }
-  getBranchDetails(reqData:any){
-    const getBranchDetails=this.configService.config.baseUrl+this.configService.config.getBranchDetails;
-    return this.httpService.post(getBranchDetails,reqData);
-  }
-
-  fetchPolicyDetailsFromFile(reqData:FormData){
-    const fetchPolicyDetailsFromFile= this.configService.config.baseUrl+this.configService.config.fetchPolicyDetailsFromFile;
-    return this.httpService.post(fetchPolicyDetailsFromFile,reqData);
+  getBranchDetails(reqData: any) {
+    const getBranchDetails = this.configService.config.baseUrl + this.configService.config.getBranchDetails;
+    return this.httpService.post(getBranchDetails, reqData);
   }
 
-  justPayRedirection(reqData:any){
-    const paymentRedirection= this.configService.config.baseUrl+this.configService.config.justPayRedirection;
-    return this.httpService.post(paymentRedirection,reqData);
+  fetchPolicyDetailsFromFile(reqData: FormData) {
+    const fetchPolicyDetailsFromFile = this.configService.config.baseUrl + this.configService.config.fetchPolicyDetailsFromFile;
+    return this.httpService.post(fetchPolicyDetailsFromFile, reqData);
   }
 
-  submitFeedback(reqData:any){
-    const feedbackServiceURL = this.configService.config.baseUrl+this.configService.config.addfeedback;
-    return this.httpService.post(feedbackServiceURL,reqData);
+  justPayRedirection(reqData: any) {
+    const paymentRedirection = this.configService.config.baseUrl + this.configService.config.justPayRedirection;
+    return this.httpService.post(paymentRedirection, reqData);
   }
-  getRelations(){
-    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelations;
+
+  submitFeedback(reqData: any) {
+    const feedbackServiceURL = this.configService.config.baseUrl + this.configService.config.addfeedback;
+    return this.httpService.post(feedbackServiceURL, reqData);
+  }
+  getRelations() {
+    const getRelationship = this.configService.config.baseUrl + this.configService.config.getRelations;
     return this.httpService.get(getRelationship);
   }
-  getProductCombinations(){
-    const  getProductCombinations = this.configService.config.baseUrl + this.configService.config.getProductCombination;
+  getProductCombinations() {
+    const getProductCombinations = this.configService.config.baseUrl + this.configService.config.getProductCombination;
     return this.httpService.get(getProductCombinations);
   }
-  getProposalDetails(reqData:any){
+  getProposalDetails(reqData: any) {
     const proposalDetails = this.configService.config.axisBaseUrl + this.configService.config.getBBProposalDetails;
-    return this.httpService.post(proposalDetails,reqData);
+    return this.httpService.post(proposalDetails, reqData);
   }
-  getSumInsuredDetails(reqData:any){
+  getSumInsuredDetails(reqData: any) {
     const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getSumInsuredDetails;
-    return this.httpService.post(suminsuredDetails,reqData);
+    return this.httpService.post(suminsuredDetails, reqData);
   }
-  getBBPolicyInfoByLeadId(reqData:any){
-    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
-    return this.httpService.post(suminsuredDetails,reqData);
-  }
-  getd2cPolicyInfoByLeadId(reqData:any){
+  getd2cPolicyInfoByLeadId(reqData: any) {
     const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getd2cPolicyInfoByLeadId;
-    return this.httpService.post(suminsuredDetails,reqData);
+    return this.httpService.post(suminsuredDetails, reqData);
   }
-  getPremiumData(reqData:any){
+  getPremiumData(reqData: any) {
     const premiumData = this.configService.config.baseUrl + this.configService.config.getRUGPremium;
-    return this.httpService.post(premiumData,reqData);
+    return this.httpService.post(premiumData, reqData);
   }
-  getFamilyConstructData(reqData:any){
+  getFamilyConstructData(reqData: any) {
     const familyConstructData = this.configService.config.baseUrl + this.configService.config.getFamilyConstruct;
-    return this.httpService.post(familyConstructData,reqData);
+    return this.httpService.post(familyConstructData, reqData);
   }
-  saveBBCommonDraft(reqData:any){
+  saveBBCommonDraft(reqData: any) {
     const saveCommonDraftData = this.configService.config.baseUrl1 + this.configService.config.saveBBCommonDraft;
-    return this.httpService.post(saveCommonDraftData,reqData);
+    return this.httpService.post(saveCommonDraftData, reqData);
   }
-  getBbOtp(reqData:any){
+  getBbOtp(reqData: any) {
     const getBbOtp = this.configService.config.baseUrl1 + this.configService.config.getBBOTP;
-    return this.httpService.post(getBbOtp,reqData);
+    return this.httpService.post(getBbOtp, reqData);
   }
-  validateBBOTP(reqData:any){
+  validateBBOTP(reqData: any) {
     const validateBbOtp = this.configService.config.baseUrl1 + this.configService.config.getValidateBbOtp;
-    return this.httpService.post(validateBbOtp,reqData);
+    return this.httpService.post(validateBbOtp, reqData);
   }
-  saveD2CCommonDraft(reqData:any){
+  saveD2CCommonDraft(reqData: any) {
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft";
-    return this.httpService.post(saveCommonDraftData,reqData);
+    return this.httpService.post(saveCommonDraftData, reqData);
   }
-  bbHalfQuote(reqData:any){
-    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/v1/HalfQuote";
-    return this.httpService.post(halfQuoteData,reqData);
-  }
-  d2cJustpayRedirection(reqData:any){
+  d2cJustpayRedirection(reqData: any) {
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/yatra/JusPayPaymentRedirectRUG";
-    return this.httpService.post(saveCommonDraftData,reqData);
+    return this.httpService.post(saveCommonDraftData, reqData);
   }
-  insertFullQuoteJson(reqData:any){
+  insertFullQuoteJson(reqData: any) {
     const insertfullquotejson = this.configService.config.baseUrl + this.configService.config.insertfullquotejson;
-    return this.httpService.post(insertfullquotejson,reqData);
+    return this.httpService.post(insertfullquotejson, reqData);
   }
-  getFullQuoteViaOfflinePayment(reqData:any){
+  getFullQuoteViaOfflinePayment(reqData: any) {
     const getfullquoteviaofflinepayment = this.configService.config.baseUrl1 + this.configService.config.getfullquoteviaofflinepayment;
     // const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
-    return this.httpService.post(getfullquoteviaofflinepayment,reqData);
+    return this.httpService.post(getfullquoteviaofflinepayment, reqData);
   }
 
-  getBankDetailsViaIFSC(reqData:any){
+  getBankDetailsViaIFSC(reqData: any) {
     const getBankDetailsViaIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsViaIFSC;
-    return this.httpService.post(getBankDetailsViaIFSC,reqData);
+    return this.httpService.post(getBankDetailsViaIFSC, reqData);
   }
-  getBankDetailsByIFSC(reqData:any){
+  getBankDetailsByIFSC(reqData: any) {
     const getBankDetailsByIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsByIFSC;
-    return this.httpService.post(getBankDetailsByIFSC,reqData);
+    return this.httpService.post(getBankDetailsByIFSC, reqData);
+  }
+  pennyDropVerfication(reqData: any) {
+    const Pennydropverification = this.configService.config.baseUrl + this.configService.config.fetchPennydropverification;
+    return this.httpService.post(Pennydropverification, reqData);
+  }
+  
+  pennyDropVerficationByOCR(reqData: any) {
+    const Pennydropverification = this.configService.config.baseUrl1 + this.configService.config.fetchPennyVerificationByOCR;
+    return this.httpService.post(Pennydropverification, reqData);
+  }
+
+  insertproposerDocumentById(reqData: any) {
+    const Pennydropverification = this.configService.config.baseUrl1 + this.configService.config.getInsertproposerdocumentid;
+    return this.httpService.post(Pennydropverification, reqData);
+  }
+
+  sharePaymentLink(reqData: any) {
+    const sharePaymentLink = this.configService.config.baseUrl + this.configService.config.sharePaymentLink;
+    return this.httpService.post(sharePaymentLink, reqData);
+  }
+  sendOTP(reqData: any) {
+    const sendOtpReqeustURL = this.configService.config.baseUrl + this.configService.config.sendOTP;
+    return this.httpService.post(sendOtpReqeustURL, reqData);
+  }
+  verifyOTP(reqData: any) {
+    const verifyOTPURL = this.configService.config.baseUrl + this.configService.config.verifyOTP;
+    return this.httpService.post(verifyOTPURL, reqData);
+  }
+  sendEmailLink(reqData: any) {
+    const emailLinkURL = this.configService.config.baseUrl + this.configService.config.sendEmailLink;
+    return this.httpService.post(emailLinkURL, reqData);
+  }
+
+  getStaticForms(reqData : any){
+    const staticFormURL = this.configService.config.baseUrl + this.configService.config.staticForm;
+    return this.httpService.post(staticFormURL,reqData);
+  }
+  getpaymentdetailsbyproposalno(reqData:any){
+    const getpaymentdetailsbyproposalno = this.configService.config.baseUrl + this.configService.config.getpaymentdetailsbyproposalno;
+    return this.httpService.post(getpaymentdetailsbyproposalno,reqData);
+  }
+
+  getVerifylink(reqData:any){
+    const getVerifylink = this.configService.config.baseUrl + this.configService.config.verifylink;
+    return this.httpService.post(getVerifylink,reqData);
+  }
+  confirmproposer(reqData:any){
+    const confirmproposer = this.configService.config.baseUrl + this.configService.config.confirmproposer;
+    return this.httpService.post(confirmproposer,reqData);
+  }
+
+  getforminfobyproposalNum(reqData:any){
+    const getforminfobyproposalNum = this.configService.config.baseUrl + this.configService.config.getforminfobyproposalNum;
+    return this.httpService.post(getforminfobyproposalNum,reqData);
+  }
+
+  insertoptionalcoversjson(reqData:any){
+    const insertoptionalcoversjson = this.configService.config.baseUrl + this.configService.config.insertoptionalcoversjson;
+    return this.httpService.post(insertoptionalcoversjson,reqData);
+  }
+  getSumInsuredList(reqData:any){
+    const suminsuredList = this.configService.config.baseUrl + this.configService.config.getsuminsuredlist;
+    // const suminsuredList = `https://localhost:7070/getactivesecuresidetails`;
+    return this.httpService.post(suminsuredList,reqData);
+  }
+
+  getFlsCodeViaAgentCode(reqData:any){
+    const flsCode = this.configService.config.baseUrl + this.configService.config.getParentCodeViaAgentId;
+    // const flsCode =`https://upuat.monocept.ai/api/yatra/getflsagents`
+    return this.httpService.post(flsCode,reqData);
   }
 }

@@ -1,6 +1,6 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
-        <div class="bodyColumn body_flex_column" *ngIf="!customerInfo">
+        <div class="bodyColumn body_flex_column pageHeading" *ngIf="!customerInfo">
             <h2>{{"My Customers" | translate}}</h2>
             <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
                 <div class="quickFilterLeft">
@@ -11,9 +11,9 @@
                         </li>
                     </ul>
                 </div>
-                <div class="quickFilterRight">
-                    <div class="common_searchWraper common_searchWraper_proposals">
-                        <div class="field_searchMain">
+                <div class="quickFilterRight leads_searchWraperMobile">
+                    <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                        <div class="field_searchMain field_searchMainMobile">
                             <div>
                                 <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
                                     <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"><span id="filter-count"> {{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
@@ -52,13 +52,13 @@
                                     <div class="fw_formRow">
                                         <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
                                                     <label for="startdate">{{"Select Start Date" | translate}}</label>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">{{"Select End Date" | translate}}</label>
@@ -184,12 +184,12 @@
                                                                         <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
                                                                             <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
                                                                         </li>
-                                                                        <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
+                                                                        <!-- <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
                                                                             <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                                         </li>
                                                                         <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
                                                                             <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
-                                                                        </li>
+                                                                        </li> -->
                                                                     </ul>
                                                                 </div>
                                                             </mat-menu>
@@ -317,7 +317,7 @@
                                                 <li class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(policy.policyNumber)">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
+                                                <!-- <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
                                                     <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
@@ -325,7 +325,7 @@
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
-                                                </li>
+                                                </li> -->
                                             </ul>
                                         </div>
                                     </mat-menu>
@@ -366,7 +366,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
+                        <div *ngIf="errorMessages.length > 0">
+                            <p class="text-danger">{{ errorMessages }}</p>
+                          </div>
+                        <div *ngIf="errorMessages.length === 0">
                             <p>Select the data fields you wish to download.</p>
                             <div class="input-checkbox-feild" *ngFor="let document of documents">
                                 <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
@@ -378,8 +381,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
+                        <button *ngIf="errorMessages.length === 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
                             {{"Download" | translate}}
+                        </button>
+                        <button *ngIf="errorMessages.length > 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
+                            {{"Ok" | translate}}
                         </button>
                     </div>
                 </div>
@@ -507,7 +513,7 @@
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "Email ID" | translate }}</label>
-                        <h6>{{ customerBasicDetails.emailID || "-" }}</h6>
+                        <h6 class="text-break-w200">{{ customerBasicDetails.emailID || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{"Mobile Number" | translate}}</label>

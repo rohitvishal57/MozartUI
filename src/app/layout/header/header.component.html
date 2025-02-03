@@ -1,5 +1,5 @@
 <!--Header start-->
-<header class="siteHeader" *ngIf="agentCode != '467898'">
+<header class="siteHeader" *ngIf="!showD2cHeader && agentCode != '467898'">
 
   <!--ABC Links start-->
   <div class="abcLinksMain" *ngIf="agentCode != '467899'">
@@ -10,9 +10,17 @@
       </div>
       <div class="abcSolution" tabindex="0">
         <a>ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
+        <!-- <a class="dropdown-toggle" id="abcSolutionMenu" data-bs-toggle="dropdown" aria-expanded="false">ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
+        <div class="dropdown-menu mainMenu_abcSolution" aria-labelledby="abcSolutionMenu">
+          <ul >
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </div> -->
       </div>
       <div class="abcHelpLine">
-        <a href="tel:+1800-270-7000"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
+        <a href="javascript:void(0);" onclick="window.location.href = 'tel:+1800-270-7000';"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
       </div>
     </div>
   </div>
@@ -21,7 +29,7 @@
   <!--Logo Main start-->
   <div class="logoMain">
     <div class="logoMainLeft">
-      <a><img src="assets/Img/abhi_logo.svg" alt="ABHI" routerLink="/dashboard"></a>
+      <a><img src="assets/Img/abhi_logo.svg" alt="ABHI"></a>
     </div>
     <div class="logoMainRight">
       <div class="logoLeftNav">
@@ -39,9 +47,25 @@
               <span class="navbar-toggler-icon block-hide"></span>Services
             </button>
             <div class="collapse navbar-collapse" id="supported_NavBar">
+              <div class="menuServices">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="javascript:void(0)" target="_blank">
+                  <a class="nav-link"  href="https://login-in21.leadsquared.com/Home/SignInWithSSO" target="_blank" rel="noopener noreferrer">
+                    {{"LSQ" | translate}}
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link"  href="https://insights.adityabirlahealth.com/#/signin" target="_blank" rel="noopener noreferrer">
+                    {{"MIS" | translate}}
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link"  href="https://aarambh.adityabirlacapital.com/Lead/Dashboard" target="_blank" rel="noopener noreferrer">
+                    {{"Aarambh" | translate}}
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" (click)="raiseServiceRequest()">
                     {{"Service Request" | translate}}
                   </a>
                 </li>
@@ -73,6 +97,7 @@
                   
                 </li>
               </ul>
+            </div>
             </div>
           </div>
         </nav>
@@ -155,7 +180,7 @@
 </header>
 <!--Header end-->
 <!--Axis Header start-->  
-<header class="pageHeader" *ngIf="agentCode == '467898'">
+<header class="pageHeader" *ngIf="showD2cHeader || agentCode == '467898'">
   <div class="pageHeaderContainer">
           <div class="ph_Left">
               <img src="assets/axis_assets/images/logo_axis.svg" alt="Axis insurance" class="logo_desktop">

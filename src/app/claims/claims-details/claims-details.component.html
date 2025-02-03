@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
@@ -33,7 +33,7 @@
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
                                     <label>{{"Claim Status" | translate}}</label>
-                                    <h6><b>{{ status?.claimStatus }}</b></h6>
+                                    <h6><b>{{ claims?.claimStatus }}</b></h6>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,11 @@
                                                 <h4>{{"Claim Details" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">{{"Raised On:" | translate}}</span>
+                                                        <span class="label">{{"Raised By:" | translate}}</span>
+                                                        <span class="value">{{designationName}}</span>
+                                                    </li>
+                                                    <li>
+                                                       <span class="label">{{"Raised On:" | translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>
@@ -155,20 +159,22 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div>
-                                            <strong>{{"View Uploads:" | translate}}</strong>
-                                            <div *ngIf="noFilesFound" class="no-files-message">
-                                               {{" No documents have been uploaded yet." | translate}}
+                                        <div class="uploadDocument_head body_flex_column gap-2">
+                                            <h4 class="m-0">{{"View Uploads:" | translate}}</h4>
+                                            <div *ngIf="noFilesFound" class="tipInfo_org m-0">
+                                               <span class="body_flex_row">{{" No documents have been uploaded yet." | translate}}</span>
                                             </div>
-                                            <div class="viewDocument_listMain"
+                                            <div class="viewDocument_listMain tableMain quoteView"
                                                 *ngIf="!noFilesFound && fileUploads.length > 0">
-                                                <table class="table table-striped">
+                                                <div class="tableSubMain">
+                                                    <div class="table-responsive">
+                                                <table class="table table-borderless table-search">
                                                     <thead>
                                                         <tr>
                                                             <th>S.No</th>
                                                             <th>Document Name</th>
                                                             <th>Type</th>
-                                                            <th>Status</th>
+                                                            <!-- <th>Status</th> -->
                                                             <th>Date of Upload</th>
                                                             <th>Download</th>
                                                         </tr>
@@ -178,12 +184,11 @@
                                                             <td>{{ i + 1 }}</td>
                                                             <td>{{ file.name }}</td>
                                                             <td>{{ file.type }}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td>
+                                                            <td>{{file.createdDateTime}}</td>
+                                                            <td align="center">
                                                                 <button type="button" id="downloadfile"
                                                                     name="downloadfile"
-                                                                    class="btn_iconGrey btn_cardDownload"
+                                                                    class="btn_action btn_renewalAction"
                                                                     (click)="downloadFile(file)"><img
                                                                         src="../../../../../assets/Img/icon_download_grey.svg"></button>
                                                                 <!-- <button class="btn btn-primary" (click)="downloadFile(file)">Download</button> -->
@@ -191,6 +196,8 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="uploadDocument_main" >
@@ -337,7 +344,7 @@
                                         <div class="col-12">
                                             <div class="tracker_claimDetails">
                                                 <div class="main_claimProgressSteps">
-                                                    <div class="submain_claimProgressSteps">
+                                                    <div class="submain_claimProgressSteps" *ngIf="customeStepperStatuses.length > 0">
                                                         <div class="item_claimProgressSteps"
                                                             *ngFor="let status of customeStepperStatuses"
                                                             [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
@@ -357,9 +364,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="item_claimProgressInfo" *ngIf="statusMessage">
-                                                    {{statusMessage}}</div>
-
+                                                <div class="item_claimProgressInfo" *ngIf="statusMessage && customeStepperStatuses.length > 0">{{statusMessage}}</div>
                                                 <div class="item_claimProgressButtons">
                                                     <button type="button" name="claimshistory" id="claimshistory"
                                                         class="btn_iconText" (click)="toggleViewDetails()">

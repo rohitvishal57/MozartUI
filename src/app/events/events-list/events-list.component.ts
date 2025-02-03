@@ -7,7 +7,7 @@ import {
   addWeeks,
   subDays,
   subMonths,
-  subWeeks,
+  subWeeks
 } from "date-fns";
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
@@ -16,6 +16,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { CalendarEvent, CalendarView } from "src/app/interface/events.interface";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import * as $ from 'jquery';
+
 
 @Component({
   selector: "app-events-list",
@@ -23,7 +25,7 @@ import { LanguageService } from 'src/app/services/language.service';
   styleUrls: ["./events-list.component.scss"],
 })
 export class EventsListComponent implements OnInit {
-  view: CalendarView = CalendarView.Day ;
+  view: CalendarView = CalendarView.Day;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
@@ -32,11 +34,26 @@ export class EventsListComponent implements OnInit {
   dayStartHour: any;
   dayEndHour: any;
   selectedEvent: any = null;
+  currentEventIndex: number = 0;
+  selectedMonthRecords: any = [];
+  slickConfig = {
+    dots: false,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+  };
+
   @ViewChild('eventModal') eventModal: any;
-  constructor(private route: Router, private eventsService: EventsService,   private dialog: MatDialog, private languageService: LanguageService,
-    private translateService: TranslateService) {}
+  @ViewChild('eventModalCarousel') eventModalCarousel: any;
+  constructor(private route: Router, private eventsService: EventsService, private dialog: MatDialog, private languageService: LanguageService,
+    private translateService: TranslateService) { }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -47,36 +64,35 @@ export class EventsListComponent implements OnInit {
     this.loadEvents();
   }
 
-
   loadEvents(): void {
     const agentCode = localStorage.getItem("agentCode");
-    let getEventReq = [
-      {
-        agentCode: agentCode,
-        customerName: "",
-        mobileNumber: "",
-        activityTitle: "",
-        startDate: "",
-        endDate: "",
-        activityType: "",
-        note: "",
-      },
-    ];
-  
+    let getEventReq =
+    {
+      "agentCode": agentCode,
+      "startDate": null,
+      "endDate": null,
+      "eventType": "",
+      "eventNumber": "",
+      "customerName": "",
+      "mobileNumber": "",
+      "pageNumber": 1,
+      "pageSize": 10
+    }
+
     this.eventsService.getEvents(getEventReq, agentCode).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.events = response.data.map((event: any) => {
+          this.events = response.data.eventList.map((event: any) => {
             // For each event, process all scheduled times
             return event.eventSchedule.map((schedule: any) => {
               const startDateTime = this.parseDateTime(schedule.date, schedule.startTime);
               const endDateTime = this.parseDateTime(schedule.date, schedule.endTime);
-  
+
               if (!startDateTime || !endDateTime) {
                 console.error("Invalid date/time for event:", event);
                 return null;
               }
-  
+
               return {
                 note: event.note,
                 title: `${event.customerName} </br> ${event.activityType}  </br>  ${event.note}`,
@@ -95,19 +111,19 @@ export class EventsListComponent implements OnInit {
               };
             });
           })
-          // Flatten the array of arrays since we mapped event schedules
-          .flat()
-          // Remove any null events from invalid dates
-          .filter((event: any) => event !== null);
-  
+            // Flatten the array of arrays since we mapped event schedules
+            .flat()
+            // Remove any null events from invalid dates
+            .filter((event: any) => event !== null);
+
           if (this.events.length > 0) {
             const startHours = this.events.map(event => event.start.getHours());
             const endHours = this.events.map(event => event.end.getHours());
-            
+
             this.dayStartHour = Math.min(...startHours);
             this.dayEndHour = Math.max(...endHours);
           }
-  
+
           this.refresh.next();
         } else {
           console.error("Error loading events:", response.message);
@@ -119,14 +135,14 @@ export class EventsListComponent implements OnInit {
       }
     );
   }
-  
+
   parseDateTime(date: string, time: string): Date | null {
     try {
-     
+
       const cleanTime = time.split('.')[0];  // Remove any milliseconds from the time string if present
       const dateTimeStr = `${date}T${cleanTime}`; // Combine date and time
       const dateTime = new Date(dateTimeStr);
-  
+
       if (isNaN(dateTime.getTime())) {      // Validate the parsed date
         console.error(`Invalid DateTime: ${dateTimeStr}`);
         return null;
@@ -178,16 +194,84 @@ export class EventsListComponent implements OnInit {
   }
 
   handleEventClick(event: any) {
+    console.log(event.event);
+
     this.selectedEvent = event.event;
     this.openEventModal();
   }
+  // handleEventClick(eventInfo: { event: any }) {
+  //   const selectedEvents = this.events.filter(
+  //     (event) =>
+  //       event.start.getDate() === eventInfo.event.start.getDate() &&
+  //       event.start.getMonth() === eventInfo.event.start.getMonth() &&
+  //       event.start.getFullYear() === eventInfo.event.start.getFullYear()
+  //   );
 
+  //   if (selectedEvents.length > 0) {
+  //     let selectedIndex = selectedEvents.findIndex(
+  //       (event) => event === eventInfo.event
+  //     );
+  //     selectedIndex = (selectedIndex + 1) % selectedEvents.length;
+  //     this.selectedEvent = selectedEvents[selectedIndex];
+  //     this.openEventModal();
+  //   }
+  // }
+  // handleDayClick(eventInfo:any){
+  //   console.log(eventInfo.day.events,'data')
+  //   const selectedEvents = this.events.filter(
+  //     (event) =>
+  //       event.start.getDate() === eventInfo.day.events.start.getDate() &&
+  //       event.start.getMonth() === eventInfo.day.events.start.getMonth() &&
+  //       event.start.getFullYear() === eventInfo.day.events.start.getFullYear()
+  //   );
+
+  //   if (selectedEvents.length > 0) {
+  //     let selectedIndex = selectedEvents.findIndex(
+  //       (event) => event === eventInfo.event
+  //     );
+  //     selectedIndex = (selectedIndex + 1) % selectedEvents.length;
+  //     this.selectedEvent = selectedEvents[selectedIndex];
+  //     this.openEventModal();
+  //   }
+  // }
+  addSlide() {
+    this.events.push(this.eventModalCarousel);
+  }
+  removeSlide() {
+    this.events.length = this.events.length - 1;
+  }
+  slickInit(e: any) {
+    console.log('slick initialized');
+  }
+  breakpoint(e: any) {
+    console.log('breakpoint');
+  }
+  afterChange(e: any) {
+    console.log('afterChange');
+  }
+  beforeChange(e: any) {
+    console.log('beforeChange');
+  }
+  handleDayClick(eventInfo: any): void {
+    let selectedEvents: any = eventInfo.day.events;
+    if (selectedEvents.length > 0) {
+      this.selectedMonthRecords = selectedEvents;
+      console.log(this.selectedMonthRecords, ' this.selectedMonthRecords')
+      this.openEventCarousalModal();
+    }
+  }
   openEventModal(): void {
     this.dialog.open(this.eventModal, {
       width: '350px',
       position: { top: '150px' },
       disableClose: true,
-      data: this.selectedEvent
+    });
+  }
+  openEventCarousalModal(): void {
+    this.dialog.open(this.eventModalCarousel, {
+      width: '350px',
+      position: { top: '150px' },
+      disableClose: true,
     });
   }
 
@@ -211,7 +295,10 @@ export class EventsListComponent implements OnInit {
     this.route.navigate(["events/createEvents"]);
   }
 
-  navigateToBirthdays(){
+  navigateToBirthdays() {
     this.route.navigate(["events/birthdaysList"]);
+  }
+  navigateToEventsList() {
+    this.route.navigate(["events/eventsListView"]);
   }
 }

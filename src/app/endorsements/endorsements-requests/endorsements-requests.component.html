@@ -1,8 +1,8 @@
 <!--All Requests Start-->
-<main class="siteBody">
+<main class="siteBody siteBody_padding siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <div class="body_flex_row justify-content-between">
+            <div class="body_flex_row justify-content-between pageHeading_align-items-center">
                 <h2>{{"All Requests" | translate}}</h2>
                 <button type="button" id="newrequest" name="newrequest" class="btn_white btn_newRequest" (click)="redirect('endorsements/new-request')">
                     <img src="assets/Img/icon_plus_red.svg">{{"New Request" | translate}}
@@ -11,20 +11,20 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
-                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}} ({{totalRecords}})</button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}} ({{activeCount}})</button></li>
-                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
+                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All', 'totalRecords')">{{"All" | translate}} ({{totalRecords}})</button></li>
+                        <!-- <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active', 'activeCount')">{{"Active" | translate}} ({{activeCount}})</button></li>
+                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved', 'resolvedCount')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled', 'cancelledCount')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li> -->
                     </ul>
                 </div>
-                <div class="quickFilterRight" >
+                <div class="quickFilterRight leads_searchWraperMobile" >
                     <!--Search section start-->
-                    <div class="common_searchWraper common_searchWraper_proposals">
-                        <div class="field_searchMain">
+                    <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                        <div class="field_searchMain field_searchMainMobile">
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">{{"Select an option" | translate}}</option>
-                                    <option value="caseId">{{"Endorsement Id" | translate}}</option>
+                                    <option value="caseId">{{"Endorsement No." | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberName">{{"Member Name" | translate}}</option>
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
@@ -39,7 +39,7 @@
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement No." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter Valid Member Name." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter Valid Mobile Number." | translate}}</small>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"><span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -60,15 +60,15 @@
                                     <div class="fw_formRow">
                                         <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob m-0">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                <div class="input-block form-floating input-block-dob m-0 w-full">
                                                     <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
                                                     <label for="fromDate">{{"From Date" | translate}}</label>
                                                     <span class="ui-error">{{"Please enter start date" | translate}}</span>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob m-0">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                <div class="input-block form-floating input-block-dob m-0 w-full">
                                                     <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
                                                     <label for="toDate">{{"To Date" | translate}}</label>
                                                     <span class="ui-error">Please enter end date</span>
@@ -124,14 +124,14 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">{{"Endorsement Id" | translate}}</th>
+                                <th scope="col">{{"Endorsement No." | translate}}</th>
                                 <th scope="col">{{"Policy Number" | translate}}</th>
                                 <th scope="col">{{"Product Name" | translate}}</th>
                                 <th scope="col">{{"Member Name" | translate}}</th>
                                 <th scope="col">{{"Contact Info" | translate}}</th>
                                 <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">{{"Request Type" | translate}}</th>
-                                <th scope="col">{{"Status" | translate}}</th>
+                                <!-- <th scope="col">{{"Status" | translate}}</th> -->
                                 <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
                                 <th scope="col">{{"Action" | translate}}</th>
                             </tr>
@@ -146,18 +146,20 @@
                                 <td><span class="text-break-w100">{{ row?.mobileNumber }} {{ row?.emailId }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
-                                <td>{{ row?.status }}</td>
+                                <!-- <td>{{ row?.status }}</td> -->
                                 <td>{{ row?.raisedOn }}</td>
-                                <td class="d-flex">
-                                    <button type="button" id="viewdetails" name="viewdetails" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                    <button
-                                        type="button"
-                                        class="btn_action btn_renewalAction"
-                                        (click)="downloadSingleItem(row)"
-                                        id="Download" name="Download" value="Download" title="Download"
-                                    >
-                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
-                                    </button>
+                                <td>
+                                    <div class="btn_groupAction">
+                                        <button type="button" id="viewdetails" name="viewdetails" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                        <button
+                                            type="button"
+                                            class="btn_action btn_renewalAction"
+                                            (click)="downloadSingleItem(row)"
+                                            id="Download" name="Download" value="Download" title="Download"
+                                        >
+                                            <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                           </tbody>
@@ -175,10 +177,12 @@
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
-                            <button type="button" id="viewdetails-grid" name="viewdetails-grid" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                            <button type="button" class="btn_action btn_renewalAction" (click)="downloadSingleItem(row)" id="Download" name="Download" value="Download" title="Download">
-                                <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
-                            </button>
+                            <div class="btn_groupAction">
+                                <button type="button" id="viewdetails-grid" name="viewdetails-grid" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                <button type="button" class="btn_action btn_renewalAction" (click)="downloadSingleItem(row)" id="Download" name="Download" value="Download" title="Download">
+                                    <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                </button>
+                            </div>
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">

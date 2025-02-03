@@ -17,7 +17,6 @@
   padding: 0;
 
 }
-
 .card {
   width: 100%;
   border-radius: 12px;
@@ -111,7 +110,7 @@ p {
 .dropdown-container {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 10px;
   background-color: #f9f8fb;
   padding: 14px;
   border-radius: 8px;
@@ -125,12 +124,13 @@ p {
   }
 
   .field_div {
-    width: 23.6%;
+    /* width: 23.6%; 
+    max-width: 20%;*/
     display: flex;
     flex-direction: column;
     gap: 4px;
     position: relative;
-
+    flex: auto;
     @media (max-width:767px) {
       width: 100%;
     }
@@ -157,12 +157,36 @@ p {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 180px;
+    text-transform: capitalize;
+  }
+  img {
+    width: 10px;
+  }
+  .arrows_porting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+    img {
+      width: 5px;
+    }
+    .arrows_porting_left {
+      transform: rotate(-180deg);
+    }
+    .arrows_porting_right {
+    }
   }
 
   i {
     font-size: 9px;
     padding: 5px;
   }
+}
+.sumInsured_value.policy-type-close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
 
 .card-container {
@@ -664,7 +688,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .input-checkbox-withIcon .input-checkbox-feild .input-check+label {
-  padding: 8px 16px 8px 8px;
+  padding: 8px !important;
   background: #f1f3f6;
   border-radius: 16px;
   display: flex;
@@ -743,13 +767,13 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .input-radiolabel input:checked+span {
-  border: 0px solid #ED1164;
+  border: 0px solid #c91429;
 }
 
 .input-radiolabel input:checked+span:before {
-  background-color: #ED1164;
+  background-color: #c91429;
   box-shadow: inset 0 0 0 0.1675em var(--white-color);
-  border: 2px solid #ED1164;
+  border: 2px solid #c91429;
 }
 
 .input-radiolabel span {
@@ -778,7 +802,26 @@ input[type="search"]::-webkit-search-results-decoration {
 .input-radiolabel input:disabled+span:before {
   box-shadow: inset 0 0 0 0.125em #b4b4b4;
 }
-
+.input-radiolabel-porting{
+  max-width: 100%;
+}
+.input-radiolabel-porting .input-radiolabel input+span:before {
+  display: none;
+}
+.input-radiolabel-porting .input-radiolabel input+span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  background: #ffffff;
+  border: 2px solid #F1F3F6;
+  border-radius: 24px;
+  padding: 5px 25px;
+}
+.input-radiolabel-porting .input-radiolabel input:checked+span {
+  color: #c91429;
+  background: #ffffff;
+  border: 2px solid #c91429;
+}
 /*----Radio buttons end----*/
 
 /*----Sept-16 noneed end----*/
@@ -889,7 +932,7 @@ h4 {
   border: 2px solid #fff;
   box-shadow: 0px 12px 20px 0px #00000026;
   backdrop-filter: blur(10px);
-  z-index: 1;
+  z-index: 2;
 }
 
 .overlay_dropdown_w360 {
@@ -999,6 +1042,7 @@ h4 {
   font-weight: 600;
   font-size: 16px;
   color: var(--black-color);
+  padding-left: 25px !important;
 }
 
 .checkbox_disease .input-checkbox-feild .input-check+label:before {
@@ -1413,7 +1457,7 @@ h4 {
 }
 
 .dashboard_contentContainer .insurance_optionHUB {
-  padding: 0 20px;
+  padding: 0 10px;
 
   .continue-btn-container {
     margin: 0;
@@ -1429,7 +1473,6 @@ h4 {
     padding: 0;
   }
 }
-
 @media (max-width:767px) {
   .overlay_popupMain.overlay_dropdown_w518 {
     width: 100%;
@@ -1444,6 +1487,36 @@ h4 {
       }
     }
   }
+  .overlay_popupMain {
+    padding: 16px;
+  }
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy {
+    top: -2px;
+    width: 120px;
+  }
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy2 {
+    top: 128px;
+    width: 120px;
+  }
+  .member_extraInfo {
+    right: 24px;
+  }
+  .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox{
+    width: 100px;
+  }
+  .input-checkbox-withIcon .input-checkbox-feild .input-check + label{
+    gap: 5px;
+    font-size: 11px;
+  }
+  .sumInsured_value.policy-type-close button, .sumInsured_value button{
+  font-size: 11px !important;
+  }
+}
+
+@media (max-width:360px) {
+  .raido_policyType .input-radiolabel input:checked + span + .selected_policy2 {
+    top: 142px;
+  }
 }
 
 .close-popup{
@@ -1451,4 +1524,47 @@ h4 {
   margin-top: -9px;
 }
 
+
+.dropdown-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+.sumInsured_selectMain .input-filed-white select.input-textBox, 
+.sumInsured_selectMain .input-block select.input-textBox {
+  appearance: none;
+  background: var(--white-color) url(/assets/Img/down_arrow.svg) no-repeat 96% 50% !important;
+  padding: 12px 16px !important;
+}
+.viewall_member {
+  overflow: hidden;
+  height: auto;
+}
+.less_members {
+  height: 155px;
+}
+@media (min-width:768px) and (max-width:1024px) {
+  .dropdown-container {
+    flex-wrap: wrap;
+  }
+  .dropdown-container .field_div {
+    width: 45%;
+    flex: none;
+  }
+  .dropdown-container .field_div.porting_getQuote {
+    width: 25%;
+  }
+  .dropdownContent {
+    right: 0;
+  }
+  .dropdownContent .overlay_popupMain {
+    left: auto;
+    right: 0;
+  }
+}
+@media (max-width:540px) {
+  .less_members {
+      height: 285px;
+  }
+}
 /*Custom overlay dropdown end*/

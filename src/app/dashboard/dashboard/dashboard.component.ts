@@ -61,7 +61,8 @@ export class DashboardComponent {
   performanceFilter = 'Quarterly';
   performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
   businessFilter = 'Last7Days';
-  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  renewalFilter = 'Last7Days'
+  commonFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
   widgetArr = [
     {
       name: 'QuickAction', isFilter: false
@@ -71,6 +72,9 @@ export class DashboardComponent {
     },
     {
       name: 'Business', isFilter: true, filterType: this.businessFilter
+    },
+    {
+      name: 'Renewal', isFilter: true, filterType: this.renewalFilter
     },
     {
       name: 'Customer', isFilter: false
@@ -206,6 +210,14 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    window.scrollTo(0, 0); // Scroll to top when the component is initialized
+    this.performanceCard = [];
+    this.tabsInfo = [];
+    this.otherSection = [];
+    this.quickActionDetails = [];
+    this.renewalDetail = [];
+    this.otherSection = [];
+    this.dhaSection = [];
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -219,6 +231,7 @@ export class DashboardComponent {
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
         this.profileDetails = res.data;
+        localStorage.setItem("designation", res.data.designation);
       }
     });
     this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
@@ -235,7 +248,6 @@ export class DashboardComponent {
       }
     });
     this.fetchWidgets();
-    this.createRenewChart();
     this.getPoductList();
     this.checkScreenSize();
   }
@@ -300,39 +312,39 @@ export class DashboardComponent {
         break;
       case 'Customer':
         this.newCustomerList = widget.map((item: any, index: any) => {
-          return { main: 'Customer', name: item, order: index + 1 };
+          return { main: 'Customer', name: item, subOrder: index + 1 };
         });
         console.log(this.newCustomerList)
         break;
       case 'Renewal':
         this.newRenewalList = widget.map((item: any, index: any) => {
-          return { main: 'Renewal', name: item, order: index + 1 };
+          return { main: 'Renewal', name: item, subOrder: index + 1 };
         });
         console.log(this.newRenewalList)
         break;
       case 'Business':
         this.newBusinessList = widget.map((item: any, index: any) => {
-          return { main: 'Business', name: item, order: index + 1 };
+          return { main: 'Business', name: item, subOrder: index + 1 };
         });
         console.log(this.newBusinessList)
         break;
       case 'QuickAction':
         this.newQuickActionList = widget.map((item: any, index: any) => {
-          return { main: 'QuickAction', name: item, order: index + 1 };
+          return { main: 'QuickAction', name: item, subOrder: index + 1 };
         });
         console.log(this.newQuickActionList)
         break;
 
       case 'Performance':
         this.newPerformanceList = widget.map((item: any, index: any) => {
-          return { main: 'Performance', name: item, order: index + 1 };
+          return { main: 'Performance', name: item, subOrder: index + 1 };
         });
         console.log(this.newPerformanceList)
         break;
 
       case 'Wellness':
         this.newWellnessList = widget.map((item: any, index: any) => {
-          return { main: 'Wellness', name: item, order: index + 1 };
+          return { main: 'Wellness', name: item, subOrder: index + 1 };
         });
         console.log(this.newWellnessList)
         break;
@@ -533,6 +545,9 @@ export class DashboardComponent {
             return this.tabsInfo;
           })
           break;
+
+        case 'Renewal': this.createRenewChart()
+        break;
 
         default:
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
@@ -1167,6 +1182,9 @@ export class DashboardComponent {
     this.tabsInfo = [];
     this.otherSection = [];
     this.quickActionDetails = [];
+    this.renewalDetail = [];
+    this.otherSection = [];
+    this.dhaSection = [];
     this.widgetArr.forEach((action: any) => {
       if (action.name === section && action.isFilter) {
         action.filterType = filter;
@@ -1327,7 +1345,57 @@ export class DashboardComponent {
 
     this.dashboardService.submitPreferenceData(obj).subscribe((response: any) => {
       console.log('Data submitted successfully', response);
+      // this.ngOnInit();
     });
   }
 
+  filterText: string = '';
+  isDropdownOpen: boolean = false;
+  isAllSelected = false;
+
+  items = [
+    { name: 'Team 1', selected: false },
+    { name: 'Team 2', selected: false },
+    { name: 'Team 3', selected: false },
+    { name: 'Team 4', selected: false },
+  ];
+
+  filteredItems = [...this.items];
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
+
+  filterItems() {
+    this.filteredItems = this.items.filter(item =>
+      item.name.toLowerCase().includes(this.filterText.toLowerCase())
+    );
+  }
+
+  deselectAll() {
+    this.items.forEach(item => (item.selected = false));
+  }
+
+  onInputChange() {
+    this.updateButtonStates();
+  }
+
+  toggleSelectAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.items.forEach(item => (item.selected = this.isAllSelected));
+  }
+
+  updateButtonStates() {
+    const checkedItems = this.items.filter(item => item.selected).length;
+    this.isAllSelected = checkedItems > 0;
+  }
+
+  submit() {
+    console.log('Selected Items:', this.items.filter(item => item.selected));
+    this.isDropdownOpen = false;
+  }
 }

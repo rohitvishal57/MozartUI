@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import HeaderInformation from 'src/app/layout/headerInfo';
 import { LeadsService } from 'src/app/leads/leads.service';
 import { error } from 'jquery';
+import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
   selector: 'app-products',
@@ -55,7 +56,7 @@ export class ProductsComponent implements OnInit {
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute, private languageService: LanguageService,
-   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
+   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService,  private rugService: RugService ) {}
 
   ngOnInit(): void {
     
@@ -79,6 +80,7 @@ export class ProductsComponent implements OnInit {
         this.productId = this.paramLeadId.ProductId;
         // this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
         console.log(this.formSequence);
+        this.rugService.changeStatus(true)
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem('agentCode', this.paramLeadId.AgentCode)
         localStorage.setItem('leadId', this.paramLeadId.LeadId)
@@ -239,7 +241,7 @@ export class ProductsComponent implements OnInit {
       //   });
       // }
    
-        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
+        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897")) {
           if(this.agentCode == "467898"){
             let reqObj = {
               "leadId": this.leadId,
@@ -269,9 +271,18 @@ export class ProductsComponent implements OnInit {
               }
             });
           }else{
-            this.router.navigate(['rug'], {
-               state: { productData: productData, formSequence: this.formSequence }
-            });
+            if(this.agentCode == "467896" || this.agentCode == "467897"){
+              this.router.navigate(['rug'], {
+                state: { productData: productData, formSequence: this.formSequence, productCode: item.productCode, productName: item.productName }
+             });
+            }
+            else{
+                this.router.navigate(['rug'], {
+              state: { productData: productData, formSequence: this.formSequence }
+           });
+
+            }
+
 
           }
         }else{
@@ -306,7 +317,7 @@ export class ProductsComponent implements OnInit {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
   productsDetail(item: any) {
@@ -347,7 +358,10 @@ getProductInformation(productId: String ){
       this.compareItems.push(res.data);
     },
     error: (err) => {
-      this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
+      this.toast.error({
+        detail: 'Error',
+        summary: 'Failed to Add Product for Comparison'
+      });
       console.error(err);
     }
   });
@@ -381,7 +395,7 @@ donwloadBrowcher(productName : any){
       const leadInformation = response?.data?.leadList[0];
       leadInformation.interestedProductName = productName;
       leadInformation.isUpdate = 1;
-
+      leadInformation.proposalNumber =  this.proposalNum;
       this.leadsService.saveLeadData(leadInformation).subscribe(
         (response) => {
           console.log("Lead has been Successfully Updated", response);
@@ -398,7 +412,7 @@ donwloadBrowcher(productName : any){
   productSearch() {
     this.ProductList = this.productsInformation;
     this.ProductList = this.ProductList.filter(product =>
-      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
+      product.productName.trim().toLowerCase().includes(this.searchProductName.trim().toLowerCase())
     );
   }
 

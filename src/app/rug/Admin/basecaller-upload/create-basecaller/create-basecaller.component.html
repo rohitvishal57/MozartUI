@@ -1,0 +1,352 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" [routerLink]="['/rug/basecaller']" title="Back To List"></a>
+                    {{ isUpdate ? 'Update Base Caller' : 'Create Base Caller' }}
+                </h2>
+            </div>
+            <form [formGroup]="createBaseCallerForm" (ngSubmit)="onSubmit()">
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Base Caller Details</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="domainId" 
+                                    name="domainId" 
+                                    placeholder="Domain Id *" 
+                                    formControlName="domainId" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('domainId')?.invalid && (createBaseCallerForm.get('domainId')?.touched || submitted) }">
+                                <label for="domainId">Domain Id *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('domainId')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['required']">
+                                        Please enter Domain Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('domainId')?.errors?.['pattern']">
+                                        Domain Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="baseCallerEmpId" 
+                                    name="baseCallerEmpId" 
+                                    placeholder="Base Caller Id *" 
+                                    formControlName="baseCallerEmpId" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('baseCallerEmpId')?.invalid && (createBaseCallerForm.get('baseCallerEmpId')?.touched || submitted) }">
+                                <label for="baseCallerEmpId">Base Caller Id *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('baseCallerEmpId')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('baseCallerEmpId')?.errors?.['required']">
+                                        Please enter Base Caller Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('baseCallerEmpId')?.errors?.['pattern']">
+                                        Base Caller should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="baseCallerName" 
+                                    name="baseCallerName" 
+                                    placeholder="Base Caller Name *" 
+                                    formControlName="baseCallerName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('baseCallerName')?.invalid && (createBaseCallerForm.get('baseCallerName')?.touched || submitted) }">
+                                <label for="baseCallerName">Base Caller Name *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('baseCallerName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('baseCallerName')?.errors?.['required']">
+                                        Please enter Base Caller Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('baseCallerName')?.errors?.['pattern']">
+                                        Base Caller Name should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="tlId" 
+                                    name="tlId" 
+                                    placeholder="TL Id *" 
+                                    formControlName="tlId" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('tlId')?.invalid && (createBaseCallerForm.get('tlId')?.touched || submitted) }">
+                                <label for="tlId">TL Id *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('tlId')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('tlId')?.errors?.['required']">
+                                        Please enter TL Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('tlId')?.errors?.['pattern']">
+                                        TL Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="tlName" 
+                                    name="tlName" 
+                                    placeholder="TL Name *" 
+                                    formControlName="tlName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('tlName')?.invalid && (createBaseCallerForm.get('tlName')?.touched || submitted) }">
+                                <label for="tlName">TL Name *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('tlName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('tlName')?.errors?.['required']">
+                                        Please enter TL Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('tlName')?.errors?.['pattern']">
+                                        TL Name should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="amId" 
+                                    name="amId" 
+                                    placeholder="AM Id *" 
+                                    formControlName="amId" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('amId')?.invalid && (createBaseCallerForm.get('amId')?.touched || submitted) }">
+                                <label for="amId">AM Id *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('amId')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('amId')?.errors?.['required']">
+                                        Please enter AM Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('amId')?.errors?.['pattern']">
+                                        AM Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="amName" 
+                                    name="amName" 
+                                    placeholder="AM Name *" 
+                                    formControlName="amName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('amName')?.invalid && (createBaseCallerForm.get('amName')?.touched || submitted) }">
+                                <label for="amName">AM Name *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('amName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('amName')?.errors?.['required']">
+                                        Please enter AM Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('amName')?.errors?.['pattern']">
+                                        AM Name should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="omId" 
+                                    name="omId" 
+                                    placeholder="OM Id *" 
+                                    formControlName="omId" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('omId')?.invalid && (createBaseCallerForm.get('omId')?.touched || submitted) }">
+                                <label for="omId">OM Id *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('omId')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('omId')?.errors?.['required']">
+                                        Please enter OM Id.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('omId')?.errors?.['pattern']">
+                                        OM Id should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="omName" 
+                                    name="omName" 
+                                    placeholder="OM Name *" 
+                                    formControlName="omName" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('omName')?.invalid && (createBaseCallerForm.get('omName')?.touched || submitted) }">
+                                <label for="omName">OM Name *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('omName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('omName')?.errors?.['required']">
+                                        Please enter OM Name.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('omName')?.errors?.['pattern']">
+                                        OM Name should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="center" 
+                                    name="center" 
+                                    formControlName="center"  (change)="onLocationChange($event)" 
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('center')?.invalid && (createBaseCallerForm.get('center')?.touched || submitted) }">
+                                    <option value="" disabled selectedLocationId>Select Center</option> 
+                                    <option *ngFor="let opt of allAxisLocations" [value]="opt.location">{{ opt.location }}</option>
+                                </select>
+                                <label for="center">Center *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('center')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('center')?.errors?.['required']">
+                                        Please select a Center.
+                                    </span>
+                                </span>
+                            </div>
+                        </div> 
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="lob" name="lob"
+                                    formControlName="lob"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('lob')?.invalid && (createBaseCallerForm.get('lob')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select LOB</option>
+                                    <option *ngFor="let lob of AllManageLOB" [value]="lob">{{lob}}</option>
+                                </select>
+                                <label for="lob">LOB*</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('lob')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBaseCallerForm.get('lob')?.errors?.['required']">
+                                        Please select Axis Lob
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="vendor" name="vendor"
+                                    formControlName="vendor"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('vendor')?.invalid && (createBaseCallerForm.get('vendor')?.touched || submitted) }">
+                                    <option value="" disabled selected>Select Vendor</option>
+                                    <option *ngFor="let opt of filteredAxisVendors" [value]="opt.vendorName">{{
+                                        opt.vendorName }}</option>
+                                </select>
+                                <label for="vendor">Vendor*</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('vendor')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBaseCallerForm.get('vendor')?.errors?.['required']">
+                                        Please select Axis Vendor
+                                    </span>
+                                </span>
+                            </div>
+                        </div>    
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="abhiSalesManager" 
+                                    name="abhiSalesManager" 
+                                    placeholder="ABHI Sales Manager *" 
+                                    formControlName="abhiSalesManager" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('abhiSalesManager')?.invalid && (createBaseCallerForm.get('abhiSalesManager')?.touched || submitted) }">
+                                <label for="abhiSalesManager">ABHI Sales Manager *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('abhiSalesManager')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('abhiSalesManager')?.errors?.['required']">
+                                        Please enter ABHI Sales Manager.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('abhiSalesManager')?.errors?.['pattern']">
+                                        ABHI Sales Manager should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="abhiAreaHead" 
+                                    name="abhiAreaHead" 
+                                    placeholder="ABHI Area Head *" 
+                                    formControlName="abhiAreaHead" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('abhiAreaHead')?.invalid && (createBaseCallerForm.get('abhiAreaHead')?.touched || submitted) }">
+                                <label for="abhiAreaHead">ABHI Area Head *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('abhiAreaHead')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('abhiAreaHead')?.errors?.['required']">
+                                        Please enter ABHI Area Head.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('abhiAreaHead')?.errors?.['pattern']">
+                                        ABHI Area Head should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="recruitedMonitoringManager" 
+                                    name="recruitedMonitoringManager" 
+                                    placeholder="Recruited Monitoring Manager Code *" 
+                                    formControlName="recruitedMonitoringManager" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('recruitedMonitoringManager')?.invalid && (createBaseCallerForm.get('recruitedMonitoringManager')?.touched || submitted) }">
+                                <label for="recruitedMonitoringManager">Recruited Monitoring Manager Code *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('recruitedMonitoringManager')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('recruitedMonitoringManager')?.errors?.['required']">
+                                        Please enter Recruited Monitoring Manager Code.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('recruitedMonitoringManager')?.errors?.['pattern']">
+                                        Recruited Monitoring Manager Code should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="imdCode" 
+                                    name="imdCode" 
+                                    placeholder="IMD Code *" 
+                                    formControlName="imdCode" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBaseCallerForm.get('imdCode')?.invalid && (createBaseCallerForm.get('imdCode')?.touched || submitted) }">
+                                <label for="imdCode">IMD Code *</label>
+                                <span class="invalid-feedback" *ngIf="createBaseCallerForm.get('imdCode')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('imdCode')?.errors?.['required']">
+                                        Please enter IMD Code.
+                                    </span>
+                                    <span class="ui-error block-show" *ngIf="createBaseCallerForm.get('imdCode')?.errors?.['pattern']">
+                                        IMD Code should only contain alphanumeric characters.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                                  
+                        <div class="col-12 mt-4">
+                            <button type="submit" id="save" name="save" class="btn_red">Save</button>
+                        </div>
+                    </div>
+                </section>
+            </form>        
+        </div>
+    </div>
+</main>

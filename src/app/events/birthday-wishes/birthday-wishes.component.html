@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
         <div class="row m-0">
@@ -46,7 +46,7 @@
                             {{ isSendingAllWishes ? 'Sending...' : 'Send All' }}
                         </button>
                     </div>
-                    <div class="birthday-list-container body_flex_row">
+                    <!-- <div class="birthday-list-container body_flex_row">
                         <ng-container *ngFor="let birthday of birthdays; let i = index">
                             <div class="birthday-item">
                                 <span class="name">{{ birthday.name }}</span>
@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                         </ng-container>
-                    </div>
+                    </div> -->
                 
                     <div class="birthday-list-container body_flex_row">
                         <ng-container  *ngFor="let birthday of selectedDayBirthdays; let i = index">
@@ -79,7 +79,7 @@
                                 <h4 class="day-title">
                                     {{ day.date | date: 'EEEE, MMM d' }}
                                     <button class="nav-btn" (click)="navigateToDayView(day.date)">
-                                        <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                                        <img src="assets/navigate.png" alt="" style="width: 20px; height: 20px;">
                                     </button>
                                 </h4>
                             </header>
@@ -99,7 +99,7 @@
             
 
 
-                <div *ngIf="currentView === 'month'" class="month-view">
+                <!-- <div *ngIf="currentView === 'month'" class="month-view">
                     <h3>{{"Birthday Wishes for This Month" | translate}}</h3>
                     <div class="month-grid">
                         <div *ngFor="let day of getMonthDays()" class="day">
@@ -111,7 +111,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </section>
           </div>
       </div>

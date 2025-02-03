@@ -50,15 +50,15 @@
         </form>
 
         <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
-          <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
+          <label class="otp-text-wrap">The OTP has been sent to {{ maskedUserCode }}</label>
           <div class="otp-container">
-            <input type="password" id="otp0" class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-            <input type="password" id="otp1" class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-            <input type="password" id="otp2" class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-            <input type="password" id="otp3" class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-            <input type="password" id="otp4" class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-            <input type="password" id="otp5" class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
-          </div>
+            <input type="password" id="otp0" class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)" inputmode="numeric">
+            <input type="password" id="otp1" class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)" inputmode="numeric">
+            <input type="password" id="otp2" class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)" inputmode="numeric">
+            <input type="password" id="otp3" class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)" inputmode="numeric">
+            <input type="password" id="otp4" class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)" inputmode="numeric">
+            <input type="password" id="otp5" class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)" inputmode="numeric">
+          </div>    
           <button type="submit" id="verifylogin" name="verifylogin" (click)="onVerifyOTP()">
             <span>{{"Verify & Login" | translate}}</span>
           </button>

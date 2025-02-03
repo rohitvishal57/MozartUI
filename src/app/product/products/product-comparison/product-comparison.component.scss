@@ -60,4 +60,9 @@
 .quoteComparisonWraper .qc_item .qc_info.qc_info_grey {
   border:1px solid #ffffff;
 }
+@media (max-width: 767px) {
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+}
 /*---Plan Comparison Css End---*/

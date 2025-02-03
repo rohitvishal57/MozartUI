@@ -1,0 +1,22 @@
+    <!--Success Popup start-->  
+    <div class="popup-modal " id="modal-successCreateLead">
+        <div class="popup-modal-dialog">
+          <div class="popup-modal-content sorryError">
+            <div class="popup-modal-header">
+              <button mat-button mat-dialog-close class="popup-btn-close jsClosePopup" (click)="closeIcon()" data-bs-dismiss="modal-selfDetails" aria-label="modal-successCreateLead"></button>
+            </div>
+            <div class="popup-modal-body text-center">
+              <div class="sorryErrorImg successInfoImg">
+                  <img src="/assets/Img/success_icon.svg">  
+              </div>
+              <h6 class="popup-content-title">Success</h6>
+                <p>{{displayContent}}</p>
+              
+            </div>
+            <div class="popup-modal-footer justify-content-center">
+              <button type="button" class="btn_Default btn_red btn_save btn_width_f jsClosePopup" (click)="close()" aria-label="modal-successCreateLead">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Success Popup end-->

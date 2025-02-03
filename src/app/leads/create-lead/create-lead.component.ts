@@ -190,7 +190,7 @@ export class CreateLeadComponent implements OnInit {
 
     if (this.userValidations.invalid) {
       window.scrollTo(0, 0);
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields.", duration: 5000 });
+      this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields.", duration: 5000 });
       return;
     }
     else {
@@ -215,9 +215,9 @@ export class CreateLeadComponent implements OnInit {
       (response) => {
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
-            this.toast.success({ detail: "", summary: 'Lead is updated successfully.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Lead is updated successfully.', duration: 5000 });
           } else {
-            this.toast.success({ detail: "", summary: 'Lead is created successfully.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Lead is created successfully.', duration: 5000 });
           }
           this.router.navigate(['leads/leadsList'])
         }
@@ -285,13 +285,15 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('email')?.disable();
 
 
-    if(this.submittedUser?.leadStatus.includes('In progress')){
+   // ng if(this.submittedUser?.formSequence >0){
+      if(this.submittedUser?.leadStatus == 'In progress'){
       const formControls = this.userValidations.controls;
       Object.keys(formControls).forEach((key) => {
         if (key !== 'email') {
           formControls[key].disable();
         }
       });
+      //this.userValidations.get('leadStatus')?.enable();
       this.userValidations.get('leadSubStatus')?.enable();
     }
   }
@@ -360,7 +362,7 @@ export class CreateLeadComponent implements OnInit {
       this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
         (response) => {
           if (response.message == "Success") {
-            this.toast.success({ detail: "", summary: 'Note Added successfully.', duration: 5000 });
+            this.toast.success({ detail: "Success", summary: 'Note Added successfully.', duration: 5000 });
             this.router.navigate(['leads/leadsList'])
           }
         }, (error) => {
@@ -502,7 +504,7 @@ export class CreateLeadComponent implements OnInit {
     const reqData = {
       "pincode": pincode
     }
-    this.common.getPinCodeByCity(reqData).subscribe(
+    this.common.getCommonPinCodeByCity(reqData).subscribe(
       (response) => {
         if(response?.isSuccess){
          this.pincodeResponse = response?.data;         

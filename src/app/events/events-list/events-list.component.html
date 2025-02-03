@@ -5,16 +5,19 @@
           <div class="row m-0">
             <!-- <h2>{{"Events" | translate}} &gt; <a  (click)="navigateToBirthdays()" class="breadcrumb-link">{{"Birthdays" | translate}}</a>
             </h2> -->
-            <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 align-items-center">
-              <div class="body_flex_row">
-                <h2>{{"Events" | translate}}</h2>
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 d-flex align-items-center">
+              <div class="body_flex_row ">
+                <h2>{{"All Events" | translate}}</h2>
+                <button type="button" id="btn-birthday" name="btn-birthday" class="btn_red btn_redBirthday" (click)="navigateToEventsList()">
+                  {{"List" | translate}}
+                </button>
                 <button type="button" id="btn-birthday" name="btn-birthday" class="btn_red btn_redBirthday" (click)="navigateToBirthdays()">
                   {{"Birthdays" | translate}}
                 </button>
               </div>
             </div>
             <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex justify-content-end buttons_div">
-              <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="addEvents()">
+              <button type="button" id="addEvents" name="addEvents" class="btn_white btn_newRequest" (click)="addEvents()">
                 <img src="assets/Img/icon_plus_red.svg">{{"Add Event" | translate}}
             </button>
             </div>
@@ -90,58 +93,125 @@
                     *ngIf="view === CalendarView.Month" 
                     [viewDate]="viewDate" 
                     [events]="events" 
-                    (eventClicked)="handleEventClick($event)">
+                    (eventClicked)="handleEventClick($event)"
+                    (dayClicked)="handleDayClick($event)" 
+                    >
                   </mwl-calendar-month-view>
-               
+                  <!-- <ng-template #calendarCellTemplate let-day="day" let-events="events">
+                    <div class="cal-cell-top">
+                      {{ day.date | date:'d' }}
+                    </div>
+                    <div class="cal-events">
+                      <div
+                        *ngFor="let event of events; let i = index"
+                        class="cal-event"
+                        (click)="handleEventClick({ event: event })"
+                      >
+                        <div class="event-title">{{ event.title }}</div>
+                      </div>
+                    </div>
+                  </ng-template> -->
                   <ng-template #eventModal>
                     <h2 mat-dialog-title>{{"Event Details" | translate}}</h2>
-                    <mat-dialog-content>
-                      <mat-card>
-                        <mat-card-content>
-                          <h3 class="card-title mb-3">{{ selectedEvent?.meta?.activityTitle | translate }}</h3>
-                          <div class="row mb-2">
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"Customer Name" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.meta?.customerName | translate }}</p>
-                            </div>
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"Mobile Number" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.meta?.mobileNumber }}</p>
-                            </div>
-                          </div>
-                          <div class="row mb-2">
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"Activity Type" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.meta?.activityType }}</p>
-                            </div>
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"Date" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.start | date:'mediumDate' }}</p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"Start Time" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.start | date:'shortTime' }}</p>
-                            </div>
-                            <div class="col-md-6">
-                              <p class="mb-1"><strong>{{"End Time" | translate}}:</strong></p>
-                              <p>{{ selectedEvent?.end | date:'shortTime' }}</p>
-                            </div>
+                        <mat-card style="width: 90%;">
+                          <mat-card-content>
+                            <h3 class="card-title mb-3">{{ selectedEvent?.meta?.activityTitle | translate }}</h3>
                             <div class="row mb-2">
-                              <div class="col-12">
-                                <p class="mb-1"><strong>{{"Notes" | translate}}:</strong></p>
-                                <p>{{ selectedEvent?.note | translate }}</p>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Customer Name" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.customerName | translate }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Mobile Number" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.mobileNumber }}</p>
                               </div>
                             </div>
-                          </div>
-                        </mat-card-content>
-                      </mat-card>
-                    </mat-dialog-content>
+                            <div class="row mb-2">
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Activity Type" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.activityType }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Date" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.start | date:'mediumDate' }}</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Start Time" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.start | date:'shortTime' }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"End Time" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.end | date:'shortTime' }}</p>
+                              </div>
+                              <div class="row mb-2">
+                                <div class="col-12">
+                                  <p class="mb-1"><strong>{{"Notes" | translate}}:</strong></p>
+                                  <p>{{ selectedEvent?.note | translate }}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                      
                     <mat-dialog-actions align="end">
-                      <button mat-button mat-dialog-close  >{{"Close" | translate}}</button>
+                      <button mat-button mat-dialog-close>{{"Close" | translate}}</button>
                     </mat-dialog-actions>
-                  </ng-template>           
+                  </ng-template>
+                  <ng-template #eventModalCarousel>
+                    <h2 mat-dialog-title>{{"Event Details" | translate}}</h2>
+                    <ngx-slick-carousel  #slickModal="slick-carousel"  class="carousel" [config]="slickConfig">
+                      <div ngxSlickItem *ngFor="let selectedEvent of selectedMonthRecords" class="slide">
+                        <mat-card style="width: 90%;">
+                          <mat-card-content>
+                            <h3 class="card-title mb-3">{{ selectedEvent?.meta?.activityTitle | translate }}</h3>
+                            <div class="row mb-2">
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Customer Name" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.customerName | translate }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Mobile Number" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.mobileNumber }}</p>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Activity Type" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.meta?.activityType }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Date" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.start | date:'mediumDate' }}</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"Start Time" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.start | date:'shortTime' }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                <p class="mb-1"><strong>{{"End Time" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.end | date:'shortTime' }}</p>
+                              </div>
+                              <div class="row mb-2">
+                                <div class="col-12">
+                                  <p class="mb-1"><strong>{{"Notes" | translate}}:</strong></p>
+                                  <p>{{ selectedEvent?.note | translate }}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                    </ngx-slick-carousel>
+                    <mat-dialog-actions align="end">
+                      <button mat-button mat-dialog-close>{{"Close" | translate}}</button>
+                    </mat-dialog-actions>
+                  </ng-template> 
+                  <!-- <button (click)="slickModal.slickGoTo(2)">slickGoto 2</button>
+                  <button (click)="slickModal.unslick()">unslick</button> -->                                     
               </div>
             </section>
           </div>

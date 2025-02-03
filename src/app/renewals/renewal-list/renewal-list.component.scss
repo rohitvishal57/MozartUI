@@ -46,7 +46,7 @@ h6 {
 
 .tableSubMain .table th,
 .tableSubMain .table td {
-	padding: 8px 12px;
+	padding: 8px 6px;
 }
 
 .quickFilterMain {
@@ -248,10 +248,6 @@ h6 {
 //star rating css end
 
 
-.filterWraperForm {
-	padding: 15px 24px;
-}
-
 .filterWraperForm .fw_form header {
 	font-size: 21px;
 }
@@ -293,13 +289,13 @@ h6 {
 	width: 100%;
 }
 
-.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+/* .jsFilterBtnClick.active ,.jsFilterBtnClick.active {
 	background: var(--primary-red-color) !important;
 	color: white;
 	img{
 		filter: brightness(0) invert(1);
 	}
-  }
+  } */
   .quickFilterMain .quickFilter {
 	gap:5px;
   }
@@ -316,6 +312,12 @@ h6 {
 	gap:4px;
 	margin-right: 0;
   }
+  
+@media (max-width:820px) {
+	.quickFilterMain .quickFilterRight .filterWraper {
+		width: 130px;
+	}
+}
 @media(max-width:767px) {
 	.quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
@@ -325,10 +327,8 @@ h6 {
 	.filterWraperForm {
 		padding: 0;
 	}
-}
-@media (max-width:820px) {
-	.quickFilterMain .quickFilterRight .filterWraper {
-		width: 130px;
+	.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+		width: 100%;
 	}
 }
 .btn_quickFilter {
@@ -350,3 +350,8 @@ h6 {
 .common_searchWraper .field_searchMain button{
 	right:5px
 }
+@media (max-width: 767px) {
+    .siteBody {
+        padding-bottom: 6rem;
+    }
+  }

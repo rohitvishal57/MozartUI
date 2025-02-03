@@ -153,5 +153,14 @@
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
   min-height: initial;
 }
+@media (max-width:767px) {
+	.quickFilterLeft .quickFilter {
+		flex-wrap: nowrap;
+		/* min-width: 500px; */
+	}
+  .siteBody {
+      padding-bottom: 6rem;
+  }
+}
 /*---Common css end---*/
 /* Required Css End */

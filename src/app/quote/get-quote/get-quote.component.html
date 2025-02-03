@@ -27,7 +27,7 @@
     <div class="insurance_optionHUB" #scrollTarget [formGroup]="quoteFormGroup">
       <div class="dropdown-container ">
         <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
-        <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
+        <div class="field_div" [ngClass]="dropdown.label === 'Porting' ? 'porting_getQuote' : ''" *ngFor="let dropdown of dropdownOptions; let i = index">
           <!-- Label -->
           <label class="field_label">{{ dropdown.label | translate }}</label>
           <!-- Button for each dropdown -->
@@ -52,8 +52,11 @@
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
                   {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
-
-              </span><img src="assets/Img/down_arrow.svg">
+                <ng-container  *ngIf="dropdown.label === 'Porting'">
+                  {{ quoteFormGroup.get('isPortability')?.value ? quoteFormGroup.get('isPortability')?.value : ('Select' | translate) }}
+                </ng-container>
+                
+              </span><img src="assets/Img/icon_getquote_arrow.svg" ><!-- <span class="arrows_porting" *ngIf="dropdown.label === 'Porting'"><img src="assets/Img/icon_getquote_porting_arrow.svg" class="arrows_porting_left"><img src="assets/Img/icon_getquote_porting_arrow.svg" class="arrows_porting_right"></span> -->
             </div>
           </button>
 
@@ -61,8 +64,10 @@
           <div class="dropdownContent" *ngIf="activeDropdown === i+1">
 
 
-            <!-- Custom dropdown content for "Policy Type" -->
+            <!-- Custom dropdown content for "Policy Type" --> 
             <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Policy Type'">
+              <div class="sumInsured_value policy-type-close"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="font-size: 14px;" (click)="closeCustomDiv()"></button></div>
               <div class="option_policyType">
                 <div class="input-radio-block raido_policyType">
                   <label class="input-radiolabel">
@@ -96,6 +101,8 @@
             <!-- Sum Insured Dropdown -->
 
             <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Sum Insured'">
+              <div class="sumInsured_value policy-type-close"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="font-size: 14px;" (click)="closeCustomDiv()"></button></div>
               <div class="option_policyType">
                 <div class="overlay_body sumInsured_selectMain">
                   <div class="sumInsured_select">
@@ -166,9 +173,9 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
                         
-                        <input type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
-                          placeholder="" class="input-textBox" maxlength="10" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
-                          (input)="enforceMaxLength($event, 10)">
+                        <input type="text"  maxlength="10"  id="mobileNumber" name="mobileNumber" formControlName="mobileNumber"
+                           class="input-textBox" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
+                           (input)="enforceMaxLength($event, 10)">
                           <label for="mobileNumber" class="get-quote-label">
                             {{"Enter mobile no of proposer" | translate}} <span class="required">*</span>
                           </label>
@@ -232,9 +239,12 @@
                       </div>
                     </div>
                   </div>
-                  <h3>{{"Member details" | translate}}</h3>
+                  <div class="body_flex_row justify-content-between">
+                    <h3>{{"Member details" | translate}}</h3>
+                    <a *ngIf="checkGender" class="btn_linkText" (click)="viewAllToggleClass()">{{ viewAllToggleText }}</a>
+                  </div>
                   <div class="insurer_memberDetails" *ngIf="checkGender">
-                    <div class="input-checkbox-block input-checkbox-withIcon">
+                    <div class="input-checkbox-block input-checkbox-withIcon viewall_member less_members" [ngClass]="{'less_members': isClassAddedMembers}">
                       <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="self" value="self" class="input-check">
                                 <label for="self"><img
@@ -255,10 +265,11 @@
                                 <label for="{{relation.value}}"><img
                                     src="{{relation.imagePath}}">{{relation.name | translate}}</label>
                                 <div class="member_extraInfo">
-                                  <div class="member_extraInfoSub">
+                                  <div class="member_extraInfoSub member_extraInfoSubDate">
                                     <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
                                       [value]="relation.dob"  [max]="currentDate"
-                                      (input)="onAgeChange($event, relation)">
+                                      [ngClass]="{'mobiledate_textbox': hasAnyValue(relation)}"
+                                      (input)="onAgeChange($event, relation)" [placeholder]="datePlaceholder">
                                       <!-- <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
                                         src="assets/Img/icon_delete_red2.svg"></span> -->
                                     </div>
@@ -395,35 +406,64 @@
                   </div>
                 </div> -->
 
-            <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
-              <div class="close-popup">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                          style="font-size: 14px;" (click)="closeCustomDiv()"></button>
-              </div>
-              <div class="option_policyType">
-                <div class="overlay_body checkbox_disease_scroll">
-                  <div class="input-checkbox-block checkbox_disease">
-                    <div class="input-checkbox-feild" *ngFor="let disease of diseases">
-                      <input type="checkbox" [id]="disease.id" name="{{disease.id}}" [value]="disease.value"
-                        (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected(disease.value)"
-                        class="input-check">
-                      <label [for]="disease.id">{{ disease.label | translate }}</label>
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
+                  <div class="close-popup">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+                      style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+                  </div>
+                  <div class="option_policyType">
+                    <div class="overlay_body checkbox_disease_scroll">
+                      <div class="input-checkbox-block checkbox_disease">
+                        <div class="input-checkbox-feild" *ngFor="let disease of diseases">
+                          <input type="checkbox" 
+                                 [id]="disease.id" 
+                                 name="{{disease.id}}" 
+                                 [value]="disease.value" 
+                                 (change)="onDiseaseChange($event)" 
+                                 [checked]="isDiseaseSelected(disease.value)" 
+                                 class="input-check">
+                          <label [for]="disease.id">{{ disease.label | translate }}</label>
+                        </div>
+                      </div>
                     </div>
+                    <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
+                      (click)="diseaseSelection()">{{"Continue" | translate}}</button>
                   </div>
                 </div>
-                <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
-                  (click)="diseaseSelection()">{{"Continue" | translate}}</button>
-              </div>
-            </div>
-
-
-
+                <div class="overlay_popupMain overlay_dropdown_w220" *ngIf="selectedDropdown === 'Porting'">
+                  <div class="close-popup">
+                    <button type="button" class="btn-close" aria-label="Close"
+                      style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+                  </div>
+                  <div class="option_policyType">
+                    <div class="input-radio-block raido_policyType">
+                      <div class="input-radio-block input-radiolabel-porting">
+                      <label class="input-radiolabel">
+                        <input type="radio" name="porting" value="Yes"
+                          (click)="onPortingChange('Yes')"
+                          [checked]="quoteFormGroup.get('isPortability')?.value === 'Yes'">
+                        <span>
+                          <em class="pt-head">{{"Yes" | translate}}</em>
+                        </span>
+                      </label>
+                      <label class="input-radiolabel">
+                        <input type="radio" name="porting" value="No"
+                          (click)="onPortingChange('No')"
+                          [checked]="quoteFormGroup.get('isPortability')?.value === 'No'">
+                        <span>
+                          <em class="pt-head">{{"No" | translate}}</em>
+                        </span>
+                      </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
           </div>
         </div>
       </div>
 
       <div class="continue-btn-container">
-        <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey"
+        <button type="button" id="mainContinue" [disabled]="this.quoteFormGroup.status == 'INVALID' ? true : false" name="mainContinue" class="continue-btn-0 btn_grey"
           (click)="continue()">{{"Continue" | translate}}</button>
       </div>
     </div>

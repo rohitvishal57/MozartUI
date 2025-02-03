@@ -10,11 +10,11 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-radio-block">
                                 <label class="input-radiolabel ">
-                                    <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="performance" checked>
+                                    <input type="radio" name="selectedView" (change)="viewSelected($event)" formControlName="selectedView" value="performance" checked>
                                     <span>Performance</span>
                                 </label>
                                 <label class="input-radiolabel ">
-                                    <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="detailedView">
+                                    <input type="radio" name="selectedView" (change)="viewSelected($event)" formControlName="selectedView" value="detailedView">
                                     <span>Detailed View</span>
                                 </label>
                             </div>
@@ -32,7 +32,7 @@
                                 <div class="ud_area_left">
                                     <h6>Upload Documents</h6>
                                     <p>xlsx/xls/csv Files</p>
-                                    {{selctedFileName}}
+                                    <span class="uploaded_fileIno">{{selctedFileName}}</span>
                                 </div>
                                 <div class="ud_area_right">
                                     <button type="button" id="upload" name="upload" class="btn_uploadDocument">

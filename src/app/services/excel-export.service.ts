@@ -6,7 +6,9 @@ import { saveAs } from 'file-saver';
   providedIn: 'root',
 })
 export class ExcelExportService {
-  exportToExcel(data: any[], fileName: string): void {
+  constructor() {}
+
+  async exportToExcel(data: any[], fileName: string): Promise<void> {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
     const workbook: XLSX.WorkBook = {
       Sheets: { data: worksheet },
@@ -17,11 +19,14 @@ export class ExcelExportService {
       type: 'array',
     });
 
-    this.saveAsExcelFile(excelBuffer, fileName);
+    this.saveAsExcelFileForWeb(excelBuffer, fileName);
   }
 
-  private saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], { type: 'application/octet-stream' });
+  private saveAsExcelFileForWeb(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
     saveAs(data, `${fileName}.xlsx`);
   }
+
 }

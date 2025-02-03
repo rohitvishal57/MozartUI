@@ -20,88 +20,80 @@ export class KycStatusComponent {
     private router: Router,private encryptionService: EncryptionService,private toast: NgToastService) { 
   }
 
-  ngOnInit() {
-    console.log("redirection");
-    
+  ngOnInit() {    
     const params = this.route.snapshot.queryParams;
-  
     if (Object.keys(params).length) {
-      this.transactionId = params['transactionId'];
       if (params['token']) {
         localStorage.setItem('token', params['token']); 
-      } else {
-        console.warn('Token not found in query parameters');
       }
+      this.transactionId = params['transactionId'];
     }
-  
     if (!this.transactionId) {
       console.error('Order ID is missing');
       return;
     }
-  
-    console.log('Order ID:', this.transactionId);
     this.getKycStatus();
   }
   
-
-
     getKycStatus() {  
       const kycDetailsReq = {
-        "transactionId":  this.transactionId
+        transactionId :  this.transactionId,
+        businessType : "REN",
+        userType: ""
       }
-  
       this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
         (res: any) => {
-          if (res.kycStatus) {
+          console.log(res);
+          
+          if (res.data.kycStatus) {
             const kycData = res.data;
             const renewalInfoRequestBody = {
-              policy_Number: kycData.policyNumber,
+              policy_Number: res.data.policyNumber,
             };
             this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
               (res: any) => {
-                const formData = res.data;
-                formData.isKYCComplete=kycData.kycStatus;
-                formData.ckycNo = kycData.kycNumber;
-                if (kycData.paymentStatus) {
+                const formData = res.data;     
+                if (kycData.kycStatus) {
+                  console.log("kycStatue" , res.data.kycStatus);
+                  formData.isKycCompleted=true;
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
                       formData: this.encryptionService.encrypt(formData),
-                      proposalNum: this.encryptionService.encrypt(kycData.orderDetails.proposalNumber),
-                      policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
+                      proposalNum: this.encryptionService.encrypt(""),
+                      policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                      kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.paymentStatus == 'FAILED') {
+                } else if (!kycData.kycStatus) {
                   this.router.navigate(['renewal/renewalJourney'], {
                     state: {
-                      formData: this.encryptionService.encrypt(kycData.orderDetails),
-                      proposalNum: this.encryptionService.encrypt(kycData.orderDetails.proposalNumber),
-                      policyNumber: this.encryptionService.encrypt(kycData.orderDetails.policyNumber),
+                      formData: this.encryptionService.encrypt(formData),
+                      proposalNum: this.encryptionService.encrypt(""),
+                      policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                       journeyProcess: this.encryptionService.encrypt(0),
                       formSequence: this.encryptionService.encrypt([payment, thankYou]),
+                      kycStatus: this.encryptionService.encrypt(kycData.kycStatus),
                       formIndex: "0",
                     }
                   });
-                } else if (kycData.paymentStatus == 'INPROGRESS') {
-                  console.log('InProgress');
+                } else {
                   this.router.navigate(['renewal/renewalList']);
                 }
               },
               (err) => {
                 console.error("Error from getRenewalInfo API:", err);
-                this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+                this.toast.error({ detail: "Error", summary: "Error while getting renewal Information.", duration: 3000 });
               }
-            );
-            console.log(res.data);
-      
+            );      
           } else {
-            this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
+            this.toast.error({ detail: 'Error', summary: res.message || "Failed to do Payment", duration: 3000 });
           }
         },
         (err) => {
-          this.toast.error({ detail: '', summary: 'Failed to do kyc.', duration: 3000 });
+          this.toast.error({ detail: 'Error', summary: 'Failed to do kyc.', duration: 3000 });
           console.log("error is coming from fullquote api");
         }
       );

@@ -1459,7 +1459,8 @@ h2 {
     flex-direction: row !important;
     gap: 10px !important;
     .scroll_contentDashboard, .leads_newChart {
-        width: 50%;
+        /* width: 50%; */
+        width: 100%;
         @media (max-width:767px) {
             width: 100%;
         }
@@ -1633,7 +1634,154 @@ h2 {
         left: auto;
     }
 }
+@media (max-width:360px) {
+    .main_headerSearch .get-quote-btn {
+        padding: 6px 10px 6px 6px !important;
+    }
+    .dashboard_latestABHI{
+        margin-bottom: 140px;
+    }
+}
 
 /*---Responsive dahboard new sections styles end---*/
 
 /*---dahboard new sections styles end---*/
+
+/*--- Styles for Team View ---*/
+.teamView_container {
+    position: relative;
+    display: inline-block;
+  
+    .teamView_btn {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 400;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background: #fff;
+      }
+    }
+    .teamView_icon {
+        img {
+            width: 16px;
+        }
+    }
+  
+    .teamView_dropdown_container {
+      position: absolute;
+      top: 32px;
+      right: 0;
+      width: 200px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      padding: 12px;
+    }
+  
+    .teamView_dropdown_header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+  
+      .teamView_inputText {
+        width: 85%;
+        border-radius: 20px;
+        border: 1px solid var(--bg-verylight-grey);
+        background: #efefef;
+        font-size: 12px;
+        font-weight: 400;
+        padding: 4px 35px 4px 16px;
+      }
+  
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #d32f2f;
+        transition: color 0.3s ease;
+  
+        &:hover {
+          color: #b71c1c;
+        }
+      }
+    }
+  
+    .teamView_dropdown_body {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 8px 0;
+       .input-checkbox-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        .input-checkbox-feild {
+            .input-check + label {
+                font-size: 14px;
+                font-weight: 300;
+            }
+        }
+       }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        input[type='checkbox'] {
+          width: 16px;
+          height: 16px;
+          accent-color: #C7222A;
+          cursor: pointer;
+        }
+      }
+    }
+  
+    .teamView_dropdown_footer {
+      text-align: center;
+      padding-top: 10px;
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      button {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #C7222A;
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        flex: auto;
+        &:hover {
+          color: #fff;
+          background: #a61d24;
+        }
+      }
+  
+      .deselect-all {
+        flex: auto;
+        color: #d32f2f;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+      }
+    }
+}
+  

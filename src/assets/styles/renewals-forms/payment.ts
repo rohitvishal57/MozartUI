@@ -1,4 +1,4 @@
-export const payment={
+export const payment = {
   "formTitle": "Payment",
   "saveBtnTitle": "Next",
   "prevBtnTitle": "Back",
@@ -14,8 +14,8 @@ export const payment={
       "class": "kyc-container",
       "formControls": [
         {
-          "name": "shareKyc",
-          "label": "Share KYC",
+          "name": "checkKycControl",
+          "label": "Check KYC",
           "type": "text",
           "class": "",
           "disabled": false,
@@ -30,9 +30,9 @@ export const payment={
           "disabled": false,
           "visible": true,
           "methodName": "shareKycURL",
-          // "dependentControls": [
-          //   "copyLink"
-          // ]
+          "dependentControls": [
+            "kycCopyLink"
+          ]
         },
         {
           "name": "initiateKyc",
@@ -42,16 +42,36 @@ export const payment={
           "disabled": false,
           "visible": true,
           "methodName": "initiateKycURL",
-          "onChangeMethod":"",
+          "onChangeMethod": "",
           // "dependentControls": [
           //   "copyLink"
           // ]
         },
+        {
+          "name": "skipKyc",
+          "label": "Skip KYC",
+          "value": "",
+          "type": "button",
+          "class": "send-link-btn send-btn",
+          "disabled": false,
+          "visible": true,
+          "methodName": "skipKycURL"
+        },
+        {
+          "name": "kycCopyLink",
+          "label": "KYC Link",
+          "visibleLabel": true,
+          "value": "",
+          "type": "editableInfo",
+          "class": "col-12 col-lg-8 col-md-8",
+          "disabled": true,
+          "visible": false
+        }
       ],
-    }, 
+    },
     {
       "sectionTitle": "Share Payment Link",
-      "visible": true,
+      "visible": false,
       "visibleLabel": true,
       "class": "payment-container",
       "formControls": [
@@ -128,8 +148,8 @@ export const payment={
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
-          {
-            "name": "autoDebit",
+        {
+          "name": "autoDebit",
           "label": "Auto Debit",
           "visibleLabel": false,
           "visible": true,
@@ -161,14 +181,14 @@ export const payment={
             "totalPremium",
             "chequeNumber",
             "chequeDate",
-            "accountNumber",
-            "ifscCode",
+            "paymentAccountNumber",
+            "paymentIfscCode",
             "paymentBankName",
             "chequeCopy",
             "documentProofUpload",
-            "paymentBankCity",
-            "paymentBankBranch",
-            "micrCode",
+            "paymentBankCityName",
+            "paymentBankBranchName",
+            "paymentMicrCode",
             "nextOffline"
           ]
         },
@@ -207,27 +227,27 @@ export const payment={
                   "visibility": true
                 },
                 {
-                  "name": "ifscCode",
+                  "name": "paymentIfscCode",
                   "visibility": true
                 },
                 {
-                  "name": "accountNumber",
+                  "name": "paymentAccountNumber",
                   "visibility": true
                 },
                 {
-                  "name": "bankName",
+                  "name": "paymentBankName",
                   "visibility": true
                 },
                 {
-                  "name": "bankCity",
+                  "name": "paymentBankCityName",
                   "visibility": true
                 },
                 {
-                  "name": "bankBranch",
+                  "name": "paymentBankBranchName",
                   "visibility": true
                 },
                 {
-                  "name": "micrCode",
+                  "name": "paymentMicrCode",
                   "visibility": true
                 },
                 {
@@ -351,34 +371,34 @@ export const payment={
           "label": "Cheque Number",
           "visible": false,
           "visibleLabel": true,
-          "type": "number",
+          "type": "text",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
               "validatorName": "required",
               "required": true,
-              "message": "6 Digits Cheque number is required field."
+              "message": "Enter 6 Digits Cheque Number it is a required field."
             },
             {
               "validatorName": "pattern",
-              "pattern": "^(?!.*[_-]{2,})(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[1-9][0-9]*(?:[_-][0-9]+)*[0-9]$",
-              "message": "Enter a valid 6-digit cheque number"
+              "pattern": "^(?!000000$|999999$)[0-9_-]{6}$",
+              "message": "Only 6 digits are allowed, including optional - or _, excluding 000000 and 999999."
             },
             {
               "validatorName": "maxlength",
-              "maxLength": 8,
-              "message": "Maximum length is 8 characters."
+              "maxLength": 6,
+              "message": "Invalid number, maximum length is 6 characters."
             },
             {
               "validatorName": "minlength",
               "minLength": 6,
-              "message": "Minimum length is 6 characters."
+              "message": "Invalid number, minimum length is 6 characters."
             }
           ]
         },
         {
-          "name": "accountNumber",
+          "name": "paymentAccountNumber",
           "label": "Account Number",
           "visible": false,
           "visibleLabel": true,
@@ -394,7 +414,7 @@ export const payment={
             {
               "validatorName": "pattern",
               "pattern": "^[0-9]{9,18}$",
-              "message": "Account Number should be between 9 to 18 digits"
+              "message": "Provide between 9 to 18 digits"
             }
           ]
         },
@@ -446,9 +466,11 @@ export const payment={
           "visible": false,
           "visibleLabel": true,
           "minDateLength": "currentDate",
-          "maxDateLength": "futureDate",
+          "maxDateLength": "currentDate",
           "type": "date",
           "value": "",
+          "disabled": true,
+          "methodName": "currentDateValue",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
@@ -497,7 +519,7 @@ export const payment={
           "visibleLabel": true,
           "getAllOption": "getAllBankDetails",
           "onChangeMethod": "getBankCity",
-          "otherControlName": "paymentBankCity",
+          "otherControlName": "paymentBankCityName",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -511,12 +533,12 @@ export const payment={
           ]
         },
         {
-          "name": "paymentBankCity",
+          "name": "paymentBankCityName",
           "label": "Bank City",
           "visible": false,
           "visibleLabel": true,
           "onChangeMethod": "getBranchDetails",
-          "otherControlName": "paymentBankBranch",
+          "otherControlName": "paymentBankBranchName",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -530,13 +552,13 @@ export const payment={
           ]
         },
         {
-          "name": "paymentBankBranch",
+          "name": "paymentBankBranchName",
           "label": "Bank Branch",
           "visible": false,
           "visibleLabel": true,
           "type": "select",
           "onChangeMethod": "setIfscCode",
-          "otherControlName": "ifscCode",
+          "otherControlName": "paymentIfscCode",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
           "options": [],
@@ -549,7 +571,7 @@ export const payment={
           ]
         },
         {
-          "name": "ifscCode",
+          "name": "paymentIfscCode",
           "label": "IFSC Code",
           "visibleLabel": true,
           "visible": false,
@@ -566,7 +588,7 @@ export const payment={
           ]
         },
         {
-          "name": "micrCode",
+          "name": "paymentMicrCode",
           "label": "MICR Code",
           "visibleLabel": true,
           "disabled": true,
@@ -655,16 +677,16 @@ export const payment={
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "onSubmit",
-          "onClickMethod": "uploadSelectedDocument"
+          "onClickMethod": "getFullQuoteViaOfflinePayment"
         },
         {
-            "name": "nextOnline",
-            "label": "Next",
-            "visibleLabel": false,
-            "visible": false,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "redirectToJustPay"
+          "name": "nextOnline",
+          "label": "Next",
+          "visibleLabel": false,
+          "visible": false,
+          "type": "button",
+          "class": "col-12 col-md-6 col-lg-2 next-btn",
+          "methodName": "redirectToJustPay"
         },
         {
           "name": "back",
@@ -679,3 +701,500 @@ export const payment={
     }
   ]
 }
+
+
+export const leads = {
+  "formTitle": "Leads",
+  "saveBtnTitle": "Next",
+  "prevBtnTitle": "Back",
+  "resetBtnTitle": "",
+  "calculateBtnTitle": "",
+  "saveBtnFunction": "generatehalfqoute",
+  "themeFile": "ABHI.css",
+  "formSections": [
+    {
+      "sectionTitle": "Nominee Details",
+      "visible": true,
+      "visibleLabel": true,
+      "class": "section-title",
+      "formControls": [
+        {
+          "name": "nomineeFirstName",
+          "label": "First Name",
+          "visibleLabel": true,
+          "type": "text",
+          "value": "",
+          "visible": true,
+          "class": "col-12 col-md-6 col-lg-4",
+          "disabled": false,
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "First Name is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[a-zA-Z ]{1,35}$",
+              "message": "Maxmium Length for FirstName is 25"
+            }
+          ]
+        },
+        {
+          "name": "nomineeMiddleName",
+          "label": "Middle Name",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4"
+        },
+        {
+          "name": "nomineeLastName",
+          "label": "Last Name",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Last Name is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[a-zA-Z ]{1,35}$",
+              "message": "Maxmium Length for LastName is 25"
+            }
+          ]
+        },
+        {
+          "name": "nomineeDob",
+          "label": "Date of Birth",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "date",
+          "disabled": false,
+          "onChangeMethod": "checkNomineeAge",
+          "dependentControls": [
+            "appointeeName",
+            "appointeeContactNo",
+            "appointeeRelationWithNominee"
+          ],
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "DOB is required field"
+            }
+          ]
+        },
+        {
+          "name": "nomineeRelationWithProposer",
+          "label": "Relation with Proposer",
+          "visibleLabel": true,
+          "type": "select",
+          "visible": true,
+          "getAllOption": "getNomineeRelationShip",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "options": [],
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Nominee Relationship is required field"
+            }
+          ]
+        },
+        {
+          "name": "nomineeAddress",
+          "label": "Nominee Address",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Nominee Address is a required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[a-zA-Z0-9/, ]{1,50}$",
+              "message": "Address only contains alphabets, digits, (/), (,), and up to 50 characters"
+            }
+          ]
+        },
+        {
+          "name": "nomineeContactNo",
+          "label": "Nominee Contact Details",
+          "visibleLabel": true,
+          "visible": true,
+          "value": "",
+          "disabled": false,
+          "type": "phonenumber",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Nominee number is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[6-9]\\d{9}$",
+              "message": "Mobile No is not valid"
+            }
+          ]
+        },
+        {
+          "name": "appointeeName",
+          "label": "Appointee Name",
+          "visibleLabel": true,
+          "type": "text",
+          "value": "",
+          "visible": false,
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Appointee Name is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[a-zA-Z ]{1,35}$",
+              "message": "Maxmium Length for AppointeeName is 25"
+            }
+          ]
+        },
+        {
+          "name": "appointeeContactNo",
+          "label": "Appointee Contact Number",
+          "visibleLabel": true,
+          "visible": false,
+          "type": "phonenumber",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          // "validators": [
+          //   {
+          //     "validatorName": "required",
+          //     "required": true,
+          //     "message": "Mobile No is required field"
+          //   },
+          //   {
+          //     "validatorName": "pattern",
+          //     "pattern": "^[6-9]\\d{9}$",
+          //     "message": "Mobile No is not valid"
+          //   }
+          // ]
+        },
+        {
+          "name": "appointeeRelationWithNominee",
+          "label": "Relation With Proposer",
+          "visible": false,
+          "visibleLabel": true,
+          "value": "",
+          "type": "select",
+          "getAllOption": "getNomineeRelationShip",
+          "options": [],
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Appointee Relationship is required field"
+            }
+          ]
+        },
+        {
+          "name": "gender",
+          "label": "Gender",
+          "visibleLabel": true,
+          "type": "",
+          "class": "col-md-4 control",
+          "value": "",
+          "methodName": "",
+          "subType": "",
+          "disabled": false,
+          "otherControlName": "",
+          "visible": true,
+          "options": [
+            {
+              "id": 1,
+              "name": "Male",
+              "value": "M"
+            },
+            {
+              "id": 2,
+              "name": "Female",
+              "value": "F"
+            }
+          ],
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Select is a required field."
+            }
+          ]
+        },
+        {
+          "name": "Nominee Details",
+          "label": "Save",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "disabled": false,
+          "class": " col-12 send-link-btn send-btn",
+          "methodName": "checkleadValidation"
+        },
+      ]
+    },
+    {
+      "sectionTitle": "Bank Account Details",
+      "visible": true,
+      "visibleLabel": true,
+      "class": "section-title",
+      "formControls": [
+        {
+          "name": "proposerName",
+          "label": "Account Holder Name",
+          "visibleLabel": true,
+          "type": "text",
+          "visible": true,
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          // "methodName":"checkBankDetail",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Account Holder name is required field"
+            }
+          ]
+        },
+        {
+          "name": "accountNumber",
+          "label": "Account No",
+          "visible": true,
+          "visibleLabel": true,
+          "type": "number",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Account Number is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[0-9]{9,18}$",
+              "message": "Account Number should be between 9 to 18 digits"
+            }
+          ]
+        },
+        {
+          "name": "accountType",
+          "label": "Account Type",
+          "visible": true,
+          "visibleLabel": true,
+          "type": "select",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "options": [
+            {
+              "name": "Savings",
+              "value": "02",
+              "selected": true
+            },
+            {
+              "name": "Current",
+              "value": "01",
+              "selected": false
+            }
+          ],
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Account Type is required field"
+            }
+          ]
+        },
+        {
+          "name": "bankName",
+          "label": "Bank Name",
+          "visible": true,
+          "visibleLabel": true,
+          "getAllOption": "getAllBankDetails",
+          "onChangeMethod": "getBankCity",
+          "otherControlName": "bankCity",
+          "type": "select",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "options": [],
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Bank name is required field"
+            }
+          ]
+        },
+        {
+          "name": "bankCity",
+          "label": "Bank City",
+          "visible": true,
+          "visibleLabel": true,
+          "onChangeMethod": "getBranchDetails",
+          "otherControlName": "bankBranch",
+          "type": "select",
+          "value": "",
+          "disabled": false,
+          "class": "col-12 col-md-6 col-lg-4",
+          "options": [],
+          // "validators": [
+          //   {
+          //     "validatorName": "required",
+          //     "required": true,
+          //     "message": "Bank City is required field"
+          //   }
+          // ]
+        },
+        {
+          "name": "bankBranch",
+          "label": "Bank Branch",
+          "visible": true,
+          "visibleLabel": true,
+          "type": "select",
+          "onChangeMethod": "setIfscCode",
+          "otherControlName": "ifscCode",
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "options": [],
+          "disabled": false,
+          // "validators": [
+          //   {
+          //     "validatorName": "required",
+          //     "required": true,
+          //     "message": "Bank Branch is required field"
+          //   }
+          // ]
+        },
+        {
+          "name": "ifscCode",
+          "label": "IFSC Code",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "disabled": true,
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "IFSC is required field"
+            }
+          ]
+        },
+        {
+          "name": "Bank Account Details",
+          "label": "Save",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "class": "col-12 send-link-btn send-btn",
+          "methodName": "checkleadValidation"
+        },
+      ]
+    },
+    {
+      "sectionTitle": "Bottom Section",
+      "visible": true,
+      "class": "section-title bottom-section",
+      "formControls": [
+        {
+          "name": "plandetails",
+          "label": "Plan Details",
+          "visibleLabel": true,
+          "type": "summary",
+          "value": "",
+          "class": "col-md-12",
+          "visible": true,
+          "disabled": true
+        },
+        {
+          "name": "productName",
+          "label": "Product Name",
+          "visibleLabel": false,
+          "visible": true,
+          "disabled": true,
+          "type": "boldtext",
+          "class": "col-12 col-md-6 col-lg-3 bottom-product",
+          "value": "",
+          "text": "Aditya Birla Health Insurance"
+        },
+        {
+          "name": "totalPremium",
+          "label": "Total Premium/Incl tax",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "boldtext",
+          "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "policyNumber",
+          "label": "Policy Number",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "boldtext",
+          "class": "col-12 col-md-6 col-lg-3",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "next",
+          "label": "Next",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "class": "col-12 col-md-6 col-lg-2 next-btn",
+          "methodName": "onSubmit",
+        },
+        {
+          "name": "back",
+          "label": "Back",
+          "visibleLabel": false,
+          "visible": true,
+          "type": "button",
+          "class": "col-12 col-md-6 col-lg-2 back-btn",
+          "methodName": "onPrevious"
+        }
+      ]
+    }
+  ]
+}
+
+

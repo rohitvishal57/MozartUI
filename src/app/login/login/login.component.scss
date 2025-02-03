@@ -1,3 +1,6 @@
+body {
+    background: #FFFFFF;
+}
 .login-mainContainer {
     width: 100%;
     min-height: 100vh;
@@ -176,6 +179,11 @@
                     width: 41px !important;
                     margin-right: 7px !important;
                 }
+                @media (max-width:320px) {
+                    width: 35px !important;
+                    height: 35px;
+                    padding: 6px !important;
+                }
             }
             .otp-text-wrap {
                 color: #000000;
@@ -302,6 +310,7 @@
         left: 0;
         z-index: -1;
         text-align: center;
+        background: #FFFFFF;
         &:before {
             content: '';
             position: absolute;

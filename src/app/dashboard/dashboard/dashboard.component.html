@@ -1,4 +1,4 @@
-<main class="siteBody">
+<main class="siteBody siteBody_padding">
   <div class="contentBody bodyColumns-1 bodyColumns-dashboard">
     <div class="bodyColumn body_flex_column">
       <div class="contentBody dashboard_contentContainer body_flex_column">
@@ -12,9 +12,9 @@
                 src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
             </div>
           </div> -->
-          <div class="body_flex_row align-items-center justify-content-between">
+          <div class="body_flex_row align-items-center justify-content-between customiseDashboard_bodyColumns">
             <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
-            <button type="button" class="btn_iconText btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
+            <button type="button" class="block-hide btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
               src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
           </div>
         </section>
@@ -259,12 +259,50 @@
             <!-- performance -->
             <div cdkDrag [cdkDragDisabled]="!isDesktopView" class="contentBody dashboard_contentContainer"
               *ngIf="section.widgetName == 'Performance'">
-              <div class="performance-overview">
+              <div class="performance-overview" *ngIf="performanceCard.length">
                 <div class="body_flex_row justify-content-between align-items-center">
                   <h2>{{"Performance Overview" | translate}}</h2>
                   <div class="filter_performanceOverview">
                     <div class="filterfields_PO">
                       <div class="filterfields_input">
+                        <div class="teamView_container">
+                            <!-- Team View Button -->
+                            <button class="teamView_btn" (click)="toggleDropdown()">
+                              Team View <span class="teamView_icon"><img
+                                src="assets/Img/icon_teamview.svg"></span>
+                            </button>
+                          
+                            <!-- Dropdown (Shown When Clicked) -->
+                            <div *ngIf="isDropdownOpen" class="teamView_dropdown_container" #dropdown>
+                              <!-- Header with Search Bar & Close Button -->
+                              <div class="teamView_dropdown_header">
+                                <input type="text" placeholder="Find something" [(ngModel)]="filterText" (input)="filterItems()" class="teamView_inputText" />
+                                <button class="btn-close" (click)="closeDropdown()"></button>
+                              </div>
+                          
+                              <!-- Dropdown Items -->
+                              <div class="teamView_dropdown_body">
+                                <div class="input-checkbox-block">
+                                    <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
+                                      <input type="checkbox" id="{{ item.name }}-{{i}}" [(ngModel)]="item.selected" (change)="onInputChange()" class="input-check" />
+                                      <label for="{{ item.name }}-{{i}}">{{ item.name }}</label>
+                                    </div>
+                                </div>
+                                <!-- <div *ngFor="let item of filteredItems" class="item">
+                                  <label>{{ item.name }}</label>
+                                  <input type="checkbox" [(ngModel)]="item.selected" />
+                                </div> -->
+                              </div>
+                          
+                              <!-- Footer -->
+                              <div class="teamView_dropdown_footer">
+                                <span class="deselect-all" (click)="toggleSelectAll()">{{ isAllSelected ? 'Clear All' : 'Select All' }}</span>
+                                <button (click)="submit()">Submit</button>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="filterfields_input"> 
                         <div class="input-block input-block-renew compare_inputblock">
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                             [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)"
@@ -288,7 +326,7 @@
                     (cdkDropListDropped)="dropPerformance($event)">
                     <ng-container *ngFor="let perform of performanceCard">
                       <ng-container [ngSwitch]="perform.type">
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -297,7 +335,7 @@
                           <div class="card-tip" *ngIf="perform.description"><img
                               [src]="perform.subIcon">{{perform.description | translate}}</div>
                         </div>
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -308,7 +346,7 @@
                             <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                           </div>
                         </div>
-                        <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [queryParams]="{ status: 1}" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -318,7 +356,7 @@
                               src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
                           </div>
                         </div>
-                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
@@ -346,7 +384,7 @@
                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
                          (change)="onSelectFilter('Business', businessFilter)">
-                         <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                         <option *ngFor="let opt of commonFilterList" [value]="opt">
                            {{ opt | translate }}
                          </option>
                        </select>
@@ -366,11 +404,11 @@
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
-                       <div class="data_inscroll">
+                       <div class="data_inscroll_noneed">
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Leads'">
-                               <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -378,7 +416,7 @@
                                </div>
                              </div>
                              <div *ngSwitchCase="'Proposals'">
-                               <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -389,7 +427,7 @@
                          </ng-container>
                        </div>
                      </div>
-                     <div [ngSwitch]="tab.chart">
+                     <div [ngSwitch]="tab.chart" class="block-hide">
                        <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
                          <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
@@ -413,9 +451,9 @@
                     <div class="filterfields_input">
                       <div class="input-block input-block-renew compare_inputblock">
                         <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
-                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
-                          (change)="onSelectFilter('Business', businessFilter)">
-                          <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                          [(ngModel)]='renewalFilter' id="renewalFilter" name="renewalFilter"
+                          (change)="onSelectFilter('Renewal', businessFilter)">
+                          <option *ngFor="let opt of commonFilterList" [value]="opt">
                             {{ opt | translate }}
                           </option>
                         </select>
@@ -427,7 +465,7 @@
               <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropRenewal($event)">
                 <ng-container *ngFor="let tab of renewalDetail">
-                  <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="!isDesktopView"
+                  <div cdkDrag [cdkDragDisabled]="!isDesktopView"
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                     <header class="leads_itemHeader"
                       [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
@@ -435,11 +473,11 @@
                     </header>
                     <div class="leads_content leads_contentDashboard leads_newService">
                       <div class="scroll_contentDashboard">
-                        <div class="data_inscroll">
+                        <div class="data_inscroll_noneed">
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                               <div *ngSwitchCase="'Renewal'">
-                                <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -447,19 +485,19 @@
                                 </div>
                               </div>
                               <div *ngSwitchCase="'Persistency'">
-                                <div class="leads_item leads_open">
+                                <!-- <div class="leads_item leads_open">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
                                   </header>
-                                </div>
+                                </div> -->
                                 <app-guage [halfProgress]="tab.totalCount" style="margin: auto;  width:100%" [guageType]="'half-moon'"></app-guage>
                               </div>
                             </div>
                           </ng-container>
                         </div>
                       </div>
-                      <div [ngSwitch]="tab.chart">
+                      <div [ngSwitch]="tab.chart" class="block-hide">
                         <div *ngSwitchCase="'Renewal'" class="chart-container" style="position: relative; width:100%">
                           <canvas #chartRenewCanvas style="margin: auto;  width:100%"></canvas>
                         </div>
@@ -484,11 +522,11 @@
                    </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
-                       <div class="data_inscroll">
+                       <div class="data_inscroll_noneed">
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                              <div *ngSwitchCase="'Customer'">
-                               <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -497,7 +535,7 @@
                              </div>
                             
                              <div *ngSwitchCase="'Claims'">
-                               <div class="leads_item leads_open" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -508,14 +546,14 @@
                          </ng-container>
                        </div>
                      </div>
-                     <div class="leads_newChart" [ngSwitch]="tab.chart">
+                     <div class="leads_newChart block-hide" [ngSwitch]="tab.chart">
                        <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
                          <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
                        <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
                  </div> -->
-                       <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
+                       <div *ngSwitchCase="'Claims'" class="chart-container block-hide" style="position: relative; width:100%">
                          <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
                        </div>
                      </div>
@@ -795,7 +833,7 @@
                         <div class="input-block input-block-renew compare_inputblock">
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
                             [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
-                            <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                            <option *ngFor="let opt of commonFilterList" [value]="opt">
                               {{ opt | translate }}
                             </option>
                           </select>

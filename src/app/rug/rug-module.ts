@@ -4,10 +4,10 @@ import { CommonModule } from "@angular/common";
 import { RugDynamicFormComponent } from "./rug-dynamic-form/rug-dynamic-form.component";
 import { PrimeNgModule } from "../prime-ng.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { RugRoutingModule } from "./rug-routing.module";
 import { OtpPopupComponent } from './otp-popup/otp-popup.component';
 import { MyMaterialModule } from "../material.module";
@@ -18,18 +18,74 @@ import { ProductDownloadComponent } from "./components/product-download/product-
 import { SafeUrlPipe } from "./components/product-download/safe-url.pipe";
 import { D2cTestPageComponent } from './d2c-test-page/d2c-test-page.component';
 import { BbTestPageComponent } from './bb-test-page/bb-test-page.component';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CreateAVComponent } from "./Admin/AV_Upload/create-av/create-av.component";
+import { AVListComponent } from "./Admin/AV_Upload/av-list/av-list.component";
+import { BulkUploadComponent } from "./Admin/AV_Upload/bulk-upload/bulk-upload.component";
+import { ViewMakerCheckerLeadsComponent } from './components/view-maker-checker-leads/view-maker-checker-leads.component';
+import { ViewForSoloJourneyComponent } from "./Admin/View_For_Solo_Journey/view-for-solo-journey/view-for-solo-journey.component";
+import { CreateBasecallerComponent } from "./Admin/basecaller-upload/create-basecaller/create-basecaller.component";
+import { BulkUploadBasecallerComponent } from "./Admin/basecaller-upload/bulk-upload-basecaller/bulk-upload-basecaller.component";
+import { BasecallerListComponent } from "./Admin/basecaller-upload/basecaller-list/basecaller-list.component";
+import { ViewUnverifiedLeadsComponent } from "./Admin/View_Unverified_Leads/view-unverified-leads/view-unverified-leads.component";
+import { ViewForDualJourneyComponent } from "./Admin/View_For_Dual_Journey/view-for-dual-journey/view-for-dual-journey.component";
+import { ReassignpopupComponent } from "./Admin/View_For_Solo_Journey/reassignpopup/reassignpopup.component";
+import { AuditpopupComponent } from "./components/auditpopup/auditpopup.component";
+import { SuccesspopupComponent } from "./components/successpopup/successpopup.component";
+import { ProductDetailsComponent } from "./Admin/Product_Details/product-details/product-details.component";
+import { ProposalPolicyViewDetailsComponent } from "./Admin/Proposal_Policy_View_Details/proposal-policy-view-details/proposal-policy-view-details.component";
+import { ManageLobComponent } from "./Admin/lob/manage-lob/manage-lob.component";
+import { CreateLobComponent } from "./Admin/lob/create-lob/create-lob.component";
+import { CancelPopupComponent } from "./Admin/lob/cancel-popup/cancel-popup.component";
+import { ConfirmPopupComponent } from "./Admin/lob/confirm-popup/confirm-popup.component";
+import { UpdatedPopupComponent } from "./Admin/lob/updated-popup/updated-popup.component";
+import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renewal-do-home.component";
+import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
+import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
+import { RetailsRenewalLeadsComponent } from "./retails-renewal-leads/retails-renewal-leads.component";
+import { HdfcCustomerRegistrationComponent } from './components/hdfc-customer-registration/hdfc-customer-registration.component';
+import { HdfcValidationPopupComponent } from './components/hdfc-validation-popup/hdfc-validation-popup.component';
+
+
 
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/','.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-    declarations:[RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent, ViewLeadsComponent,
+    declarations: [RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent, ViewLeadsComponent,
         ProductDownloadComponent,
         SafeUrlPipe,
         D2cTestPageComponent,
-        BbTestPageComponent
+        BbTestPageComponent,
+        CreateAVComponent,
+        AVListComponent,
+        BulkUploadComponent,
+        ViewMakerCheckerLeadsComponent,
+        ViewForSoloJourneyComponent,
+        CreateBasecallerComponent,
+        BulkUploadBasecallerComponent,
+        BasecallerListComponent,
+        ViewUnverifiedLeadsComponent,
+        ViewForDualJourneyComponent,
+        ReassignpopupComponent,
+        AuditpopupComponent,
+        SuccesspopupComponent,
+        ProductDetailsComponent,
+        ProposalPolicyViewDetailsComponent,
+        ManageLobComponent,
+        CreateLobComponent,
+        CancelPopupComponent,
+        ConfirmPopupComponent,
+        UpdatedPopupComponent,
+        GroupRenewalDoHomeComponent,
+        GroupRenewalModifyViewComponent,
+        GroupRenewalPhase2LeadsComponent,
+        RetailsRenewalLeadsComponent,
+        HdfcCustomerRegistrationComponent,
+        HdfcValidationPopupComponent
     ],
-    imports:[
+    
+    imports: [
         CommonModule,
         PrimeNgModule,
         ClipboardModule,
@@ -39,11 +95,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         FormsModule,
         TranslateModule.forRoot({
             loader: {
-              provide: TranslateLoader,
-              useFactory: HttpLoaderFactory,
-              deps: [HttpClient]
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
             }
         })
     ]
 })
-export class RugModule{}
+export class RugModule { }

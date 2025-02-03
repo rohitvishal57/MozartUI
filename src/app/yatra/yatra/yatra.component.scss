@@ -106,6 +106,7 @@
     position: relative;
     display: inline-block;
     margin-left: 5px;
+    pointer-events: auto !important;
 }
 .tooltip-wrapper:hover .tooltip-text {
     visibility: visible;
@@ -114,8 +115,9 @@
 .tooltip-wrapper .tooltip-text {
     visibility: hidden;
     position: absolute;
-    z-index: 1;
-    bottom: 125%;
+    z-index: 2;
+    bottom: auto !important;
+    top: -25px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -129,6 +131,13 @@
     font-size: 12px;
     width: 300px;
 }
+.tooltip-wrapper .tooltip-text.tooltip-textcheckbox {
+    top: 16px;
+}
+.tooltip-wrapper .tooltip-text.tooltip-textidnumber {
+    bottom: 21px !important;
+    top: auto;
+}
  .input-container:has(.tooltip-wrapper .tooltip-text:not(:empty)):hover .tooltip-wrapper .tooltip-text {
     visibility: visible;
     opacity: 1;
@@ -136,7 +145,7 @@
 .tooltip-wrapper .tooltip-text::after {
     content: "";
     position: absolute;
-    top: 100%;
+    top: -1px;
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
@@ -146,4 +155,71 @@
 .tooltip-wrapper .info-icon img {
     width: 14px;
     height: 14px;
+}
+.main_toolTip:hover .main_content_tooltip {
+  display: initial;
+  visibility: visible;
+  opacity: 1;
+}
+.main_toolTip .main_content_tooltip {
+    display: initial;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .input-container:has(.main_toolTip .main_content_tooltip:not(:empty)):hover .main_toolTip .main_content_tooltip {
+    display: initial;
+    visibility: visible;
+    opacity: 1;
+}
+.cd-checkboxMain .cd-checkbox {
+    width: 50%;
+    padding-left: 25px;
+}
+.cd-checkboxMain .cd-checkbox input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+}
+.cd-checkboxMain .cd-checkbox input[type="checkbox"] + .checkbox-label {
+    padding-left: 10px !important;
+    font-size: 14px !important;
+}
+.cd-checkboxMain .cd-checkbox:first-child, .cd-checkboxMain .cd-checkbox:last-child {
+    width: 100%;
+    padding-left: 0px;
+}
+.cd-checkboxMain .cd-checkbox:first-child input[type="checkbox"],
+.cd-checkboxMain .cd-checkbox:last-child input[type="checkbox"] {
+    width: 25px !important;
+    height: 25px !important;
+}
+.cd-checkboxMain .cd-checkbox:first-child input[type="checkbox"] + .checkbox-label,
+.cd-checkboxMain .cd-checkbox:last-child input[type="checkbox"] + .checkbox-label {
+    padding-left: 15px !important;
+    font-size: 16px !important;
+}
+.policy-paragraphs p {
+    margin-bottom: 0 !important;
+}
+.delete_policyDetails {
+    position: absolute;
+    right: 0;
+    width: auto;
+}
+@media (max-width:767px) {
+    .health-lifestyle-selct-btn #select{
+        left: 0;
+    }
+    .health-lifestyle-selct-btn {
+        justify-content: center;
+    }
+    .tooltip-wrapper .tooltip-text {
+        max-width: 150px;
+        line-height: normal;
+        z-index: 5;
+        padding: 5px;
+    }
+    .cd-checkboxMain .cd-checkbox{
+        width: 100%;
+        padding-left: 25px;
+    }
 }
