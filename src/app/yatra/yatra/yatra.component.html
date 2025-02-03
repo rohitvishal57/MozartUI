@@ -2458,6 +2458,21 @@
                                         *ngIf="innerControl.validators"></span></label>
                                   </div>
                                 </div>
+                                <div *ngIf="innerControl.type === 'radio'" class="radio-buttons" 
+                                style="font-size: 12px; font-weight: 600; margin-left: 2% !important;"
+                                 [hidden]="!innerControl.visible">
+                                  <label class="inputField_Label" *ngIf="innerControl.visibleLabel === true"
+                                    [innerHTML]="innerControl.label ? (innerControl.label | translate) : ''">
+                                    <span *ngIf="innerControl.validators">*</span>
+                                  </label>
+                                  <div class="radio-button">
+                                    <div class="radio-button" *ngFor="let option of innerControl.radioOptions">
+                                      <input type="radio" [formControlName]="innerControl.name" [name]="innerControl.name" [id]="innerControl.name"
+                                        value="{{option.value}}" style="margin-right: 10px;" (change)="onInputChange($event, innerControl,subControl)">
+                                      <label [innerHTML]="option.label ? (option.label | translate) : ''"></label>
+                                    </div>
+                                  </div>
+                                  </div>
                               </ng-container>
                             </ng-container>
                           </ng-container>
