@@ -6952,6 +6952,7 @@ export class YatraComponent {
             else {
               const coverId = addOnData.addOnId;
               const coverName = addOnData.optionalCoverName || addOnData.additionalCoverName;
+              const coverValue = addOnData.isCoverValue;
               let coverFound = false;
 
               if (!member.covers) {
@@ -6991,8 +6992,9 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
-                  weeklyCashLimit: weeklyCashLimit,
-                  noOfDays: noOfDays
+                  weeklyCashLimit:weeklyCashLimit,
+                  noOfDays:noOfDays,
+                  coverValue:coverValue
                 });
               }
 
@@ -7008,8 +7010,9 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
-                  weeklyCashLimit: weeklyCashLimit,
-                  noOfDays: noOfDays
+                  weeklyCashLimit:weeklyCashLimit,
+                  noOfDays:noOfDays,
+                  coverValue:coverValue
                 });
               }
 
@@ -7071,20 +7074,56 @@ export class YatraComponent {
                     });
                   }
                 });  
-              }else if(parentControl.name =='accident'){
+              }else if (parentControl.name == 'accident') {
+                console.log("form data", this.formData);
+              
                 this.form.formSections.forEach((section: any) => {
                   if (section.sectionTitle === "Optional Covers") {
                     section.formControls.forEach((formControl: any) => {
-                      if(formControl.name=='accidentPatienthospitalization' || formControl.name=='temporaryTotalDisablementBenefit' 
-                        ||formControl.name=='brokenBonesBenefit' || formControl.name=='burnBenefit' || formControl.name=='adventureSports' 
-                        || formControl.name=='medicalExpenses' || formControl.name=='emergencyAssistance' || formControl.name=='emiProtect' 
-                        || formControl.name=='loanProtect' || formControl.name=='comaBenefits'){
-                        formControl.visible=true
+                      if ([
+                        'accidentPatienthospitalization', 'temporaryTotalDisablementBenefit', 'brokenBonesBenefit',
+                        'burnBenefit', 'adventureSports', 'medicalExpenses', 'emergencyAssistance',
+                        'emiProtect', 'loanProtect', 'comaBenefits'
+                      ].includes(formControl.name)) {
+                        formControl.visible = true;
                       }
+              
+                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
+                        if (formControl.subControls) {
+                          formControl.subControls.forEach((subControl: any) => {
+                            if (subControl.innerSubControls) {
+                              subControl.innerSubControls.forEach((innerSubControl: any) => {
+                                if (innerSubControl.coreControls) {
+                                  innerSubControl.coreControls.forEach((coreControl: any) => {
+                                    if (coreControl.name == 'comaBenefit') {
+                                      coreControl.value = "500000";
+                                      // Find the member in formData who has 'ACCD' cover
+                                      // let member = this.formData.insuredMemberDetails.find((m: any) =>
+                                      //   m.covers.some((c: any) => c.coverId === 'ACCD')
+                                      // );
+              
+                                      // if (member) {
+                                      //   let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
+                                      //   if (accdCover) {
+                                      //     coreControl.value = accdCover.value; // Assign ACCD value
+                                      //   } else {
+                                      //     coreControl.value = ""; // Hide value if ACCD not found
+                                      //   }
+                                      // }
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                          });
+                        }
+                      }
+              
                     });
                   }
-                });  
+                });
               }
+              
 
             }
           }
