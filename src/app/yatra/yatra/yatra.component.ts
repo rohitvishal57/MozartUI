@@ -5142,9 +5142,9 @@ export class YatraComponent {
         }
       }
 
-      if(!this.dynamicFormGroup.contains('insuredMemberDetails')){
-        this.dynamicFormGroup.addControl('insuredMemberDetails',new FormArray([]));
-      }
+      // if(!this.dynamicFormGroup.contains('insuredMemberDetails')){
+      //   this.dynamicFormGroup.addControl('insuredMemberDetails',new FormArray([]));
+      // }
       
       
     }
