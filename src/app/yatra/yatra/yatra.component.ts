@@ -2642,20 +2642,20 @@ export class YatraComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
     }
 
-    if(control.name == 'agentId'){
-    const isValidOption = control.options.some((opt: any) => opt.value === eventValue);
-    console.log(isValidOption)
+    if (control.name == 'agentId') {
+      const isValidOption = control.options.some((opt: any) => opt.value === eventValue);
+      console.log(isValidOption)
 
-    if (!isValidOption) {
-      this.dynamicFormGroup.get('agentId')?.setErrors({ invalidOption: true });
-      this.toast.warning({
-        detail: "Warning",
-        summary: "Invalid Agent ID selected. Please choose from the given options.",
-        duration: 3000
-      });
-      this.dynamicFormGroup.get(control.name)?.setValue('');
+      if (!isValidOption) {
+        this.dynamicFormGroup.get('agentId')?.setErrors({ invalidOption: true });
+        this.toast.warning({
+          detail: "Warning",
+          summary: "Invalid Agent ID selected. Please choose from the given options.",
+          duration: 3000
+        });
+        this.dynamicFormGroup.get(control.name)?.setValue('');
+      }
     }
-  }
 
     if (control.name == 'previousPolicyDetails') {
       this.changeRecalculate(true);
@@ -5142,11 +5142,46 @@ export class YatraComponent {
         }
       }
 
-      // if(!this.dynamicFormGroup.contains('insuredMemberDetails')){
-      //   this.dynamicFormGroup.addControl('insuredMemberDetails',new FormArray([]));
-      // }
-      
-      
+      if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+        this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+      }
+      let addOnData = this.dynamicFormGroup.get('accident')?.getRawValue();
+      console.log(addOnData);
+      this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+        Object.keys(addOnData.addOnDetails).forEach((key) => {
+          if (key == member.relation) {
+            let memberSelected = false;
+            addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+
+              if (addOnDetail.memberCheckbox) {
+                memberSelected = true;
+                // console.log(addOnDetail);
+                // member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+                // console.log(member);
+
+              }
+              if (addOnDetail.occupation && memberSelected) {
+                member.occupationCode = JSON.parse(addOnDetail.occupation).value;
+              }
+              if (addOnDetail.occupationRisk && memberSelected) {
+                member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+              }
+            })
+          }
+        })
+        const dynamicForm = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+        while (dynamicForm.length <= index) {
+          dynamicForm.push(new FormGroup({}));
+        }
+
+        const dindex = dynamicForm.at(index) as FormGroup;
+        Object.keys(member).forEach((key: string) => {
+          dindex.addControl(key, new FormControl(member[key]));
+        });
+      })
+
+
     }
 
     if (this.form.formTitle == 'Insurance Details' && this.formData.productName == 'Activ One SAVR') {
@@ -7075,31 +7110,30 @@ export class YatraComponent {
               console.log(member);
 
             }
-            if(this.formData.productName=='Active Secure')
-            {
-              if(parentControl.name =='cancerSecure'){
+            if (this.formData.productName == 'Active Secure') {
+              if (parentControl.name == 'cancerSecure') {
                 this.form.formSections.forEach((section: any) => {
                   if (section.sectionTitle === "Optional Covers") {
                     section.formControls.forEach((formControl: any) => {
-                      if(formControl.name=='csSecondOpinion'){
-                        formControl.visible=true
+                      if (formControl.name == 'csSecondOpinion') {
+                        formControl.visible = true
                       }
                     });
                   }
-                });  
-              }else if(parentControl.name =='criticalIllness'){
+                });
+              } else if (parentControl.name == 'criticalIllness') {
                 this.form.formSections.forEach((section: any) => {
                   if (section.sectionTitle === "Optional Covers") {
                     section.formControls.forEach((formControl: any) => {
-                      if(formControl.name=='ciSecondOpinion'){
-                        formControl.visible=true
+                      if (formControl.name == 'ciSecondOpinion') {
+                        formControl.visible = true
                       }
                     });
                   }
-                });  
-              }else if (parentControl.name == 'accident') {
+                });
+              } else if (parentControl.name == 'accident') {
                 console.log("form data", this.formData);
-              
+
                 this.form.formSections.forEach((section: any) => {
                   if (section.sectionTitle === "Optional Covers") {
                     section.formControls.forEach((formControl: any) => {
@@ -7110,7 +7144,7 @@ export class YatraComponent {
                       ].includes(formControl.name)) {
                         formControl.visible = true;
                       }
-              
+
                       if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
                         if (formControl.subControls) {
                           formControl.subControls.forEach((subControl: any) => {
@@ -7124,7 +7158,7 @@ export class YatraComponent {
                                       // let member = this.formData.insuredMemberDetails.find((m: any) =>
                                       //   m.covers.some((c: any) => c.coverId === 'ACCD')
                                       // );
-              
+
                                       // if (member) {
                                       //   let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
                                       //   if (accdCover) {
@@ -7141,12 +7175,12 @@ export class YatraComponent {
                           });
                         }
                       }
-              
+
                     });
                   }
                 });
               }
-              
+
 
             }
           }
@@ -7365,44 +7399,43 @@ export class YatraComponent {
       if (this.covers[index]) {
         this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
       }
-      if(this.formData.productName=='Active Secure')
-        {
-          if(parentControl.name =='cancerSecure'){
-            this.form.formSections.forEach((section: any) => {
-              if (section.sectionTitle === "Optional Covers") {
-                section.formControls.forEach((formControl: any) => {
-                  if(formControl.name=='csSecondOpinion'){
-                    formControl.visible=false
-                  }
-                });
-              }
-            });  
-          }else if(parentControl.name =='criticalIllness'){
-            this.form.formSections.forEach((section: any) => {
-              if (section.sectionTitle === "Optional Covers") {
-                section.formControls.forEach((formControl: any) => {
-                  if(formControl.name=='ciSecondOpinion'){
-                    formControl.visible=false
-                  }
-                });
-              }
-            });  
-          }else if(parentControl.name =='accident'){
-            this.form.formSections.forEach((section: any) => {
-              if (section.sectionTitle === "Optional Covers") {
-                section.formControls.forEach((formControl: any) => {
-                  if(formControl.name=='accidentPatienthospitalization' || formControl.name=='temporaryTotalDisablementBenefit' 
-                    ||formControl.name=='brokenBonesBenefit' || formControl.name=='burnBenefit' || formControl.name=='adventureSports' 
-                    || formControl.name=='medicalExpenses' || formControl.name=='emergencyAssistance' || formControl.name=='emiProtect' 
-                    || formControl.name=='loanProtect' || formControl.name=='comaBenefits'){
-                    formControl.visible=false
-                  }
-                });
-              }
-            });  
-          }
-
+      if (this.formData.productName == 'Active Secure') {
+        if (parentControl.name == 'cancerSecure') {
+          this.form.formSections.forEach((section: any) => {
+            if (section.sectionTitle === "Optional Covers") {
+              section.formControls.forEach((formControl: any) => {
+                if (formControl.name == 'csSecondOpinion') {
+                  formControl.visible = false
+                }
+              });
+            }
+          });
+        } else if (parentControl.name == 'criticalIllness') {
+          this.form.formSections.forEach((section: any) => {
+            if (section.sectionTitle === "Optional Covers") {
+              section.formControls.forEach((formControl: any) => {
+                if (formControl.name == 'ciSecondOpinion') {
+                  formControl.visible = false
+                }
+              });
+            }
+          });
+        } else if (parentControl.name == 'accident') {
+          this.form.formSections.forEach((section: any) => {
+            if (section.sectionTitle === "Optional Covers") {
+              section.formControls.forEach((formControl: any) => {
+                if (formControl.name == 'accidentPatienthospitalization' || formControl.name == 'temporaryTotalDisablementBenefit'
+                  || formControl.name == 'brokenBonesBenefit' || formControl.name == 'burnBenefit' || formControl.name == 'adventureSports'
+                  || formControl.name == 'medicalExpenses' || formControl.name == 'emergencyAssistance' || formControl.name == 'emiProtect'
+                  || formControl.name == 'loanProtect' || formControl.name == 'comaBenefits') {
+                  formControl.visible = false
+                }
+              });
+            }
+          });
         }
+
+      }
     });
 
     // Call getPremiumAmount after removing the add-on if needed
@@ -10516,7 +10549,7 @@ export class YatraComponent {
     if (control.innerArrayControl.length > 1) {
       // Remove the item at index + 1 from innerArrayControl
       control.innerArrayControl.splice(index + 1, 1);  // Removes 1 item at index + 1
-  
+
       // Remove the corresponding control from the FormArray
       const controlArray = this.dynamicFormGroup.get(control.name) as FormArray;
       if (controlArray && controlArray.length > index) {
@@ -10524,7 +10557,7 @@ export class YatraComponent {
       }
     }
   }
-  
+
 
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
     const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
@@ -10654,7 +10687,7 @@ export class YatraComponent {
 
         }
       })
-    }else if (this.formData.productName=='Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+    } else if (this.formData.productName == 'Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
       console.log(addOnDetailsControl);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -10721,7 +10754,7 @@ export class YatraComponent {
 
       })
     }
-    else if (this.formData.productName=='Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+    else if (this.formData.productName == 'Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
       Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
         console.log(Key, index);
@@ -10786,11 +10819,11 @@ export class YatraComponent {
       const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
       if (addOnControlGroup) {
         const addOnDetailsControl = addOnControlGroup.get(subControl.name);
-        console.log("addOnDetailsControl",addOnDetailsControl?.getRawValue());
+        console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
         Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
           console.log(Key, index);
           if (index != 0) {
-            const memberArray = addOnDetailsControl?.get(Key) as FormArray;  
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
               console.log(member);
               const memberControlCheckbox = member.get('addOnSumInsured');  
@@ -10799,22 +10832,22 @@ export class YatraComponent {
               }
             })
           }
-  
+
         })
       }
-    }else if(parentControl.name=='hospitalCashBenefits'){
+    } else if (parentControl.name == 'hospitalCashBenefits') {
       console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
       const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
       if (addOnControlGroup) {
         const addOnDetailsControl = addOnControlGroup.get(subControl.name);
-        console.log("addOnDetailsControl",addOnDetailsControl?.getRawValue());
+        console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
         Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
           console.log(Key, index);
           if (index != 0) {
-            const memberArray = addOnDetailsControl?.get(Key) as FormArray;  
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
               console.log(member);
-              const memberControlCheckbox = member.get('noOfDays');  
+              const memberControlCheckbox = member.get('noOfDays');
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
               }
@@ -11028,9 +11061,277 @@ export class YatraComponent {
 
 
 
+    // if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+    //   let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
+    //   let isSelfPresent = false;
+    //   // Check for age validation rules
+    //   const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
+    //   if (ageValidationRule) {
+    //     this.checkForAgeValidations(control); // Call the age validation method
+    //   }
+
+    //   const memberSumInsuredValidationRule = control.validationRules?.find((rule: any) => rule.type === 'memberLevelSumInsured');
+    //   if (memberSumInsuredValidationRule) {
+    //     this.memberSumInsuredValidationMethod(memberSumInsuredValidationRule);
+    //   }
+
+    //   console.log("After disabling based on member", this.form);
+
+
+    //   const zoneValidationRule = control.validationRules?.find((rule: any) => rule.type === 'zoneWiseValidation');
+
+    //   const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
+    //   const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over';
+    //   if (portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over') {
+    //     this.setPortabilityValidationRule(portabilityValidationRule, control);
+    //   }
+
+    //   // Existing "Personal Accident" logic
+    //   Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+    //     const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+    //     memberArray.controls.forEach((member: any) => {
+    //       const memberControlCheckbox = member.get('memberCheckbox');
+    //       const occupationControl = member.get('occupation');
+    //       const occupationRiskControl = member.get('occupationRisk');
+    //       const addOnSumInsuredControl = member.get('addOnSumInsured');
+
+    //       // Skip processing if member control is disabled
+    //       if (memberControlCheckbox?.disabled) {
+    //         console.log(`Skipping disabled member: ${key}`);
+    //         return;
+    //       }
+
+    //       if (memberControlCheckbox) {
+
+    //         if (!isPortabilityRuleAvailable && !portabilityValidationRule) {
+    //           memberControlCheckbox.setValue(true);
+    //           if (key === 'Self') {
+    //             isSelfPresent = true;
+    //             // Disable the checkbox for 'Self'
+    //             memberControlCheckbox.disable();
+    //           }
+    //         }
+    //         else if (isPortabilityRuleAvailable) {
+    //           if (portabilityValidationRule.allMemberSelected) {
+    //             memberControlCheckbox.setValue(true);
+    //           }
+    //           if (portabilityValidationRule.allMemberDisabled) {
+    //             memberControlCheckbox.disable();
+    //           }
+    //         }
+
+    //         shouldEnableAddOnCover = true; // Set the flag if any checkbox is enabled
+    //       }
+
+    //       if (addOnCoverNameControl?.value.includes('Personal Accident')) {
+    //         console.log(control.subControls);
+
+    //         const innerControls = control.subControls[1].innerSubControls || [];
+    //         const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
+    //         const coreControls = matchingInnerControl?.coreControls || [];
+
+    //         if (occupationControl) {
+    //           coreControls.forEach((coreControl: any) => {
+    //             if (coreControl.name === 'occupation' && occupationControl.value === '') {
+    //               const defaultOption = JSON.stringify(coreControl.options?.[0]);
+    //               if (defaultOption) {
+    //                 occupationControl.setValue(defaultOption);
+    //               }
+    //             }
+    //           });
+    //         }
+
+    //         if (occupationRiskControl) {
+    //           coreControls.forEach((coreControl: any) => {
+    //             if (coreControl.name === 'occupationRisk' && occupationRiskControl.value === '') {
+    //               const defaultOption = JSON.stringify(coreControl.options?.[0]);
+    //               if (defaultOption) {
+    //                 occupationRiskControl.setValue(defaultOption);
+    //               }
+    //             }
+    //           });
+    //         }
+
+    //         if (addOnSumInsuredControl) {
+    //           coreControls.forEach((coreControl: any) => {
+    //             if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl.value === '') {
+    //               const defaultOption = coreControl.options?.[0]?.value;
+    //               if (defaultOption) {
+    //                 addOnSumInsuredControl.setValue(defaultOption);
+    //               }
+    //             }
+    //           });
+    //         }
+    //       }
+
+    //       // modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+    //       //   if (insuredMember.relation === key) {
+    //       //     const coverId = addOnIdControl?.value;
+    //       //     const coverName = addOnCoverNameControl?.value || '';
+
+    //       //     let addOnSumInsured = 0;
+    //       //     let coverFound = false;
+
+    //       //     const addOnDetails = addOnControl?.value.addOnDetails[key];
+    //       //     addOnDetails.forEach((detail: any) => {
+    //       //       if (detail.addOnSumInsured) {
+    //       //         addOnSumInsured = detail.addOnSumInsured;
+    //       //       } else if (detail.roomType) {
+    //       //         addOnSumInsured = detail.roomType;
+    //       //       }
+
+    //       //       if (coverName.includes('Personal Accident') && detail.occupation) {
+    //       //         insuredMember.occupationCode = JSON.parse(detail.occupation).value;
+    //       //       }
+
+    //       //       if (coverName.includes('Personal Accident') && detail.occupationRisk) {
+    //       //         insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
+    //       //       }
+    //       //     });
+
+    //       //     if (!insuredMember.covers) {
+    //       //       insuredMember.covers = [];
+    //       //     }
+
+    //       //     insuredMember.covers.forEach((cover: any) => {
+    //       //       if (cover.coverId === coverId) {
+    //       //         cover.value = addOnSumInsured;
+    //       //         coverFound = true;
+    //       //       }
+    //       //     });
+
+    //       //     if (!coverFound) {
+    //       //       insuredMember.covers.push({
+    //       //         coverId,
+    //       //         value: addOnSumInsured,
+    //       //         coverName
+    //       //       });
+    //       //     }
+
+    //       //     if (!this.covers[index]) {
+    //       //       this.covers[index] = [];
+    //       //     }
+
+    //       //     const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+    //       //     if (coverInCovers) {
+    //       //       coverInCovers.value = addOnSumInsured;
+    //       //     } else {
+    //       //       this.covers[index].push({
+    //       //         coverId,
+    //       //         value: addOnSumInsured,
+    //       //         coverName
+    //       //       });
+    //       //     }
+    //       //   }
+    //       // });
+
+
+
+    //       if (!portabilityValidationRule || isPortabilityRuleAvailable) {
+    //         modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+    //           if (insuredMember.relation === key) {
+    //             const coverId = addOnIdControl?.value;
+    //             const coverName = addOnCoverNameControl?.value || '';
+
+    //             let addOnSumInsured = 0;
+    //             let coverFound = false;
+
+    //             const addOnDetails = addOnControl?.value.addOnDetails[key];
+    //             addOnDetails.forEach((detail: any) => {
+    //               if (detail.addOnSumInsured) {
+    //                 addOnSumInsured = detail.addOnSumInsured;
+    //               } else if (detail.roomType) {
+    //                 addOnSumInsured = detail.roomType;
+    //               }
+
+    //               if (coverName.includes('Personal Accident') && detail.occupation) {
+    //                 insuredMember.occupationCode = JSON.parse(detail.occupation).value;
+    //               }
+
+    //               if (coverName.includes('Personal Accident') && detail.occupationRisk) {
+    //                 insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
+    //               }
+    //             });
+
+    //             if (!insuredMember.covers) {
+    //               insuredMember.covers = [];
+    //             }
+
+    //             insuredMember.covers.forEach((cover: any) => {
+    //               if (cover.coverId === coverId) {
+    //                 cover.value = addOnSumInsured;
+    //                 coverFound = true;
+    //               }
+    //             });
+
+    //             if (!coverFound) {
+    //               insuredMember.covers.push({
+    //                 coverId,
+    //                 value: addOnSumInsured,
+    //                 coverName
+    //               });
+    //             }
+
+    //             if (!this.covers[index]) {
+    //               this.covers[index] = [];
+    //             }
+
+    //             const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+    //             if (coverInCovers) {
+    //               coverInCovers.value = addOnSumInsured;
+    //             } else {
+    //               this.covers[index].push({
+    //                 coverId,
+    //                 value: addOnSumInsured,
+    //                 coverName
+    //               });
+    //             }
+    //           }
+    //         });
+    //       }
+
+    //     });
+    //   });
+
+    //   // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
+    //   if (shouldEnableAddOnCover) {
+    //     console.log(shouldEnableAddOnCover);
+
+    //     let zoneValidationRuleApplicable = false;
+    //     if (zoneValidationRule) {
+    //       zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
+    //         (insuredMember: any) => insuredMember.zone === 'Zone I'
+    //       );
+    //     }
+
+
+    //     if (portabilityValidationRule) {
+
+    //       if (isPortabilityRuleAvailable) {
+    //         addOnCoverControl?.setValue(true);
+    //       }
+    //       else {
+    //         addOnCoverControl?.setValue(false);
+    //       }
+    //     }
+    //     else {
+    //       addOnCoverControl?.setValue(true);
+    //     }
+
+    //     if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
+    //       addOnCoverControl?.disable();
+    //     }
+
+    //   }
+    //   else {
+    //     addOnCoverControl?.setValue(false);
+    //   }
+    // }
     if (addOnCoverNameControl?.value.includes('Personal Accident')) {
       let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
       let isSelfPresent = false;
+
       // Check for age validation rules
       const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
       if (ageValidationRule) {
@@ -11044,16 +11345,14 @@ export class YatraComponent {
 
       console.log("After disabling based on member", this.form);
 
-
       const zoneValidationRule = control.validationRules?.find((rule: any) => rule.type === 'zoneWiseValidation');
-
       const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
-      const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over';
-      if (portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over') {
+      const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] === 'Roll Over';
+
+      if (isPortabilityRuleAvailable) {
         this.setPortabilityValidationRule(portabilityValidationRule, control);
       }
 
-      // Existing "Personal Accident" logic
       Object.keys(addOnDetailsControl.value).forEach((key: any) => {
         const memberArray = addOnDetailsControl.get(key) as FormArray;
 
@@ -11063,37 +11362,67 @@ export class YatraComponent {
           const occupationRiskControl = member.get('occupationRisk');
           const addOnSumInsuredControl = member.get('addOnSumInsured');
 
-          // Skip processing if member control is disabled
           if (memberControlCheckbox?.disabled) {
             console.log(`Skipping disabled member: ${key}`);
             return;
           }
 
-          if (memberControlCheckbox) {
+          const matchingMember = this.formData.insuredMemberDetails.find(
+            (insuredMember: any) => key === insuredMember.relation
+          );
 
-            if (!isPortabilityRuleAvailable && !portabilityValidationRule) {
-              memberControlCheckbox.setValue(true);
-              if (key === 'Self') {
-                isSelfPresent = true;
-                // Disable the checkbox for 'Self'
-                memberControlCheckbox.disable();
+          // let minSumInsured = portabilityValidationRule?.minSumInsured;
+          // let maxSumInsured = portabilityValidationRule?.maxSumInsured;
+
+          if (isPortabilityRuleAvailable && portabilityValidationRule?.policyRules) {
+            const policyRule = portabilityValidationRule.policyRules.find(
+              (rule: any) => rule.policyType === this.formData.memberPolicyType
+            );
+
+            if (policyRule?.ageBasedRules) {
+              const ageThreshold = policyRule.ageBasedRules.ageThreshold;
+
+              if (parseInt(matchingMember.memberAge) < ageThreshold) {
+                const belowThresholdRules = policyRule.ageBasedRules.belowThreshold;
+                if (belowThresholdRules) {
+                  // minSumInsured = belowThresholdRules.minSumInsured || minSumInsured;
+                  // maxSumInsured = belowThresholdRules.maxSumInsured || maxSumInsured;
+                  if (memberControlCheckbox) {
+                    memberControlCheckbox.setValue(belowThresholdRules.selected);
+                    if (belowThresholdRules.disabled) {
+                      memberControlCheckbox.disable();
+                    }
+
+                  }
+                }
+              } else {
+                const aboveThresholdRules = policyRule.ageBasedRules.aboveThreshold;
+                if (aboveThresholdRules) {
+                  console.log(memberControlCheckbox);
+
+                  if (memberControlCheckbox) {
+                    memberControlCheckbox.setValue(aboveThresholdRules.selected);
+                    if (aboveThresholdRules.disabled) {
+                      memberControlCheckbox.disable();
+                    }
+
+                  }
+                }
               }
             }
-            else if (isPortabilityRuleAvailable) {
-              if (portabilityValidationRule.allMemberSelected) {
-                memberControlCheckbox.setValue(true);
-              }
-              if (portabilityValidationRule.allMemberDisabled) {
-                memberControlCheckbox.disable();
-              }
+          }
+          else if (!isPortabilityRuleAvailable && !portabilityValidationRule && memberControlCheckbox) {
+            memberControlCheckbox.setValue(true);
+            if (key === 'Self') {
+              isSelfPresent = true;
+              // Disable the checkbox for 'Self'
+              memberControlCheckbox.disable();
             }
-
-            shouldEnableAddOnCover = true; // Set the flag if any checkbox is enabled
           }
 
-          if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-            console.log(control.subControls);
+          shouldEnableAddOnCover = true;
 
+          if (addOnCoverNameControl?.value.includes('Personal Accident')) {
             const innerControls = control.subControls[1].innerSubControls || [];
             const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
             const coreControls = matchingInnerControl?.coreControls || [];
@@ -11132,169 +11461,135 @@ export class YatraComponent {
             }
           }
 
-          // modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-          //   if (insuredMember.relation === key) {
-          //     const coverId = addOnIdControl?.value;
-          //     const coverName = addOnCoverNameControl?.value || '';
-
-          //     let addOnSumInsured = 0;
-          //     let coverFound = false;
-
-          //     const addOnDetails = addOnControl?.value.addOnDetails[key];
-          //     addOnDetails.forEach((detail: any) => {
-          //       if (detail.addOnSumInsured) {
-          //         addOnSumInsured = detail.addOnSumInsured;
-          //       } else if (detail.roomType) {
-          //         addOnSumInsured = detail.roomType;
-          //       }
-
-          //       if (coverName.includes('Personal Accident') && detail.occupation) {
-          //         insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-          //       }
-
-          //       if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-          //         insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-          //       }
-          //     });
-
-          //     if (!insuredMember.covers) {
-          //       insuredMember.covers = [];
-          //     }
-
-          //     insuredMember.covers.forEach((cover: any) => {
-          //       if (cover.coverId === coverId) {
-          //         cover.value = addOnSumInsured;
-          //         coverFound = true;
-          //       }
-          //     });
-
-          //     if (!coverFound) {
-          //       insuredMember.covers.push({
-          //         coverId,
-          //         value: addOnSumInsured,
-          //         coverName
-          //       });
-          //     }
-
-          //     if (!this.covers[index]) {
-          //       this.covers[index] = [];
-          //     }
-
-          //     const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-          //     if (coverInCovers) {
-          //       coverInCovers.value = addOnSumInsured;
-          //     } else {
-          //       this.covers[index].push({
-          //         coverId,
-          //         value: addOnSumInsured,
-          //         coverName
-          //       });
-          //     }
-          //   }
-          // });
-
-
-
-          if (!portabilityValidationRule || isPortabilityRuleAvailable) {
-            modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-              if (insuredMember.relation === key) {
-                const coverId = addOnIdControl?.value;
-                const coverName = addOnCoverNameControl?.value || '';
-
-                let addOnSumInsured = 0;
-                let coverFound = false;
-
-                const addOnDetails = addOnControl?.value.addOnDetails[key];
-                addOnDetails.forEach((detail: any) => {
-                  if (detail.addOnSumInsured) {
-                    addOnSumInsured = detail.addOnSumInsured;
-                  } else if (detail.roomType) {
-                    addOnSumInsured = detail.roomType;
-                  }
-
-                  if (coverName.includes('Personal Accident') && detail.occupation) {
-                    insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-                  }
-
-                  if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-                    insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-                  }
-                });
-
-                if (!insuredMember.covers) {
-                  insuredMember.covers = [];
-                }
-
-                insuredMember.covers.forEach((cover: any) => {
-                  if (cover.coverId === coverId) {
-                    cover.value = addOnSumInsured;
-                    coverFound = true;
-                  }
-                });
-
-                if (!coverFound) {
-                  insuredMember.covers.push({
-                    coverId,
-                    value: addOnSumInsured,
-                    coverName
-                  });
-                }
-
-                if (!this.covers[index]) {
-                  this.covers[index] = [];
-                }
-
-                const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-                if (coverInCovers) {
-                  coverInCovers.value = addOnSumInsured;
-                } else {
-                  this.covers[index].push({
-                    coverId,
-                    value: addOnSumInsured,
-                    coverName
-                  });
-                }
-              }
-            });
-          }
-
         });
+        if (!portabilityValidationRule || isPortabilityRuleAvailable) {
+          modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+            if (insuredMember.relation === key) {
+              const matchingMemberControl = memberArray.controls.find(
+                (member: any) => member.get('memberCheckbox')?.value === true
+              );
+
+              // Only proceed if memberCheckbox is checked
+              if (!matchingMemberControl) {
+                console.log(`Skipping member ${key} as memberCheckbox is false`);
+                return;
+              }
+              const coverId = addOnIdControl?.value;
+              const coverName = addOnCoverNameControl?.value || '';
+
+              let addOnSumInsured = 0;
+              let coverFound = false;
+
+              const addOnDetails = addOnControl?.value.addOnDetails[key];
+              addOnDetails.forEach((detail: any) => {
+                if (detail.addOnSumInsured) {
+                  addOnSumInsured = detail.addOnSumInsured;
+                } else if (detail.roomType) {
+                  addOnSumInsured = detail.roomType;
+                }
+
+                if (coverName.includes('Personal Accident') && detail.occupation) {
+                  insuredMember.occupationCode = JSON.parse(detail.occupation).value;
+                }
+
+                if (coverName.includes('Personal Accident') && detail.occupationRisk) {
+                  insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
+                }
+              });
+
+              if (!insuredMember.covers) {
+                insuredMember.covers = [];
+              }
+
+              insuredMember.covers.forEach((cover: any) => {
+                if (cover.coverId === coverId) {
+                  cover.value = addOnSumInsured;
+                  coverFound = true;
+                }
+              });
+
+              if (!coverFound) {
+                insuredMember.covers.push({
+                  coverId,
+                  value: addOnSumInsured,
+                  coverName
+                });
+              }
+
+              if (!this.covers[index]) {
+                this.covers[index] = [];
+              }
+
+              const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+              if (coverInCovers) {
+                coverInCovers.value = addOnSumInsured;
+              } else {
+                this.covers[index].push({
+                  coverId,
+                  value: addOnSumInsured,
+                  coverName
+                });
+              }
+            }
+          });
+        }
       });
 
-      // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
+      // if (shouldEnableAddOnCover) {
+      //   let zoneValidationRuleApplicable = false;
+      //   if (zoneValidationRule) {
+      //     zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
+      //       (insuredMember: any) => insuredMember.zone === 'Zone I'
+      //     );
+      //   }
+
+      //   if (isPortabilityRuleAvailable) {
+      //     addOnCoverControl?.setValue(true);
+      //   } else {
+      //     addOnCoverControl?.setValue(false);
+      //   }
+
+      //   if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
+      //     addOnCoverControl?.disable();
+      //   }
+      // } else {
+      //   addOnCoverControl?.setValue(false);
+      // }
+
       if (shouldEnableAddOnCover) {
-        console.log(shouldEnableAddOnCover);
-
-        let zoneValidationRuleApplicable = false;
-        if (zoneValidationRule) {
-          zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
-            (insuredMember: any) => insuredMember.zone === 'Zone I'
-          );
-        }
-
-
-        if (portabilityValidationRule) {
-
-          if (isPortabilityRuleAvailable) {
-            addOnCoverControl?.setValue(true);
+            console.log(shouldEnableAddOnCover);
+    
+            let zoneValidationRuleApplicable = false;
+            if (zoneValidationRule) {
+              zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
+                (insuredMember: any) => insuredMember.zone === 'Zone I'
+              );
+            }
+    
+    
+            if (portabilityValidationRule) {
+    
+              if (isPortabilityRuleAvailable) {
+                addOnCoverControl?.setValue(true);
+              }
+              else {
+                addOnCoverControl?.setValue(false);
+              }
+            }
+            else {
+              addOnCoverControl?.setValue(true);
+            }
+    
+            if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
+              addOnCoverControl?.disable();
+            }
+    
           }
           else {
             addOnCoverControl?.setValue(false);
           }
-        }
-        else {
-          addOnCoverControl?.setValue(true);
-        }
-
-        if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
-          addOnCoverControl?.disable();
-        }
-
-      }
-      else {
-        addOnCoverControl?.setValue(false);
-      }
     }
+
     else {
       // New logic for validationRules
       const validationRules = control.validationRules || [];
@@ -12133,99 +12428,195 @@ export class YatraComponent {
 
 
   //default addOn on portability
-  setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
+  // setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
 
+  //   const addOnControl = this.dynamicFormGroup.get(control.name);
+  //   // const addOnCoverControl = addOnControl?.get('addOnCover');
+  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+  //   this.form.formSections.forEach((section: any) => {
+  //     if (section.sectionTitle == "Optional Covers") {
+  //       section.formControls.forEach((control: any) => {
+  //         if (control.name == 'accident') {
+  //           control.subControls.forEach((subControl: any) => {
+  //             if (subControl.name == 'addOnDetails') {
+  //               subControl.innerSubControls.forEach((innerSubControl: any) => {
+  //                 if (innerSubControl.name != 'demoType' && innerSubControl.name != 'doneButton') {
+  //                   console.log(portabilityValidationRule, innerSubControl);
+
+  //                   let maxSumInsured = portabilityValidationRule.maxSumInsured;
+  //                   let minSumInsured = portabilityValidationRule.minSumInsured;
+  //                   const matchingMember = this.formData.insuredMemberDetails.find(
+  //                     (insuredMember: any) => innerSubControl.name === insuredMember.relation
+  //                   );
+
+
+  //                   // if (memberRules.proposerSIRule) {
+  //                   //   if (matchingMember.relation === 'Self') {
+
+  //                   //     if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
+  //                   //       maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
+  //                   //       minSumInsured = memberRules.proposerSIRule.minSumInsured;
+  //                   //     }
+
+  //                   //     console.log(matchingMember.relation)
+  //                   //     innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                   //       console.log(coreControl);
+  //                   //       if (coreControl.name == 'addOnSumInsured') {
+  //                   //         coreControl.options = coreControl.options.filter((option: any) => {
+  //                   //           return option.value >= minSumInsured && option.value <= maxSumInsured;
+  //                   //         });
+  //                   //         console.log(coreControl.options)
+  //                   //       }
+  //                   //     });
+  //                   //   } else {
+  //                   //     innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                   //       if (coreControl.name == 'addOnSumInsured') {
+  //                   //         coreControl.options = coreControl.options.filter((option: any) =>
+  //                   //           option.value >= minSumInsured && option.value <= maxSumInsured
+  //                   //         );
+  //                   //         console.log(coreControl.options)
+  //                   //       }
+  //                   //     });
+  //                   //   }
+  //                   // }
+
+  //                   if (portabilityValidationRule.ageBasedRules) {
+  //                     if (parseInt(matchingMember.memberAge) < portabilityValidationRule.ageBasedRules.ageThreshold) {
+  //                       //disable the all the coreControls for that key
+  //                       Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+  //                         // Use explicit non-null assertion for maxAge and minAge
+  //                         if (matchingMember.relation === key) {
+  //                           const memberArray = addOnDetailsControl?.get(key) as FormArray;
+
+  //                           memberArray.controls.forEach((formGroup: AbstractControl) => {
+  //                             if (formGroup instanceof FormGroup) {
+  //                               Object.keys(formGroup.controls).forEach((controlName) => {
+  //                                 formGroup.get(controlName)?.disable();
+  //                               });
+  //                             }
+  //                           });
+
+  //                           console.log('All controls in the FormGroup are disabled:', memberArray);
+  //                         }
+  //                       });
+  //                     }
+  //                   }
+
+  //                   innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                     if (coreControl.name == 'addOnSumInsured') {
+  //                       coreControl.options = coreControl.options.filter((option: any) =>
+  //                         option.value >= minSumInsured && option.value <= maxSumInsured
+  //                       );
+  //                     }
+  //                   })
+  //                   console.log(innerSubControl.coreControls);
+
+  //                 }
+  //               })
+  //             }
+  //           })
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
+
+  //default addOn on portability
+  setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
     const addOnControl = this.dynamicFormGroup.get(control.name);
-    // const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
 
     this.form.formSections.forEach((section: any) => {
-      if (section.sectionTitle == "Optional Covers") {
+      if (section.sectionTitle === "Optional Covers") {
         section.formControls.forEach((control: any) => {
-          if (control.name == 'accident') {
+          if (control.name === 'accident') {
             control.subControls.forEach((subControl: any) => {
-              if (subControl.name == 'addOnDetails') {
+              if (subControl.name === 'addOnDetails') {
                 subControl.innerSubControls.forEach((innerSubControl: any) => {
-                  if (innerSubControl.name != 'demoType' && innerSubControl.name != 'doneButton') {
-                    console.log(portabilityValidationRule, innerSubControl);
+                  if (innerSubControl.name !== 'demoType' && innerSubControl.name !== 'doneButton') {
 
-                    let maxSumInsured = portabilityValidationRule.maxSumInsured;
-                    let minSumInsured = portabilityValidationRule.minSumInsured;
                     const matchingMember = this.formData.insuredMemberDetails.find(
                       (insuredMember: any) => innerSubControl.name === insuredMember.relation
                     );
 
+                    let minSumInsured = portabilityValidationRule.minSumInsured;
+                    let maxSumInsured = portabilityValidationRule.maxSumInsured;
 
-                    // if (memberRules.proposerSIRule) {
-                    //   if (matchingMember.relation === 'Self') {
+                    // Determine applicable policy rules
+                    const policyRule = portabilityValidationRule.policyRules.find(
+                      (rule: any) => rule.policyType === this.formData.memberPolicyType
+                    );
 
-                    //     if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
-                    //       maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
-                    //       minSumInsured = memberRules.proposerSIRule.minSumInsured;
-                    //     }
+                    if (policyRule && policyRule.ageBasedRules) {
+                      const ageThreshold = policyRule.ageBasedRules.ageThreshold;
 
-                    //     console.log(matchingMember.relation)
-                    //     innerSubControl.coreControls.forEach((coreControl: any) => {
-                    //       console.log(coreControl);
-                    //       if (coreControl.name == 'addOnSumInsured') {
-                    //         coreControl.options = coreControl.options.filter((option: any) => {
-                    //           return option.value >= minSumInsured && option.value <= maxSumInsured;
-                    //         });
-                    //         console.log(coreControl.options)
-                    //       }
-                    //     });
-                    //   } else {
-                    //     innerSubControl.coreControls.forEach((coreControl: any) => {
-                    //       if (coreControl.name == 'addOnSumInsured') {
-                    //         coreControl.options = coreControl.options.filter((option: any) =>
-                    //           option.value >= minSumInsured && option.value <= maxSumInsured
-                    //         );
-                    //         console.log(coreControl.options)
-                    //       }
-                    //     });
-                    //   }
-                    // }
+                      if (parseInt(matchingMember.memberAge) < ageThreshold) {
+                        // Below age threshold handling
+                        const belowThresholdRules = policyRule.ageBasedRules.belowThreshold;
+                        if (belowThresholdRules) {
+                          minSumInsured = belowThresholdRules.minSumInsured || minSumInsured;
+                          maxSumInsured = belowThresholdRules.maxSumInsured || maxSumInsured;
 
-                    if (portabilityValidationRule.ageBasedRules) {
-                      if (parseInt(matchingMember.memberAge) < portabilityValidationRule.ageBasedRules.ageThreshold) {
-                        //disable the all the coreControls for that key
-                        Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
-                          // Use explicit non-null assertion for maxAge and minAge
-                          if (matchingMember.relation === key) {
-                            const memberArray = addOnDetailsControl?.get(key) as FormArray;
+                          // Disable or enable controls based on the rules
+                          Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+                            if (matchingMember.relation === key) {
+                              const memberArray = addOnDetailsControl?.get(key) as FormArray;
 
-                            memberArray.controls.forEach((formGroup: AbstractControl) => {
-                              if (formGroup instanceof FormGroup) {
-                                Object.keys(formGroup.controls).forEach((controlName) => {
-                                  formGroup.get(controlName)?.disable();
-                                });
-                              }
-                            });
+                              memberArray.controls.forEach((formGroup: AbstractControl) => {
+                                if (formGroup instanceof FormGroup) {
+                                  Object.keys(formGroup.controls).forEach((controlName) => {
+                                    if (belowThresholdRules.disabled) {
+                                      formGroup.get(controlName)?.disable();
+                                    } else {
+                                      formGroup.get(controlName)?.enable();
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                          });
+                        }
+                      } else {
+                        // Above age threshold handling
+                        const aboveThresholdRules = policyRule.ageBasedRules.aboveThreshold;
+                        // if (aboveThresholdRules && aboveThresholdRules.disabled) {
+                        //   // Disable controls if applicable
+                        //   Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+                        //     if (matchingMember.relation === key) {
+                        //       const memberArray = addOnDetailsControl?.get(key) as FormArray;
 
-                            console.log('All controls in the FormGroup are disabled:', memberArray);
-                          }
-                        });
+                        //       memberArray.controls.forEach((formGroup: AbstractControl) => {
+                        //         if (formGroup instanceof FormGroup) {
+                        //           Object.keys(formGroup.controls).forEach((controlName) => {
+                        //             formGroup.get(controlName)?.disable();
+                        //           });
+                        //         }
+                        //       });
+                        //     }
+                        //   });
+                        // }
                       }
                     }
 
+                    // Update addOnSumInsured options based on min/max sum insured
                     innerSubControl.coreControls.forEach((coreControl: any) => {
-                      if (coreControl.name == 'addOnSumInsured') {
+                      if (coreControl.name === 'addOnSumInsured') {
                         coreControl.options = coreControl.options.filter((option: any) =>
                           option.value >= minSumInsured && option.value <= maxSumInsured
                         );
                       }
-                    })
-                    console.log(innerSubControl.coreControls);
-
+                    });
                   }
-                })
+                });
               }
-            })
+            });
           }
-        })
+        });
       }
-    })
+    });
   }
+
 
   getFlsCodeViaAgentCode(control: any) {
     const reqData = {
