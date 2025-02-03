@@ -8288,7 +8288,10 @@ export class YatraComponent {
       appointeeName: formData?.appointeeName || '',
       appointeeMobileNumber: formData?.appointeeContactNo || '',
       appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : '',
-      lrFlag: formData?.lrFlag || ''
+      lrFlag: formData?.lrFlag || '',
+      affiliateEmployeeId: formData?.affiliateEmployeeId || '',
+      isAffiliateEmployee: formData?.isAffiliateEmployee || '',
+      nameOfTheAffiliate: this.jsonParse(formData?.nameOfTheAffiliate ,'name')|| '',
     };
     return mappedData;
   }

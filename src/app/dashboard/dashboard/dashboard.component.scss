@@ -1123,6 +1123,7 @@ h2 {
 .dashboard_leadsMain {
     gap: 10px;
     padding-bottom: 16px;
+    flex: 0 0 300px;
     .leads_content {
         display: flex;
         flex-direction: column;
@@ -1784,4 +1785,14 @@ h2 {
       }
     }
 }
-  
+
+.dashboard_leadsMain:last-child {
+    flex: 1;
+}
+
+.dashboard_leadsMain:last-child .data_inscroll_noneed {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+}

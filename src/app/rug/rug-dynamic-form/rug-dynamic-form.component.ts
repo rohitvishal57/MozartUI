@@ -1098,7 +1098,7 @@ export class RugDynamicFormComponent {
           // console.log(this.policyDetails);
           // console.log(this.filteredPolicies)
         }
-        if(this.getFormIndexValue() == 0 && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
+        if(this.getFormIndexValue() == 0 && this.partnerId == "16" && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
           console.log(this.bbdetails)
           this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
             // const selfResult = this.centimetersToFeetAndInches(item.height);
