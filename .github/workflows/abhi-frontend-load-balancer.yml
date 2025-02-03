@@ -1,0 +1,112 @@
+name: Build and Deploy Angular App to Azure VM (Rolling Deployment)
+
+on:
+#  push:
+ #    - RV_abhi_frontend_deploy
+  workflow_dispatch:
+    
+env:
+  SONAR_PROJECT_KEY: "frontend-sonar-project"
+  DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
+  WEB_ROOT: "C:/USP/ABHI_DEPLOY"
+  APP_POOL_NAME: "ABHIDEPLOY"
+  SITE_NAME: "ABHIUSP"
+  BINDING_HOST: "usp.monocept.ai"
+  PORT: 8443
+
+permissions:
+  contents: write 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 10
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.20.3'
+
+    - name: Cache Node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          ~/.cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+
+    - name: Clean previous build artifacts
+      run: rm -rf ./dist/*
+
+    - name: Build the project
+      run: npm run build --prod
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./dist/*
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Setup SSH for VM1
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VM1_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_vm1
+        chmod 600 ~/.ssh/id_rsa_vm1
+        ssh-keyscan -H ${{ secrets.VM1_SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Setup SSH for VM2
+      run: |
+        echo "${{ secrets.VM2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_vm2
+        chmod 600 ~/.ssh/id_rsa_vm2
+        ssh-keyscan -H ${{ secrets.VM2_SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Generate Deployment Version
+      id: version
+      run: |
+        CURRENT_DATE=$(TZ="Asia/Kolkata" date +"%Y%m%d-%H%M%S")
+        TAGGED_VERSION="v${CURRENT_DATE}"
+        echo "Deployment version: $TAGGED_VERSION"
+        echo "TAGGED_VERSION=$TAGGED_VERSION" >> $GITHUB_ENV
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./my-artifacts
+
+    - name: Deploy to VM1
+      run: |
+        ssh -i ~/.ssh/id_rsa_vm1 -p 22 ${{ secrets.VM1_SSH_USER }}@${{ secrets.VM1_SSH_HOST }} "powershell -Command \"\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; if (-Not (Test-Path \$DeployDir)) { New-Item -Path \$DeployDir -ItemType Directory; }\""
+        scp -i ~/.ssh/id_rsa_vm1 -P 22 -r ./my-artifacts/* ${{ secrets.VM1_SSH_USER }}@${{ secrets.VM1_SSH_HOST }}:${{ env.DEPLOY_BASE_DIR }}/$TAGGED_VERSION/
+        ssh -i ~/.ssh/id_rsa_vm1 -p 22 ${{ secrets.VM1_SSH_USER }}@${{ secrets.VM1_SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${DEPLOY_BASE_DIR}/frontend_new_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion $TAGGED_VERSION -Port ${{ env.PORT }} -BindingHost ${{ env.BINDING_HOST }}"
+
+    - name: Switch traffic to VM1
+      run: |
+        echo "Switching all traffic to VM1..."
+        
+
+    - name: Deploy to VM2
+      run: |
+        ssh -i ~/.ssh/id_rsa_vm2 -p 22 ${{ secrets.VM2_SSH_USER }}@${{ secrets.VM2_SSH_HOST }} "powershell -Command \"\$DeployDir = '${{ env.DEPLOY_BASE_DIR }}\\$TAGGED_VERSION'; if (-Not (Test-Path \$DeployDir)) { New-Item -Path \$DeployDir -ItemType Directory; }\""
+        scp -i ~/.ssh/id_rsa_vm2 -P 22 -r ./my-artifacts/* ${{ secrets.VM2_SSH_USER }}@${{ secrets.VM2_SSH_HOST }}:${{ env.DEPLOY_BASE_DIR }}/$TAGGED_VERSION/
+        ssh -i ~/.ssh/id_rsa_vm2 -p 22 ${{ secrets.VM2_SSH_USER }}@${{ secrets.VM2_SSH_HOST }} "powershell -ExecutionPolicy Bypass -File ${DEPLOY_BASE_DIR}/frontend_new_deploy.ps1 -AppPoolName ${{ env.APP_POOL_NAME }} -SiteName ${{ env.SITE_NAME }} -WebRoot ${{ env.WEB_ROOT }} -DeployBaseDir ${{ env.DEPLOY_BASE_DIR }} -TaggedVersion $TAGGED_VERSION -Port ${{ env.PORT }} -BindingHost ${{ env.BINDING_HOST }}"
+
+    - name: Balance traffic between VM1 and VM2
+      run: |
+        echo "Rebalancing traffic across VM1 and VM2..."
+        
