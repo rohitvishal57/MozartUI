@@ -1314,7 +1314,6 @@ export class YatraComponent {
       });
 
       if (this.isQuote) {
-        console.log("hello");
         let nameList = [];
         const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
         nameList.push(parsedName);
@@ -1393,7 +1392,6 @@ export class YatraComponent {
       // if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
       //   this.getPremiumAmount();
       // }
-
 
       this.flattenObject(this.formData);
       this.spinner.hide();
@@ -8103,7 +8101,8 @@ export class YatraComponent {
 
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
-    const updatedAgentCode = localStorage.getItem('parentCode') || this.agentCode || '';
+    const storedAgentCode = localStorage.getItem('parentCode')?.trim() || '';
+    const updatedAgentCode = (storedAgentCode || this.agentCode || '').trim();
 
     const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: updatedAgentCode || '',
@@ -8485,6 +8484,11 @@ export class YatraComponent {
         console.error(err);
       }
     });
+
+    const loggedInAgentCode = localStorage.getItem('agentCode'); 
+    if (loggedInAgentCode) {
+      localStorage.setItem('parentCode', loggedInAgentCode);
+    }
     this.isFeedBackModalVisible = false;
   }
 
@@ -12258,6 +12262,14 @@ export class YatraComponent {
     this.yatraService.getFlsCodeViaAgentCode(reqData).subscribe({
       next: (res: any) => {
         console.log(res);
+        if (res.data && Object.keys(res.data).length === 0) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: "No agentCode Found",
+            duration: 5000,
+          });
+          return;
+        }
         control.options = res.data;
       },
       error: (err: any) => {
