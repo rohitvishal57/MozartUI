@@ -1118,6 +1118,16 @@ export class YatraComponent {
               })
             }
           }
+          else if (control.innerArrayControl) {
+            if (control.visible == true) {
+              let tempFormArray = this.fb.array([]);
+              for (let i = 1; i < control.innerArrayControl.length; i++) {
+                tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i, control));
+              }
+
+              this.dynamicFormGroup.addControl(control.name, tempFormArray);
+            }
+          }
           else {
 
             if (control.type === 'date') {
@@ -3109,13 +3119,7 @@ export class YatraComponent {
           this.resolveMethod(control.onChangeMethod, dependent, eventValue);
         }
       }
-      // else {
-      //   // If not a radio control, just resolve using the control
-      //   this.resolveMethod(control.onChangeMethod, control, eventValue);
-      // }
-
-
-      if (control.type === 'select') {
+      else if (control.type === 'select') {
         const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
         if (control.dependentControls) {
           this.resolveMethod(control.onChangeMethod, control, eventValue);
@@ -3772,7 +3776,7 @@ export class YatraComponent {
         // If the result is a Promise, await it; otherwise, wrap it in Promise.resolve()
         if (result && typeof result.then === 'function') {
           await result; // It's already a Promise, so await it
-        } else {
+        } else if (result != undefined) {
           await Promise.resolve(result); // Wrap non-Promise results into a Promise
         }
 
@@ -5128,6 +5132,12 @@ export class YatraComponent {
           return;
         }
       }
+
+      if(!this.dynamicFormGroup.contains('insuredMemberDetails')){
+        this.dynamicFormGroup.addControl('insuredMemberDetails',new FormArray([]));
+      }
+      
+      
     }
 
     if (this.form.formTitle == 'Insurance Details' && this.formData.productName == 'Activ One SAVR') {
@@ -5660,6 +5670,13 @@ export class YatraComponent {
                         innerArrayControl.visible = visibility;
                       }
                     })
+                  }
+                })
+              }
+              else if (control.name == parentControlName && control.innerArrayControl && controlIndex != null) {
+                control.innerArrayControl[controlIndex].forEach((innerControl: any) => {
+                  if (innerControl.name == dependentName) {
+                    innerControl.visible = visibility;
                   }
                 })
               }
@@ -10415,6 +10432,25 @@ export class YatraComponent {
 
   }
 
+  addMoreClaimPolicies(innerControl: any, control: any) {
+
+    console.log(innerControl, control);
+    let tempArrayControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
+    control.innerArrayControl.push(tempArrayControl);
+
+    let formArr = this.dynamicFormGroup.get(control.name) as FormArray;
+    // let formArr;
+    console.log(formArr);
+
+    if (formArr == null) {
+      let tempFormArray = this.fb.array([]);
+      this.dynamicFormGroup.addControl(control.name, tempFormArray);
+      formArr = this.dynamicFormGroup.get(control.name) as FormArray;
+    }
+    formArr.push(this.initializeDynamicFormControls(tempArrayControl, control.innerArrayControl.length - 1, control));
+
+  }
+
   removePolicy(control: any, index: number): void {
     if (control.innerArrayControl && control.innerArrayControl.length > index) {
       control.innerArrayControl.splice(index, 1);  // Removes the element at the specified index
@@ -10460,6 +10496,20 @@ export class YatraComponent {
     console.log('Updated form structure:', this.form);
     console.log('Updated reactive form:', this.dynamicFormGroup);
   }
+
+  removeClaimPolicy(control: any, index: any) {
+    if (control.innerArrayControl.length > 1) {
+      // Remove the item at index + 1 from innerArrayControl
+      control.innerArrayControl.splice(index + 1, 1);  // Removes 1 item at index + 1
+  
+      // Remove the corresponding control from the FormArray
+      const controlArray = this.dynamicFormGroup.get(control.name) as FormArray;
+      if (controlArray && controlArray.length > index) {
+        controlArray.removeAt(index);  // Remove control at the specified index
+      }
+    }
+  }
+  
 
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
     const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
@@ -12214,6 +12264,48 @@ export class YatraComponent {
         console.error(err);
       }
     });
+  }
+
+  //Previous Claims Information
+  changePreviousCurrentPolicyDetails(dependentControl: any, visibility: any) {
+    console.log("Changes inside current policy details", dependentControl, visibility);
+    dependentControl.forEach((control: any) => {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == control.name) {
+            formControl.visible = visibility;
+            if (visibility) {
+              let tempArrayControl = formControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+              formControl.innerArrayControl.push(tempArrayControl);
+
+              let formArr = this.dynamicFormGroup.get(formControl.name) as FormArray;
+              // let formArr;
+              console.log(formArr);
+
+              if (formArr == null) {
+                let tempFormArray = this.fb.array([]);
+                this.dynamicFormGroup.addControl(formControl.name, tempFormArray);
+                formArr = this.dynamicFormGroup.get(formControl.name) as FormArray;
+              }
+              formArr.push(this.initializeDynamicFormControls(tempArrayControl, 1, formControl));
+            }
+            else {
+
+              while (formControl.innerArrayControl.length > 1) {
+                formControl.innerArrayControl.pop();
+              }
+
+              // Remove the entire FormArray from dynamicFormGroup
+              if (this.dynamicFormGroup.contains(formControl.name)) {
+                this.dynamicFormGroup.removeControl(formControl.name);
+              }
+            }
+
+
+          }
+        })
+      })
+    })
   }
 
 }
