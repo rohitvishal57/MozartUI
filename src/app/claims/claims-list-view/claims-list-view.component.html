@@ -31,6 +31,22 @@
                                 </button>
                             </li>
                             <li>
+                                <button type="button" id="claims-underProcess" name="claims-underProcess"
+                                    value="underProcess" class="btn_quickFilter btn_quickFilterClaim"
+                                    (click)="filterClaims('underProcess', 'underProcess')"
+                                    [ngClass]="{'active': selectedStatus === 'underProcess'}">
+                                    {{ "Under Process" | translate }} ({{ countsList.underProcess }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-underDeficiency" name="claims-underDeficiency"
+                                    value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"
+                                    (click)="filterClaims('underDeficiency', 'underDeficiency')"
+                                    [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
+                                    {{ "Under Deficiency" | translate }} ({{ countsList.underDeficiency }})
+                                </button>
+                            </li>
+                            <li>
                                 <button type="button" id="claims-approved" name="claims-approved" value="Approved"
                                     class="btn_quickFilter btn_quickFilterClaim"
                                     (click)="filterClaims('approved', 'approved')"
@@ -52,14 +68,6 @@
                                     (click)="filterClaims('rejected', 'rejected')"
                                     [ngClass]="{'active': selectedStatus === 'rejected'}">
                                     {{ "Rejected" | translate }} ({{ countsList.rejected }})
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" id="claims-underDeficiency" name="claims-underDeficiency"
-                                    value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"
-                                    (click)="filterClaims('underDeficiency', 'underDeficiency')"
-                                    [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
-                                    {{ "Under Deficiency" | translate }} ({{ countsList.underDeficiency }})
                                 </button>
                             </li>
                         </ul>
