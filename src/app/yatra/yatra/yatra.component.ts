@@ -5017,6 +5017,16 @@ export class YatraComponent {
 
   }
 
+  skipOTP(){
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.name == "next") {
+          controls.disabled = false;
+        }
+      });
+    });
+  }
+
 
   verifyOTP(control: any) {
     if (!this.otpRequestId) {
