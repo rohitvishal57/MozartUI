@@ -11486,8 +11486,6 @@ export class YatraComponent {
             }
           }
 
-          shouldEnableAddOnCover = true;
-
           if (addOnCoverNameControl?.value.includes('Personal Accident')) {
             const innerControls = control.subControls[1].innerSubControls || [];
             const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
@@ -11540,6 +11538,7 @@ export class YatraComponent {
                 console.log(`Skipping member ${key} as memberCheckbox is false`);
                 return;
               }
+              shouldEnableAddOnCover = true;
               const coverId = addOnIdControl?.value;
               const coverName = addOnCoverNameControl?.value || '';
 
