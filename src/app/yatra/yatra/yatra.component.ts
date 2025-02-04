@@ -20,6 +20,7 @@ import { CustomersService } from 'src/app/customers/customers.service';
 import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
 import { Options } from '@angular-slider/ngx-slider';
 import { LogarithmicScale } from 'chart.js';
+import { event } from 'jquery';
 
 @Component({
   selector: 'app-yatra',
@@ -6913,6 +6914,55 @@ export class YatraComponent {
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
     }
+
+    if (this.formData.productName == 'Active Secure') {
+      if (parentControl.name == 'cancerSecure') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'csSecondOpinion') {
+                if(formControl.visible){
+                  formControl.visible = false;
+                  this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                  this.onCheckboxChange(event, formControl.subControls[0],formControl,null);
+                }
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'criticalIllness') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'ciSecondOpinion') {
+                if(formControl.visible){
+                  formControl.visible = false;
+                  this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                  this.onCheckboxChange(event, formControl.subControls[0],formControl,null);
+                }
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'accident') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'accidentPatienthospitalization' || formControl.name == 'temporaryTotalDisablementBenefit'
+                || formControl.name == 'brokenBonesBenefit' || formControl.name == 'burnBenefit' || formControl.name == 'adventureSports'
+                || formControl.name == 'medicalExpenses' || formControl.name == 'emergencyAssistance' || formControl.name == 'emiProtect'
+                || formControl.name == 'loanProtect' || formControl.name == 'comaBenefits') {
+                  if(formControl.visible){
+                    formControl.visible = false;
+                    this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                    this.onCheckboxChange(event, formControl.subControls[0],formControl,null);
+                  }
+              }
+            });
+          }
+        });
+      }
+    }
   }
 
   // addOnAdded(control: any, parentControl: any = null) {
@@ -7400,43 +7450,6 @@ export class YatraComponent {
       // Synchronize the change in the local covers variable
       if (this.covers[index]) {
         this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
-      }
-      if (this.formData.productName == 'Active Secure') {
-        if (parentControl.name == 'cancerSecure') {
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle === "Optional Covers") {
-              section.formControls.forEach((formControl: any) => {
-                if (formControl.name == 'csSecondOpinion') {
-                  formControl.visible = false
-                }
-              });
-            }
-          });
-        } else if (parentControl.name == 'criticalIllness') {
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle === "Optional Covers") {
-              section.formControls.forEach((formControl: any) => {
-                if (formControl.name == 'ciSecondOpinion') {
-                  formControl.visible = false
-                }
-              });
-            }
-          });
-        } else if (parentControl.name == 'accident') {
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle === "Optional Covers") {
-              section.formControls.forEach((formControl: any) => {
-                if (formControl.name == 'accidentPatienthospitalization' || formControl.name == 'temporaryTotalDisablementBenefit'
-                  || formControl.name == 'brokenBonesBenefit' || formControl.name == 'burnBenefit' || formControl.name == 'adventureSports'
-                  || formControl.name == 'medicalExpenses' || formControl.name == 'emergencyAssistance' || formControl.name == 'emiProtect'
-                  || formControl.name == 'loanProtect' || formControl.name == 'comaBenefits') {
-                  formControl.visible = false
-                }
-              });
-            }
-          });
-        }
-
       }
     });
 
