@@ -5142,44 +5142,46 @@ export class YatraComponent {
         }
       }
 
-      if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
-        this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
-      }
-      let addOnData = this.dynamicFormGroup.get('accident')?.getRawValue();
-      console.log(addOnData);
-      this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
-        Object.keys(addOnData.addOnDetails).forEach((key) => {
-          if (key == member.relation) {
-            let memberSelected = false;
-            addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
-
-              if (addOnDetail.memberCheckbox) {
-                memberSelected = true;
-                // console.log(addOnDetail);
-                // member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
-                // console.log(member);
-
-              }
-              if (addOnDetail.occupation && memberSelected) {
-                member.occupationCode = JSON.parse(addOnDetail.occupation).value;
-              }
-              if (addOnDetail.occupationRisk && memberSelected) {
-                member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
-              }
-            })
-          }
-        })
-        const dynamicForm = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-
-        while (dynamicForm.length <= index) {
-          dynamicForm.push(new FormGroup({}));
+      if(this.dynamicFormGroup.contains('accident')){
+        if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+          this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
         }
-
-        const dindex = dynamicForm.at(index) as FormGroup;
-        Object.keys(member).forEach((key: string) => {
-          dindex.addControl(key, new FormControl(member[key]));
-        });
-      })
+        let addOnData = this.dynamicFormGroup.get('accident')?.getRawValue();
+        console.log(addOnData);
+        this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+          Object.keys(addOnData.addOnDetails).forEach((key) => {
+            if (key == member.relation) {
+              let memberSelected = false;
+              addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+  
+                if (addOnDetail.memberCheckbox) {
+                  memberSelected = true;
+                  // console.log(addOnDetail);
+                  // member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+                  // console.log(member);
+  
+                }
+                if (addOnDetail.occupation && memberSelected) {
+                  member.occupationCode = addOnDetail.occupation == ''? addOnDetail.occupation : JSON.parse(addOnDetail.occupation).value;
+                }
+                if (addOnDetail.occupationRisk && memberSelected) {
+                  member.natureOfDutyCode = addOnDetail.occupationRisk == ''? addOnDetail.occupationRisk : JSON.parse(addOnDetail.occupationRisk).value;
+                }
+              })
+            }
+          })
+          const dynamicForm = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+  
+          while (dynamicForm.length <= index) {
+            dynamicForm.push(new FormGroup({}));
+          }
+  
+          const dindex = dynamicForm.at(index) as FormGroup;
+          Object.keys(member).forEach((key: string) => {
+            dindex.addControl(key, new FormControl(member[key]));
+          });
+        })
+      }
 
 
     }
@@ -8324,7 +8326,7 @@ export class YatraComponent {
       lrFlag: formData?.lrFlag || '',
       affiliateEmployeeId: formData?.affiliateEmployeeId || '',
       isAffiliateEmployee: formData?.isAffiliateEmployee || '',
-      nameOfTheAffiliate: this.jsonParse(formData?.nameOfTheAffiliate ,'name')|| '',
+      nameOfTheAffiliate: formData?.nameOfTheAffiliate ? this.jsonParse(formData?.nameOfTheAffiliate ,'name') : '',
     };
     return mappedData;
   }
