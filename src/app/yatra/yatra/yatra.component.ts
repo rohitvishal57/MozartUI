@@ -1507,6 +1507,9 @@ export class YatraComponent {
             }
           });
         }
+        else{
+          this.resolveMethod(subControls.methodName,subControls,parentControl)
+        }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
         if (subControls.visible == true) {
@@ -1640,10 +1643,13 @@ export class YatraComponent {
             this.callMethod(control.getAllOption, control);
           }
         }
-        else if (control.type == 'select' && control.methodName) {
+        // else if(control.type == 'select' && control.methodName && control.onChangeMethod && this.formData.productName=='Active Secure'){
+        //   this.resolveMethod(control.methodName,parentControl,index)
+        //   console.log("resolve",parentControl,index); 
+        // }
+        else if (control.type == 'select' && control.methodName ) {
           this.resolveMethod(control.methodName, control, index, policyLength);
         }
-
         if (control.type == 'select' && control.value === "") {
           // Set control value if any option is selected
           if (control.options && control.options.length > 0) {
@@ -2635,6 +2641,65 @@ export class YatraComponent {
   //     }
   //   });
   // }
+  getNatureOfWorkByOccupation(event:any,innerControl:null, control :null, parentControl:null, index :null, indexj :null, subControl:any){
+    const parsedValue = JSON.parse(event.target.value);
+    const selectedControl = subControl;
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.subControls) {
+            formControl.subControls.forEach((subControl: any) => {
+              if (subControl.innerSubControls) {
+                subControl.innerSubControls.forEach((innerSubControls: any) => {
+                  if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
+                    innerSubControls.coreControls.forEach((coreControl: any) => {
+                      if(parsedValue.name === 'Retired' && coreControl.name == "occupationRisk"){
+                        coreControl.options =[{
+                          "id": "1",
+                          "value": "ND0410",
+                          "name": "Retired"
+                        }]
+                      }else if (parsedValue.name === 'Student' && coreControl.name == "occupationRisk") {
+                        coreControl.options = [{
+                          "id": "2",
+                          "value": "ND0277",
+                          "name": "Student "
+                        }]
+                      } else if (parsedValue.name === 'Not Employed' && coreControl.name == "occupationRisk") {
+                        coreControl.options = [{
+                          "id": "6",
+                          "value": "ND0306",
+                          "name": "UnEmployed"
+                        }]
+                      } else if (parsedValue.name === 'HouseWife/Husband' && coreControl.name == "occupationRisk") {
+                        coreControl.options = [{
+                          "id": "3",
+                          "value": "ND0209",
+                          "name": "Housewife"
+                        },
+                        {
+                          "id": "3",
+                          "value": "ND0207",
+                          "name": "Househusband"
+                        }]
+                      }else if(coreControl.name == "occupationRisk"){
+                          this.yatraService.getNatureOfDuty().subscribe({
+                            next: (res: any) => {
+                              coreControl.options = res.data;
+                            },
+                            error: (err: any) => {
+                              console.error(err);
+                            }
+                          });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      });              
+}
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     this.changesMade = true;
@@ -2729,45 +2794,7 @@ export class YatraComponent {
                   subControl.innerSubControls.forEach((innerSubControls: any) => {
                     if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
                       innerSubControls.coreControls.forEach((coreControl: any) => {
-                        if ((this.parsedValue && this.parsedValue.name === 'Retired') && coreControl.name == "occupationRisk") {
-                          coreControl.options = [{
-                            "id": "1",
-                            "value": "ND0410",
-                            "name": "Retired "
-                          }]
-                        } else if ((this.parsedValue && this.parsedValue.name === 'Student') && coreControl.name == "occupationRisk") {
-                          coreControl.options = [{
-                            "id": "2",
-                            "value": "ND0277",
-                            "name": "Student "
-                          }]
-                        } else if ((this.parsedValue && this.parsedValue.name === 'Not Employed') && coreControl.name == "occupationRisk") {
-                          coreControl.options = [{
-                            "id": "6",
-                            "value": "ND0306",
-                            "name": "UnEmployed"
-                          }]
-                        } else if ((this.parsedValue && this.parsedValue.name === 'HouseWife/Husband') && coreControl.name == "occupationRisk") {
-                          coreControl.options = [{
-                            "id": "3",
-                            "value": "ND0209",
-                            "name": "Housewife"
-                          },
-                          {
-                            "id": "3",
-                            "value": "ND0207",
-                            "name": "Househusband"
-                          }]
-                        } else if (innerControl.name == "occupation" && coreControl.name == "occupationRisk") {
-                          this.yatraService.getNatureOfDuty().subscribe({
-                            next: (res: any) => {
-                              coreControl.options = res.data;
-                            },
-                            error: (err: any) => {
-                              console.error(err);
-                            }
-                          });
-                        } else if (innerControl.name == "addOnSumInsured") {
+                       if (innerControl.name == "addOnSumInsured") {
                           if (selectedControl.name == 'Self') {
                             this.selfCoverSumInsured = Number(event.target.value)
                           }
@@ -2908,51 +2935,6 @@ export class YatraComponent {
                             },
                             error: (err: any) => {
                               console.error(err);
-                            }
-                          });
-                        }
-                        else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
-                          this.formData.insuredMemberDetails.forEach((member: any) => {
-                            if (selectedControl.name == member.relation) {
-                              if (member.annualIncome != "") {
-                                coreControl.options = [{
-                                  "id": "1",
-                                  "value": "O464",
-                                  "name": "Retired"
-                                },
-                                {
-                                  "id": "3",
-                                  "value": "O553",
-                                  "name": "Salaried"
-                                },
-                                {
-                                  "id": "6",
-                                  "value": "O556",
-                                  "name": "Self Employed"
-                                }]
-                              }
-                              else {
-                                coreControl.options = [{
-                                  "id": "1",
-                                  "value": "O464",
-                                  "name": "Retired"
-                                },
-                                {
-                                  "id": "2",
-                                  "value": "O490",
-                                  "name": "Student"
-                                },
-                                {
-                                  "id": "6",
-                                  "value": "O554",
-                                  "name": "Not Employed"
-                                },
-                                {
-                                  "id": "3",
-                                  "value": "O555",
-                                  "name": "HouseWife/Husband"
-                                }]
-                              }
                             }
                           });
                         }
@@ -9745,7 +9727,60 @@ export class YatraComponent {
       disabled: disabledSalutations.includes(option.name)
     }));
   }
+  //  updateDesignationBasedOnAnnualincome(control:any,index:any,policylength:any,parentcontrol:any){
 
+  updateDesignationBasedOnAnnualincome(control:any,parentcontrol:any,index:any){
+    if(control.name=='insuredMemberDetails'){
+      control.dynamicControls.forEach((control:any)=>{
+        console.log("dcontrol",control);
+        
+      })
+
+    }
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      if (parentcontrol.name == member.relation) {
+        if (member.annualIncome != "") {
+          control.options = [{
+            "id": "1",
+            "value": "O464",
+            "name": "Retired"
+          },
+          {
+            "id": "3",
+            "value": "O553",
+            "name": "Salaried"
+          },
+          {
+            "id": "6",
+            "value": "O556",
+            "name": "Self Employed"
+          }]
+        }
+        else {
+          control.options = [{
+            "id": "1",
+            "value": "O464",
+            "name": "Retired"
+          },
+          {
+            "id": "2",
+            "value": "O490",
+            "name": "Student"
+          },
+          {
+            "id": "6",
+            "value": "O554",
+            "name": "Not Employed"
+          },
+          {
+            "id": "3",
+            "value": "O555",
+            "name": "HouseWife/Husband"
+          }]
+        }
+    }
+    });
+  }
   updatePrefixBasedOnGender(control: any): void {
     if (this.formData?.proposerGender) {
       const proposerGender = this.formData.proposerGender;
