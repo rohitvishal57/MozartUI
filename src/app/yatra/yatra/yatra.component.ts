@@ -7179,8 +7179,6 @@ export class YatraComponent {
                   }
                 });
               } else if (parentControl.name == 'accident') {
-                console.log("form data", this.formData);
-
                 this.form.formSections.forEach((section: any) => {
                   if (section.sectionTitle === "Optional Covers") {
                     section.formControls.forEach((formControl: any) => {
@@ -7192,14 +7190,14 @@ export class YatraComponent {
                         formControl.visible = true;
                       }
 
-                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
+                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports' || formControl.name=='temporaryTotalDisablementBenefit') {
                         if (formControl.subControls) {
                           formControl.subControls.forEach((subControl: any) => {
                             if (subControl.innerSubControls) {
                               subControl.innerSubControls.forEach((innerSubControl: any) => {
                                 if (innerSubControl.coreControls) {
                                   innerSubControl.coreControls.forEach((coreControl: any,index :any) => {
-                                    if (coreControl.name == 'comaBenefit') {
+                                    if (coreControl.name == 'addOnSumInsured') {
                                 
                                       const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
                                       const controlGroup = parentGroup?.controls[control.name] as FormGroup;
