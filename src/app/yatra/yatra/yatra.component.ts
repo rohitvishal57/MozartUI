@@ -7216,22 +7216,33 @@ export class YatraComponent {
                             if (subControl.innerSubControls) {
                               subControl.innerSubControls.forEach((innerSubControl: any) => {
                                 if (innerSubControl.coreControls) {
-                                  innerSubControl.coreControls.forEach((coreControl: any) => {
+                                  innerSubControl.coreControls.forEach((coreControl: any,index :any) => {
                                     if (coreControl.name == 'comaBenefit') {
-                                      coreControl.value = "500000";
-                                      // Find the member in formData who has 'ACCD' cover
-                                      // let member = this.formData.insuredMemberDetails.find((m: any) =>
-                                      //   m.covers.some((c: any) => c.coverId === 'ACCD')
-                                      // );
-
-                                      // if (member) {
-                                      //   let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
-                                      //   if (accdCover) {
-                                      //     coreControl.value = accdCover.value; // Assign ACCD value
-                                      //   } else {
-                                      //     coreControl.value = ""; // Hide value if ACCD not found
-                                      //   }
-                                      // }
+                                
+                                      const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
+                                      const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                                      
+                                      if (innerSubControl.name !== "demoType" && innerSubControl.name !== "doneButton") {
+                                        const innerSubGroup = controlGroup?.controls[innerSubControl.name] as FormArray;
+                                        const targetFormGroup = innerSubGroup?.controls[index] as FormGroup;
+                                        const coreControls = targetFormGroup?.controls[coreControl.name] as FormControl;
+                                        if (coreControls) {
+                                          let member = this.formData.insuredMemberDetails.find((m: any) =>
+                                            m.covers.some((c: any) => c.coverId === 'ACCD' && m.relation === innerSubControl.name)
+                                          );                                           
+                                          if (member) {
+                                            let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
+                                            
+                                            if (accdCover && accdCover.value !== undefined) {
+                                              coreControls.setValue( 1000000 >= accdCover.value ? accdCover.value : 1000000);
+                                            } else {
+                                              coreControls.setValue("");
+                                            }
+                                          } else {
+                                            coreControls.setValue("");
+                                          }
+                                        }
+                                      }
                                     }
                                   });
                                 }
