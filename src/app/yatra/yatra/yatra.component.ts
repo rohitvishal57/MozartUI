@@ -850,7 +850,7 @@ export class YatraComponent {
                     // control.visible = false;
                   }
                 }
-                else{
+                else {
                   control.visible = true;
                 }
 
@@ -3135,6 +3135,9 @@ export class YatraComponent {
             this.resolveMethod(control.onChangeMethod, selectedOption.dependentControls)
           }
         }
+        else if (control.onChangeMethod == 'changeChronicCondition') {
+          this.changeChronicCondition(selectedValue, control);
+        }
         else {
           eventValue = selectedValue === 'Others' ? true : false;
           const selectedOption = control.options.find((option: any) => option.value === selectedValue);
@@ -3700,10 +3703,10 @@ export class YatraComponent {
         this.toast.warning({ detail: "Warning", summary: "Date cannot be in the future.", duration: 3000 });
       }
     }
-    if(control.type == 'radio' && control.dependentControls){
+    if (control.type == 'radio' && control.dependentControls) {
       console.log((event.target as HTMLInputElement).value);
-      parentControl.innerControls.forEach((element:any) => {
-        if(control.dependentControls.includes(element.name)){
+      parentControl.innerControls.forEach((element: any) => {
+        if (control.dependentControls.includes(element.name)) {
           element.visible = !element.visible;
         }
       });
@@ -5153,7 +5156,7 @@ export class YatraComponent {
         }
       }
 
-      if(this.dynamicFormGroup.contains('accident')){
+      if (this.dynamicFormGroup.contains('accident')) {
         if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
           this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
         }
@@ -5164,29 +5167,29 @@ export class YatraComponent {
             if (key == member.relation) {
               let memberSelected = false;
               addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
-  
+
                 if (addOnDetail.memberCheckbox) {
                   memberSelected = true;
                   // console.log(addOnDetail);
                   // member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
                   // console.log(member);
-  
+
                 }
                 if (addOnDetail.occupation && memberSelected) {
-                  member.occupationCode = addOnDetail.occupation == ''? addOnDetail.occupation : JSON.parse(addOnDetail.occupation).value;
+                  member.occupationCode = addOnDetail.occupation == '' ? addOnDetail.occupation : JSON.parse(addOnDetail.occupation).value;
                 }
                 if (addOnDetail.occupationRisk && memberSelected) {
-                  member.natureOfDutyCode = addOnDetail.occupationRisk == ''? addOnDetail.occupationRisk : JSON.parse(addOnDetail.occupationRisk).value;
+                  member.natureOfDutyCode = addOnDetail.occupationRisk == '' ? addOnDetail.occupationRisk : JSON.parse(addOnDetail.occupationRisk).value;
                 }
               })
             }
           })
           const dynamicForm = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-  
+
           while (dynamicForm.length <= index) {
             dynamicForm.push(new FormGroup({}));
           }
-  
+
           const dindex = dynamicForm.at(index) as FormGroup;
           Object.keys(member).forEach((key: string) => {
             dindex.addControl(key, new FormControl(member[key]));
@@ -7114,8 +7117,8 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
-                  weeklyCashLimit:weeklyCashLimit,
-                  noOfDays:noOfDays,
+                  weeklyCashLimit: weeklyCashLimit,
+                  noOfDays: noOfDays,
                 });
               }
 
@@ -7131,8 +7134,8 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
-                  weeklyCashLimit:weeklyCashLimit,
-                  noOfDays:noOfDays,
+                  weeklyCashLimit: weeklyCashLimit,
+                  noOfDays: noOfDays,
                 });
               }
 
@@ -8349,7 +8352,7 @@ export class YatraComponent {
       lrFlag: formData?.lrFlag || '',
       affiliateEmployeeId: formData?.affiliateEmployeeId || '',
       isAffiliateEmployee: formData?.isAffiliateEmployee || '',
-      nameOfTheAffiliate: formData?.nameOfTheAffiliate ? this.jsonParse(formData?.nameOfTheAffiliate ,'name') : '',
+      nameOfTheAffiliate: formData?.nameOfTheAffiliate ? this.jsonParse(formData?.nameOfTheAffiliate, 'name') : '',
     };
     return mappedData;
   }
@@ -8554,7 +8557,7 @@ export class YatraComponent {
       }
     });
 
-    const loggedInAgentCode = localStorage.getItem('agentCode'); 
+    const loggedInAgentCode = localStorage.getItem('agentCode');
     if (loggedInAgentCode) {
       localStorage.setItem('parentCode', loggedInAgentCode);
     }
@@ -10801,45 +10804,45 @@ export class YatraComponent {
       })
     }
   }
-  disableControlForAllOtherMembers(control:any){
-    if(control.name=='burnBenefit' || control.name=='brokenBonesBenefit'){
-     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
-     if ( addOnControlGroup) {
-       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
-       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
-         console.log(Key, index);
-         if (index != 0) {
-           const memberArray = addOnDetailsControl?.get(Key) as FormArray;
-           memberArray.controls.forEach((member: any) => {
-             const memberDaysControl = member.get('addOnSumInsured');
-             if (memberDaysControl) {
-               memberDaysControl.disable();
-             }
-           })
-         }
-       })
-     }
-    }else if(control.name=='hospitalCashBenefits'){
-     const addOnControlGroup = this.dynamicFormGroup.get(control.name);
-     if ( addOnControlGroup) {
-       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
-       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
-         console.log(Key, index);
-         if (index != 0) {
-           const memberArray = addOnDetailsControl?.get(Key) as FormArray;
-           memberArray.controls.forEach((member: any) => {
-             const memberDaysControl = member.get('noOfDays');
-             if (memberDaysControl) {
-               memberDaysControl.disable();
-             }
-           })
-         }
-       })
-     }
+  disableControlForAllOtherMembers(control: any) {
+    if (control.name == 'burnBenefit' || control.name == 'brokenBonesBenefit') {
+      const addOnControlGroup = this.dynamicFormGroup.get(control.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+        Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+          console.log(Key, index);
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberDaysControl = member.get('addOnSumInsured');
+              if (memberDaysControl) {
+                memberDaysControl.disable();
+              }
+            })
+          }
+        })
+      }
+    } else if (control.name == 'hospitalCashBenefits') {
+      const addOnControlGroup = this.dynamicFormGroup.get(control.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+        Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+          console.log(Key, index);
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberDaysControl = member.get('noOfDays');
+              if (memberDaysControl) {
+                memberDaysControl.disable();
+              }
+            })
+          }
+        })
+      }
     }
-   }
-  autoSelectControlValueForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any){
-    if(parentControl.name=='burnBenefit' || parentControl.name=='brokenBonesBenefit'){
+  }
+  autoSelectControlValueForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
+    if (parentControl.name == 'burnBenefit' || parentControl.name == 'brokenBonesBenefit') {
       console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
       const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
       if (addOnControlGroup) {
@@ -10851,7 +10854,7 @@ export class YatraComponent {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
               console.log(member);
-              const memberControlCheckbox = member.get('addOnSumInsured');  
+              const memberControlCheckbox = member.get('addOnSumInsured');
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
               }
@@ -10878,7 +10881,7 @@ export class YatraComponent {
               }
             })
           }
-  
+
         })
       }
     }
@@ -11582,37 +11585,37 @@ export class YatraComponent {
       // }
 
       if (shouldEnableAddOnCover) {
-            console.log(shouldEnableAddOnCover);
-    
-            let zoneValidationRuleApplicable = false;
-            if (zoneValidationRule) {
-              zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
-                (insuredMember: any) => insuredMember.zone === 'Zone I'
-              );
-            }
-    
-    
-            if (portabilityValidationRule) {
-    
-              if (isPortabilityRuleAvailable) {
-                addOnCoverControl?.setValue(true);
-              }
-              else {
-                addOnCoverControl?.setValue(false);
-              }
-            }
-            else {
-              addOnCoverControl?.setValue(true);
-            }
-    
-            if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
-              addOnCoverControl?.disable();
-            }
-    
+        console.log(shouldEnableAddOnCover);
+
+        let zoneValidationRuleApplicable = false;
+        if (zoneValidationRule) {
+          zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
+            (insuredMember: any) => insuredMember.zone === 'Zone I'
+          );
+        }
+
+
+        if (portabilityValidationRule) {
+
+          if (isPortabilityRuleAvailable) {
+            addOnCoverControl?.setValue(true);
           }
           else {
             addOnCoverControl?.setValue(false);
           }
+        }
+        else {
+          addOnCoverControl?.setValue(true);
+        }
+
+        if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
+          addOnCoverControl?.disable();
+        }
+
+      }
+      else {
+        addOnCoverControl?.setValue(false);
+      }
     }
 
     else {
@@ -12707,6 +12710,31 @@ export class YatraComponent {
         })
       })
     })
+  }
+
+  changeChronicCondition(eventValue: any, control: any) {
+    console.log(eventValue);
+
+    if (eventValue == 'Roll Over') {
+      this.dynamicFormGroup.get(control.otherControlName)?.setValue('N');
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == control.otherControlName) {
+            formControl.visible = false;
+          }
+        })
+      })
+    }
+    else {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == control.otherControlName) {
+            formControl.visible = true;
+          }
+        })
+      })
+    }
+
   }
 
 }
