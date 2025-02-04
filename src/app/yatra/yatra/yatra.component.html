@@ -2241,7 +2241,7 @@
 
                                                       <mat-form-field class="mat_inputField_Select" appearance="fill">
                                                         <!--<mat-label>{{ "Disease Name" | translate }}</mat-label>-->
-                                                        <mat-select [formControlName]="innerControl.name"
+                                                        <mat-select [formControlName]="innerControl.name" [attr.name]="innerControl.name" [id]="innerControl.name"
                                                           (selectionChange)="onInputChange($event, subControl, control, k-1, innerControl)"
                                                           [ngClass]="{'has-value': hasInnerValue(control, subControl, innerControl, k-1)}">
 
