@@ -60,7 +60,10 @@ export class AppComponent {
       '/proposals/shareconstent',
       '/proposals/shareSummary',
       '/rug/test-page',
-      '/rug/otpauthentication'
+      '/rug/customerDetails',
+      '/rug/otpauthentication',
+      '/products/hdfc',
+      '/products/axis'
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
       return true;

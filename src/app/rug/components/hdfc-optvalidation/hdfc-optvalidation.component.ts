@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { RugService } from '../../rug.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LeadsService } from 'src/app/leads/leads.service';
 
 @Component({
   selector: 'app-hdfc-optvalidation',
@@ -19,11 +20,14 @@ export class HdfcOptvalidationComponent {
   customerForm!: FormGroup;
   otpInfoObject: any;
   submitted : Boolean = false;
-  isShowOtp: boolean = false;
+  isShowOtp: Boolean = false;
+  isCustomerInfo: Boolean = false;
   referenceId : any = '';
+  leadNumber: any = '';
+  customerInfo : any ={};
 
-
-  constructor(private formBuilder: FormBuilder,private rugService : RugService,private route: ActivatedRoute,private router: Router) { }
+  constructor(private formBuilder: FormBuilder,private rugService : RugService,private route: ActivatedRoute,private router: Router
+    ,private leadService: LeadsService){ }
 
   ngOnInit() {
     this.customerForm = this.formBuilder.group({
@@ -33,17 +37,10 @@ export class HdfcOptvalidationComponent {
 
     this.route.queryParams.subscribe(params => {
       localStorage.setItem('token', params['token']);
-      this.customerForm.patchValue({
-        mobilenumber: params['mobileNo']
-      });
-
-      // ✅ Correct way to remove query params
-      // this.router.navigate([], {
-      //   relativeTo: this.route,
-      //   queryParams: {},
-      //   replaceUrl: true
-      // });
+      this.leadNumber = params['LeadNumber']
     });
+
+    this.getLeadInfoByLeadNumber();
   }
   
     focusPrevious(event: KeyboardEvent, previousInput: HTMLInputElement | null): void {
@@ -90,13 +87,12 @@ export class HdfcOptvalidationComponent {
           phoneNumber : this.customerForm.get("mobilenumber")?.value,
           dateOfBirth : this.customerForm.get("dob")?.value
         }
-
         this.rugService.sendHdfcOTP(reqData).subscribe(
           (response: any) => {
-          //  if (response.isSuccess) {
+            if (JSON.parse(response.data).isSuccess) {
               this.isShowOtp = true;
-              this.referenceId =  response.referenceId;
-          //  }
+              this.referenceId =  JSON.parse(response.data).data.responseString.refNo;
+            }
           },
           (error)=>{
             console.error("Error from send OTP API:", error);
@@ -104,16 +100,16 @@ export class HdfcOptvalidationComponent {
       }
     }
 
-
     ValidateOTP(){
       let reqData = {
-        referenceId : this.referenceId,
+        refNo : this.referenceId,
         passwordValue : this.otpInfoObject
       }
       this.rugService.validateHdfcOTP(reqData).subscribe(
         (response: any) => {
-          if (response.isSuccess) {
-            this.referenceId =  response.referenceId;
+          if (JSON.parse(response.data).isSuccess) {
+          this.customerInfo =  JSON.parse(response.data).data.sas_DIM_DEDUPE_OUTPUT.all_ACCOUNT.account_INFO;
+          this.isCustomerInfo = true;
           }
         },
         (error)=>{
@@ -128,6 +124,49 @@ export class HdfcOptvalidationComponent {
         event.preventDefault(); // Block non-numeric input
       }
     }
+
+
+    getLeadInfoByLeadNumber(){
+      this.leadService.getLeadInformationByLeadID(this.leadNumber).subscribe(
+     (response)=>{
+      if(response.isSuccess){
+        this.customerForm.patchValue({
+          mobilenumber : response.data.leadList[0].phoneNumber
+        });
+      }
+     },(error)=>{
+      console.log('failed to fetch lead Information',error);
+     });
+    }
+
+
+    generateProposal() {
+      let reqData = {
+              CustomerName: this.customerInfo.v_D_CUST_FIRST_NAME + " " +  this.customerInfo.v_D_CUST_LAST_NAME,
+              Dob: this.customerInfo.d_D_CUST_DATE_OF_BIRTH,  // Date of Birth in the required format
+              MobileNumber: this.customerInfo.v_D_CUST_MOBILE_PHONE,
+              Address1: this.customerInfo.v_D_CUST_OFF_ADR1,
+              Address2: this.customerInfo.v_D_CUST_ADD2,
+              Address3: this.customerInfo.v_D_CUST_OFF_ADR3,
+              City: this.customerInfo.v_D_CUST_CITY,
+              State: this.customerInfo.v_D_CUST_STATE,
+              Pincode: this.customerInfo.v_D_CUST_ZIP_CODE,
+              EmailID: this.customerInfo.v_D_CUST_EMAIL_ADD,
+              AgentCode: "I0002484",
+              Gender: this.customerInfo.v_D_CUST_GENDER,
+              LeadNumber: this.leadNumber
+      };
+  
+      this.rugService.generateProposal(reqData).subscribe(
+          (response: any) => {
+          
+            console.log('generateProposal',response);
+          },
+          (error) => {
+              console.error("Error from send OTP API:", error);
+          });
+  }
+  
 
   }
 

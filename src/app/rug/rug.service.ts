@@ -124,5 +124,17 @@ export class RugService {
       return this.httpService.post(validateRequestURL,reqData);
     }
 
+    sendCommunication(reqData : any){
+      const  sendCommunicationURL = this.configService.config.baseUrl1 + this.configService.config.sendCommunication;
+      return this.httpService.post(sendCommunicationURL,reqData);
+    }
+    
+    
+    generateProposal(reqData : any){
+      const  generateProposalURL = 'https://usp.monocept.ai/' + this.configService.config.generateProposal;
+      return this.httpService.post(generateProposalURL,reqData);
+    }
+    
+
 
   }

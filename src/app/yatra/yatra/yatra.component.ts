@@ -208,9 +208,9 @@ export class YatraComponent {
       if (history.state.productData.tenureAmounts) {
         this.tenureAmount = history.state.productData.tenureAmounts;
       }
-      // if (history.state.productData.quickQuoteRedirect) {
-      //   this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
-      // }
+      if (history.state.productData.quickQuoteRedirect) {
+         this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
+       }
       if (history.state.productData.leadId) {
         this.leadNumber = history.state.productData.leadId;
       }

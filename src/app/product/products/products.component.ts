@@ -12,7 +12,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import HeaderInformation from 'src/app/layout/headerInfo';
 import { LeadsService } from 'src/app/leads/leads.service';
-import { error } from 'jquery';
+import { error, param } from 'jquery';
 import { RugService } from 'src/app/rug/rug.service';
 
 @Component({
@@ -51,7 +51,10 @@ export class ProductsComponent implements OnInit {
   quickQuoteRedirect : Boolean = false;
   searchProductName : any ;
   productsInformation  : any[] =[];
-  hdfcNetbanking : Boolean = false;
+  isHdfcIMD : Boolean = false;
+  isHdfcCustomer : Boolean = false;
+  token : any = '';
+  redirect : any = '';
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -61,22 +64,44 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
 
-
-    debugger;
     const currentUrl = this.router.url;
-
     if (currentUrl.includes("hdfc")) {
-      this.hdfcNetbanking = true;
-      console.log(currentUrl);
-    }
-
-    this.route.queryParams.subscribe(params => {
+      this.route.queryParams.subscribe(params => {
+        this.leadId = params['leadnumber'];
+        this.token =  params['token'];
+        this.redirect = params['redirect'];
+        if(this.leadId){
+          this.quickQuoteRedirect = true;
+        }
+      });
+      if(this.redirect == 'hdfc-products'){
+        this.isHdfcCustomer = true;
+        localStorage.setItem('token',this.token);
+      }else{
+        this.isHdfcIMD = true;
+        localStorage.setItem('token','aa59deee594c4c90abd5737929d0302e');
+      }
+      localStorage.setItem('agentCode','I0002484');
+    }else if (currentUrl.includes("axis")) {
+      this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
+      this.token =  params['token'];
       if(this.leadId){
         this.quickQuoteRedirect = true;
       }
-    });
+      localStorage.setItem('agentCode','467899');
 
+    });
+    }else{
+      this.route.queryParams.subscribe(params => {
+        this.leadId = params['leadnumber'];
+        if(this.leadId){
+          this.quickQuoteRedirect = true;
+        }
+      });
+    }
+
+   
     this.route.params.subscribe(async (params) => {
         this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
         console.log(this.paramLeadId)
@@ -133,7 +158,7 @@ export class ProductsComponent implements OnInit {
 
   getPoductList() {
     // this.selectedToggle = item.insuranceType
-    if(this.hdfcNetbanking){
+    if(this.isHdfcIMD){
     this.agentCode = "I0002484";
     }
     const reqData = {
@@ -225,7 +250,16 @@ export class ProductsComponent implements OnInit {
   }
 
   async buyNow(item: any) {
+   if(this.isHdfcIMD){
+    this.router.navigate(['rug/customerDetails'], {
+      state: { productInformation: item}
+    });
+    return 
+  }
+
     this.formData = { ...this.formData, productName: item.productName}
+
+   
     try {
       await this.getProposalNum();
       console.log(item)
@@ -254,7 +288,7 @@ export class ProductsComponent implements OnInit {
       //   });
       // }
    
-        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897")) {
+        if (this.formSequence != null && this.formSequence.length > 0 && ( this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897")) {
           if(this.agentCode == "467898"){
             let reqObj = {
               "leadId": this.leadId,
@@ -299,9 +333,9 @@ export class ProductsComponent implements OnInit {
 
           }
         }else{
-          this.router.navigate(['yatra'], {
-            state: { productData: productData, formSequence: this.formSequence }
-         });
+            this.router.navigate(['yatra'], {
+              state: { productData: productData, formSequence: this.formSequence }
+           });
         }
       
     } catch (error) {
