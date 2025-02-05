@@ -63,7 +63,9 @@ export class AppComponent {
       '/rug/customerDetails',
       '/rug/otpauthentication',
       '/products/hdfc',
-      '/products/axis'
+      '/products/axis',
+      '/rug/otpauthentication',
+      '/yatra/hdfc'
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
       return true;

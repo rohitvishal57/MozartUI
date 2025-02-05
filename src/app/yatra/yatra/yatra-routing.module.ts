@@ -4,7 +4,7 @@ import { YatraComponent } from './yatra.component';
 
 const routes: Routes = [
   { path:'', component: YatraComponent },
-
+  { path:'hdfc', component: YatraComponent }
 ];
 
 @NgModule({
