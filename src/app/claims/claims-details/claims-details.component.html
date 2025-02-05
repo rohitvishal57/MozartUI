@@ -12,7 +12,7 @@
                             <div class="row_claimsInfo">
                                 <div class="claim_amount">
                                     <label>{{"Member Name" | translate}}</label>
-                                    <h6><b>{{ claims?.memberName }}</b></h6>
+                                    <h6>{{ claims?.memberName }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
@@ -27,13 +27,13 @@
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
-                                    <label>{{"Request Type" | translate}}</label>
+                                    <label>{{"Claim Type" | translate}}</label>
                                     <h6>{{ claims?.claimType }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
                                     <label>{{"Claim Status" | translate}}</label>
-                                    <h6><b>{{ claims?.claimStatus }}</b></h6>
+                                    <h6>{{ claims?.claimStatus }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             </div>
                             <div class="claim_amount">
                                 <h6>{{"Approved Amount" | translate}}</h6>
-                                <p>₹ {{ claims?.approvedAmount !== null ? claims.approvedAmount : '--' }}</p>
+                                <p>₹ {{ claims?.approvedAmount != 0 ? claims.approvedAmount : '--' }}</p>
                             </div>
                         </div>
                     </div>
