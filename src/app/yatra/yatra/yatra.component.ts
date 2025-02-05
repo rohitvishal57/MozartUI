@@ -246,12 +246,25 @@ export class YatraComponent {
         }
         else {
           const decryptedData = this.encryptionService.decrypt(params['data']);
+          if(params['redirect']=='HDFC'){
+            if (params['token']) {
+              localStorage.setItem('token', params['token']);
+            }
+            this.setFormIndexValue(decryptedData.currentFormSequence as number);
+            const reqData = {
+              "partnerId": decryptedData.partnerId,
+              "productId": decryptedData.productId
+      
+            }
+            const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
+            this.formSequence = JSON.parse(res.data.formSequence);
+          }
           if (decryptedData) {
             this.leadnumber = decryptedData.leadId;
             this.agentCode = decryptedData.agentCode;
             this.partnerId = decryptedData.partnerId;
             this.productId = decryptedData.productId;
-            if (decryptedData.isLead) {
+            if (decryptedData.isLead && !params['redirect'] && params['redirect']!='HDFC') {
               this.quickQuoteRedirect = decryptedData.isLead;
             }
             // this.formData.proposalNumber = decryptedData.proposalNum;
