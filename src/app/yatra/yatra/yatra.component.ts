@@ -2641,7 +2641,7 @@ export class YatraComponent {
   //     }
   //   });
   // }
-  getNatureOfWorkByOccupation(event:any,innerControl:null, control :null, parentControl:null, index :null, indexj :null, subControl:any){
+  getNatureOfWorkByOccupation(event:any,subControl:any,parentControl:any, index :any){
     const parsedValue = JSON.parse(event.target.value);
     const selectedControl = subControl;
       this.form.formSections.forEach((section: any) => {
@@ -2696,6 +2696,48 @@ export class YatraComponent {
                 });
               }
             });
+          }else if(formControl.dynamicControls){
+            formControl.dynamicControls[index+1].forEach((dynamicControl:any)=>{
+              if(parsedValue.name === 'Retired' && (dynamicControl.name == "productMemberNatureWork")){
+                dynamicControl.options =[{
+                  "id": "1",
+                  "value": "ND0410",
+                  "name": "Retired"
+                }]
+              }else if (parsedValue.name === 'Student' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "2",
+                  "value": "ND0277",
+                  "name": "Student "
+                }]
+              } else if (parsedValue.name === 'Not Employed' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "6",
+                  "value": "ND0306",
+                  "name": "UnEmployed"
+                }]
+              } else if (parsedValue.name === 'HouseWife/Husband' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "3",
+                  "value": "ND0209",
+                  "name": "Housewife"
+                },
+                {
+                  "id": "3",
+                  "value": "ND0207",
+                  "name": "Househusband"
+                }]
+              }else if(dynamicControl.name == "productMemberNatureWork"){
+                  this.yatraService.getNatureOfDuty().subscribe({
+                    next: (res: any) => {
+                      dynamicControl.options = res.data;
+                    },
+                    error: (err: any) => {
+                      console.error(err);
+                    }
+                  });
+              }
+            })
           }
         });
       });              
@@ -2972,7 +3014,6 @@ export class YatraComponent {
       })
     }
     if (control.name == 'confAccountNumber') {
-
       if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
         this.toast.error({ detail: "Error", summary: 'AccountNumber and Confirm confAccountNumber should be matched', duration: 3000 });
         const idNumberControl = this.dynamicFormGroup.get('confAccountNumber');
@@ -3128,6 +3169,8 @@ export class YatraComponent {
         }
         else if (control.onChangeMethod == 'changeChronicCondition') {
           this.changeChronicCondition(selectedValue, control);
+        }else if(control.onChangeMethod == 'getNatureOfWorkByOccupation'){
+          this.resolveMethod(control.onChangeMethod, event,control, parentControl, index);
         }
         else {
           eventValue = selectedValue === 'Others' ? true : false;
@@ -3234,6 +3277,8 @@ export class YatraComponent {
             this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index, innerControl.name, indexj);
           }
         }
+      }else if(innerControl.onChangeMethod == 'getNatureOfWorkByOccupation'){
+        this.resolveMethod(innerControl.onChangeMethod, event, subControl);
       }
       else {
         this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
@@ -9737,7 +9782,7 @@ export class YatraComponent {
     console.log("control name",control.name);
     let selectedRelation:string ='';
     if(control.name=='productMemberDesignation'){
-      selectedRelation = parentControl.dynamicControls[selectedControl][1].value
+      selectedRelation = parentControl.dynamicControls[selectedControl][1].value // 1 is the index of relation object
     }
     else{
       selectedRelation = selectedControl.name
