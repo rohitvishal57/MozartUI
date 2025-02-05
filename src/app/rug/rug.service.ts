@@ -113,4 +113,16 @@ export class RugService {
       const  getAllDispositions = this.configService.config.baseUrl1 + this.configService.config.getAllDispositionsRenewal;
       return this.httpService.get(getAllDispositions);
     }
-}
+
+    sendHdfcOTP(reqData : any){
+      const  sendOtpRequestURL = this.configService.config.baseUrl1 + this.configService.config.sendOtpHdfc;
+      return this.httpService.post(sendOtpRequestURL,reqData);
+    }
+
+    validateHdfcOTP(reqData : any){
+      const  validateRequestURL = this.configService.config.baseUrl1 + this.configService.config.validateHdfcOTP;
+      return this.httpService.post(validateRequestURL,reqData);
+    }
+
+
+  }

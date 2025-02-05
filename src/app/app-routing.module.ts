@@ -42,6 +42,10 @@ const routes: Routes = [
     loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
   },
   {
+    path: 'hdfc/products',
+    loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
+  },
+  {
     path: 'products/:leadId',
     loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
   },

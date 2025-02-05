@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HdfcValidationPopupComponent } from '../hdfc-validation-popup/hdfc-validation-popup.component';
+import { RugService } from '../../rug.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-hdfc-customer-registration',
@@ -13,7 +15,7 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
   customerForm!: FormGroup;
   submitted: boolean = false;
   showCustomerForm: boolean = false;
-  constructor(private dialog: MatDialog, private formBuilder: FormBuilder) {}
+  constructor(private dialog: MatDialog, private formBuilder: FormBuilder,private rugService:RugService) {}
 
   async ngOnInit() {
     
@@ -48,4 +50,5 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
       })
     }
   }
+
 }

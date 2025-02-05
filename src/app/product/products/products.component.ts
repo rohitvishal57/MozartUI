@@ -51,6 +51,7 @@ export class ProductsComponent implements OnInit {
   quickQuoteRedirect : Boolean = false;
   searchProductName : any ;
   productsInformation  : any[] =[];
+  hdfcNetbanking : Boolean = false;
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -59,7 +60,16 @@ export class ProductsComponent implements OnInit {
    private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService,  private rugService: RugService ) {}
 
   ngOnInit(): void {
-    
+
+
+    debugger;
+    const currentUrl = this.router.url;
+
+    if (currentUrl.includes("hdfc")) {
+      this.hdfcNetbanking = true;
+      console.log(currentUrl);
+    }
+
     this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
       if(this.leadId){
@@ -123,6 +133,9 @@ export class ProductsComponent implements OnInit {
 
   getPoductList() {
     // this.selectedToggle = item.insuranceType
+    if(this.hdfcNetbanking){
+    this.agentCode = "I0002484";
+    }
     const reqData = {
       "agentCode": this.agentCode
     }

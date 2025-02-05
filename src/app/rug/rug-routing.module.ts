@@ -26,6 +26,7 @@ import { GroupRenewalDoHomeComponent } from "./group-renewal-do-home/group-renew
 import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/group-renewal-modify-view.component";
 import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
 import { HdfcCustomerRegistrationComponent } from "./components/hdfc-customer-registration/hdfc-customer-registration.component";
+import { HdfcOptvalidationComponent } from "./components/hdfc-optvalidation/hdfc-optvalidation.component";
 
 
 
@@ -61,7 +62,8 @@ const routes: Routes = [
     {path:'renewal', component:GroupRenewalDoHomeComponent},
     {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
     {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
-    {path:'customerDetails', component:HdfcCustomerRegistrationComponent}    
+    {path:'customerDetails', component:HdfcCustomerRegistrationComponent},
+    {path:'otpauthentication',component:HdfcOptvalidationComponent}
 ];
 
 @NgModule({
