@@ -1683,9 +1683,8 @@ export class YatraComponent {
             this.callMethod(control.getAllOption, control);
           }
         }
-        else if(control.type == 'select' && control.methodName && control.onChangeMethod && this.formData.productName=='Active Secure'){
+        else if(control.type == 'select' && control.methodName=='updateDesignationBasedOnAnnualincome'){
           this.resolveMethod(control.methodName,control,index,parentControl)
-          console.log("resolve",parentControl,index); 
         }
         else if (control.type == 'select' && control.methodName ) {
           this.resolveMethod(control.methodName, control, index, policyLength);
