@@ -239,5 +239,7 @@ export const environment = {
   getGroupRenewalPhaseTwoLeads: "api/rug/GetGroupRenewalPhaseTwoLeads",
   getParentCodeViaAgentId:"api/yatra/getflsagents",
   sendOtpHdfc:"api/rug/generateotp",
-  validateHdfcOTP:"api/rug/validateotp"
+  validateHdfcOTP:"api/rug/validateotp",
+  sendCommunication:"api/rug/send-communication",
+  generateProposal:"api/rug/generateproposal"
 };
