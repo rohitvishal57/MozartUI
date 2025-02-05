@@ -3726,6 +3726,11 @@ input[type="checkbox"]:focus+label:before {
 .thankyouSection {
     border-radius: 16px 16px 0 0 !important;
 }
+.thankyouSectionEmailCentre{
+    display: flex !important;
+    justify-content: center !important;
+    padding-bottom: 0 !important;
+}
 
 .proposalDetails, .text-left-declaration {
     border-radius: 0 !important;

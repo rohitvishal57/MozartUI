@@ -982,7 +982,10 @@ export class RugDynamicFormComponent {
           this.filteredPolicies = this.policyDetails.policyDetails.filter(
             (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
           );
-          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetails.proposerDetails.premium)
+          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails?.proposerDetails.proposerDetails.premium);
+          this.dynamicFormGroup.patchValue({
+            proposerEmailAddress:this.policyDetails?.proposerDetails.proposerDetails.emailAddress
+          })
 
           if(this.filteredPolicies.length == 2){
             this.d2cDetails = this.filteredPolicies[0]
