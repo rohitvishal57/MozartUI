@@ -31,6 +31,22 @@
                                 </button>
                             </li>
                             <li>
+                                <button type="button" id="claims-underProcess" name="claims-underProcess"
+                                    value="underProcess" class="btn_quickFilter btn_quickFilterClaim"
+                                    (click)="filterClaims('underProcess', 'underProcess')"
+                                    [ngClass]="{'active': selectedStatus === 'underProcess'}">
+                                    {{ "Under Process" | translate }} ({{ countsList.underProcess }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-underDeficiency" name="claims-underDeficiency"
+                                    value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"
+                                    (click)="filterClaims('underDeficiency', 'underDeficiency')"
+                                    [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
+                                    {{ "Under Deficiency" | translate }} ({{ countsList.underDeficiency }})
+                                </button>
+                            </li>
+                            <li>
                                 <button type="button" id="claims-approved" name="claims-approved" value="Approved"
                                     class="btn_quickFilter btn_quickFilterClaim"
                                     (click)="filterClaims('approved', 'approved')"
@@ -54,21 +70,13 @@
                                     {{ "Rejected" | translate }} ({{ countsList.rejected }})
                                 </button>
                             </li>
-                            <li>
-                                <button type="button" id="claims-underDeficiency" name="claims-underDeficiency"
-                                    value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"
-                                    (click)="filterClaims('underDeficiency', 'underDeficiency')"
-                                    [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
-                                    {{ "Under Deficiency" | translate }} ({{ countsList.underDeficiency }})
-                                </button>
-                            </li>
                         </ul>
                     </div>
 
 
                     <div class="quickFilterRight leads_searchWraperMobile">
 
-                        <div class="filterWraper leads_searchWraper">
+                        <!-- <div class="filterWraper leads_searchWraper">
                             <span class="filter-desktop-block-top">
                             <button type="button" id="productFilter" name="productFilter" value="filter"
                                 (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"
@@ -114,22 +122,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
-                                            <h6>{{"Products" | translate}}</h6>
-                                            <div class="fw_checkboxWraper">
-                                                <div class="input-checkbox-block"
-                                                    *ngFor="let product of productsList; let i = index">
-                                                    <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="product{{i}}" name="product{{i}}"
-                                                            value="products" class="input-check"
-                                                            [(ngModel)]="product.selected"
-                                                            (change)="calculateAppliedFiltersCount()">
-                                                        <label for="product{{i}}">{{product.productName |
-                                                            translate}}</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
+                                        
                                         <div class="fw_formRow">
                                             <h6>{{"Claim Type" | translate}}</h6>
                                             <div class="fw_checkboxWraper">
@@ -162,7 +155,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
                             <img src="assets/Img/icon_download_grey.svg" alt="Download">
                         </button>
@@ -180,7 +173,7 @@
                     <!--Search section start-->
                     <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
-                            <div>
+                            <div class="select_searchOption">
                                 <select class="filterSearch" [(ngModel)]="selected"
                                     (ngModelChange)="onSelectChanges($event)" id="filterSearchOption"
                                     name="filterSearchOption">
@@ -228,11 +221,97 @@
                                         Valid Member Id." | translate}}</small>
                                 </span>
                             </div>
-                            <button type="button" id="productFilter" name="productFilter" value="filter"
-                                (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick filter-desktop-hide "
+                            <div class="filterWraper leads_searchWraper" style="position: relative;">
+                                <button type="button" id="productFilter" name="productFilter" value="filter"
+                                (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick "
                                 aria-label="filterForm"><img
                                     src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"><span id="filter-count">{{"Filter" |
                                 translate}} ({{appliedFiltersCount}})</span></button>
+                                <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
+                                [ngClass]="{'active': toggeledropdown}">
+                                    <div class="fw_form mobile_popupMain">
+                                        <div class="filterHeader">
+                                            <header>{{"Filter" | translate}}</header>
+                                            <button type="button" id="filterclose" name="filterclose" value="cancel"
+                                                class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                                (click)="cancel()"></button>
+                                        </div>
+                                        <div class="fw_formBody">
+                                            <div class="fw_formRow">
+                                                <h6>{{"Date Range" | translate}}</h6>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                        <div class="input-block form-floating input-block-dob m-0">
+                                                            <input type="date" id="fromDate" name="fromDate" value=""
+                                                                placeholder="Select Start Date"
+                                                                class="input-textBox input-date" [(ngModel)]="fromDate"
+                                                                (dateChange)="formatDate('startDate')" [max]="maxDate">
+                                                            <label for="fromDate">{{"From Date" | translate}}</label>
+                                                            <span class="ui-error">{{"Please enter start date" |
+                                                                translate}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                        <div class="input-block form-floating input-block-dob m-0">
+                                                            <input type="date" id="toDate" name="toDate" value=""
+                                                                placeholder="Select End Date"
+                                                                class="input-textBox input-date" [(ngModel)]="toDate"
+                                                                (dateChange)="formatDate('endDate')" [max]="maxDate"
+                                                                [min]="fromDate">
+                                                            <label for="toDate">{{"To Date" | translate}}</label>
+                                                            <span class="ui-error">{{"Please enter end date" |
+                                                                translate}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                                <h6>{{"Products" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block"
+                                                        *ngFor="let product of productsList; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="product{{i}}" name="product{{i}}"
+                                                                value="products" class="input-check"
+                                                                [(ngModel)]="product.selected"
+                                                                (change)="calculateAppliedFiltersCount()">
+                                                            <label for="product{{i}}">{{product.productName |
+                                                                translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <div class="fw_formRow">
+                                                <h6>{{"Claim Type" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block"
+                                                        *ngFor="let policyType of StaticRequestTypes; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="policytype{{i}}"
+                                                                name="policytype{{i}}" value="policytype"
+                                                                class="input-check" [(ngModel)]="policyType.selected"
+                                                                (change)="calculateAppliedFiltersCount()">
+                                                            <label for="policytype{{i}}">{{policyType.name |
+                                                                translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fw_formRow fw_formRowFooter">
+                                                <footer>
+                                                    <button type="button" id="filterClear" name="filterClear"
+                                                        value="cancel" class="btn_white btn_fullWidth"
+                                                        (click)="clear()">{{"Clear" | translate}}</button>
+                                                    <button type="button" id="filterApply" name="filterApply"
+                                                        value="apply" class="btn_red btn_fullWidth"
+                                                        (click)="applyFilter()">{{"Apply" | translate}}</button>
+                                                </footer>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

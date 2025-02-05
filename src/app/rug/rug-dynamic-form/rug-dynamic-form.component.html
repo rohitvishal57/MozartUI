@@ -288,7 +288,20 @@
                 <div *ngIf="control.type === 'line' && control.visible === true" [class]="control.class">
                   <hr />
                 </div>
-
+                <div *ngIf="control.type === 'textarea'"
+                [class]="control.class" class="typecss col-12"
+                [hidden]="!control.visible">
+                  <div class="input-container">
+                    <textarea class="inputField_Text"
+                      [formControlName]="control.name" [name]="control.name" 
+                      [id]="control.name"></textarea>
+                    <label class="inputField_Label"
+                      *ngIf="control.visibleLabel">{{
+                        control.label ?
+                      (control.label | translate) : '' }}<span
+                        *ngIf="control.validators"></span></label>
+                  </div>
+                </div>
                 <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
                   <p *ngIf="!isD2C && !isBB" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
                   <p *ngIf="control.value && !isD2C && !isBB" [innerHTML]="control.value"></p>

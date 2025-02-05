@@ -94,8 +94,8 @@
                                 <select class="form-select input-selectBox" id="claimType" name="claimType"
                                     formControlName="claimType" (change)="onClaimTypeChange($event)">
                                     <option value="" disabled selected>{{"Select Claim Type" | translate}}</option>
-                                    <option value="Cashless">{{"Cashless" | translate}}</option>
-                                    <option value="Reimbursement">{{"Reimbursement" | translate}}</option>
+                                    <option value="CA">{{"Cashless" | translate}}</option>
+                                    <option value="RI">{{"Reimbursement" | translate}}</option>
                                 </select>
                                 <label for="claimtype">{{"Claim Type" | translate}}<span
                                         class="text-danger">*</span></label>
@@ -761,7 +761,6 @@
                                 <ng-container *ngFor="let section of documentSections">
                                     <div class="upload-section">
                                         <h4 class="section-title">{{ section.label }}</h4>
-
                                         <!-- Upload Area - Show only if no file is uploaded -->
                                         <div class="uploadDocument_area" (click)="triggerFileInput(section.id)"
                                             *ngIf="!section.file">

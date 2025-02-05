@@ -104,7 +104,8 @@ export class EncryptionInterceptor implements HttpInterceptor {
     "https://usp.monocept.ai/api/rug/generateotp",
     "https://upuat.adityabirlahealth.com/api/rug/generateotp",
     "https://usp.monocept.ai/api/rug/validateotp",
-    "https://upuat.adityabirlahealth.com/api/rug/validateotp"
+    "https://upuat.adityabirlahealth.com/api/rug/validateotp",
+    "https://upuat.adityabirlahealth.com/api/rug/CreateManageLob"
   ];
   
 
