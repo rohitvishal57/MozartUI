@@ -1643,10 +1643,10 @@ export class YatraComponent {
             this.callMethod(control.getAllOption, control);
           }
         }
-        // else if(control.type == 'select' && control.methodName && control.onChangeMethod && this.formData.productName=='Active Secure'){
-        //   this.resolveMethod(control.methodName,parentControl,index)
-        //   console.log("resolve",parentControl,index); 
-        // }
+        else if(control.type == 'select' && control.methodName && control.onChangeMethod && this.formData.productName=='Active Secure'){
+          this.resolveMethod(control.methodName,control,index,parentControl)
+          console.log("resolve",parentControl,index); 
+        }
         else if (control.type == 'select' && control.methodName ) {
           this.resolveMethod(control.methodName, control, index, policyLength);
         }
@@ -2937,6 +2937,15 @@ export class YatraComponent {
                               console.error(err);
                             }
                           });
+                        }else if(innerControl.name == 'weeklyCashLimit' && coreControl.name === "addOnSumInsured"){
+                          let sumInsured= Number(event.target.value)*100                     
+                          const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
+                          const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                          if (innerSubControls.name !== "demoType" && innerSubControls.name !== "doneButton") {
+                            const innerSubGroup = controlGroup?.controls[innerSubControls.name] as FormArray;
+                            const targetFormGroup = innerSubGroup?.controls[index+1] as FormGroup;
+                            const coreControls = targetFormGroup?.controls[coreControl.name].setValue(sumInsured);
+                          }
                         }
                       });
                     }
@@ -7190,7 +7199,7 @@ export class YatraComponent {
                         formControl.visible = true;
                       }
 
-                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports' || formControl.name=='temporaryTotalDisablementBenefit') {
+                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
                         if (formControl.subControls) {
                           formControl.subControls.forEach((subControl: any) => {
                             if (subControl.innerSubControls) {
@@ -7236,8 +7245,6 @@ export class YatraComponent {
                   }
                 });
               }
-
-
             }
           }
         });
@@ -9725,19 +9732,19 @@ export class YatraComponent {
       disabled: disabledSalutations.includes(option.name)
     }));
   }
-  //  updateDesignationBasedOnAnnualincome(control:any,index:any,policylength:any,parentcontrol:any){
 
-  updateDesignationBasedOnAnnualincome(control:any,parentcontrol:any,index:any){
-    if(control.name=='insuredMemberDetails'){
-      control.dynamicControls.forEach((control:any)=>{
-        console.log("dcontrol",control);
-        
-      })
-
+  updateDesignationBasedOnAnnualincome(control:any,selectedControl:any,parentControl?:any){
+    console.log("control name",control.name);
+    let selectedRelation:string ='';
+    if(control.name=='productMemberDesignation'){
+      selectedRelation = parentControl.dynamicControls[selectedControl][1].value
+    }
+    else{
+      selectedRelation = selectedControl.name
     }
     this.formData.insuredMemberDetails.forEach((member: any) => {
-      if (parentcontrol.name == member.relation) {
-        if (member.annualIncome != "") {
+      if (selectedRelation == member.relation) {
+        if (member.annualIncome != "") {          
           control.options = [{
             "id": "1",
             "value": "O464",
