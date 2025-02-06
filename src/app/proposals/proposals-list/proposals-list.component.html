@@ -2,16 +2,17 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between head_myProposals pageHeading_align-items-center">
-                <h2>{{"My Proposals" | translate}}</h2>
+                <h2 *ngIf="tabProposals?.getAttribute('aria-selected') === 'true'">{{"My Proposals" | translate}}</h2>
+                <h2 *ngIf="tabQuotes?.getAttribute('aria-selected') === 'true'">{{"My Quotes" | translate}}</h2>
                 <div class="main_productTabs">
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="tab-proposals-tab" data-bs-toggle="tab"
+                            <button #tabProposals class="nav-link active" id="tab-proposals-tab" data-bs-toggle="tab"
                                 data-bs-target="#tab-proposals" type="button" role="tab" aria-controls="tab-proposals"
                                 aria-selected="true" (click)="getProposal()">{{"Proposals"| translate}}</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab-quotes-tab" data-bs-toggle="tab"
+                            <button #tabQuotes class="nav-link" id="tab-quotes-tab" data-bs-toggle="tab"
                                 data-bs-target="#tab-quotes" type="button" role="tab" aria-controls="tab-quotes"
                                 aria-selected="false" (click)="getQuoteList(true)">{{"Quotes" | translate}}</button>
                         </li>
