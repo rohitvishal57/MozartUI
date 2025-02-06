@@ -148,16 +148,12 @@ export class HdfcOptvalidationComponent {
         });
       }
      },(error)=>{
+      this.toast.error({ detail: "error", summary: 'Failed to Fetch Lead Information.', duration: 3000 });
       console.log('failed to fetch lead Information',error);
      });
     }
 
      generateProposal() {
-    if (!this.customerInfo) {
-      console.error("Customer information is missing.");
-      return;
-    }
-
     const reqData = {
       customerName: `${this.customerInfo.v_D_CUST_FIRST_NAME ?? ''} ${this.customerInfo.v_D_CUST_LAST_NAME ?? ''}`.trim(),
       dob: this.customerInfo.d_D_CUST_DATE_OF_BIRTH ?? '',
@@ -181,6 +177,7 @@ export class HdfcOptvalidationComponent {
         }
       },
       (error) => {
+        this.toast.error({ detail: "error", summary: 'Failed to generate proposal.', duration: 3000 });
         console.error("Error from generateProposal API:", error);
 
       }
