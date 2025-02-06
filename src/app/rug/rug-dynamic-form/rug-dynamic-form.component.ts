@@ -5352,7 +5352,7 @@ export class RugDynamicFormComponent {
                     nomineeLastname: this.bbdetails.nomineeLastName,
                     nomineeContactNumber: this.bbdetails.nomineeMobileNumber,
                     nomineeAddress: this.bbdetails.nomineeAddress || null,
-                    appointeeDOB: null,
+                    appointeeDOB: this.bbdetails.appointeeDob || null,
                     appointeeName: this.bbdetails.appointeeName || null,
                     appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
                     relationshipOfAppointeeWithNominee: this.bbdetails.relationWithNominee || "",
