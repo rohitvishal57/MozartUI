@@ -198,7 +198,7 @@ export const environment = {
   tsCreateLead: "api/v1/SaveLeadDetails",
   getAllDispositions: "api/rug/getAllDisposition?appName=TELESALES",
   getAllSubDispositions:'api/rug/GetAllSubDisposition',
-  saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
+  saveTSCommonDraft:"api/rug/SaveTSCommonDraft",
   postTSHalfQuote:"api/v1/PostHalfQuote",
   getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
   bbHalfQuote: "api/rug/HalfQuote",

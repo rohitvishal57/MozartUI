@@ -110,6 +110,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
     "https://upuat.adityabirlahealth.com/api/rug/send-communication",
     "https://usp.monocept.ai/api/rug/generateproposal",
     "https://upuat.adityabirlahealth.com/api/rug/generateproposal",
+    "https://upuat.adityabirlahealth.com/api/rug/SaveTSCommonDraft"
   ];
   
 
