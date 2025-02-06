@@ -742,6 +742,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         this.fileSizeError = true;
         e.target.value = '';
         this.showNote = false;
+        this.selectedFile = null;
         return;
       }
   
@@ -759,6 +760,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showDocInfo = true;
     } else {
       this.showNote = true;
+      this.selectedFile = null;
     }
   }
 
@@ -927,6 +929,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = "";
     this.documentType = "";
     this.showDocInfo = false;
+    this.selectedFile = null;
   }
 
   onKey(event: KeyboardEvent, index: number) {
@@ -984,5 +987,34 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       });
     }
-  }  
+  }
+get isSubmitDisabled(): boolean {
+  const selectedType = this.caseCreationForm.get('endorsementType').value;
+  
+  const otpRequiredTypes = [
+    'alternateContactNumber', 
+    'internationalContactNumber', 
+    'primaryContactNumber', 
+    'memberPrimaryContactNumber', 
+    'memberAlternateContactNumber',
+    'email',
+    'alternateEmail',
+    'memberEmail',
+    'memberAlternateEmail'
+  ];
+  
+  const isFormInvalid = !this.caseCreationForm.valid;
+  
+  const isOtpNotValidated = otpRequiredTypes.includes(selectedType) && this.sendOtptDisabled;
+  
+  const isDocumentMissing =                                               // Check document upload for PAN and Aadhar
+    (selectedType === 'panNumber' || selectedType === 'aadharNumber') && 
+    (!this.selectedFile || this.isFilenotSelected);
+  
+  return (
+    isFormInvalid || 
+    isOtpNotValidated || 
+    isDocumentMissing
+  );
+}  
 }

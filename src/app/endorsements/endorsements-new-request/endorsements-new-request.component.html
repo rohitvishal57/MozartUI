@@ -363,7 +363,7 @@
                     </div>
                   </div>
                 </div>
-                <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
+                <!-- <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span> -->
                 <span class="ui-error block-show" *ngIf="showNote"> File format not supported! Please upload .jpg, .png, .jpeg, or .pdf files. </span>
                 <span class="ui-error block-show" *ngIf="fileSizeError">File is too large! Please upload a file smaller than 10MB.</span>
               </div>
@@ -378,7 +378,7 @@
         </section>
         <div class="row mt-4">
           <div class="col-12">
-            <button type="submit" id="submitrequest" name="submitrequest" class="btn_red" [disabled]="isDisabled">{{"Submit Request" | translate}}</button>
+            <button type="submit" id="submitrequest" name="submitrequest" class="btn_red" [disabled]="isSubmitDisabled">{{"Submit Request" | translate}}</button>
           </div>
         </div>
       </form>
