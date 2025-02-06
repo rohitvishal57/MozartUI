@@ -5345,7 +5345,7 @@ export class RugDynamicFormComponent {
                   })),
                   nomineeDetails: {
                     leadId: this.bbdetails.leadId,
-                    NomineeSalutation: this.bbdetails.nomineeGender == "M" ? "Mr" : this.bbdetails.nomineeGender == "F" ? "Ms" : null, // Assuming not provided
+                    NomineeSalutation: this.bbdetails.nomineeGender == "Male" ? "Mr" : this.bbdetails.nomineeGender == "Female" ? "Ms" : null, // Assuming not provided
                     nomineeRelation: this.bbdetails.relationWithProposer || "son",
                     NomineeRelationCode: nomineeRelationCode[0].relationCode,
                     nomineeFirstname: this.bbdetails.nomineeFirstName,
@@ -8977,7 +8977,10 @@ export class RugDynamicFormComponent {
         // Compare normalized relation with the input value
         return standardizedRelation === relationWithProposer;
       });
-    
+      const appointeeNameControl = this.dynamicFormGroup.get('appointeeName');
+      const appointeeMobileNumberControl = this.dynamicFormGroup.get('appointeeMobileNumber');
+      const appointeeDobControl = this.dynamicFormGroup.get('appointeeDob');
+      const relationWithNomineeControl = this.dynamicFormGroup.get('relationWithNominee');
       if (selectedDetails) {
         // Patch values to the form group if a match is found
         this.dynamicFormGroup.patchValue({
@@ -8987,6 +8990,53 @@ export class RugDynamicFormComponent {
           nomineeGender: selectedDetails.gender || '',
           nomineeMobileNumber: selectedDetails.mobileNumber || ''
         });
+        let nomineeAge = this.calculateAge(this.dynamicFormGroup.get('nomineeDob')?.value);
+        let isKid = /^\d+days$/.test(nomineeAge.toString());
+        if(isKid == true){
+          nomineeAge = 1;
+        }
+        console.log(nomineeAge);
+        if (typeof nomineeAge === "number") {        
+          // Determine the second argument based on nomineeAge
+          const shouldEnableDependentControls = nomineeAge < 18;
+          if(shouldEnableDependentControls){
+            // control.dependentControls.forEach((item: any) => {
+            //   item.visibility = true
+            // })
+            this.form.formSections.forEach((section: IFormSections) => {
+              section.formControls.forEach((control: IFormControl) => {
+                if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                  control.visible = true;
+                }
+              })
+            })
+            appointeeNameControl?.setValidators([Validators.required]);
+            appointeeMobileNumberControl?.setValidators([Validators.required]);
+            appointeeDobControl?.setValidators([Validators.required]);
+            relationWithNomineeControl?.setValidators([Validators.required]);
+          }else{
+            control.dependentControls.forEach((item: any) => {
+              item.visibility = false
+            })
+            this.form.formSections.forEach((section: IFormSections) => {
+              section.formControls.forEach((control: IFormControl) => {
+                if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                  control.visible = false;
+                }
+              })
+            })
+            appointeeNameControl?.clearValidators();
+            appointeeMobileNumberControl?.clearValidators();
+            appointeeDobControl?.clearValidators();
+            relationWithNomineeControl?.clearValidators();
+          }             
+          appointeeNameControl?.updateValueAndValidity();
+          appointeeMobileNumberControl?.updateValueAndValidity();
+          appointeeDobControl?.updateValueAndValidity();
+          relationWithNomineeControl?.updateValueAndValidity();
+        } else {
+          console.error("Nominee age is not a number:", nomineeAge);
+        }
       } else {
         // Clear the form group fields if no match is found
         this.dynamicFormGroup.patchValue({
@@ -8996,6 +9046,21 @@ export class RugDynamicFormComponent {
           nomineeGender: '',
           nomineeMobileNumber: ''
         });
+        appointeeNameControl?.clearValidators();
+        appointeeMobileNumberControl?.clearValidators();
+        appointeeDobControl?.clearValidators();
+        relationWithNomineeControl?.clearValidators();
+        appointeeNameControl?.updateValueAndValidity();
+        appointeeMobileNumberControl?.updateValueAndValidity();
+        appointeeDobControl?.updateValueAndValidity();
+        relationWithNomineeControl?.updateValueAndValidity();
+        this.form.formSections.forEach((section: IFormSections) => {
+          section.formControls.forEach((control: IFormControl) => {
+            if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+              control.visible = false;
+            }
+          })
+        })
         console.log("No matching member details found.");
       }
     } else {
