@@ -10077,10 +10077,10 @@ export class YatraComponent {
     }
   }
   async modifyThankYouJson() {
-    if (this.formData.paymentMode === 'offline') {
-      console.log(this.formData);
-    }
-    else {
+    // if (this.formData.paymentMode === 'offline') {
+    //   console.log(this.formData);
+    // }
+    // else {
       const reqData = {
         proposalNumber: this.proposalNum
       };
@@ -10138,7 +10138,7 @@ export class YatraComponent {
         .catch((err) => {
           console.log(err);
         });
-    }
+    // }
   }
 
   setPreviousPolicyYears(control: any, index: any, policyLength: any = 0) {
@@ -12464,6 +12464,9 @@ export class YatraComponent {
       //     return;
       //   }
       // }
+      if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
+        this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+      }
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
