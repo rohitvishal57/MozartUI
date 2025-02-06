@@ -5752,6 +5752,9 @@ background: var(--white-color);
 .info_status_gray {
   background: #A9A9A9;
 }
+.info_status_nobg {
+  color: #282828;
+}
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
 	max-width: 160px;
     white-space: nowrap;
