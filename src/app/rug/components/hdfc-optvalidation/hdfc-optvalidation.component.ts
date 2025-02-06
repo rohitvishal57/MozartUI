@@ -24,9 +24,10 @@ export class HdfcOptvalidationComponent {
   submitted : Boolean = false;
   isShowOtp: Boolean = false;
   isCustomerInfo: Boolean = false;
-  referenceId : any = '';
   leadNumber: any = '';
   customerInfo : any ={};
+  otpInfo : any ={};
+
 
   constructor(private formBuilder: FormBuilder,private rugService : RugService,private route: ActivatedRoute,private router: Router
     ,private leadService: LeadsService,private toast: NgToastService){ }
@@ -94,7 +95,7 @@ export class HdfcOptvalidationComponent {
             if (JSON.parse(response.data).isSuccess) {
               this.toast.success({ detail: "Success", summary: 'OTP Send Successfully.', duration: 3000 });
               this.isShowOtp = true;
-              this.referenceId =  JSON.parse(response.data).data.responseString.refNo;
+              this.otpInfo =JSON.parse(response.data).data.responseString;
             }else{
               this.toast.error({ detail: "error", summary: 'Failed to send OTP.', duration: 3000 });
             }
@@ -107,14 +108,18 @@ export class HdfcOptvalidationComponent {
 
     ValidateOTP(){
       let reqData = {
-        refNo : this.referenceId,
-        passwordValue : this.otpInfoObject
+        refNo : this.otpInfo.refNo,
+        passwordValue : this.otpInfoObject,
+        txnId : this.otpInfo.txnId,
+        mobileNo :this.customerForm.get('mobilenumber')?.value ,
+        dob : this.customerForm.get('dob')?.value
+
       }
       this.rugService.validateHdfcOTP(reqData).subscribe(
         (response: any) => {
           if (JSON.parse(response.data).isSuccess) {
           this.toast.success({ detail: "Success", summary: 'Validated Successfully.', duration: 3000 });
-          this.customerInfo =  JSON.parse(response.data).data.sas_DIM_DEDUPE_OUTPUT.all_ACCOUNT.account_INFO;
+          this.customerInfo =  JSON.parse(response.data).data.serviceResponse.sas_DIM_DEDUPE_OUTPUT.all_ACCOUNT.account_INFO;
           this.isCustomerInfo = true;
           }else{
             this.toast.error({ detail: "error", summary: 'Incorrect OPT.', duration: 3000 });
