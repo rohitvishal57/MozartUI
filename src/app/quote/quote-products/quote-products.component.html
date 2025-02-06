@@ -54,7 +54,7 @@
                                                     <div *ngIf="item.t1DiscountPercentage" class="planDuration">
                                                         /{{ item.t1DiscountPercentage }}%
                                                     </div>
-                                                    <div *ngIf="item.t1DiscountAmount" class="planDuration"
+                                                    <div *ngIf="item.t1DiscountAmount && item.t1DiscountPercentage" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 1}">
                                                         (Discount:{{ item.t1DiscountAmount }})
                                                     </div>
@@ -69,7 +69,7 @@
                                                     <div *ngIf="item.t2DiscountPercentage" class="planDuration">
                                                          {{ item.t2DiscountPercentage }}%
                                                     </div>
-                                                    <div *ngIf="item.t2DiscountAmount" class="planDuration"
+                                                    <div *ngIf="item.t2DiscountAmount && item.t2DiscountPercentage" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 2}">
                                                         (Discount:{{ item.t2DiscountAmount }})
                                                     </div>
@@ -84,7 +84,7 @@
                                                     <div *ngIf="item.t3DiscountPercentage" class="planDuration">
                                                         {{ item.t3DiscountPercentage }}%
                                                     </div>
-                                                    <div *ngIf="item.t3DiscountAmount" class="planDuration"
+                                                    <div *ngIf="item.t3DiscountAmount && item.t3DiscountPercentage" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 3}">
                                                         (Discount:{{ item.t3DiscountAmount }})
                                                     </div>

@@ -126,6 +126,11 @@ export class QuoteProductsComponent implements OnInit {
             prod.tenure1Premium = Math.round(prod.tenure1Premium);
             prod.tenure2Premium = Math.round(prod.tenure2Premium);
             prod.tenure3Premium = Math.round(prod.tenure3Premium);
+
+            // Round tenure discount
+            prod.t1DiscountAmount = Math.round(prod.t1DiscountAmount);
+            prod.t2DiscountAmount = Math.round(prod.t2DiscountAmount);
+            prod.t3DiscountAmount = Math.round(prod.t3DiscountAmount);
   
             // Optionally, log the updated product
             console.log(prod);
