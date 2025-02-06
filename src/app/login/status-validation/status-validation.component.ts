@@ -31,7 +31,6 @@ export class StatusValidationComponent implements OnInit {
   }
 
   checkADFSLogin() {
-debugger
 const url = new URL(window.location.href);
 this.token = new URLSearchParams(url.hash.substring(1)).get('id_token');
     
