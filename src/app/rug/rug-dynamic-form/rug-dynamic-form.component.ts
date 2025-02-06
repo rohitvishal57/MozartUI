@@ -945,7 +945,7 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.paymentMode);
         this.form.formSections.forEach((section: any) => {
           console.log(section);
-          if (section.sectionTitle == "Details of Your Policy" && this.bbdetails.paymentMode == "yes") {
+          if (section.sectionTitle == "Details of Your Policy" && this.bbdetails.paymentMode == "easyPay") {
             section.visible = false;
           }
           if(section.sectionTitle == "details of links"){
@@ -4690,7 +4690,7 @@ export class RugDynamicFormComponent {
             });
             dialogRef.afterClosed().subscribe((result: any) => {
               console.log(result);
-              if (this.bbdetails?.paymentMode == 'yes') {
+              if (this.bbdetails?.paymentMode == 'easyPay') {
                 if (this.getFormIndexValue() < this.formSequence.length - 1) {
                   this.incrementIndex();
                   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -6235,7 +6235,7 @@ export class RugDynamicFormComponent {
     this.activeMemberTabIndex = tempIndex;
     console.log(this.form);
     console.log(this.dynamicFormGroup.get('paymentMode')?.value);
-    if(this.dynamicFormGroup.get('paymentMode')?.value == 'yes'){
+    if(this.dynamicFormGroup.get('paymentMode')?.value == 'easyPay'){
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
       this.dynamicFormGroup.patchValue({
