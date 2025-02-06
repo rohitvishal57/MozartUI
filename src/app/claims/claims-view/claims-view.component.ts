@@ -565,9 +565,9 @@ export class ClaimsViewComponent {
 
   dateFormat(dateType: "fromDate" | "toDate") {
     if (dateType === "fromDate" && this.fromDate) {
-      this.fromDate = this.datePipe.transform(this.fromDate, "MM-dd-yyyy");
+      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
     } else if (dateType === "toDate" && this.toDate) {
-      this.toDate = this.datePipe.transform(this.toDate, "MM-dd-yyyy");
+      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
     const admissionDateTime = new Date(
       this.form.get('admissionDate')?.value
@@ -583,6 +583,7 @@ export class ClaimsViewComponent {
     return null;
 
   }
+  
   get dischargeDateError(): boolean {
     return this.form.errors?.['dischargeDateInvalid'] &&
       this.form.get('dischargeDate')?.touched;
@@ -1184,6 +1185,14 @@ export class ClaimsViewComponent {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
+      function convertToIsoFormat(dateString: string): string {
+        const [month, day, year] = dateString.split('-');
+        return `${year}-${month}-${day}`;
+      }
+      
+      // Before submitting the data, convert to yyyy-MM-dd format
+      const isoFromDate = convertToIsoFormat(this.fromDate);
+      const isoToDate = convertToIsoFormat(this.toDate);
       // Add documents from documentSections
       saveClaimData.documentsArray = this.documentSections
         .filter(section => section.file && section.file.status === 'success')
