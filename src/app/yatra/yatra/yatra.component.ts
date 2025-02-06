@@ -649,7 +649,7 @@ export class YatraComponent {
                   innerControl.options = member.upgradableSumInsured;
                 }
 
-                if (innerControl.name == 'previousCurrentPolicyDetails') {
+                if (innerControl.name == 'previousCurrentPolicyDetails' && innerControl.type == 'claimInfo') {
                   if (member.previousCurrentPolicyDetails && member.previousCurrentPolicyDetails.length > 0) {
 
                     innerControl.visible = true;
@@ -3533,6 +3533,7 @@ export class YatraComponent {
             const age = this.calculateAge(dob);
             ageControl.setValue(age);
           }
+          this.setForSelfMember(control,eventValue);
         }
       }
     }
@@ -8369,6 +8370,7 @@ export class YatraComponent {
           isSmoking: member.isSmoking || '',
           isTobacco: member.isTobacco || '',
           alcohol: member.alcohol || '',
+          previousCurrentPolicyDetails: member?.previousCurrentPolicyDetails || ''
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
@@ -13127,6 +13129,11 @@ export class YatraComponent {
 
           if(control.name == 'occupation'){
             group.get('productMemberDesignation')?.setValue(eventValue);
+          }
+
+          if(control.name == 'memberDobProposer'){
+            group.get('memberdob')?.setValue(eventValue);
+            group.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
           }
         }
       });
