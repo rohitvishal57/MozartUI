@@ -374,7 +374,7 @@ h6 {
 	.info_status {
 		display: block;
 		padding: 0;
-		width: 70px;
+		width: 95px;
 		text-align: center;
 	}
 }
@@ -409,6 +409,7 @@ header h3 {
 
   .data-item h6 {
 	display: block;
+	line-height: normal;
   }
 @media (max-width:767px) {
 	.filterWraperForm{
