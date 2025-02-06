@@ -3137,10 +3137,10 @@ export class RugDynamicFormComponent {
                           control.get('salutation').disable();
                           }
                       }
-                        control.get('mobileNumber')?.clearValidators();
-                        control.get('mobileNumber')?.setValidators([Validators.pattern('^[6-9]\\d{9}$')]);
-                        // // Update the validation state
-                        control.get('mobileNumber')?.updateValueAndValidity();
+                        // control.get('mobileNumber')?.clearValidators();
+                        // control.get('mobileNumber')?.setValidators([Validators.pattern('^[6-9]\\d{9}$')]);
+                        // // // Update the validation state
+                        // control.get('mobileNumber')?.updateValueAndValidity();
                       });
                   }
                 }
@@ -5301,7 +5301,7 @@ export class RugDynamicFormComponent {
                     endDate: this.bbdetails.endDate || "",
                     frequencyOfPayment: this.bbdetails.frequencyOfPayment || "",
                     maskedAccountNo: "",
-                    paymentMode: this.bbdetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
+                    paymentMode: this.bbdetails.paymentMode || "",
                     paymentMethod: this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
                     startDate: this.bbdetails.startDate || "",
                     idType: this.bbdetails.idType,
