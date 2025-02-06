@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("Create Lead" | translate) : ("Update Lead" | translate) }}
                 </h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">

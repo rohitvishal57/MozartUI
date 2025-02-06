@@ -583,6 +583,7 @@ export class ClaimsViewComponent {
     return null;
 
   }
+  
   get dischargeDateError(): boolean {
     return this.form.errors?.['dischargeDateInvalid'] &&
       this.form.get('dischargeDate')?.touched;
@@ -623,7 +624,7 @@ export class ClaimsViewComponent {
 
     const selectedType = event.target.value;
 
-    if (selectedType === "CA") {
+    if (selectedType === "Cashless") {
       // Clear file upload validators for Cashless
       this.form.get('isFileUploadRequired')?.clearValidators();
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
@@ -636,7 +637,7 @@ export class ClaimsViewComponent {
       this.form.patchValue({
         coverName: "Hospitalization",
       });
-    } else if (selectedType === "RI") {
+    } else if (selectedType === "Reimbursement") {
       // Set file upload as required for Reimbursement
       this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
@@ -1136,10 +1137,10 @@ export class ClaimsViewComponent {
   isSubmitDisabled(): boolean {
     const claimType = this.form.get('claimType')?.value;
 
-    if (claimType === 'CA') {
+    if (claimType === 'Cashless') {
       return false;
     }
-    if (claimType === 'RI') {
+    if (claimType === 'Reimbursement') {
       return !this.areAllSectionsComplete();
     }
     return true;
@@ -1184,6 +1185,14 @@ export class ClaimsViewComponent {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
+      function convertToIsoFormat(dateString: string): string {
+        const [month, day, year] = dateString.split('-');
+        return `${year}-${month}-${day}`;
+      }
+      
+      // Before submitting the data, convert to yyyy-MM-dd format
+      const isoFromDate = convertToIsoFormat(this.fromDate);
+      const isoToDate = convertToIsoFormat(this.toDate);
       // Add documents from documentSections
       saveClaimData.documentsArray = this.documentSections
         .filter(section => section.file && section.file.status === 'success')

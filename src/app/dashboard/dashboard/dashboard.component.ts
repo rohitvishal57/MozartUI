@@ -140,10 +140,10 @@ export class DashboardComponent {
           "categoryName": "Premium",
           "subOrder": 3
         },
-        {
-          "categoryName": "Commission Earned",
-          "subOrder": 4
-        }
+        // {
+        //   "categoryName": "Commission Earned",
+        //   "subOrder": 4
+        // }
       ]
     },
     {
@@ -441,17 +441,17 @@ export class DashboardComponent {
                   this.performanceCard.push(premiumEarned)
                   break;
 
-                case 'commissionEarned':
-                  const commissionEarned = {
-                    title: 'Commission Earned',
-                    value: res.data[0][el],
-                    description: `You can potentially earned ${res.data[0][el]}`,
-                    icon: 'assets/Img/icon_dashboard_healthreturn.svg',
-                    type: 'action',
-                    class: 'commission-earned'
-                  }
-                  this.performanceCard.push(commissionEarned)
-                  break;
+                // case 'commissionEarned':
+                //   const commissionEarned = {
+                //     title: 'Commission Earned',
+                //     value: res.data[0][el],
+                //     description: `You can potentially earned ${res.data[0][el]}`,
+                //     icon: 'assets/Img/icon_dashboard_healthreturn.svg',
+                //     type: 'action',
+                //     class: 'commission-earned'
+                //   }
+                //   this.performanceCard.push(commissionEarned)
+                //   break;
 
                 case 'achievementsPercentage':
                   const achievementsPercentage = {
