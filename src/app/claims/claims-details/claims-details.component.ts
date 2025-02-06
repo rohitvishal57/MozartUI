@@ -538,7 +538,6 @@ uploadFiles(files: File[], section: string): void {
             formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
        
     });
-    debugger
 
     this.claimsService.uploadFiles(formData).subscribe(
         (response: any) => {
