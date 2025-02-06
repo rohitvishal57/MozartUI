@@ -12464,6 +12464,9 @@ export class YatraComponent {
       //     return;
       //   }
       // }
+      if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
+        this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+      }
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
