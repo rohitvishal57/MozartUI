@@ -4631,7 +4631,7 @@ export class RugDynamicFormComponent {
     console.log(this.tsDetails);
   }
   updateValidators(planAvailable: string) {
-    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome ');
+    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome');
     const occupationControl = this.dynamicFormGroup.get('occupation');
     
     if (planAvailable === 'GHI+GPA') {
@@ -5285,7 +5285,7 @@ export class RugDynamicFormComponent {
                     tenure: 1,
                     sumInsured: this.bbdetails.sumInsured,
                     premium: this.bbdetails.totalPremium,
-                    annualIncome: this.bbdetails.annualIncome ,
+                    annualIncome: this.bbdetails.annualIncome,
                     axisProductCode: this.bbdetails.axisProductCode,
                     axisProductName: this.bbdetails.axisProductName,
                     familyConstruct: this.bbdetails.familyConstruct,
