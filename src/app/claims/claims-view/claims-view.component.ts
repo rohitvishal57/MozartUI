@@ -565,9 +565,9 @@ export class ClaimsViewComponent {
 
   dateFormat(dateType: "fromDate" | "toDate") {
     if (dateType === "fromDate" && this.fromDate) {
-      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+      this.fromDate = this.datePipe.transform(this.fromDate, "MM-dd-yyyy");
     } else if (dateType === "toDate" && this.toDate) {
-      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+      this.toDate = this.datePipe.transform(this.toDate, "MM-dd-yyyy");
     }
     const admissionDateTime = new Date(
       this.form.get('admissionDate')?.value
@@ -623,7 +623,7 @@ export class ClaimsViewComponent {
 
     const selectedType = event.target.value;
 
-    if (selectedType === "CA") {
+    if (selectedType === "Cashless") {
       // Clear file upload validators for Cashless
       this.form.get('isFileUploadRequired')?.clearValidators();
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
@@ -636,7 +636,7 @@ export class ClaimsViewComponent {
       this.form.patchValue({
         coverName: "Hospitalization",
       });
-    } else if (selectedType === "RI") {
+    } else if (selectedType === "Reimbursement") {
       // Set file upload as required for Reimbursement
       this.form.get('isFileUploadRequired')?.setValidators([Validators.required]);
       this.form.get('isFileUploadRequired')?.updateValueAndValidity();
@@ -1136,10 +1136,10 @@ export class ClaimsViewComponent {
   isSubmitDisabled(): boolean {
     const claimType = this.form.get('claimType')?.value;
 
-    if (claimType === 'CA') {
+    if (claimType === 'Cashless') {
       return false;
     }
-    if (claimType === 'RI') {
+    if (claimType === 'Reimbursement') {
       return !this.areAllSectionsComplete();
     }
     return true;
