@@ -56,7 +56,7 @@
                                                     </div>
                                                     <div *ngIf="item.t1DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 1}">
-                                                        ({{ item.t1DiscountAmount }})
+                                                        (Discount:{{ item.t1DiscountAmount }})
                                                     </div>
                                                 </div>
             
@@ -71,7 +71,7 @@
                                                     </div>
                                                     <div *ngIf="item.t2DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 2}">
-                                                        ({{ item.t2DiscountAmount }})
+                                                        (Discount:{{ item.t2DiscountAmount }})
                                                     </div>
                                                 </div>
             
@@ -86,7 +86,7 @@
                                                     </div>
                                                     <div *ngIf="item.t3DiscountAmount" class="planDuration"
                                                         [ngClass]="{'highlight': selectedPlans[i] === 3}">
-                                                        ({{ item.t3DiscountAmount }})
+                                                        (Discount:{{ item.t3DiscountAmount }})
                                                     </div>
                                                 </div>
             
@@ -144,7 +144,7 @@
                                             <div class="btn_groupAction">
                                                 <button class="btn_red btn_products btn_buy" id="Add to Cart" name="Add to Cart" (click)="addToCart(item)">
                                                     <img src="assets/Img/trolley1.svg" alt="">
-                                                    {{"Add to Cart" | translate}}
+                                                    {{"Buy Now" | translate}}
                                                 </button>
                                                 <button class="btn_pink btn_products" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
                                                 (click)="showOverlay(i)">{{"View Recommended Add-Ons" | translate}}</button>
