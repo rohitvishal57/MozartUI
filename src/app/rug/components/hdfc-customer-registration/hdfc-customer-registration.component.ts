@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { HdfcValidationPopupComponent } from '../hdfc-validation-popup/hdfc-validation-popup.component';
 import { RugService } from '../../rug.service';
 import { NgToastService } from 'ng-angular-popup';
 
@@ -52,7 +51,7 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
 
     this.rugService.sendCommunication(requestBody).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
+        if (JSON.parse(response.data).isSuccess) {
           this.toast.success({ detail: "Success", summary: 'Commincation Send Succesfully.', duration: 3000 });
         }else{
           this.toast.error({ detail: "Error", summary: 'Failed to send Commincation.', duration: 3000 });
