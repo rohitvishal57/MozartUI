@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { RugService } from '../../rug.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LeadsService } from 'src/app/leads/leads.service';
+import { HttpClient } from '@angular/common/http';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-hdfc-optvalidation',
@@ -27,7 +29,7 @@ export class HdfcOptvalidationComponent {
   customerInfo : any ={};
 
   constructor(private formBuilder: FormBuilder,private rugService : RugService,private route: ActivatedRoute,private router: Router
-    ,private leadService: LeadsService){ }
+    ,private leadService: LeadsService,private toast: NgToastService){ }
 
   ngOnInit() {
     this.customerForm = this.formBuilder.group({
@@ -90,8 +92,11 @@ export class HdfcOptvalidationComponent {
         this.rugService.sendHdfcOTP(reqData).subscribe(
           (response: any) => {
             if (JSON.parse(response.data).isSuccess) {
+              this.toast.success({ detail: "Success", summary: 'OTP Send Successfully.', duration: 3000 });
               this.isShowOtp = true;
               this.referenceId =  JSON.parse(response.data).data.responseString.refNo;
+            }else{
+              this.toast.error({ detail: "error", summary: 'Failed to send OTP.', duration: 3000 });
             }
           },
           (error)=>{
@@ -108,8 +113,11 @@ export class HdfcOptvalidationComponent {
       this.rugService.validateHdfcOTP(reqData).subscribe(
         (response: any) => {
           if (JSON.parse(response.data).isSuccess) {
+          this.toast.success({ detail: "Success", summary: 'Validated Successfully.', duration: 3000 });
           this.customerInfo =  JSON.parse(response.data).data.sas_DIM_DEDUPE_OUTPUT.all_ACCOUNT.account_INFO;
           this.isCustomerInfo = true;
+          }else{
+            this.toast.error({ detail: "error", summary: 'Incorrect OPT.', duration: 3000 });
           }
         },
         (error)=>{
@@ -139,36 +147,40 @@ export class HdfcOptvalidationComponent {
      });
     }
 
+     generateProposal() {
+    if (!this.customerInfo) {
+      console.error("Customer information is missing.");
+      return;
+    }
 
-    generateProposal() {
-      let reqData = {
-              CustomerName: this.customerInfo.v_D_CUST_FIRST_NAME + " " +  this.customerInfo.v_D_CUST_LAST_NAME,
-              Dob: this.customerInfo.d_D_CUST_DATE_OF_BIRTH,  // Date of Birth in the required format
-              MobileNumber: this.customerInfo.v_D_CUST_MOBILE_PHONE,
-              Address1: this.customerInfo.v_D_CUST_OFF_ADR1,
-              Address2: this.customerInfo.v_D_CUST_ADD2,
-              Address3: this.customerInfo.v_D_CUST_OFF_ADR3,
-              City: this.customerInfo.v_D_CUST_CITY,
-              State: this.customerInfo.v_D_CUST_STATE,
-              Pincode: this.customerInfo.v_D_CUST_ZIP_CODE,
-              EmailID: this.customerInfo.v_D_CUST_EMAIL_ADD,
-              AgentCode: "I0002484",
-              Gender: this.customerInfo.v_D_CUST_GENDER,
-              LeadNumber: this.leadNumber
-      };
-  
-      this.rugService.generateProposal(reqData).subscribe(
-          (response: any) => {
-          
-            console.log('generateProposal',response);
-          },
-          (error) => {
-              console.error("Error from send OTP API:", error);
-          });
-  }
-  
+    const reqData = {
+      customerName: `${this.customerInfo.v_D_CUST_FIRST_NAME ?? ''} ${this.customerInfo.v_D_CUST_LAST_NAME ?? ''}`.trim(),
+      dob: this.customerInfo.d_D_CUST_DATE_OF_BIRTH ?? '',
+      mobileNumber: this.customerInfo.v_D_CUST_MOBILE_PHONE ?? '',
+      address1: this.customerInfo.v_D_CUST_OFF_ADR1 ?? '',
+      address2: this.customerInfo.v_D_CUST_ADD2 ?? '',
+      address3: this.customerInfo.v_D_CUST_OFF_ADR3 ?? '',
+      city: this.customerInfo.v_D_CUST_CITY ?? '',
+      state: this.customerInfo.v_D_CUST_STATE ?? '',
+      pincode: this.customerInfo.v_D_CUST_ZIP_CODE ?? '',
+      emailID: this.customerInfo.v_D_CUST_EMAIL_ADD ?? '',
+      gender: this.customerInfo.v_D_CUST_GENDER ?? '',
+      leadNumber: this.leadNumber ?? '',
+      agentcode: ''
+    };
 
-  }
+    this.rugService.generateProposal(reqData).subscribe(
+      (response: any) => {
+        if(JSON.parse(response.data).isSuccess){
+          window.location.href = JSON.parse(response.data).data;
+        }
+      },
+      (error) => {
+        console.error("Error from generateProposal API:", error);
+
+      }
+    );
+  }}
 
 
 

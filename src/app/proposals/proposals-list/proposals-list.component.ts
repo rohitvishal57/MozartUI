@@ -81,6 +81,7 @@ export class ProposalsListComponent {
   }
 
   searchApplied: boolean = false;
+  pageHeading : string = "My Proposals";
 
   constructor(
     private proposalService: ProposalsService,
@@ -173,6 +174,7 @@ export class ProposalsListComponent {
 
 
   getProposal(){
+    this.pageHeading ='My Proposals';
     this.countsList = [];
     this.totalRecords = 0;
     this.productsList.forEach((product) => (product.selected = false));
@@ -225,6 +227,7 @@ export class ProposalsListComponent {
   }
 
   getQuoteList(clean : boolean) {
+    this.pageHeading = 'My Quotes';
     if(clean){
     this.countsList = [];
     this.totalRecords = 0;

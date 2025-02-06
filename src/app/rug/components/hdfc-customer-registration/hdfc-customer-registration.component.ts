@@ -20,7 +20,6 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
 
   async ngOnInit() {
 
-    debugger;
     if (history.state && history.state.productInformation) {
       if (history.state.productInformation)
         this.productInformation = history.state.productInformation;
@@ -45,19 +44,20 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
   }
 
   onsubmit(){
-    debugger;
     let requestBody : any ={};
     requestBody.mobileNumber = this.customerValidations.get("mobilenumber")?.value;
     requestBody.emailId = this.customerValidations.get("email")?.value;
     requestBody.productName = this.productInformation.productName;
-    this.toast.success({ detail: "Success", summary: 'Commincation Send Succesfully.', duration: 3000 });
+    requestBody.agentcode=  'I0002484';
 
     this.rugService.sendCommunication(requestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-      
-        }
+          this.toast.success({ detail: "Success", summary: 'Commincation Send Succesfully.', duration: 3000 });
+        }else{
+          this.toast.error({ detail: "Error", summary: 'Failed to send Commincation.', duration: 3000 });
 
+        }
       },
       (error)=>{
         console.error("Error from send OTP API:", error);

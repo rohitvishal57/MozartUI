@@ -131,7 +131,7 @@ export class RugService {
     
     
     generateProposal(reqData : any){
-      const  generateProposalURL = 'https://usp.monocept.ai/' + this.configService.config.generateProposal;
+      const  generateProposalURL = this.configService.config.baseUrl1  + this.configService.config.generateProposal;
       return this.httpService.post(generateProposalURL,reqData);
     }
     
