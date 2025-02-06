@@ -5302,6 +5302,7 @@ export class RugDynamicFormComponent {
                     frequencyOfPayment: this.bbdetails.frequencyOfPayment || "",
                     maskedAccountNo: "",
                     paymentMode: this.bbdetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
+                    paymentMethod: this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
                     startDate: this.bbdetails.startDate || "",
                     idType: this.bbdetails.idType,
                     idValue: this.bbdetails.idValue,
