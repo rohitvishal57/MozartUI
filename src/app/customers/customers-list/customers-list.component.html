@@ -364,10 +364,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div *ngIf="errorMessages.length > 0">
+                        <div *ngIf="errorMessages!='' ">
                             <p class="text-danger">{{ errorMessages }}</p>
                           </div>
-                        <div *ngIf="errorMessages.length === 0">
+                        <div *ngIf="errorMessages =='' ">
                             <p>Select the data fields you wish to download.</p>
                             <div class="input-checkbox-feild" *ngFor="let document of documents">
                                 <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
