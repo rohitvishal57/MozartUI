@@ -432,7 +432,7 @@ export class RenewalListComponent {
           (response: any) => {
             if (response.isSuccess) {
               const searchResponse = response.data.searchResponse;
-              if (searchResponse && searchResponse[0]?.error?.length > 0) {
+              if (searchResponse && searchResponse[0]?.error?.some((err: any) => err.description !== "SUCCESS")) {
                 const errorMessages = "No documents are available to download."
                 this.toast.warning({ detail: "Warning", summary: errorMessages, duration: 3000 });
                 return;
