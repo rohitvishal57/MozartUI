@@ -3202,7 +3202,8 @@ export class YatraComponent {
         }
         else if (control.onChangeMethod == 'changeMainFormDependentControls') {
           if (!control.dependentControls) {
-            const selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
+            // const selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
+            const selectedOption = control.options.find((option: any) => option.value === selectedValue);
             this.resolveMethod(control.onChangeMethod, selectedOption.dependentControls)
           }
         }
