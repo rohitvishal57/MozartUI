@@ -19,12 +19,19 @@
                 font-weight: 400;
                 padding: 30px 36px;
                 text-transform: uppercase;
+                color: var(--primary-red-color);
+                border: 1px solid var(--primary-red-color);
                 em {
                     font-size: 18px;
                     font-weight: 500;
                     font-style: normal;
                     display: block;
                     text-transform: capitalize;
+                }
+                &:hover {
+                    border: 1px solid var(--primary-red-color);
+                    background: var(--primary-red-color);
+                    color: #fff;
                 }
                 @media (max-width: 1093px) {
                     border-radius: 12px;
