@@ -311,7 +311,85 @@
                         </div>
                     </div>
                 </section>
-                <section class="white_container mb-3">
+                <section class="white_container mb-3" *ngIf="!isRetailsJourney">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Product Details</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="productType" 
+                                    name="productType" 
+                                    formControlName="productType" 
+                                    [ngClass]="{ 'is-invalid': createBataLeads.get('productType')?.invalid && (createBataLeads.get('productType')?.touched || submitted) }">
+                                    <option value="" disabled>Select Type</option> 
+                                    <option *ngFor="let opt of productType" [value]="opt.value">{{ opt.name }}</option>
+                                </select>
+                                <label for="productType">Product Type *</label>
+                                <span class="invalid-feedback" *ngIf="createBataLeads.get('productType')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('productType')?.errors?.['required']">
+                                        Please select a Product Type.
+                                    </span>
+                                </span>
+                            </div>
+                        </div> 
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="sumInsured" 
+                                    name="sumInsured" 
+                                    formControlName="sumInsured" 
+                                    [ngClass]="{ 'is-invalid': createBataLeads.get('sumInsured')?.invalid && (createBataLeads.get('sumInsured')?.touched || submitted) }">
+                                    <option value="" disabled>Select</option> 
+                                    <option *ngFor="let opt of SumInsured" [value]="opt.value">{{ opt.name }}</option>
+                                </select>
+                                <label for="sumInsured">Sum Insured *</label>
+                                <span class="invalid-feedback" *ngIf="createBataLeads.get('sumInsured')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('sumInsured')?.errors?.['required']">
+                                        Please select a Product Type.
+                                    </span>
+                                </span>
+                            </div>
+                        </div> 
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select 
+                                    class="form-select input-selectBox" 
+                                    id="campaignName" 
+                                    name="campaignName" 
+                                    formControlName="campaignName" 
+                                    [ngClass]="{ 'is-invalid': createBataLeads.get('campaignName')?.invalid && (createBataLeads.get('campaignName')?.touched || submitted) }">
+                                    <option value="" disabled>Select Type</option> 
+                                    <option *ngFor="let opt of campaignName" [value]="opt.value">{{ opt.name }}</option>
+                                </select>
+                                <label for="campaignName">Campaign Name *</label>
+                                <span class="invalid-feedback" *ngIf="createBataLeads.get('campaignName')?.errors">
+                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('campaignName')?.errors?.['required']">
+                                        Please select a Campaign Name.
+                                    </span>
+                                </span>
+                            </div>
+                        </div> 
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input 
+                                    class="form-control input-textBox" 
+                                    id="campaignIMDCode" 
+                                    name="campaignIMDCode" 
+                                 
+                                    placeholder="Campaign IMD Code *" 
+                                    formControlName="campaignIMDCode" 
+                                    type="text"
+                                    [ngClass]="{ 'is-invalid': createBataLeads.get('campaignIMDCode')?.invalid && (createBataLeads.get('campaignIMDCode')?.touched || submitted) }">
+                                <label for="campaignIMDCode">Campaign IMD Code *</label>
+                            </div>
+                        </div>
+                    </div>
+                </section> 
+                <section class="white_container mb-3" *ngIf="!isGroupJourney">
                     <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Product Details</h6>

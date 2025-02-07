@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 export class HdfcJourneySelectionsComponent implements OnInit{
   agentCode: any;
   isShowQCJourney:boolean = false;
-
+  isGroupJourney!:boolean;
+  isRetailsJourney!:boolean;
 
   constructor(private router:Router){
 
@@ -17,15 +18,26 @@ export class HdfcJourneySelectionsComponent implements OnInit{
 
   ngOnInit(): void {
     this.agentCode = localStorage.getItem("agentCode");
-
-    if(this.agentCode == 'QC'){
-        this.isShowQCJourney = false;
-    }
-
     
   }
 
-  Group_Journey(){
+  Group_Journey() {
     this.router.navigate(['rug/hdfc_createBataLeads']);
+    this.isGroupJourney = true;
+    this.isRetailsJourney = false;
+  
+    // Flags ko localStorage me store karna
+    localStorage.setItem('isGroupJourney', 'true');
+    localStorage.setItem('isRetailsJourney', 'false');
+  }
+  
+  Retail_Journey() {
+    this.router.navigate(['rug/hdfc_createBataLeads']);
+    this.isRetailsJourney = true;
+    this.isGroupJourney = false;
+  
+    // Flags ko localStorage me store karna
+    localStorage.setItem('isRetailsJourney', 'true');
+    localStorage.setItem('isGroupJourney', 'false');
   }
 }

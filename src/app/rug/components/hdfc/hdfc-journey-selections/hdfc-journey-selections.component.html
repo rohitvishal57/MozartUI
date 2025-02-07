@@ -2,9 +2,9 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="journey_buttonMain">
-                <div class="journey_buttonMainSub body_flex_row">
-                    <div class="journey_btnItem" *ngIf="!isShowQCJourney">
-                        <button type="button" id="online-retail-journey" name="online-retail-journey" (click)="Group_Journey()" class="btn_white btn_products btn_buy">
+                <div class="journey_buttonMainSub body_flex_row" *ngIf="!isShowQCJourney">
+                    <div class="journey_btnItem">
+                        <button type="button" id="online-retail-journey" name="online-retail-journey" (click)="Retail_Journey()" class="btn_white btn_products btn_buy">
                             Online <em>Retail Journey</em>
                         </button>
                         <button type="button" id="online-group-journey" name="online-group-journey" (click)="Group_Journey()" class="btn_white btn_products btn_buy">
@@ -12,10 +12,10 @@
                         </button> 
                     </div>
                     <div class="journey_btnItem" *ngIf="isShowQCJourney">
-                        <button type="button" id="offline-retail-journey" name="offline-retail-journey" (click)="Group_Journey()" class="btn_white btn_products" >
+                        <button type="button" id="offline-retail-journey" name="offline-retail-journey" class="btn_white btn_products" >
                             Offline <em>Retail Journey</em>
                         </button>
-                        <button type="button" id="offline-retail-journey" name="offline-retail-journey" (click)="Group_Journey()" class="btn_white btn_products" >
+                        <button type="button" id="offline-retail-journey" name="offline-retail-journey" class="btn_white btn_products" >
                             Offline <em>Group Journey</em>
                         </button> 
                     </div>

@@ -28,6 +28,8 @@ export class HdfcCreateBataLeadsComponent {
   dataToModify!: any;
   EmployeeDetails: any;
   AllProductDetails:any;
+  isGroupJourney!:boolean;
+  isRetailsJourney!:boolean;
   SumInsured:any[] = [
     {
       "name": "5 Lakh",
@@ -177,6 +179,14 @@ salutations:any [] = [ {
   }
   ngOnInit(): void {
     this.inItForm();
+    const groupJourney = localStorage.getItem('isGroupJourney');
+    const retailJourney = localStorage.getItem('isRetailsJourney');
+  
+    this.isGroupJourney = groupJourney === 'true'; // String 'true' ko boolean true me convert karna
+    this.isRetailsJourney = retailJourney === 'true';
+  
+    console.log('Group Journey:', this.isGroupJourney);
+    console.log('Retail Journey:', this.isRetailsJourney);
     this.getProductDetails();
   }
 
