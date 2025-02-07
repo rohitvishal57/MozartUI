@@ -140,10 +140,10 @@ export class DashboardComponent {
           "categoryName": "Premium",
           "subOrder": 3
         },
-        // {
-        //   "categoryName": "Commission Earned",
-        //   "subOrder": 4
-        // }
+        {
+          "categoryName": "Commission Earned",
+          "subOrder": 4
+        }
       ]
     },
     {
@@ -413,6 +413,7 @@ export class DashboardComponent {
         case 'Performance':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('performance', res.data);
+            const channel = localStorage.getItem('channel');
             res.data.length && Object.keys(res.data[0]).forEach(el => {
               switch (el) {
                 case 'nops':
@@ -452,6 +453,19 @@ export class DashboardComponent {
                 //   }
                 //   this.performanceCard.push(commissionEarned)
                 //   break;
+                case 'commissionEarned':
+                  if (channel === 'agency' || channel === 'AGENCY'){
+                    const commissionEarned = {
+                      title: 'Commission Earned',
+                      value: res.data[0][el],
+                      description: `You can potentially earn ${res.data[0][el]}`,
+                      icon: 'assets/Img/icon_dashboard_healthreturn.svg',
+                      type: 'action',
+                      class: 'commission-earned'
+                    }
+                    this.performanceCard.push(commissionEarned);
+                  }
+                  break;
 
                 case 'achievementsPercentage':
                   const achievementsPercentage = {

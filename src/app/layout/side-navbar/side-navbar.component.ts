@@ -120,8 +120,17 @@ export class SideNavbarComponent {
       this.isActive = state;
       this.loginService.setValue(state)
     });
-  }
+    const channel = localStorage.getItem('channel');
 
+    if (channel === 'agency' || channel === 'AGENCY') {
+      this.sideMenuList.push({
+        id: 9,
+        displayName: 'My Performance',
+        path: 'performance/my-performance',
+        imagePath: 'assets/Img/icon_menu_performance.png'
+      });
+    }
+  }  
   // Handle route redirection
   redirect(route: string): void {
     if (route) {
