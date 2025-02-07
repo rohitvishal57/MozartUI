@@ -296,8 +296,8 @@
                                                                     <li class="actionItem" (click)="shareKyc(row)"  *ngIf="row.proposalStatus == 'Declaration'">
                                                                         <a><span>Share KycLink</span></a>
                                                                     </li>
-                                                                    <li class="actionItem"   *ngIf="row.proposalStatus == 'Declaration'">
-                                                                        <a><span>Share PaymentLink</span></a>
+                                                                    <li class="actionItem"   *ngIf="row.proposalStatus == 'Payment'" (click)="sharePaymentLink(row)">
+                                                                        <a><span>Payment Link</span></a>
                                                                     </li>
         
                                                                 </ul>
