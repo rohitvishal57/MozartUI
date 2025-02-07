@@ -5259,6 +5259,7 @@ export class RugDynamicFormComponent {
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
               let nomineeRelationCode = this.filterRelationByName(this.bbdetails.relationWithProposer);
+              let relationshipOfAppointee = this.filterRelationByName(this.bbdetails.relationWithNominee);
               this.selectedOccupationCode = this.occupationList.filter(
                 (item: any) => item.occupationName === this.bbdetails.occupation
               );
@@ -5356,7 +5357,7 @@ export class RugDynamicFormComponent {
                     appointeeDOB: this.bbdetails.appointeeDob || null,
                     appointeeName: this.bbdetails.appointeeName || null,
                     appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
-                    relationshipOfAppointeeWithNominee: this.bbdetails.relationWithNominee || "",
+                    relationshipOfAppointeeWithNominee: relationshipOfAppointee[0].relationCode || "",
                     dateOfBirth: this.bbdetails.nomineeDob,
                     defaultShare: this.bbdetails.nomineeDefaultShare,
                     nomineeGender: this.bbdetails.nomineeGender || null
