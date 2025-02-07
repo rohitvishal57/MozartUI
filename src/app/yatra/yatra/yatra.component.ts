@@ -2701,7 +2701,7 @@ export class YatraComponent {
                       coreControl.options = [{
                         "id": "2",
                         "value": "ND0277",
-                        "name": "Student "
+                        "name": "Student"
                       }]
                     } else if (parsedValue.name === 'Not Employed' && coreControl.name == "occupationRisk") {
                       coreControl.options = [{
@@ -2747,7 +2747,7 @@ export class YatraComponent {
               dynamicControl.options = [{
                 "id": "2",
                 "value": "ND0277",
-                "name": "Student "
+                "name": "Student"
               }]
             } else if (parsedValue.name === 'Not Employed' && dynamicControl.name == "productMemberNatureWork") {
               dynamicControl.options = [{
