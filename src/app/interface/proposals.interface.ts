@@ -15,4 +15,5 @@ export interface ProposalList {
     totalPremiumInt: number;
     proposerEmail: string;
     leadId:string;
+    kycStatus :Boolean;
   }
