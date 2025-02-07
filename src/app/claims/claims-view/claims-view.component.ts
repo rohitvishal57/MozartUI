@@ -1009,7 +1009,12 @@ export class ClaimsViewComponent {
   deleteFile(sectionId: string): void {
     const section = this.documentSections.find(s => s.id === sectionId);
     if (!section?.file) return;
-
+    
+    if (section.file.status === 'failed') {
+      section.file = null;
+      this.cdr.detectChanges();
+      return;
+    }
     const payload = {
       policyNumber: this.form.get("policyNumber")?.value,
       documentId: section.file.documentId,
