@@ -8634,8 +8634,11 @@ export class YatraComponent {
     reqData.agentCode = this.agentCode;
     reqData.rating = this.customerFeedbackForm.value.rating;
     reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
-    reqData.customerId = "";
+    reqData.policyNumber = this.formData.policyNumber || '';
+    reqData.proposalNumber = this.formData.proposalNumber;
+    reqData.customerId = this.formData.customerId || '';
     this.yatraService.submitFeedback(reqData).subscribe((response) => {
+      this.closeIsFeedBackModalVisible();
       this.toast.success({ detail: 'Success', summary: 'Feedback submitted successfully! Thank you for your input.' });
     }, (error) => {
       this.toast.error({ detail: 'Error', summary: 'Failed to submit feedback. Please try again later.' });
