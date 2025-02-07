@@ -27,6 +27,7 @@ import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/gro
 import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
 import { HdfcCustomerRegistrationComponent } from "./components/hdfc-customer-registration/hdfc-customer-registration.component";
 import { HdfcOptvalidationComponent } from "./components/hdfc-optvalidation/hdfc-optvalidation.component";
+import { LeadCheckComponent } from "./components/lead-check/lead-check.component";
 
 
 
@@ -63,7 +64,10 @@ const routes: Routes = [
     {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
     {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
     {path:'customerDetails', component:HdfcCustomerRegistrationComponent},
-    {path:'otpauthentication',component:HdfcOptvalidationComponent}
+    {path:'otpauthentication',component:HdfcOptvalidationComponent},
+    {path:'lead-check',component:LeadCheckComponent}
+
+    
 ];
 
 @NgModule({
