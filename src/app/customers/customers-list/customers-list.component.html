@@ -379,10 +379,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button *ngIf="errorMessages.length === 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
+                        <button *ngIf="errorMessages == '' " type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
                             {{"Download" | translate}}
                         </button>
-                        <button *ngIf="errorMessages.length > 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
+                        <button *ngIf="errorMessages != '' " type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
                             {{"Ok" | translate}}
                         </button>
                     </div>
