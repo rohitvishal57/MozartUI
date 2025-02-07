@@ -165,12 +165,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       });
     });
-
     this.isDesktop = this.screenSize > 768;
     this.agentCode = localStorage.getItem('agentCode');
     this.otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
     this.getPolicyNumbers();
     this.initForm();
+    this.caseCreationForm.get('asignedTeam')?.disable();
   }
 
   initForm() {
@@ -419,16 +419,16 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value === 'panNumber' || value === 'aadharNumber') {
       this.uploadDoc = true;
       this.showOtpSection = false;
-      this.isDisabled = false;
+      //this.isDisabled = false;
     } else {
       this.uploadDoc = false;
       this.showOtpSection = true;
-      this.isDisabled = true;
+     // this.isDisabled = true;
     }
 
     if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.showOtpSection = false;
-      this.isDisabled = false;
+     // this.isDisabled = false;
     }
 
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {
@@ -835,13 +835,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
               duration: 5000
             });
             this.closeOtpPopup();
-            this.isDisabled = false;
-            this.sendOtptDisabled = true;
+            //this.isDisabled = false;
+            this.sendOtptDisabled = false;
           }  
           else {
             this.errorMessage = resp.message;
-            this.isDisabled = false;
-            this.sendOtptDisabled = false;
+            //this.isDisabled = false;
+            this.sendOtptDisabled = true;
             resp.message.includes("Your Account Has been locked") || resp.message.includes("You have Reached Maximum Number of Attempts") ? this.timerOn = false : this.timerOn = true;
           }
         },
