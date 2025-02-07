@@ -1,0 +1,35 @@
+.journey_buttonMain {
+    flex: auto;
+    margin: auto;
+    @media (max-width:767px) {
+        width: 90%;
+    }
+    .journey_buttonMainSub {
+        @media (max-width:767px) {
+            flex-direction: column;
+        }
+        .journey_btnItem {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: auto;
+            .btn_products {
+                width: 100%;
+                font-size: 16px;
+                font-weight: 400;
+                padding: 30px 36px;
+                text-transform: uppercase;
+                em {
+                    font-size: 18px;
+                    font-weight: 500;
+                    font-style: normal;
+                    display: block;
+                    text-transform: capitalize;
+                }
+                @media (max-width: 1093px) {
+                    border-radius: 12px;
+                }
+            }
+        }
+    }
+}
