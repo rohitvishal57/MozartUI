@@ -27,6 +27,9 @@ import { GroupRenewalModifyViewComponent } from "./group-renewal-modify-view/gro
 import { GroupRenewalPhase2LeadsComponent } from "./group-renewal-phase-2-leads/group-renewal-phase-2-leads.component";
 import { HdfcCustomerRegistrationComponent } from "./components/hdfc-customer-registration/hdfc-customer-registration.component";
 import { HdfcOptvalidationComponent } from "./components/hdfc-optvalidation/hdfc-optvalidation.component";
+import { HdfcCreateBataLeadsComponent } from "./components/hdfc/hdfc-create-bata-leads/hdfc-create-bata-leads.component";
+import { HdfcBataLeadsListComponent } from "./components/hdfc/hdfc-bata-leads-list/hdfc-bata-leads-list.component";
+import { HdfcJourneySelectionsComponent } from "./components/hdfc/hdfc-journey-selections/hdfc-journey-selections.component";
 import { LeadCheckComponent } from "./components/lead-check/lead-check.component";
 
 
@@ -65,9 +68,10 @@ const routes: Routes = [
     {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
     {path:'customerDetails', component:HdfcCustomerRegistrationComponent},
     {path:'otpauthentication',component:HdfcOptvalidationComponent},
-    {path:'lead-check',component:LeadCheckComponent}
-
-    
+    {path:'lead-check',component:LeadCheckComponent},
+    {path:'hdfc_createBataLeads',component:HdfcCreateBataLeadsComponent},
+    {path:"hdfc_bataLeadsList", component:HdfcBataLeadsListComponent},
+    {path:"hdfc_JourneySelection", component:HdfcJourneySelectionsComponent}
 ];
 
 @NgModule({

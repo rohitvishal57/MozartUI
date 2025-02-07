@@ -46,6 +46,9 @@ import { RetailsRenewalLeadsComponent } from "./retails-renewal-leads/retails-re
 import { HdfcCustomerRegistrationComponent } from './components/hdfc-customer-registration/hdfc-customer-registration.component';
 import { HdfcOptvalidationComponent } from "./components/hdfc-optvalidation/hdfc-optvalidation.component";
 import { LeadCheckComponent } from './components/lead-check/lead-check.component';
+import { HdfcCreateBataLeadsComponent } from "./components/hdfc/hdfc-create-bata-leads/hdfc-create-bata-leads.component";
+import { HdfcBataLeadsListComponent } from "./components/hdfc/hdfc-bata-leads-list/hdfc-bata-leads-list.component";
+import { HdfcJourneySelectionsComponent } from "./components/hdfc/hdfc-journey-selections/hdfc-journey-selections.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -83,7 +86,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         RetailsRenewalLeadsComponent,
         HdfcCustomerRegistrationComponent,
         HdfcOptvalidationComponent,
-        LeadCheckComponent
+        LeadCheckComponent,
+        HdfcCreateBataLeadsComponent,
+        HdfcBataLeadsListComponent,
+        HdfcJourneySelectionsComponent
     ],
     
     imports: [

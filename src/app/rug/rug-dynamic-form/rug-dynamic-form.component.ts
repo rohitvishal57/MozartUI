@@ -527,9 +527,7 @@ export class RugDynamicFormComponent {
       this.yatraService.Getform(reqData).subscribe({
         next: (res: any) => {
           console.log(res);
-           this.form = JSON.parse(res.data.jsonFormData);
-         
-         
+           this.form = JSON.parse(res.data.jsonFormData);         
         
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);

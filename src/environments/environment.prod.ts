@@ -241,5 +241,8 @@ export const environment = {
   sendOtpHdfc:"api/rug/generateotp",
   validateHdfcOTP:"api/rug/validateotp",
   sendCommunication:"api/rug/send-communication",
-  generateProposal:"api/rug/generateproposal"
+  generateProposal:"api/rug/generateproposal",
+  getEmployeeDetails:"api/rug/GetEMployeeDetails",
+  createBataleads:"api/rug/SaveLeadDetailshdfc",
+  gethdfcProductDetails:"api/rug/GetProductCombination"
 };

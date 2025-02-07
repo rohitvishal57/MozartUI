@@ -136,5 +136,19 @@ export class RugService {
     }
     
 
+    createBataLeads(reqdata: any) {
+      const createBatalead = this.configService.config.baseUrl + this.configService.config.createBataleads;
+      return this.httpService.post(createBatalead, reqdata)
+    }
+
+    getEMployeeDetails(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getEmployeeDetails;
+      return this.httpService.post(req, reqdata);
+    }
+
+    getProdcutDetails(){
+      const  getProduct = this.configService.config.baseUrl1 + this.configService.config.gethdfcProductDetails;
+      return this.httpService.get(getProduct);
+    }
 
   }

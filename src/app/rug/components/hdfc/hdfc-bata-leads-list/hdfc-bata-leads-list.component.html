@@ -1,0 +1,210 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>View Lead Details</h2>
+                <div class="btn_groupAction">
+                    <button type="button" id="createlead" name="createlead" (click)="selectJourney()" class="btn_white btn_newRequest">
+                        <img src="assets/Img/icon_plus_red.svg">CREATE LEAD
+                    </button>
+                    <!-- <button type="button" id="uploadlead" name="uploadlead" class="btn_white btn_newRequest"
+                        >
+                        BULK UPLOAD
+                    </button> -->
+                    <!-- <button type="button" class="btn_white btn_newRequest" routerLink="/leads/campaignmanagment">
+                       Campaigns
+                    </button> -->
+                </div>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterRight">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <div class="filterFieldGroup">
+                                <!-- <input class="filterSearch" id="filterSearch" name="filterSearch" placeholder="Filter"
+                                    (input)="onInput($event)"> -->
+                                <form [formGroup]="soloJourneyForm">
+                                    <section class="white_container mb-3">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="mobileno"
+                                                        name="mobileno" placeholder="Mobile Number"
+                                                        formControlName="mobileno" type="number"
+                                                        (input)="onInput($event)">
+                                                    <label for="mobileno">Enter Mobile Number</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="leadid" name="leadid"
+                                                        placeholder="Lead Id" formControlName="leadid" type="number"
+                                                        (input)="onInput($event)">
+                                                    <label for="leadid">Enter Lead Id</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="policyno"
+                                                        name="policyno" placeholder="Policy Number"
+                                                        formControlName="policyno" type="text"
+                                                        (input)="onInput($event)">
+                                                    <label for="policyno">Enter Policy No</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select class="form-select input-selectBox" id="location"
+                                                        name="location" formControlName="location"
+                                                        (change)="onInput($event)">
+                                                        <option value="" disabled>Select Center
+                                                        </option>
+                                                        <option *ngFor="let location of Location" [value]="location">
+                                                            {{location}}</option>
+                                                    </select>
+                                                    <label for="location">Select Location</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="lgdate" name="lgdate"
+                                                        placeholder="License Expiry From Date *"
+                                                        formControlName="lgdate" type="date" [max]="today"
+                                                        (input)="onInput($event)">
+                                                    <label for="lgdate">Enter Lead Generation Date</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input class="form-control input-textBox" id="pidate" name="pidate"
+                                                        placeholder="License Expiry To Date *" formControlName="pidate"
+                                                        type="date" [max]="today" (input)="onInput($event)">
+                                                    <label for="pidate">Enter Policy Insurance Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select class="form-select input-selectBox" id="axisprocess"
+                                                        name="axisprocess" formControlName="axisprocess"
+                                                        (change)="onInput($event)">
+                                                        <option value="" disabled>Select Axis Process</option>
+                                                        <option *ngFor="let axisprocess of AxisProcess"
+                                                            [value]="axisprocess">{{ axisprocess}}</option>
+                                                    </select>
+                                                    <label for="axisprocess">Select Axis Process</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <button type="submit" id="save" name="save" (click)="clearFilter()"
+                                                        class="btn_red">Clear
+                                                        Filter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quotes-list" class="tableMain quoteView block-show">
+                <div class="tableSubMain">
+                    <section class="quickFilterMain">
+                        <div class="quickFilterRight">
+                            <div class="body_flex_row leads_searchWraper">
+                                <div class="field_searchMain">
+                                    <div class="filterFieldGroup">
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch"
+                                            placeholder="Filter" (input)="onsearch($event)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th nowrap>SEQ NO</th>
+                                    <th nowrap>REF NO</th>
+                                    <th nowrap>PROPOSER NAME</th>
+                                    <th nowrap>IMD Code</th>
+                                    <th nowrap>AXIS PROCESS</th>
+                                    <th nowrap>PROPOSAL NO</th>
+                                    <th nowrap>PLAN</th>
+                                    <th nowrap>PREMIUM</th>
+                                    <th nowrap>STATUS</th>
+                                    <th nowrap>LEAD GANERATION DATE</th>
+                                    <th nowrap>CUSTOMER ID</th>
+                                    <th nowrap>POLICY NO</th>
+                                    <th nowrap>POLICY ISSUE DATE</th>
+                                    <th nowrap>DISPOSITION</th>
+                                    <th nowrap>SUB-DISPOSITION</th>
+                                    <th nowrap>REMARK</th>
+                                    <th nowrap>AV NAME</th>
+                                    <th nowrap>AV ID</th>
+                                    <th nowrap>LAST MODIFIED DATE</th>
+                                    <th nowrap>AXIS LOCATION</th>
+                                    <th nowrap>REASSIGN</th>
+                                    <th nowrap>AUDIT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let leads of displayedLeads; let i = index">
+                                    <td>{{(first + i + 1)}}</td>
+                                    <td>{{leads.refNo}}</td>
+                                    <td>{{leads.proposerName}}</td>
+                                    <td>{{leads.imdCode}}</td>
+                                    <td>{{leads.axisProcess}}</td>
+                                    <td>{{leads.proposalNo}}</td>
+                                    <td>{{leads.planName}}</td>
+                                    <td>{{leads.premium}}</td>
+                                    <td>{{leads.status}}</td>
+                                    <td>{{leads.leadGenerationDate}}</td>
+                                    <td>{{leads.customerId}}</td>
+                                    <td>{{leads.policyNumber}}</td>
+                                    <td nowrap>{{leads.policyIssuanceDate}}</td>
+                                    <td>{{leads.disposition}}</td>
+                                    <td>{{leads.subDisposition}}</td>
+                                    <td>{{leads.remark}}</td>
+                                    <td>{{leads.avName}}</td>
+                                    <td>{{leads.avid}}</td>
+                                    <td>{{leads.latestModifiedDateTime}}</td>
+                                    <td>{{leads.axisLocation}}</td>
+                                    
+                                    <td><button type="button" class="btn_audit jsOpenPopup"
+                                            aria-label="modal-audit">Action</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+
