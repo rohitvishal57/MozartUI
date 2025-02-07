@@ -7145,6 +7145,8 @@ export class YatraComponent {
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.getRawValue();
+    console.log(addOnData);
+    
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
@@ -7883,7 +7885,23 @@ export class YatraComponent {
 
                             let memberFormGroupControl = memberFormGroup.get(coreControl.name);
                             if (memberFormGroupControl?.value == '' && coreControl.type == 'text' && coreControl.name == 'addOnSumInsured') {
-                              memberFormGroupControl.setValue(this.formData.sumInsured);
+                              console.log(innerSubControl,coreControl,this.formData);
+                              if (this.formData.memberPolicyType == 'Multi Individual') {
+                                // Find the insured member who matches the relation in innerSubControl.name
+                                const insuredMember = this.formData.insuredMemberDetails.find(
+                                    (member: any) => member.relation === innerSubControl.name
+                                );
+                            
+                                // If a matching insured member is found, set the sumInsured to memberFormGroupControl
+                                if (insuredMember) {
+                                    memberFormGroupControl.setValue(insuredMember.sumInsured);
+                                }
+                            } else {
+                                // If not Multi Individual, set the sumInsured from formData directly
+                                memberFormGroupControl.setValue(this.formData.sumInsured);
+                            }
+                            
+                              
                             }
                             else if (memberFormGroupControl?.value == '') {
 
