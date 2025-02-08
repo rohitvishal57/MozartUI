@@ -1285,7 +1285,7 @@ export class RugDynamicFormComponent {
           }
         });
       }
-      if (this.partnerId == "16" && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
+      if (this.partnerId == "16" && this.formSequence[this.getFormIndexValue()].formName == "Nominee Details") {
         this.dynamicFormGroup.patchValue({
           nomineeShare: this.bbdetails.defaultShare,
           relationWithProposer: this.bbdetails.relationWithProposer,
@@ -2209,7 +2209,7 @@ export class RugDynamicFormComponent {
                   })
                 })
                 appointeeNameControl?.setValidators([Validators.required]);
-                appointeeMobileNumberControl?.setValidators([Validators.required]);
+                appointeeMobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]);
                 appointeeDobControl?.setValidators([Validators.required]);
                 relationWithNomineeControl?.setValidators([Validators.required]);
               }else{
@@ -8180,7 +8180,7 @@ export class RugDynamicFormComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
   getBbRelations(control: any){
-    if(this.formSequence[this.getFormIndexValue()].formName == "Add Nominee" || this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee & Bank Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
+    if(this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee & Bank Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
       this.yatraService.getRelations().subscribe({
         next: (response: any) => {
           response = JSON.parse(response.data).data;
@@ -9011,7 +9011,7 @@ export class RugDynamicFormComponent {
               })
             })
             appointeeNameControl?.setValidators([Validators.required]);
-            appointeeMobileNumberControl?.setValidators([Validators.required]);
+            appointeeMobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]);
             appointeeDobControl?.setValidators([Validators.required]);
             relationWithNomineeControl?.setValidators([Validators.required]);
           }else{
