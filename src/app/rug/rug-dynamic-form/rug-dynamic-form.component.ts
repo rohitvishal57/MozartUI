@@ -5355,7 +5355,7 @@ export class RugDynamicFormComponent {
                     appointeeDOB: this.bbdetails.appointeeDob || null,
                     appointeeName: this.bbdetails.appointeeName || null,
                     appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
-                    relationshipOfAppointeeWithNominee: relationshipOfAppointee[0].relationCode || "",
+                    relationshipOfAppointeeWithNominee: relationshipOfAppointee[0]?.relationCode || "",
                     dateOfBirth: this.bbdetails.nomineeDob,
                     defaultShare: this.bbdetails.nomineeDefaultShare,
                     nomineeGender: this.bbdetails.nomineeGender || null
@@ -9420,6 +9420,18 @@ export class RugDynamicFormComponent {
           }
         });
       });
+    }
+  }
+  onHDFCSubmit(){
+    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      this.incrementIndex();
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    }
+  }
+  onHDFCPrevious(){
+    if (this.getFormIndexValue() > 0) {
+      this.decrementIndex()
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
 }
