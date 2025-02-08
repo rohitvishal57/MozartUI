@@ -288,7 +288,7 @@ export class ProductsComponent implements OnInit {
       //   });
       // }
    
-        if (this.formSequence != null && this.formSequence.length > 0 && ( this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897")) {
+        if (this.formSequence != null && this.formSequence.length > 0 && ( this.agentCode == "467898" || this.agentCode == "467896" || this.agentCode == "467897" || this.agentCode == "av2")) {
           if(this.agentCode == "467898"){
             let reqObj = {
               "leadId": this.leadId,
