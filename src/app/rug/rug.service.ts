@@ -151,4 +151,14 @@ export class RugService {
       return this.httpService.get(getProduct);
     }
 
+    getSumInsuredByProduct(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getSumInsuredByProductSelection;
+      return this.httpService.post(req, reqdata);
+    }
+
+    getCampaignName(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getCampaignName;
+      return this.httpService.post(req, reqdata);
+    }
+
   }

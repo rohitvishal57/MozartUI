@@ -244,5 +244,7 @@ export const environment = {
   generateProposal:"api/rug/generateproposal",
   getEmployeeDetails:"api/rug/GetEMployeeDetails",
   createBataleads:"api/rug/SaveLeadDetailshdfc",
-  gethdfcProductDetails:"api/rug/GetProductCombination"
+  gethdfcProductDetails:"api/rug/GetProductCombination",
+  getSumInsuredByProductSelection:"api/rug/GetSumInsuredList",
+  getCampaignName:"api/yatra/getcampaignsdetails"
 };

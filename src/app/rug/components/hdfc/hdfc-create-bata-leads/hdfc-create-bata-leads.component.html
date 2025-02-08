@@ -2,7 +2,8 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToJourneySelection()" title="Back To List"></a>
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToJourneySelection()"
+                        title="Back To List"></a>
                     Create Leads
                 </h2>
             </div>
@@ -14,17 +15,30 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="caseStatus" 
-                                    name="caseStatus" 
-                                    placeholder="Case Status"
-                                    formControlName="caseStatus" 
-                                    type="text"
+                                <select class="form-select input-selectBox" id="journeyType" name="journeyType"
+                                    formControlName="journeyType"
+                                    [ngClass]="{ 'is-invalid': createBataLeads.get('journeyType')?.invalid && (createBataLeads.get('journeyType')?.touched || submitted) }">
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of JourneyType" [value]="opt">{{ opt }}</option>
+                                </select>
+                                <label for="journeyType">Journey Type *</label>
+                                <span class="invalid-feedback" *ngIf="createBataLeads.get('journeyType')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('journeyType')?.errors?.['required']">
+                                        Please select Journey Type.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="caseStatus" readonly name="caseStatus"
+                                    placeholder="Case Status" formControlName="caseStatus" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('caseStatus')?.invalid && (createBataLeads.get('caseStatus')?.touched || submitted) }">
                                 <label for="caseStatus">Case Status *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('caseStatus')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('caseStatus')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('caseStatus')?.errors?.['required']">
                                         Case Status is required field.
                                     </span>
                                 </span>
@@ -32,18 +46,14 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="employeeCode" 
-                                    name="employeeCode" 
-                                    (change)="validateEmployeeCode()"
-                                    placeholder="Employee Code*" 
-                                    formControlName="employeeCode" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="employeeCode" name="employeeCode"
+                                    (change)="validateEmployeeCode()" placeholder="Employee Code*"
+                                    formControlName="employeeCode" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('employeeCode')?.invalid && (createBataLeads.get('employeeCode')?.touched || submitted) }">
                                 <label for="employeeCode">Employee Code *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('employeeCode')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('employeeCode')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('employeeCode')?.errors?.['required']">
                                         Employee Code is required field.
                                     </span>
                                 </span>
@@ -51,76 +61,46 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="employeeName" 
-                                    name="employeeName" 
-                                    readonly
-                                    placeholder="Employee Name" 
-                                    formControlName="employeeName" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="employeeName" name="employeeName" readonly
+                                    placeholder="Employee Name" formControlName="employeeName" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('employeeName')?.invalid && (createBataLeads.get('employeeName')?.touched || submitted) }">
                                 <label for="employeeName">Employee Name</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="certifacateNo" 
-                                    name="certifacateNo" 
-                                    readonly
-                                    placeholder="Certificate No" 
-                                    formControlName="certifacateNo" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="certifacateNo" name="certifacateNo"
+                                    readonly placeholder="Certificate No" formControlName="certifacateNo" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('certifacateNo')?.invalid && (createBataLeads.get('certifacateNo')?.touched || submitted) }">
                                 <label for="certifacateNo">Certificate No</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="branchName" 
-                                    name="branchName" 
-                                    readonly
-                                    placeholder="Branch Name" 
-                                    formControlName="branchName" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="branchName" name="branchName" readonly
+                                    placeholder="Branch Name" formControlName="branchName" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('branchName')?.invalid && (createBataLeads.get('certifacateNo')?.touched || submitted) }">
                                 <label for="branchName">Branch Name</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="branch_code" 
-                                    name="branch_code" 
-                                    readonly
-                                    placeholder="Branch Code" 
-                                    formControlName="branch_code" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="branch_code" name="branch_code" readonly
+                                    placeholder="Branch Code" formControlName="branch_code" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('branch_code')?.invalid && (createBataLeads.get('branch_code')?.touched || submitted) }">
                                 <label for="branch_code">Branch Code</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="rmContactNo" 
-                                    name="rmContactNo" 
-                                    readonly
-                                    (keypress)="isNumber($event)"
-                                    maxlength="10"
-                                    placeholder="RM’s contact no*" 
-                                    formControlName="rmContactNo" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="rmContactNo" name="rmContactNo" readonly
+                                    (keypress)="isNumber($event)" maxlength="10" placeholder="RM’s contact no*"
+                                    formControlName="rmContactNo" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('rmContactNo')?.invalid && (createBataLeads.get('rmContactNo')?.touched || submitted) }">
                                 <label for="rmContactNo">RM’s contact no *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('rmContactNo')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('rmContactNo')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('rmContactNo')?.errors?.['required']">
                                         RM’s contact no is required field.
                                     </span>
                                 </span>
@@ -128,64 +108,54 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="bbCustomerType" 
-                                    name="bbCustomerType" 
-                                    formControlName="bbCustomerType" 
+                                <select class="form-select input-selectBox" id="bbCustomerType" name="bbCustomerType"
+                                    formControlName="bbCustomerType"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('bbCustomerType')?.invalid && (createBataLeads.get('bbCustomerType')?.touched || submitted) }">
-                                    <option value="" disabled>Select Type</option> 
-                                    <option *ngFor="let opt of bbcustometype" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of bbcustometype" [value]="opt.value">{{ opt.name }}
+                                    </option>
                                 </select>
                                 <label for="bbCustomerType">BB Customer Type *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('bbCustomerType')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('bbCustomerType')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('bbCustomerType')?.errors?.['required']">
                                         Please select a Center.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="languagePreference" 
-                                    name="languagePreference" 
-                                    formControlName="languagePreference" 
+                                <select class="form-select input-selectBox" id="languagePreference"
+                                    name="languagePreference" formControlName="languagePreference"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('languagePreference')?.invalid && (createBataLeads.get('languagePreference')?.touched || submitted) }">
-                                    <option value="" disabled>Select Language</option> 
+                                    <option value="" disabled>Select Language</option>
                                     <option *ngFor="let opt of language" [value]="opt.value">{{ opt.name }}</option>
                                 </select>
                                 <label for="languagePreference">Language Preference *</label>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="salutation" 
-                                    name="salutation" 
-                                    formControlName="salutation" 
+                                <select class="form-select input-selectBox" id="salutation" name="salutation"
+                                    formControlName="salutation"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('salutation')?.invalid && (createBataLeads.get('salutation')?.touched || submitted) }">
-                                    <option value="" disabled>Select Salutation</option> 
-                                    <option *ngFor="let opt of salutations" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Salutation</option>
+                                    <option *ngFor="let opt of salutations" [value]="opt.value">{{ opt.name }}
+                                    </option>
                                 </select>
                                 <label for="languagePreference">Salutation *</label>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="customer_name" 
-                                    name="customer_name" 
-                                    placeholder="Customer Name"
-                                    formControlName="customer_name" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="customer_name" name="customer_name"
+                                    placeholder="Customer Name" formControlName="customer_name" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('customer_name')?.invalid && (createBataLeads.get('customer_name')?.touched || submitted) }">
                                 <label for="customer_name">Customer Name *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('customer_name')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('customer_name')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('customer_name')?.errors?.['required']">
                                         Customer Name is required field.
                                     </span>
                                 </span>
@@ -193,18 +163,13 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="dob" 
-                                    name="dob" 
-                                    placeholder="Customer DOB *" 
-                                    formControlName="dob" 
-                                    type="date" 
-                                    [max]="today"
+                                <input class="form-control input-textBox" id="dob" name="dob"
+                                    placeholder="Customer DOB *" formControlName="dob" type="date" [max]="today"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('dob')?.invalid && (createBataLeads.get('dob')?.touched || submitted) }">
                                 <label for="lefdate">Customer DOB *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('dob')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('dob')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('dob')?.errors?.['required']">
                                         Please select a date.
                                     </span>
                                 </span>
@@ -212,19 +177,14 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="customer_mob_no" 
-                                    name="customer_mob_no" 
-                                    (keypress)="isNumber($event)"
-                                    maxlength="10"
-                                    placeholder="Customer Mob No*" 
-                                    formControlName="customer_mob_no" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="customer_mob_no" name="customer_mob_no"
+                                    (keypress)="isNumber($event)" maxlength="10" placeholder="Customer Mob No*"
+                                    formControlName="customer_mob_no" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('customer_mob_no')?.invalid && (createBataLeads.get('customer_mob_no')?.touched || submitted) }">
                                 <label for="rmContactNo">Customer Mob No *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('customer_mob_no')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('customer_mob_no')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('customer_mob_no')?.errors?.['required']">
                                         Customer Mobile Number is required field.
                                     </span>
                                 </span>
@@ -232,17 +192,13 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="emailId" 
-                                    name="emailId" 
-                                    placeholder="Customer E-Mail*" 
-                                    formControlName="emailId" 
-                                    type="email"
+                                <input class="form-control input-textBox" id="emailId" name="emailId"
+                                    placeholder="Customer E-Mail*" formControlName="emailId" type="email"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('emailId')?.invalid && (createBataLeads.get('emailId')?.touched || submitted) }">
                                 <label for="emailId">Customer E-Mail *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('emailId')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('emailId')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('emailId')?.errors?.['required']">
                                         Customer E-Mail is required field.
                                     </span>
                                 </span>
@@ -250,60 +206,39 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="premium" 
-                                    name="premium" 
-                                    placeholder="Premium" 
-                                    formControlName="premium" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="premium" name="premium"
+                                    placeholder="Premium" formControlName="premium" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('premium')?.invalid && (createBataLeads.get('premium')?.touched || submitted) }">
                                 <label for="premium">Premium</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="comment" 
-                                    name="comment" 
-                                    placeholder="Comment *" 
-                                    formControlName="comment" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="comment" name="comment"
+                                    placeholder="Comment *" formControlName="comment" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('comment')?.invalid && (createBataLeads.get('comment')?.touched || submitted) }">
                                 <label for="comment">Comment *</label>
                             </div>
                         </div>
-                        
+
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="smName" 
-                                    name="smName" 
-                                    readonly
-                                    placeholder="SM Name *" 
-                                    formControlName="smName" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="smName" name="smName" readonly
+                                    placeholder="SM Name *" formControlName="smName" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('smName')?.invalid && (createBataLeads.get('smName')?.touched || submitted) }">
                                 <label for="smName">SM Name *</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="smMobileNo" 
-                                    name="smMobileNo" 
-                                    maxlength="10"
-                                    (keypress)="isNumber($event)"
-                                    placeholder="SM Mobile No*" 
-                                    formControlName="smMobileNo" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="smMobileNo" name="smMobileNo"
+                                    maxlength="10" (keypress)="isNumber($event)" placeholder="SM Mobile No*"
+                                    formControlName="smMobileNo" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('smMobileNo')?.invalid && (createBataLeads.get('smMobileNo')?.touched || submitted) }">
                                 <label for="smMobileNo">SM Mobile No *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('smMobileNo')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('smMobileNo')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('smMobileNo')?.errors?.['required']">
                                         SM Mobile Number is required field.
                                     </span>
                                 </span>
@@ -311,167 +246,142 @@
                         </div>
                     </div>
                 </section>
-                <section class="white_container mb-3" *ngIf="!isRetailsJourney">
+                <section class="white_container mb-3" *ngIf="showProduct1">
                     <div class="row">
                         <div class="col-12 mb-4">
-                            <h6 class="heading-16-red">Product Details</h6>
+                            <h6 class="heading-16-red">Retail Product Details</h6>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="productType" 
-                                    name="productType" 
-                                    formControlName="productType" 
+                                <select class="form-select input-selectBox" id="productType" name="productType"
+                                    formControlName="productType" (change)="onProductSelect($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('productType')?.invalid && (createBataLeads.get('productType')?.touched || submitted) }">
-                                    <option value="" disabled>Select Type</option> 
-                                    <option *ngFor="let opt of productType" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of productType" [value]="opt.productCode">{{ opt.productCode }}</option>
                                 </select>
                                 <label for="productType">Product Type *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('productType')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('productType')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('productType')?.errors?.['required']">
                                         Please select a Product Type.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="sumInsured" 
-                                    name="sumInsured" 
-                                    formControlName="sumInsured" 
+                                <select class="form-select input-selectBox" id="sumInsured" name="sumInsured"
+                                    formControlName="sumInsured"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('sumInsured')?.invalid && (createBataLeads.get('sumInsured')?.touched || submitted) }">
-                                    <option value="" disabled>Select</option> 
-                                    <option *ngFor="let opt of SumInsured" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select</option>
+                                    <option *ngFor="let opt of SumInsured" [value]="opt.siPlanValue">{{ opt.siPlanText }}</option>
                                 </select>
                                 <label for="sumInsured">Sum Insured *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('sumInsured')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('sumInsured')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('sumInsured')?.errors?.['required']">
                                         Please select a Product Type.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="campaignName" 
-                                    name="campaignName" 
-                                    formControlName="campaignName" 
+                                <select class="form-select input-selectBox" id="campaignName" name="campaignName"
+                                    formControlName="campaignName" (change)="onCampaignChange($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignName')?.invalid && (createBataLeads.get('campaignName')?.touched || submitted) }">
-                                    <option value="" disabled>Select Type</option> 
-                                    <option *ngFor="let opt of campaignName" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of campaignName" [value]="opt.name">{{ opt.name }}</option>
                                 </select>
                                 <label for="campaignName">Campaign Name *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('campaignName')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('campaignName')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('campaignName')?.errors?.['required']">
                                         Please select a Campaign Name.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="campaignIMDCode" 
-                                    name="campaignIMDCode" 
-                                 
-                                    placeholder="Campaign IMD Code *" 
-                                    formControlName="campaignIMDCode" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="campaignIMDCode" name="campaignIMDCode" readonly
+                                    placeholder="Campaign IMD Code *" formControlName="campaignIMDCode" type="text" [value]="selectedCampaignCode"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignIMDCode')?.invalid && (createBataLeads.get('campaignIMDCode')?.touched || submitted) }">
                                 <label for="campaignIMDCode">Campaign IMD Code *</label>
                             </div>
                         </div>
                     </div>
-                </section> 
-                <section class="white_container mb-3" *ngIf="!isGroupJourney">
+                </section>
+                <section class="white_container mb-3" *ngIf="showProduct2">
                     <div class="row">
                         <div class="col-12 mb-4">
-                            <h6 class="heading-16-red">Product Details</h6>
+                            <h6 class="heading-16-red">Group Product Details</h6>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="productType" 
-                                    name="productType" 
-                                    formControlName="productType" 
+                                <select class="form-select input-selectBox" id="productType" name="productType"
+                                    formControlName="productType" (change)="onProductSelect($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('productType')?.invalid && (createBataLeads.get('productType')?.touched || submitted) }">
-                                    <option value="" disabled>Select Type</option> 
-                                    <option *ngFor="let opt of productType" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of productType" [value]="opt.productCode">{{ opt.productCode }}</option>
                                 </select>
                                 <label for="productType">Product Type *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('productType')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('productType')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('productType')?.errors?.['required']">
                                         Please select a Product Type.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="sumInsured" 
-                                    name="sumInsured" 
-                                    formControlName="sumInsured" 
+                                <select class="form-select input-selectBox" id="sumInsured" name="sumInsured"
+                                    formControlName="sumInsured"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('sumInsured')?.invalid && (createBataLeads.get('sumInsured')?.touched || submitted) }">
-                                    <option value="" disabled>Select</option> 
-                                    <option *ngFor="let opt of SumInsured" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select</option>
+                                    <option *ngFor="let opt of SumInsured" [value]="opt.siPlanValue">{{ opt.siPlanText }}</option>
                                 </select>
                                 <label for="sumInsured">Sum Insured *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('sumInsured')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('sumInsured')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('sumInsured')?.errors?.['required']">
                                         Please select a Product Type.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select 
-                                    class="form-select input-selectBox" 
-                                    id="campaignName" 
-                                    name="campaignName" 
-                                    formControlName="campaignName" 
+                                <select class="form-select input-selectBox" id="campaignName" name="campaignName"
+                                    formControlName="campaignName" (change)="onCampaignChange($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignName')?.invalid && (createBataLeads.get('campaignName')?.touched || submitted) }">
-                                    <option value="" disabled>Select Type</option> 
-                                    <option *ngFor="let opt of campaignName" [value]="opt.value">{{ opt.name }}</option>
+                                    <option value="" disabled>Select Type</option>
+                                    <option *ngFor="let opt of campaignName" [value]="opt.name">{{ opt.name }}</option>
                                 </select>
                                 <label for="campaignName">Campaign Name *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('campaignName')?.errors">
-                                    <span class="ui-error block-show" *ngIf="createBataLeads.get('campaignName')?.errors?.['required']">
+                                    <span class="ui-error block-show"
+                                        *ngIf="createBataLeads.get('campaignName')?.errors?.['required']">
                                         Please select a Campaign Name.
                                     </span>
                                 </span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input 
-                                    class="form-control input-textBox" 
-                                    id="campaignIMDCode" 
-                                    name="campaignIMDCode" 
-                                 
-                                    placeholder="Campaign IMD Code *" 
-                                    formControlName="campaignIMDCode" 
-                                    type="text"
+                                <input class="form-control input-textBox" id="campaignIMDCode" name="campaignIMDCode" readonly
+                                    placeholder="Campaign IMD Code *" formControlName="campaignIMDCode" type="text" [value]="selectedCampaignCode"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignIMDCode')?.invalid && (createBataLeads.get('campaignIMDCode')?.touched || submitted) }">
                                 <label for="campaignIMDCode">Campaign IMD Code *</label>
                             </div>
                         </div>
                     </div>
-                </section> 
+                </section>
                 <div class="col-12 mt-4">
                     <button type="submit" id="save" name="save" class="btn_red">Save</button>
                 </div>
-            </form>        
+            </form>
         </div>
     </div>
 </main>
-

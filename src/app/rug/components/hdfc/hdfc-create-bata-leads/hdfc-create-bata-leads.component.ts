@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { event } from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 import { RugService } from 'src/app/rug/rug.service';
 
@@ -27,63 +28,16 @@ export class HdfcCreateBataLeadsComponent {
   filteredAxisVendors: any;
   dataToModify!: any;
   EmployeeDetails: any;
-  AllProductDetails:any;
-  isGroupJourney!:boolean;
-  isRetailsJourney!:boolean;
-  SumInsured:any[] = [
-    {
-      "name": "5 Lakh",
-      "value": "500000"
-    },
-    {
-      "name": "10 Lakh",
-      "value": "1000000"
-    },
-    {
-      "name": "15 Lakh",
-      "value": "1500000"
-    },
-    {
-      "name": "20 Lakh",
-      "value": "2000000"
-    }
-  ];
-  campaignName:any[] = [
-    {
-      "name": "Auto Loan",
-      "value": "AL"
-    },
-    {
-      "name": "Branch Banking",
-      "value": "BB"
-    },
-    {
-      "name": "Two Wheeler",
-      "value": "TW"
-    },
-    {
-      "name": "Gold Loan",
-      "value": "GL"
-    }
-  ];
-  productType:any[] = [
-    {
-      "name": "ABCD",
-      "value": "ABCD"
-    },
-    {
-      "name": "Combo 1",
-      "value": "combo1"
-    },
-    {
-      "name": "Combo 2",
-      "value": "combo2"
-    },
-    {
-      "name": "Combo 3",
-      "value": "Combo 3"
-    }
-  ];
+  AllProductDetails: any;
+  isGroupJourney!: boolean;
+  isRetailsJourney!: boolean;
+  JourneyType: any[] = ["Retail", "Group"]
+  SumInsured: any;
+  showProduct1: boolean = false;
+  showProduct2: boolean = false;
+  campaignName: any;
+  productType: any;
+  selectedCampaignCode: string = '';
   bbcustometype: any[] = [
     {
       "name": "Imperia",
@@ -106,7 +60,7 @@ export class HdfcCreateBataLeadsComponent {
       "value": "non_managed"
     }
   ];
-  language:any[] = [{
+  language: any[] = [{
     "name": "English",
     "value": "En"
   },
@@ -142,52 +96,47 @@ export class HdfcCreateBataLeadsComponent {
     "name": "Kanada",
     "value": "Ka"
   }
-];
+  ];
 
-salutations:any [] = [ {
-  "value": "Mr",
-  "name": "Mr"
-},
-{
-  "value": "Mrs",
-  "name": "Mrs"
-},
-{
-  "value": "Ms",
-  "name": "Ms"
-},
-{
-  "value": "Dr",
-  "name": "Dr"
-},
-{
-  "value": "Mx",
-  "name": "Mx"
-},
-{
-  "value": "Miss",
-  "name": "Miss"
-},
-{
-  "value": "Others",
-  "name": "Others"
-}
-]
+  salutations: any[] = [{
+    "value": "Mr",
+    "name": "Mr"
+  },
+  {
+    "value": "Mrs",
+    "name": "Mrs"
+  },
+  {
+    "value": "Ms",
+    "name": "Ms"
+  },
+  {
+    "value": "Dr",
+    "name": "Dr"
+  },
+  {
+    "value": "Mx",
+    "name": "Mx"
+  },
+  {
+    "value": "Miss",
+    "name": "Miss"
+  },
+  {
+    "value": "Others",
+    "name": "Others"
+  }
+  ]
 
+  selectedProductCode: string | null = null;
+  subProducts: any[] = []; // Second dropdown ke liye data store karne ke liye
   constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private rugService: RugService, private toast: NgToastService) {
 
   }
   ngOnInit(): void {
     this.inItForm();
-    const groupJourney = localStorage.getItem('isGroupJourney');
-    const retailJourney = localStorage.getItem('isRetailsJourney');
-  
-    this.isGroupJourney = groupJourney === 'true'; // String 'true' ko boolean true me convert karna
-    this.isRetailsJourney = retailJourney === 'true';
-  
-    console.log('Group Journey:', this.isGroupJourney);
-    console.log('Retail Journey:', this.isRetailsJourney);
     this.getProductDetails();
+    this.getCampaignName();
   }
 
   inItForm() {
@@ -213,7 +162,13 @@ salutations:any [] = [ {
       campaignName: ['', Validators.required],
       smName: ['', Validators.required],
       smMobileNo: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$'), Validators.maxLength(10)]],
-      campaignIMDCode: ['', Validators.required]
+      campaignIMDCode: ['', Validators.required],
+      journeyType: ['', Validators.required]
+    });
+
+    this.createBataLeads.get('journeyType')?.valueChanges.subscribe((value) => {
+      this.showProduct1 = value === 'Retail';
+      this.showProduct2 = value === 'Group';
     });
   }
 
@@ -243,8 +198,8 @@ salutations:any [] = [ {
       emailId: this.createBataLeads.get('emailId')?.value,
       dob: this.createBataLeads.get('dob')?.value,
       createdBy: "QC",
-      productCode: "null",
-      productName: "null",
+      productCode: "7200",
+      productName: "Active Max",
       branchCode: this.createBataLeads.get('branch_code')?.value,
       rmContactNo: this.createBataLeads.get('rmContactNo')?.value,
       bbCustomerType: this.createBataLeads.get('bbCustomerType')?.value,
@@ -259,7 +214,7 @@ salutations:any [] = [ {
       campaignIMDCode: this.createBataLeads.get('campaignIMDCode')?.value
     }
     this.rugService.createBataLeads(reqData).subscribe((response: any) => {
-      console.log('create AV successfully:', response);
+      console.log('create Bata Av successfully:', response);
       this.toast.success({ detail: "Success", summary: "Successful..", duration: 3000 })
     });
   }
@@ -268,12 +223,12 @@ salutations:any [] = [ {
     const reqData = {
       imdCode: "2120594"
     };
-  
+
     this.rugService.getEMployeeDetails(reqData).subscribe((res: any) => {
       const resData = JSON.parse(res.data);
       this.EmployeeDetails = resData.data;
       console.log('EmployeeDetails:', this.EmployeeDetails);
-  
+
       const enteredEmployeeCode = this.createBataLeads.get('employeeCode')?.value;
       if (this.EmployeeDetails?.employeeCode === enteredEmployeeCode) {
         this.createBataLeads.patchValue({
@@ -301,7 +256,7 @@ salutations:any [] = [ {
       this.createBataLeads.updateValueAndValidity();
     });
   }
-  
+
   validateEmployeeCode() {
     const employeeCode = this.createBataLeads.get('employeeCode')?.value;
     if (!employeeCode) {
@@ -312,20 +267,76 @@ salutations:any [] = [ {
       });
       return;
     }
-    this.getEmployeeDetails(); 
+    this.getEmployeeDetails();
   }
 
-  getProductDetails(){
-      this.rugService.getProdcutDetails().subscribe((res:any)=>{
-        const response = JSON.parse(res.data)
-        this.AllProductDetails = response.data.productCombinationModel;
-        console.log('Product Details',this.AllProductDetails)
-      })
+  getProductDetails() {
+    this.rugService.getProdcutDetails().subscribe((res: any) => {
+      const response = JSON.parse(res.data)
+      this.productType = response.data.productCombinationModel;
+      this.productType = this.productType.slice(-4);
+      console.log('Product Details', this.productType);
+    })
+  }
+  onProductSelect(event: any) {
+    this.selectedProductCode = event.target.value;
+    console.log('Selected Product Code:', this.selectedProductCode);
+    if (this.selectedProductCode) {
+      this.getProductDetailsByCode();
+    }
   }
 
+  getProductDetailsByCode() {
+    const req = {
+      productCode: this.selectedProductCode
+    }
+
+    this.rugService.getSumInsuredByProduct(req).subscribe(
+      (response: any) => {
+        const res = JSON.parse(response.data);
+        console.log('Details for Selected Product:', res.data.productSIDetails);
+        this.SumInsured = res.data.productSIDetails;
+      },
+      (error: any) => {
+        console.error('Error fetching product details:', error);
+      }
+    );
+  }
+
+  getCampaignName() {
+    const req = {
+      agent: "BATARM",
+      pageNumber: 0,
+      pageSize: 10,
+      name: "",
+      filterType: ""
+    };
+
+    this.rugService.getCampaignName(req).subscribe((res: any) => {
+      const response = typeof res.data === "string" ? JSON.parse(res.data) : res.data;
+
+      this.campaignName = response.campaignlist;
+      console.log('Campaign Names', this.campaignName);
+    },
+      (error: any) => {
+        console.error('Error fetching campaign names:', error);
+      });
+  }
+
+  onCampaignChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const selectedName = target.value; 
+    console.log('Selected Campaign Name:', selectedName);
+
+    const selectedCampaign = this.campaignName?.find((camp: any) => camp.name === selectedName);
+    this.selectedCampaignCode = selectedCampaign.campaignNo; 
+    console.log('Mapped Campaign No:', this.selectedCampaignCode);
+
+    this.createBataLeads.patchValue({ campaignIMDCode: this.selectedCampaignCode });
+}
 
   backToJourneySelection() {
-    this.router.navigate(['rug/hdfc_JourneySelection']);
+    this.router.navigate(['rug/hdfc_bataLeadsList']);
   }
 
   isNumber(event: KeyboardEvent) {
