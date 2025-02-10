@@ -477,7 +477,7 @@
                 </div>
               </div> -->
 
-                <div *ngIf="control.type === 'multiSelectCheckbox'">
+                <div *ngIf="control.type === 'multiSelectCheckbox' && control.visible">
                   <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}<span
                       *ngIf="control.validators">*</span></label>
                   <div [formGroupName]="control.name" class="checkbox-container" [ngStyle]="{ 'display': isCustomerJourney ? 'none' : 'flex' }" 

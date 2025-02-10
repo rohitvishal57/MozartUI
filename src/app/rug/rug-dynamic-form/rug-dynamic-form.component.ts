@@ -18,6 +18,7 @@ import { PaymentInfoComponent } from '../payment-info/payment-info.component';
 import { CaptchaPopupComponent } from '../captcha-popup/captcha-popup.component';
 import { RugService } from 'src/app/rug/rug.service';
 import { AllProductContent } from '../constants/constant';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 declare var bootstrap: any;
 
 @Component({
@@ -155,6 +156,7 @@ export class RugDynamicFormComponent {
         this.leadId = this.paramLeadId.LeadId;
         this.partnerId = this.paramLeadId.PartnerId;
         this.productId = this.paramLeadId.ProductId;
+        console.log(this.leadId, this.partnerId, this.productId)
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
@@ -1331,6 +1333,48 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       // this.flattenObject(this.formData);
+      
+      if(this.productId == 36 ){
+
+        Object.keys(this.d2cDetails).forEach((key) => {
+          if (key !== 'insuredMemberDetails') {
+            // Check if the control exists and update its value
+            if (this.dynamicFormGroup.contains(key)) {
+              this.dynamicFormGroup.get(key)?.patchValue(this.d2cDetails[key]);
+            }
+          }
+        });
+       
+        
+        // if(this.getFormIndexValue() == 0){
+        //   this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+        //     // const selfResult = this.centimetersToFeetAndInches(item.height);
+        //     const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        //     const formGroup = insuredMembersArray.at(index) as FormGroup;
+        //     // console.log(insuredMembersArray?.value);
+        //     // if(insuredMembersArray.value[index].relation == item.relation){
+        //       insuredMembersArray.at(index).patchValue({
+        //         // name: item.name,
+        //         // lastName: item.name,
+        //         // dob: item.dob,
+        //         // gender: item.gender,
+        //         // memberAge: this.getAgeFromDOB(item.dob),
+        //         // weight: item.weight,
+        //         // height: item.height,
+        //         // heightInches: item.heightInches
+        //         firstName: item.firstName,
+        //         lastName: item.lastName,
+        //         dob: item.dob,
+        //         gender: item.gender,
+        //         salutation:item.salutation,
+        //         memberAge:  this.getAgeFromDOB(item.dob),
+        //         // height: selfResult.feet !== 0 ? selfResult.feet : null,
+        //         // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
+        //       });
+        //     // }
+        //   });
+        // }
+      }
       
     }
   }
@@ -2843,6 +2887,13 @@ export class RugDynamicFormComponent {
                 if (tsRelationCodes.includes(option.id)) {
                   this.logSelection(null, option, control);
                 }
+              }else if(this.formSequence[0].formName == "Proposal Detials" && this.productId == "36"){
+                console.log(this.tsDetails);
+                controlGroup.addControl(option.value, new FormControl((d2cRelationCodes.includes(option.memberRelationCode)) ? true : false));
+                // controlGroup.get('Self')?.disable();
+                if (d2cRelationCodes.includes(option.memberRelationCode)) {
+                  this.logSelection(null, option, control);
+                }
               } else {
                 controlGroup.addControl(option.value, new FormControl(false));
               }
@@ -3508,6 +3559,30 @@ export class RugDynamicFormComponent {
             }
           })
         }
+      }
+    }
+    if(this.formSequence[0].formName == "Proposal Detials" && this.productId == "36"){
+      if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
+
+        this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+          // const selfResult = this.centimetersToFeetAndInches(item.height);
+          console.log(insuredMembersArray.value);
+          // item = this.d2cDetails.insuredMemberDetails.filter((ele:any)=>{
+          // return ele.relation == insuredMembersArray.value[index].relation
+          // })
+          
+            console.log(item.name)
+            // const [firstName, lastName] = fullName.split(' ');
+            insuredMembersArray.at(index).patchValue({
+              salutation: item.salutation,
+              firstName:item.firstName,
+              lastName: item.lastName,
+              dob: this.formatDate(item.dob),
+              gender: item.gender,
+              age: this.getAgeFromDOB(item.dob)
+            });
+          
+        });
       }
     }
   }
@@ -9434,4 +9509,188 @@ export class RugDynamicFormComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
+  onIncludeHealthChange(){
+    let healthInclude = this.dynamicFormGroup.get("preExistsingDisease")?.value
+    if(healthInclude == 'yes'){
+      this.dynamicFormGroup.get('renewalPremiumToPay')?.patchValue(this.d2cDetails?.renewalPremium - this.d2cDetails?.totalHealthReturn)
+    }else if(healthInclude == 'no'){
+      this.dynamicFormGroup.get('renewalPremiumToPay')?.patchValue(this.d2cDetails?.renewalPremiumToPay)
+    }
+
+  }
+
+
+  async onRenewalCustomerSubmit(): Promise<void> {
+   
+    // console.log(this.policyDetailsForm.get('declarationDetails.declaration')?.value);
+    if(!this.dynamicFormGroup.get('decl2')?.valid){
+      return;
+    }
+    // console.log(this.policyDetailsForm.get('premiumDetails.excludeHealthReturns')?.value);
+    let renewalObj = {
+      leadId: this.leadId,
+      disposition: this.dynamicFormGroup.get('disposition')?.value,
+      subDispositon: this.dynamicFormGroup.get('subDisposition')?.value,
+      remarks: "",
+      claimReportedInPreviousPolicy: false,
+      pedChronicHistoryPast1Year: false,
+      isHealthInclude: this.dynamicFormGroup.get('includeHealthReturns')?.value == "true" ? true : false,
+      currentUser: this.agentCode
+    }
+    this.rugService.SaveRenewalProposalData(renewalObj).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        res = JSON.parse(res.data)
+        console.log(res);
+        if (res.isSuccess == true && res.statusCode == 200) {
+        let linkObj = {
+            leadId: this.leadId,
+            isRenewal: true
+          }
+          if(this.isCustomerJourney){
+            let justpayPayload = {
+              "agentcode": this.agentCode,
+              "proposalNumber": this.tsDetails?.leadId,
+              //  "paymentMethod": "autoDebit",
+              "paymentMethod": "emandate_payment",
+              "source": "RUG",
+              "policyType": "New Business",
+              "policyNumber": "",
+              "quoteNumber": "",
+              "OrderId": "",
+              "Amount": Math.round(this.tsDetails?.renewalPremiumToPay),
+              "FirstName": this.tsDetails?.firstName,
+              "MiddleName": "",
+              "LastName": this.tsDetails?.lastName,
+              "Phone": this.tsDetails?.mobileNumber,
+              "Email": this.tsDetails?.emailId,
+              "DOB": this.tsDetails?.dob,
+              "appName": "RENEWAL"
+
+            }
+            console.log(justpayPayload);
+          this.d2cJustPayRedirection(justpayPayload)
+          }else{
+
+            this.rugService.sendLinkToCustomer(linkObj).subscribe({
+                 next: (res: any) => {
+                   console.log(res);
+                   res = JSON.parse(res.data)
+                   console.log(res);
+                  if (res.isSuccess == true && res.statusCode == 200) {
+                     console.log(res);
+                     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+                       //width: '400px',
+                       disableClose: true,
+                       panelClass:"messageModal-mat",
+                       data: {
+                         type: 'success', 
+                         title: 'Renewal',
+                         message: ` ${res.statusMessage}`
+                       },
+                     });
+                     // const dialogRef = this.dialog.open(SuccessPopupComponent, {
+                     //   width: "500px",
+                     //   autoFocus: false,
+                     //   data: res.statusMessage
+                     // });
+                     dialogRef.afterClosed().subscribe((result: any) => {
+                       console.log(result);
+                       this.router.navigate(['renewal/srl_thankyou/'+ this.leadId]);
+                     })
+                   }
+                   if (res.isSuccess == false && res.statusCode == 500) {
+                     this.toast.warning({ detail: "Warning", summary: res.errorMessage, duration: 5000 });
+                     // this.toastr.warning(res.errorMessage, '', { timeOut: 5000 });
+                   }
+                 },
+                 error: (err) => {
+                   console.error(err);
+                 }
+               });
+          }
+                }
+        if (res.isSuccess == false && res.statusCode == 500) {
+          if(res.groupRenewalData.error.length > 0 ){
+            this.toast.warning({ detail: "Warning", summary: "something wrong", duration: 5000 });
+            // this.toastr.warning(response.groupRenewalData.error[0].errorMessage, '', { timeOut: 5000 });
+          }
+          // this.toastr.warning(response.errorMessage, '', { timeOut: 5000 });
+        }
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+   
+  }
+  async onRenewalCustomerFinalSubmit(): Promise<void> {
+   
+    // console.log(this.policyDetailsForm.get('declarationDetails.declaration')?.value);
+    if(!this.dynamicFormGroup.get('decl2')?.valid){
+      return;
+    }
+    // console.log(this.policyDetailsForm.get('premiumDetails.excludeHealthReturns')?.value);
+    let renewalObj = {
+      leadId: this.leadId,
+      disposition: this.dynamicFormGroup.get('disposition')?.value,
+      subDispositon: this.dynamicFormGroup.get('subDisposition')?.value,
+      remarks: "",
+      claimReportedInPreviousPolicy: false,
+      pedChronicHistoryPast1Year: false,
+      isHealthInclude: this.dynamicFormGroup.get('includeHealthReturns')?.value == "true" ? true : false,
+      currentUser: this.agentCode
+    }
+    this.rugService.SaveRenewalProposalData(renewalObj).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        res = JSON.parse(res.data)
+        console.log(res);
+        if (res.isSuccess == true && res.statusCode == 200) {
+        let linkObj = {
+            leadId: this.leadId,
+            isRenewal: true
+          }
+            let justpayPayload = {
+              "agentcode": this.agentCode,
+              "proposalNumber": this.tsDetails?.leadId,
+              //  "paymentMethod": "autoDebit",
+              "paymentMethod": "emandate_payment",
+              "source": "RUG",
+              "policyType": "New Business",
+              "policyNumber": "",
+              "quoteNumber": "",
+              "OrderId": "",
+              "Amount": Math.round(this.tsDetails?.renewalPremiumToPay),
+              "FirstName": this.tsDetails?.firstName,
+              "MiddleName": "",
+              "LastName": this.tsDetails?.lastName,
+              "Phone": this.tsDetails?.mobileNumber,
+              "Email": this.tsDetails?.emailId,
+              "DOB": this.tsDetails?.dob,
+              "appName": "RENEWAL"
+
+            }
+            console.log(justpayPayload);
+          this.d2cJustPayRedirection(justpayPayload)
+          
+                }
+        if (res.isSuccess == false && res.statusCode == 500) {
+          if(res.groupRenewalData.error.length > 0 ){
+            this.toast.warning({ detail: "Warning", summary: "something wrong", duration: 5000 });
+            // this.toastr.warning(response.groupRenewalData.error[0].errorMessage, '', { timeOut: 5000 });
+          }
+          // this.toastr.warning(response.errorMessage, '', { timeOut: 5000 });
+        }
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+   
+  }
+
+
 }

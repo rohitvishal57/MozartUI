@@ -95,13 +95,7 @@ export class SideNavbarComponent {
     //   ];
     // }
     // Fetch allowed pages from AuthService
-    if(this.agentCode == "467892"){
-      this.sideMenuList = [
-        { id: 1, displayName: 'Group Renewal', path: 'rug/group_renewal', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-        { id: 2, displayName: 'Reneal Phase 2 Leads', path: 'rug/group-renewal-phase-2-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-    
-      ];
-    }else{
+
       
       const allowedPages = this.authService.getAllowedModules();
       
@@ -110,7 +104,7 @@ export class SideNavbarComponent {
         this.sideMenuList=[];
         this.sideMenuList = allowedPages;
       }
-    }
+    
 
     // Check initial expansion based on window width
     this.isExpanded = window.innerWidth < 1024;
