@@ -32,7 +32,13 @@ export class BbTestPageComponent implements OnInit{
         if(response.isSuccess == true && response.statusCode == 200){
          window.location.href = response.message;
         }
-        if(response.isSuccess == false && response.statusCode == 500){
+        else if(response.isSuccess == false && response.statusCode == 500){
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
+        }
+        else if(response.isSuccess == false && response.statusCode == 400){
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
+        }
+        else{
           this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
       }, error => {

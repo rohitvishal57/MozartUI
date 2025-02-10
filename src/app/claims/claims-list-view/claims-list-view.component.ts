@@ -18,7 +18,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./claims-list-view.component.scss'],
 })
 export class ClaimsListViewComponent implements OnInit {
-  displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'requestType', 'status', 'raisedDate', 'download'];
+  displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'claimType', 'status', 'raisedDate', 'download'];
   allData: ClaimsInterface[] = [];
   claims: any[] = [];
   selectedListView: string = '';
@@ -38,10 +38,11 @@ export class ClaimsListViewComponent implements OnInit {
   claimStatusCounts: any = {
     all: 0,
     active: 0,
+    UnderProcess: 0,
+    UnderDeficiency: 0,
     approved: 0,
     settled: 0,
     rejected: 0,
-    UnderDeficiency: 0
   };
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
@@ -141,7 +142,7 @@ export class ClaimsListViewComponent implements OnInit {
     "agentCode": this.agentCode,
     "requestId": "",
     "policyNumber": "",
-    "requestType": "",
+    "claimType": "",
     "startDate": null,
     "endDate": null,
     "pageNumber": 1,
@@ -191,7 +192,7 @@ export class ClaimsListViewComponent implements OnInit {
         this.productsList = res.data;
         const uniqueRequestTypes = Array.from(new Set(this.productsList
           .map((product: any) => product.familyPlan)))
-          .map((requestType) => ({ name: requestType, selected: false }));
+          .map((claimType) => ({ name: claimType, selected: false }));
         this.requestTypes = uniqueRequestTypes;
       },
       error: (err: any) => {
@@ -245,8 +246,8 @@ export class ClaimsListViewComponent implements OnInit {
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
     console.log("selected policy types", selectedPolicyTypes);
-    this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body", this.claimsReqBody.requestType);
+    this.claimsReqBody.claimType = selectedPolicyTypes.join(", ");
+    console.log("policy types which are taking by request body", this.claimsReqBody.claimType);
     this.first = 0;
     this.page = 1;
     this.fetchData();
@@ -264,7 +265,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.endDate = null;
     this.appliedFiltersCount = 0;
     //this.claimsReqBody.productVarientName = "";
-    this.claimsReqBody.requestType = "";
+    this.claimsReqBody.claimType = "";
     this.claimsReqBody.startDate = null;
     this.claimsReqBody.endDate = null;
     this.fetchData();

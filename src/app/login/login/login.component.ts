@@ -287,6 +287,10 @@ export class LoginComponent implements OnInit {
             if(this.menuItems.length>0){
               this.currentRoute=this.menuItems[0].routePath;
             }
+            if (res.data.channel === 'agency' || res.data.channel === 'AGENCY') {
+              localStorage.setItem('channel', 'AGENCY');
+            }
+        
             // if(res.data.agentCode === "467896"){
             //   this.router.navigate(['products'])
             // }else if(res.data.agentCode === "467897"){

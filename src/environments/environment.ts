@@ -147,7 +147,7 @@ export const environment = {
   getPremiumDetaiks: "/Product/GetPremium",
   getRUGPremium: "api/rug/GetPremium",
   getFamilyConstruct: "api/rug/GetFamilyConstructByProductCode",
-  bbAxisRedirection: "api/v1/RedirectAxisBranchBankingRequest",
+  bbAxisRedirection: "api/v1/axisbb/leaddetails",
   saveBBCommonDraft: "api/rug/SaveBBCommonDraft",
   getLeadStatusCount: "GetLeadStatusCount",
   getProposalStatusCount: "GetProposalStatusCount",
@@ -198,7 +198,7 @@ export const environment = {
   tsCreateLead: "api/v1/SaveLeadDetails",
   getAllDispositions: "api/rug/getAllDisposition?appName=TELESALES",
   getAllSubDispositions:'api/rug/GetAllSubDisposition',
-  saveTSCommonDraft:"api/v1/SaveTSCommonDraft",
+  saveTSCommonDraft:"api/rug/SaveTSCommonDraft",
   postTSHalfQuote:"api/v1/PostHalfQuote",
   getTSPolicyInfoByLeadId:"api/v1/GetTSPolicyInfoByLeadId",
   bbHalfQuote: "api/rug/HalfQuote",
@@ -237,5 +237,14 @@ export const environment = {
   getRetailRenewalPhaseTwoLeads: "api/rug/GetRetailRenewalPhaseTwoLeads",
   getRenewalPolicyData: "api/rug/GetRenewalPolicyData",
   getGroupRenewalPhaseTwoLeads: "api/rug/GetGroupRenewalPhaseTwoLeads",
-  getParentCodeViaAgentId:"api/yatra/getflsagents"
+  getParentCodeViaAgentId:"api/yatra/getflsagents",
+  sendOtpHdfc:"api/rug/generateotp",
+  validateHdfcOTP:"api/rug/validateotp",
+  sendCommunication:"api/rug/send-communication",
+  generateProposal:"api/rug/generateproposal",
+  getEmployeeDetails:"api/rug/GetEMployeeDetails",
+  createBataleads:"api/rug/SaveLeadDetailshdfc",
+  gethdfcProductDetails:"api/rug/GetProductCombination",
+  getSumInsuredByProductSelection:"api/rug/GetSumInsuredList",
+  getCampaignName:"api/yatra/getcampaignsdetails"
 };

@@ -106,6 +106,19 @@ export class TokenInterceptor implements HttpInterceptor {
     "https://usp.monocept.ai/api/rug/SendRetailLinkToCustomer",
     "https://upuat.adityabirlahealth.com/api/rug/GetGroupRenewalPhaseTwoLeads",
     "https://usp.monocept.ai/api/rug/GetGroupRenewalPhaseTwoLeads",
+    "https://usp.monocept.ai/api/rug/generateotp",
+    "https://upuat.adityabirlahealth.com/api/rug/generateotp",
+    "https://usp.monocept.ai/api/rug/validateotp",
+    "https://upuat.adityabirlahealth.com/api/rug/validateotp",
+    "https://upuat.adityabirlahealth.com/api/rug/CreateManageLob",
+    "https://usp.monocept.ai/api/rug/send-communication",
+    "https://upuat.adityabirlahealth.com/api/rug/send-communication",
+    "https://usp.monocept.ai/api/rug/generateproposal",
+    "https://upuat.adityabirlahealth.com/api/rug/generateproposal",
+    "https://upuat.adityabirlahealth.com/api/rug/SaveTSCommonDraft",
+    "https://usp.monocept.ai/api/rug/GetEMployeeDetails",
+    "https://usp.monocept.ai/api/rug/SaveLeadDetailshdfc",
+    "https://usp.monocept.ai/api/rug/GetSumInsuredList"
   ];
 
   intercept(

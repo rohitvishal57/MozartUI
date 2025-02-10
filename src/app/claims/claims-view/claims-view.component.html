@@ -761,7 +761,6 @@
                                 <ng-container *ngFor="let section of documentSections">
                                     <div class="upload-section">
                                         <h4 class="section-title">{{ section.label }}</h4>
-
                                         <!-- Upload Area - Show only if no file is uploaded -->
                                         <div class="uploadDocument_area" (click)="triggerFileInput(section.id)"
                                             *ngIf="!section.file">

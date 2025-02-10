@@ -14,6 +14,7 @@ import { Item } from 'src/app/interface/modal-popup.interface';
 })
 export class StatusValidationComponent implements OnInit {
   items: Item[] = [];
+  token : any = '';
 
   constructor(  
     private route: ActivatedRoute, 
@@ -30,18 +31,20 @@ export class StatusValidationComponent implements OnInit {
   }
 
   checkADFSLogin() {
-    let idToken: any = '';
+const url = new URL(window.location.href);
+this.token = new URLSearchParams(url.hash.substring(1)).get('id_token');
+    
+    //let idToken: any = '';
     this.route.queryParams.subscribe(params => {
       let url: any = this.router.url.split('/');
       let data: any = {};
   
-      // Check if the URL includes 'adfs' or 'cyberark'
       if (params) {
         console.log(params, url);
   
         if (url.includes('adfs')) {
-          const token = "id_token";
-          data.Idtoken = params[token]; // Get the token from queryParams
+         // const token = "id_token";
+          data.Idtoken = this.token // Get the token from queryParams
           data.username = localStorage.getItem('agentCode');
           this.loginService.checkADFSLogin(data, data.Idtoken, data.username).subscribe({
             next: (res: any) => {

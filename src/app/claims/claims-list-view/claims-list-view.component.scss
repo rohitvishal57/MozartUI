@@ -167,12 +167,17 @@ padding:0 0 0 10px !important;
       padding: 9px 32px 9px 16px;
     }
     button {
-      position: absolute;
-      right: 10px;
-      top: 6px;
-      padding: 0;
-      @media (max-width:767px) {
-        top: 43px;
+      &.btn_filter {
+        position: initial;
+        padding: 4px 16px;
+        @media (max-width:767px) {
+          position: absolute;
+          right: 10px;
+          top: 6px;
+          padding: 0;
+          /* top: 43px; */
+        }
+        
       }
       img {
         position: initial;
@@ -183,6 +188,50 @@ padding:0 0 0 10px !important;
         flex-direction: row;
       }
     }
+    .filterWraper.leads_searchWraper {
+      position: relative;
+      @media (max-width:767px) {
+        width: auto;
+        min-width: initial;
+      }
+    }
+    .filterWraperForm {
+      position: absolute;
+      .fw_formRowFooter {
+        .btn_fullWidth {
+          position: initial;
+          padding: 10px 16px;
+        }
+      }
+      &.mobile_popupBackdrop {
+        @media (max-width:1093px) {
+          position: fixed;
+        }
+        .mobile_popupMain {
+          @media (max-width:1093px) {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            border-radius: 40px 40px 0 0;
+            padding: 32px 16px;
+            background-color: var(--white-color);
+            box-shadow: 0 0 10.67px #0000001a;
+            .filterHeader, .fw_formBody, .fw_formRow  {
+              width: 100%;
+            }
+            .fw_formBody .input-block-dob, .fw_checkboxWraper div {
+              width: 100% !important;
+            }
+            
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 767px) {
+  .quickFilterMain_claims .leads_searchWraperMobile.claims_searchWraper .field_searchMain div.select_searchOption {
+    width: 150px !important;
   }
 }
 .tableSubMain .table thead tr, .tableSubMain .table thead tr th,
@@ -211,6 +260,9 @@ padding:0 0 0 10px !important;
 }
 .field_searchMain .field_searchMain .input-block-renew .input-textBox {
   padding: 8px 16px !important;
+}
+.quickFilterRight.leads_searchWraperMobile .filterWraper.leads_searchWraper {
+  min-width: auto;
 }
 @media (max-width:767px) {
 	.quickFilterLeft .quickFilter {

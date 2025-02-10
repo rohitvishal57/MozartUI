@@ -1,0 +1,494 @@
+<main class="siteBody siteBody_padding">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between pageHeading_align-items-center">
+                <h2>All Bata Leads</h2>
+                <div class="btn_groupAction">
+                    <button type="button" id="createlead" name="createlead" class="btn_white btn_newRequest" (click)="createBataLeads()">
+                        <img src="assets/Img/icon_plus_red.svg">Create lead
+                    </button>
+                    <!-- <button type="button" id="uploadlead" name="uploadlead" class="btn_white btn_newRequest" routerLink="/leads/uploadLead">
+                        {{"Upload lead" | translate}}
+                    </button> -->
+                    <!-- <button type="button" class="btn_white btn_newRequest" routerLink="/leads/campaignmanagment">
+                       Campaigns
+                    </button> -->
+                </div>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterLeft">
+                    <ul class="quickFilter">
+                         <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li> 
+                        <li>
+                            <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList.totalRecords}})</button>
+                        </li>
+                        <li>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Assigned Leads'}"  (click)="filterQuotes('Assigned Leads','assignLeads')">{{"Assigned" | translate}} ({{countsList.assignLeads}})</button>
+                        </li>
+                        <li>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Unassigned Leads'}"  (click)="filterQuotes('Unassigned Leads','unassignLeads')">{{"Unassigned" | translate}} ({{countsList.unassignLeads}})</button>
+                        </li>
+                    </ul>
+                </div>
+
+                
+             
+                <div class="quickFilterRight leads_searchWraperMobile">
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain field_searchMainMobile">
+                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
+                                <option value="">{{"Select an option" | translate}}</option>
+                                <option value="leadId">{{"Lead ID" | translate}}</option>
+                                <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                <option value="name">{{"Name" | translate}}</option>
+                                <option value="emailID">{{"Email ID" | translate}}</option>
+                                <option value="AssignedTo">{{"Assigned To" | translate}}</option>
+
+                            </select>
+                            <div class="filterFieldGroup">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)" (keydown.enter)="applySearch()">
+                                <button  type="submit" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <!--SEARCH CLEAR BUTTON-->
+                                <!-- <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button> -->
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
+                                    <!-- <small *ngIf="searchInputControl.hasError('pattern') && selected === 'leadId'">{{"Enter a valid Lead ID." | translate}}</small> -->
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">{{"Name should contain only letters and spaces." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Please enter a valid email address (e.g., user@example.com)." | translate}}</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filterWraper">
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
+                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                            <div class="fw_form mobile_popupMain">
+                                <div class="filterHeader" >
+                                    <header>{{"Filter" | translate}}</header>
+                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
+                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
+                                    </button>-->
+                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="toggleSearchDropdown()"></button>
+                                </div>
+
+                                <div class="fw_formBody">
+                                    <div class="fw_formRow">
+                                        <h6>{{"Lead Status" | translate}}</h6>
+                                        <div class="fw_checkboxWraper fw_checkboxWraper_leads">
+                                            <div class="input-checkbox-block" *ngFor="let leadFilter of leadFilterStatus; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                  <input type="checkbox" id="leadFilter{{i}}" name="leadFilter{{i}}" value="leadFilter" class="input-check" [(ngModel)]="leadFilter.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="leadFilter{{i}}">{{leadFilter.name | translate}}</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
+                                    </div>
+
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (change)="formatDate('startDate')">
+                                                    <label for="startdate">{{"Start Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <label for="enddate">{{"End Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Policy Type" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name | translate}}</label>
+                                                </div>
+                                              </div>                                              
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Products" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer>
+                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAllLeads()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                    </button>
+                    <button type="button" id="leadgridlist" name="leadgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
+                        [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
+                        (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
+                            alt="Grid List"></button>
+                    <button type="button" id="leadgridcard" name="leadgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
+                        [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card"
+                        (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg"
+                            alt="Grid Card"></button>
+                </div>
+            </section>
+
+
+            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th class="text-center icon_allAssignLead">
+                                        <div class="icon_leads_check">
+                                            <div class="input-checkbox-block">
+                                                <div class="input-checkbox-feild input-checkbox-noSpace">
+                                                    <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)" class="input-check">
+                                                    <label for="Select All"></label>
+                                                </div>
+                                            </div>
+                                            <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
+                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 1" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                                src="assets/Img/icon_profile.svg"></button>
+                                        </div>
+                                    </th>
+                                    <th>{{"Lead ID" | translate}}</th>
+                                    <th>{{"Name" | translate}}</th>
+                                    <th>{{"Product Name" | translate}}</th>
+                                    <th>{{"Contact Info" | translate}}</th>
+                                    <!-- <th nowrap>{{"Mobile Number" | translate}}</th> -->
+                                    <th>{{"Assigned To" |  translate}}</th>
+                                    <th>{{"Lead Status"}}</th>
+                                    <th nowrap>{{"Created Date" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                    <th class="text-center">{{"Action" | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let row of leadsList; let i = index">
+                                    <td align="center" class="icon_allAssignLead_td">
+                                        <div class="input-checkbox-feild input-checkbox-noSpace">
+                                            <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
+                                            <label for={{i}}></label>
+                                        </div>
+                                        <!--<input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" >-->
+                                    </td>
+                                    <td>{{row.leadNumber}}</td>
+                                    <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
+                                    <td><span class="text-break-w200">{{row.interestedProductName}}</span></td> 
+                                    <td>{{row?.phoneNumber}}<br />
+                                        <span class="text-break-w200" title="{{ row.email }}">{{ row.email }}</span>                                    
+                                    </td>
+                                    <td> {{row?.leadAssignee||'-'}}</td>
+                                    <td>{{row.leadStatus ? row.leadStatus : '-'}}</td>
+                                    <td>{{formatCreatedOn(row.createdon)}}</td>
+                                    <td>
+                                        <div class="btn_groupAction lead_btnList justify-content-center">
+                                            <button type="button" id="assignto2" name="assignto2" class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
+                                                    src="assets/Img/icon_profile.svg" /></button>
+                                            <button type="button" id="updatestatus" name="updatestatus" class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
+                                                     src="assets/Img/icon_add_notes.svg"></button>
+                                            <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote"><img
+                                                     src="assets/Img/icon_savenew_subquote.svg">        
+                                            </button>
+                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                                src="assets/Img/icon_download_grey.svg">        
+                                           </button>
+                                            <mat-menu #moreMenu="matMenu"
+                                                class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                    <ul class="actionItemsMain">
+                                                        <li class="actionItem">
+                                                            <a (click)="markDuplicate(row.leadNumber)">
+                                                                <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
+                                                                <span>{{"Mark Duplicate" | translate}}</span></a>
+                                                        </li>
+                                                        <li class="actionItem">
+                                                            <a (click)="showAuditTrailDialog(row.leadNumber)">
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
+                                                                    alt="Share via email">
+                                                                <span>{{"View audit trail" | translate}}</span></a>
+                                                        </li>
+                                                        <li class="actionItem">
+                                                            <a>
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
+                                                                    alt="Share via email">
+                                                                <span>{{"Quick Quote" | translate}}</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </mat-menu>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let row of leadsList; let i = index">
+                        <header>
+                            <div class="card_insureInfo">
+                                <h6>
+                                    <div class="insureName" title="{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
+                                    </div>
+                                </h6>
+                                <div class="item_productName">{{ row.interestedInPlan }}</div>
+                            </div>
+                            <div class="card_btnGroup">
+                                <div class="btn_groupAction ">
+                                    <button type="button" id="gridassignto" name="gridassignto" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
+                                        class="btn_action btn_editAction"><img
+                                            src="assets/Img/icon_profile.svg"></button>
+                                    <button type="button" id="gridupdatestatus" name="gridupdatestatus" value="Update Status" title="Update Status" (click)="updateLeadStatus(row.leadNumber)"
+                                        class="btn_action btn_renewalAction"><img
+                                            src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" id="gridaddnote" name="gridaddnote" value="Add Notes" title="Add Notes" (click)="addNotesLead(row.leadNumber)"
+                                        class="btn_action btn_renewalAction"><img
+                                            src="assets/Img/icon_add_notes.svg"></button>
+                                    <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
+                                    <button type="button" id="gridquickquote" name="gridquickquote" class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote"  (click)="redirectProducts(row)"><img
+                                        src="assets/Img/icon_savenew_subquote.svg"></button>
+                                        <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
+                                            src="assets/Img/icon_download_grey.svg">        
+                                       </button>
+                                        <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                            <ul class="actionItemsMain">
+                                                <li class="actionItem">
+                                                    <a (click)="editLead(row.leadNumber)"> 
+                                                        <img src="assets/Img/icon_download2_grey.svg" alt="Download">
+                                                        <span>Edit Lead</span></a>
+                                                </li>
+                                                <li class="actionItem">
+                                                    <a (click)="markDuplicate(row.leadNumber)">  
+                                                        <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
+                                                        <span>Mark Duplicate</span></a>
+                                                </li>
+                                                <li class="actionItem">
+                                                    <a (click)="showAuditTrailDialog(row.leadNumber)">
+                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
+                                                        <span>View audit trail</span></a>
+                                                </li>
+                                                <li class="actionItem">
+                                                    <a>
+                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
+                                                        <span>Quick Quote</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </mat-menu> -->
+                                </div>
+                            </div>
+                        </header>
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Contact Info" | translate}}</div>
+                                <div class="item_value">{{ row.phoneNumber }}</div>
+                                <div class="item_value">{{ row.email }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Assigned To" | translate}}</div>
+                                <div class="item_value">{{row?.leadAssignee||'-'}}</div>
+                            </div>
+
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Product Name" | translate}}</div>
+                                <div class="item_value">{{ row.interestedProductName }}</div>
+                            </div>
+
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Created Date" | translate}} <small>{{"(dd-mm-yyyy)" | translate}}</small></div>
+                                <div class="item_value">{{formatCreatedOn(row.createdon)}}</div>
+                            </div>
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Campaign Name</div>
+                                <div class="item_value">{{ row.campaignName}}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Campaign Number</div>
+                                <div class="item_value">{{ row.campaignNumber }}</div>
+                            </div> -->
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Lead ID" | translate}}</div>
+                                <div class="item_value">{{ row.leadNumber }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Lead Status" | translate}}</div>
+                                <div class="item_value">{{row.leadStatus ? row.leadStatus : '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tableNav" *ngIf="totalRecords > 0">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                    [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                    class="custom-paginator my-paginator">
+                                </p-paginator>
+                            </li>
+                            <li class="pageCountMain">
+                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > countsList.totalCount
+                                    ? countsList.totalCount : first + rows}}</span> of <span
+                                    class="pageCountTotal">{{countsList.totalCount}} {{"entries" | translate}}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalCount === 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>{{"No data found" | translate}}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+ 
+ 
+<div class="modal fade popupModalMain modal-bgWhite" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalLabel">{{"Assigne Leads" | translate}}</h5>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>-->
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-block form-floating input-block-renew">
+                            <select class="form-select input-selectBox" formControlName="selectedAgentCode" id="selectedAgentCode" name="selectedAgentCode">
+                                <option *ngFor="let item of agentCodes " [value]="item">
+                                    {{ item | translate }}
+                                </option>
+                            </select>
+                            <label for="">{{"Select Agent" | translate}}</label>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="modal-footer modal_footerBtnGroup_column">
+                <div class="body_flex_row container-fluid">
+                    <button type="button" id="cancel" name="cancel"  class="btn_white_cancel btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >{{"Cancel" | translate}}</button>
+                    <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [disabled]="agentCodes.length===0">{{"Save" | translate}}</button>
+                </div>
+                <!-- <div class="d-flex justify-content-center">
+                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >{{"Cancel" | translate}}</button>
+                </div> -->
+            </div>
+         </form>
+        </div>
+    </div>
+</div>
+  
+  
+  
+    <div class="card flex justify-content-center no-border">
+        <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
+            [style]="{ width: '75rem', height: '30rem' }">
+            <span class="p-text-secondary block mb-5">{{"Provide Lead Number for which the current Lead Number is duplicate" | translate}}</span>
+            <form (ngSubmit)="markDuplicateFormSubmit()" [formGroup]="markDuplicateForm" novalidate autocomplete="false">
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <div class="input-block form-floating input-block-renew">
+                                    <input class="form-control input-textBox" id="leadId" placeholder="" type="text"
+                                        formControlName="leadId">
+                                    <label>{{"Enter Lead ID" | translate}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    
+                <div class="row mt-4">
+                    <div class="col-12 btn_container_leads">
+                        <button type="button" id="leadcancel" name="leadcancel" class="btn_red" (onClick)="markDuplicatePopup = false">{{"Cancel" | translate}}</button>
+                        <button type="submit" id="markduplicate" name="markduplicate" class="btn_red">{{"Mark Duplicate" | translate}}</button>
+                    </div>
+                </div>
+            </form>
+        </p-dialog>
+    </div>
+
+    <div class="card flex justify-content-center no-border">
+        <p-dialog header="Audit Trail Details" [modal]="true" [(visible)]="displayAuditTrailPopup"
+            [style]="{ width: '75rem', height: '45rem' }">
+
+            <table class="table table-border table-search">
+                <thead>
+                    <tr>
+                        <th>{{"Date" | translate}}</th>
+                        <th>{{"Time" | translate}}</th>
+                        <th>{{"Action" | translate}}</th>
+                        <th>{{"Action Owner" | translate}}</th>
+                        <th>{{"Action Recipient" | translate}}</th>
+                        <th>{{"Action Type" | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr *ngFor="let row of auditTrails; let i = index" >
+                        <td>{{row.actionDate}}</td>
+                        <td>{{row.actionTime}}</td>
+                        <td>{{row.action}}</td>
+                        <td>{{row.actionOwnerCode}}</td>
+                        <td>{{row.actionRecipientCode}}</td>
+                        <td>{{row.actionType}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </p-dialog>
+
+    </div>
+
+    
+      

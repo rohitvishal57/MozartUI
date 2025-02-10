@@ -73,6 +73,9 @@ export interface IFullQuoteMapping {
     lrFlag:string
     deductibleAmount:string
     gstIn:string
+    affiliateEmployeeId : string
+    isAffiliateEmployee:string
+    nameOfTheAffiliate : string
 }
 
 export interface InsuredMemberDetail {

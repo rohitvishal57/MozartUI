@@ -13,6 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GalleriaThumbnails } from 'primeng/galleria';
 import { error } from 'jquery';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-proposals-list',
@@ -81,6 +82,7 @@ export class ProposalsListComponent {
   }
 
   searchApplied: boolean = false;
+  pageHeading : string = "My Proposals";
 
   constructor(
     private proposalService: ProposalsService,
@@ -90,7 +92,8 @@ export class ProposalsListComponent {
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private yatraService : YatraService
   ) { }
 
   ngOnInit(): void {
@@ -173,6 +176,7 @@ export class ProposalsListComponent {
 
 
   getProposal(){
+    this.pageHeading ='My Proposals';
     this.countsList = [];
     this.totalRecords = 0;
     this.productsList.forEach((product) => (product.selected = false));
@@ -225,6 +229,7 @@ export class ProposalsListComponent {
   }
 
   getQuoteList(clean : boolean) {
+    this.pageHeading = 'My Quotes';
     if(clean){
     this.countsList = [];
     this.totalRecords = 0;
@@ -825,6 +830,35 @@ export class ProposalsListComponent {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  sharePaymentLink(proposalInfo: any) {
+    let requestBody: any = {};
+
+    requestBody.firstName = proposalInfo.firstName;
+    requestBody.lastName = proposalInfo.lastName;
+    requestBody.agentcode = this.agentCode;
+    requestBody.emailId = proposalInfo.proposerEmail;
+    requestBody.productName = proposalInfo.productVarientName;
+    requestBody.pNumber = proposalInfo.proposalNumber;
+    requestBody.businessType = 'NB';
+    requestBody.productCode = proposalInfo.productVarientName; 
+    requestBody.premiumAmount = proposalInfo.totalPremiumInt.toString();
+    requestBody.mobilenumber = proposalInfo.mobileNo;
+
+    this.yatraService.sharePaymentLink(requestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          this.toast.success({ detail: "Success", summary: response.data.message, duration: 2000 });
+        } else {
+          this.toast.error({ detail: "Error", summary: response.data.message, duration: 2000 });
+        }
+
+      }, (error) => {
+        console.log('failed to send communication', error);
+        this.toast.error({ detail: "Error", summary: "Failed to send communincation", duration: 2000 });
+
+      });
   }
 
 }

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 // import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { RugService } from '../rug.service';
 import { NgToastService } from 'ng-angular-popup';
 import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
+import { CommonService } from 'src/app/services/common.service';
 // import { SuccessPopupComponent } from 'src/app/shared/components/success-popup/success-popup.component';
 // import { ExcelServiceService } from 'src/app/core/services/excel-service.service';
 
@@ -162,7 +164,8 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
   agentDesignation: any;
   agentCode:any;
   location:any;
-  constructor(private dialog: MatDialog, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private rugService: RugService,
+  formSequence: any;
+  constructor(private dialog: MatDialog, public common: CommonService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private rugService: RugService,
     private toast: NgToastService
   ) { }
   async ngOnInit() {
@@ -286,6 +289,20 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
         console.error(err);
       }
     });
+
+          try {
+            const reqData = {
+              partnerId: "59",
+              productId: "36",
+            };
+            const res = await firstValueFrom(this.common.Getformsequence(reqData));
+            console.log(res);
+            this.formSequence = JSON.parse(res.data.formSequence);
+            console.log(this.formSequence);
+            localStorage.setItem("formIndex", "0");
+          } catch (err) {
+            console.error(err);
+          }
     // await this.apiService.getApiCall(environment.ENDPOINTS.RENEWAL_GET_ALL_DISPOSITION).subscribe(
     //   (response: any) => {
     //     if (response.isSuccess == true && response.statusCode == 200) {
@@ -339,6 +356,8 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
       //GHI-71-24-0013306-000
       let reqObj = {
         certificate_number: event.target.value,
+        agentCode: this.agentCode
+
       }
       this.rugService.checkGroupRenewalData(reqObj).subscribe({
         next: (res: any) => {
@@ -347,10 +366,12 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
           console.log(res);
           if (res.isSuccess == true && res.statusCode == 200) {
             res = res.data
+            
                     this.groupRenewalFormCheck.patchValue({
                       renewalStatus: res.renewalStatus,
                     })
                     this.leadId = res.leadId
+                    localStorage.setItem("leadId", this.leadId);
                   }
                   if (res.isSuccess == false && res.statusCode == 500) {
                     if(res.groupRenewalData.error.length > 0 ){
@@ -571,16 +592,26 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
       disposition: this.getDispositionName(this.groupRenewalFormCheck.get('disposition')?.value),
       subDispositon: this.getSubDispositionName(this.groupRenewalFormCheck.get('subDisposition')?.value),
       remarks: this.groupRenewalFormCheck.get('remark')?.value,
-      currentUser: this.loginData?.userName
+      currentUser: this.agentCode
     }
     this.loading = true;
+    const productData :any = {
+      partnerId: 59,
+      productId: 36,
+      proposalNum: this.leadId
+    }
     this.rugService.SaveRenewalProposalData(renewalObj).subscribe({
       next: (res: any) => {
         console.log(res);
         res = JSON.parse(res.data)
         console.log(res);
         if (res.isSuccess == true && res.statusCode == 200) {
-          this.router.navigate(['rug/group_renewal_modify_view/'+ this.leadId]);
+          if(this.agentCode == "467892"){
+            this.router.navigate(['rug'], {
+              state: { productData: productData, formSequence: this.formSequence}
+           });
+          }
+          // this.router.navigate(['rug/group_renewal_modify_view/'+ this.leadId]);
                 }
         if (res.isSuccess == false && res.statusCode == 500) {
           if(res.groupRenewalData.error.length > 0 ){

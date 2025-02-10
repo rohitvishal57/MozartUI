@@ -113,4 +113,52 @@ export class RugService {
       const  getAllDispositions = this.configService.config.baseUrl1 + this.configService.config.getAllDispositionsRenewal;
       return this.httpService.get(getAllDispositions);
     }
-}
+
+    sendHdfcOTP(reqData : any){
+      const  sendOtpRequestURL = this.configService.config.baseUrl1 + this.configService.config.sendOtpHdfc;
+      return this.httpService.post(sendOtpRequestURL,reqData);
+    }
+
+    validateHdfcOTP(reqData : any){
+      const  validateRequestURL = this.configService.config.baseUrl1 + this.configService.config.validateHdfcOTP;
+      return this.httpService.post(validateRequestURL,reqData);
+    }
+
+    sendCommunication(reqData : any){
+      const  sendCommunicationURL = this.configService.config.baseUrl1 + this.configService.config.sendCommunication;
+      return this.httpService.post(sendCommunicationURL,reqData);
+    }
+    
+    
+    generateProposal(reqData : any){
+      const  generateProposalURL = this.configService.config.baseUrl1  + this.configService.config.generateProposal;
+      return this.httpService.post(generateProposalURL,reqData);
+    }
+    
+
+    createBataLeads(reqdata: any) {
+      const createBatalead = this.configService.config.baseUrl + this.configService.config.createBataleads;
+      return this.httpService.post(createBatalead, reqdata)
+    }
+
+    getEMployeeDetails(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getEmployeeDetails;
+      return this.httpService.post(req, reqdata);
+    }
+
+    getProdcutDetails(){
+      const  getProduct = this.configService.config.baseUrl1 + this.configService.config.gethdfcProductDetails;
+      return this.httpService.get(getProduct);
+    }
+
+    getSumInsuredByProduct(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getSumInsuredByProductSelection;
+      return this.httpService.post(req, reqdata);
+    }
+
+    getCampaignName(reqdata:any){
+      const req = this.configService.config.baseUrl + this.configService.config.getCampaignName;
+      return this.httpService.post(req, reqdata);
+    }
+
+  }

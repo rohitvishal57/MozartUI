@@ -160,12 +160,11 @@
                                                     <td>{{ formatPolicyStartDate(policy.policyEndDate) }}</td>
                                                     <td>
                                                         <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
-                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
-                                        'info_status_red': policy.policyStatus === 'RJ' || policy.policyStatus === 'Rejected' || policy.policyStatus !=='Inforced',
-                                        'info_status_gray': policy.policyStatus === 'CN' || policy.policyStatus === 'Cancelled'
-                                      }">
-                                      {{ policy.policyStatus }}
+                                                            'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
+                                                            'info_status_red': policy.policyStatus === 'Pre-Issuance Hold' || policy.policyStatus === 'Pending KYC',
+                                                            'info_status_nobg': policy.policyStatus != 'Pending KYC' && policy.policyStatus != 'Pre-Issuance Hold' && policy.policyStatus != 'Inforced'
+                                                          }">
+                                      {{ policy.policyStatus?policy.policyStatus:'-' }}
                                     </span>
                                                     </td>
                                                     <td>
@@ -294,16 +293,15 @@
                                     <div class="item_lable">{{"Premium" | translate}}</div>
                                     <div class="item_value">{{policy.totalPremium}}</div>
                                 </div>
-                                <div class="userInfoItem userInfoItem-30">
+                                <div class="userInfoItem">
                                     <div class="item_lable">{{"Status" | translate}}</div>
                                     <span class="info_status" [ngClass]="{
                                         'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
-                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
-                                        'info_status_red': policy.policyStatus == 'RJ' || policy.policyStatus === 'Rejected' || policy.policyStatus !=='Inforced',
-                                        'info_status_gray': policy.policyStatus == 'CN' || policy.policyStatus === 'Cancelled'
+                                        'info_status_red': policy.policyStatus === 'Pre-Issuance Hold' || policy.policyStatus === 'Pending KYC',
+                                        'info_status_nobg': policy.policyStatus != 'Pending KYC' && policy.policyStatus != 'Pre-Issuance Hold' && policy.policyStatus != 'Inforced'
                                       }">
-                                      {{ policy.policyStatus }}
-                                    </span>
+                  {{ policy.policyStatus?policy.policyStatus:'-' }}
+                </span>
                                 </div>
                                 <div class="menu_morePolicy">
                                     <button type="button" id="View" name="View" class="btn_action btn_moreActionCard" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
@@ -366,10 +364,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div *ngIf="errorMessages.length > 0">
+                        <div *ngIf="errorMessages!='' ">
                             <p class="text-danger">{{ errorMessages }}</p>
                           </div>
-                        <div *ngIf="errorMessages.length === 0">
+                        <div *ngIf="errorMessages =='' ">
                             <p>Select the data fields you wish to download.</p>
                             <div class="input-checkbox-feild" *ngFor="let document of documents">
                                 <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
@@ -381,10 +379,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button *ngIf="errorMessages.length === 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
+                        <button *ngIf="errorMessages == '' " type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew" (click)="downloadPolicyKit()">
                             {{"Download" | translate}}
                         </button>
-                        <button *ngIf="errorMessages.length > 0" type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
+                        <button *ngIf="errorMessages != '' " type="button" id="next" name="next" value="next"  data-bs-dismiss="modal" class="btn_red btn_redRenew">
                             {{"Ok" | translate}}
                         </button>
                     </div>
@@ -539,7 +537,7 @@
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Date Of Birth" | translate}}</div>
-                                <div class="item_value">{{ member.dateOfBirth | date:'dd-mm-yyyy' || '-' }}</div>
+                                <div class="item_value">{{ member.dateOfBirth | date:'dd-MM-yyyy' || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Gender" | translate}}</div>
@@ -571,7 +569,7 @@
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Date" | translate}}</div>
-                                <div class="item_value">{{ claim.dateofClaim | date:'dd-mm-yyyy' || '-' }}</div>
+                                <div class="item_value">{{ claim.dateofClaim | date:'dd-MM-yyyy' || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Claim Amount" | translate}}</div>
@@ -611,7 +609,7 @@
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Date" | translate}}</div>
-                                <div class="item_value">{{ service.requestedOn| date:'dd-mm-yyyy' || '-' }}</div>
+                                <div class="item_value">{{ service.requestedOn| date:'dd-MM-yyyy' || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems ">
                                 <div class="item_lable">{{"Status" | translate}}</div>

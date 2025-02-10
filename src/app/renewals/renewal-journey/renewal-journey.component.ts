@@ -600,8 +600,6 @@ export class RenewalJourneyComponent {
             }
 
           }
-          
-          console.log(control , control.value);
           const bank = this.formData.accountNumber?.trim() && this.formData.ifscCode?.trim() && this.formData.bankName?.trim();
           const nominee = this.formData.nomineeFirstName?.trim() && this.formData.nomineeDob?.trim() && this.formData.nomineeRelationWithProposer?.trim();
             if (section.sectionTitle === "Bank Account Details" || section.sectionTitle === "Nominee Details") {
@@ -624,6 +622,10 @@ export class RenewalJourneyComponent {
             }          
             if (control.disabled) {
               this.renewalFormGroup.get(control.name)?.disable();
+            }
+            if(bank && control.name == "accountNumber"){
+              control.type = "text";
+              control.validators =[];
             }
         });
       });      
@@ -1340,18 +1342,29 @@ export class RenewalJourneyComponent {
     console.log(this.renewalFormGroup.value, this.form, this.renewalFormGroup);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-      // console.log("formData", this.formData);
-      // this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
       if (this.form.saveBtnFunction) {
         await this.resolveMethod(this.form.saveBtnFunction);
       } else if (control != null && control.onClickMethod) {
         await this.resolveMethod(control.onClickMethod);
       }
-
       if (this.getFormIndexValue() < this.formSequence.length - 1 && this.form.saveBtnFunction != "generatehalfqoute") {
-        this.incrementIndex();
-        this.getFormDataFromFormSequence();
+        let currentState = history.state;
+        let updatedState = { ...currentState,
+          formData: this.encryptionService.encrypt(this.renewalFormGroup.getRawValue()),
+          formIndex: (parseInt(currentState.formIndex) + 1).toString(),
+        };
+        Object.assign(history.state, updatedState);
+
+        this.router.navigateByUrl(this.router.url, { state: updatedState });
+
+        setTimeout(() => {
+          console.log("Updated formIndex:", history.state.formIndex); // Now should reflect the updated value
+
+          this.incrementIndex();
+          this.getFormDataFromFormSequence();
+        }, 50);
       }
+      
     }
     else {
       console.log('Form is invalid', this.renewalFormGroup);
@@ -2786,24 +2799,6 @@ export class RenewalJourneyComponent {
     this.renewalFormGroup.get(control.name)?.setValue(control.value);
   }
   
-// async getAllBankDetails(control: any) {
-//   if (control.options.length > 0) return;
-//   try {
-//     const res: any = await lastValueFrom(this.yatraService.getAllBankDetails());
-
-//     const matchingOption = res.data.find((opt: any) => opt.value === control.value);
-//     if (matchingOption) {
-//       control.value = JSON.stringify(matchingOption);
-//       console.log(control.value, JSON.stringify(matchingOption));
-//     }
-//     control.options = res.data;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// }
- 
-  
-
   getBankCity(event: any, otherControl: any) {
     otherControl.value = "";
     otherControl.options = [];
@@ -3095,6 +3090,16 @@ export class RenewalJourneyComponent {
             if(res.data.errorMessage){
               this.toast.success({ detail: 'Success', summary: res.data.errorMessage || 'Success', duration: 3000 });
             }
+            this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+            let currentState = history.state;
+            let updatedState = {
+              ...currentState,
+              formData: this.encryptionService.encrypt(this.renewalFormGroup.getRawValue()),
+              formIndex: (parseInt(currentState.formIndex) + 1).toString(),
+            };
+            this.router.navigate([], {
+              state: updatedState,
+            });
             this.incrementIndex();
             this.getFormDataFromFormSequence();
           }else if (res.isSuccess && res.statusCode === 200 && !res.data.isFullQuoteSuccess) {
@@ -3109,6 +3114,16 @@ export class RenewalJourneyComponent {
             if(res.data.errorMessage){
               this.toast.warning({ detail: 'Warning', summary: res.data.errorMessage || 'policy issuance failed.', duration: 3000 });
             }
+            this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+            let currentState = history.state;
+            let updatedState = {
+              ...currentState,
+              formData: this.encryptionService.encrypt(this.renewalFormGroup.getRawValue()),
+              formIndex: (parseInt(currentState.formIndex) + 1).toString(),
+            };
+            this.router.navigate([], {
+              state: updatedState,
+            });
             this.incrementIndex();
             this.getFormDataFromFormSequence();
           }
@@ -4315,6 +4330,16 @@ export class RenewalJourneyComponent {
     this.renewalService.generatehalfqoute(halfQuote).subscribe(
         (res: any) => {
           if(res.data.isSuccess){
+            this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+            let currentState = history.state;
+            let updatedState = {
+              ...currentState,
+              formData: this.encryptionService.encrypt(this.renewalFormGroup.getRawValue()),
+              formIndex: (parseInt(currentState.formIndex) + 1).toString(),
+            };
+            this.router.navigate([], {
+              state: updatedState,
+            });
             this.incrementIndex();
             this.getFormDataFromFormSequence();
             this.toast.success({ detail: "Success", summary: res.data.message || "half quote generated successfully.", duration: 3000 });

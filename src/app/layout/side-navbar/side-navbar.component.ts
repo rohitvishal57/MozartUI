@@ -25,7 +25,7 @@ export class SideNavbarComponent {
     { id: 6, displayName: 'Renewals', path: 'renewal/renewalList', imagePath: 'assets/Img/icon_bullet_list_grey.svg' },
     { id: 7, displayName: 'Customers', path: 'customers/customersList', imagePath: 'assets/Img/icon_menu_customers_grey.svg' },
     { id: 8, displayName: 'Proposals', path: 'proposals/proposalsList', imagePath: 'assets/Img/icon_menu_proposal.png' },
-    { id: 9, displayName: 'My Performance', path: 'performance/my-performance', imagePath: 'assets/Img/icon_menu_performance.png' },
+    // { id: 9, displayName: 'My Performance', path: 'performance/my-performance', imagePath: 'assets/Img/icon_menu_performance.png' },
     { id: 10, displayName: 'Upload Report', path: 'performance/upload-performance', imagePath: 'assets/Img/icon_menu_uploadreports.png' },
     { id: 11, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_menu_events.png' },
   ];
@@ -95,13 +95,7 @@ export class SideNavbarComponent {
     //   ];
     // }
     // Fetch allowed pages from AuthService
-    if(this.agentCode == "467892"){
-      this.sideMenuList = [
-        { id: 1, displayName: 'Group Renewal', path: 'rug/group_renewal', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-        { id: 2, displayName: 'Reneal Phase 2 Leads', path: 'rug/group-renewal-phase-2-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
-    
-      ];
-    }else{
+
       
       const allowedPages = this.authService.getAllowedModules();
       
@@ -110,7 +104,7 @@ export class SideNavbarComponent {
         this.sideMenuList=[];
         this.sideMenuList = allowedPages;
       }
-    }
+    
 
     // Check initial expansion based on window width
     this.isExpanded = window.innerWidth < 1024;
@@ -120,8 +114,17 @@ export class SideNavbarComponent {
       this.isActive = state;
       this.loginService.setValue(state)
     });
-  }
+    const channel = localStorage.getItem('channel');
 
+    if (channel === 'agency' || channel === 'AGENCY') {
+      this.sideMenuList.push({
+        id: 9,
+        displayName: 'My Performance',
+        path: 'performance/my-performance',
+        imagePath: 'assets/Img/icon_menu_performance.png'
+      });
+    }
+  }  
   // Handle route redirection
   redirect(route: string): void {
     if (route) {

@@ -165,12 +165,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       });
     });
-
     this.isDesktop = this.screenSize > 768;
     this.agentCode = localStorage.getItem('agentCode');
     this.otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
     this.getPolicyNumbers();
     this.initForm();
+    this.caseCreationForm.get('asignedTeam')?.disable();
   }
 
   initForm() {
@@ -419,16 +419,16 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value === 'panNumber' || value === 'aadharNumber') {
       this.uploadDoc = true;
       this.showOtpSection = false;
-      this.isDisabled = false;
+      //this.isDisabled = false;
     } else {
       this.uploadDoc = false;
       this.showOtpSection = true;
-      this.isDisabled = true;
+     // this.isDisabled = true;
     }
 
     if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.showOtpSection = false;
-      this.isDisabled = false;
+     // this.isDisabled = false;
     }
 
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {
@@ -742,6 +742,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         this.fileSizeError = true;
         e.target.value = '';
         this.showNote = false;
+        this.selectedFile = null;
         return;
       }
   
@@ -759,6 +760,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showDocInfo = true;
     } else {
       this.showNote = true;
+      this.selectedFile = null;
     }
   }
 
@@ -833,13 +835,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
               duration: 5000
             });
             this.closeOtpPopup();
-            this.isDisabled = false;
-            this.sendOtptDisabled = true;
+            //this.isDisabled = false;
+            this.sendOtptDisabled = false;
           }  
           else {
             this.errorMessage = resp.message;
-            this.isDisabled = false;
-            this.sendOtptDisabled = false;
+            //this.isDisabled = false;
+            this.sendOtptDisabled = true;
             resp.message.includes("Your Account Has been locked") || resp.message.includes("You have Reached Maximum Number of Attempts") ? this.timerOn = false : this.timerOn = true;
           }
         },
@@ -927,6 +929,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = "";
     this.documentType = "";
     this.showDocInfo = false;
+    this.selectedFile = null;
   }
 
   onKey(event: KeyboardEvent, index: number) {
@@ -984,5 +987,34 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       });
     }
-  }  
+  }
+get isSubmitDisabled(): boolean {
+  const selectedType = this.caseCreationForm.get('endorsementType').value;
+  
+  const otpRequiredTypes = [
+    'alternateContactNumber', 
+    'internationalContactNumber', 
+    'primaryContactNumber', 
+    'memberPrimaryContactNumber', 
+    'memberAlternateContactNumber',
+    'email',
+    'alternateEmail',
+    'memberEmail',
+    'memberAlternateEmail'
+  ];
+  
+  const isFormInvalid = !this.caseCreationForm.valid;
+  
+  const isOtpNotValidated = otpRequiredTypes.includes(selectedType) && this.sendOtptDisabled;
+  
+  const isDocumentMissing =                                               // Check document upload for PAN and Aadhar
+    (selectedType === 'panNumber' || selectedType === 'aadharNumber') && 
+    (!this.selectedFile || this.isFilenotSelected);
+  
+  return (
+    isFormInvalid || 
+    isOtpNotValidated || 
+    isDocumentMissing
+  );
+}  
 }

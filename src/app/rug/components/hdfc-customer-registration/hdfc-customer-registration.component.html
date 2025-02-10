@@ -5,13 +5,13 @@
                 <!-- <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
                 </h2> -->
             </div>
-            <form (ngSubmit)="onCustomerValidationSubmit()" [formGroup]="customerValidations">
-                <section class="white_container mb-3">
+            <form [formGroup]="customerValidations">
+                <section class="white_container mb-3 white_container_CCD">
                     <div class="col-12 mb-4">
                         <h6 class="heading-16-red">{{"Customer Contact Details" | translate}}</h6>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber"
                                     placeholder="" formControlName="mobilenumber" type="text"
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-5">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" name="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
@@ -52,13 +52,13 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
-                            <button type="submit" id="save" name="save" class="btn_red col-md-3">{{"Submit" |
+                            <button type="submit" id="save" name="save" class="btn_red col-md-3" (click)="onsubmit()"  >{{"Submit" |
                                 translate}}</button>
                         </div>
                     </div>
                 </section>
             </form>
-            <section class="white_container mb-3">
+            <!-- <section class="white_container mb-3" >
                 <div class="col-12 mb-4">
                     <h6 class="heading-16-red">{{"Customer Details" | translate}}</h6>
                 </div>
@@ -142,7 +142,7 @@
                             translate}}</button>
                     </div>
                 </div>
-            </section>
+            </section> -->
         </div>
     </div>
 </main>

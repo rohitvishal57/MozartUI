@@ -18,6 +18,7 @@ import { PaymentInfoComponent } from '../payment-info/payment-info.component';
 import { CaptchaPopupComponent } from '../captcha-popup/captcha-popup.component';
 import { RugService } from 'src/app/rug/rug.service';
 import { AllProductContent } from '../constants/constant';
+import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
 declare var bootstrap: any;
 
 @Component({
@@ -155,6 +156,7 @@ export class RugDynamicFormComponent {
         this.leadId = this.paramLeadId.LeadId;
         this.partnerId = this.paramLeadId.PartnerId;
         this.productId = this.paramLeadId.ProductId;
+        console.log(this.leadId, this.partnerId, this.productId)
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
@@ -343,7 +345,7 @@ export class RugDynamicFormComponent {
         }
       });
     }
-    if (this.formSequence[0].formName == "Proposer Details" || this.formSequence[this.getFormIndexValue()].formId == 2) {
+    if (this.formSequence[0].formName == "Proposer Details" || this.partnerId == "45") {
       let familyConstructObj = {
         productCode: this.tsDetails.productCode
       }
@@ -527,9 +529,7 @@ export class RugDynamicFormComponent {
       this.yatraService.Getform(reqData).subscribe({
         next: (res: any) => {
           console.log(res);
-           this.form = JSON.parse(res.data.jsonFormData);
-         
-         
+           this.form = JSON.parse(res.data.jsonFormData);         
         
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);
@@ -945,7 +945,7 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.paymentMode);
         this.form.formSections.forEach((section: any) => {
           console.log(section);
-          if (section.sectionTitle == "Details of Your Policy" && this.bbdetails.paymentMode == "yes") {
+          if (section.sectionTitle == "Details of Your Policy" && this.bbdetails.paymentMode == "easyPay") {
             section.visible = false;
           }
           if(section.sectionTitle == "details of links"){
@@ -982,7 +982,10 @@ export class RugDynamicFormComponent {
           this.filteredPolicies = this.policyDetails.policyDetails.filter(
             (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
           );
-          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails.proposerDetails.proposerDetails.premium)
+          this.dynamicFormGroup.get('premium')?.setValue(this.policyDetails?.proposerDetails.proposerDetails.premium);
+          this.dynamicFormGroup.patchValue({
+            proposerEmailAddress:this.policyDetails?.proposerDetails.proposerDetails.emailAddress
+          })
 
           if(this.filteredPolicies.length == 2){
             this.d2cDetails = this.filteredPolicies[0]
@@ -1098,7 +1101,7 @@ export class RugDynamicFormComponent {
           // console.log(this.policyDetails);
           // console.log(this.filteredPolicies)
         }
-        if(this.getFormIndexValue() == 0 && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
+        if(this.getFormIndexValue() == 0 && this.partnerId == "16" && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
           console.log(this.bbdetails)
           this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
             // const selfResult = this.centimetersToFeetAndInches(item.height);
@@ -1136,7 +1139,7 @@ export class RugDynamicFormComponent {
 
           });
         }
-        if (this.productId == "29" && this.partnerId == "45" && this.formSequence[this.getFormIndexValue()].formId == 2) {
+        if (this.productId == "29" && this.partnerId == "45" && this.formSequence[this.getFormIndexValue()].formName == "Policy Details") {
           this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
             const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
             const memberGroup = insuredMembersArray.at(index) as FormGroup;
@@ -1169,7 +1172,7 @@ export class RugDynamicFormComponent {
             }
           })
         }
-        if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
+        if(this.formSequence[this.getFormIndexValue()].formName == "Proposer Details" && this.partnerId == "16"){
           // insuredMembersArray.at(0).get('firstName')?.disable();
           this.dynamicFormGroup.get('preFix')?.disable();
           this.dynamicFormGroup.get('customerFirstName')?.disable();
@@ -1181,14 +1184,14 @@ export class RugDynamicFormComponent {
           this.dynamicFormGroup.get('proposerEmailAddress')?.disable();
           this.dynamicFormGroup.get('proposerAddress')?.disable();
       }
-      if(this.formSequence[this.getFormIndexValue()].formId == 4 && this.partnerId == "45"){
+      if(this.formSequence[this.getFormIndexValue()].formName == "Customer Details" && this.partnerId == "45"){
         this.dynamicFormGroup.patchValue({
           preFix: this.tsDetails.proposerGender == "M" ? "Mr" : "Ms"
         })
         this.dynamicFormGroup.get('preFix')?.disable();
         this.dynamicFormGroup.get('proposerGender')?.disable();
       }
-        if(this.getFormIndexValue() == 1 && (this.formSequence[0].formName == "Proposer Details")){
+        if(this.partnerId == "45" && (this.formSequence[this.getFormIndexValue()].formName == "Policy Details")){
           console.log(this.tsDetails)
           this.tsDetails.insuredMemberDetails.forEach((item: any, index: any) => {
             // const selfResult = this.centimetersToFeetAndInches(item.height);
@@ -1227,7 +1230,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
       }
       console.log(this.dynamicFormGroup.value);
-      if (this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16") {
+      if (this.formSequence[this.getFormIndexValue()].formName == "Proposer Details" && this.partnerId == "16") {
         console.log("Customer Details");
         console.log(this.dynamicFormGroup.value);
         console.log(this.bbdetails);
@@ -1250,7 +1253,7 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
-      if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.partnerId == "45") {
+      if (this.formSequence[this.getFormIndexValue()].formName == "Agent Details" && this.partnerId == "45") {
         let baseCallerRequest = {
           "baseCallerId": this.agentCode.toString()
         }
@@ -1284,7 +1287,7 @@ export class RugDynamicFormComponent {
           }
         });
       }
-      if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
+      if (this.partnerId == "16" && this.formSequence[this.getFormIndexValue()].formName == "Nominee Details") {
         this.dynamicFormGroup.patchValue({
           nomineeShare: this.bbdetails.defaultShare,
           relationWithProposer: this.bbdetails.relationWithProposer,
@@ -1302,7 +1305,7 @@ export class RugDynamicFormComponent {
         console.log(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
-      if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
+      if (this.partnerId == "16" && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
         this.dynamicFormGroup.patchValue({
@@ -1326,10 +1329,52 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('consentDeclare')?.disable();
       }
-      if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
+      if(this.partnerId == "16" && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       // this.flattenObject(this.formData);
+      
+      if(this.productId == 36 ){
+
+        Object.keys(this.d2cDetails).forEach((key) => {
+          if (key !== 'insuredMemberDetails') {
+            // Check if the control exists and update its value
+            if (this.dynamicFormGroup.contains(key)) {
+              this.dynamicFormGroup.get(key)?.patchValue(this.d2cDetails[key]);
+            }
+          }
+        });
+       
+        
+        // if(this.getFormIndexValue() == 0){
+        //   this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+        //     // const selfResult = this.centimetersToFeetAndInches(item.height);
+        //     const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+        //     const formGroup = insuredMembersArray.at(index) as FormGroup;
+        //     // console.log(insuredMembersArray?.value);
+        //     // if(insuredMembersArray.value[index].relation == item.relation){
+        //       insuredMembersArray.at(index).patchValue({
+        //         // name: item.name,
+        //         // lastName: item.name,
+        //         // dob: item.dob,
+        //         // gender: item.gender,
+        //         // memberAge: this.getAgeFromDOB(item.dob),
+        //         // weight: item.weight,
+        //         // height: item.height,
+        //         // heightInches: item.heightInches
+        //         firstName: item.firstName,
+        //         lastName: item.lastName,
+        //         dob: item.dob,
+        //         gender: item.gender,
+        //         salutation:item.salutation,
+        //         memberAge:  this.getAgeFromDOB(item.dob),
+        //         // height: selfResult.feet !== 0 ? selfResult.feet : null,
+        //         // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
+        //       });
+        //     // }
+        //   });
+        // }
+      }
       
     }
   }
@@ -1563,7 +1608,7 @@ export class RugDynamicFormComponent {
                   if(memberGroup.get(selectedControl.name)?.value == true && dependentControlNames.includes(control.name)){
                       control.visible = true;
                       control.visibleLabel = true;
-                      if(this.formSequence[this.getFormIndexValue()].formId == 9){
+                      if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
                         Object.entries(this.tsDetails.insuredMemberDetails[index]).forEach(([key, value]) => {
                           if (key === control.name) {
                             memberGroup.get(control.name)?.setValue(value);
@@ -2208,7 +2253,7 @@ export class RugDynamicFormComponent {
                   })
                 })
                 appointeeNameControl?.setValidators([Validators.required]);
-                appointeeMobileNumberControl?.setValidators([Validators.required]);
+                appointeeMobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]);
                 appointeeDobControl?.setValidators([Validators.required]);
                 relationWithNomineeControl?.setValidators([Validators.required]);
               }else{
@@ -2842,6 +2887,13 @@ export class RugDynamicFormComponent {
                 if (tsRelationCodes.includes(option.id)) {
                   this.logSelection(null, option, control);
                 }
+              }else if(this.formSequence[0].formName == "Proposal Detials" && this.productId == "36"){
+                console.log(this.tsDetails);
+                controlGroup.addControl(option.value, new FormControl((d2cRelationCodes.includes(option.memberRelationCode)) ? true : false));
+                // controlGroup.get('Self')?.disable();
+                if (d2cRelationCodes.includes(option.memberRelationCode)) {
+                  this.logSelection(null, option, control);
+                }
               } else {
                 controlGroup.addControl(option.value, new FormControl(false));
               }
@@ -3134,10 +3186,10 @@ export class RugDynamicFormComponent {
                           control.get('salutation').disable();
                           }
                       }
-                        control.get('mobileNumber')?.clearValidators();
-                        control.get('mobileNumber')?.setValidators([Validators.pattern('^[6-9]\\d{9}$')]);
-                        // // Update the validation state
-                        control.get('mobileNumber')?.updateValueAndValidity();
+                        // control.get('mobileNumber')?.clearValidators();
+                        // control.get('mobileNumber')?.setValidators([Validators.pattern('^[6-9]\\d{9}$')]);
+                        // // // Update the validation state
+                        // control.get('mobileNumber')?.updateValueAndValidity();
                       });
                   }
                 }
@@ -3319,7 +3371,7 @@ export class RugDynamicFormComponent {
       insuredMembersArray.at(0).get('firstName')?.disable();
       insuredMembersArray.at(0).get('mobileNumber')?.disable();
       console.log(this.formSequence[this.getFormIndexValue()].formName);
-      if(this.formSequence[this.getFormIndexValue()].formId == 2 && this.partnerId == "16"){
+      if(this.formSequence[this.getFormIndexValue()].formName == "Proposer Details" && this.partnerId == "16"){
                 // insuredMembersArray.at(0).get('firstName')?.disable();
                 this.dynamicFormGroup.get('customerFirstName')?.disable();
                 this.dynamicFormGroup.get('customerLastName')?.disable();
@@ -3423,7 +3475,8 @@ export class RugDynamicFormComponent {
         insuredMembersArray.at(0).get('salutation')?.disable();
       }
     }
-    if (this.formSequence[0].formName == "Proposer Details" && (this.formSequence[this.getFormIndexValue()].formId == 2 || this.formSequence[this.getFormIndexValue()].formId == 9)) {
+    console.log(this.formSequence[this.getFormIndexValue()].formName);
+    if ((this.formSequence[this.getFormIndexValue()].formName == "Policy Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary") && this.partnerId == "45") {
       const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       console.log(insuredMembersArray.value);
       if (insuredMembersArray.value.length === this.tsDetails.insuredMemberDetails.length) {
@@ -3450,7 +3503,7 @@ export class RugDynamicFormComponent {
         })
         insuredMembersArray.at(0).get('gender')?.disable();
         console.log(this.formSequence[this.getFormIndexValue()].formName);
-        if (this.formSequence[this.getFormIndexValue()].formId == 9 && this.partnerId == "45") {
+        if (this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" && this.partnerId == "45") {
           this.dynamicFormGroup.get('occupation')?.disable();
           this.dynamicFormGroup.get('sumInsured')?.disable();
           this.dynamicFormGroup.get('preFix')?.disable();
@@ -3506,6 +3559,30 @@ export class RugDynamicFormComponent {
             }
           })
         }
+      }
+    }
+    if(this.formSequence[0].formName == "Proposal Detials" && this.productId == "36"){
+      if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
+
+        this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
+          // const selfResult = this.centimetersToFeetAndInches(item.height);
+          console.log(insuredMembersArray.value);
+          // item = this.d2cDetails.insuredMemberDetails.filter((ele:any)=>{
+          // return ele.relation == insuredMembersArray.value[index].relation
+          // })
+          
+            console.log(item.name)
+            // const [firstName, lastName] = fullName.split(' ');
+            insuredMembersArray.at(index).patchValue({
+              salutation: item.salutation,
+              firstName:item.firstName,
+              lastName: item.lastName,
+              dob: this.formatDate(item.dob),
+              gender: item.gender,
+              age: this.getAgeFromDOB(item.dob)
+            });
+          
+        });
       }
     }
   }
@@ -4627,7 +4704,7 @@ export class RugDynamicFormComponent {
     console.log(this.tsDetails);
   }
   updateValidators(planAvailable: string) {
-    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome ');
+    const annualIncomeControl = this.dynamicFormGroup.get('annualIncome');
     const occupationControl = this.dynamicFormGroup.get('occupation');
     
     if (planAvailable === 'GHI+GPA') {
@@ -4686,7 +4763,7 @@ export class RugDynamicFormComponent {
             });
             dialogRef.afterClosed().subscribe((result: any) => {
               console.log(result);
-              if (this.bbdetails?.paymentMode == 'yes') {
+              if (this.bbdetails?.paymentMode == 'easyPay') {
                 if (this.getFormIndexValue() < this.formSequence.length - 1) {
                   this.incrementIndex();
                   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -5255,6 +5332,7 @@ export class RugDynamicFormComponent {
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
               let nomineeRelationCode = this.filterRelationByName(this.bbdetails.relationWithProposer);
+              let relationshipOfAppointee = this.filterRelationByName(this.bbdetails.relationWithNominee);
               this.selectedOccupationCode = this.occupationList.filter(
                 (item: any) => item.occupationName === this.bbdetails.occupation
               );
@@ -5281,7 +5359,7 @@ export class RugDynamicFormComponent {
                     tenure: 1,
                     sumInsured: this.bbdetails.sumInsured,
                     premium: this.bbdetails.totalPremium,
-                    annualIncome: this.bbdetails.annualIncome ,
+                    annualIncome: this.bbdetails.annualIncome,
                     axisProductCode: this.bbdetails.axisProductCode,
                     axisProductName: this.bbdetails.axisProductName,
                     familyConstruct: this.bbdetails.familyConstruct,
@@ -5297,7 +5375,8 @@ export class RugDynamicFormComponent {
                     endDate: this.bbdetails.endDate || "",
                     frequencyOfPayment: this.bbdetails.frequencyOfPayment || "",
                     maskedAccountNo: "",
-                    paymentMode: this.bbdetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
+                    paymentMode: this.bbdetails.paymentMode || "",
+                    paymentMethod: this.bbdetails?.paymentOption == "eMandate" ? "emandate_payment" : "autoDebit",
                     startDate: this.bbdetails.startDate || "",
                     idType: this.bbdetails.idType,
                     idValue: this.bbdetails.idValue,
@@ -5341,17 +5420,17 @@ export class RugDynamicFormComponent {
                   })),
                   nomineeDetails: {
                     leadId: this.bbdetails.leadId,
-                    NomineeSalutation: this.bbdetails.nomineeGender == "M" ? "Mr" : this.bbdetails.nomineeGender == "F" ? "Ms" : null, // Assuming not provided
+                    NomineeSalutation: this.bbdetails.nomineeGender == "Male" ? "Mr" : this.bbdetails.nomineeGender == "Female" ? "Ms" : null, // Assuming not provided
                     nomineeRelation: this.bbdetails.relationWithProposer || "son",
                     NomineeRelationCode: nomineeRelationCode[0].relationCode,
                     nomineeFirstname: this.bbdetails.nomineeFirstName,
                     nomineeLastname: this.bbdetails.nomineeLastName,
                     nomineeContactNumber: this.bbdetails.nomineeMobileNumber,
                     nomineeAddress: this.bbdetails.nomineeAddress || null,
-                    appointeeDOB: null,
+                    appointeeDOB: this.bbdetails.appointeeDob || null,
                     appointeeName: this.bbdetails.appointeeName || null,
                     appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
-                    relationshipOfAppointeeWithNominee: this.bbdetails.relationWithNominee || "",
+                    relationshipOfAppointeeWithNominee: relationshipOfAppointee[0]?.relationCode || "",
                     dateOfBirth: this.bbdetails.nomineeDob,
                     defaultShare: this.bbdetails.nomineeDefaultShare,
                     nomineeGender: this.bbdetails.nomineeGender || null
@@ -6230,7 +6309,7 @@ export class RugDynamicFormComponent {
     this.activeMemberTabIndex = tempIndex;
     console.log(this.form);
     console.log(this.dynamicFormGroup.get('paymentMode')?.value);
-    if(this.dynamicFormGroup.get('paymentMode')?.value == 'yes'){
+    if(this.dynamicFormGroup.get('paymentMode')?.value == 'easyPay'){
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
       this.dynamicFormGroup.patchValue({
@@ -8176,7 +8255,7 @@ export class RugDynamicFormComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
   getBbRelations(control: any){
-    if(this.formSequence[this.getFormIndexValue()].formName == "Add Nominee" || this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee & Bank Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
+    if(this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee Details" || this.formSequence[this.getFormIndexValue()].formName == "Nominee & Bank Details" || this.formSequence[this.getFormIndexValue()].formName == "Customer Summary" ){
       this.yatraService.getRelations().subscribe({
         next: (response: any) => {
           response = JSON.parse(response.data).data;
@@ -8315,7 +8394,7 @@ export class RugDynamicFormComponent {
         }
         this.sumInsuredData = res.productSIDetails;
         control.options = res.productSIDetails;
-        if(this.formSequence[this.getFormIndexValue()].formId != 9 && this.partnerId == "45"){
+        if(this.formSequence[this.getFormIndexValue()].formName != "Customer Summary" && this.partnerId == "45"){
           console.log(this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value));
           this.dynamicFormGroup.get('sumInsured')?.setValue(this.sumInsuredData[0].value)
   
@@ -8893,22 +8972,22 @@ export class RugDynamicFormComponent {
         }
         if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
           const filteredData = premiumObj.filter(
-            (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
+            (item: any) => item.combinationName === "GHI-5L"
           );
           console.log(filteredData);
-          this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+          // this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+          // this.d2cDetails.productPlanName = "GHI-5L";
+          this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+          this.d2cDetails.deductibleAmount = "500000"
           this.d2cDetails.productPlanName = "GHI-5L";
-          this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
-          this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-          this.d2cDetails.productPlanName = "GHI-5L";
-          this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
           this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
-          this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-          this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
+          this.dynamicFormGroup.get('deductibleAmount')?.setValue("500000");
+          this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
           this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
           this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
           let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-            if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+            if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
               return ele;
             }
             });
@@ -8923,21 +9002,21 @@ export class RugDynamicFormComponent {
           console.log(filteredData);
           console.log(this.dynamicFormGroup.get('sumInsured')?.value);
           if(this.dynamicFormGroup.get('sumInsured')?.value == '10000000'){
-            this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+            this.d2cDetails.deductibleAmount = "1000000"
             this.d2cDetails.productPlanName = "GHI-10L";
-            this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
-            this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
-            this.d2cDetails.productPlanName = "GHI-10L";
-            this.d2cDetails.totalPremium = (filteredData[1].premium).toFixed(2);
+            // this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
+            // this.d2cDetails.deductibleAmount = filteredData[1].premium.toString();
+            // this.d2cDetails.productPlanName = "GHI-10L";
+            this.d2cDetails.totalPremium = (filteredData[0].premium).toFixed(2);
             this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
             this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
       
-            this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
-            this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
+            this.dynamicFormGroup.get('deductibleAmount')?.setValue("1000000");
+            this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
             this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
             this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
             let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
-              if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+              if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.D2CproductCode){
                 return ele;
               }
               });
@@ -8973,7 +9052,10 @@ export class RugDynamicFormComponent {
         // Compare normalized relation with the input value
         return standardizedRelation === relationWithProposer;
       });
-    
+      const appointeeNameControl = this.dynamicFormGroup.get('appointeeName');
+      const appointeeMobileNumberControl = this.dynamicFormGroup.get('appointeeMobileNumber');
+      const appointeeDobControl = this.dynamicFormGroup.get('appointeeDob');
+      const relationWithNomineeControl = this.dynamicFormGroup.get('relationWithNominee');
       if (selectedDetails) {
         // Patch values to the form group if a match is found
         this.dynamicFormGroup.patchValue({
@@ -8983,6 +9065,53 @@ export class RugDynamicFormComponent {
           nomineeGender: selectedDetails.gender || '',
           nomineeMobileNumber: selectedDetails.mobileNumber || ''
         });
+        let nomineeAge = this.calculateAge(this.dynamicFormGroup.get('nomineeDob')?.value);
+        let isKid = /^\d+days$/.test(nomineeAge.toString());
+        if(isKid == true){
+          nomineeAge = 1;
+        }
+        console.log(nomineeAge);
+        if (typeof nomineeAge === "number") {        
+          // Determine the second argument based on nomineeAge
+          const shouldEnableDependentControls = nomineeAge < 18;
+          if(shouldEnableDependentControls){
+            // control.dependentControls.forEach((item: any) => {
+            //   item.visibility = true
+            // })
+            this.form.formSections.forEach((section: IFormSections) => {
+              section.formControls.forEach((control: IFormControl) => {
+                if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                  control.visible = true;
+                }
+              })
+            })
+            appointeeNameControl?.setValidators([Validators.required]);
+            appointeeMobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]);
+            appointeeDobControl?.setValidators([Validators.required]);
+            relationWithNomineeControl?.setValidators([Validators.required]);
+          }else{
+            control.dependentControls.forEach((item: any) => {
+              item.visibility = false
+            })
+            this.form.formSections.forEach((section: IFormSections) => {
+              section.formControls.forEach((control: IFormControl) => {
+                if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                  control.visible = false;
+                }
+              })
+            })
+            appointeeNameControl?.clearValidators();
+            appointeeMobileNumberControl?.clearValidators();
+            appointeeDobControl?.clearValidators();
+            relationWithNomineeControl?.clearValidators();
+          }             
+          appointeeNameControl?.updateValueAndValidity();
+          appointeeMobileNumberControl?.updateValueAndValidity();
+          appointeeDobControl?.updateValueAndValidity();
+          relationWithNomineeControl?.updateValueAndValidity();
+        } else {
+          console.error("Nominee age is not a number:", nomineeAge);
+        }
       } else {
         // Clear the form group fields if no match is found
         this.dynamicFormGroup.patchValue({
@@ -8992,6 +9121,21 @@ export class RugDynamicFormComponent {
           nomineeGender: '',
           nomineeMobileNumber: ''
         });
+        appointeeNameControl?.clearValidators();
+        appointeeMobileNumberControl?.clearValidators();
+        appointeeDobControl?.clearValidators();
+        relationWithNomineeControl?.clearValidators();
+        appointeeNameControl?.updateValueAndValidity();
+        appointeeMobileNumberControl?.updateValueAndValidity();
+        appointeeDobControl?.updateValueAndValidity();
+        relationWithNomineeControl?.updateValueAndValidity();
+        this.form.formSections.forEach((section: IFormSections) => {
+          section.formControls.forEach((control: IFormControl) => {
+            if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+              control.visible = false;
+            }
+          })
+        })
         console.log("No matching member details found.");
       }
     } else {
@@ -9353,4 +9497,200 @@ export class RugDynamicFormComponent {
       });
     }
   }
+  onHDFCSubmit(){
+    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      this.incrementIndex();
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    }
+  }
+  onHDFCPrevious(){
+    if (this.getFormIndexValue() > 0) {
+      this.decrementIndex()
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    }
+  }
+  onIncludeHealthChange(){
+    let healthInclude = this.dynamicFormGroup.get("preExistsingDisease")?.value
+    if(healthInclude == 'yes'){
+      this.dynamicFormGroup.get('renewalPremiumToPay')?.patchValue(this.d2cDetails?.renewalPremium - this.d2cDetails?.totalHealthReturn)
+    }else if(healthInclude == 'no'){
+      this.dynamicFormGroup.get('renewalPremiumToPay')?.patchValue(this.d2cDetails?.renewalPremiumToPay)
+    }
+
+  }
+
+
+  async onRenewalCustomerSubmit(): Promise<void> {
+   
+    // console.log(this.policyDetailsForm.get('declarationDetails.declaration')?.value);
+    if(!this.dynamicFormGroup.get('decl2')?.valid){
+      return;
+    }
+    // console.log(this.policyDetailsForm.get('premiumDetails.excludeHealthReturns')?.value);
+    let renewalObj = {
+      leadId: this.leadId,
+      disposition: this.dynamicFormGroup.get('disposition')?.value,
+      subDispositon: this.dynamicFormGroup.get('subDisposition')?.value,
+      remarks: "",
+      claimReportedInPreviousPolicy: false,
+      pedChronicHistoryPast1Year: false,
+      isHealthInclude: this.dynamicFormGroup.get('includeHealthReturns')?.value == "true" ? true : false,
+      currentUser: this.agentCode
+    }
+    this.rugService.SaveRenewalProposalData(renewalObj).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        res = JSON.parse(res.data)
+        console.log(res);
+        if (res.isSuccess == true && res.statusCode == 200) {
+        let linkObj = {
+            leadId: this.leadId,
+            isRenewal: true
+          }
+          if(this.isCustomerJourney){
+            let justpayPayload = {
+              "agentcode": this.agentCode,
+              "proposalNumber": this.tsDetails?.leadId,
+              //  "paymentMethod": "autoDebit",
+              "paymentMethod": "emandate_payment",
+              "source": "RUG",
+              "policyType": "New Business",
+              "policyNumber": "",
+              "quoteNumber": "",
+              "OrderId": "",
+              "Amount": Math.round(this.tsDetails?.renewalPremiumToPay),
+              "FirstName": this.tsDetails?.firstName,
+              "MiddleName": "",
+              "LastName": this.tsDetails?.lastName,
+              "Phone": this.tsDetails?.mobileNumber,
+              "Email": this.tsDetails?.emailId,
+              "DOB": this.tsDetails?.dob,
+              "appName": "RENEWAL"
+
+            }
+            console.log(justpayPayload);
+          this.d2cJustPayRedirection(justpayPayload)
+          }else{
+
+            this.rugService.sendLinkToCustomer(linkObj).subscribe({
+                 next: (res: any) => {
+                   console.log(res);
+                   res = JSON.parse(res.data)
+                   console.log(res);
+                  if (res.isSuccess == true && res.statusCode == 200) {
+                     console.log(res);
+                     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
+                       //width: '400px',
+                       disableClose: true,
+                       panelClass:"messageModal-mat",
+                       data: {
+                         type: 'success', 
+                         title: 'Renewal',
+                         message: ` ${res.statusMessage}`
+                       },
+                     });
+                     // const dialogRef = this.dialog.open(SuccessPopupComponent, {
+                     //   width: "500px",
+                     //   autoFocus: false,
+                     //   data: res.statusMessage
+                     // });
+                     dialogRef.afterClosed().subscribe((result: any) => {
+                       console.log(result);
+                       this.router.navigate(['renewal/srl_thankyou/'+ this.leadId]);
+                     })
+                   }
+                   if (res.isSuccess == false && res.statusCode == 500) {
+                     this.toast.warning({ detail: "Warning", summary: res.errorMessage, duration: 5000 });
+                     // this.toastr.warning(res.errorMessage, '', { timeOut: 5000 });
+                   }
+                 },
+                 error: (err) => {
+                   console.error(err);
+                 }
+               });
+          }
+                }
+        if (res.isSuccess == false && res.statusCode == 500) {
+          if(res.groupRenewalData.error.length > 0 ){
+            this.toast.warning({ detail: "Warning", summary: "something wrong", duration: 5000 });
+            // this.toastr.warning(response.groupRenewalData.error[0].errorMessage, '', { timeOut: 5000 });
+          }
+          // this.toastr.warning(response.errorMessage, '', { timeOut: 5000 });
+        }
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+   
+  }
+  async onRenewalCustomerFinalSubmit(): Promise<void> {
+   
+    // console.log(this.policyDetailsForm.get('declarationDetails.declaration')?.value);
+    if(!this.dynamicFormGroup.get('decl2')?.valid){
+      return;
+    }
+    // console.log(this.policyDetailsForm.get('premiumDetails.excludeHealthReturns')?.value);
+    let renewalObj = {
+      leadId: this.leadId,
+      disposition: this.dynamicFormGroup.get('disposition')?.value,
+      subDispositon: this.dynamicFormGroup.get('subDisposition')?.value,
+      remarks: "",
+      claimReportedInPreviousPolicy: false,
+      pedChronicHistoryPast1Year: false,
+      isHealthInclude: this.dynamicFormGroup.get('includeHealthReturns')?.value == "true" ? true : false,
+      currentUser: this.agentCode
+    }
+    this.rugService.SaveRenewalProposalData(renewalObj).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        res = JSON.parse(res.data)
+        console.log(res);
+        if (res.isSuccess == true && res.statusCode == 200) {
+        let linkObj = {
+            leadId: this.leadId,
+            isRenewal: true
+          }
+            let justpayPayload = {
+              "agentcode": this.agentCode,
+              "proposalNumber": this.tsDetails?.leadId,
+              //  "paymentMethod": "autoDebit",
+              "paymentMethod": "emandate_payment",
+              "source": "RUG",
+              "policyType": "New Business",
+              "policyNumber": "",
+              "quoteNumber": "",
+              "OrderId": "",
+              "Amount": Math.round(this.tsDetails?.renewalPremiumToPay),
+              "FirstName": this.tsDetails?.firstName,
+              "MiddleName": "",
+              "LastName": this.tsDetails?.lastName,
+              "Phone": this.tsDetails?.mobileNumber,
+              "Email": this.tsDetails?.emailId,
+              "DOB": this.tsDetails?.dob,
+              "appName": "RENEWAL"
+
+            }
+            console.log(justpayPayload);
+          this.d2cJustPayRedirection(justpayPayload)
+          
+                }
+        if (res.isSuccess == false && res.statusCode == 500) {
+          if(res.groupRenewalData.error.length > 0 ){
+            this.toast.warning({ detail: "Warning", summary: "something wrong", duration: 5000 });
+            // this.toastr.warning(response.groupRenewalData.error[0].errorMessage, '', { timeOut: 5000 });
+          }
+          // this.toastr.warning(response.errorMessage, '', { timeOut: 5000 });
+        }
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+   
+  }
+
+
 }

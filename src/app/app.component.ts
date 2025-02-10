@@ -59,7 +59,13 @@ export class AppComponent {
       '/yatra/payment',
       '/proposals/shareconstent',
       '/proposals/shareSummary',
-      '/rug/test-page'
+      '/rug/test-page',
+      '/rug/customerDetails',
+      '/rug/otpauthentication',
+      '/products/hdfc',
+      '/products/axis',
+      '/rug/otpauthentication',
+      '/yatra/hdfc'
     ];
     if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
       return true;

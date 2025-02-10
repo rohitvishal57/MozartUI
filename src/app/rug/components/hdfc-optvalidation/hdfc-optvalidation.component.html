@@ -1,0 +1,192 @@
+<div>
+    <main class="siteBody siteBody_padding">
+        <div class="contentBody bodyColumns-1">
+            <div class="bodyColumn body_flex_column">
+                <div class="body_flex_row justify-content-between">
+                    <!-- <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
+                    </h2> -->
+                </div>
+
+                <form [formGroup]="customerForm">
+                    <div class="modal-body">
+                        <section class="white_container mb-3 white_container_CCD ">
+                            <div class="col-12 mb-4">
+                                <h6 class="heading-16-red">{{"Customer Registration" }}</h6>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <div class="input-block form-floating input-block-renew">
+                                        <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber"
+                                            placeholder="" formControlName="mobilenumber" type="text"
+                                            (keypress)="isNumber($event)" maxlength="10"
+                                            [ngClass]="{ 'is-invalid': submitted && customerForm.get('mobilenumber')?.errors }">
+                                        <label for="mobilenumber">{{"Mobile Number" }} *</label>
+                                        <span class="invalid-feedback"
+                                            *ngIf="submitted && customerForm.get('mobilenumber')?.errors">
+                                            <span class="ui-error block-show"
+                                                *ngIf="submitted && customerForm.get('mobilenumber')?.invalid && !customerForm.get('mobilenumber')?.errors?.['pattern']">{{"Mobile
+                                                number cannot be blank."}}</span>
+                                        </span>
+                                        <span class="ui-error block-show"
+                                            *ngIf="customerForm.get('mobilenumber')?.invalid && customerForm.get('mobilenumber')?.errors?.['pattern']">{{"Enter
+                                            a valid 10-digit mobile number." }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <div class="input-block form-floating input-block-renew">
+                                        <input class="form-control input-textBox" id="dob" name="dob" placeholder=""
+                                            formControlName="dob" type="date" OnlyCharacter
+                                            [ngClass]="{ 'is-invalid': submitted && customerForm.get('dob')?.errors }">
+                                        <label for="dob">{{"DOB" }} *</label>
+                                        <span class="invalid-feedback"
+                                            *ngIf="submitted && customerForm.get('dob')?.errors">
+                                            <span class="ui-error block-show"
+                                                *ngIf="submitted && customerForm.get('dob')?.invalid && !customerForm.get('dob')?.errors?.['pattern']">{{"Dob
+                                                cannot be blank."}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4" *ngIf="isShowOtp==false">
+                                <div class="col-12">
+                                    <button type="submit" id="save" name="save" class="btn_red col-md-3"
+                                        (click)="onSubmit()">{{"Submit"}}</button>
+                                </div>
+                            </div>
+                            <div *ngIf="isShowOtp && isCustomerInfo == false" class="row mt-4">
+                                <div class="col-12 col-sm-12 col-md-10 col-lg-5 col-xl-10">
+                                    <div class="input-block m-0">
+                                        <label for="">Enter OTP</label>
+                                        <div class="input-group-block input-otp-block">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="focusNext($event, input2)" #input1
+                                                (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input1)">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="focusNext($event, input3)" #input2
+                                                (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input1)">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="focusNext($event, input4)" #input3
+                                                (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input2)">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="focusNext($event, input5)" #input4
+                                                (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input3)">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="focusNext($event, input6)" #input5
+                                                (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input4)">
+                                            <input type="text" maxlength="1" class="input-textBox"
+                                                (input)="onComplete()" #input6 (keypress)="restrictToNumbers($event)"
+                                                (keydown)="focusPrevious($event, input5)">
+                                        </div>
+                                        <span class="ui-error">Please enter valid OTP</span>
+                                        <span class="ui-error ui-success">Entered valid OTP</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="isShowOtp && isCustomerInfo == false" class="row mt-4">
+                                <div class="col-12">
+                                    <button type="button" id="save" name="save" class="btn_red col-md-8"
+                                        (click)="ValidateOTP()">{{"Validate OTP" }}</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="white_container mb-3 white_container_CCD " *ngIf="isCustomerInfo">
+                            <div class="col-12 mb-4">
+                                <h6 class="heading-16-red">{{"Customer Details" | translate}}</h6>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="claims_member_info">
+                                                <ul class="list-detailsInfo">
+                                                    <li>
+                                                        <span class="label">Customer Cust ID :</span>
+                                                        <span class="value">{{customerInfo.customer_ID}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Customer Last Name:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_LAST_NAME}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Customer Gender :</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_GENDER}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Address 1:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_OFF_ADR1}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Address 3 :</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_OFF_ADR3}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">State:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_STATE}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Email :</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_EMAIL_ADD}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="claims_member_info">
+                                                <ul class="list-detailsInfo">
+                                                    <li>
+                                                        <span class="label">Customer First Name:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_FIRST_NAME}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Date of Birth:</span>
+                                                        <span class="value">{{customerInfo.d_D_CUST_DATE_OF_BIRTH}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">PAN:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_IT_PAN2}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Address 2:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_ADD2}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">City:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_CITY}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Pin code:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_ZIP_CODE}}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Mobile No:</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_MOBILE_PHONE}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12" style="text-align: center;">
+                                    <button type="button" id="save" name="save" class="btn_red col-md-3" (click)="generateProposal()">{{"Ok" |
+                                        translate}}</button>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

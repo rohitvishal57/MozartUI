@@ -7,12 +7,12 @@
             </div>
             <section class="white_container white_container_shadow">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7">
                         <div class="details_claimsInfo">
                             <div class="row_claimsInfo">
                                 <div class="claim_amount">
                                     <label>{{"Member Name" | translate}}</label>
-                                    <h6><b>{{ claims?.memberName }}</b></h6>
+                                    <h6>{{ claims?.memberName }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
@@ -27,19 +27,19 @@
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
-                                    <label>{{"Request Type" | translate}}</label>
-                                    <h6>{{ claims?.requestType }}</h6>
+                                    <label>{{"Claim Type" | translate}}</label>
+                                    <h6>{{ claims?.claimType }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
                                     <label>{{"Claim Status" | translate}}</label>
-                                    <h6><b>{{ claims?.claimStatus }}</b></h6>
+                                    <h6>{{ claims?.claimStatus }}</h6>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5">
                         <div class="details_claimsAmount">
 
                             <div class="claim_amount">
@@ -48,7 +48,7 @@
                             </div>
                             <div class="claim_amount">
                                 <h6>{{"Approved Amount" | translate}}</h6>
-                                <p>₹ {{ claims?.approvedAmount !== null ? claims.approvedAmount : '--' }}</p>
+                                <p>₹ {{ claims?.approvedAmount != 0 ? claims.approvedAmount : '--' }}</p>
                             </div>
                         </div>
                     </div>
@@ -201,7 +201,7 @@
                                             </div>
                                         </div>
                                         <div class="uploadDocument_main" >
-                                            <div class="uploadDocument_area" *ngIf="claims?.requestType !== 'Cashless'" (click)="docUploadFileInput.click()">
+                                            <div class="uploadDocument_area" *ngIf="claims?.claimType !== 'Cashless'" (click)="docUploadFileInput.click()">
                                                 <div class="ud_area_left">
                                                     <h6>{{"Upload Documents" | translate}}</h6>
                                                     <p>{{"JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)" | translate}}</p>
