@@ -68,6 +68,9 @@ jobs:
       run: |
         npm install --legacy-peer-deps
 
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli
+
     - name: Clean previous build artifacts
       run: |
         rm -rf ./dist/*
