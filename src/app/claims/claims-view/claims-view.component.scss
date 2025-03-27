@@ -38,15 +38,25 @@ border-radius: 17px;
     }
   
     .uploadDocument_file {
-      padding:16px;
+      padding: 13px;
       border-radius: 16px;
-      background:#F1F3F6;
+      background: #F1F3F6;
       border: 2px dashed #D5D7DE;
       display: flex;
-      gap:8px;
+      gap: 8px;
       align-items: center;
       cursor: pointer;
     }
+    .uploadDocument_area {
+      padding: 8px;
+      border-radius: 16px;
+      background: #F1F3F6;
+      border: 2px dashed #D5D7DE;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+  }
     .delete-button{
       border: none;
       background-color: none;
@@ -168,6 +178,8 @@ border-radius: 17px;
 }
 .uploadDocument_mainClaims .section-title {
   margin-bottom: 5px;
+  font-size: 14px;
+  line-height: normal;
 }
 .uploadDocument_mainClaims .document-sections {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -177,13 +189,16 @@ border-radius: 17px;
 
 }
 .uploadDocument_mainClaims .btn_uploadDocument .upload_icon {
-  padding: 7px 10px;
+  padding: 3px 5px 0px 5px;
 }
 .uploadDocument_mainClaims .uploadedFiles_infoItem h4{
   margin-bottom: 5px !important;
-  font-size: 13px;
+  font-size: 11px;
   line-height: normal;
   word-break: break-word;
+}
+.uploadDocument_mainClaims .uploadDocument_file .uploadedFiles_infoItem p {
+  margin-bottom: 5px;
 }
 .uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size{
     min-width: 100px;
@@ -192,7 +207,7 @@ border-radius: 17px;
     align-items: center;
 }
 .uploadDocument_mainClaims .uploadDocument_file {
-  min-height: 115px;
+  min-height: 33px;
   justify-content: space-between;
 }
 .uploadDocument_mainClaims .uploadedFiles_infoItem.uploadedFiles_infoItem_size .size-align p {
@@ -210,6 +225,25 @@ border-radius: 17px;
 .uploadDocument_mainClaims .uploadedFiles_item {
   position: relative;
   width: 100%;
+}
+.uploadDocument_head  {
+  p {
+    margin-bottom: 0px;
+  }
+}
+.unorderList {
+  font-size: 14px;
+  &.ul_withIcon{
+    li {
+      img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  } 
+  li {
+    padding: 0 0 8px 0;
+  }
 }
 @media (max-width: 767px) {
   .siteBody {

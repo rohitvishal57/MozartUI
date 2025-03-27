@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
@@ -7,34 +7,13 @@ import { ClaimsViewService } from './claims-view.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { EndorsementsRequestsService } from 'src/app/endorsements/endorsements-requests/endorsements-requests.service';
-import { CoverDetail, UploadErrors } from 'src/app/interface/claims.interface';
+import { CoverDetail, DocumentSection, Errors, FileObject } from 'src/app/interface/claims.interface';
 import { debounceTime, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessErrorModalComponent } from 'src/app/shared/components/success-error-modal/success-error-modal.component';
+import { error } from 'jquery';
 
-interface FileObject {
-  documentId: string;
-  name: string;
-  type: string;
-  size: number;
-  uploadDateTime: Date;
-  status: 'pending' | 'success' | 'failed';
-  file: File;
-}
-interface DocumentSection {
-  id: string;
-  label: string;
-  uploadStatus: string;
-  file: FileObject | null;
-}
 
-interface Errors {
-  policyNumberRequired: string;
-  invalidFormat: boolean;
-  requiredDocs: string;
-  fileNotSelected: boolean;
-  missingDocuments: boolean;
-}
 @Component({
   selector: "app-claims-view",
   templateUrl: "./claims-view.component.html",
@@ -43,25 +22,6 @@ interface Errors {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClaimsViewComponent {
-  @Input() uploadedFiles: {
-    documentId: string;
-    name: string;
-    type: string;
-    size: number;
-    label: string;
-    isEditing?: boolean;
-    isEdited?: boolean;
-    editableControl?: FormControl;
-    uploadDateTime?: Date;
-    formattedUploadDateTime?: string;
-    status: string;
-    file: File;
-    policyNumber?: string;
-    documentName?: string;
-    documentType?: string;
-    createdBy?: string;
-    documentLabelForm: FormGroup
-  }[] = [];
   errors: Errors = {
     policyNumberRequired: '',
     invalidFormat: false,
@@ -69,7 +29,6 @@ export class ClaimsViewComponent {
     fileNotSelected: false,
     missingDocuments: false
   };
-  // uploadedFiles: File[] = [];
   form!: FormGroup;
   activePolicyNumbers: string[] = [];
   saveForm!: FormGroup;
@@ -88,18 +47,14 @@ export class ClaimsViewComponent {
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
   selectedMember: any;
-  uploadedFilesCount = 0;
   showCustomHospitalInput = false;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
   uploadSuccess: boolean = true;
   namesVariable: any;
   documentType: any;
-  response: any;
-  selectedMemberName: any;
   uploadedFile: any;
   agentCode: any;
-  selectMemberData: any = {};
   showCashlessFields: boolean = false;
   showReimbursementFields: boolean = false;
   states: any[] = [];
@@ -135,37 +90,16 @@ export class ClaimsViewComponent {
   specialCovers: any;
   selectedCover: string = 'Hospitalisation';
   isDisabled: boolean = true;
-  // coverNames:any
-  documentLabelOptions = [
-    'govt/KYC ID',
-    'Hospital bill invoice',
-    'Investigation report',
-    'Doctor’s Prescription',
-    'NEFT/ Cancelled cheque/ Passbook',
-    'Hospital discharge form',
-    'Consultation form',
-    'Claim form',
-    'Others'
-  ];
-  private requiredDocumentTypes = [
-    'govt/KYC ID',
-    'Hospital bill invoice',
-    'Investigation report',
-    'Doctor’s Prescription',
-    'NEFT/ Cancelled cheque/ Passbook',
-    'Hospital discharge form',
-    'Consultation form',
-    'Claim form'
-  ];
+
   documentSections: DocumentSection[] = [
-    { id: 'nursing breakup', label: 'Nursing Breakup', uploadStatus: '', file: null },
-    { id: 'room category', label: 'Room Category', uploadStatus: '', file: null },
-    { id: 'package breakup', label: 'Package Breakup', uploadStatus: '', file: null },
-    { id: 'discharge summary', label: 'Discharge Summary', uploadStatus: '', file: null },
-    { id: 'investigation reports', label: 'Investigation Reports', uploadStatus: '', file: null },
-    { id: 'consultation papers', label: 'Consultation Papers', uploadStatus: '', file: null },
-    { id: 'pharmacy bills', label: 'Pharmacy Bills', uploadStatus: '', file: null },
-    { id: 'other documents', label: 'Other Documents', uploadStatus: '', file: null }
+    { id: 'any govt/KYC ID', label: 'Any govt/KYC ID', uploadStatus: '', file: null },
+    { id: 'hospital bill invoice', label: 'Hospital bill invoice', uploadStatus: '', file: null },
+    { id: 'investigation report', label: 'Investigation report', uploadStatus: '', file: null },
+    { id: 'doctor’s Prescription', label: 'Doctor’s Prescription', uploadStatus: '', file: null },
+    { id: 'NEFT/ Cancelled cheque/ Passbook', label: 'NEFT/ Cancelled cheque/ Passbook', uploadStatus: '', file: null },
+    { id: 'hospital discharge form', label: 'Hospital discharge form', uploadStatus: '', file: null },
+    { id: 'consultation form', label: 'Consultation form', uploadStatus: '', file: null },
+    { id: 'claim form', label: 'Claim form', uploadStatus: '', file: null },
   ];
   documentLabelForm!: FormGroup;
   billGroup: any;
@@ -306,10 +240,10 @@ export class ClaimsViewComponent {
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
       proposerName: [""],
-      approvedAmount: [""],
-      deductedAmount: [""],
-      deductionReason: [""],
-      coPayAmount: [""],
+      // approvedAmount: [""],
+      // deductedAmount: [""],
+      // deductionReason: [""],
+      // coPayAmount: [""],
       reasonForCoPay: [""],
       coverName: [""],
       raisedBy: [""],
@@ -428,7 +362,6 @@ export class ClaimsViewComponent {
         }
       },
       (err) => {
-        console.log(err);
       });
   }
 
@@ -446,31 +379,17 @@ export class ClaimsViewComponent {
     this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
         this.form.get('memberId')?.setValue('');
-        //this.memberNames = [];
-        //this.form.get('policyNumber')?.setErrors(null);
       }
     });
     const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
-    // if (!filteredMembers || filteredMembers.length === 0) {      // If no members are found
-    //   this.form.get('policyNumber')?.setErrors({ noMemberDetails: true });
-    // } else {
-    //   this.form.get('policyNumber')?.setErrors(null);
-    // }
     this.form.get("memberId")?.setValue("");
     this.cdr.markForCheck();
     this.getPolicyMembers(value)
     this.fetchCoverNames(value)
   }
-  // handleDropdownChange(value: string): void {
-  //   if (value == "") {
-  //     this.form.get('policyNumber')?.reset();
-  //   }
 
-  //   this.getPolicyMembers(value)
-  //   this.fetchCoverNames(value)
-  // }
   getPolicyMembers(value: string) {
     const membersReq = {
       "agentCode": localStorage.getItem("agentCode"),
@@ -488,7 +407,6 @@ export class ClaimsViewComponent {
         }
       },
       (err) => {
-        console.log(err);
       });
   }
   getMemberIdList(membersList: Array<any>) {
@@ -532,26 +450,30 @@ export class ClaimsViewComponent {
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
+    if (/[^0-9]/.test(value)) {
+      input.value = value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  }
+
+  if (value.length > 10) {
+      this.form.get('billNo')?.setErrors({ maxlength: true });
+  } else {
+      this.form.get('billNo')?.setErrors(null);
+  }
+
+  if (this.form.get('claimedAmount')?.value && value.length === 1 && value === '0') {
+    input.value = ''; 
+    this.form.get('claimedAmount')?.setErrors({ invalidStart: true });
+    return;
+   }
     if (value.length > 12) {
       this.form.get('claimedAmount')?.setErrors({ maxlength: true });
     } else {
       this.form.get('claimedAmount')?.setErrors(null);
     }
-    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-
-    const isDigit = /^[0-9]$/.test(event.key);
-    if (!isDigit) {
-      event.preventDefault();
-      return;
-    }
-
-    const currentValue = input.value;
-    if (currentValue === '' && event.key === '0') {
-      event.preventDefault();
+    if (value.length > 12) {
+      this.form.get('billAmount')?.setErrors({ maxlength: true });
+    } else {
+      this.form.get('billAmount')?.setErrors(null);
     }
   }
 
@@ -591,17 +513,9 @@ export class ClaimsViewComponent {
 
   validateDate(controlName: string): void {
     const control = this.form.get(controlName);
-    console.log(control?.value, this.maxDate);
     control?.value > this.maxDate ? control?.setErrors({ incorrect: true }) : control?.setErrors(null);
   }
 
-  // ngAfterViewInit() {
-  //   document.addEventListener('click', this.handleClickOutside.bind(this));
-  // }
-
-  // ngOnDestroy() {
-  //   document.removeEventListener('click', this.handleClickOutside.bind(this));
-  // }
   onTimeChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input) {
@@ -669,41 +583,15 @@ export class ClaimsViewComponent {
         if (response.isSuccess && response.data?.coverDetails) {
           this.coverNames = response.data.coverDetails;
         } else {
-          console.error('No cover names found');
           this.coverNames = [];
         }
       },
       error: (error: any) => {
-        console.error('Error fetching cover names', error);
         this.coverNames = [];
       }
     });
   }
 
-  // onCoverNameChange(event: any): void {
-  //   const selectedCover = event.target.value;
-  //   this.selectedCoverName = selectedCover;
-  //   this.billsArray.clear();
-  //   if (
-  //     [
-  //       "AYUSH Treatment",
-  //       "Day Care Treatment",
-  //       "In-patient Hospitalization",
-  //       "Mental Illness Hospitalization",
-  //     ].includes(selectedCover)
-  //   ) {
-  //     this.showSecondScenario = false;
-  //     this.billsArray.clear();
-  //     this.addBillRow();
-  //     this.showFirstScenario = true;
-  //     let coverName = this.form.get('coverName')?.value;
-  //     this.handleCoverNameValidation(coverName);
-
-  //   } else {
-  //     this.showFirstScenario = false;
-  //     this.showSecondScenario = true;
-  //   }
-  // }
   onCoverNameChange(event: any): void {
     this.selectedCoverName = event.target.value;
     const selectedCover = this.coverNames.find(cover => cover.cover_Name === this.selectedCoverName);
@@ -726,18 +614,18 @@ export class ClaimsViewComponent {
 
       if (this.specialCovers.includes(this.selectedCoverCode)) {
         this.showSecondScenario = true;
-        this.billsArray.clear();
-        this.addBillRow();
         this.showFirstScenario = false;
       } else {
         this.showFirstScenario = true;
+        this.billsArray.clear();
+        this.addBillRow();
         this.showSecondScenario = false;
         this.handleCoverNameValidation(this.form.get('coverName')?.value);
       }
     }
   }
   get billsArray(): FormArray {
-    return this.billsForm.get("billsArray") as FormArray;
+    return this.billsForm?.get("billsArray") as FormArray;
   }
 
   addBillRow() {
@@ -746,7 +634,7 @@ export class ClaimsViewComponent {
       billDate: [""],
       billAmount: [""],
     });
-    this.billsArray.push(newRow);
+    this.billsArray?.push(newRow);
   }
 
   removeBillRow(index: number) {
@@ -969,8 +857,6 @@ export class ClaimsViewComponent {
     this.uploadFile(fileObject, sectionId);
     this.cdr.detectChanges();
 }
-
-
   private uploadFile(fileObject: FileObject, sectionId: string): void {
     const policyNumber = this.form.get("policyNumber")?.value;
     if (!policyNumber) {
@@ -993,14 +879,24 @@ export class ClaimsViewComponent {
           // this.isDisabled = false;
         } else if (section?.file) {
           section.file.status = 'failed';
+          this.toast.error({
+            detail: 'Error',
+            summary: response.message !== "" ? response.message : "Claim Document is not uploaded. Try Again!",
+            duration: 7000,
+          }); 
         }
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err: any) => {
         const section = this.documentSections.find(s => s.id === sectionId);
         if (section?.file) {
           section.file.status = 'failed';
         }
+        this.toast.error({
+          detail: 'Error',
+          summary: err,
+          duration: 3000,
+        });
         this.cdr.detectChanges();
       }
     });
@@ -1092,7 +988,6 @@ export class ClaimsViewComponent {
       const customLabel = customLabelControl.value;
       // Determine the final label
       file.label = selectedLabel === 'Others' ? customLabel : selectedLabel;
-
       file.isEditing = false;
       file.isEdited = true;
     }
@@ -1190,15 +1085,6 @@ export class ClaimsViewComponent {
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
-      function convertToIsoFormat(dateString: string): string {
-        const [month, day, year] = dateString.split('-');
-        return `${year}-${month}-${day}`;
-      }
-      
-      // Before submitting the data, convert to yyyy-MM-dd format
-      const isoFromDate = convertToIsoFormat(this.fromDate);
-      const isoToDate = convertToIsoFormat(this.toDate);
-      // Add documents from documentSections
       saveClaimData.documentsArray = this.documentSections
         .filter(section => section.file && section.file.status === 'success')
         .map(section => ({
@@ -1222,9 +1108,7 @@ export class ClaimsViewComponent {
                 duration: 0,
                 sticky: true
               });
-              // this.toast.error({ response.data.message: "Failed to submit claims" });
             }
-            //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
           } else {
             this.openErrorModal(response.message)
           }
@@ -1238,144 +1122,5 @@ export class ClaimsViewComponent {
       this.toast.error({ detail: "Warning", summary: "Please fill in the required form fields." });
     }
 }
-
-  /*submitRequest(): void {
-    debugger
-    // if (this.form.get('claimType')?.value === 'Reimbursement') {
-    // if (this.uploadedFiles.length === 0) {
-    //   this.isFilenotSelected = true;
-    //   this.errors.fileNotSelected = true;
-    //   return;
-    // }
-
-    // const validationResult = this.validateRequiredDocuments();
-    // if (!validationResult.isValid) {
-    //   // this.toast.error({ 
-    //   //   detail: validationResult.message,
-    //   //   duration: 5000
-    //   // });
-    //   this.errors.requiredDocs = `Please upload the following required documents`;
-    //   return;
-    // }
-    //}
-    this.claimSubmitted = true;
-    if (this.saveForm.valid || this.form.valid) {
-      const saveClaimData = { ...this.form.value };
-      if (this.form.get('hospitalName')?.value === 'others') {
-        saveClaimData.hospitalName = this.form.get('customHospitalName')?.value;
-        saveClaimData.hospitalCode = '';
-      } else {
-        saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-        saveClaimData.hospitalCode = this.selectedHospital;
-      }
-
-      saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
-      saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.formattedDate;
-      saveClaimData.admissionTime = saveClaimData.admissionTime ? saveClaimData.admissionTime : "6:00";
-      saveClaimData.dischargeTime = saveClaimData.dischargeTime ? saveClaimData.dischargeTime : "7:00";
-
-      saveClaimData.memberId = this.form.get('memberId')?.value;
-      saveClaimData.memberName = this.form.get('memberName')?.value;
-      saveClaimData.hospitalCode = this.selectedHospital;
-      saveClaimData.customHospitalName = "";
-      //saveClaimData.hospitalName = this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
-
-
-      const coverNames = this.form.get('coverName')?.value;
-      const coverCode = this.form.get('coverCode')?.value;
-      if (coverNames && coverCode) {
-        saveClaimData.coverName = coverNames;
-        saveClaimData.coverCode = coverCode;
-      }
-      saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
-        ...bill,
-        billAmount: bill.billAmount ? bill.billAmount.toString() : ""
-      }));
-
-      // if (!this.selectedFile) {
-      //   this.isFilenotSelected = true;
-      //   return;
-      // }
-
-      // if (!saveClaimData.claimedAmount) {
-      //   saveClaimData.claimedAmount = 0;
-      // }
-
-      //let coverName = this.form.get('coverName')?.value;
-      // if (coverName) {
-      //   this.handleCoverNameValidation(coverName);
-      //   if (coverName === 'AYUSH Treatment') {
-      //     saveClaimData.state = "";
-      //     saveClaimData.city = "";
-      //     saveClaimData.hospitalName = "";
-      //     saveClaimData.hospitalAddress = "";
-      //   }
-      // }
-
-      if (Array.isArray(saveClaimData.hospitalAddress)) {
-        saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
-      }
-      const uploadedDocuments = this.documentSections
-        .filter(section => section.file?.status === 'success')
-        .map(section => ({
-          documentId: section.file!.documentId,
-          documentType: section.id,
-          uploadedFilesName: section.file!.name
-        }));
-
-      // const documentsArray = this.uploadedFiles.map((file) => ({
-      //   documentId: file.documentId,
-      //   documentName: file.name,
-      //   status: file.status,
-      //   labelName: file.label
-      // }));
-      const documentsArray = this.uploadedFiles.map((file) => {
-        const documentLabelControl = file.documentLabelForm.get('documentLabel');
-        const customLabelControl = file.documentLabelForm.get('customLabel')
-        let labelName = file.label;
-
-        if (documentLabelControl && customLabelControl && documentLabelControl.value === 'Others') {
-          labelName = customLabelControl.value || 'Others';
-        } else if (documentLabelControl) {
-          labelName = documentLabelControl.value || file.label;
-        }
-
-        return {
-          documentId: file.documentId,
-          documentName: file.name,
-          status: file.status,
-          labelName: labelName
-        };
-      });
-      saveClaimData.documentsArray = documentsArray;
-      this.claimsService.saveClaims(saveClaimData).subscribe(
-        (response: any) => {
-          if (response?.isSuccess) {
-            this.uploadSuccess = true;
-            if (response.data.claim_Number !== "") {
-              this.openModal(response);
-            } else {
-              this.toast.error({
-                detail: 'Error',
-                summary: response.data.message !== "" ? response.data.message : "No response from Jarvis.",
-                duration: 0,
-                sticky: true
-              });
-              // this.toast.error({ response.data.message: "Failed to submit claims" });
-            }
-            //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
-          } else {
-            this.openErrorModal(response.message)
-          }
-          // this.updateStatusLabel();
-        },
-        (_error: any) => {
-          this.openErrorModal(_error);
-        }
-      );
-    } else {
-      this.toast.error({ detail: "Warning", summary: "Please fill in the required form fields." });
-    }
-  } */
 
 }

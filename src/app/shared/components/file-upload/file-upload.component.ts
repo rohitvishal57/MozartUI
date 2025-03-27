@@ -44,6 +44,11 @@ export class FileUploadComponent implements ControlValueAccessor {
       this.fileList = [];
     }
   }
+  @Input() set fileValue(value: any) {
+    if (value) {
+      this.updateFileList(value);
+    }
+  }
 
   selectedFiles: File[] = [];
 
@@ -130,6 +135,20 @@ export class FileUploadComponent implements ControlValueAccessor {
     // Optionally, you can also reset the file input element if needed
     if (this.myFileInput) {
       this.myFileInput.nativeElement.value = '';  // This clears the file input itself
+    }
+  }
+
+  updateFileList(value: any) {
+    if (typeof value === 'string' && value !== 'null' && value !== 'NULL' && value !== 'Null') {
+      this.fileList = [
+        {
+          name: this.getFileName(value),
+        }
+      ];
+      this.fileUploadname = this.fileList;
+    } else {
+      this.fileList = [];
+      this.fileUploadname = [];
     }
   }
 }

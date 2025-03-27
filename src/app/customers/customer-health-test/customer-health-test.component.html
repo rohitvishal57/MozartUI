@@ -1,0 +1,23 @@
+<main class="siteBody siteBody_padding siteBody_searchMobile">
+    <div class="contentBody bodyColumns-1 accordionCardHeader">
+        <ng-container *ngFor="let member of memberdata;index as i">
+            <div class="row">
+                <button type="button" style="margin: 10px;" class="col-md-4 btn_red btn_products btn_buy">
+                    {{member.firstName}} {{member.lastName}}
+                </button>
+                <button type="button" style="margin: 10px;" class="col-md-4 btn_red btn_products btn_buy" (click)="startTest(member)">
+                    Start Test
+                </button>
+                <button type="button" style="margin: 10px;" class="col-md-3 btn_red btn_products btn_buy">
+                    <span *ngIf="!isTestComplete[i]">Not</span> Completed
+                </button>
+            </div>
+        </ng-container>
+    </div>
+    <div class="submitButton">
+        <button type="button" style="margin: 10px;" class="col-md-2 btn_red btn_products btn_buy"
+        (click)="submit()">
+            Submit
+        </button>
+    </div>
+</main>

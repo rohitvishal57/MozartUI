@@ -4,6 +4,7 @@ import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import { AesEncryptionService } from '../services/AESEncrypt.service';
 import { Router } from '@angular/router';
 import { LoadingService } from '../services/loading.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class EncryptionInterceptor implements HttpInterceptor {
@@ -72,6 +73,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/ExtractMasterData',
     'https://usp.monocept.ai/api/rug/GetTSPolicyInfoByLeadId',
     'https://upuat.adityabirlahealth.com/api/rug/GetBaseCallerDetails',
+    'https://usp.monocept.ai/api/rug/GetBaseCallerDetails',
     "https://usp.monocept.ai/api/rug/DeleteBaseCaller",
     "https://usp.monocept.ai/api/rug/CreateUpdateBaseCaller",
     "https://upuat.adityabirlahealth.com/api/rug/CreateUpdateBaseCaller",
@@ -113,11 +115,33 @@ export class EncryptionInterceptor implements HttpInterceptor {
     "https://upuat.adityabirlahealth.com/api/rug/SaveTSCommonDraft",
     "https://usp.monocept.ai/api/rug/GetEMployeeDetails",
     "https://usp.monocept.ai/api/rug/SaveLeadDetailshdfc",
-    "https://usp.monocept.ai/api/rug/GetSumInsuredList"
+    "https://usp.monocept.ai/api/rug/GetSumInsuredList",
+    "https://usp.monocept.ai/api/rug/GetLeadDetailsBata",
+    "https://usp.monocept.ai/api/rug/EnquirePaymentDetails",
+    "https://upuat.adityabirlahealth.com/api/rug/EnquirePaymentDetails",
+    "https://usp.monocept.ai/api/rug/CapturePayment",
+    "https://upuat.adityabirlahealth.com/api/rug/CapturePayment",
+    "https://usp.monocept.ai/api/rug/GetProposalNumberHDFC",
+    "https://upuat.adityabirlahealth.com/api/rug/CallQuote",
+    "https://usp.monocept.ai/api/rug/SendShortenUrl",
+    "https://upuat.adityabirlahealth.com/api/rug/SendShortenUrl",
+    "https://upuat.adityabirlahealth.com/api/rug/GetPolicyInfoByLeadId",
+    "https://upuat.adityabirlahealth.com/api/rug/GetProposalNumberHDFC",
+    "https://upuat.adityabirlahealth.com/api/rug/GetEMployeeDetails",
+    "https://upuat.adityabirlahealth.com/api/rug/GetLeadDetailsBata",
+     "https://upuat.adityabirlahealth.com/api/rug/SaveLeadDetailshdfc",
+     "https://upuat.adityabirlahealth.com/api/rug/getAllDisposition?appName=btsp",
+     "https://upuat.adityabirlahealth.com/api/rug/GetHDFCSMCodes",
+     "https://upuat.adityabirlahealth.com/api/rug/UploadBBDocument",
+     "https://usp.monocept.ai/api/rug/GetBankDetailsByIfsc",
+     "https://usp.monocept.ai/api/rug/GetHDFCSMCodes",
+     "https://usp.monocept.ai/api/rug/CallQuote",
+     "https://upuat.adityabirlahealth.com/api/rug/GetLeadDetailsByLeadIDBata",
+     "https://upuat.adityabirlahealth.com/api/v1/CheckLeadExist"
   ];
   
 
-  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
+  constructor(private authService: AuthService, private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
@@ -147,7 +171,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
               const modifiedUrl = decryptedData?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
               window.open(modifiedUrl, "_blank");
             }
-            res.body && localStorage.setItem('token', res?.body.token);
+            res.body && this.authService.storeToken(res?.body.token);
             res.body = decryptedData;
           }
         }),
@@ -166,7 +190,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       tap((res: any) => {
         if (res.body && res?.body?.data) {
-          res.body && localStorage.setItem('token', res?.body.token);
+          res.body && this.authService.storeToken(res?.body.token);
           res.body = this.aesEncryptService.decrypt(res?.body?.data);
         }
       }),

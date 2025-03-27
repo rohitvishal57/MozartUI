@@ -57,30 +57,34 @@
                                     <div class="field_searchMain field_searchMainMobile">
                                         <div>
                                             <select id="filterSearchOption" name="filterSearchOption" class="filterSearch"
-                                                [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null"
-                                                (ngModelChange)="onSelectChanges($event)">
-                                                <option id="selectOption" name="selectOption" value=""
-                                                    (click)="cancelSearch()">
-                                                    {{"Select an Option" | translate}}</option>
-                                                <option id="mobileNumberOption" name="mobileNumberOption"
-                                                    value="mobileNumber">{{"Mobile
-                                                    Number" | translate}}</option>
-                                                <option id="proposerNameOption" name="proposerNameOption"
-                                                    value="proposerName">
-                                                    {{"Proposer Name" | translate}}</option>
-                                                <option id="proposalNumberOption" name="proposalNumberOption"
-                                                    value="proposalNumber">
-                                                    {{"Proposal Number" | translate}}</option>
-                                                <option id="leadIdOption" name="leadIdOption" value="leadId">{{"Lead ID" |
-                                                    translate}}
-                                                </option>
-                                                <option id="emailIdOption" name="emailIdOption" value="email">{{"Email ID" |
-                                                    translate}}
-                                                </option>
-                                                <option id="proposalStatus" name="proposalStatus" value="proposalStatus">
+                                            [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null"
+                                            (ngModelChange)="onSelectChanges($event)">
+                                            <option id="selectOption" name="selectOption" value=""
+                                                (click)="cancelSearch()">
+                                                {{"Select an Option" | translate}}</option>
+                                            <option id="leadIdOption" name="leadIdOption" value="leadId">{{"Lead ID" |
+                                                translate}}
+                                            </option>
+                                            <option id="emailIdOption" name="emailIdOption" value="email">{{"Email ID" |
+                                                translate}}
+                                            </option>
+                                            <option id="proposerNameOption" name="proposerNameOption"
+                                                value="proposerName">
+                                                {{"Proposer Name" | translate}}</option>
+                                            <option id="proposalStatus" name="proposalStatus" value="proposalStatus">
                                                     {{"Proposal
                                                     Status" | translate}}</option>
-                                            </select>
+                                            <option id="proposalNumberOption" name="proposalNumberOption"
+                                                value="proposalNumber">
+                                                {{"Proposal Number" | translate}}</option>
+                                            <option id="applicationNumberOption" name="applicationNumberOption"
+                                                value="applicationNumber">
+                                                {{"Application Number" | translate}}</option>
+                                            
+                                            <option id="mobileNumberOption" name="mobileNumberOption"
+                                                value="mobileNumber">{{"Mobile
+                                                Number" | translate}}</option>                                     
+                                        </select>
                                         </div>
                                         <div class="filterFieldGroup">
                                             <input class="filterSearch" id="filterSearch" name="filterSearch"

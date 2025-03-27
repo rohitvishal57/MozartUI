@@ -258,8 +258,8 @@ body {
     pointer-events: none;
     background-color: #f2f3f6;
     padding: 0 5px;
-    /* padding-right: 35px; */
-    padding-right: 20px;
+    /* padding-right: 35px; padding-right: 20px;*/
+    padding-right: 5px;
     /* width: 53%; */
 }
 
@@ -682,6 +682,22 @@ body {
     /*position: absolute;
   opacity: 0;*/
 }
+.main-container .right-panel .acceptTermsCheck.totalPremiumConsent {
+    background: transparent;
+    padding: 0;
+    margin: 10px 0 5px;
+    border-radius: 0;
+}
+.main-container .right-panel .acceptTermsCheck.totalPremiumConsent input[type="checkbox"] {
+    margin-top: 0;
+    width: 15px;
+}
+.main-container .right-panel .acceptTermsCheck.totalPremiumConsent input[type="checkbox"] + label {
+    padding: 0;
+    line-height: normal;
+    font-size: 13px;
+    font-weight: 600;
+}
 /*.acceptTermsCheck input[type="checkbox"] + label {
     position: relative;
     cursor: pointer;
@@ -968,13 +984,15 @@ body {
     color: #ffe2dc;
     border: none;
     border-radius: 12px;
-    width: 18%;
+    width: 25%;
     height: 46px;
     font-size: 14px;
     text-transform: uppercase;
     margin-right: 5px;
 }
-
+.main-container .right-panel #skipOTP {
+    margin-bottom: 20px;
+}
 .main-container .right-panel .sendOTPLabel{
     background-color: #c72229;
     color: #ffe2dc;
@@ -1866,7 +1884,26 @@ body {
     position: relative;
     padding-bottom: 25px;
 }
-
+.main-container .right-panel .typecss.renewal_nonEdit {
+    padding-bottom: 5px;
+    padding-left: 0;
+}
+.main-container .right-panel .typecss.renewal_nonEdit .label-value-container {
+    margin-bottom: 8px;
+}
+.main-container .right-panel .typecss.renewal_nonEdit .label-value-container .label-text {
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    color: var(--text-grey-79);
+    margin-bottom: 5px;
+}
+.main-container .right-panel .typecss.renewal_nonEdit .label-value-container .value-text {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--text-black-4c);
+}
 .main-container .right-panel .bottom-planDetails{
     color: #000;
 }
@@ -2816,8 +2853,17 @@ margin: 0;
   .typecss.bottom-total-premium {
     width: 135px !important;
     }
+    .typecss.bottom-total-premium.bottom-rug-totalPremium ,.main-container .right-panel .typecss.bottom-total-premium.bottom-rug-totalPremium .boldtext_input{
+        width: auto !important;
+    }
+    .main-container .right-panel .typecss.bottom-total-premium.bottom-rug-totalPremium,.main-container .right-panel .typecss.bottom-product.bottom-rug-product,.main-container .right-panel .typecss.bottom-rug-typecss{
+        padding-bottom: 10px !important;
+    }
     .bottom-total-premium input#totalPremium {
         width: 110px;
+    }
+    .bottom-total-premium.total-rug-premium input#totalPremium {
+        width: 143px;
     }
     input#productName {
         text-overflow: ellipsis;

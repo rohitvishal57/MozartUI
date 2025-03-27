@@ -31,6 +31,11 @@ import { HdfcCreateBataLeadsComponent } from "./components/hdfc/hdfc-create-bata
 import { HdfcBataLeadsListComponent } from "./components/hdfc/hdfc-bata-leads-list/hdfc-bata-leads-list.component";
 import { HdfcJourneySelectionsComponent } from "./components/hdfc/hdfc-journey-selections/hdfc-journey-selections.component";
 import { LeadCheckComponent } from "./components/lead-check/lead-check.component";
+import { BataavLeadsListComponent } from "./components/hdfc/bataav-leads-list/bataav-leads-list.component";
+import { RetailsRenewalLeadsComponent } from "./retails-renewal-leads/retails-renewal-leads.component";
+import { EasypayCheckComponent } from "./easypay-check/easypay-check.component";
+import { PaymentCheckComponent } from "./payment-check/payment-check.component";
+import { BataDetailsComponent } from "./components/hdfc/bata-details/bata-details.component";
 
 
 
@@ -65,13 +70,18 @@ const routes: Routes = [
     {path:'update_lob/:lobName', component:CreateLobComponent},
     {path:'renewal', component:GroupRenewalDoHomeComponent},
     {path:'group-renewal-phase-2-leads', component:GroupRenewalPhase2LeadsComponent},
+    {path:'retail-renewal', component:RetailsRenewalLeadsComponent},
     {path:'group_renewal_modify_view/:leadId', component:GroupRenewalModifyViewComponent},
     {path:'customerDetails', component:HdfcCustomerRegistrationComponent},
     {path:'otpauthentication',component:HdfcOptvalidationComponent},
     {path:'lead-check',component:LeadCheckComponent},
+    {path:'easypay-check',component:EasypayCheckComponent},
     {path:'hdfc_createBataLeads',component:HdfcCreateBataLeadsComponent},
-    {path:"hdfc_bataLeadsList", component:HdfcBataLeadsListComponent},
-    {path:"hdfc_JourneySelection", component:HdfcJourneySelectionsComponent}
+    {path:"view-leads-list", component:HdfcBataLeadsListComponent},
+    {path:"hdfc_JourneySelection", component:HdfcJourneySelectionsComponent},
+    {path:"view_leads_list", component:BataavLeadsListComponent},
+    {path:"payment-check", component:PaymentCheckComponent},
+    {path:"bata-details", component:BataDetailsComponent}
 ];
 
 @NgModule({

@@ -137,17 +137,17 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" (click)="downloadAllLeads()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
                         <img src="assets/Img/icon_download_grey.svg" alt="Download">
                     </button>
                     <button type="button" id="leadgridlist" name="leadgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
                         [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
                         (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
                             alt="Grid List"></button>
-                    <button type="button" id="leadgridcard" name="leadgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
+                    <!-- <button type="button" id="leadgridcard" name="leadgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
                         [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card"
                         (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg"
-                            alt="Grid Card"></button>
+                            alt="Grid Card"></button> -->
                 </div>
             </section>
 
@@ -158,88 +158,41 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th class="text-center icon_allAssignLead">
-                                        <div class="icon_leads_check">
-                                            <div class="input-checkbox-block">
-                                                <div class="input-checkbox-feild input-checkbox-noSpace">
-                                                    <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)" class="input-check">
-                                                    <label for="Select All"></label>
-                                                </div>
-                                            </div>
-                                            <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
-                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 1" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
-                                                src="assets/Img/icon_profile.svg"></button>
-                                        </div>
-                                    </th>
-                                    <th>{{"Lead ID" | translate}}</th>
-                                    <th>{{"Name" | translate}}</th>
-                                    <th>{{"Product Name" | translate}}</th>
-                                    <th>{{"Contact Info" | translate}}</th>
-                                    <!-- <th nowrap>{{"Mobile Number" | translate}}</th> -->
-                                    <th>{{"Assigned To" |  translate}}</th>
-                                    <th>{{"Lead Status"}}</th>
-                                    <th nowrap>{{"Created Date" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
-                                    <th class="text-center">{{"Action" | translate}}</th>
+                                    <th class="text-center">Action</th>
+                                    <th nowrap>Sr No.</th>
+                                    <th nowrap>BATA Lead No.</th>
+                                    <th nowrap>Customer Name</th>
+                                    <th nowrap>Customer Mobile</th>
+                                    <th nowrap>Product</th>
+                                    <th nowrap>Created Date</th>
+                                    <!-- <th nowrap>Last Modified Date</th> -->
+                                    <th nowrap>Camaign Name</th>
+                                    <th nowrap>Status</th>
+                                    <th nowrap>Sub-Status</th>
+                                    <th nowrap>Remarks</th>
+                                    <th nowrap>AV Name</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                                <tr *ngFor="let row of leadsList; let i = index">
-                                    <td align="center" class="icon_allAssignLead_td">
-                                        <div class="input-checkbox-feild input-checkbox-noSpace">
-                                            <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
-                                            <label for={{i}}></label>
-                                        </div>
-                                        <!--<input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" >-->
-                                    </td>
-                                    <td>{{row.leadNumber}}</td>
-                                    <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
-                                    <td><span class="text-break-w200">{{row.interestedProductName}}</span></td> 
-                                    <td>{{row?.phoneNumber}}<br />
-                                        <span class="text-break-w200" title="{{ row.email }}">{{ row.email }}</span>                                    
-                                    </td>
-                                    <td> {{row?.leadAssignee||'-'}}</td>
-                                    <td>{{row.leadStatus ? row.leadStatus : '-'}}</td>
-                                    <td>{{formatCreatedOn(row.createdon)}}</td>
+                                <tr *ngFor="let lead of displayedLeads; let i = index">
                                     <td>
-                                        <div class="btn_groupAction lead_btnList justify-content-center">
-                                            <button type="button" id="assignto2" name="assignto2" class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
-                                                    src="assets/Img/icon_profile.svg" /></button>
-                                            <button type="button" id="updatestatus" name="updatestatus" class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
-                                                    src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
-                                                     src="assets/Img/icon_add_notes.svg"></button>
-                                            <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote" (click)="redirectProducts(row)" title="Quick Quote"><img
-                                                     src="assets/Img/icon_savenew_subquote.svg">        
-                                            </button>
-                                            <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
-                                                src="assets/Img/icon_download_grey.svg">        
-                                           </button>
-                                            <mat-menu #moreMenu="matMenu"
-                                                class="overlay_popupMenu_Main_CDK moreActionItems active">
-                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                                    <ul class="actionItemsMain">
-                                                        <li class="actionItem">
-                                                            <a (click)="markDuplicate(row.leadNumber)">
-                                                                <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
-                                                                <span>{{"Mark Duplicate" | translate}}</span></a>
-                                                        </li>
-                                                        <li class="actionItem">
-                                                            <a (click)="showAuditTrailDialog(row.leadNumber)">
-                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
-                                                                    alt="Share via email">
-                                                                <span>{{"View audit trail" | translate}}</span></a>
-                                                        </li>
-                                                        <li class="actionItem">
-                                                            <a>
-                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
-                                                                    alt="Share via email">
-                                                                <span>{{"Quick Quote" | translate}}</span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </mat-menu>
-                                        </div>
+                                        <button type="button" class="btn_reassign" (click)="actionLead(lead)">Action</button>
                                     </td>
+                                    <td>{{i + 1}}</td>
+                                    <td>{{lead.leadID}}</td>
+                                    <td>{{lead.customerName}}</td> 
+                                    <td>{{lead.customerNumber}}</td>
+                                    <td>{{lead.productName}}</td>
+                                    <td>{{lead.createdOn}}</td>
+                                    <!-- <td>{{lead.lastModified}}</td> -->
+                                    <td>{{lead.campaignName}}</td>
+                                    <td>{{lead.status}}</td>
+                                    <td>{{lead.subStatus}}</td>
+                                    <td>{{lead.remarks}}</td>
+                                    <td>{{lead.avUserName}}</td> 
+                                    
+                                    
                                 </tr>
                             </tbody>
                         </table>
@@ -249,125 +202,15 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
-                <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of leadsList; let i = index">
-                        <header>
-                            <div class="card_insureInfo">
-                                <h6>
-                                    <div class="insureName" title="{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
-                                    </div>
-                                </h6>
-                                <div class="item_productName">{{ row.interestedInPlan }}</div>
-                            </div>
-                            <div class="card_btnGroup">
-                                <div class="btn_groupAction ">
-                                    <button type="button" id="gridassignto" name="gridassignto" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
-                                        class="btn_action btn_editAction"><img
-                                            src="assets/Img/icon_profile.svg"></button>
-                                    <button type="button" id="gridupdatestatus" name="gridupdatestatus" value="Update Status" title="Update Status" (click)="updateLeadStatus(row.leadNumber)"
-                                        class="btn_action btn_renewalAction"><img
-                                            src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="gridaddnote" name="gridaddnote" value="Add Notes" title="Add Notes" (click)="addNotesLead(row.leadNumber)"
-                                        class="btn_action btn_renewalAction"><img
-                                            src="assets/Img/icon_add_notes.svg"></button>
-                                    <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
-                                    <button type="button" id="gridquickquote" name="gridquickquote" class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote"  (click)="redirectProducts(row)"><img
-                                        src="assets/Img/icon_savenew_subquote.svg"></button>
-                                        <button type="button" id="exportleadInfo" name="exportleadInfo" class="btn_action btn_renewalAction btn_subQuote btn_exportLead" (click)="downloadSingleItem(row)" title="Export Lead"><img
-                                            src="assets/Img/icon_download_grey.svg">        
-                                       </button>
-                                        <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
-                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                            <ul class="actionItemsMain">
-                                                <li class="actionItem">
-                                                    <a (click)="editLead(row.leadNumber)"> 
-                                                        <img src="assets/Img/icon_download2_grey.svg" alt="Download">
-                                                        <span>Edit Lead</span></a>
-                                                </li>
-                                                <li class="actionItem">
-                                                    <a (click)="markDuplicate(row.leadNumber)">  
-                                                        <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
-                                                        <span>Mark Duplicate</span></a>
-                                                </li>
-                                                <li class="actionItem">
-                                                    <a (click)="showAuditTrailDialog(row.leadNumber)">
-                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
-                                                        <span>View audit trail</span></a>
-                                                </li>
-                                                <li class="actionItem">
-                                                    <a>
-                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
-                                                        <span>Quick Quote</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </mat-menu> -->
-                                </div>
-                            </div>
-                        </header>
-                        <div class="cardViewBody">
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Contact Info" | translate}}</div>
-                                <div class="item_value">{{ row.phoneNumber }}</div>
-                                <div class="item_value">{{ row.email }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Assigned To" | translate}}</div>
-                                <div class="item_value">{{row?.leadAssignee||'-'}}</div>
-                            </div>
-
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Product Name" | translate}}</div>
-                                <div class="item_value">{{ row.interestedProductName }}</div>
-                            </div>
-
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Created Date" | translate}} <small>{{"(dd-mm-yyyy)" | translate}}</small></div>
-                                <div class="item_value">{{formatCreatedOn(row.createdon)}}</div>
-                            </div>
-                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Campaign Name</div>
-                                <div class="item_value">{{ row.campaignName}}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Campaign Number</div>
-                                <div class="item_value">{{ row.campaignNumber }}</div>
-                            </div> -->
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Lead ID" | translate}}</div>
-                                <div class="item_value">{{ row.leadNumber }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Lead Status" | translate}}</div>
-                                <div class="item_value">{{row.leadStatus ? row.leadStatus : '-'}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
                                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                    [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                    [rowsPerPageOptions]="[10, 15, 25, 50, 100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > countsList.totalCount
-                                    ? countsList.totalCount : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalCount}} {{"entries" | translate}}</span>
+                                <span class="pageCount">{{"Showing" }} {{first + 1}} - {{first + rows > totalRecords ?
+                                    totalRecords : first + rows}}</span> {{"of" | translate}} <span
+                                    class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
@@ -433,7 +276,7 @@
         <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
             [style]="{ width: '75rem', height: '30rem' }">
             <span class="p-text-secondary block mb-5">{{"Provide Lead Number for which the current Lead Number is duplicate" | translate}}</span>
-            <form (ngSubmit)="markDuplicateFormSubmit()" [formGroup]="markDuplicateForm" novalidate autocomplete="false">
+            <form [formGroup]="markDuplicateForm" novalidate autocomplete="false">
                 <section class="white_container">
                     <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -489,6 +332,10 @@
         </p-dialog>
 
     </div>
+
+
+
+    
 
     
       

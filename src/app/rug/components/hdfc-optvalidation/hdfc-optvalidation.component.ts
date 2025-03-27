@@ -27,7 +27,8 @@ export class HdfcOptvalidationComponent {
   leadNumber: any = '';
   customerInfo : any ={};
   otpInfo : any ={};
-
+  timer: number = 120; // 2 minutes in seconds
+  interval: any;
 
   constructor(private formBuilder: FormBuilder,private rugService : RugService,private route: ActivatedRoute,private router: Router
     ,private leadService: LeadsService,private toast: NgToastService){ }
@@ -95,6 +96,7 @@ export class HdfcOptvalidationComponent {
             if (JSON.parse(response.data).isSuccess) {
               this.toast.success({ detail: "Success", summary: 'OTP Send Successfully.', duration: 3000 });
               this.isShowOtp = true;
+              this.startTimer();
               this.otpInfo =JSON.parse(response.data).data.responseString;
             }else{
               this.toast.error({ detail: "error", summary: 'Failed to send OTP.', duration: 3000 });
@@ -121,8 +123,10 @@ export class HdfcOptvalidationComponent {
           this.toast.success({ detail: "Success", summary: 'Validated Successfully.', duration: 3000 });
           this.customerInfo =  JSON.parse(response.data).data.serviceResponse.sas_DIM_DEDUPE_OUTPUT.all_ACCOUNT.account_INFO;
           this.isCustomerInfo = true;
-          }else{
-            this.toast.error({ detail: "error", summary: 'Incorrect OPT.', duration: 3000 });
+          }
+          else{  
+            this.toast.error({ detail: "error", summary: JSON.parse(response.data).message, duration: 3000 });
+            this.isShowOtp=false;
           }
         },
         (error)=>{
@@ -146,6 +150,7 @@ export class HdfcOptvalidationComponent {
         this.customerForm.patchValue({
           mobilenumber : response.data.leadList[0].phoneNumber
         });
+        this.customerForm.get('mobilenumber')?.disable();
       }
      },(error)=>{
       this.toast.error({ detail: "error", summary: 'Failed to Fetch Lead Information.', duration: 3000 });
@@ -158,17 +163,24 @@ export class HdfcOptvalidationComponent {
       customerName: `${this.customerInfo.v_D_CUST_FIRST_NAME ?? ''} ${this.customerInfo.v_D_CUST_LAST_NAME ?? ''}`.trim(),
       dob: this.customerInfo.d_D_CUST_DATE_OF_BIRTH ?? '',
       mobileNumber: this.customerInfo.v_D_CUST_MOBILE_PHONE ?? '',
-      address1: this.customerInfo.v_D_CUST_OFF_ADR1 ?? '',
+      address1: this.customerInfo.v_D_CUST_ADD1 ?? '',
       address2: this.customerInfo.v_D_CUST_ADD2 ?? '',
-      address3: this.customerInfo.v_D_CUST_OFF_ADR3 ?? '',
+      address3: this.customerInfo.v_D_CUST_ADD3 ?? '',
       city: this.customerInfo.v_D_CUST_CITY ?? '',
       state: this.customerInfo.v_D_CUST_STATE ?? '',
       pincode: this.customerInfo.v_D_CUST_ZIP_CODE ?? '',
       emailID: this.customerInfo.v_D_CUST_EMAIL_ADD ?? '',
       gender: this.customerInfo.v_D_CUST_GENDER ?? '',
       leadNumber: this.leadNumber ?? '',
-      agentcode: ''
+      panNumber:this.customerInfo.v_D_CUST_IT_NBR??'',
+      agentcode: '2100465',
+      customerId:this.customerInfo.customer_ID??''
     };
+
+      if (!this.customerInfo.v_D_CUST_IT_NBR ||!this.customerInfo.v_D_CUST_ADD1 ||!this.customerInfo.v_D_CUST_ADD2  ) {
+      this.toast.warning({ detail: "Warning", summary: 'Mandatory details are required to process the journey.', duration: 2000 });
+      return;
+      }
 
     this.rugService.generateProposal(reqData).subscribe(
       (response: any) => {
@@ -182,7 +194,40 @@ export class HdfcOptvalidationComponent {
 
       }
     );
-  }}
+  }
+
+  startTimer() {
+    this.interval = setInterval(() => {
+      if (this.timer > 0) {
+        this.timer--;
+      } else {
+        clearInterval(this.interval);
+        this.isShowOtp = false;
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.interval);
+  }
+
+  getFormattedTime() {
+    const minutes = Math.floor(this.timer / 60); // Get minutes
+    const seconds = this.timer % 60; // Get seconds
+    return `${this.padZero(minutes)}:${this.padZero(seconds)}`;
+  }
+
+  padZero(value: number) {
+    return value < 10 ? `0${value}` : value;
+  }
+
+
+  closeModel(){
+    window.location.reload();
+  }
+}
+
+  
 
 
 

@@ -54,6 +54,8 @@ export class CreateLeadComponent implements OnInit {
   productSumInsured: any = [];
   occupationInfo : any;
   pincodeResponse : any='';
+  pinCode: any;
+  productId: any;
  
   constructor(private formBuilder: FormBuilder,private toast: NgToastService, private router: Router,private route: ActivatedRoute,private leadsService: LeadsService,
     private datePipe: DatePipe,public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,private cdr: ChangeDetectorRef,private datepipe: DatePipe,
@@ -139,7 +141,8 @@ export class CreateLeadComponent implements OnInit {
       leadAssignee: [''],
       isUpdate: 0,
       leadStatus: [''],
-      leadSubStatus: ['']
+      leadSubStatus: [''],
+      additionalInformation : ['']
     });
 
       // Disable the age control
@@ -209,6 +212,7 @@ export class CreateLeadComponent implements OnInit {
     this.CreateLead.age = age.toString();
     this.CreateLead.zone =  this.userValidations.get('zoneCode')?.value;
     this.CreateLead.leadPriority  =this.userValidations.get('leadSubStatus')?.value;
+    this.CreateLead.additionalInformation = this.userValidations.get('additionalInformation')?.value;
 
     
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
@@ -277,7 +281,8 @@ export class CreateLeadComponent implements OnInit {
       leadStatus : this.submittedUser?.leadStatus??'',
       interestedProductName: this.submittedUser?.interestedProductName??'',
       leadSubStatus : this.submittedUser?.leadPriority??'',
-      zoneCode : this.submittedUser?.zone??''
+      zoneCode : this.submittedUser?.zone??'',
+      additionalInformation : this.submittedUser?.additionalInformation??'',
     });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
@@ -312,15 +317,17 @@ export class CreateLeadComponent implements OnInit {
   }
 
   changeSumInsured(event: any) {
+    // if (event.target.value === 'Active Secure') { 
+    //   this.userValidations.get('sumInsured')?.disable();
+    // }
     if (event) {
-      const selectedValue = typeof (event) === 'string' ? event : event.target.value;  
-      this.productSumInsured = this.productsList.find(
-        (product: any) => product.productName === selectedValue
-      )?.sumInsured.split(",");  
+      const selectedValue = typeof (event) === 'string' ? event : event.target.value; 
+      this.productId = this.productsList.find((product: any) => product.productName === event.target.value)?.productId 
       this.userValidations.patchValue({
         sumInsured: ''
       });  
       this.setPolicyType(selectedValue);
+      this.getSumInsured();
     }
   }
 
@@ -466,10 +473,11 @@ export class CreateLeadComponent implements OnInit {
       next: (res) => {
         this.productsList = res.data;
         if (this.submittedUser) {
-          this.productSumInsured = this.productsList.find((product: any) => product.productName === this.submittedUser.interestedProductName)?.sumInsured.split(",");
+          this.productId = this.productsList.find((product: any) => product.productName === this.submittedUser.interestedProductName)?.productId
           this.userValidations.patchValue({
           sumInsured: this.submittedUser?.sumInsured ?? ''
           });
+          this.getSumInsured();
         }
       },
       error: (err) => {
@@ -479,7 +487,11 @@ export class CreateLeadComponent implements OnInit {
   }
 
   fetchOccupationInfo() {
-    this.leadsService.getOccupationInfo().subscribe(
+    const reqData = {
+      "agentCode":localStorage.getItem('agentCode')
+      };
+
+    this.leadsService.getOccupationInfo(reqData).subscribe(
       (response) => {
         if(response?.isSuccess){
           this.occupationInfo =  response?.data;
@@ -501,6 +513,7 @@ export class CreateLeadComponent implements OnInit {
   }
 
   getZoneByPinCode(pincode: any) {
+    this.pinCode = pincode
     const reqData = {
       "pincode": pincode
     }
@@ -528,7 +541,31 @@ export class CreateLeadComponent implements OnInit {
       }
     )
   }
-
+  getSumInsured(){
+    console.log(this.agentCode); 
+    console.log(this.productId);
+    console.log(this.pinCode);
+    console.log(this.productId.toString());    
+    
+    const reqData = {
+      pincode: this.submittedUser.pincode || this.pinCode,
+      agentCode: this.agentCode,
+      productId: this.productId.toString(),
+    };
+    console.log("request body",reqData);
+    this.commonService.getPinCodeByCity(reqData).subscribe({
+      next: (res: any) => {
+        if (res.isSuccess && res.data) {
+          this.productSumInsured = res.data.sumInsured ? res.data.sumInsured.split(",") : [];
+          console.log("product sum insured",this.productSumInsured);
+        } else {
+          console.error("Failed to fetch sumInsured. Resetting options.");
+        }
+      },
+      error: (err: any) => {
+        console.error("Error fetching sumInsured:", err);
+      },
+    });
+  }
 
 }
-

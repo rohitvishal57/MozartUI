@@ -31,7 +31,10 @@ export class CommonService {
     const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalNumber;
     return this.http.get<any>(proposalnumber);
   }
-
+  getProposalNumberHdfc(reqdata: any) {
+    const proposalnumber = this.configService.config.baseUrl + this.configService.config.getProposalNumberHDFC;
+    return this.http.post<any>(proposalnumber, reqdata);
+  }
   Getproductlist(reqData: any) {
     const productList = this.configService.config.baseUrl + this.configService.config.productList;
     return this.http.post<any>(productList, reqData)
@@ -42,13 +45,14 @@ export class CommonService {
     return this.http.post<any>(formSequence, reqData)
   }
 
-  GetSingleProductQuote(reqData: any) {;
-    const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
+  GetSingleProductQuote(reqData: any) {
+    const singleProductQuote = this.configService.config.baseUrl + this.configService.config.getSingleProductQuote;
+    // const singleProductQuote = 'https://localhost:7188/getquoteforsingleproduct';
     return this.http.post<any>(singleProductQuote, reqData);
   }
   
   UpdateAgentAllFormData(reqData:any){
-    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/UpdateAgentAllFormData";
+    const saveCommonDraftData = this.configService.config.baseUrl + this.configService.config.updateAgentAllFormData;
     return this.http.post<any>(saveCommonDraftData,reqData);
   }
 
@@ -86,7 +90,7 @@ export class CommonService {
   }
 
   uploadDocument(reqData:any){
-    const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
+    const uploadDocument= this.configService.config.baseUrl+this.configService.config.uploadDocument;
     return this.http.post(uploadDocument,reqData);
   }
 
@@ -126,5 +130,15 @@ export class CommonService {
       arrayBuffer[i] = binary.charCodeAt(i);
     }
     return new Blob([arrayBuffer], { type });
+  }
+  insertProposerDocuments(reqData: any)
+  {
+    const insertProposerDocuments = this.configService.config.baseUrl + this.configService.config.insertProposerDocuments;
+    return this.http.post(insertProposerDocuments, reqData);
+  }
+  getfullquotejsonfromproposalnum(reqData:any){
+    const getfullquotejsonfromproposalnum = this.configService.config.baseUrl + this.configService.config.getfullquotejsonfromproposalnum;
+    return this.http.post<any>(getfullquotejsonfromproposalnum, reqData)
+  
   }
 }

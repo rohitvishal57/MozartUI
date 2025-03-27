@@ -24,9 +24,9 @@ export interface IFormSections {
   sectionButton?: ISectionButton;
   class?: string;
   toolTipText?: string;
-  urlDependentControls?:any;
-  urlPath?:any;
-  productFeaturesUrl?:any
+  urlDependentControls?: any;
+  urlPath?: any;
+  productFeaturesUrl?: any
 }
 export interface ISectionButton {
   label?: string;
@@ -64,7 +64,7 @@ export interface IFormControl {
   validationRules?: any[];
   disabled?: boolean;
   dynamicControls?: IDynamicControl[][];
-  innerArrayControl?:IDynamicControl[][];
+  innerArrayControl?: IDynamicControl[][];
   bannerText?: string;
   image?: Image;
   additionalCovers?: IAdditionalCover[];
@@ -89,18 +89,21 @@ export interface IFormControl {
   tabs?: ITab[];
   bigFontValue?: string;
   details?: any;
-  button?:any;
-  icon?:string;
-  imageUrl?:string;
+  button?: any;
+  icon?: string;
+  imageUrl?: string;
   maxDateLength?: any;
-  minDateLength?:any;
+  minDateLength?: any;
   maxLength?: any;
   minLength?: any;
   inputMaxLength?: any;
-  visibleToolTip?:boolean;
-  toolTipMessage?:string;
-  isDefault?:boolean;
+  visibleToolTip?: boolean;
+  toolTipMessage?: string;
+  isDefault?: boolean;
+  notMandatory?:boolean;
   postControlCreationMethod?: string;
+  dependentAddOnControls?: any[];
+  visibleCondition?: any[];
 }
 export interface ISubControl {
   name: string;
@@ -124,17 +127,20 @@ export interface ISubControl {
   bigFont?: boolean;
   dependentControls?: string[];
   getAllOption?: string;
-  isButton?:boolean;
-  innerArrayControl?:IDynamicControl[][];
-  conditionCheck?:boolean;
+  isButton?: boolean;
+  innerArrayControl?: IDynamicControl[][];
+  conditionCheck?: boolean;
   maxDateLength?: any;
-  minDateLength?:any;
+  minDateLength?: any;
   maxLength?: any;
-  visibleToolTip?:boolean;
-  toolTipMessage?:string;
+  visibleToolTip?: boolean;
+  toolTipMessage?: string;
   onChangeMethod?: string;
   methodName?: string;
-  allowedRelations?:string[];
+  allowedRelations?: string[];
+  tooolTipTable?: any[];
+  visibleToolTipTable?: boolean;
+  tableHeadArray?: any[];
 }
 
 export interface ITab {
@@ -142,9 +148,9 @@ export interface ITab {
   label: string;
   content: any;
   selectCheckboxOptions?: ISelectCheckboxOption[];
-  type:string;
-  class:string;
-  visibleLabel:boolean;
+  type: string;
+  class: string;
+  visibleLabel: boolean;
 }
 
 export interface IConditionalVisibility {
@@ -160,21 +166,21 @@ export interface IRadioOption {
   year?: string;
   discount?: string;
   dependentControls?: any[];
-  visible:boolean
+  visible: boolean
 }
 
 export interface ISelectCheckboxOption {
-  label?: string;   
+  label?: string;
   value: string;
   button?: boolean;
   imagePath?: string;
   isIncrement?: boolean;
-  name?:string;
+  name?: string;
   dependentControls?: any;
-  gender?:any;
-  id?:any;
-  memberRelationCode?:any;
-  productId?:any;
+  gender?: any;
+  id?: any;
+  memberRelationCode?: any;
+  productId?: any;
 }
 
 export interface IImage {
@@ -218,8 +224,8 @@ export interface IDynamicControl {
   value?: any;
   apiEndpoint?: any;
   disabled?: boolean;
-  relationDisabled?:boolean;
-  questionCondition?:boolean;
+  relationDisabled?: boolean;
+  questionCondition?: boolean;
   class?: string;
   restrictKeyPress?: boolean;
   methodName?: any;
@@ -232,12 +238,13 @@ export interface IDynamicControl {
   subControls?: ISubControl[][];
   innerArrayControl?: IDynamicControl[][];
   innerControls?: ISubControl[];
-  image?:IImage;
-  tabs?:ITab[];
+  innerSubControls?: ISubControl[];
+  image?: IImage;
+  tabs?: ITab[];
   onChangeMethod?: string;
   getAllOption?: string;
   maxDateLength?: any;
-  minDateLength?:any;
+  minDateLength?: any;
   maxLength?: any;
   minLength?: any;
   inputMaxLength?: any;

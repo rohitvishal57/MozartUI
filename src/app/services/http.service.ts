@@ -15,7 +15,7 @@ export class HttpService {
   }
 
   // POST request
-  post<T>(url: string, body: any, options?: any): Observable<HttpEvent<T>> {
+  post<T>(url: string, body?: any, options?: any): Observable<HttpEvent<T>> {
     return this.http.post<T>(url, body, options);
   }
 

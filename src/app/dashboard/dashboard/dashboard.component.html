@@ -13,9 +13,47 @@
             </div>
           </div> -->
           <div class="body_flex_row align-items-center justify-content-between customiseDashboard_bodyColumns">
-            <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
-            <button type="button" class="block-hide btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
-              src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
+            <div class="body_flex_row goodmorning_wraper">
+              <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})  <span *ngIf="profileDetails?.annualClubStatus2" class="proseller_img"><img src="assets/Img/icon_dashboard_earnbadge.svg"> <span>{{profileDetails?.annualClubStatus2}}</span></span></h6>
+              <!-- <div class="proseller_img"><img src="assets/Img/img_proSeller.svg"></div> -->
+            </div>
+            <div class="filterfields_input">
+              <div class="teamView_container" *ngIf="filteredItems.length > 0">
+                  <!-- Team View Button -->
+                  <button class="teamView_btn" (click)="toggleDropdown()" [disabled]="filteredItems.length === 0">
+                    Team View <span class="teamView_icon"><img
+                      src="assets/Img/icon_teamview.svg"></span>
+                  </button>
+                
+                  <!-- Dropdown (Shown When Clicked) -->
+                  <div *ngIf="isDropdownOpen" class="teamView_dropdown_container" #dropdown>
+                    <!-- Header with Search Bar & Close Button -->
+                    <div class="teamView_dropdown_header">
+                      <input type="text" placeholder="Search.." [(ngModel)]="filterText" (input)="filterItems()" class="teamView_inputText" />
+                      <button class="btn-close" (click)="closeDropdown()"></button>
+                    </div>
+                
+                    <!-- Dropdown Items -->
+                    <div class="teamView_dropdown_body">
+                      <div class="input-checkbox-block">
+                          <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
+                            <a (click)="teamViewRedirect(item?.agentCode)" >
+                              {{ item?.firstName ? item?.firstName + ' ' : '' }}({{ item?.agentCode }})
+                            </a>
+                          </div>
+                      </div>
+                    </div>
+                
+                    <!-- Footer -->
+                    <div class="teamView_dropdown_footer">
+                      <!-- <span class="deselect-all" (click)="toggleSelectAll()">{{ isAllSelected ? 'Clear All' : 'Select All' }}</span> -->
+                      <button (click)="clearTeamView()">Clear</button>
+                    </div>
+                  </div>
+              </div>
+              <button type="button" class="btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard" (click)="onSubmit()"><img
+                src="assets/Img/icon_custom_dashboard.svg"> {{"Customise Your Dashboard" | translate}}</button>
+            </div>
           </div>
         </section>
         <div class="section_fullWidth" >
@@ -264,44 +302,6 @@
                   <h2>{{"Performance Overview" | translate}}</h2>
                   <div class="filter_performanceOverview">
                     <div class="filterfields_PO">
-                      <div class="filterfields_input">
-                        <div class="teamView_container">
-                            <!-- Team View Button -->
-                            <button class="teamView_btn" (click)="toggleDropdown()">
-                              Team View <span class="teamView_icon"><img
-                                src="assets/Img/icon_teamview.svg"></span>
-                            </button>
-                          
-                            <!-- Dropdown (Shown When Clicked) -->
-                            <div *ngIf="isDropdownOpen" class="teamView_dropdown_container" #dropdown>
-                              <!-- Header with Search Bar & Close Button -->
-                              <div class="teamView_dropdown_header">
-                                <input type="text" placeholder="Find something" [(ngModel)]="filterText" (input)="filterItems()" class="teamView_inputText" />
-                                <button class="btn-close" (click)="closeDropdown()"></button>
-                              </div>
-                          
-                              <!-- Dropdown Items -->
-                              <div class="teamView_dropdown_body">
-                                <div class="input-checkbox-block">
-                                    <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
-                                      <input type="checkbox" id="{{ item.name }}-{{i}}" [(ngModel)]="item.selected" (change)="onInputChange()" class="input-check" />
-                                      <label for="{{ item.name }}-{{i}}">{{ item.name }}</label>
-                                    </div>
-                                </div>
-                                <!-- <div *ngFor="let item of filteredItems" class="item">
-                                  <label>{{ item.name }}</label>
-                                  <input type="checkbox" [(ngModel)]="item.selected" />
-                                </div> -->
-                              </div>
-                          
-                              <!-- Footer -->
-                              <div class="teamView_dropdown_footer">
-                                <span class="deselect-all" (click)="toggleSelectAll()">{{ isAllSelected ? 'Clear All' : 'Select All' }}</span>
-                                <button (click)="submit()">Submit</button>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
                       <div class="filterfields_input"> 
                         <div class="input-block input-block-renew compare_inputblock">
                           <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
@@ -322,7 +322,7 @@
                   </div>
                 </div> -->
                 <div *ngIf="performanceCard.length">
-                  <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList
+                  <div class="cardWraper-container cardWraper-container-po" cdkDropListOrientation="horizontal" cdkDropList
                     (cdkDropListDropped)="dropPerformance($event)">
                     <ng-container *ngFor="let perform of performanceCard">
                       <ng-container [ngSwitch]="perform.type">
@@ -331,8 +331,8 @@
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
-                          <div class="value">{{perform.value}}</div>
-                          <div class="card-tip" *ngIf="perform.description"><img
+                          <div class="value">{{perform.value == 0 ? "--" : perform.value}}</div>
+                          <div class="card-tip" *ngIf="perform.description && perform.value != 0"><img
                               [src]="perform.subIcon">{{perform.description | translate}}</div>
                         </div>
                         <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
@@ -340,19 +340,35 @@
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
-                          <div class="value">₹ {{perform.value}}</div>
-                          <div class="progress-barMain">
+                          <div class="value" *ngIf="perform.title === 'Agent Activation(MTD)'; else defaultValue">{{perform.value == 0 ? "--" : perform.value}}</div>
+                          <ng-template #defaultValue><div class="value" *ngIf="perform.title === 'Premium'; else definedValue" >{{ perform.value == 0 ? '--' : (convertToLakhsOrCrores(perform.value)) }}</div></ng-template>
+                          <ng-template #definedValue><div class="value">{{ perform.value == 0 ? '--' : '₹' + perform.value}}</div></ng-template>
+                          <div class="progress-barMain" *ngIf="perform.description && perform.value != 0">
                             <p>{{perform.description | translate}}</p>
                             <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                           </div>
                         </div>
-                        <div style="cursor: pointer;" [routerLink]="'/performance/my-performance'" [queryParams]="{ status: 1}" [ngClass]="'cardItem ' + perform.class"
+                        <div style="cursor: pointer;" [routerLink]="'/customers/customersList'" [ngClass]="'cardItem ' + perform.class"
+                        *ngSwitchCase="'percentage'" cdkDrag [cdkDragDisabled]="!isDesktopView">
+                        <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
+                          translate}}
+                        </header>
+                        <div class="value">{{ perform.value == 0 ? '--' : perform.value + '%'}}</div>
+                        <div class="progress-barMain" *ngIf="perform.description && perform.value != 0">
+                          <p>{{perform.description | translate}}</p>
+                          <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
+                        </div>
+                      </div>
+                        
+                        <div style="cursor: pointer;" [routerLink]="perform.title === 'Claim Count' ? '/claims/claimsList' : '/performance/my-performance'" 
+                        [queryParams]="{ status: 1}" [ngClass]="'cardItem ' + perform.class"
                           *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="!isDesktopView">
                           <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
                             translate}}
                           </header>
-                          <div class="value">₹ {{perform.value}}</div>
-                          <div class="card-tip" *ngIf="perform.description"><img
+                          <div class="value" *ngIf="perform.title === 'Claim Count'; else defaultValue"> {{ perform.value == 0 ? '--' : perform.value}}</div>
+                          <ng-template #defaultValue><div class="value"> {{perform.value == 0 ? '--' : '₹' + perform.value }}</div></ng-template>
+                          <div class="card-tip" *ngIf="perform.description && perform.value != 0"><img
                               src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
                           </div>
                         </div>
@@ -469,7 +485,9 @@
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                     <header class="leads_itemHeader"
                       [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
-                      <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span><label>{{tab.totalCount}}</label>
+                      <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span>  <label>
+                        {{ tab.totalCount }}<ng-container *ngIf="tab.widgetName === 'Persistency'">%</ng-container>
+                      </label>
                     </header>
                     <div class="leads_content leads_contentDashboard leads_newService">
                       <div class="scroll_contentDashboard">
@@ -477,7 +495,7 @@
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
                               <div *ngSwitchCase="'Renewal'">
-                                <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count, filter: businessFilter }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -517,25 +535,32 @@
                  <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="!isDesktopView"
                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                    <header class="leads_itemHeader"
-                     [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals' }">
-                     <span>{{"Total" | translate}} {{tab.widgetName | translate}}</span><label>{{tab.totalCount}}</label>
-                   </header>
+                   [ngClass]="{'leads_itemHeaderProposal': tab.widgetName == 'Proposals'}">
+                   <ng-container *ngIf="tab.widgetName === 'Customers'; else defaultValue">
+                     <span>{{'Active' | translate}} {{tab.widgetName | translate}}</span>
+                     <label>{{tab.totalCount}}</label>
+                   </ng-container>
+                   <ng-template #defaultValue>
+                     <span>{{'Total' | translate}} {{tab.widgetName | translate}}</span>
+                     <label>{{tab.totalCount}}</label>
+                   </ng-template>
+                 </header>
                    <div class="leads_content leads_contentDashboard leads_newService">
                      <div class="scroll_contentDashboard">
                        <div class="data_inscroll_noneed">
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.widgetName">
-                             <div *ngSwitchCase="'Customer'">
+                             <div *ngSwitchCase="'Customers'">
                                <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                  <header>
-                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name + 's' }}</span>
                                    <label>{{buz.count}}</label>
                                  </header>
                                </div>
                              </div>
                             
                              <div *ngSwitchCase="'Claims'">
-                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                               <div class="leads_item leads_open" style="cursor: pointer;" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count, filter: businessFilter }">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>
@@ -651,7 +676,7 @@
                             <header><span class="cardItem_icon"><img
                                   src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{cat.name | translate}}
                             </header>
-                            <div class="value">₹ {{cat.count}}</div>
+                            <div class="value"> {{cat.count}}</div>
                             <div class="card-tip">
                               <img src="assets/Img/icon_currency.svg">
                               {{"Nudge your users to actively participate to save more" | translate}}

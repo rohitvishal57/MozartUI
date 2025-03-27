@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-product-details',
@@ -7,11 +8,12 @@ import { Component } from '@angular/core';
 })
 export class ProductDetailsComponent {
   pdfUrl = 'assets/productdetails.pdf'; // Adjust the path to your PDF file
+  disableBuyJourney: boolean | undefined;
 
-
-  constructor() {}
+  constructor(private authService: AuthService) {}
   ngOnInit() {
     // this.downloadPdf();
+    this.disableBuyJourney = this.authService.getUserInfo().disableBuyJourney;
   }
   downloadPdf() {
     const link = document.createElement('a');

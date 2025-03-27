@@ -224,6 +224,7 @@ export class ViewForDualJourneyComponent implements OnInit {
   onsearch(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
     this.displayedLeads = this.getAllLeads.filter((option: any) =>
+      option?.proposerName?.toLowerCase().includes(this.searchTerm) ||
       option?.mobileNumber?.toLowerCase().includes(this.searchTerm) ||
       option?.refNo?.toLowerCase().includes(this.searchTerm) ||
       option?.policyNumber?.toLowerCase().includes(this.searchTerm) ||

@@ -50,16 +50,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-4" *ngIf="isShowOtp==false">
+                            <!-- <div class="row mt-4" *ngIf="isShowOtp==false">
                                 <div class="col-12">
                                     <button type="submit" id="save" name="save" class="btn_red col-md-3"
                                         (click)="onSubmit()">{{"Submit"}}</button>
                                 </div>
                             </div>
+                            <div class="row mt-2" >
+                                <div class="col-12">
+                                    <button type="submit" id="close" name="close" class="btn_red col-md-3"
+                                        (click)="closeModel()">{{"Close"}}</button>
+                                </div>
+                            </div> -->
+                            <div class="row mt-4" *ngIf="isShowOtp == false">
+                                <div class="col-12">
+                                  <button type="submit" id="save" name="save" class="btn_red col-md-3"
+                                    (click)="onSubmit()">{{ "Submit" }}</button>
+                                </div>
+                              </div>
+                              
+                              
                             <div *ngIf="isShowOtp && isCustomerInfo == false" class="row mt-4">
                                 <div class="col-12 col-sm-12 col-md-10 col-lg-5 col-xl-10">
                                     <div class="input-block m-0">
-                                        <label for="">Enter OTP</label>
+                                        <label for="" style="font-weight: 500;">Enter OTP</label>
                                         <div class="input-group-block input-otp-block">
                                             <input type="text" maxlength="1" class="input-textBox"
                                                 (input)="focusNext($event, input2)" #input1
@@ -90,11 +104,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div *ngIf="isShowOtp && isCustomerInfo == false" class="row mt-4">
-                                <div class="col-12">
-                                    <button type="button" id="save" name="save" class="btn_red col-md-8"
+                        <div *ngIf="isShowOtp && isCustomerInfo == false" class="col-12 mt-3">
+                            <div *ngIf="timer > 0" class="timer_main"><span class="icon_timer"><img src="/assets/Img/icon_otp_timer.svg"></span><span class="timer_content">Time remaining: <span class="timer_count">{{ getFormattedTime()  }}</span> seconds</span></div>
+                            <span *ngIf="timer == 0">OTP Expired</span>
+                        </div>
+                            <div *ngIf="isShowOtp && isCustomerInfo == false" class="row mt-3 mb-2">
+                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                    <button type="button" id="save" name="save" class="btn_red btn_rug_fullwidth"
                                         (click)="ValidateOTP()">{{"Validate OTP" }}</button>
                                 </div>
+
+                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                    <button type="button" id="close" name="close" class="btn_pink btn_rug_fullwidth"
+                                        (click)="closeModel()">{{"Close" }}</button>
+                                </div>
+                                
                             </div>
                         </section>
 
@@ -122,11 +146,11 @@
                                                     </li>
                                                     <li>
                                                         <span class="label">Address 1:</span>
-                                                        <span class="value">{{customerInfo.v_D_CUST_OFF_ADR1}}</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_ADD1}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">Address 3 :</span>
-                                                        <span class="value">{{customerInfo.v_D_CUST_OFF_ADR3}}</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_ADD3}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">State:</span>
@@ -152,7 +176,7 @@
                                                     </li>
                                                     <li>
                                                         <span class="label">PAN:</span>
-                                                        <span class="value">{{customerInfo.v_D_CUST_IT_PAN2}}</span>
+                                                        <span class="value">{{customerInfo.v_D_CUST_IT_NBR}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">Address 2:</span>

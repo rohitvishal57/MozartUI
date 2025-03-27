@@ -64,4 +64,9 @@ export class DashboardService {
     const productList = this.configService.config.baseUrl + this.configService.config.getTopProducts;
     return this.httpService.get(productList)
   }
+
+  getAgentCategoryDetails(reqData: any) {
+    const agentCategory = this.configService.config.baseUrl + this.configService.config.getagentportabilityandcategorydetails;
+    return this.httpService.post(agentCategory,reqData);
+  }
 }

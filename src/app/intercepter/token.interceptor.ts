@@ -118,7 +118,27 @@ export class TokenInterceptor implements HttpInterceptor {
     "https://upuat.adityabirlahealth.com/api/rug/SaveTSCommonDraft",
     "https://usp.monocept.ai/api/rug/GetEMployeeDetails",
     "https://usp.monocept.ai/api/rug/SaveLeadDetailshdfc",
-    "https://usp.monocept.ai/api/rug/GetSumInsuredList"
+    "https://usp.monocept.ai/api/rug/GetSumInsuredList",
+    "https://usp.monocept.ai/api/rug/GetLeadDetailsBata",
+    "https://usp.monocept.ai/api/rug/EnquirePaymentDetails",
+    "https://upuat.adityabirlahealth.com/api/rug/EnquirePaymentDetails",
+    "https://upuat.adityabirlahealth.com/api/rug/CapturePayment",
+    "https://usp.monocept.ai/api/rug/CapturePayment",
+    "https://usp.monocept.ai/api/rug/GetProposalNumberHDFC",
+    "https://upuat.adityabirlahealth.com/api/rug/CallQuote",
+    "https://usp.monocept.ai/api/rug/SendShortenUrl",
+    "https://upuat.adityabirlahealth.com/api/rug/SendShortenUrl",
+    "https://upuat.adityabirlahealth.com/api/rug/GetPolicyInfoByLeadId",
+    "https://upuat.adityabirlahealth.com/api/rug/GetProposalNumberHDFC",
+    "https://upuat.adityabirlahealth.com/api/rug/GetEMployeeDetails",
+    "https://upuat.adityabirlahealth.com/api/rug/GetLeadDetailsBata",
+    "https://upuat.adityabirlahealth.com/api/rug/getAllDisposition?appName=btsp",
+    "https://upuat.adityabirlahealth.com/api/rug/GetHDFCSMCodes",
+    "https://upuat.adityabirlahealth.com/api/rug/UploadBBDocument",
+    "https://usp.monocept.ai/api/rug/GetBankDetailsByIfsc",
+    "https://usp.monocept.ai/api/rug/GetHDFCSMCodes",
+    "https://usp.monocept.ai/api/rug/CallQuote",
+    "https://upuat.adityabirlahealth.com/api/v1/CheckLeadExist"
   ];
 
   intercept(

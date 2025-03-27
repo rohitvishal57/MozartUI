@@ -18,8 +18,8 @@
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count">
-                <button *ngIf="i < getFormIndexValue()" (click)="onDrillDown(i, case)" class="btn btn-default" class="nav-index">
-                  {{ i + 1 }}
+                <button *ngIf="i < getFormIndexValue()" [disabled]="isTS && i === 0" (click)="isTS ? onDrillDown(i == getFormIndexValue() - 1 ? i - 1 : i, case) : onDrillDown(i, case)" class="btn btn-default" class="nav-index">
+                  {{ i + 1 }} 
                 </button>
                 <button *ngIf="i == getFormIndexValue() " class="btn btn-default" class="nav-last">
                   {{i+1}}
@@ -80,7 +80,7 @@
                       [name]="control.name" [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
                       (change)="onInputChange($event, control)" readonly>
                     <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}
-                      <span *ngIf="control.validators">*</span>
+                      <span *ngIf="control.validators && !control.notMandatory">*</span>
                     </label>
                   </div>
                   <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
@@ -110,6 +110,10 @@
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
                     class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
                     ''}}
+                  </small>
+                  
+                  <small *ngIf="dynamicFormGroup.get(control.name)?.hasError('childAgeRange')" class="text-danger">
+                    Child age should be between 5 years to 25 years
                   </small>
                 </div>
 
@@ -280,11 +284,41 @@
                     ''}}
                   </small>
                 </div>
+                <div *ngIf="control.type==='customizeSelect'" [class]="control.class" class="typecss"
+                [hidden]="!control.visible">
+                <div class="input-container custom-dropdown">
+                  <!-- Label -->
 
+
+                  <!-- Input field with datalist -->
+                  <input type="text" formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
+                    list="agentIdList" class="inputField_Select pointer-cursor"
+                    (change)="onInputChange($event, control)" [ngClass]="{'has-value': hasAnyValue(control)}"
+                    placeholder="{{ control.label }}">
+                    <label *ngIf="control.visibleLabel">
+                      {{ control.label ? (control.label | translate) : '' }}
+                      <span *ngIf="control.validators">*</span>
+                    </label>
+                  <datalist id="agentIdList">
+                    <ng-container *ngFor="let opt of control.options" [class]="control.class">
+                      <option [value]="opt.value" [disabled]="opt.disabled" [class]="opt.class">
+                    </ng-container>
+                  </datalist>
+                </div>
+                <!-- Validation Error Message -->
+                <small
+                  *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                  class="text-danger">
+                  {{ getValidationErrors(control) ? (getValidationErrors(control) | translate) : '' }}
+                </small>
+              </div>
                 <div *ngIf="control.type === 'captcha'">
                   <img *ngIf="control.imagesrc" [src]="control.imagesrc" alt="captcha" [class]="control.class">
                 </div>
-
+                <a *ngIf="control.type === 'link' && control.name == 'knowMoreTeleOPD'" href="javascript:void(0);" 
+                [class]="control.class" (click)="onKnowMoreClick(control)">
+                {{ control.value }}
+                </a>
                 <div *ngIf="control.type === 'line' && control.visible === true" [class]="control.class">
                   <hr />
                 </div>
@@ -293,7 +327,7 @@
                 [hidden]="!control.visible">
                   <div class="input-container">
                     <textarea class="inputField_Text"
-                      [formControlName]="control.name" [name]="control.name" 
+                      [formControlName]="control.name" [name]="control.name" [ngClass]="{'has-value': hasAnyValue(control)}"
                       [id]="control.name"></textarea>
                     <label class="inputField_Label"
                       *ngIf="control.visibleLabel">{{
@@ -303,7 +337,8 @@
                   </div>
                 </div>
                 <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
-                  <p *ngIf="!isD2C && !isBB" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                  <p *ngIf="!isD2C && !isBB && !isTS && control.name != 'Disclaimer'" [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                  <p *ngIf="!isD2C && !isBB && !isTS && control.name == 'Disclaimer'" [innerHTML]="control.label ? (control.label | translate) : ''" style="color: #c7222a;"></p>
                   <p *ngIf="control.value && !isD2C && !isBB" [innerHTML]="control.value"></p>
                   <div *ngIf="isD2C || isBB" [ngClass]="{'form-box declarationBox':  (isD2C || isBB) && control.name === 'd2cDeclarationLabel1' }">
                     <div class="row">
@@ -329,7 +364,50 @@
                     
                     
                   </div>
-
+                  <div *ngIf="isTS" [ngClass]="{'form-box declarationBox':  (isTS) && (control.name === 'tsDeclarationLabel1' || control.name === 'tsDeclarationLabel2') }">
+                    <div class="row">
+                      <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9" *ngIf="(control.name === 'tsDeclarationLabel1' ||  control.name === 'tsDeclarationLabel2')">
+                        <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                      </div>
+                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="control.name !== 'tsDeclarationLabel1' && control.name !== 'tsDeclarationLabel2'">
+                        <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
+                      </div>
+                      <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 text-center">
+                        <div *ngIf="control.name === 'tsDeclarationLabel1' && this.productId == '29'" class="radio-button">
+                          <label class="input-radiolabel  labelflex-auto">
+                            <input type="radio" name="tsDeclarationSelected" [formControl]="tsDeclarationSelected" value="yes" id="declaration-yes">
+                            <span>YES</span>
+                          </label>
+                            <label class="input-radiolabel labelflex-auto">
+                                <input type="radio" name="tsDeclarationSelected" [formControl]="tsDeclarationSelected" value="no" id="declaration-no" checked="">
+                                <span>NO</span>
+                            </label>
+                        </div>
+                        <div *ngIf="control.name === 'tsDeclarationLabel2' && this.productId == '29'" class="radio-button">
+                          <label class="input-radiolabel  labelflex-auto">
+                            <input type="radio" name="tsDeclaration2Selected" [formControl]="tsDeclaration2Selected" value="yes" id="declaration-yes">
+                            <span>YES</span>
+                          </label>
+                            <label class="input-radiolabel labelflex-auto">
+                                <input type="radio" name="tsDeclaration2Selected" [formControl]="tsDeclaration2Selected" value="no" id="declaration-no" checked="">
+                                <span>NO</span>
+                            </label>
+                        </div>
+                        <div *ngIf="control.name === 'tsDeclarationLabel1' && this.productId != '29'" class="input-radio-block toggle-checkbox toggle-declaration">
+                          <label class="input-radiolabel  labelflex-auto">
+                            <input type="radio" name="tsDeclarationSelected" [formControl]="tsDeclarationSelected" value="yes" id="declaration-yes">
+                            <span>YES</span>
+                          </label>
+                            <label class="input-radiolabel labelflex-auto">
+                                <input type="radio" name="tsDeclarationSelected" [formControl]="tsDeclarationSelected" value="no" id="declaration-no" checked="">
+                                <span>NO</span>
+                            </label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                  </div>
                 </div>
 
 
@@ -374,7 +452,21 @@
 
                 <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
-                  <div class="custom-file-upload">
+                  <div class="section-file-uploads" [id]="control.name">
+                    <app-file-upload [id]="control.name" [name]="control.name" formControlName="{{ control.name }}"
+                      [dataInputs]="control" (emitFilesList)="onUploadFile($event, control)">
+                    </app-file-upload>
+                  </div>
+
+                  <small
+                    *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
+                    class="text-danger">
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only
+                    PNG,JPG,JPEG,PDF are allowed.' : '' }}
+                    {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
+                    {{ getValidationErrors(control)}}
+                  </small>
+                  <!-- <div class="custom-file-upload">
                     <label *ngIf="control.visibleLabel == true">{{ control.label }} <span
                         *ngIf="control.validators">*</span></label>
                     <div class="file-input-container">
@@ -389,7 +481,6 @@
                     <div class="fileUploadInfo">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
                   </div>
                   <div *ngIf="this.dynamicFormGroup.value[control.name]" style="margin-top: 5px;">
-                    <!-- selected file: {{ selectedFile.name }} -->
                     {{ this.dynamicFormGroup.value[control.name]?.split('\\').pop() }}
                   </div>
                   <small
@@ -399,7 +490,7 @@
                     JPG,JPEG, PDF are allowed.' : '' }}
                     {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
                     {{ getValidationErrors(control)}}
-                  </small>
+                  </small> -->
                 </div>
 
                 <div *ngIf="control.type === 'checkbox' && !isD2C">
@@ -519,7 +610,7 @@
                 <div *ngIf="control.type === 'details'" [class]="control.class" class="typecss">
                   <ng-container [formArrayName]="control.name">
                     <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">
-                      
+
                       <ng-container *ngIf="i>0">
                         <div [ngClass]="{'form-box': isD2C}">
                         <ng-container [formGroupName]="i-1">
@@ -550,20 +641,20 @@
                               </div>
                               <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type) && isD2C && subControl.name != 'relation'"
                                   [class]="subControl.class" class="typecss input-typecss" [hidden]="!control.visible">
-                                  
                                   <div class="input-container" [ngClass]="{'input-containerError': isD2C && checkValidations(subControl,control,i-1)}">
                                     <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
                                       [name]="subControl.name" [id]="subControl.name" class="inputField_Text"
                                       [type]="subControl.type"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
-                                      (change)="onInputChange($event, subControl,control,i-1)">
+                                      (change)="onInputChange($event, subControl,control,i-1)"
+                                     >
                                     <input  *ngIf="subControl.disabled"
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
                                       [formControlName]="subControl.name" [name]="subControl.name"
                                       [id]="subControl.name" class="inputField_Text_disabled" [type]="subControl.type"
                                       readonly>
                                     <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
-                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                      translate) : '' }} <span *ngIf="subControl.validators && subControl.name != 'middleName'">*</span></label>
                                   </div>
                                   <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                     getValidationErrors(subControl,control,i-1)?
@@ -580,14 +671,17 @@
                                       [type]="subControl.type"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       (change)="onInputChange($event, subControl,control,i-1)"
-                                      (keypress)="subControl.type == 'number' ? restrictKeyPress($event, subControl) : null">
+                                      (keypress)="subControl.type == 'number' || subControl.restrictKeyPress ? restrictKeyPress($event, subControl) : null">
                                     <input  *ngIf="subControl.disabled"
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
                                       [formControlName]="subControl.name" [name]="subControl.name"
                                       [id]="subControl.name" class="inputField_Text_disabled" [type]="subControl.type"
                                       readonly>
                                     <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
-                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                      translate) : '' }} 
+                                      <span *ngIf="subControl.validators && (subControl.name !== 'mobileNumber' && subControl.name !== 'emailId' && subControl.name !== 'middleName')">*</span>
+                                      <span *ngIf="subControl.validators && (subControl.name === 'mobileNumber' || subControl.name === 'emailId') && ((isTS && (i == 1 || i == 2)) || (!isTS && i == 1))">*</span>
+                                    </label>
                                   </div>
                                   <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                     getValidationErrors(subControl,control,i-1)?
@@ -952,7 +1046,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="control.type==='phonenumber'" [class]="control.class" class="typecss input-typecss">
+                <div *ngIf="control.type==='phonenumber' && control.visible" [class]="control.class" class="typecss input-typecss">
                   <div class="input-container" [ngClass]="{'input-containerError': isD2C && dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)}">
                     <input *ngIf="!control.disabled" class="inputField_Text"
                       [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}"
@@ -963,7 +1057,7 @@
                       [ngClass]="{'has-value': hasAnyValue(control)}" (change)="onInputChange($event, control)"
                       readonly>
                     <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
-                      translate) : '' }}<span *ngIf="control.validators">*</span></label>
+                      translate) : '' }}<span *ngIf="control.validators && control.name !== 'nomineeMobileNumber'">*</span></label>
                   </div>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
@@ -977,9 +1071,9 @@
                   </label>
                   <div class="radio-button">
                     <div [class]="control.class" *ngFor="let option of control.radioOptions">
-                      <input type="radio" [formControlName]="control.name" [name]="control.name" [id]="control.name"
+                      <input type="radio" *ngIf="option.visible" [formControlName]="control.name" [name]="control.name" [id]="control.name"
                         [value]="option.value" style="margin-right: 10px;" (change)="onInputChange($event, control)">
-                      <label [innerHTML]="option.label"></label>
+                      <label [innerHTML]="option.label" *ngIf="option.visible"></label>
                     </div>
                   </div>
                 </div>
@@ -1146,7 +1240,7 @@
                             <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label |
                               translate) : '' }}<span *ngIf="subControl.validators"></span></label>
                             <div class="radio-button">
-                              <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
+                              <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions" >
                                 <input type="radio" formControlName="{{subControl.name}}" [id]="subControl.name"
                                   [name]="subControl.name" [value]="option.value" style="margin-right: 10px;">
                                 <label>
@@ -1548,5 +1642,22 @@
     </div>
   </div>
 </div> -->
-
+<!-- Tele OPD Modal -->
+<div class="modal fade popupModalMain popupModalOTP" id="telOpdModal" tabindex="-1" aria-labelledby="telOpdModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="roomModalLabel">Tele OPD Alert</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to optout of Tele OPD?  It will cost you Rs.799 only? </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="verify" name="verify" (click)="optTeleOpd('yes')" class="btn-submit">Yes</button>
+        <button type="button" id="verify" name="verify" (click)="optTeleOpd('no')" class="btn-submit">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Tele OPD Modal -->
 

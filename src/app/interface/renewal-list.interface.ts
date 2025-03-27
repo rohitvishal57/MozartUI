@@ -1,6 +1,7 @@
 import { ValidatorFn, Validators } from '@angular/forms';
 
 export interface RenewalList {
+    isSelected?: boolean;
     proposerFirstName: string;
     proposerLastName: string;
     rating: number;
@@ -12,12 +13,14 @@ export interface RenewalList {
     renewalPremiumAmount: number;
     healthReturn: number;
     proposerMobileNumber: string;
+    email: string,
     policyEndDate: string;
     policyStartDate?:string,
     modification: string;
     proposerEmail:string;
     proposerDateOfBirth:string;
     upgradedPremiumAmount:number;
+    renewalSumInsured:number;
   }
 
   export const validationConfig: { [key: string]: ValidatorFn[] } = {

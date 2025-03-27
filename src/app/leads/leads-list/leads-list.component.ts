@@ -16,12 +16,15 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { DatepipePipe } from 'src/app/utilities/pipe/datepipe.pipe';
 
 
 @Component({
   selector: 'app-leads-list',
   templateUrl: './leads-list.component.html',
-  styleUrls: ['./leads-list.component.scss']
+  styleUrls: ['./leads-list.component.scss'],
+  providers: [DatepipePipe]
+
 })
 export class LeadsListComponent {
   
@@ -99,6 +102,7 @@ export class LeadsListComponent {
     private languageService: LanguageService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
+    private datepipePipe: DatepipePipe
   ) { }
 
   leadsInfoListRequestBody ={
@@ -141,42 +145,10 @@ export class LeadsListComponent {
         if (filter) {
           console.log("route filter", filter);
           const currentDate = new Date();
-          switch (filter) {
-            case 'Last7Days':
-              this.startDate = this.datePipe.transform(
-                new Date(currentDate.setDate(currentDate.getDate() - 7)),
-                'yyyy-MM-dd'
-              );
-              this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-              break;
-      
-            case 'LastMonth':
-              const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-              const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-              this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
-              this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
-              break;
-      
-            case 'QuarterWise':
-              const currentMonth = currentDate.getMonth();
-              const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
-              const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
-              const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
-              this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
-              this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
-              break;
-      
-            case 'FinancialYear':
-              const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
-              const financialYearStartDate = new Date(year, 3, 1); // April 1st
-              const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
-              this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
-              this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
-              break;
-      
-            default:
-              console.log("Unknown filter:", filter);
-              break;
+          if (filter) {
+            const dateRange = this.datepipePipe.getDateRange(filter);
+            this.startDate = dateRange.startDate;
+            this.endDate = dateRange.endDate;
           }
         }
         this.applyFilter();
@@ -564,7 +536,7 @@ export class LeadsListComponent {
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-            localStorage.setItem("formIndex", lead.formSequence);
+            sessionStorage.setItem("formIndex", lead.formSequence);
           } catch (err) {
             this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
           }
@@ -578,7 +550,7 @@ export class LeadsListComponent {
             leadId : lead.leadNumber
           }
           console.log(reqData);
-          localStorage.setItem("formIndex", lead.formSequence.toString());
+          sessionStorage.setItem("formIndex", lead.formSequence.toString());
           const encodedEncryptedData = this.encryptionService.encrypt(reqData);
     
           this.router.navigate(['yatra'], {

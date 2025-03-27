@@ -14,11 +14,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { GalleriaThumbnails } from 'primeng/galleria';
 import { error } from 'jquery';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { DatepipePipe } from 'src/app/utilities/pipe/datepipe.pipe';
 
 @Component({
   selector: 'app-proposals-list',
   templateUrl: './proposals-list.component.html',
-  styleUrls: ['./proposals-list.component.scss']
+  styleUrls: ['./proposals-list.component.scss'],
+  providers: [DatepipePipe]
+
 })
 export class ProposalsListComponent {
   proposalList: ProposalList[] = [];
@@ -54,6 +57,7 @@ export class ProposalsListComponent {
     "proposer": "",
     "productVarientName": "",
     "proposalNumber": "",
+    "applicationNumber": "",
     "agentCode": this.agentCode,
     "policyType": "",
     "proposalStatus": "",
@@ -93,7 +97,8 @@ export class ProposalsListComponent {
     private languageService: LanguageService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private yatraService : YatraService
+    private yatraService : YatraService,
+    private datepipePipe: DatepipePipe
   ) { }
 
   ngOnInit(): void {
@@ -114,47 +119,11 @@ export class ProposalsListComponent {
         this.applySearch();
       }
       if (filter) {
-        console.log("route filter", filter);
-        const currentDate = new Date();
-        switch (filter) {
-          case 'Last7Days':
-            this.startDate = this.datePipe.transform(
-              new Date(currentDate.setDate(currentDate.getDate() - 7)),
-              'yyyy-MM-dd'
-            );
-            this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-            break;
-
-          case 'LastMonth':
-            const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-            const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-            this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
-            this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
-            break;
-
-          case 'QuarterWise':
-            const currentMonth = currentDate.getMonth();
-            const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
-            const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
-            const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
-            this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
-            this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
-            break;
-
-          case 'FinancialYear':
-            const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
-            const financialYearStartDate = new Date(year, 3, 1); // April 1st
-            const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
-            this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
-            this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
-            break;
-
-          default:
-            console.log("Unknown filter:", filter);
-            break;
-        }
+        const dateRange = this.datepipePipe.getDateRange(filter);
+        this.startDate = dateRange.startDate;
+        this.endDate = dateRange.endDate;
         this.applyFilter();
-      }
+      } 
     });
     this.getProposalList();
     this.getProducts();
@@ -201,6 +170,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.email="";
     this.proposalListRequestBody.leadId="";
     this.proposalListRequestBody.proposalStatus="";
+    this.proposalListRequestBody.applicationNumber="";
     this.getProposalList() ;
     this.checkView();  
   }
@@ -429,6 +399,8 @@ export class ProposalsListComponent {
       return "Enter Email ID";  
     } else if (this.selected === "proposalStatus") {
       return "Enter Proposal Status";
+    } else if (this.selected === "applicationNumber") {
+      return "Enter Application Number";
     }
     else {
       return "Search...";
@@ -442,6 +414,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposalNumber = "",
     this.proposalListRequestBody.email = "",
     this.proposalListRequestBody.proposalStatus = "",
+    this.proposalListRequestBody.applicationNumber = "",
     this.searchInputControl.reset();
     this.searchApplied = false;
     this.getProposalList();
@@ -466,6 +439,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
         this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.applicationNumber = "";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
@@ -473,6 +447,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
         this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.applicationNumber = "";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
@@ -480,6 +455,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposalNumber = "",
         this.proposalListRequestBody.proposalStatus = "";
         this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.applicationNumber = "";
       } else if (this.selected === "proposalNumber") {
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
@@ -487,6 +463,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalStatus = "";
         this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.applicationNumber = "";
       } else if (this.selected == "email") {
         this.proposalListRequestBody.email = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
@@ -494,6 +471,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalStatus = "";
         this.proposalListRequestBody.proposalNumber = "";
+        this.proposalListRequestBody.applicationNumber = "";
       }
       else if (this.selected === "proposalStatus") {
         this.proposalListRequestBody.proposalStatus = trimmedValue || "";
@@ -502,6 +480,16 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber = ""
         this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.applicationNumber = "";
+      }
+      else if (this.selected === "applicationNumber") {
+        this.proposalListRequestBody.applicationNumber = trimmedValue || "";
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalNumber = ""
+        this.proposalListRequestBody.email = "";
+        this.proposalListRequestBody.proposalStatus = "";
       }
       this.first = 0;
       this.page = 1;
@@ -598,7 +586,7 @@ export class ProposalsListComponent {
         firstName: quoteInformation.proposerName,
         proposerGender: ""
       }
-      localStorage.setItem("formIndex",  (quoteInformation.currentFormSequence ??0).toString());
+      sessionStorage.setItem("formIndex",  (quoteInformation.currentFormSequence ??0).toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
       this.router.navigate(['yatra'], {
@@ -625,7 +613,7 @@ export class ProposalsListComponent {
         currentFormSequence: proposalDetails.formSequence,
         leadId: proposalDetails.leadId
       }
-      localStorage.setItem("formIndex",   proposalDetails.formSequence.toString());
+      sessionStorage.setItem("formIndex",   proposalDetails.formSequence.toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
       this.router.navigate(['yatra'], {
@@ -674,7 +662,7 @@ export class ProposalsListComponent {
         sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
       }
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-      localStorage.setItem("formIndex", "0");
+      sessionStorage.setItem("formIndex", "0");
     } catch (err) {
       this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
     }

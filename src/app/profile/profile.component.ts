@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from '../login/login/login.service';
 import { DatePipe } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 
 
@@ -35,8 +36,9 @@ export class ProfileComponent implements OnInit {
   isShareOptionsVisible = false;
   qrCodeImage: any;
   profileQRCode:any = '';
-
+  channel: string | any;
   constructor(
+    private authService: AuthService,
     private performanceService: PerformanceService, private languageService: LanguageService,
     private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService,
     private loginService: LoginService,
@@ -104,6 +106,7 @@ export class ProfileComponent implements OnInit {
         }   
       }
     });
+    this.channel = this.authService.getUserInfo().channel.toUpperCase();
   }
 
   getIcons(key: string) {

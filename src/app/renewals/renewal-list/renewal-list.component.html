@@ -1,304 +1,887 @@
-<main class="siteBody siteBody_padding siteBody_searchMobile">
+<main class="siteBody siteBody_searchMobile">
     <div class="contentBody bodyColumns-1">
-        <div class="bodyColumn body_flex_column pageHeading">
-            <h2>{{"Renewals List" | translate }}</h2>
-            <section class="quickFilterMain">
-                <div class="quickFilterLeft">
-                    <ul class="quickFilter">
-                        <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
-                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList?.totalRecords !== undefined ? countsList.totalRecords : 0}})</button></li>
-                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"Expired" | translate}} ({{countsList?.expiredCount !== undefined ? countsList.expiredCount : 0}})</button></li>
-                        <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList?.expiringInLessThan30DaysCount !== undefined ? countsList.expiringInLessThan30DaysCount : 0}})</button></li>
-                        <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.expiringIn30To60DaysCount}})</button></li>
-                        <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Lapsed" | translate}} ({{countsList?.lapsedCount !== undefined ? countsList.lapsedCount : 0}})</button></li>
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between head_myProposals pageHeading_align-items-center">
+                <h2>{{"Renewal" | translate}}</h2>
+                <div class="main_productTabs">
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button #tabProposals class="nav-link" [class.active]="renewalType === 'List'" id="tab-proposals-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-proposals" type="button" role="tab" aria-controls="tab-proposals"
+                                aria-selected="true" (click)="getRenewalList('List')">{{"Renewal List"| translate}}</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button #tabQuotes class="nav-link" [class.active]="renewalType === 'BulkRenewal'" id="tab-quotes-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-quotes" type="button" role="tab" aria-controls="tab-quotes"
+                                aria-selected="false" (click)="getBulkRenewalNotice('BulkRenewal')">{{"Bulk Renewal Notice" | translate}}</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button #tabNotice class="nav-link" [class.active]="renewalType === 'BulkRenewalNotice'" id="tab-notice-tab" data-bs-toggle="tab"
+                                data-bs-target="#tab-notice" type="button" role="tab" aria-controls="tab-notice"
+                                aria-selected="false" (click)="getBulkRenewal('BulkRenewalNotice')">{{"Batch History" | translate}}</button>
+                        </li>
                     </ul>
                 </div>
-                <div class="quickFilterRight leads_searchWraperMobile">
-                    <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
-                        <div class="field_searchMain field_searchMainMobile">
-                            <div>
-                                <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                    <option value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
-                                    <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
-                                    <option value="proposerName">{{"Proposer Name" | translate}}</option>
-                                    <option value="policyNumber">{{"Policy Number" | translate}}</option>
-                                </select>
-                            </div>
-                            <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="triggerSearch()">
-                                <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="triggerSearch()" *ngIf="!searchApplied"><img  src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
-                                <!--SEARCH CLEAR BUTTON-->
-                                <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" (click)="triggerSearch()" *ngIf="searchApplied"><img  src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
-                                <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter a valid proposer name." | translate}}</small>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
-                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
-                            <div class="fw_form mobile_popupMain">
-                                <div class="filterHeader">
-                                    <header>{{"Filter" | translate}}</header>
-                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+            </div>
+            <!--Tab Content start-->
+            <div class="tab-content" id="pills-tabContent">
+                <!--Tab Content: Notifications start-->
+                <div class="tab-pane fade" [class.show]="renewalType === 'List'" [class.active]="renewalType === 'List'"  id="tab-proposals" role="tabpanel" aria-labelledby="tab-proposals-tab">
+                    <div class="body_flex_column">
+                        <section class="quickFilterMain_claims">
+                            <div class="quickFilterMain">
+                                <div class="quickFilterLeft">
+                                    <ul class="quickFilter">
+                                        <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList?.totalRecords !== undefined ? countsList.totalRecords : 0}})</button></li>
+                                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"In Grace" | translate}} ({{countsList?.expiredCount !== undefined ? countsList.expiredCount : 0}})</button></li>
+                                        <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList?.expiringInLessThan30DaysCount !== undefined ? countsList.expiringInLessThan30DaysCount : 0}})</button></li>
+                                        <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.expiringIn30To60DaysCount}})</button></li>
+                                        <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Expired" | translate}} ({{countsList?.lapsedCount !== undefined ? countsList.lapsedCount : 0}})</button></li>
+                                        <li><button type="button" id="duetoday" name="duetoday" value="duetoday" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'dueToday'}" (click)="filterQuotes('dueToday','dueTodayCount')">{{"DueToday" | translate}} ({{countsList?.dueTodayCount !== undefined ? countsList.dueTodayCount : 0}})</button></li>
+                                        <li><button type="button" id="Renewed" name="Renewed" value="Renewed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Renewed'}" (click)="filterQuotes('Renewed','renewedCount')">{{"Renewed" | translate}} ({{countsList?.renewedCount !== undefined ? countsList.renewedCount : 0}})</button></li>
+                                    </ul>
                                 </div>
-                                <div class="fw_formBody">
-                                    <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Products" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="policytype{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Policy Type" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="policytype{{i}}">{{policyType.name | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <footer class="mt-3">
-                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
-                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
-                                </footer>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
-                    <button type="button" id="renewalgridcard" name="renewalgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
-                </div>
-            </section>
-            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
-                <div class="tableSubMain">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-search">
-                            <thead>
-                                <tr>
-                                    <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Product" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Policy Type" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Policy Number" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Renewal Premium" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
-                                    <th scope="col" nowrap>{{"Date of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
-                                    <th scope="col">{{"Status" | translate}}</th>
-                                    <th scope="col">{{"Action" | translate}}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr *ngFor="let row of renewalsList; let i = index">
-                                    <td><span class="text-break-w100">{{ row.proposerFirstName | translate}}</span></td>
-                                    <td><span class="productName">{{ row.productName | translate}}</span></td>
-                                    <td>{{ row.policyType | translate}}</td>
-                                    <td nowrap>{{ row.policyNumber | translate}}</td>
-                                    <td>
-                                        <div class="table-renewalPremium">
-                                            <div class="row-renewalPremium">
-                                                <span class="lable">{{"Total Premium" | translate}}</span>
-                                                <span class="value">₹ {{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0}}</span>
-                                            </div>
-                                            <div class="row-renewalPremium text-green">
-                                                <span class="lable">{{"HR benefits" | translate}}</span>
-                                                <span class="value">- ₹{{ row.healthReturn }}</span>
-                                            </div>
-                                            <div class="row-renewalPremium">
-                                                <span class="lable">{{"Renewal Premium" | translate}}</span>
-                                                <span class="value">₹ {{ (row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</td>
-                                    <td>{{ row.policyEndDate }}</td>
-                                    <td>{{ row.renewalStatusDescription }}</td>
-                                    <td>
-                                        <div class="btn_groupAction">
-                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                            <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
-                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                                    <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="activeFilter !== 'Lapsed'">
-                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'sms')">
-                                                            <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
-                                                            <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </mat-menu>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
-                <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of renewalsList; let i = index">
-                        <header>
-                            <div class="card_insureInfo">
-                                <h6>
-                                    <div class="insureName" title="{{ row.proposerFirstName | translate}}">{{ row.proposerFirstName | translate}} </div>
+                                <div class="quickFilterRight leads_searchWraperMobile">
                                     
-                                </h6>
-                                <div class="item_productName">{{ row.productName | translate }}</div>
-                            </div>
-                            <div class="card_btnGroup">
-                                <div class="btn_groupAction">
-                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="activeFilter !== 'Lapsed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                    <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
-                                    aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                
+                                    <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" id="downloadAllRenewals" name="downloadAllRenewals" value="downloadAllRenewals" title="downloadAllRenewals" [matMenuTriggerFor]="downloadAllMenu">
+                                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                                    </button>
+                
+                                    <mat-menu #downloadAllMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="activeFilter !== 'Lapsed'">
-                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                <li class="actionItem" (click)="downloadBulk()">
+                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Dump</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'sms')">
-                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
-                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>{{"Share via Email" | translate}}</span></a>
+                                                <li class="actionItem" (click)="downloadAudit()">
+                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Audit History</span></a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </mat-menu>
+                
+                                    
+                                    <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                                    <button type="button" id="renewalgridcard" name="renewalgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                                 </div>
                             </div>
-                        </header>
-                        <div class="cardViewBody">
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Policy Type" | translate}}</div>
-                                <div class="item_value">{{ row.policyType }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Policy Number" | translate}}</div>
-                                <div class="item_value">{{ row.policyNumber }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Status" | translate}}</div>
-                                <div class="item_value">{{ row.renewalStatusDescription }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
-                                <div class="item_value">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Date Of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
-                                <div class="item_value">{{ row.policyEndDate }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Renewal Premium" | translate}}</div>
-                                <div class="item_value">
-                                    <div class="table-renewalPremium">
-                                        <div class="row-renewalPremium">
-                                            <span class="lable">{{"Total Premium" | translate}}</span>
-                                            <span class="value">₹{{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0 }}</span>
+                            <div class="common_searchWraper common_searchWraper_proposals claims_searchWraper leads_searchWraperMobile leads_searchWraper">
+                                <div class="field_searchMain field_searchMainMobile">
+                                    <div>
+                                        <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                            <option value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
+                                            <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                            <option value="proposerName">{{"Proposer Name" | translate}}</option>
+                                            <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                            <option value="email">{{"Email" | translate}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="filterFieldGroup">
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
+                                        <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img  src="assets/Img/icon_magnify_grey.svg" *ngIf="!searchApplied" alt="Search"></button>
+                                        <!--SEARCH CLEAR BUTTON-->
+                                        <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" (click)="cancelSearch()" *ngIf="searchApplied"><img  src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
+                                        <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
+                                        <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                            <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter a valid proposer name." | translate}}</small>
+                                        </span>
+                                    </div>
+                                    <div class="filterWraper">
+                                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
+                                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                                            <div class="fw_form mobile_popupMain">
+                                                <div class="filterHeader">
+                                                    <header>{{"Filter" | translate}}</header>
+                                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                                </div>
+                                                <div class="fw_formBody">
+                                                    <div class="fw_formRow">
+                                                        <h6>{{"Date Range" | translate}}</h6>
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                                <div class="input-block form-floating input-block-dob">
+                                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                                <div class="input-block form-floating input-block-dob">
+                                                                    <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fw_formRow">
+                                                        <h6>{{"Auto-debit" | translate}}</h6>
+                                                        <div class="fw_checkboxWraper">
+                                                            <div class="input-checkbox-block" *ngFor="let status of AutoDebitStatus; let i = index">
+                                                                <div class="input-checkbox-feild">
+                                                                    <input type="checkbox" id="status{{i}}" name="status{{i}}" value="AutoDebitStatu" class="input-check" [(ngModel)]="status.selected" (change)="calculateAppliedFiltersCount()">
+                                                                    <label for="status{{i}}">{{status.name | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fw_formRow">
+                                                        <h6>{{"Tenure" | translate}}</h6>
+                                                        <div class="fw_checkboxWraper">
+                                                            <div class="input-checkbox-block" *ngFor="let tenure of TenureList; let i = index">
+                                                                <div class="input-checkbox-feild">
+                                                                    <input type="checkbox" id="tenure{{i}}" name="tenureType{{i}}" value="tenures" class="input-check" [(ngModel)]="tenure.selected" (change)="calculateAppliedFiltersCount()">
+                                                                    <label for="tenure{{i}}">{{tenure.name | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="fw_formRow">
+                                                        <h6>{{"Products" | translate}}</h6>
+                                                        <div class="fw_checkboxWraper">
+                                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                                <div class="input-checkbox-feild">
+                                                                    <input type="checkbox" id="product{{i}}" name="policytype{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fw_formRow">
+                                                        <h6>{{"Policy Type" | translate}}</h6>
+                                                        <div class="fw_checkboxWraper">
+                                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                                <div class="input-checkbox-feild">
+                                                                    <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                                    <label for="policytype{{i}}">{{policyType.name | translate}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fw_formRow fw_formRowFooter">
+                                                        <footer>
+                                                            <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                                            <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
+                                                        </footer>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="row-renewalPremium text-green">
-                                            <span class="lable">{{"HR benefits" | translate}}</span>
-                                            <span class="value">- ₹{{ row.healthReturn }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
+                            <div class="tableSubMain">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-search">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Product" | translate}}</th>
+                                                <!-- <th scope="col" nowrap>{{"Policy Type" | translate}}</th> -->
+                                                <th scope="col" nowrap>{{"Policy Number" | translate}}</th>
+                                                <th class="col" nowrap>{{"Sum Insured" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Renewal Premium" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
+                                                <th scope="col" nowrap>{{"Policy Date"}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                                <!-- <th scope="col" nowrap>{{"Date of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th> -->
+                                                <th scope="col">{{"Status" | translate}}</th>
+                                                <th scope="col">{{"Action" | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            <tr *ngFor="let row of renewalsList; let i = index">
+                                                <td><span class="text-break-w100">{{ row.proposerFirstName | translate}}</span></td>
+                                                <td><span class="productName">{{ row.productName | translate}}</span></td>
+                                                <!-- <td>{{ row.policyType | translate}}</td> -->
+                                                <td nowrap>{{ row.policyNumber | translate}}</td>
+                                                <td nowrap>₹ {{ row?.renewalSumInsured == 0.00 || row?.renewalSumInsured == null ? '--' : row?.renewalSumInsured }}</td>
+                                                <td>
+                                                    <div class="table-renewalPremium">
+                                                        <div class="row-renewalPremium">
+                                                            <span class="lable">{{"Total Premium" | translate}}</span>
+                                                            <span class="value">₹ {{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0}}</span>
+                                                        </div>
+                                                        <div class="row-renewalPremium text-green">
+                                                            <span class="lable">{{"HR benefits" | translate}}</span>
+                                                            <span class="value">- ₹{{ row.healthReturn }}</span>
+                                                        </div>
+                                                        <div class="row-renewalPremium">
+                                                            <span class="lable">{{"Renewal Premium" | translate}}</span>
+                                                            <span class="value">₹ {{ (row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-break-w100">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }} <div>{{ row.proposerEmail }}</div></td>
+                                                <td>    
+                                                    <div class="table-renewalPremium policyStartEndDate">
+                                                        <div class="row-renewalPremium">
+                                                            <span class="lable">{{"Start" | translate}}</span>
+                                                            <span class="value">{{ row.policyStartDate }}</span>
+                                                        </div>
+                                                        <div  class="row-renewalPremium">
+                                                            <span class="lable">{{"End" | translate}}</span>
+                                                            <span class="value">{{ row.policyEndDate }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <!-- <td>{{ row.policyEndDate }}</td> -->
+                                                <td>{{ row.renewalStatusDescription }}</td>
+                                                <td>
+                                                    <div class="btn_groupAction">
+                                                        <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"   [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                                        <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Internal Migration " class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"   [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_internal_portability_grey.svg"></button>
+                                                        <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')"  [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                                        <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                                        <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                                            <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                                <ul class="actionItemsMain">
+                                                                    <li class="actionItem" (click)="handleAction(row, 'download_RN')" *ngIf="activeFilter !== 'Lapsed'">
+                                                                        <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                                    </li>
+                                                                    <li class="actionItem" (click)="handleAction(row, 'download_PK')" *ngIf="activeFilter !== 'Lapsed'">
+                                                                        <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
+                                                                    </li>
+                                                                    <!-- <li class="actionItem" (click)="handleAction(row, 'sms')">
+                                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
+                                                                    </li>
+                                                                    <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
+                                                                        <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
+                                                                    </li> -->
+                                                                    <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                                        <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share Renewal Notice via Email" | translate}}</span></a>
+                                                                    </li>
+                                                                    <li class="actionItem" (click)="handleAction(row, 'sharePaymentLink')">
+                                                                        <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share payment link"><span>{{"Share Payment Link" | translate}}</span></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </mat-menu>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tableNav" *ngIf="totalRecords > 0">
+                                <nav>
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                            </p-paginator>
+                                        </li>
+                                        <li class="pageCountMain">
+                                            <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </section>
+                        <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+                            <div class="cardViewWraper">
+                                <div class="cardViewItem" *ngFor="let row of renewalsList; let i = index">
+                                    <header>
+                                        <div class="card_insureInfo">
+                                            <h6>
+                                                <div class="insureName" title="{{ row.proposerFirstName | translate}}">{{ row.proposerFirstName | translate}} </div>
+                                                
+                                            </h6>
+                                            <div class="item_productName">{{ row.productName | translate }}</div>
                                         </div>
-                                        <div class="row-renewalPremium">
-                                            <span class="lable">{{"Renewal Premium" | translate}}</span>
-                                            <span class="value">₹{{ ( row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
+                                        <div class="card_btnGroup">
+                                            <div class="btn_groupAction">
+                                                <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                                <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Internal Portability" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_internal_portability_grey.svg"></button>
+                                                <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                                <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
+                                                aria-expanded="false" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                                <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                                    <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                        <ul class="actionItemsMain">
+                                                            <li class="actionItem" (click)="handleAction(row, 'download_RN')" *ngIf="activeFilter !== 'Lapsed'">
+                                                                <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                            </li>
+                                                            <li class="actionItem" (click)="handleAction(row, 'download_PK')" *ngIf="activeFilter !== 'Lapsed'">
+                                                                <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
+                                                            </li>
+                                                            <!-- <li class="actionItem" (click)="handleAction(row, 'sms')">
+                                                                <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
+                                                            </li>
+                                                            <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
+                                                                <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
+                                                            </li> -->
+                                                            <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                                <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>{{"Share Renewal Notice via Email" | translate}}</span></a>
+                                                            </li>
+                                                            <li class="actionItem" (click)="handleAction(row, 'sharePaymentLink')">
+                                                                <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share payment link"><span>{{"Share Payment Link" | translate}}</span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </mat-menu>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <div class="cardViewBody">
+                                        <div class="cv_bodyItems cv_bodyItems_45 block-hide">
+                                            <div class="item_lable">{{"Policy Type" | translate}}</div>
+                                            <div class="item_value">{{ row.policyType }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Policy Number" | translate}}</div>
+                                            <div class="item_value">{{ row.policyNumber }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Sum Insured" | translate}}</div>
+                                            <div class="item_value">₹ {{ row?.renewalSumInsured == 0.00 || row?.renewalSumInsured == null ? '--' : row?.renewalSumInsured }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Status" | translate}}</div>
+                                            <div class="item_value">{{ row.renewalStatusDescription }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Contact Info" | translate}}</div>
+                                            <div class="item_value">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</div>
+                                            <div class="item_value">{{ row.proposerEmail }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45 block-hide">
+                                            <div class="item_lable">{{"Date Of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
+                                            <div class="item_value">{{ row.policyEndDate }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Policy Date" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
+                                            <div class="item_value">Start: {{ row.policyStartDate }}</div>
+                                            <div class="item_value">End: {{ row.policyEndDate }}</div>
+                                        </div>
+                                        <div class="cv_bodyItems cv_bodyItems_45">
+                                            <div class="item_lable">{{"Renewal Premium" | translate}}</div>
+                                            <div class="item_value">
+                                                <div class="table-renewalPremium">
+                                                    <div class="row-renewalPremium">
+                                                        <span class="lable">{{"Total Premium" | translate}}</span>
+                                                        <span class="value">₹{{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0 }}</span>
+                                                    </div>
+                                                    <div class="row-renewalPremium text-green">
+                                                        <span class="lable">{{"HR benefits" | translate}}</span>
+                                                        <span class="value">- ₹{{ row.healthReturn }}</span>
+                                                    </div>
+                                                    <div class="row-renewalPremium">
+                                                        <span class="lable">{{"Renewal Premium" | translate}}</span>
+                                                        <span class="value">₹{{ ( row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tableNav" *ngIf="totalRecords > 0">
+                                <nav>
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                            </p-paginator>
+                                        </li>
+                                        <li class="pageCountMain">
+                                            <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </section>
+                        <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
+                            <div class="cardViewWraper">
+                                <div class="no_dataFound">
+                                    <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                    <p>{{"No data found" | translate}}</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+        
+            <!--Tab Content: Notifications start-->
+            <div class="tab-pane fade" [class.show]="renewalType === 'BulkRenewal'" [class.active]="renewalType === 'BulkRenewal'" id="tab-quotes" role="tabpanel" aria-labelledby="tab-quotes-tab">
+                <div class="body_flex_column">
+                    <section class="quickFilterMain">
+                        <div class="quickFilterLeft">
+                            <div class="filterfields_input">
+                                <div class="teamView_container" *ngIf="filteredItems.length > 0">  <!--*ngIf="filteredItems.length > 0"-->
+                                    <button class="teamView_btn" (click)="toggleDropdown()" > <!-- [disabled]="filteredItems.length === 0" -->
+                                      Team View <span class="teamView_icon"><img
+                                        src="assets/Img/icon_teamview.svg"></span>
+                                    </button>
+                                    <div *ngIf="isDropdownOpen" class="teamView_dropdown_container" #dropdown>
+                                      <!-- <div class="teamView_dropdown_header">
+                                        <input type="text" placeholder="Search.." [(ngModel)]="filterText" (input)="filterItems()" class="teamView_inputText" />
+                                        <button class="btn-close" (click)="closeDropdown()"></button>
+                                      </div> -->
+                                  
+                                      <div class="teamView_dropdown_body">
+                                        <div class="input-checkbox-block">
+                                            <div class="input-checkbox-feild" *ngFor="let item of filteredItems; let i = index">
+                                              <a (click)="teamViewRedirect(item?.agentCode)" >
+                                                {{ item?.firstName ? item?.firstName + ' ' : '' }}({{ item?.agentCode }})
+                                              </a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="teamView_dropdown_footer">
+                                        <button (click)="clearTeamView()">Clear</button>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <ul class="quickFilter">
+                                <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                                <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">{{"All" | translate}} ({{countsList?.totalRecords !== undefined ? countsList.totalRecords : 0}})</button></li>
+                                <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">{{"In Grace" | translate}} ({{countsList?.expiredCount !== undefined ? countsList.expiredCount : 0}})</button></li>
+                                <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < {{"30 Days" | translate}} ({{countsList?.expiringInLessThan30DaysCount !== undefined ? countsList.expiringInLessThan30DaysCount : 0}})</button></li>
+                                <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">{{"30-60 Days" | translate}} ({{countsList.expiringIn30To60DaysCount}})</button></li>
+                                <li><button type="button" id="Lapsed" name="Lapsed" value="Lapsed" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'Lapsed'}" (click)="filterQuotes('Lapsed','lapsedCount')">{{"Expired" | translate}} ({{countsList?.lapsedCount !== undefined ? countsList.lapsedCount : 0}})</button></li>
+                                <li><button type="button" id="duetoday" name="duetoday" value="duetoday" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'dueToday'}" (click)="filterQuotes('dueToday','dueTodayCount')">{{"DueToday" | translate}} ({{countsList?.dueTodayCount !== undefined ? countsList.dueTodayCount : 0}})</button></li>
+                            </ul> -->
+                        </div>
+                        <div class="quickFilterRight leads_searchWraperMobile">
+                            <div class="common_searchWraper common_searchWraper_proposals leads_searchWraper">
+                                <div class="field_searchMain field_searchMainMobile">
+                                    <div>
+                                        <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                            <option value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
+                                            <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                            <option value="proposerName">{{"Proposer Name" | translate}}</option>
+                                            <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                            <option value="email">{{"Email" | translate}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="filterFieldGroup">
+                                        <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
+                                        <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img  src="assets/Img/icon_magnify_grey.svg" *ngIf="!searchApplied" alt="Search"></button>
+                                        <!--SEARCH CLEAR BUTTON-->
+                                        <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" (click)="cancelSearch()" *ngIf="searchApplied"><img  src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
+                                        <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
+                                        <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                            <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
+                                            <small *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">{{"Enter a valid proposer name." | translate}}</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist" class="btn_grid jsBtnClickQuote" aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list' || selectedView === 'grid'}" (click)="downloadResult()"> <h3 style="color: white;">Download Result</h3></button>
+                            <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist" class="btn_grid jsBtnClickQuote" aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list' || selectedView === 'grid'}" (click)="downloadAll()"> <h3 style="color: white;">Download All</h3></button>  
+
+                            <!-- <button type="button" class="btn_iconGrey mobile-hide jsBtnClickQuote" id="downloadAllRenewals" name="downloadAllRenewals" value="downloadAllRenewals" title="downloadAllRenewals" [matMenuTriggerFor]="downloadAllMenu">
+                                <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                            </button>
+        
+                            <mat-menu #downloadAllMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                    <ul class="actionItemsMain">
+                                        <li class="actionItem" (click)="downloadBulk()">
+                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Dump</span></a>
+                                        </li>
+                                        <li class="actionItem" (click)="downloadAudit()">
+                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Audit History</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </mat-menu> -->
+        
+                            <div class="filterWraper">
+                                <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> <span id="filter-count">{{"Filter" | translate}} ({{appliedFiltersCount}})</span></button>
+                                <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                                    <div class="fw_form mobile_popupMain">
+                                        <div class="filterHeader">
+                                            <header>{{"Filter" | translate}}</header>
+                                            <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                        </div>
+                                        <div class="fw_formBody">
+                                            <div class="fw_formRow">
+                                                <h6>{{"Date Range" | translate}}</h6>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                        <div class="input-block form-floating input-block-dob">
+                                                            <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                            <label for="startdate">{{"Select Start Date" | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-daterange">
+                                                        <div class="input-block form-floating input-block-dob">
+                                                            <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                            <label for="enddate">{{"Select End Date" | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fw_formRow">
+                                                <h6>{{"Auto-debit" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block" *ngFor="let status of AutoDebitStatus; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="status{{i}}" name="status{{i}}" value="AutoDebitStatu" class="input-check" [(ngModel)]="status.selected" (change)="calculateAppliedFiltersCount()">
+                                                            <label for="status{{i}}">{{status.name | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fw_formRow">
+                                                <h6>{{"Tenure" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block" *ngFor="let tenure of TenureList; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="tenure{{i}}" name="tenureType{{i}}" value="tenures" class="input-check" [(ngModel)]="tenure.selected" (change)="calculateAppliedFiltersCount()">
+                                                            <label for="tenure{{i}}">{{tenure.name | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="fw_formRow">
+                                                <h6>{{"Products" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="product{{i}}" name="policytype{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                            <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fw_formRow">
+                                                <h6>{{"Policy Type" | translate}}</h6>
+                                                <div class="fw_checkboxWraper">
+                                                    <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                        <div class="input-checkbox-feild">
+                                                            <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                            <label for="policytype{{i}}">{{policyType.name | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <footer class="mt-3">
+                                            <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                            <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
+                                        </footer>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                            <button type="button" id="renewalgridcard" name="renewalgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                        </div>
+                    </section>
+                    <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
+                        <div class="tableSubMain">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-search">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center icon_allAssignLead">
+                                                <div class="icon_leads_check">
+                                                    <div class="input-checkbox-block">
+                                                        <div class="input-checkbox-feild input-checkbox-noSpace">
+                                                            <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)" class="input-check">
+                                                            <label for="Select All"></label>
+                                                        </div>
+                                                    </div>
+                                                    <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
+                                                    <!-- <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 1" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                                        src="assets/Img/icon_profile.svg"></button> -->
+                                                </div>
+                                            </th>
+                                            <th scope="col" nowrap>{{"Proposer Name" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Product" | translate}}</th>
+                                            <!-- <th scope="col" nowrap>{{"Policy Type" | translate}}</th> -->
+                                            <th scope="col" nowrap>{{"Policy Number" | translate}}</th>
+                                            <th class="col" nowrap>{{"Sum Insured" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Renewal Premium" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
+                                            <th scope="col" nowrap>{{"Policy Date"}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                            <!-- <th scope="col" nowrap>{{"Date of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th> -->
+                                            <th scope="col">{{"Status" | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr *ngFor="let row of renewalsList; let i = index">
+                                            <td align="center" class="icon_allAssignLead_td">
+                                                <div class="input-checkbox-feild input-checkbox-noSpace">
+                                                    <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
+                                                    <label for={{i}}></label>
+                                                </div>
+                                            </td>
+                                            <td><span class="text-break-w100">{{ row.proposerFirstName | translate}}</span></td>
+                                            <td><span class="productName">{{ row.productName | translate}}</span></td>
+                                            <!-- <td>{{ row.policyType | translate}}</td> -->
+                                            <td nowrap>{{ row.policyNumber | translate}}</td>
+                                            <td nowrap>₹ {{ row?.renewalSumInsured == 0.00 || row?.renewalSumInsured == null ? '--' : row?.renewalSumInsured }}</td>
+                                            <td>
+                                                <div class="table-renewalPremium">
+                                                    <div class="row-renewalPremium">
+                                                        <span class="lable">{{"Total Premium" | translate}}</span>
+                                                        <span class="value">₹ {{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0}}</span>
+                                                    </div>
+                                                    <div class="row-renewalPremium text-green">
+                                                        <span class="lable">{{"HR benefits" | translate}}</span>
+                                                        <span class="value">- ₹{{ row.healthReturn }}</span>
+                                                    </div>
+                                                    <div class="row-renewalPremium">
+                                                        <span class="lable">{{"Renewal Premium" | translate}}</span>
+                                                        <span class="value">₹ {{ (row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-break-w100">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }} <div>{{ row.proposerEmail }}</div></td>
+                                            <td>    
+                                                <div class="table-renewalPremium policyStartEndDate">
+                                                    <div class="row-renewalPremium">
+                                                        <span class="lable">{{"Start" | translate}}</span>
+                                                        <span class="value">{{ row.policyStartDate }}</span>
+                                                    </div>
+                                                    <div  class="row-renewalPremium">
+                                                        <span class="lable">{{"End" | translate}}</span>
+                                                        <span class="value">{{ row.policyEndDate }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <!-- <td>{{ row.policyEndDate }}</td> -->
+                                            <td>{{ row.renewalStatusDescription }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tableNav" *ngIf="totalRecords > 0">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                        </p-paginator>
+                                    </li>
+                                    <li class="pageCountMain">
+                                        <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </section>
+                    <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+                        <div class="cardViewWraper">
+                            <div class="cardViewItem" *ngFor="let row of renewalsList; let i = index">
+                                <header>
+                                    <div class="card_insureInfo">
+                                        <h6>
+                                            <div class="insureName" title="{{ row.proposerFirstName | translate}}">{{ row.proposerFirstName | translate}} </div>
+                                            
+                                        </h6>
+                                        <div class="item_productName">{{ row.productName | translate }}</div>
+                                    </div>
+                                    <div class="card_btnGroup">
+                                        <div class="btn_groupAction">
+                                            <!-- <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
+                                            aria-expanded="false" [disabled]="row.renewalStatusDescription === 'Renewed'"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                    <ul class="actionItemsMain">
+                                                        <li class="actionItem" (click)="handleAction(row, 'download_RN')" *ngIf="activeFilter !== 'Lapsed'">
+                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                        </li>
+                                                        <li class="actionItem" (click)="handleAction(row, 'download_PK')" *ngIf="activeFilter !== 'Lapsed'">
+                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
+                                                        </li>
+                                                        <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>{{"Share via Email" | translate}}</span></a>
+                                                        </li>
+                                                        <li class="actionItem" (click)="handleAction(row, 'sharePaymentLink')">
+                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share payment link"><span>{{"Share Payment Link" | translate}}</span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </mat-menu> -->
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="cardViewBody">
+                                    <div class="cv_bodyItems cv_bodyItems_45 block-hide">
+                                        <div class="item_lable">{{"Policy Type" | translate}}</div>
+                                        <div class="item_value">{{ row.policyType }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Policy Number" | translate}}</div>
+                                        <div class="item_value">{{ row.policyNumber }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Sum Insured" | translate}}</div>
+                                        <div class="item_value">₹ {{ row?.renewalSumInsured == 0.00 || row?.renewalSumInsured == null ? '--' : row?.renewalSumInsured }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Status" | translate}}</div>
+                                        <div class="item_value">{{ row.renewalStatusDescription }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Contact Info" | translate}}</div>
+                                        <div class="item_value">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</div>
+                                        <div class="item_value">{{ row.proposerEmail }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45 block-hide">
+                                        <div class="item_lable">{{"Date Of Renewal" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
+                                        <div class="item_value">{{ row.policyEndDate }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Policy Date" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></div>
+                                        <div class="item_value">Start: {{ row.policyStartDate }}</div>
+                                        <div class="item_value">End: {{ row.policyEndDate }}</div>
+                                    </div>
+                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                        <div class="item_lable">{{"Renewal Premium" | translate}}</div>
+                                        <div class="item_value">
+                                            <div class="table-renewalPremium">
+                                                <div class="row-renewalPremium">
+                                                    <span class="lable">{{"Total Premium" | translate}}</span>
+                                                    <span class="value">₹{{ row.upgradedPremiumAmount || row.renewalPremiumAmount || 0 }}</span>
+                                                </div>
+                                                <div class="row-renewalPremium text-green">
+                                                    <span class="lable">{{"HR benefits" | translate}}</span>
+                                                    <span class="value">- ₹{{ row.healthReturn }}</span>
+                                                </div>
+                                                <div class="row-renewalPremium">
+                                                    <span class="lable">{{"Renewal Premium" | translate}}</span>
+                                                    <span class="value">₹{{ ( row.upgradedPremiumAmount || row.renewalPremiumAmount || 0) - (row.healthReturn || 0) }}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="tableNav" *ngIf="totalRecords > 0">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                        </p-paginator>
+                                    </li>
+                                    <li class="pageCountMain">
+                                        <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </section>
+                    <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
+                        <div class="cardViewWraper">
+                            <div class="no_dataFound">
+                                <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                <p>{{"No data found" | translate}}</p>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
-                            </li>
-                        </ul>
-                    </nav>
+            </div>
+
+            <div class="tab-pane fade" [class.show]="renewalType === 'BulkRenewalNotice'" [class.active]="renewalType === 'BulkRenewalNotice'" id="tab-notice" role="tabpanel" aria-labelledby="tab-notice-tab">
+                <div class="body_flex_column">
+                    <section id="quotes-list" class="tableMain quoteView">
+                        <div class="tableSubMain">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-search">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" >{{"Agentcode" | translate}}</th>
+                                            <th scope="col" >{{"BatchNumber" | translate}}</th>
+                                            <th scope="col" >{{"Date"}}<div><small>{{"(DD-MM-YYYY)" | translate}}</small></div></th>
+                                            <th scope="col">{{"Status" | translate}}</th>
+                                            <th scope="col">{{"Action" | translate}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr *ngFor="let row of bulkrenewalnoticelist; let i = index">
+                                            <td><span class="text-break-w100">{{row.subAgentCode || agentCode}}</span></td>
+                                            <td nowrap>{{ row.batchNumber | translate}}</td>
+                                            <td>    
+                                                <div class="table-renewalPremium policyStartEndDate">
+                                                    <div class="row-renewalPremium">
+                                                        <span class="value">{{ row.createdOn }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td nowrap>{{ row.status | translate}}</td>
+                                            <td>
+                                                <div class="btn_groupAction">
+                                                    <!-- <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Batch Details" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" ><img src="assets/Img/icon_download2_grey.svg" alt="Download"></button>
+                                                    <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Internal Migration " class="btn_action btn_editAction"><img src="assets/Img/icon_download2_grey.svg"></button> -->
+                                                    <button type="button" class="btn_action btn_editAction" id="downloadAll" name="downloadAll" value="DownloadAll" title="Batch Details" [disabled]="row.status !== 'Completed'" (click)="downloadrenewalbulknotices(row.batchNumber)">
+                                                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- <div class="tableNav" *ngIf="totalRecords > 0">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                        </p-paginator>
+                                    </li>
+                                    <li class="pageCountMain">
+                                        <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div> -->
+                    </section>
+                    <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
+                        <div class="cardViewWraper">
+                            <div class="no_dataFound">
+                                <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                <p>{{"No data found" | translate}}</p>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-            </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
-                <div class="cardViewWraper">
-                    <div class="no_dataFound">
-                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>{{"No data found" | translate}}</p>
-                    </div>
-                </div>
-            </section>
-            <!-- <section class="createNewQuoteWraper" *ngIf="totalRecords === 0">
-                <div class="createNewQuoteMain">
-                    <div class="cnqLeft">
-                        <h5>Hi let's get started with new leads</h5>
-                    </div>
-                    <div class="cnqRight">
-                        <button type="button" value="createnewquote" class="btn_red btn_CN_Quote"><img src="assets/Img/icon_plus_white.svg"> Create New Quote</button>
-                    </div>
-                </div>
-            </section> -->
+            </div>
+        </div>
         </div>
     </div>
 </main>
+ <!-- ========================= -->
+
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isAutoDebitModalVisible">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Auto Debit Confirmation</h5>
+        </div>
+        <div class="modal-body">
+            <p class="para-rate-18">
+                <strong>Dear Customer, You are registered with auto debit facility. If you choose to continue now, you will lose a 2.5% discount provided on renewal through Auto Debit.</strong>
+            </p>
+        </div>
+        
+  
+        <div class="modal-footer">
+            <div class="btn-group w-100 d-flex gap-3">
+              <button type="button" class="btn-submit w-50" (click)="exitAutoDebitModal()">Exit</button>
+              <button type="button" class="btn-submit w-50" (click)="continueAutoDebitModal()">Continue</button>
+            </div>
+        </div>
+          
+          
+      </div>
+    </div>
+  </div>

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
 import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
 import { Item } from 'src/app/interface/modal-popup.interface';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-status-validation',
@@ -23,6 +24,7 @@ export class StatusValidationComponent implements OnInit {
     public dialog: MatDialog,
     private authService: AuthService, 
     private router: Router,
+    private sessionService: SessionService
   ){
 
   }
@@ -31,8 +33,8 @@ export class StatusValidationComponent implements OnInit {
   }
 
   checkADFSLogin() {
-const url = new URL(window.location.href);
-this.token = new URLSearchParams(url.hash.substring(1)).get('id_token');
+    const url = new URL(window.location.href);
+    this.token = new URLSearchParams(url.hash.substring(1)).get('id_token');
     
     //let idToken: any = '';
     this.route.queryParams.subscribe(params => {
@@ -96,6 +98,8 @@ this.token = new URLSearchParams(url.hash.substring(1)).get('id_token');
   }
 
   navigateToDashboard(res: any) {
+    this.sessionService.startSessionTimer();
+    this.authService.isFLSLoginExists(res.data?.teamList?.length > 0);
     localStorage.setItem('agentCode', res.data.agentCode);
     localStorage.setItem('userData', JSON.stringify(res.data));
     this.items = this.authService.getUserInfo()?.repotingMembers;

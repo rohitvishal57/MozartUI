@@ -264,6 +264,11 @@ padding:0 0 0 10px !important;
 .quickFilterRight.leads_searchWraperMobile .filterWraper.leads_searchWraper {
   min-width: auto;
 }
+@media screen and (min-width: 768px) and (max-width: 912px){
+  .common_searchWraper .field_searchMain .filterWraper.leads_searchWraper{
+    width: auto;
+  }
+}
 @media (max-width:767px) {
 	.quickFilterLeft .quickFilter {
 		flex-wrap: nowrap;

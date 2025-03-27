@@ -48,7 +48,15 @@
                             </div>
                             <div class="claim_amount">
                                 <h6>{{"Approved Amount" | translate}}</h6>
-                                <p>₹ {{ claims?.approvedAmount != 0 ? claims.approvedAmount : '--' }}</p>
+                                <p>₹ {{ claims?.approvedAmount != 0 ? claims?.approvedAmount : '--' }}</p>
+                            </div>
+                            <div class="claim_amount">
+                                <h6>{{"Deducted Amount" | translate}}</h6>
+                                <p>₹ {{ claims?.deductedAmount != 0 ? claims?.deductedAmount : '--' }}</p>
+                            </div>
+                            <div class="claim_amount">
+                                <h6>{{"Co Payment" | translate}}</h6>
+                                <p>₹ {{ claims?.coPayAmount != 0 ? claims?.coPayAmount : '--'}}</p>
                             </div>
                         </div>
                     </div>
@@ -94,12 +102,13 @@
                                                         <span class="value">{{designationName}}</span>
                                                     </li>
                                                     <li>
-                                                       <span class="label">{{"Raised On:" | translate}}</span>
+                                                        <span class="label">{{"Raised On:" | translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">{{"Document Recv. Date:" | translate}}</span>
+                                                        <span class="label">{{"Document Recv. Date:" |
+                                                            translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>
@@ -112,7 +121,8 @@
                                                         <span class="value">{{claims?.hospitalName}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">{{"Date of Recommendation:" | translate}}</span>
+                                                        <span class="label">{{"Date of Recommendation:" |
+                                                            translate}}</span>
                                                         <span class="value">{{claims?.admissionDate}}</span>
                                                     </li>
                                                     <li>
@@ -123,20 +133,35 @@
                                                         <span class="label">{{"Date of Discharge:" | translate}}</span>
                                                         <span class="value">{{claims?.dischargeDate}}</span>
                                                     </li>
+                                                    <li *ngIf="deductionReason?.length < 2">
+                                                        <span class="label">{{"Deduction Reason:" | translate}}</span>
+                                                        <span class="value">{{claims?.deductionReason}}</span>
+                                                    </li>
+                                                    <li class="view_claimReason" *ngIf="deductionReason?.length > 2">
+                                                        <span class="label">{{ "Deduction Reason:" | translate }}</span>
+                                                        <ul>
+                                                            <li *ngFor="let reason of deductionReason">
+                                                                <span class="value">{{ reason }}</span>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="view_claimReason">
+                                                        <span class="label">{{"Denial Reason:" | translate}}</span>
+                                                        <span class="value">{{status?.denialReason}}</span>
+                                                    </li>
                                                 </ul>
                                                 <div class="claims_member_info-gradient"></div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </mat-tab>
                                 <mat-tab [label]="'Documents' | translate">
                                     <div class="body_flex_column gap-32">
-                                        <div class="uploadDocument_head body_flex_column gap-2">
+                                        <!-- <div class="uploadDocument_head body_flex_column gap-2" *ngIf="claims?.claimType !== 'Cashless'">
                                             <h3 class="heading-20-black">{{"Upload Documents" | translate}}</h3>
                                             <p>{{"Please upload the documents mentioned below. The files should be in .png / .jpg / .pdf with less than 2 MB size per image." | translate}}</p>
                                         </div>
-                                        <div class="uploadDocument_optionsInfo row">
+                                        <div class="uploadDocument_optionsInfo row" *ngIf="claims?.claimType !== 'Cashless'">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <ul class="unorderList ul_withIcon">
                                                     <li><img src="assets/Img/icon_ud_kycid.svg">{{"Any govt/KYC ID" | translate}}</li>
@@ -158,50 +183,9 @@
                                                     <li><img src="assets/Img/icon_ud_consultation_form.svg">{{"Hospital discharge form" | translate}}</li>
                                                 </ul>
                                             </div>
-                                        </div>
-                                        <div class="uploadDocument_head body_flex_column gap-2">
-                                            <h4 class="m-0">{{"View Uploads:" | translate}}</h4>
-                                            <div *ngIf="noFilesFound" class="tipInfo_org m-0">
-                                               <span class="body_flex_row">{{" No documents have been uploaded yet." | translate}}</span>
-                                            </div>
-                                            <div class="viewDocument_listMain tableMain quoteView"
-                                                *ngIf="!noFilesFound && fileUploads.length > 0">
-                                                <div class="tableSubMain">
-                                                    <div class="table-responsive">
-                                                <table class="table table-borderless table-search">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>S.No</th>
-                                                            <th>Document Name</th>
-                                                            <th>Type</th>
-                                                            <!-- <th>Status</th> -->
-                                                            <th>Date of Upload</th>
-                                                            <th>Download</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let file of fileUploads; let i = index">
-                                                            <td>{{ i + 1 }}</td>
-                                                            <td>{{ file.name }}</td>
-                                                            <td>{{ file.type }}</td>
-                                                            <td>{{file.createdDateTime}}</td>
-                                                            <td align="center">
-                                                                <button type="button" id="downloadfile"
-                                                                    name="downloadfile"
-                                                                    class="btn_action btn_renewalAction"
-                                                                    (click)="downloadFile(file)"><img
-                                                                        src="../../../../../assets/Img/icon_download_grey.svg"></button>
-                                                                <!-- <button class="btn btn-primary" (click)="downloadFile(file)">Download</button> -->
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="uploadDocument_main" >
-                                            <div class="uploadDocument_area" *ngIf="claims?.claimType !== 'Cashless'" (click)="docUploadFileInput.click()">
+                                        </div> -->
+                                        <div class="uploadDocument_main">
+                                            <!-- <div class="uploadDocument_area" (click)="docUploadFileInput.click()">
                                                 <div class="ud_area_left">
                                                     <h6>{{"Upload Documents" | translate}}</h6>
                                                     <p>{{"JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)" | translate}}</p>
@@ -217,37 +201,37 @@
                                                 <input type="file" #docUploadFileInput name="docUpload"
                                                     (change)="onFileSelected($event)" style="display:none;" multiple
                                                     accept=".jpg, .jpeg, .pdf, .bmp, .png" />
-                                            </div>
-                                            <span class="ui-error block-show" *ngIf="uploadValidFormt">
+                                            </div> -->
+                                            <!-- <span class="ui-error block-show" *ngIf="uploadValidFormt">
                                                 {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
-                                            </span>
+                                            </span> -->
 
-                                            <div class="uploadedFiles_main" *ngIf="uploadedFiles.length > 0">
+                                            <!-- <div class="uploadedFiles_main" *ngIf="uploadedFiles.length > 0">
                                                 <h3 class="heading-20-black">{{"Uploaded Documents" | translate}}</h3>
                                                 <ul class="uploadedFiles_list">
-                                                    <li class="uploadedFiles_item" *ngFor="let file of uploadedFiles">
-                                                        <!-- <div class="uploadedFiles_info"> -->
-                                                        <!-- <div class="file-label">
+                                                    <li class="uploadedFiles_item" *ngFor="let file of uploadedFiles"> -->
+                                            <!-- <div class="uploadedFiles_info"> -->
+                                            <!-- <div class="file-label">
                                                                 <span>{{ file.label }}</span>
                                                             </div> -->
-                                                        <!-- <div class="file-details"> -->
-                                                        <!-- <h6>{{ file.fileName }}</h6> -->
-                                                        <!-- <p>{{ file.type }}</p> -->
-                                                        <!-- <p>{{ convertBytesToKB(file.size) }} | Uploaded on {{ file.uploadDate | date:'short' }}</p> -->
-                                                        <!-- </div> -->
-                                                        <!-- <div class="file-actions"> -->
-                                                        <!-- <a [href]="file.fileUrl" download class="btn-download">
+                                            <!-- <div class="file-details"> -->
+                                            <!-- <h6>{{ file.fileName }}</h6> -->
+                                            <!-- <p>{{ file.type }}</p> -->
+                                            <!-- <p>{{ convertBytesToKB(file.size) }} | Uploaded on {{ file.uploadDate | date:'short' }}</p> -->
+                                            <!-- </div> -->
+                                            <!-- <div class="file-actions"> -->
+                                            <!-- <a [href]="file.fileUrl" download class="btn-download">
                                                   <img src="assets/Img/icon_download.svg" alt="Download" /> Download
                                                 </a> -->
 
-                                                        <!-- <button (click)="deleteFile(file.fileId)" class="btn-delete">
+                                            <!-- <button (click)="deleteFile(file.fileId)" class="btn-delete">
                                                   <img src="assets/Img/icon_delete_red2.svg" alt="Delete" /> Delete
                                                 </button> -->
-                                                        <!-- </div> -->
-                                                        <!-- </div> -->
-                                                    </li>
+                                            <!-- </div> -->
+                                            <!-- </div> -->
+                                            <!-- </li>
                                                 </ul>
-                                            </div>
+                                            </div> -->
 
                                             <!-- <div class="filesList_body">
                                                 <ul class="uploadedFiles_main">
@@ -260,11 +244,10 @@
                                               </li>
                                               </ul>
                                               </div> -->
-                                            <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
+                                            <!-- <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                                                 <div class="uploadDocument_filesList">
                                                     <div class="filesList_head">
                                                         <div class="filesList_headLeft">{{"Uploads:" | translate}}</div>
-                                                        <!-- <div class="filesList_headRight">{{ documentsUploadStatus }}</div> -->
                                                     </div>
 
                                                     <div class="filesList_body">
@@ -328,12 +311,59 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                            </div> -->
+                                            <div *ngIf="status?.notes?.length > 0" class="query-submission">
+                                                For query submission, please redirect to <a
+                                                    href="https://www.adityabirlahealth.com"
+                                                    target="_blank">https://www.adityabirlahealth.com</a>.
                                             </div>
-
-                                            <div class="row">
+                                            <!-- <div class="row" *ngIf="claims?.claimType !== 'Cashless'">
                                                 <div class="col-12 text-center">
                                                     <button name="submit" id="submit" class="button_red" type="button"
                                                         (click)="updateClaim()">{{"Submit" | translate}}</button>
+                                                </div>
+                                            </div> -->
+
+                                            <div class="uploadDocument_head body_flex_column gap-2">
+                                                <h4 class="m-0">{{"View Uploads:" | translate}}</h4>
+                                                <div *ngIf="noFilesFound" class="tipInfo_org m-0">
+                                                    <span class="body_flex_row">{{" No documents have been uploaded
+                                                        yet." | translate}}</span>
+                                                </div>
+                                                <div class="viewDocument_listMain tableMain quoteView"
+                                                    *ngIf="!noFilesFound && fileUploads.length > 0">
+                                                    <div class="tableSubMain">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-borderless table-search">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>S.No</th>
+                                                                        <th>Document Name</th>
+                                                                        <th>Type</th>
+                                                                        <!-- <th>Status</th> -->
+                                                                        <th>Date of Upload</th>
+                                                                        <th>Download</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let file of fileUploads; let i = index">
+                                                                        <td>{{ i + 1 }}</td>
+                                                                        <td>{{ file.fileName }}</td>
+                                                                        <td>{{ file.type }}</td>
+                                                                        <td>{{file.uploadedDate}}</td>
+                                                                        <td align="center">
+                                                                            <button type="button" id="downloadfile"
+                                                                                name="downloadfile"
+                                                                                class="btn_action btn_renewalAction"
+                                                                                (click)="downloadFile(file)"><img
+                                                                                    src="../../../../../assets/Img/icon_download_grey.svg"></button>
+                                                                            <!-- <button class="btn btn-primary" (click)="downloadFile(file)">Download</button> -->
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -344,7 +374,8 @@
                                         <div class="col-12">
                                             <div class="tracker_claimDetails">
                                                 <div class="main_claimProgressSteps">
-                                                    <div class="submain_claimProgressSteps" *ngIf="customeStepperStatuses.length > 0">
+                                                    <div class="submain_claimProgressSteps"
+                                                        *ngIf="customeStepperStatuses.length > 0">
                                                         <div class="item_claimProgressSteps"
                                                             *ngFor="let status of customeStepperStatuses"
                                                             [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
@@ -357,14 +388,25 @@
                                                             </span>
                                                             <div class="item_info">
                                                                 <h6>{{status.title | translate}}</h6>
-                                                                <p *ngIf="status.statusDate">({{status.statusDate}})</p>
+                                                                <p *ngIf="status.statusDate">({{status.statusDate |
+                                                                    date: 'yyyy-MM-dd HH:mm:ss'}})</p>
                                                                 <small class="cursor"
                                                                     (click)="moveToDocsSection(-1)">{{status?.nextProcess}}</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="item_claimProgressInfo" *ngIf="statusMessage && customeStepperStatuses.length > 0">{{statusMessage}}</div>
+                                                <div class="item_claimProgressInfo"
+                                                    *ngIf="status?.notes && customeStepperStatuses.length > 0">
+                                                    <div *ngFor="let note of notes; let i = index">
+                                                        {{ i + 1 }}.&nbsp; {{ note }}
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="status?.notes?.length > 0" class="query-submission">
+                                                    For query submission, please redirect to <a
+                                                        href="https://www.adityabirlahealth.com"
+                                                        target="_blank">https://www.adityabirlahealth.com</a>.
+                                                </div>
                                                 <div class="item_claimProgressButtons">
                                                     <button type="button" name="claimshistory" id="claimshistory"
                                                         class="btn_iconText" (click)="toggleViewDetails()">
@@ -372,26 +414,33 @@
                                                     </button>
                                                 </div>
 
-                                            <div class="detailsRow" *ngIf="claimsHistory.length > 0 && isViewVisible">
-                                                    <ng-container  *ngFor="let claimsHist of claimsHistory">
+                                                <div class="detailsRow"
+                                                    *ngIf="claimsHistory.length > 0 && isViewVisible">
+                                                    <ng-container *ngFor="let claimsHist of claimsHistory">
                                                         <div class="row claim_historyData">
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Policy Number" | translate}}</label>
                                                                 <h6>{{ claimsHist?.policyNumber }}</h6>
                                                             </div>
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Request Id" | translate}}</label>
                                                                 <h6>{{ claimsHist?.claimInfoId }}</h6>
                                                             </div>
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Member Id" | translate}}</label>
-                                                                 <h6>{{ claimsHist?.memberId }}</h6>
+                                                                <h6>{{ claimsHist?.memberId }}</h6>
                                                             </div>
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Created Date" | translate}}</label>
-                                                                <h6>{{ claimsHist?.createdDateTime }}</h6>
+                                                                <h6>{{ claimsHist?.createdDateTime | date: 'yyyy-MM-dd
+                                                                    HH:mm:ss' }}</h6>
                                                             </div>
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Claim Status" | translate}}</label>
                                                                 <h6>{{ claimsHist?.claimStatus }}</h6>
                                                             </div>
@@ -399,16 +448,19 @@
                                                                 <label>Claim Status Id</label>
                                                                 <h6>{{ claimsHist?.claimStatusId }}</h6>
                                                             </div> -->
-                                                            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                                            <div
+                                                                class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                                 <label>{{"Notes" | translate}}</label>
                                                                 <h6>{{ claimsHist?.notes }}</h6>
                                                             </div>
                                                         </div>
-                                                    </ng-container>           
-                                            </div>
+                                                    </ng-container>
+                                                </div>
 
-                                                <div *ngIf="claimsHistory?.length === 0 && isViewVisible" class="no-data">
-                                                    <p>{{"No claim history found for the selected policy number." | translate}}</p>
+                                                <div *ngIf="claimsHistory?.length === 0 && isViewVisible"
+                                                    class="no-data">
+                                                    <p>{{"No claim history found for the selected policy number." |
+                                                        translate}}</p>
                                                 </div>
 
                                             </div>

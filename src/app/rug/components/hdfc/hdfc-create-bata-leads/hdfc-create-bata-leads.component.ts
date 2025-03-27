@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { event } from 'jquery';
 import { NgToastService } from 'ng-angular-popup';
 import { RugService } from 'src/app/rug/rug.service';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-hdfc-create-bata-leads',
@@ -32,12 +33,20 @@ export class HdfcCreateBataLeadsComponent {
   isGroupJourney!: boolean;
   isRetailsJourney!: boolean;
   JourneyType: any[] = ["Retail", "Group"]
-  SumInsured: any;
+  SumInsured: any = [];
+  sumInsuredOptionsRetail:any = [];
   showProduct1: boolean = false;
   showProduct2: boolean = false;
   campaignName: any;
   productType: any;
   selectedCampaignCode: string = '';
+  products:any = [];
+  retailProducts:any = [];
+  groupProducts:any = [];
+  isSummery:boolean = false;
+  leadId: string | null = null;
+  bataDetails:any = [];
+  agentCode = localStorage.getItem('agentCode');
   bbcustometype: any[] = [
     {
       "name": "Imperia",
@@ -134,6 +143,11 @@ export class HdfcCreateBataLeadsComponent {
 
   }
   ngOnInit(): void {
+    const isSummeryStored = sessionStorage.getItem('isSummery');
+    this.leadId = sessionStorage.getItem('leadId');
+    if (isSummeryStored === 'true') {
+        this.isSummery = true;
+    }
     this.inItForm();
     this.getProductDetails();
     this.getCampaignName();
@@ -148,22 +162,23 @@ export class HdfcCreateBataLeadsComponent {
       branchName: ['', Validators.required],
       branch_code: ['', Validators.required],
       rmContactNo: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$'), Validators.maxLength(10)]],
-      bbCustomerType: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
-      languagePreference: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]],
+      bbCustomerType: [''],
+      languagePreference: [''],
       salutation: ['', Validators.required],
-      customer_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$')]],
+      customer_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
       dob: ['', Validators.required],
       customer_mob_no: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$'), Validators.maxLength(10)]],
       emailId: ['', Validators.required],
       productType: ['', Validators.required],
       sumInsured: ['', Validators.required],
-      premium: ['', Validators.required],
-      comment: ['', Validators.required],
+      premium: [''],
+      comment: [''],
       campaignName: ['', Validators.required],
       smName: ['', Validators.required],
       smMobileNo: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$'), Validators.maxLength(10)]],
       campaignIMDCode: ['', Validators.required],
-      journeyType: ['', Validators.required]
+      journeyType: ['', Validators.required],
+      LeadAssignee:['BATAAV', Validators.required]
     });
 
     this.createBataLeads.get('journeyType')?.valueChanges.subscribe((value) => {
@@ -174,54 +189,71 @@ export class HdfcCreateBataLeadsComponent {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.createBataLeads.value);
 
     if (this.createBataLeads.invalid) {
-      const firstInvalidControl = Object.keys(this.createBataLeads.controls).find(
-        control => this.createBataLeads.get(control)?.invalid
-      );
-      if (firstInvalidControl) {
-        const invalidElement = document.getElementById(firstInvalidControl);
-        invalidElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
+        const firstInvalidControl = Object.keys(this.createBataLeads.controls).find(
+            control => this.createBataLeads.get(control)?.invalid
+        );
+        if (firstInvalidControl) {
+            const invalidElement = document.getElementById(firstInvalidControl);
+            invalidElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
     }
-    console.log(this.createBataLeads.value);
+
     const reqData = {
-      caseStatus: this.createBataLeads.get('caseStatus')?.value,
-      employeeCode: this.createBataLeads.get('employeeCode')?.value,
-      salutation: this.createBataLeads.get('salutation')?.value,
-      employeeName: this.createBataLeads.get('employeeName')?.value,
-      certifacateNo: this.createBataLeads.get('certifacateNo')?.value,
-      branchName: this.createBataLeads.get('branchName')?.value,
-      mobileNumber: this.createBataLeads.get('customer_mob_no')?.value,
-      emailId: this.createBataLeads.get('emailId')?.value,
-      dob: this.createBataLeads.get('dob')?.value,
-      createdBy: "QC",
-      productCode: "7200",
-      productName: "Active Max",
-      branchCode: this.createBataLeads.get('branch_code')?.value,
-      rmContactNo: this.createBataLeads.get('rmContactNo')?.value,
-      bbCustomerType: this.createBataLeads.get('bbCustomerType')?.value,
-      languagePreference: this.createBataLeads.get('languagePreference')?.value,
-      productType: this.createBataLeads.get('productType')?.value,
-      sumInsured: this.createBataLeads.get('sumInsured')?.value,
-      comment: this.createBataLeads.get('comment')?.value,
-      premium: this.createBataLeads.get('premium')?.value,
-      campaignName: this.createBataLeads.get('campaignName')?.value,
-      smName: this.createBataLeads.get('smName')?.value,
-      smMobileNo: this.createBataLeads.get('smMobileNo')?.value,
-      campaignIMDCode: this.createBataLeads.get('campaignIMDCode')?.value
-    }
+        caseStatus: this.createBataLeads.get('caseStatus')?.value,
+        employeeCode: this.createBataLeads.get('employeeCode')?.value,
+        salutation: this.createBataLeads.get('salutation')?.value,
+        employeeName: this.createBataLeads.get('employeeName')?.value,
+        certifacateNo: this.createBataLeads.get('certifacateNo')?.value,
+        branchName: this.createBataLeads.get('branchName')?.value,
+        customerMobileNo: this.createBataLeads.get('customer_mob_no')?.value,
+        customerName: this.createBataLeads.get('customer_name')?.value,
+        customerEmail: this.createBataLeads.get('emailId')?.value,
+        customerDOB: this.createBataLeads.get('dob')?.value,
+        createdBy: this.agentCode,
+        branchCode: this.createBataLeads.get('branch_code')?.value,
+        rmMobileNumber: this.createBataLeads.get('rmContactNo')?.value,
+        bbCustomerType: this.createBataLeads.get('bbCustomerType')?.value,
+        languagePreference: this.createBataLeads.get('languagePreference')?.value,
+        productType: this.createBataLeads.get('productType')?.value,
+        sumInsured: this.createBataLeads.get('sumInsured')?.value,
+        comment: this.createBataLeads.get('comment')?.value,
+        premium: this.createBataLeads.get('premium')?.value,
+        campaignName: this.createBataLeads.get('campaignName')?.value,
+        smName: this.createBataLeads.get('smName')?.value,
+        smMobileNo: this.createBataLeads.get('smMobileNo')?.value,
+        campaignIMDCode: this.createBataLeads.get('campaignIMDCode')?.value,
+        leadid: '',
+        SMCode: String(this.EmployeeDetails.smCode),
+        LeadAssignee: 'BATAAV'
+    };
+
     this.rugService.createBataLeads(reqData).subscribe((response: any) => {
-      console.log('create Bata Av successfully:', response);
-      this.toast.success({ detail: "Success", summary: "Successful..", duration: 3000 })
+        console.log('create Bata Av successfully:', response);
+
+        const parsedData = JSON.parse(response.data);
+        const leadId = parsedData?.data?.leadId;
+
+        if (leadId) {
+            this.toast.success({ detail: "Success", summary: `${leadId} : Lead generated successfully`, duration: 5000 });
+
+            localStorage.setItem('viewLeadDetails', JSON.stringify(parsedData.data)); 
+            sessionStorage.setItem('isSummery', 'true'); 
+            sessionStorage.setItem('leadId', leadId); 
+
+            this.router.navigate(['rug/bata-details']);
+        } else {
+            this.toast.error({ detail: "Error", summary: parsedData.message, duration: 3000 });
+        }
     });
-  }
+}
+
 
   getEmployeeDetails() {
     const reqData = {
-      imdCode: "2120594"
+      EmployeeCode: this.createBataLeads.get('employeeCode')?.value
     };
 
     this.rugService.getEMployeeDetails(reqData).subscribe((res: any) => {
@@ -271,43 +303,75 @@ export class HdfcCreateBataLeadsComponent {
   }
 
   getProductDetails() {
-    this.rugService.getProdcutDetails().subscribe((res: any) => {
-      const response = JSON.parse(res.data)
-      this.productType = response.data.productCombinationModel;
-      this.productType = this.productType.slice(-4);
-      console.log('Product Details', this.productType);
-    })
+    const req = {
+      agentCode: "BATAAV",
+    };
+    
+    this.rugService.getProdcutList(req).subscribe((res: any) => {
+      if (res.isSuccess && res.data) {
+        this.products = res.data; 
+        this.retailProducts = res.data.filter((product: any) => product.businessType === "Retail");
+        this.groupProducts = res.data.filter((product: any) => product.businessType === "RUG");
+        console.log("Retail Products:", this.retailProducts);
+        console.log("Group Products:", this.groupProducts);
+      }
+    });
   }
+  
   onProductSelect(event: any) {
     this.selectedProductCode = event.target.value;
-    console.log('Selected Product Code:', this.selectedProductCode);
+    console.log("Selected Product Code:", this.selectedProductCode);
+  
     if (this.selectedProductCode) {
-      this.getProductDetailsByCode();
+      this.getSumInsuredOptions(this.selectedProductCode);
+    }else{
+
     }
+    
   }
 
-  getProductDetailsByCode() {
-    const req = {
-      productCode: this.selectedProductCode
-    }
 
-    this.rugService.getSumInsuredByProduct(req).subscribe(
-      (response: any) => {
-        const res = JSON.parse(response.data);
-        console.log('Details for Selected Product:', res.data.productSIDetails);
-        this.SumInsured = res.data.productSIDetails;
-      },
-      (error: any) => {
-        console.error('Error fetching product details:', error);
-      }
-    );
+onRetailProductChange(event: any) {
+  this.selectedProductCode = event.target.value;
+  console.log("Selected Product Code:", this.selectedProductCode);
+  
+  const selectedProduct = this.products.find((prod: any) => prod.productCode === this.selectedProductCode);
+
+  if (selectedProduct) {
+    this.SumInsured = selectedProduct.sumInsured.split(",");
+    console.log("Available Sum Insured Options:", this.SumInsured);
+  } else {
+    this.SumInsured = [];
+}
+}
+  
+
+  getSumInsuredOptions(productCode: string) {
+    const req = { 
+      productCode: productCode 
+    };
+   this.SumInsured = [];
+
+      this.rugService.getSumInsured(req).subscribe((res: any) => {
+        const response = JSON.parse(res.data);
+        
+         response.data.productSIDetails.forEach((res:any) => {
+          let SiList:any = {
+            siPlanText: res.siPlanText,
+            siPlanValue:res.siPlanValue
+          };
+          this.SumInsured.push(SiList);
+        });
+      });
   }
+  
+  
 
   getCampaignName() {
     const req = {
       agent: "BATARM",
       pageNumber: 0,
-      pageSize: 10,
+      pageSize: 100,
       name: "",
       filterType: ""
     };
@@ -335,8 +399,12 @@ export class HdfcCreateBataLeadsComponent {
     this.createBataLeads.patchValue({ campaignIMDCode: this.selectedCampaignCode });
 }
 
-  backToJourneySelection() {
-    this.router.navigate(['rug/hdfc_bataLeadsList']);
+backToLeadPage() {
+   if(this.agentCode == 'BATAAV'){
+    this.router.navigate(['rug/view_leads_list']);
+   }else{
+    this.router.navigate(['rug/view_leads_list']);
+   }
   }
 
   isNumber(event: KeyboardEvent) {
@@ -354,5 +422,7 @@ export class HdfcCreateBataLeadsComponent {
       event.preventDefault();
     }
   }
+
+
 
 }

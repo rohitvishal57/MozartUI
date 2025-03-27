@@ -83,7 +83,7 @@
                                     <th nowrap>REMARK</th>
                                     <th class="disableFilterBy" nowrap>ACTION</th>
                                     <th class="disableFilterBy">AUDIT</th>
-                                    <th class="disableFilterBy" nowrap>RETRIGGER PG</th>
+                                    <th class="disableFilterBy" nowrap *ngIf="agentCode !== '467897'">RETRIGGER PG</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -108,8 +108,7 @@
                                     <td nowrap><button type="button" [disabled]="item.status === 'Payment Done'" class="btn_reassign" (click)="actionLead(item)">Action</button>
                                     </td>
                                     <td><button type="button"  class="btn_audit jsOpenPopup"
-                                        aria-label="modal-audit" (click)="auditLead(item)">Audit</button></td>
-                                   
+                                        aria-label="modal-audit" (click)="auditLead(item)">Audit</button></td> 
                                 </tr>
                             </tbody>
                         </table>

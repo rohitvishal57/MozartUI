@@ -1,0 +1,9 @@
+.submitButton{
+    display: flex;
+    justify-content:center;
+}
+.accordionCardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds spacing between rows */
+}

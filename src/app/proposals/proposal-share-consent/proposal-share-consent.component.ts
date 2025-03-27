@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Renderer2 } from '@angular/core';
+import { Component, Inject, Input, Renderer2 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'jquery';
@@ -23,6 +23,8 @@ export class ProposalShareConsentComponent {
   private dynamicStyle!: HTMLLinkElement;
   formData: any;
   selectedButton: any;
+  isSummaryClicked: boolean = false;
+  @Input() formData1: any; 
 
   constructor(
     private yatraService: YatraService, private route: ActivatedRoute, private formBuilder: FormBuilder,
@@ -155,5 +157,12 @@ export class ProposalShareConsentComponent {
       (error) => {
         console.error(error);
       });
+  }
+  clickSummaryConsent(){
+    this.isSummaryClicked= true;
+  }
+
+  closeSummaryPopUp(){
+    this.isSummaryClicked = false;
   }
 }

@@ -593,8 +593,23 @@
                                         </button>
                                       </div>
                                     </div>
+                                </div>
+                                <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">
+                                  <div [class]="control.class" style="display: -webkit-box;">
+                                    <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
+                                      [name]="control.name" id="{{control.name}}" class="checkbox-label"
+                                      (change)="onInputChange($event,control)" />
+                                    <label [for]="control.name"
+                                      [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
+                                      class="checkboxes"><span *ngIf="control.validators">*</span></label>
                                   </div>
-
+                                  <small
+                                    *ngIf="renewalFormGroup.get(control.name)?.invalid && (renewalFormGroup.get(control.name)?.touched)"
+                                    class="text-danger"> {{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
+                                    ''
+                                    }}
+                                  </small>
+                                </div>
                                 <!--type button-->
                                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
                                     (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
@@ -714,6 +729,63 @@
           <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isHealthDeclarationVisible">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Good Health Declaration for Insured Members</h5>
+      </div>
+      <div class="modal-body">
+        <p class="para-rate-18">
+          Did you / insured members suffer from or are currently suffering from or have developed, 
+          been investigated for, or advised to take medical opinion or advised surgery for any 
+          disease/illness/injury/accident/medical/surgical condition other than common cold or viral fever?
+        </p>
+
+        <form [formGroup]="healthDeclarationForm">
+          <div *ngFor="let member of memberDetail; let i = index">
+            <div class="member-section">
+              <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+        
+              <div class="radio-group spaced-radio" style="display: flex; gap: 20px; align-items: center; margin-bottom: 10px; margin-top: 10px;">
+                <label>
+                  <input type="radio" [formControlName]="'GHDApplicable' + i" 
+                         (change)="toggleInputField(i, 'yes')" value="yes"> Yes
+                </label>
+                <label>
+                  <input type="radio" [formControlName]="'GHDApplicable' + i" 
+                         (change)="toggleInputField(i, 'no')" value="no"> No
+                </label>
+              </div>
+              <div class="feedback-message" *ngIf="member.showInputField">
+                  <div class="message-label">
+                    <p class="para-rate-lable">GHD Remarks</p>
+                  </div>
+                  <div class="textarea-wrapper">
+                    <textarea class="input-textBox" id="notes" placeholder="Enter GHD Remarks" [formControlName]="'GHDRemarks' + i"></textarea>
+                  </div>
+                  <small *ngIf="healthDeclarationForm.get('GHDRemarks' + i)?.invalid && healthDeclarationForm.get('GHDRemarks' + i)?.touched"
+                       class="text-danger">
+                  This field is required.
+                </small>
+              </div>
+            </div>
+          </div>
+        </form>
+        
+        
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-submit" (click)="closeModal()">Close</button>
+        <button type="button" class="btn-submit" [disabled]="!healthDeclarationForm.valid" (click)="confirmHealthDeclaration()">
+          Renew
+        </button>
+      </div>
     </div>
   </div>
 </div>

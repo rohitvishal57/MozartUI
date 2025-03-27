@@ -6,6 +6,9 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
 import Chart, { ChartData } from 'chart.js/auto';
+import { AuthService } from 'src/app/services/auth.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { lightFormat } from 'date-fns';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +27,9 @@ export class DashboardComponent {
   renewalDetail: any = [];
   quickActionDetails: any = [];
   businessSummary: any;
+  linkUrl: string = "https://app.powerbi.com/groups/me/reports/6e9a8f65-8065-4a7b-8463-6599e98b902b/ReportSection?experience=power-bi";
+  filterText: string = '';
+  isDropdownOpen: boolean = false;
 
   public chart: any;
   public Leadchart: any;
@@ -49,7 +55,7 @@ export class DashboardComponent {
   dhaSection: any = [];
 
   ProductList: any;
- isDesktopView: boolean = false;
+  isDesktopView: boolean = false;
 
   newSectionList: any;
   newCustomerList: any;
@@ -140,10 +146,32 @@ export class DashboardComponent {
           "categoryName": "Premium",
           "subOrder": 3
         },
+        // {
+        //   "categoryName": "Commission Earned",
+        //   "subOrder": 4
+        // },
+        // {
+        //   "categoryName": "Cross Sell(GWP)",
+        //   "subOrder": 5
+        // },
         {
-          "categoryName": "Commission Earned",
-          "subOrder": 4
-        }
+          "categoryName": "Agent Recruitment",
+          "subOrder": 6
+        },
+        {
+          "categoryName": "Agent Activation",
+          "subOrder": 7
+        },
+        {
+          "categoryName": "Loss Ratio",
+          "subOrder": 8
+        },
+        {
+          "categoryName": "Claim Count",
+          "subOrder": 9
+        },
+       
+        
       ]
     },
     {
@@ -204,9 +232,11 @@ export class DashboardComponent {
     }
   ];
   newWellnessList: any;
-
+  channel: string | undefined;
+  items:any = [];
+  filteredItems:any = []
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
+    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef, private authService: AuthService, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -231,7 +261,13 @@ export class DashboardComponent {
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
         this.profileDetails = res.data;
+        const AgentName = (this.profileDetails?.firstName !== this.profileDetails?.lastName && this.profileDetails?.firstName !== this.profileDetails?.middleName)
+                          ? `${this.profileDetails?.firstName}${this.profileDetails?.middleName || ""} ${this.profileDetails?.lastName || ""}`.trim()
+                          : this.profileDetails?.firstName;
+        console.log('kjrfnvire',this.profileDetails?.annualClubStatus2);
+        
         localStorage.setItem("designation", res.data.designation);
+        localStorage.setItem("agentName", AgentName);
       }
     });
     this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
@@ -247,9 +283,16 @@ export class DashboardComponent {
 
       }
     });
+    this.channel = this.authService?.getUserInfo()?.channel?.toUpperCase();
+    if(this.authService.getUserInfo().teamList && this.authService.getUserInfo().teamList?.length > 0){
+      this.items = this.authService.getUserInfo().teamList;
+    }
+    this.filteredItems = (this.items?.length > 0) ? [...this.items] : [];
     this.fetchWidgets();
     this.getPoductList();
     this.checkScreenSize();
+    this.getAgentCategoryDetails();
+
   }
 
   getTimeOfDay() {
@@ -399,8 +442,6 @@ export class DashboardComponent {
     }
   }
 
-
-
   fetchWidgets() {
     this.widgetArr.forEach(element => {
       const obj = {
@@ -413,14 +454,13 @@ export class DashboardComponent {
         case 'Performance':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('performance', res.data);
-            const channel = localStorage.getItem('channel');
             res.data.length && Object.keys(res.data[0]).forEach(el => {
               switch (el) {
                 case 'nops':
                   const nops = {
                     title: 'Policies Sold',
                     value: res.data[0][el],
-                    description: `Policies sold as per selected range ${res.data[0][el]}`,
+                   // description: `Policies sold as per selected range ${res.data[0][el]}`,
                     icon: 'assets/Img/icon_dashboard_policysold.svg',
                     subIcon: 'assets/Img/icon_price_tag.svg',
                     type: 'text',
@@ -433,7 +473,7 @@ export class DashboardComponent {
                   const premiumEarned = {
                     title: 'Premium',
                     value: res.data[0][el],
-                    description: `${res.data[0][el]} of monthly goal achieved`,
+                    description:`${ this.convertToLakhsOrCrores(res.data[0][el])} of monthly goal achieved`,
                     icon: 'assets/Img/icon_dashboard_premium.svg',
                     type: 'progress',
                     progress: res.data[0][el],
@@ -443,43 +483,88 @@ export class DashboardComponent {
                   break;
 
                 // case 'commissionEarned':
-                //   const commissionEarned = {
-                //     title: 'Commission Earned',
-                //     value: res.data[0][el],
-                //     description: `You can potentially earned ${res.data[0][el]}`,
-                //     icon: 'assets/Img/icon_dashboard_healthreturn.svg',
-                //     type: 'action',
-                //     class: 'commission-earned'
+                //   if (this.channel === 'AGENCY'){
+                //     const commissionEarned = {
+                //       title: 'Commission Earned',
+                //       value: res.data[0][el],
+                //       description: `You can potentially earn ${res.data[0][el]}`,
+                //       icon: 'assets/Img/icon_dashboard_healthreturn.svg',
+                //       type: 'action',
+                //       class: 'commission-earned'
+                //     }
+                //     this.performanceCard.push(commissionEarned);
                 //   }
-                //   this.performanceCard.push(commissionEarned)
                 //   break;
-                case 'commissionEarned':
-                  if (channel === 'agency' || channel === 'AGENCY'){
-                    const commissionEarned = {
-                      title: 'Commission Earned',
+
+                // case 'achievementsPercentage':
+                //   const achievementsPercentage = {
+                //     title: 'My Goals',
+                //     value: res.data[0][el],
+                //     description: 'Achievement',
+                //     icon: 'assets/Img/icon_dashboard_myperformance.svg',
+                //     type: 'gauge',
+                //     progress: res.data[0][el],
+                //     class: 'my-goals'
+                //   }
+                //   this.performanceCard.push(achievementsPercentage)
+                //   break;
+                  // case 'crossSellGWP':
+                  //   const crossSellGWP = {
+                  //     title: 'Cross Sell(GWP)',
+                  //     value: res.data[0][el],
+                  //     icon: 'assets/Img/icon_dashboard_myperformance.svg',
+                  //     type: 'action',                
+                  //     class: 'cross sell'
+                  //   }
+                  //   this.performanceCard.push(crossSellGWP);
+                  // break;
+                  case 'agentRecruitmentMTD':
+                      const agentRecruitment = {
+                        title: 'Agent Recruitment',
+                        value: res.data[0][el],
+                        icon: 'assets/Img/icon_dashboard_policysold.svg',
+                        type: 'text',
+                        class: 'agent-recruitment agent-recruitment-mtd'
+                      }
+                      this.performanceCard.push(agentRecruitment);
+                    break;
+                    case 'agentActivationMTD':
+                      const agentActivation = {
+                        title: 'Agent Activation',
+                        value: res.data[0][el],
+                        description: `70% of monthly goal achieved ${res.data[0][el]}`,
+                        icon: 'assets/Img/icon_dashboard_premium.svg',
+                        type: 'progress',
+                        progress: res.data[0][el],
+                        class: 'agent-recruitment agent-recruitment-mtd'
+                      }
+                      this.performanceCard.push(agentActivation);
+                    break;
+                    case 'lossRatio':
+                      const lossRatio = {
+                        title: 'Loss Ratio(%)',
+                        value: res.data[0][el],
+                        description: '70% of monthly goal achieved',
+                        icon: 'assets/Img/icon_dashboard_premium.svg',
+                        type: 'percentage',
+                        progress: res.data[0][el],
+                        class: 'loss-ratio'
+                      }
+                      this.performanceCard.push(lossRatio);
+                    break;
+                    case 'claimCount':
+                    const claimCount = {
+                      title: 'Claim Count',
                       value: res.data[0][el],
-                      description: `You can potentially earn ${res.data[0][el]}`,
+                    //  description: `You can potentially earn ${res.data[0][el]} more with just 2 more policies`,
                       icon: 'assets/Img/icon_dashboard_healthreturn.svg',
                       type: 'action',
-                      class: 'commission-earned'
+                      progress: res.data[0][el],
+                      class: 'claim-count'
                     }
-                    this.performanceCard.push(commissionEarned);
-                  }
+                    this.performanceCard.push(claimCount);
                   break;
-
-                case 'achievementsPercentage':
-                  const achievementsPercentage = {
-                    title: 'My Goals',
-                    value: res.data[0][el],
-                    description: 'Achievement',
-                    icon: 'assets/Img/icon_dashboard_myperformance.svg',
-                    type: 'gauge',
-                    progress: res.data[0][el],
-                    class: 'my-goals'
-                  }
-                  this.performanceCard.push(achievementsPercentage)
-                  break;
-
+             
                 default:
                   break;
               }
@@ -492,15 +577,15 @@ export class DashboardComponent {
             console.log('customer', res.data)
             this.customerInfo = res.data;
             this.otherSection.push({
-              widgetName: 'Customer',
+              widgetName: 'Customers',
               chart: 'Customer',
               isShow: true,
-              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
+              totalCount: this.customerInfo.activeCustomerCount,
               category: Object.entries(res.data).map(([name, count]) => ({
                 name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
                 count: count
               }))
-            })
+            })            
           })
           break;
 
@@ -582,6 +667,17 @@ export class DashboardComponent {
     });
   }
 
+  convertToLakhsOrCrores(amount: number): string {
+    if (amount >= 10000000) {
+      let crores = amount / 10000000;
+      return crores.toFixed(2) + ' Cr';
+    } else if (amount >= 100000) {
+      let lakhs = amount / 100000;
+      return lakhs.toFixed(2) + ' L';  
+    }
+    return amount.toString(); 
+  }
+  
   ngAfterViewInit(): void {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
@@ -835,7 +931,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/renewal/renewalList/'], {
-                queryParams: { filter: label },
+                queryParams: { status: label, filter: this.businessFilter },
               });
             }
           }
@@ -1363,19 +1459,6 @@ export class DashboardComponent {
     });
   }
 
-  filterText: string = '';
-  isDropdownOpen: boolean = false;
-  isAllSelected = false;
-
-  items = [
-    { name: 'Team 1', selected: false },
-    { name: 'Team 2', selected: false },
-    { name: 'Team 3', selected: false },
-    { name: 'Team 4', selected: false },
-  ];
-
-  filteredItems = [...this.items];
-
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -1385,31 +1468,54 @@ export class DashboardComponent {
   }
 
   filterItems() {
-    this.filteredItems = this.items.filter(item =>
-      item.name.toLowerCase().includes(this.filterText.toLowerCase())
+    this.filteredItems = this.items.filter((item: string) =>
+      item.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
 
-  deselectAll() {
-    this.items.forEach(item => (item.selected = false));
+  teamViewRedirect(agentCode: string) {
+    if (agentCode) {
+      localStorage.setItem("agentCode", agentCode);
+     // window.open(this.linkUrl, "_blank");
+      window.location.reload();
+    } else {
+      console.error('Agent code or link URL is missing');
+    }
   }
 
-  onInputChange() {
-    this.updateButtonStates();
+  clearTeamView() {
+    const parentCode = localStorage.getItem('parentCode');
+    parentCode && localStorage.setItem("agentCode", parentCode);
+    window.location.reload();
   }
 
-  toggleSelectAll() {
-    this.isAllSelected = !this.isAllSelected;
-    this.items.forEach(item => (item.selected = this.isAllSelected));
+  getAgentCategoryDetails() {
+    const agentCode = localStorage.getItem('agentCode');
+      if (!agentCode) {
+      return;
+    }
+  
+    const reqData = {
+      "agentCode": agentCode
+    };
+  
+    this.dashboardService.getAgentCategoryDetails(reqData).subscribe({
+      next: (res: any) => {
+        if (res.isSuccess && res.data) {
+          console.log('agentCategory:', res.data);
+            localStorage.setItem('isAbhiEmployeeRequired', String(res.data.isAbhiEmployeeRequired));
+          localStorage.setItem('isPortabilityRestricted', String(res.data.isPortabilityRestricted));
+  
+        } else {
+          console.error('Failed to get agent category details:', res.message || 'Unknown error');
+        }
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          console.warn('Agent category details not found.');
+        }
+      }
+    });
   }
-
-  updateButtonStates() {
-    const checkedItems = this.items.filter(item => item.selected).length;
-    this.isAllSelected = checkedItems > 0;
-  }
-
-  submit() {
-    console.log('Selected Items:', this.items.filter(item => item.selected));
-    this.isDropdownOpen = false;
-  }
+  
 }

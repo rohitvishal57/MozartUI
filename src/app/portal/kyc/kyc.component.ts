@@ -35,8 +35,9 @@ export class KycComponent {
   ngOnInit() {
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.params = this.route.snapshot.queryParams;
-      if (this.params['token']) {
-        localStorage.setItem('token', this.params['token']);
+      const auth = this.route.snapshot.queryParams
+      if (auth['token']) {
+        localStorage.setItem('token', auth['token']);
       }
       this.user = this.params.userType;
       this.transactionId = this.params['transactionId'] ? this.params['transactionId'] : "";
@@ -143,7 +144,7 @@ export class KycComponent {
                         leadId: this.quickQuoteRedirect == false ? '' : kycData.leadId,
                         verifyKyc: false
                       }
-                      localStorage.setItem("formIndex", "7");
+                      sessionStorage.setItem("formIndex", "7");
                       const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
                       this.router.navigate(['yatra'], {
@@ -221,7 +222,7 @@ export class KycComponent {
         this.renewalService.getKycDetailsApi(kycDetailsReq).subscribe(
           async (res: any) => {
             if(res.data.agentCode){
-              localStorage.setItem('token', res.data.agentCode)
+              localStorage.setItem('agentCode', res.data.agentCode)
             }
             if (res.data.kycStatus == "True") {
               this.agentCode = localStorage.getItem('agentCode');
@@ -239,7 +240,8 @@ export class KycComponent {
                     proposalNum: this.encryptionService.encrypt(""),
                     policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                     journeyProcess: this.encryptionService.encrypt(0),
-                    formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+                    fromList: this.encryptionService.encrypt("kyc"),
+                    formSequence: this.encryptionService.encrypt([detailsForms,leads,payment,thankYou]),
                     kycStatus: this.encryptionService.encrypt(res.data.kycStatus),
                     formIndex: "2",
                   },
@@ -252,14 +254,15 @@ export class KycComponent {
               this.agentCode = localStorage.getItem('agentCode');
               const renewalInfoRequestBody = { policy_Number: res.data.policyNumber };
               const resInfo: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-              this.toast.error({ detail: "Error", summary: "KYC UNSUCCESS", duration: 5000 });
+              this.toast.error({ detail: "Error", summary: "Failed to do kyc.", duration: 3000 });
               this.router.navigate(['renewal/renewalJourney'], {
                 state: {
                   formData: this.encryptionService.encrypt(resInfo.data),
                   proposalNum: this.encryptionService.encrypt(""),
                   policyNumber: this.encryptionService.encrypt(res.data.policyNumber),
                   journeyProcess: this.encryptionService.encrypt(0),
-                  formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+                  fromList: this.encryptionService.encrypt("kyc"),
+                  formSequence: this.encryptionService.encrypt([detailsForms,leads,payment,thankYou]),
                   kycStatus: this.encryptionService.encrypt(res.data.kycStatus),
                   formIndex: "2",
                 }
@@ -340,7 +343,7 @@ export class KycComponent {
   }
 
   getFormIndexValue() {
-    const formIndex = localStorage.getItem("formIndex") as string;
+    const formIndex = sessionStorage.getItem("formIndex") as string;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
 

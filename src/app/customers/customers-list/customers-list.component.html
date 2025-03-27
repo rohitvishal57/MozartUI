@@ -18,9 +18,11 @@
                                 <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
                                     <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
                                     <option id="nameOption" name="nameOption" value="name">{{"Name" | translate}}</option>
+                                    <option id="emailIDOption" name="emailIDOption" value="emailID">{{"Email ID" | translate}}</option>
+                                    <option id="applicationNumberOption" name="applicationNumberOption" value="applicationNumber">{{"Application Number" | translate}}</option>
                                     <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">{{"Mobile Number" | translate}}</option>
                                     <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">{{"Policy Number" | translate}}</option>
-                                    <option id="emailIDOption" name="emailIDOption" value="emailID">{{"Email ID" | translate}}</option>
+                                    <option id="policyStatus" name="policyStatus" value="policyStatus">{{"Policy Status" | translate}}</option>
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
@@ -32,10 +34,13 @@
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'applicationNumber'">{{"Enter a valid Application number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">{{"Enter a valid name." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Enter a valid email id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyStatus'">{{"Enter a valid policy status." | translate}}</small>
+
                                 </span>
                             </div>
                         </div>
@@ -402,7 +407,7 @@
                   <div class="accordionBodyRow">
                     <div class="data-row">
                       <div class="data-item">
-                        <label>{{ "Member ID" | translate }}</label>
+                        <label>{{ "Customer ID" | translate }}</label>
                         <h6>{{ customerBasicDetails.customerID || "-" }}</h6>
                       </div>
                       <div class="data-item">
@@ -417,6 +422,10 @@
                         <label>{{"Premium" | translate}}</label>
                         <h6>{{ customerBasicDetails.totalPremium || '-' }}</h6>
                       </div>
+                      <div class="data-item">
+                        <label>{{ "Tenure" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyTerm || "-"}}</h6>
+                    </div>
                       <div class="data-item">
                         <label>{{"Insured Members" | translate}}</label>
                         <h6>{{ customerBasicDetails.noOfInsured || '-' }}</h6>
@@ -474,10 +483,6 @@
                         <h6>{{ customerBasicDetails.policyNo || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{ "Term" | translate }}</label>
-                        <h6>{{ customerBasicDetails.policyTerm || "-"}} Year(s)</h6>
-                    </div>
-                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{ "Policy Type" | translate }}</label>
                         <h6>{{ customerBasicDetails.policyType || "-"}}</h6>
                     </div>
@@ -516,6 +521,38 @@
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>{{"Mobile Number" | translate}}</label>
                         <h6>{{ customerBasicDetails.mobileNo || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"First Policy ABHI Date" | translate}}</label>
+                        <h6>{{ customerBasicDetails.firstPolicyABHIDate || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Endorsement" | translate}}</label>
+                        <h6>{{ customerBasicDetails.endorsement  || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Dha" | translate}}</label>
+                        <h6>{{ customerBasicDetails.dha || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"complaint" | translate}}</label>
+                        <h6>{{ customerBasicDetails.complaint || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Feedback" | translate}}</label>
+                        <h6>{{ customerBasicDetails.scorecardFeedback || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"CX Score Card" | translate}}</label>
+                        <h6>{{ customerBasicDetails.cxScorecard || "-" }}</h6>
+                    </div>
+                    <div class="block-hide col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Is Renewal Quote Generated" | translate}}</label>
+                        <h6>{{ customerBasicDetails.isRenewalQuoteGenerated }}</h6>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Auto Debit" | translate}}</label>
+                        <h6>{{ customerBasicDetails?.isAutoDebit }}</h6>
                     </div>
                 </div>
               </div>

@@ -37,8 +37,8 @@
                                 <input type="text" maxlength="1" class="input-textBox" (input)="onComplete()" #input6
                                     (keypress)="restrictToNumbers($event)" (keydown)="focusPrevious($event, input5)">
                             </div>
-                            <span class="ui-error">Please enter valid OTP</span>
-                            <span class="ui-error ui-success">Entered valid OTP</span>
+                            <span class="ui-error" *ngIf="isOtpValid === false">Please enter valid OTP</span>
+                            <span class="ui-error" *ngIf="isOtpRequired === true">Please enter OTP</span>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         <div class="input-block input-otp-block m-0">
                             <!-- <input type="text" name="otp-captcha" value="" placeholder="" class="input-textBox"> -->
                             <input type="text" id="captchaInput" formControlName="captchaInput" class="input-textBox" />
-                            <span class="ui-error">Please enter valid captcha</span>
+                            <span class="ui-error" *ngIf="isCaptchaValidated === false">Please enter valid captcha</span>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">

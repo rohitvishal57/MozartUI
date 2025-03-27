@@ -249,7 +249,9 @@
   align-items: center;
   justify-content: center;
 }
-
+.timer_main .timer_content {
+  width: 45px;
+}
 /*----Notifications start---*/
 .overlay_notification {
   right: -13px;
@@ -319,12 +321,15 @@
 /*----Notifications end---*/
 @media (max-width:767px) {
   .overlay_notification {
-    right: 0;
-    left: 0;
-    top: 7rem;
-    padding: 1rem;
-    width: 95%;
-    position: fixed;
-    margin: auto;
-}
+      right: 0;
+      left: 0;
+      top: 7rem;
+      padding: 1rem;
+      width: 95%;
+      position: fixed;
+      margin: auto;
+  }
+  .timer_main .icon_timer {
+    width: 16px;
+  }
 }

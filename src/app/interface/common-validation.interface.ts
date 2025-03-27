@@ -16,7 +16,7 @@ export const searchValidationConfig: { [key: string]: ValidatorFn[] } = {
   leadId: [Validators.required],
   proposalNumber: [Validators.required],
   proposalStatus:[Validators.required],
-  requestId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$")],
+  requestId: [Validators.required, Validators.pattern("^[A-Z0-9-/\\s]*$")],
   memberId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),],
   memberName: [Validators.required,Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),],
   caseId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),],

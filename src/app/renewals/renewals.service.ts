@@ -44,7 +44,7 @@ export class RenewalsService {
     this.policyState.next({ policyNo, activeSection });
   }
   getRenewalListApi(reqBody: any) {
-    const getRenewalList = this.configService.config.baseUrl1 + this.configService.config.getRenewalList;
+    const getRenewalList = this.configService.config.baseUrl + this.configService.config.getRenewalList;
     return this.httpService.post(getRenewalList, reqBody);
   }
   sendRenewalWhatsappApi(reqBody: any) {
@@ -64,11 +64,11 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(requestBody: any) {
-    const getrenewalinfo = this.configService.config.baseUrl1 + this.configService.config.getRenewalInfo;
+    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
-    const gettenuredetails = this.configService.config.baseUrl1 + this.configService.config.getTenureDetails;
+    const gettenuredetails = this.configService.config.baseUrl + this.configService.config.getTenureDetails;
     return this.httpService.post(gettenuredetails,reuestBody)
   }
   getSubquotesApi(requestBody: any){
@@ -92,7 +92,7 @@ export class RenewalsService {
     return this.httpService.post(getproductdetailsandfeatures, reqBody);
   }
   updateMemberDetailsApi(reqBody: any){
-    const updateMemberDetails = this.configService.config.baseUrl1 + this.configService.config.updateMemberDetails;
+    const updateMemberDetails = this.configService.config.baseUrl + this.configService.config.updateMemberDetails;
     return this.httpService.post(updateMemberDetails, reqBody);
   }
   paymentGatewayApi(reqBody:any){
@@ -104,7 +104,7 @@ export class RenewalsService {
     return this.httpService.post(updateKycValue, reqBody);
   }
   getkycURL(reqBody:any, options?: any){
-    const kycURL = this.configService.config.baseUrl1 + this.configService.config.getkycURL;
+    const kycURL = this.configService.config.baseUrl + this.configService.config.getkycURL;
     return this.httpService.post(kycURL, reqBody,options);
   }
   getPaymentStatusApi(orderId:any,reqBody:any){
@@ -113,56 +113,108 @@ export class RenewalsService {
   }
 
   getPaymentDetails(reqBody:any){
-    const paymentDetails = this.configService.config.baseUrl1 + this.configService.config.getPaymentDetails;
+    const paymentDetails = this.configService.config.baseUrl + this.configService.config.getPaymentDetails;
     return this.httpService.post(paymentDetails,reqBody);
   }
   getFullQuoteApi(reqBody:any){
-    const fullquote = this.configService.config.baseUrl1 + this.configService.config.fullQuote;
+    const fullquote = this.configService.config.baseUrl + this.configService.config.fullQuote;
     return this.httpService.post(fullquote, reqBody);
   }
   cpRedirectionApi(reqBody:any){
-    const reDirectionLink = this.configService.config.baseUrl1 + this.configService.config.cpRedirectionApi;
+    const reDirectionLink = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
     return this.httpService.post(reDirectionLink, reqBody);
   }
   getKycDetailsApi(reqBody:any){
-    const getKycDetails = this.configService.config.baseUrl1 + this.configService.config.getDetailsForKyc;
+    const getKycDetails = this.configService.config.baseUrl + this.configService.config.getDetailsForKyc;
     return this.httpService.post(getKycDetails, reqBody);
   }
   sharekyclinkApi(reqBody:any){
-    const sharekyclink = this.configService.config.baseUrl1 + this.configService.config.sharekyclink;
+    const sharekyclink = this.configService.config.baseUrl + this.configService.config.sharekyclink;
     return this.httpService.post(sharekyclink, reqBody);
   }
   skipKycLinkApi(reqBody:any){
-    const skipkyclink = this.configService.config.baseUrl1 + this.configService.config.skipkyclink;
+    const skipkyclink = this.configService.config.baseUrl + this.configService.config.skipkyclink;
     return this.httpService.post(skipkyclink, reqBody);
   }
   justPayRedirection(reqData:any){
-    const paymentRedirection= this.configService.config.baseUrl1 + this.configService.config.justPayRedirection;
+    const paymentRedirection= this.configService.config.baseUrl + this.configService.config.justPayRedirection;
     return this.httpService.post(paymentRedirection,reqData);
   }
   sharePaymentLinkApi(reqData:any){
-    const sharePaymentLink= this.configService.config.baseUrl1 + this.configService.config.sharePaymentLink;
+    const sharePaymentLink= this.configService.config.baseUrl + this.configService.config.sharePaymentLink;
     return this.httpService.post(sharePaymentLink,reqData);
   }
   getpaymentdetailsbypolicynoApi(reqData:any){
-    const getpaymentstatus= this.configService.config.baseUrl1 + this.configService.config.getpaymentdetailsbypolicyno;
+    const getpaymentstatus= this.configService.config.baseUrl + this.configService.config.getpaymentdetailsbypolicyno;
     return this.httpService.post(getpaymentstatus,reqData);
   }
   updateBankDetailApi(reqData:any){
-    const updateBankDetail= this.configService.config.baseUrl1 + this.configService.config.updateBankDetailApi;
+    const updateBankDetail= this.configService.config.baseUrl + this.configService.config.updateBankDetailApi;
     return this.httpService.post(updateBankDetail,reqData);
   }
   updateNomineeDetailApi(reqData:any){
-    const updateNomineeDetail= this.configService.config.baseUrl1 + this.configService.config.updateNomineeDetail;
+    const updateNomineeDetail= this.configService.config.baseUrl + this.configService.config.updateNomineeDetail;
     return this.httpService.post(updateNomineeDetail,reqData);
   }
   getbasequoteApi(reqData:any){
-    const getbasequote= this.configService.config.baseUrl1 + this.configService.config.getbasequote;
+    const getbasequote= this.configService.config.baseUrl + this.configService.config.getbasequote;
     return this.httpService.post(getbasequote,reqData);
   }
   generatehalfqoute(reqData:any){
-    const generatehalfqoute= this.configService.config.baseUrl1 + this.configService.config.generatehalfqoute;
+    const generatehalfqoute= this.configService.config.baseUrl + this.configService.config.generatehalfqoute;
     return this.httpService.post(generatehalfqoute,reqData);
+  }
+  getrenewalProductslist(){
+    const getrenewalProductslist= this.configService.config.baseUrl + this.configService.config.getrenewalProductslist;
+    return this.httpService.post(getrenewalProductslist);
+  }
+  updatehealthreturns(reqData:any){
+    const updatehealthreturns= this.configService.config.baseUrl + this.configService.config.updatehealthreturns;
+    return this.httpService.post(updatehealthreturns,reqData);
+  }
+  updateghddetailsApi(reqData:any){
+    const updateghddetails= this.configService.config.baseUrl + this.configService.config.updateghddetails;
+    return this.httpService.post(updateghddetails,reqData);
+  }
+  updatepepstatusApi(reqData:any){
+    const updatepepstatus= this.configService.config.baseUrl + this.configService.config.updatepepstatus;
+    return this.httpService.post(updatepepstatus,reqData);
+  }
+  downloadRenewalBulkApi(reqData:any){
+    const downloadRenewalBulk= this.configService.config.baseUrl + this.configService.config.downloadRenewalBulk;
+    return this.httpService.post(downloadRenewalBulk,reqData);
+  }
+  downloadRenewalAuditApi(reqData:any){
+    const downloadRenewalAudit= this.configService.config.baseUrl + this.configService.config.downloadRenewalAudit;
+    return this.httpService.post(downloadRenewalAudit,reqData);
+  }
+  saveActionAuditDataApi(reqData: any) {
+    const saveActionAuditData= this.configService.config.baseUrl + this.configService.config.saveActionAuditData;
+    return this.httpService.post(saveActionAuditData,reqData);
+  }
+  updateRenewalMemberAndAddress(reqData:any){
+    const updateRenewalMemberAndAddress= this.configService.config.baseUrl + this.configService.config.updateRenewalMemberAndAddress;
+    return this.httpService.post(updateRenewalMemberAndAddress,reqData);
+  }
+  updateCoverDetails(reqData:any){
+    const updateCoverDetails= this.configService.config.baseUrl + this.configService.config.updateCoverDetails;
+    return this.httpService.post(updateCoverDetails,reqData);
+  }
+  savebulkrenewalnotice(reqData:any){
+    const savebulkrenewalnotice= this.configService.config.baseUrl + this.configService.config.savebulkrenewalnotice;
+    return this.httpService.post(savebulkrenewalnotice,reqData);
+  }
+  downloadrenewalbulknotices(reqData:any){
+    const downloadrenewalbulknotices= this.configService.config.baseUrl + this.configService.config.downloadrenewalbulknotices;
+    return this.httpService.post(downloadrenewalbulknotices,reqData);
+  }
+  getbulkrenewalnoticelist(reqData:any){
+    const getbulkrenewalnoticelist= this.configService.config.baseUrl + this.configService.config.getbulkrenewalnoticelist;
+    return this.httpService.post(getbulkrenewalnoticelist,reqData);
+  }
+  sendpaymentlink(reqData:any){
+    const sendpaymentlink= this.configService.config.baseUrl + this.configService.config.sendpaymentlink;
+    return this.httpService.post(sendpaymentlink,reqData);
   }
 
 }

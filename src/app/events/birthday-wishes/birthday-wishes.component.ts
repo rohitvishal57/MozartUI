@@ -58,12 +58,10 @@ export class BirthdayWishesComponent implements OnInit {
     this.eventsService.sendIndividualWishes(sendWishesPayload).subscribe({
         next: (response) => {
           console.log('Wishes sent successfully to:', birthday.name);
-          // Show success message
           this.showSuccessMessage(`Birthday wishes sent to ${birthday.name}`);
         },
         error: (error) => {
           console.error('Error sending wishes:', error);
-          // Show error message
           this.showErrorMessage(`Failed to send wishes to ${birthday.name}`);
         },
         complete: () => {
@@ -186,9 +184,9 @@ isSameDate(date1: Date, date2: Date): boolean {
     });
   }
   
-  // Helper method to transform date format from MM-DD-YYYY to YYYY-MM-DD
   transformDateFormat(dateString: string): string {
-    const [month, day, year] = dateString.split('-');
+    const datePart = dateString.split(' ')[0];
+    const [month, day, year] = datePart.split('/');
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
   }
 

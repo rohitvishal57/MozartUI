@@ -250,4 +250,11 @@ export class UploadLeadComponent implements OnInit{
       this.selctedFileName='';
     }
   }
+
+  downloadSampleFile() {
+    const link = document.createElement('a');
+    link.href = 'assets/lms-assets/UploadSample.xlsx';
+    link.download = 'SampleTemplate.xlsx';
+    link.click();
+  }
 }

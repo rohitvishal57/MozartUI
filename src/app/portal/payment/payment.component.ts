@@ -176,7 +176,7 @@ export class PaymentComponent {
               applicationNumber: this.paymentDetail.applicationNumber,
               paymentStatus: this.paymentDetail.paymentStatus,
             }
-            localStorage.setItem("formIndex", "7");
+            sessionStorage.setItem("formIndex", "7");
             this.toast.error({ detail: "Error", summary: 'payment '+this.paymentDetail.paymentStatus || " Failed", duration: 5000 });
             const encodedEncryptedData = this.encryptionService.encrypt(reqData);
 
@@ -207,7 +207,7 @@ export class PaymentComponent {
             }
             // if(this.paymentDetail?.isFullQuoteSuccess){
               this.toast.success({ detail: "Success", summary: 'payment '+this.paymentDetail.paymentStatus, duration: 5000 });
-              localStorage.setItem("formIndex", "8");
+              sessionStorage.setItem("formIndex", "8");
             // }
             // else{
             //   this.toast.warning({ detail: "Warning", summary: "Payment was successful, but policy issuance failed.", duration: 5000 });
@@ -232,7 +232,7 @@ export class PaymentComponent {
               applicationNumber: this.paymentDetail.applicationNumber,
               paymentStatus: this.paymentDetail.paymentStatus,
             }
-            localStorage.setItem("formIndex", "7");
+            sessionStorage.setItem("formIndex", "7");
             this.toast.error({ detail: "Error", summary: 'payment '+this.paymentDetail.paymentStatus || " Failed", duration: 5000 });
           }
           const encodedEncryptedData = this.encryptionService.encrypt(reqData);
@@ -251,13 +251,15 @@ export class PaymentComponent {
           policyEndDate: this.paymentDetail.policyEndDate || '',
           receiptID: this.paymentDetail.receiptNumber || '',
           customerId: this.paymentDetail.customerId || '',
-          applicationNumber: this.paymentDetail.applicationNumber || '',
+          applicationNumber: this.paymentDetail?.applicationNumber || this.paymentDetail.proposalId || '',
           status: this.paymentDetail.policyStatus || '',
           productName: this.paymentDetail.productName || '',
           premiumPaid: this.paymentDetail.premiumPaid || '',
           isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false,
           paymentMessage :"",
-          paymentStatus :this.paymentDetail?.paymentStatus
+          policyNo: this.paymentDetail?.policyNumber,
+          paymentStatus :this.paymentDetail?.paymentStatus,
+          paymentMethodType:this.paymentDetail?.paymentMethodType
         };
         if (this.paymentDetail?.paymentMethodType == 'emandate_payment') {
           if (this.paymentDetail.paymentStatus == 'SUCCESS' || this.paymentDetail.paymentStatus == 'PENDING'){
@@ -294,7 +296,8 @@ export class PaymentComponent {
             state: {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
-              formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+              fromList: this.encryptionService.encrypt("payment"),
+              formSequence: this.encryptionService.encrypt([detailsForms,leads,payment,thankYou]),
               formIndex: "2",
             }
           });
@@ -308,7 +311,8 @@ export class PaymentComponent {
                 proposalNum: this.encryptionService.encrypt(""),
                 // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 journeyProcess: this.encryptionService.encrypt(0),
-                formSequence: this.encryptionService.encrypt([detailsForms,leads,payment, thankYou]),
+                fromList: this.encryptionService.encrypt("payment"),
+                formSequence: this.encryptionService.encrypt([detailsForms,leads,payment,thankYou]),
                 formIndex: "3",
               },
             });
@@ -318,6 +322,7 @@ export class PaymentComponent {
             this.router.navigate(['renewal/renewalJourney'], {
               state: {
                 formData: this.encryptionService.encrypt(formData),
+                fromList: this.encryptionService.encrypt("payment"),
                 // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
                 formIndex: "3",
               },
@@ -332,7 +337,7 @@ export class PaymentComponent {
               formData: this.encryptionService.encrypt(formData),
               // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
               paymentStatus: this.encryptionService.encrypt(this.paymentDetail?.paymentStatus),
-              formIndex: "2",
+              formIndex: "3",
             }
           });
         } else {
@@ -342,7 +347,7 @@ export class PaymentComponent {
               formData: this.encryptionService.encrypt(formData),
               proposalNum: this.encryptionService.encrypt(""),
               // policyNumber: this.encryptionService.encrypt(this.paymentDetail.oldPolicyNumber),
-              formSequence: this.encryptionService.encrypt([detailsForms,leads, payment, thankYou]),
+              formSequence: this.encryptionService.encrypt([detailsForms,leads,payment,thankYou]),
               formIndex: "2",
             }
           });
@@ -445,12 +450,13 @@ export class PaymentComponent {
           policyEndDate: this.paymentDetail.policyEndDate || '',
           receiptID: this.paymentDetail.receiptNumber || '',
           customerId: this.paymentDetail.customerId || '',
-          applicationNumber: this.paymentDetail.applicationNumber || '',
+          applicationNumber: this.paymentDetail?.applicationNumber || this.paymentDetail.proposalId || '',
           status: this.paymentDetail.policyStatus || '',
           productName: this.paymentDetail.productName || '',
           premiumPaid: this.paymentDetail.premiumPaid || '',
           isFullQuoteSuccess: this.paymentDetail.isFullQuoteSuccess || false,
           paymentMessage :"",
+          policyNo: this.paymentDetail?.policyNumber,
           paymentStatus :this.paymentDetail?.paymentStatus
         };
         if (this.paymentDetail?.paymentMethodType == 'emandate_payment') {

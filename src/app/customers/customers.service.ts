@@ -49,5 +49,16 @@ export class CustomersService {
       const customerEndorsementDetails=this.configService.config.baseUrl + this.configService.config.getCustomerEndorsementDetails+ `=${policyNumber}`;
       return this.http.post<any>(customerEndorsementDetails,policyNumber)
     }
-    
+    goodhealthmemberurl(reqBody:any){
+      const goodhealthmemberurl=this.configService.config.baseUrl + this.configService.config.goodhealthmemberurl;
+      return this.http.post<any>(goodhealthmemberurl,reqBody)
+    }
+    getproposaltest(reqBody:any){
+      const getproposaltest=this.configService.config.baseUrl + this.configService.config.getproposaltest;
+      return this.http.post<any>(getproposaltest,reqBody)
+    }
+    updateproposaltest(reqBody:any){
+      const updateproposaltest=this.configService.config.baseUrl + this.configService.config.updateproposaltest;
+      return this.http.post<any>(updateproposaltest,reqBody)
+    }
 }

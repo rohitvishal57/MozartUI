@@ -1507,6 +1507,75 @@ h2 {
 .carousel-control-next {
     right: -12px;
 }
+.goodmorning_wraper {
+    width: auto;
+    @media (max-width:820px) {
+        flex-direction: column;
+    }
+    h6 {
+        display: flex;
+        gap: 10px;
+        @media (max-width:820px) {
+            flex-direction: column;
+        }
+    }
+    .proseller_img {
+        img {
+            width: 121px;
+        }
+    }
+    span.proseller_img {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Anek Latin", sans-serif !important;
+        font-size: 18px;
+        color: #A83ABB;
+        text-transform: capitalize;
+        font-weight: 700;
+        img {
+            width: 32px;
+        }
+    }
+}
+.cardWraper-container-po {
+    display: flex;
+    flex-wrap: wrap;
+    @media (max-width:1024px) {
+        gap: 18px;
+    }
+    @media (max-width:820px) {
+        gap: 10px;
+    }
+    .cardItem{
+        /* max-width: 255px; */
+        flex: 1 0 21%;
+        margin: 0;
+        @media (max-width:1024px) {
+            flex: none;
+            width: 48.95%;
+        }
+        @media (max-width:820px) {
+            header {
+                font-size: 16px;
+                gap: 10px;
+            }
+        }
+        @media (max-width:767px) {
+            flex: 1 auto;
+        }
+        &.agent-recruitment-mtd {
+            min-width: 49%;
+            @media (max-width:1024px){
+                min-width: initial;
+                max-width: 48.95%;
+            }
+            @media (max-width:767px) {
+                max-width: 100%;
+            }
+        }
+    }
+}
 /*---Responsive dahboard new sections styles start---*/
 @media (max-width:1280px){
     .cardWraper-container {
@@ -1652,7 +1721,6 @@ h2 {
 .teamView_container {
     position: relative;
     display: inline-block;
-  
     .teamView_btn {
       background: #fff;
       border: 1px solid #e6e6e6;
@@ -1680,7 +1748,7 @@ h2 {
       position: absolute;
       top: 32px;
       right: 0;
-      width: 200px;
+      width: 250px;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -1732,6 +1800,14 @@ h2 {
                 font-size: 14px;
                 font-weight: 300;
             }
+            a, a:not(href) {
+                font-weight: 400;
+                font-size: 14px;
+                color: #282828;
+                &:hover {
+                    color: #c91429 !important;
+                }
+            }
         }
        }
       .item {
@@ -1752,7 +1828,7 @@ h2 {
     .teamView_dropdown_footer {
       text-align: center;
       padding-top: 10px;
-      display: flex;
+      // display: flex;
       gap: 8px;
       justify-content: space-between;
       align-items: center;
@@ -1783,6 +1859,17 @@ h2 {
             text-decoration: underline;
         }
       }
+    }
+}
+.filterfields_input {
+    .teamView_container{
+        margin-right: 10px;
+        .teamView_btn {
+            padding: 11px 16px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
     }
 }
 

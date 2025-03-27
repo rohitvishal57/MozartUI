@@ -53,3 +53,84 @@ export interface ClaimData {
         requiredDocs: string;
         duplicateDocs: string;
       }
+
+ export interface DocSearchParam {
+   docSearchParamId: string;
+   value: string;
+ }
+ 
+ export interface SearchResult {
+   globalId: string | null;
+   omniDocImageIndex: string;
+   omniDocIndex: string;
+   vID: string;
+   fileName: string;
+   description: string;
+   uploadedDate: string;
+   dataClassParam: DocSearchParam[];
+   error: Array<{
+     code: string;
+     description: string;
+   }>;
+ }
+ 
+ export interface SearchDocumentRequest {
+   AgentCode: string | null;
+   ReferenceId: string| null;
+   SearchOperator: string;
+   isClaims: boolean;
+   SearchRequest: Array<{
+     CategoryID: string;
+     DocumentID: string;
+     ReferenceID: string;
+     FileName: string;
+     Description: string;
+     DataClassParam: Array<{
+       DocSearchParamId: string;
+       Value: string;
+     }>;
+   }>;
+    
+ }   
+ 
+ export interface DownloadRequest {
+  agentCode:string | null;
+  referenceId:string | null;
+  eventName: any,
+  proposalNumber: any;
+  downloadRequest:any;
+  sourceSystemName:any;
+  identifier:any;
+}
+export interface FileDisplay {
+  name: string;
+  type: string;
+  createdDateTime: string;
+  base64?: string;
+  fileBlob?: Blob;
+  documentId: string;
+}
+
+export interface FileObject {
+  documentId: string;
+  name: string;
+  type: string;
+  size: number;
+  uploadDateTime: Date;
+  status: 'pending' | 'success' | 'failed';
+  file: File;
+}
+export interface DocumentSection {
+  id: string;
+  label: string;
+  uploadStatus: string;
+  file: FileObject | null;
+}
+
+export interface Errors {
+  policyNumberRequired: string;
+  invalidFormat: boolean;
+  requiredDocs: string;
+  fileNotSelected: boolean;
+  missingDocuments: boolean;
+}

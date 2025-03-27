@@ -6,7 +6,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from '../products.service';
 import { QuoteService } from 'src/app/quote/quote.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
@@ -28,15 +28,17 @@ export class ProductComparisonComponent {
   productComparison : Boolean = false;
   selectedProduct : any ='';
   proposalNum : any = '';
+  disableBuyJourney: boolean | undefined;
 
   constructor(private router: Router,private productService: ProductsService,
     private common: CommonService,private encryptionService: EncryptionService, 
-    private toast: NgToastService,private quoteservices: QuoteService
+    private toast: NgToastService,private quoteservices: QuoteService, private authService: AuthService
   ){
   }
 
   ngOnInit(): void {
     
+    this.disableBuyJourney = this.authService.getUserInfo().disableBuyJourney;
     window.scrollTo(0, 0); // Scroll to top when the component is initialized
     const savedItems = sessionStorage.getItem('compareItems');
     if (savedItems) {
@@ -72,6 +74,7 @@ export class ProductComparisonComponent {
       this.productService.Getproductlist(reqData).subscribe({
         next: async (res: any) => {
           try {
+            this.formData = { ...this.formData, proposalNumber: this.proposalNum }
             const reqData = {
               "partnerId": comparisonItem.partnerId,
               "productId": comparisonItem.productId
@@ -85,7 +88,7 @@ export class ProductComparisonComponent {
             }
             console.log(this.allJsonFormData);
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-            localStorage.setItem("formIndex", "0");
+            sessionStorage.setItem("formIndex", "0");
           } catch (err) {
             this.toast.warning({ detail: "Warning", summary: "Form Configuration not found!!", duration: 2000 });
           }

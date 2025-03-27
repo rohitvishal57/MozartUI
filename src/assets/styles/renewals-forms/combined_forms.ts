@@ -2711,7 +2711,7 @@ export const combinedForms = {
           "class": "section-title proposalDetails",
           "formControls": [
             {
-              "name": "policyNumber",
+              "name": "policyNo",
               "label": "Policy Number",
               "visibleLabel": true,
               "type": "summary",
@@ -2773,6 +2773,16 @@ export const combinedForms = {
             {
               "name": "status",
               "label": "Policy Status",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "applicationNumber",
+              "label": "Application No",
               "visibleLabel": true,
               "type": "summary",
               "value": "",

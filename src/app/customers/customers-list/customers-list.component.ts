@@ -77,6 +77,8 @@ export class CustomersListComponent {
     "receiptNo": "",
     "name": "",
     "emailID": "",
+    "policyStatus": "",
+    "applicationNumber": "",
     "mobileNumber": "",
     "proposalNumber": "",
     "pincode": "",
@@ -135,7 +137,13 @@ export class CustomersListComponent {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
   }
-  formatPolicyStartDate(datetime: string): string {
+  // formatPolicyStartDate(datetime: string): string {
+  //   return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
+  // }
+  formatPolicyStartDate(datetime: any) {
+    if (!datetime) {
+      return ""; 
+    }
     return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   getProducts() {
@@ -232,10 +240,14 @@ export class CustomersListComponent {
       return "Enter Name";
     } else if (this.selected === "mobileNumber") {
       return "Enter Mobile Number";
+    } else if (this.selected === "applicationNumber") {
+      return "Enter Application No.";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
     } else if (this.selected === "emailID") {
       return "Enter Email ID";
+    } else if (this.selected === "policyStatus") {
+      return "Enter Policy Status";
     } 
     else {
       return "Search...";
@@ -247,6 +259,8 @@ export class CustomersListComponent {
     this.customerListRequestBody.name = "";
     this.customerListRequestBody.policyNumber = "";
     this.customerListRequestBody.emailID ="",
+    this.customerListRequestBody.policyStatus ="",
+    this.customerListRequestBody.applicationNumber ="",
     this.searchInputControl.reset();
     this.searchApplied=false;
     this.getCustomerList();
@@ -259,21 +273,44 @@ export class CustomersListComponent {
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
         this.customerListRequestBody.emailID =""
+        this.customerListRequestBody.policyStatus = "";
+        this.customerListRequestBody.applicationNumber = "";
       } else if (this.selected === "name") {
         this.customerListRequestBody. name = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.policyNumber = "";
         this.customerListRequestBody.emailID =""
+        this.customerListRequestBody.policyStatus = "";
+        this.customerListRequestBody.applicationNumber = "";
       } else if (this.selected === "policyNumber") {
         this.customerListRequestBody.policyNumber = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
+        this.customerListRequestBody.policyStatus = "";
         this.customerListRequestBody.proposalNumber =""
-      }else if (this.selected === "emailID") {
+        this.customerListRequestBody.applicationNumber = "";
+      } else if (this.selected === "emailID") {
         this.customerListRequestBody.emailID = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
+        this.customerListRequestBody.policyStatus = "";
+        this.customerListRequestBody.applicationNumber = "";
+      } else if (this.selected === "policyStatus") {
+        this.customerListRequestBody.policyStatus = trimmedValue || "";
+        this.customerListRequestBody.mobileNumber = "";
+        this.customerListRequestBody.name = "";
+        this.customerListRequestBody.policyNumber = "";
+        this.customerListRequestBody.emailID = "";
+        this.customerListRequestBody.applicationNumber = "";
+      } else if (this.selected === "applicationNumber") {
+        this.customerListRequestBody.applicationNumber = trimmedValue || "";
+        this.customerListRequestBody.mobileNumber = "";
+        this.customerListRequestBody.name = "";
+        this.customerListRequestBody.policyNumber = "";
+        this.customerListRequestBody.emailID = "";
+        this.customerListRequestBody.policyStatus = "";
+
       }
       this.first = 0;
       this.page = 1;
@@ -402,7 +439,7 @@ toggleMoreInfo(index: number): void {
     const downloadPolicyKitRequestBody = {
       agentCode: this.agentCode,
       referenceId: this.agentCode,
-      eventName: "Download policy kit request from customers",
+      eventName: "Download policy kit request from Customers",
       proposalNumber: "",
       downloadRequest: [
         {
@@ -430,6 +467,9 @@ toggleMoreInfo(index: number): void {
             link.click();  
             document.body.removeChild(link)
             window.open(fileURL, "_blank");
+          }else{
+            const errorDescription =response?.data?.downloadResponse?.[0]?.error?.[0]?.description || "No file found to download.";
+            this.toast.error({ detail: "Error", summary: errorDescription, duration: 3000 });
           }
         } else {
           this.toast.error({ detail: "Error", summary: response.message || "No file found to download.", duration: 3000 });
@@ -494,7 +534,7 @@ getCustomerBasicDetails() {
           this.customerInsuredDetails = res.data;  
           this.commonInfo=res.data;         
         } else {
-          this.toast.warning({ detail: "Warning", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
+          // this.toast.warning({ detail: "Warning", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
           this.customerInsuredDetails = []        
         }
       },

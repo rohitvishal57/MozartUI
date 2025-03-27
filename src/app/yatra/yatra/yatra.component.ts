@@ -6,7 +6,7 @@ import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, interval, take, tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
@@ -18,9 +18,7 @@ import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
 import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
-import { Options } from '@angular-slider/ngx-slider';
-import { LogarithmicScale } from 'chart.js';
-import { event } from 'jquery';
+import { FocusTrap } from 'primeng/focustrap';
 
 @Component({
   selector: 'app-yatra',
@@ -142,7 +140,12 @@ export class YatraComponent {
   parsedValue: any;
   selfAnnualIncome: any;
   selfCoverSumInsured: any;
-  selectedInnerControl: any;
+  selfWeeklyLimit: any;
+  selectedOccupation: any;
+  selectedOccupationRisk: any;
+  selectedPlan = 'P1';
+  proposer = '';
+  clickedRecalculate = false;
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -165,8 +168,28 @@ export class YatraComponent {
   //Activ Care variables
   familyPair = '';
   selectedFamilyPair: string[] = [];
-
-
+  isHdfcFlow: boolean = false;
+  isAxis: boolean = false;
+  isDeclarartionDiscountVisible: boolean = false;
+  isPopupLink: boolean | undefined = false;
+  isLinkAndSendButton: boolean = false;
+  customerUrl: any;
+  isGoodHealthDiscount: boolean = false;
+  isLeadCreatedSuccessfully: boolean = false;
+  private lastLeadId: string | null = null;
+  private popupAlreadyShown: boolean = false;
+  customerOtpKey: any;
+  allAccountDetails: any;
+  isCustomerAccountDetails: boolean = false;
+  isAccountList: boolean = false;
+  selectedAccounts: any = "";
+  customerDetailsList: any[] = [];
+  isTimerRunning = false;
+  isAxisFlow: Boolean = false;
+  portabilityRestricted = false;
+  proposerFullName: any;
+  baseCallerDetails: any;
+  isAbhiEmployeeRequired: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -178,7 +201,6 @@ export class YatraComponent {
   }
 
   ngOnInit() {
-
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -187,18 +209,30 @@ export class YatraComponent {
       });
     });
 
+    if (this.router.url.includes("hdfc")) {
+      this.isHdfcFlow = true;
+    } else if (this.router.url.includes("axis")) {
+      this.isAxis = true;
+    }
+
+
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
 
+    console.log(this.formSequence);
+
+    if (localStorage.getItem('isAbhiEmployeeRequired') != null) {
+      this.isAbhiEmployeeRequired = localStorage.getItem('isAbhiEmployeeRequired') == 'true' ? true : false;
+    }
+
+
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');
-
 
     if (localStorage.getItem('agentCode'))
       this.agentCode = localStorage.getItem('agentCode');
     // this.agencyCode = history.state.productData.agencyCode;
     if (history.state && history.state.productData) {
-
       if (history.state.productData.productId)
         this.productId = history.state.productData.productId;
       if (history.state.productData.partnerId)
@@ -220,13 +254,14 @@ export class YatraComponent {
       if (history.state.productData.tenure) {
         this.formData = { ...this.formData, tenure: history.state.productData.tenure }
       }
-
-
       if (history.state.productData.selectedAddons) {
         this.selectedAddons = history.state.productData.selectedAddons
       }
-
+      if (history.state.productData.isAxisFlow) {
+        this.isAxisFlow = history.state.productData.isAxisFlow
+      }
     }
+
     // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.route.queryParams.subscribe(async params => {
@@ -250,7 +285,29 @@ export class YatraComponent {
             if (params['token']) {
               localStorage.setItem('token', params['token']);
             }
-            this.setFormIndexValue(decryptedData.currentFormSequence as number);
+            if (decryptedData.agentCode) {
+              localStorage.setItem('agentCode', decryptedData.agentCode);
+            }
+
+            // this.setFormIndexValue(decryptedData.currentFormSequence as number);
+            const rdata = {
+              ProposalNumber: decryptedData.proposalNum
+            }
+            await this.yatraService.getformsequencebyproposalnum(rdata).subscribe({
+              next: async (rres: any) => {
+                console.log(rres);
+                if (rres.isSuccess) {
+                  decryptedData.currentFormSequence = rres.data.formSequence;
+                  this.setFormIndexValue(decryptedData.currentFormSequence as number);
+                }
+                else {
+                  console.error(rres.isSuccess);
+                }
+              },
+              error: (err) => {
+                console.error(err);
+              }
+            });
             const reqData = {
               "partnerId": decryptedData.partnerId,
               "productId": decryptedData.productId
@@ -258,8 +315,11 @@ export class YatraComponent {
             }
             const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
             this.formSequence = JSON.parse(res.data.formSequence);
+            this.isHdfcFlow = true;
           }
           if (decryptedData) {
+            console.log(decryptedData);
+            
             this.leadnumber = decryptedData.leadId;
             this.agentCode = decryptedData.agentCode;
             this.partnerId = decryptedData.partnerId;
@@ -276,6 +336,9 @@ export class YatraComponent {
                 this.formSequence = JSON.parse(res.data.formConfig) || [];
                 this.form = JSON.parse(res.data.jsonFormData);
                 this.formData = JSON.parse(res.data.formData);
+                if(decryptedData.productName){
+                  this.formData = {...this.formData,productName:decryptedData.productName}
+                }
                 console.log(this.form, this.formData, this.productId, this.partnerId);
                 if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
                   this.quickQuoteRedirect = false;
@@ -368,6 +431,22 @@ export class YatraComponent {
                     }
                   }
                 }
+
+                if (this.isHdfcFlow) {
+                  let controlerNames = ['firstName', 'middleName', 'lastName', 'emailId', 'permanentAddress1', 'permanentAddress2', 'proposerPincode',
+                    'memberDobProposer', 'memberAgeProposer', 'mobileNumber', 'panNo'];
+                  console.log(" this.form", this.form);
+                  console.log(" this.form", this.formData);
+
+                  this.form.formSections.forEach((section: any) => {
+                    section.formControls.forEach((control: any) => {
+                      if (controlerNames.includes(control.name) && control.name in this.formData && this.formData[control.name] !== '' && this.formData[control.name] !== null) {
+                        control.disabled = true;
+                      }
+                    });
+                  });
+                }
+
                 // this.initializeRequiredData();
                 this.initializeForm();
               },
@@ -391,6 +470,8 @@ export class YatraComponent {
       rating: [null, Validators.required], // Add rating to the form
     });
 
+    console.log(this.formData);
+    
   }
 
   initializeRequiredData() {
@@ -420,6 +501,13 @@ export class YatraComponent {
     }
     else {
       this.proposalId = "";
+    }
+
+    if (localStorage.getItem('isPortabilityRestricted') != null) {
+      this.portabilityRestricted = localStorage.getItem('isPortabilityRestricted') == 'true' ? true : false;
+    }
+    else {
+      this.portabilityRestricted = false;
     }
 
     // if (sessionStorage.getItem('quoteId') != null) {
@@ -474,15 +562,19 @@ export class YatraComponent {
       // Check if proposalNumber matches
       if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
         this.totalPremium = proposalRequiredDetails.totalPremium;
-        this.covers = proposalRequiredDetails.covers;
+        this.covers = proposalRequiredDetails.covers ?? [];
         this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
       }
       else {
         this.totalPremium = 0;
         this.covers = [];
       }
+
+      console.log(this.covers);
+
     }
   }
+
   async getFormDataFromFormSequence(formId: any) {
     this.initializeRequiredData();
     this.showHtmlContent = false;
@@ -557,7 +649,7 @@ export class YatraComponent {
       productId: this.productId.toString(),
       formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
       proposalNum: this.proposalNum,
-      agentCode: this.agentCode,
+      agentCode: localStorage.getItem('parentCode') || localStorage.getItem('agentCode'),
       leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
       isLead: this.quickQuoteRedirect == false ? false : true,
       currentFormSequence: this.getFormIndexValue().toString()
@@ -572,10 +664,31 @@ export class YatraComponent {
         this.form = JSON.parse(res.data.jsonFormData);
         console.log("form", this.form);
 
+        console.log(this.formData, JSON.parse(res.data.formData));
+
+
         this.formData = {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
+
+
+
+
+
+        if (this.isHdfcFlow || this.isAxis) {
+          let controlerNames = ['firstName', 'middleName', 'lastName', 'emailId', 'permanentAddress1', 'permanentAddress2', 'proposerPincode',
+            'memberDobProposer', 'memberAgeProposer', 'mobileNumber', 'panNo'];
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((control: any) => {
+              if (controlerNames.includes(control.name) && control.name in this.formData && this.formData[control.name] !== '' && this.formData[control.name] !== null) {
+                control.disabled = true;
+              }
+            });
+          });
+          console.log("formData", this.formData);
+        }
+
         console.log(this.formData);
         if (this.form.formTitle == 'Insurance Details') {
 
@@ -606,23 +719,146 @@ export class YatraComponent {
         if (this.getFormIndexValue() == 8) {
           this.modifyThankYouJson();
         }
+        if (this.form.formTitle == 'Payment') {
+          let reqData = {
+            "proposalNum": this?.formData?.proposalNumber,
+            "partnerId": this.partnerId,
+            "agentCode": this.agentCode,
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+            "formName": this.formSequence[this.getFormIndexValue()].formName,
+            "formConfig": JSON.stringify(this.formSequence),
+            "productId": this.productId.toString(),
+            "formId": this.formSequence[this.getFormIndexValue()].formId,
+            "jsonForm": JSON.stringify(this.form),
+            "formSequence": this.getFormIndexValue(),
+            "leadNumber": this.leadnumber,
+            "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+          };
+          await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+            next: (res: any) => {
+              this.leadnumber = res.data;
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        }
+        if (this.getFormIndexValue() == 6) {
+          const isCheckSum = localStorage.getItem('isCheckSum');
+          if (isCheckSum == '0') {
+            this.modifyDeclarationForm();
+          }
+        }
         this.initializeForm();
-      },
-      error: (err) => {
-        console.log(err);
       }
     });
   }
 
   async initializeForm() {
-    console.log(this.form, this.formData, this.questionFormData, this.productId, this.partnerId);
+    console.log(this.form, this.formData, this.questionFormData, this.productId, this.partnerId, this.isAxisFlow);
+
+    this.form.formSections.forEach((section: any) => {
+      if (section.sectionTitle === 'Personal Details') {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name === 'educationDetails' || formControl.name === 'maritalStatus' || formControl.name === 'idProof') {
+            formControl.options.sort((a: any, b: any) => a.value.localeCompare(b.value));
+          }
+        });
+      }
+    });
+
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
+    if (this.isAxisFlow) { //axis bank flow through redirection(net banking)
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'typeOfBusiness') {
+            formControl.visible = true;
+            if (formControl.onChangeMethod || formControl.methodName) {
+              formControl.onChangeMethod = '',
+                formControl.methodName = ''
+            }
+          } else if (formControl.name == 'gstDetails') {
+            formControl.toolTipMessage = 'For Customers who are not registered under GST, GST/IN is not mandatory'
+          } else if (formControl.name == 'accountCategory') {
+            formControl.visible = true
+          } else if (formControl.name == 'online' || formControl.name == 'offline') {
+            formControl.visible = false
+          }else if(formControl.name=='paymentMode'){
+            formControl.visible=true
+          } else if ((formControl.name == "nomineeAddress" || formControl.name == "nomineeContactNo") && formControl.hasOwnProperty('validators')) {
+            delete formControl.validators;
+          } else if (formControl.name == "leadId") {
+            formControl.visible = true;
+          }
+          if (this.form.formTitle === 'Confirmation') {
+            if (formControl.name == 'proposerFullName') {
+              formControl.visible = true;
+            }
+          }
+        })
+      });
+    }
+    if (this.partnerId=='45') { //axis bank RFB
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == 'Policy Information') {
+          section.visible = true;
+        }
+        if (section.sectionTitle == 'Business Source Information') {
+          section.visible = true;
+          if (section.postControlCreationMethod) {
+            this.resolveMethod(section.postControlCreationMethod);
+          }
+        }
+        if (section.sectionTitle == 'Personal Details') {
+          section.formControls.forEach((formControl: any) => {
+            if (formControl.name == 'typeOfBusiness') {
+              formControl.visible = true;
+              if (formControl.onChangeMethod || formControl.methodName) {
+                formControl.onChangeMethod = '',
+                  formControl.methodName = ''
+              }
+            }
+            else if(formControl.name=='gstDetails'){
+              formControl.toolTipMessage='For Customers who are not registered under GST, GST/IN is not mandatory'
+            }else if(formControl.name=='customerId'){
+              formControl.visible=true
+            }else if(formControl.name=='paymentMode'){
+              formControl.visible=true
+            }
+          })
+        }if(section.sectionTitle=='Share Payment Link'){
+          section.formControls.forEach((formControl: any) => {
+            if (formControl.name == 'online' || formControl.name == 'offline') {
+              formControl.visible = false
+            }
+          })
+        }if(section.sectionTitle=='Enter Bank Account Details'){
+          section.formControls.forEach((formControl: any) => {
+            if (formControl.name == 'accountCategory') {
+              formControl.visible = true
+            }
+          })
+        }
+
+        section.formControls.forEach((formControl: any) => {
+          if ((formControl.name == "nomineeAddress" || formControl.name == "nomineeContactNo") && formControl.hasOwnProperty('validators')) {
+            delete formControl.validators;
+          }
+        });
+      });
+    }
+    const agentChannel = localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData") || '{}')?.channel : '';
+    const parentCode = localStorage.getItem('parentCode') ? localStorage.getItem('parentCode') : '';
+    if (this.formData.productName && this.formData.productName.includes('Activ Health Platinum') && this.formData.benefitTopUpPlan == true) {
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Super Health Top Up" || section.sectionTitle == "Details of Super Top UP Policy") { section.visible = true }
+      });
+    }
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         if (control.dynamicControls) {
-
           if (this.formData[control.name] && (control.visible == true || this.quickQuoteRedirect == true)) {
             if (this.formData[control.name]) {
               control.value = this.formData[control.name].length;
@@ -640,6 +876,8 @@ export class YatraComponent {
                   innerControl.value = member.relation
                 }
                 if (innerControl.name == 'covers') {
+                  console.log(this.covers);
+
                   innerControl.value = this.covers[index];
                 }
                 if (innerControl.name == 'zoneValue') {
@@ -699,7 +937,6 @@ export class YatraComponent {
                 //   }
                 // }
 
-
                 if (
                   this.formData['ckycNo'] &&
                   member.relation === 'Self' &&
@@ -732,6 +969,52 @@ export class YatraComponent {
 
         // }
         const value = this.formData[control.name];
+        if (control.name == 'planName') {
+          if (agentChannel == 'AGENCY') {
+            control.options = [
+              {
+                "id": "1",
+                "value": "Plan A",
+                "name": "Plan A",
+                "selected": true
+              },
+              {
+                "id": "2",
+                "value": "Plan B",
+                "name": "Plan B",
+                "selected": false
+              }
+            ]
+          }
+          else {
+            if (parentCode == '2119085' || parentCode == '2115839') {
+              control.options = [
+                {
+                  "id": "1",
+                  "value": "Plan A",
+                  "name": "Plan A",
+                  "selected": true
+                },
+                {
+                  "id": "2",
+                  "value": "Plan B",
+                  "name": "Plan B",
+                  "selected": false
+                }
+              ]
+            }
+            else {
+              control.options = [
+                {
+                  "id": "2",
+                  "value": "Plan B",
+                  "name": "Plan B",
+                  "selected": true
+                }
+              ]
+            }
+          }
+        }
         if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
           control.value = JSON.parse(this.formData[control.name]).value;
         }
@@ -748,33 +1031,59 @@ export class YatraComponent {
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
       this.form.formSections.forEach((section) => {
+        let trueKeys: any;
         section.formControls.forEach(async (control: IFormControl) => {
           if (control.dynamicControls) {
             if (control.visible == true) {
               let tempFormArray = this.fb.array([]);
               for (let i = 1; i < control.dynamicControls.length; i++) {
-                tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i, control));
+                const group = this.initializeDynamicFormControls(control.dynamicControls[i], i, control);
+                console.log(group);
+
+                tempFormArray.push(group);
               }
 
               this.dynamicFormGroup.addControl(control.name, tempFormArray);
+              if (this.isHdfcFlow || this.isAxisFlow) {
+                let insuredControlerNames = ['firstName', 'middleName', 'lastName', 'emailId', 'mobileNumber'];
+                let dropDownControl = ['preFix']
+
+                control.dynamicControls.forEach((formControl: any, dindex: any) => {
+                  formControl.forEach((insuredControl: any) => {
+                    if (insuredControl.name == "relation" && insuredControl.value == "Self") {
+                      formControl.forEach((insuredControl: any) => {
+                        if (insuredControlerNames.includes(insuredControl.name) && insuredControl.name in this.formData && this.formData[insuredControl.name] !== '' && this.formData[insuredControl.name] !== null) {
+                          insuredControl.disabled = true;
+                        }
+                        if (dropDownControl.includes(insuredControl.name) && insuredControl.name in this.formData && this.formData[insuredControl.name] !== '' && this.formData[insuredControl.name] !== null) {
+                          (this.dynamicFormGroup.get(control.name) as FormArray).controls[dindex - 1].get(insuredControl.name)?.disable();
+                        }
+                      });
+                      return;
+                    }
+                  });
+                });
+
+              }
             }
           }
           else if (control.subControls) {
-            // control.subControls.forEach((subControl: ISubControl) => {
-            //   if (subControl.name == 'addOnDetails') {
-            //     subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
-            //     this.formData['insuredMemberDetails'].forEach((member: any) => {
-            //       if (subControl.innerSubControls) {
-            //         let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
-            //         const tempRelationshipType = JSON.parse(member.relationshipType);
-            //         tempInnerControl.label = tempRelationshipType.value;
-            //         tempInnerControl.name = tempRelationshipType.value;
-            //         subControl.innerSubControls.push(tempInnerControl)
-            //       }
-            //     })
-            //   }
-            // })
             if (control.type == 'questionnaire') {
+              if (this.formData.productName == 'Activ Secure') {
+                if (control.label && (control.label.includes('throat condition') || control.label.includes('pre-existing conditions')
+                  || control.label.includes('Parents, brothers or sisters') || control.label.includes('alcohol / tobacco'))) {
+                  const hasRequiredCover = this.formData.insuredMemberDetails.some((member: any) =>
+                    member.covers.some((cover: any) => ['CIL', 'CANC', 'DCBC'].includes(cover.coverId))
+                  );
+                  control.visible = hasRequiredCover;
+                }
+                else if (control.label && (control.label.includes('Hazardous occupations') || control.label.includes('disability conditions'))) {
+                  const hasRequiredCover = this.formData.insuredMemberDetails.some((member: any) =>
+                    member.covers.some((cover: any) => ['ACCD'].includes(cover.coverId))
+                  );
+                  control.visible = hasRequiredCover;
+                }
+              }
               let demoMember: any;
               let demoTypeIndex: any;
               let doneButton: any;
@@ -823,12 +1132,55 @@ export class YatraComponent {
                   else {
                     tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
                   }
+                  if (this.formData.productName == 'Activ Secure') {
+                    if (['Hazardous occupations', 'disability conditions'].some(q => control.label?.includes(q))) {
+                      // Filter members who have ACCD cover
+                      const hasACCD = member.covers.some((cover: any) => cover.coverId === 'ACCD');
+                      if (hasACCD) {
+                        control.subControls?.push(tempMemberControl);
+                        control.subControls?.push(tempInnerControl);
+                      }
+                      return;
+                    }
+                    if (['throat condition', 'pre-existing conditions', 'Parents, brothers or sisters', 'alcohol / tobacco'].some(q => control.label?.includes(q))) {
+                      // Check if the member (spouse) has CIL, DCBC, or CANC cover
+                      const hasRequiredCover = member.covers.some((cover: any) => ['CIL', 'CANC', 'DCBC'].includes(cover.coverId));
+                      if (hasRequiredCover) {
+                        control.subControls?.push(tempMemberControl);
+                        control.subControls?.push(tempInnerControl);
+                      }
+                    }
+                    this.form.formSections.forEach((section: any) => {
+                      if (section.sectionTitle === "Health & Lifestyle") {
+                        section.formControls.forEach((formControl: any) => {
+                          if (
+                            formControl.subControls &&
+                            (formControl.label.includes("Parents, brothers or sisters") ||
+                              formControl.label.includes("throat condition") ||
+                              formControl.label.includes("alcohol / tobacco"))
+                          ) {
+                            formControl.subControls.forEach((subControl: any) => {
+                              if (subControl.name != "demoType" && subControl.innerArrayControl) {
+                                subControl.isButton = false;
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
 
-                  control.subControls?.push(tempMemberControl);
-                  control.subControls?.push(tempInnerControl);
+
+                  }
+                  else {
+                    control.subControls?.push(tempMemberControl);
+                    control.subControls?.push(tempInnerControl);
+                  }
                 }
               });
               control.subControls?.push(doneButton);
+              if (control.subControls.length > 3) {
+                control.visible = true;
+              }
               this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
             }
             else if (control.type == 'chronicquestionnaire') {
@@ -837,7 +1189,7 @@ export class YatraComponent {
               let checkHyp = false;
               this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {                           //           const newItem = this.formData.insuredMemberDetails.find((item: any) => item.relation === tempRelationshipType.value);
                 // let trueKeys = Object.keys(member.chronicDiseases).filter(key => member.chronicDiseases[key]);
-                let trueKeys = Object.keys(member.chronicDiseases)
+                trueKeys = Object.keys(member.chronicDiseases)
                   .filter(key => member.chronicDiseases[key])
                   .map(key => key.toLowerCase());
                 if (this.formData.productName.includes('VYTL') && trueKeys.length > 0 && trueKeys.includes(control.nameProperty.toLowerCase())) {
@@ -925,6 +1277,9 @@ export class YatraComponent {
                     tempMemberControl.visible = visibleMatchedControls[i];
                     tempInnerControl.label = tempRelationshipType.value;
                     tempInnerControl.name = tempRelationshipType.value;
+                    tempMemberControl.value = visibleMatchedControls[i];
+                    tempMemberControl.disabled = visibleMatchedControls[i];
+                    tempInnerControl.visible = visibleMatchedControls[i];
                     if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
                       for (const key in this.formData[control.name]) {
                         const value = this.formData[control.name][key];
@@ -953,6 +1308,16 @@ export class YatraComponent {
               if ((control.name == 'chronicCare' || control.name == 'chronicManagement') && this.formData['isChronicCare'] == 'N') {
                 control.visible = false;
               }
+
+              // if(control.visibleCondition){
+              //   let matchingControl = control.visibleCondition?.find((element:any)=> element.partnerId == this.partnerId.toString());
+              //   console.log(matchingControl);
+              //   if(matchingControl){
+              //     control.visible = matchingControl.visibility;
+              //   }
+              // }
+
+
               control.subControls.forEach((subControl: ISubControl) => {
                 if (subControl.name == 'addOnCover' && control.name == 'deductible') {
                   subControl.value = true;
@@ -990,6 +1355,91 @@ export class YatraComponent {
                             coreControl.value = member.deductibleAmount;
                           }
                         })
+                      }
+
+                      if (control.name == 'chronicRestriction') {
+                        tempInnerControl.coreControls.forEach((coreControl: any) => {
+                          let disableForThisMember = true;
+
+                          if (typeof member.chronicDiseases == 'object') {
+                            Object.keys(member.chronicDiseases).forEach((key2: any) => {
+                              if (member.chronicDiseases[key2]) {
+                                disableForThisMember = false;
+                              }
+                            })
+                          }
+
+                          if (coreControl.type == 'checkbox' && disableForThisMember) {
+                            coreControl.disabled = true;
+                          }
+                        })
+                      }
+
+                      if (control.name == 'chronicRestrictionPro') {
+                        let anyMemberHasChronic = false;
+                        let addOnSumInsured1 = 0;
+
+                        if (typeof member.chronicDiseases == 'object') {
+                          Object.keys(member.chronicDiseases).forEach((key2: any) => {
+                            if (member.chronicDiseases[key2]) {
+                              anyMemberHasChronic = true;
+                            }
+                          });
+                        }
+
+                        tempInnerControl.coreControls.forEach((coreControl: any) => {
+                          if (coreControl.type == 'checkbox') {
+                            if (anyMemberHasChronic) {
+                              coreControl.value = true;
+                              coreControl.disabled = true;
+                            } else {
+                              coreControl.value = false;
+                              coreControl.disabled = true;
+                            }
+                          }
+
+                          if (coreControl.name == 'addOnSumInsured') {
+                            addOnSumInsured1 = coreControl.value;
+                          }
+                        });
+
+                        if (anyMemberHasChronic) {
+                          const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                          if (addOnCoverControl) {
+                            addOnCoverControl.value = true; // Select addOnCover
+                            addOnCoverControl.disabled = true; // Disable addOnCover
+                          }
+
+                          const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                          const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+
+                          if (coverId && coverName) {
+                            if (!member.covers) {
+                              member.covers = [];
+                            }
+                            let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                            if (!memberCoverExists) {
+                              member.covers.push({
+                                coverId: coverId,
+                                value: addOnSumInsured1 || 0,
+                                coverName: coverName
+                              });
+                            }
+
+                            if (!this.covers[index]) {
+                              this.covers[index] = [];
+                            }
+
+                            let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                            if (!coverExistsInCovers) {
+                              this.covers[index].push({
+                                coverId: coverId,
+                                value: addOnSumInsured1 || 0,
+                                coverName: coverName
+                              });
+                            }
+                          }
+                        }
                       }
 
                       if (control.isDefault) {
@@ -1044,68 +1494,78 @@ export class YatraComponent {
                       if (subControl.conditionCheck) {
                         console.log(subControl, this.formData, tempInnerControl);
 
-                        if (member.chronicDiseases != "") {
-                          tempInnerControl.coreControls.forEach((coreControl: any) => {
-                            if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
-                              coreControl.value = true;
-                            }
-                          });
+                        console.log(this.formData);
 
-                          const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
-                          if (addOnCoverControl) {
-                            addOnCoverControl.value = true;
+                        if (control.name == 'chronicCare' && (this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover) || !this.formData.hasOwnProperty('chronicCare')) {
+                          if (member.chronicDiseases != null && member.chronicDiseases != "") {
+                            tempInnerControl.coreControls.forEach((coreControl: any) => {
+                              if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                                coreControl.value = true;
+                              }
+                            });
+
+                            const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                            if (addOnCoverControl) {
+                              addOnCoverControl.value = true;
+                            }
+
+                            const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                            const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+
+                            if (coverId && coverName) {
+                              // Initialize member.covers if not present
+                              if (!member.covers) {
+                                member.covers = [];
+                              }
+
+                              // Check and push into member.covers if not already present
+                              let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                              if (!memberCoverExists) {
+                                member.covers.push({
+                                  coverId: coverId,
+                                  value: 0, // Add appropriate value if needed
+                                  coverName: coverName
+                                });
+                              }
+
+                              // Initialize this.covers[index] if not present
+                              if (!this.covers[index]) {
+                                this.covers[index] = [];
+                              }
+
+                              // Check and push into this.covers[index] if not already present
+                              let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                              if (!coverExistsInCovers) {
+                                this.covers[index].push({
+                                  coverId: coverId,
+                                  value: 0, // Add appropriate value if needed
+                                  coverName: coverName
+                                });
+                              }
+                            }
                           }
 
-                          const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
-                          const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
 
-                          if (coverId && coverName) {
-                            // Initialize member.covers if not present
-                            if (!member.covers) {
-                              member.covers = [];
-                            }
+                          tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
+                            if (corecontrol.dependentControls && this.formData[control.name]) {
+                              const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                              console.log(newvalue);
 
-                            // Check and push into member.covers if not already present
-                            let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
-                            if (!memberCoverExists) {
-                              member.covers.push({
-                                coverId: coverId,
-                                value: 0, // Add appropriate value if needed
-                                coverName: coverName
-                              });
+                              corecontrol.dependentControls.forEach((question: any) => {
+                                let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
+                                newcontrol.visible = newvalue;
+                              })
                             }
+                          })
 
-                            // Initialize this.covers[index] if not present
-                            if (!this.covers[index]) {
-                              this.covers[index] = [];
-                            }
-
-                            // Check and push into this.covers[index] if not already present
-                            let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
-                            if (!coverExistsInCovers) {
-                              this.covers[index].push({
-                                coverId: coverId,
-                                value: 0, // Add appropriate value if needed
-                                coverName: coverName
-                              });
-                            }
-                          }
                         }
-
-
-                        tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-                          if (corecontrol.dependentControls && this.formData[control.name]) {
-                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
-                            console.log(newvalue);
-
-                            corecontrol.dependentControls.forEach((question: any) => {
-                              let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
-                              newcontrol.visible = newvalue;
-                            })
-                          }
-                        })
                       }
-                      subControl.innerSubControls?.push(tempInnerControl);
+                      if (control.name === 'hlthMeter' && member.memberAge > 18) {
+                        subControl.innerSubControls?.push(tempInnerControl);
+                      }
+                      else if (control.name != 'hlthMeter') {
+                        subControl.innerSubControls?.push(tempInnerControl);
+                      }
                     }
                   });
                   subControl.innerSubControls?.push(doneButton);
@@ -1113,7 +1573,6 @@ export class YatraComponent {
               });
               this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
             }
-
             if (control.isDefault) {
 
               this.dynamicFormGroup.get(control.name)?.get('addOnCover')?.disable();
@@ -1127,7 +1586,21 @@ export class YatraComponent {
             if (control.postControlCreationMethod) {
               this.resolveMethod(control.postControlCreationMethod, control);
             }
-
+            if (this.formData.productName == 'Activ Secure') {
+              control.subControls.forEach((subControl) => {
+                if (subControl.innerSubControls) {
+                  subControl.innerSubControls.forEach((innerSubControl: any) => {
+                    if (innerSubControl.coreControls && innerSubControl.name != 'demoType' && innerSubControl.name != 'doneButton') {
+                      innerSubControl.coreControls.forEach((coreControl: any) => {
+                        if (coreControl.postControlCreationMethod == 'getSumInsured' || coreControl.postControlCreationMethod == 'setSIValues') {
+                          this.resolveMethod(coreControl.postControlCreationMethod, control, subControl, innerSubControl, coreControl, 0, null);
+                        }
+                      })
+                    }
+                  });
+                }
+              });
+            }
             // control.subControls.forEach((subControl: ISubControl) => {
             //   if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
             //     console.log(subControl,control,this.dynamicFormGroup);
@@ -1141,26 +1614,31 @@ export class YatraComponent {
             //     // });
             //   }
             // });
-            if (control.type == 'combinedCheckbox') {
-              control.subControls.forEach((subControl: any) => {
-                if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
-                  this.formData['insuredMemberDetails'].forEach((member: any) => {
-                    if (subControl.innerSubControls) {
-                      subControl.innerSubControls.forEach((innerSubControl: any, index: number) => {
-                        if (innerSubControl.name == member.relation && member.chronicDiseases != "") {
-                          console.log(member.chronicDiseases);
-                          innerSubControl.coreControls.forEach((coreControl: any) => {
-                            if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
-                              this.onInputChange(true, subControl, control, index, innerSubControl, coreControl);
-                            }
-                          })
-                        }
-                      })
-                    }
-                  })
-                }
-              })
+            console.log(this.formData, control);
+
+            if (control.name == 'chronicCare' && ((this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover) || !this.formData.hasOwnProperty('chronicCare'))) {
+              if (control.type == 'combinedCheckbox') {
+                control.subControls.forEach((subControl: any) => {
+                  if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
+                    this.formData['insuredMemberDetails'].forEach((member: any) => {
+                      if (subControl.innerSubControls) {
+                        subControl.innerSubControls.forEach((innerSubControl: any, index: number) => {
+                          if (innerSubControl.name == member.relation && member.chronicDiseases != "" && member.chronicDiseases != null) {
+                            console.log(member.chronicDiseases);
+                            innerSubControl.coreControls.forEach((coreControl: any) => {
+                              if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                                this.onInputChange(true, subControl, control, index, innerSubControl, coreControl);
+                              }
+                            })
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
             }
+
           }
           else if (control.innerArrayControl) {
             if (control.visible == true) {
@@ -1255,9 +1733,9 @@ export class YatraComponent {
                 //   });
                 // });
               }
-
-
-
+              else if (control.options.length === 0 && control.name == 'sumInsured') {
+                control.options = this.formData['upgradableSumInsured'];
+              }
 
               // If the control's value is empty, set it based on the selected options
               if (control.value === "") {
@@ -1353,39 +1831,87 @@ export class YatraComponent {
               }
             }
 
+            if (control.disabled && control.name == 'zoneValue') {
+              this.dynamicFormGroup.get(control.name)?.disable();
+            }
+            if (control.name == 'typeOfBusiness' && this.portabilityRestricted) {
+              this.dynamicFormGroup.get(control.name)?.disable();
+            }
+
+            if (this.isHdfcFlow && control.name === 'customerId')
+              if (!this.formData.customerId || (this.formData.customerId && (this.formData.customerId == null || this.formData.customerId == ""))) {
+                control.visible = false;
+              }
+              else {
+                control.visible = true;
+              }
           }
         });
+        if (section.sectionTitle.includes("Chronic")) {
+          if (this.formData.memberPolicyType == 'Family Floater') {
+            section.visible = false;
+          }
+          else if (trueKeys.length === 0 && this.formData.memberPolicyType == 'Multi Individual') {
+            section.visible = false;
+          }
+        }
       });
 
+      if (this.agentCode.startsWith("POS")) {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle.includes("Optional Covers")) {
+            const criticalIllnessControl = section.formControls.find((control: any) => control.name === "criticalIllness");
+
+            if (criticalIllnessControl) {
+              criticalIllnessControl.visible = false;
+            }
+          }
+        });
+      }
+
+      const currentUrl = this.router.url;
+      if (currentUrl.includes("hdfc") && this.getFormIndexValue() == 0) {
+        this.isQuote = true;
+      }
+      if (this.isAbhiEmployeeRequired == false) {
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((control: any) => {
+            if (this.form.formTitle.includes('Total Premium') && control.name === 'isAbhiEmployee') {
+              control.visible = false;
+            }
+          });
+        });
+      }
+
       if (this.isQuote) {
-        let nameList = [];
-        const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
-        nameList.push(parsedName);
-        this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
-        this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
-        this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
+        try {
+          let nameList = [];
+          const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
+          nameList.push(parsedName);
+          this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
+          this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
+          this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
+        } catch {
+          console.log('error while parsing!')
+        }
 
         if (this.formData?.proposerPincode) {
           console.log("Proposer Pincode:", this.formData.proposerPincode);
 
           const pincode = this.formData.proposerPincode;
-
-          // Prepare request data for API call
           const reqData = {
             pincode,
             agentCode: this.agentCode,
             productId: this.productId.toString(),
+            partnerId:this.partnerId
           };
           console.log(reqData);
 
-          // Fetch sumInsured based on pincode
           this.commonService.getPinCodeByCity(reqData).subscribe({
             next: (res: any) => {
               if (res.isSuccess && res.data) {
                 const upgradableSumInsured = res.data.sumInsuredList || [];
-                console.log("Fetched Sum Insured List:", upgradableSumInsured);
-
-                // Update sumInsured options for the first member
+                const upgradableZones = res.data.upgradableZones || [];
                 const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
                 if (sumInsuredControl) {
                   sumInsuredControl.setValue(''); // Clear previous value
@@ -1402,22 +1928,57 @@ export class YatraComponent {
 
                 // Update sumInsured options for other member
                 this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-                  console.log(`Setting options for Member ${index + 1}:`, member);
                   member.upgradableSumInsured = upgradableSumInsured;
-                  console.log(upgradableSumInsured, this.formData)
-
-                  // const memberSumInsuredControl = this.dynamicFormGroup.get(`insuredMemberDetails${index + 1}.sumInsured`);
-                  // console.log(memberSumInsuredControl);
-
-                  // if (memberSumInsuredControl) {
-                  //   console.log("Updated Sum Insured Options:", upgradableSumInsured);
-                  //   memberSumInsuredControl.setValue(''); // Clear current value for the member
-                  // } else {
-                  //   console.warn(`No sumInsured control found for Member ${index + 1}`);
-                  // }
-
                 });
-                console.log("Final Sum Insured Options Updated Successfully.");
+
+                const zoneControl = this.dynamicFormGroup.get('zone');
+                const zoneValueControl = this.dynamicFormGroup.get('zoneValue');
+
+                if (zoneControl && zoneValueControl) {
+                  const dashboardZone = this.formData.zoneValue || '';
+                  const fetchedZone = upgradableZones.find((zone: any) => zone.value === res.data.zoneValue);
+                  // Check if the fetched zone differs from the current zone
+                  if (fetchedZone) {
+                    if (fetchedZone.value !== dashboardZone) {
+                      this.formData.zone = fetchedZone.name;
+                      this.formData.zoneValue = fetchedZone.value;
+                    }
+                    zoneControl.setValue(fetchedZone.name);
+                    zoneValueControl.setValue(fetchedZone.value);
+                  } else {
+                    zoneControl.setValue('');
+                    zoneValueControl.setValue('');
+                  }
+                }
+
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'zoneValue') {
+                      control.options = upgradableZones.map((zone: any) => ({
+                        name: zone.name,
+                        value: zone.value,
+                      }));
+                      this.formData['upgradableZones'] = control.options;
+                    }
+                  });
+                });
+
+                this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+                  const fetchedZoneForMember = upgradableZones.find(
+                    (zone: any) => zone.value === res.data.zoneValue
+                  );
+
+                  if (fetchedZoneForMember) {
+                    if (member.zoneValue !== fetchedZoneForMember.value) {
+                      member.zone = fetchedZoneForMember.name;
+                      member.zoneValue = fetchedZoneForMember.value;
+                    }
+                  } else {
+                    member.zone = '';
+                    member.zoneValue = '';
+                  }
+                  member.upgradableZones = upgradableZones;
+                });
               } else {
                 console.error("Failed to fetch sumInsured. Resetting options.");
               }
@@ -1427,7 +1988,6 @@ export class YatraComponent {
             },
           });
         }
-
       }
       this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
       console.log(this.dynamicFormGroup)
@@ -1443,17 +2003,10 @@ export class YatraComponent {
 
     console.log(this.form);
 
-
-
     if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
       //this.customerFeedbackModule.show();
       this.isFeedBackModalVisible = true;
     }
-
-    //  if(this.formData.productName==='Active Secure' && this.form.formTitle == 'Total Premium'){
-    //   this.sumInsuredList();
-    //  }
-
   }
 
   initializeSubControls(subControls: any, controlGroup: any = null, parentControl: any = null) {
@@ -1515,12 +2068,16 @@ export class YatraComponent {
           }
           formGroup.addControl(control.name, tempFormArray);
         }
-        else if (!control.displayOnly || control.displayOnly === false)
+        else if (!control.displayOnly || control.displayOnly === false) {
           if (this.selectedAddons.length > 0 && this.selectedAddons.find((addon: any) => addon === control.label) && control.type === 'checkbox') {
             formGroup.addControl(control.name, new FormControl(true, controlValidators));
           } else {
             formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
           }
+        }
+        if (control.disabled) {
+          formGroup.get(control.name)?.disable();
+        }
       });
     }
     else {
@@ -1536,6 +2093,12 @@ export class YatraComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
+          if (this.formData.productName.includes('Activ Health Platinum') && subControls.getAllOption == 'deductibleOptionsA') {
+            let planName = JSON.parse(this.formData.planName).value
+            if (planName == 'Plan B') {
+              subControls.getAllOption = 'deductibleOptionsB'
+            }
+          }
           this.resolveMethod(subControls.getAllOption, subControls, parentControl);
         }
       }
@@ -1584,22 +2147,23 @@ export class YatraComponent {
         }
         formGroup.addControl(subControls.name, tempFormArray);
       }
-      else
+      else {
         formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators));
+      }
       // if (subControls.postControlCreationMethod) {
       //   this.resolveMethod(subControls.postControlCreationMethod, subControls);
       // }
       // return new FormControl(subControls.value,controlValidators);
-
+      if (subControls.disabled) {
+        formGroup.get(subControls.name)?.disable();
+      }
     }
-
-
-    console.log(formGroup);
+    // console.log(formGroup);
     return formGroup;
   }
 
-  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null, policyLength: any = 0) {
-    console.log(parentControl);
+  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null, policyLength: any = 0, parentIndex: any = null) {
+    console.log(parentControl, index, parentIndex);
 
     let formGroup: any = this.fb.group({})
     dynamicFormControls.forEach((control: IDynamicControl) => {
@@ -1626,17 +2190,66 @@ export class YatraComponent {
         formGroup.addControl(control.name, tempFormArray);
       }
       else if (control.innerControls && control.visible == true) {
-        let innerGroup = this.initializeDynamicFormControls(control.innerControls);
+        let innerGroup = this.initializeDynamicFormControls(control.innerControls, index, control);
         formGroup.addControl(control.name, innerGroup);
       }
       else if (control.innerArrayControl && control.visible == true) {
         let tempFormArray = this.fb.array([]);
         for (let z = 1; z < control.innerArrayControl.length; z++) {
-          tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control));
+          tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control, null, index));
         }
         formGroup.addControl(control.name, tempFormArray);
         console.log(formGroup, tempFormArray, control)
         // formGroup.setValue(control.name, tempFormArray);
+      }
+      // else if(control.innerSubControls){
+
+      //   if(control.type == 'overlayControl'){
+      //     let tempFormGroup: any = this.fb.group({});
+      //     let doneButton: any;
+      //     doneButton = control.innerSubControls.find(subControl => subControl.name === 'doneButton');
+      //     this.formData.insuredMemberDetails.forEach((member:any,idx: number)=>{
+
+      //     })
+
+      //   }
+      // }
+      else if (control.innerSubControls) {
+        if (control.type === 'overlayControl') {
+          let tempFormGroup: any = this.fb.group({});
+          let doneButton: any;
+
+          // Find and remove the doneButton temporarily
+          doneButton = control.innerSubControls.find(subControl => subControl.name === 'doneButton');
+          control.innerSubControls = control.innerSubControls.filter(subControl => subControl.name !== 'doneButton');
+
+          this.formData.insuredMemberDetails.forEach((member: any, idx: number) => {
+            console.log(idx, index);
+
+            if (idx !== index - 1) {
+              // Keep only demoType and create a deep copy
+              let demoTypeControl = control.innerSubControls?.find(subControl => subControl.name === 'demoType');
+              let newControl = JSON.parse(JSON.stringify(demoTypeControl));
+
+              // Modify the name and label using member.relation
+              newControl.name = member.relation;
+              newControl.label = member.relation;
+
+              // Push the modified control to innerSubControls
+              control.innerSubControls?.push(newControl);
+
+              // Create a new control in tempFormGroup and set the value as false
+              tempFormGroup.addControl(newControl.name, this.fb.control(false));
+            }
+          });
+
+          // Push the doneButton back to innerSubControls
+          control.innerSubControls.push(doneButton);
+
+          formGroup.addControl(control.name, tempFormGroup);
+        }
+        console.log(formGroup);
+
       }
       else if (!control.innerArrayControl) {
         let controlValidators: any = [];
@@ -1700,13 +2313,12 @@ export class YatraComponent {
           }
         }
 
-
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
         }
 
         if (control.type == 'text' && control.methodName) {
-          this.resolveMethod(control.methodName, control, index);
+          this.resolveMethod(control.methodName, control, index, parentIndex);
         }
         if (control.type == 'radio' && control.radioOptions) {
           let initialValue = control.radioOptions.find((option) => option.selected === true)?.value;
@@ -1734,6 +2346,7 @@ export class YatraComponent {
     this.renderer.appendChild(this.document.head, this.dynamicStyle);
     this.showHtmlContent = true;
   }
+
   ngOnDestroy(): void {
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
@@ -1783,6 +2396,13 @@ export class YatraComponent {
         : this.dynamicFormGroup.get(control.name);
     }
     else if (subControl != null && parentControl != null && index == null) {
+      if(innerSubControlIndex!=null){
+        const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
+        const parentArray1 = parentArray.get(parentControl.name) as FormGroup;
+        const parentArray2 = parentArray1.get(subControl.name) as FormArray;
+        myFormControl =  parentArray2.controls[innerSubControlIndex].get(innerControl.name)
+      }
+      else
       myFormControl = ((this.dynamicFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup).get(control.name);
     }
     else {
@@ -1807,11 +2427,18 @@ export class YatraComponent {
         })
       }
     }
+    else if(index == null && innerSubControlIndex!=null){
+      innerControl.validators?.forEach((val: any) => {
+        if (myFormControl?.hasError(val.validatorName as string)) {
+          errorMessage = val.message as string
+        }
+      })
+    }
     else {
       control.validators?.forEach((val) => {
         if (myFormControl?.hasError(val.validatorName as string)) {
           if (control.name == 'insuredMembers' && val.validatorName == 'required') {
-            if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
+            if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
               errorMessage = val.message as string + 'one'
             }
             else {
@@ -1858,7 +2485,6 @@ export class YatraComponent {
           errorMessage = val.message as string
       }
     })
-
     return errorMessage;
   }
 
@@ -1870,9 +2496,8 @@ export class YatraComponent {
     innerSubControl: any | null = null,
     innerSubControlIndex: number | null = null
   ): boolean {
-    // if(control.name == 'previousPolicyDetails')
-    // console.log(control, parentControl, index, subControl, innerControl, innerSubControl,innerSubControlIndex);
     let myControl: AbstractControl | null | undefined;
+    
     if (innerControl != null && innerSubControl != null && subControl == null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormArray;
@@ -1908,9 +2533,18 @@ export class YatraComponent {
     }
     else if (subControl != null && parentControl != null && index == null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
-      const parentArray1 = parentArray.controls[parentControl.name] as FormGroup;
+      // const parentArray1 = parentArray.controls[parentControl.name] as FormGroup;
 
+      const parentArray1 = parentArray.get(parentControl.name) as FormGroup;
+
+      if(innerSubControlIndex!=null){
+        const parentArray2 = parentArray1.get(subControl.name) as FormArray;
+        myControl =  parentArray2.controls[innerSubControlIndex].get(innerControl.name)
+      }
+      else{
       myControl = parentArray1.get(subControl.name);
+      }
+      
     }
     else if (parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
@@ -1922,6 +2556,7 @@ export class YatraComponent {
     }
 
     if (myControl instanceof FormControl) {
+      
       return myControl.invalid && myControl.touched;
     } else if (myControl instanceof FormGroup) {
       return myControl.invalid && !myControl.pristine;
@@ -1949,7 +2584,6 @@ export class YatraComponent {
     } else if (myControl instanceof FormGroup) {
       return myControl.invalid && !myControl.pristine;
     }
-
     return false;
   }
 
@@ -1988,13 +2622,88 @@ export class YatraComponent {
     const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
     myControl = memberGroupInnerControlGroup.get(subControl.name);
 
-
     subControl.validators?.forEach((val: any) => {
       if (myControl?.hasError(val.validatorName as string)) {
         errorMessage = val.message as string
       }
     })
     return errorMessage;
+  }
+
+  changingVisibility(flag: boolean) {
+    let policyType: any;
+    const pinCode = this.dynamicFormGroup.get('proposerPincode')?.value.toString() || 0;
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (section.sectionTitle == 'Personal Details') {
+          if (formControl.name == 'memberPolicyType') {
+            policyType = this.dynamicFormGroup.get('memberPolicyType')?.value
+          }
+          if ((formControl.name == 'annualIncomeForPlan' || formControl.name == 'sumInsuredForPlan') && policyType == 'Family Floater') {
+            formControl.visible = flag;
+            const selectedcontrols = this.dynamicFormGroup.get(formControl.name);
+            if (flag == true) {
+              if (selectedcontrols) {
+                if (formControl.validators) {
+                  const validators = formControl.validators.map((val: any) => {
+                    if (val.validatorName === 'required') {
+                      return Validators.required;
+                    }
+                    return null;
+                  }).filter(Boolean);
+                  selectedcontrols.setValidators(validators);
+                  selectedcontrols.updateValueAndValidity();
+                }
+              }
+            }
+            else if (flag == false && selectedcontrols) {
+              selectedcontrols.clearValidators();
+              selectedcontrols.updateValueAndValidity();
+            }
+          }
+          if (formControl.name == 'sumInsuredForPlan' && policyType == 'Family Floater') {
+            this.getSumInsuredListByPincode(flag, policyType, pinCode);
+            return;
+          }
+        }
+        if (formControl.dynamicControls) {
+          formControl.dynamicControls.forEach((controlGroup: any, index: number) => {
+            if (index === 0) return; // Skip the 0th index (demoType)
+            let proposer = '';
+            controlGroup.forEach((control: any) => {
+              if (control.name === 'relation' && index == 1) {
+                proposer = control.value;
+              }
+              if ((control.name === 'annualIncomeForPlan' || control.name === 'sumInsuredForPlan') && policyType === 'Multi Individual') {
+                control.visible = flag;
+                const selectedcontrols = ((this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index - 1] as FormGroup)?.controls[control.name]
+                if (flag == true) {
+                  if (selectedcontrols) {
+                    if (control.validators) {
+                      const validators = control.validators.map((val: any) => {
+                        if (val.validatorName === 'required') {
+                          return Validators.required;
+                        }
+                        return null;
+                      }).filter(Boolean);
+                      selectedcontrols.setValidators(validators);
+                      selectedcontrols.updateValueAndValidity();
+                    }
+                  }
+                }
+                else if (flag == false) {
+                  selectedcontrols.clearValidators();
+                  selectedcontrols.updateValueAndValidity();
+                }
+              }
+              if (control.name === 'sumInsuredForPlan' && proposer != '' && policyType === 'Multi Individual') {
+                this.getSumInsuredListByPincode(flag, policyType, pinCode);
+              }
+            });
+          });
+        }
+      });
+    });
   }
 
   onCheckboxSelect(controlName: string, event?: any) {
@@ -2007,7 +2716,9 @@ export class YatraComponent {
       case 'addressTitle1':
         this.getPermanentAddressDetails(event.target.checked);
         break;
-
+      case 'benefitTopUpPlan':
+        this.changingVisibility(event.target.checked)
+        break;
       default:
         break;
     }
@@ -2058,16 +2769,19 @@ export class YatraComponent {
       : this.dynamicFormGroup.get(control.name);
     return formControl;
   }
+
   hasChronicValue(control: any, parentControl: any | null = null, innerControl: any | null = null, chronicControl: any | null = null, index: any | null = null) {
     const formControl = ((this.dynamicFormGroup.get(control.name) as FormGroup)?.get(parentControl.name)?.get(innerControl.name)?.value);
     return formControl;
   }
+
   hasSubValue(control: any, parentControl: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, index: any | null = null) {
     const formControl = parentControl != null && index != null ?
       (((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup).controls[innerControl.name] as FormArray).controls[index].get(innerSubControl.name)?.value
       : this.dynamicFormGroup.get(control.name);
     return formControl;
   }
+
   hasInnerSubValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null) {
     const formControl = parentControl != null && index != null
       ? ((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
@@ -2077,6 +2791,7 @@ export class YatraComponent {
     // formControl?.markAsTouched();
     return formControl ? formControl.value : null;
   }
+
   hasSubInnerValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, indexj: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, benefitControl: any | null = null) {
     console.log("hasSubInnerValue", control, parentControl, subControl, index, innerControl, innerSubControl, benefitControl, this.dynamicFormGroup, subControl.coreControls[index].name);
     const formControl = parentControl != null && index != null
@@ -2224,7 +2939,9 @@ export class YatraComponent {
     if (this.selectedFile && insurerControl && insurerControl.value) {
       const formData = new FormData();
       formData.append('Files', this.selectedFile);
-      formData.append('NameOfInsuranceCompany', insurerControl.value); // Dynamic value from the form control
+      formData.append('NameOfInsuranceCompany', insurerControl.value);
+      formData.append('AgentCode', this.agentCode);
+      formData.append('ProductId', this.productId);
 
       // this.spinner.show();
 
@@ -2232,10 +2949,14 @@ export class YatraComponent {
         next: (response: any) => {
           this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
           this.spinner.hide();
+          console.log(response.data)
 
           this.isPolicyDetailsFetch = true;
 
-          if (response.data['insuredMemberDetails'].length > 0) {
+          const insuredMembersData = response.data?.insuredMembers || {};
+          const hasValidMembers = Object.values(insuredMembersData).some(value => value === true);
+
+          if (hasValidMembers) {
             this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
             const insuredMembers: { [key: string]: boolean } = {};
 
@@ -2244,20 +2965,83 @@ export class YatraComponent {
             });
 
             this.formData['insuredMembers'] = insuredMembers;
+          } else {
+            // Reset insuredMembers if all are false
+            this.formData['insuredMembers'] = {};
           }
 
+          // Set form values but handle memberPolicyType separately
           Object.keys(response.data).forEach((key: string) => {
-            this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+            if (key !== 'insuredMembers') {
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+            }
+
+            if (response.data.insuredMemberDetails && Array.isArray(response.data.insuredMemberDetails)) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.name === 'zoneValue') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableZones || [];
+                    }
+                    formControl.value = response.data.zoneValue || '';
+                  }
+                  if (formControl.name === 'sumInsured') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableSumInsured || [];
+                    }
+                    formControl.value = response.data.sumInsured || '';
+                  }
+                  //eventValue = this.dynamicFormGroup.get('typeOfBusiness')?.value || control.value;
+                  if (formControl.name == 'typeOfBusiness' && formControl.methodName) {
+                    this.checkPortabilityApplicable(this.dynamicFormGroup.get('typeOfBusiness')?.value || formControl.value, formControl);
+                  }
+                });
+
+                // 🔹 **Handle Sum Insured & Zone Value Inside Dynamic Controls**
+                if (section.sectionTitle === 'Insured Member Details') {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name === 'insuredMemberDetails' && Array.isArray(formControl.dynamicControls)) {
+                      formControl.dynamicControls.forEach((controlRow: any[]) => {
+                        controlRow.forEach((control: any) => {
+                          response.data.insuredMemberDetails.forEach((member: any) => {
+                            if (control.name === 'zoneValue') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableZones || [];
+                              }
+                              control.value = member.zoneValue || '';
+                            }
+                            if (control.name === 'sumInsured') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableSumInsured || [];
+                              }
+                              control.value = member.sumInsured || '';
+                            }
+                          });
+                        });
+                      });
+                    }
+                  });
+                }
+              });
+            }
 
             if (key === 'memberPolicyType') {
               this.form.formSections.forEach((section: any) => {
                 const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
                 if (targetControl) {
-                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
+                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyType']);
                 }
               });
             }
           });
+
+          // if (response.data.upgradableZones) {
+          //   this.dynamicFormGroup.get('upgradableZones')?.setValue(response.data.upgradableZones);
+          // }
+
+          // if (response.data.upgradableSumInsured) {
+          //   this.dynamicFormGroup.get('upgradableSumInsured')?.setValue(response.data.upgradableSumInsured);
+          // }
 
         },
         error: (error) => {
@@ -2315,6 +3099,9 @@ export class YatraComponent {
       value = value.slice(0, 10);
     }
     input.value = value;
+    if (control.onChangeMethod && control.onChangeMethod == 'setForSelfMember') {
+      this.setForSelfMember(control, value);
+    }
     if (subControl) {
       this.dynamicFormGroup.get(`${control.name}.${i}.${subControl.name}`)?.setValue(value);
     } else {
@@ -2370,8 +3157,11 @@ export class YatraComponent {
     });
   }
 
-  getAllProposerOccupation(control: any) {
-    this.yatraService.getProposerOccupation().subscribe({
+  getAllProposerOccupation(control: any, otherControl: any) {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    };
+    this.yatraService.getProposerOccupation(reqData).subscribe({
       next: (res: any) => {
         control.options = res.data;
       },
@@ -2428,7 +3218,6 @@ export class YatraComponent {
   }
 
   getGstRegistrationStatus(control: any) {
-
     this.yatraService.getGstRegistrationStatus().subscribe({
       next: (res: any) => {
         control.options = res.Registration;
@@ -2484,47 +3273,57 @@ export class YatraComponent {
       });
     }
   }
+
   getBankCity(event: any, otherControl: any) {
-    otherControl.value = "";
-    otherControl.options = [];
-    const data = JSON.parse(event.target.value);
-    this.bankCode = data.id;
-    const reqData = {
-      "cityName": "",
-      "bankName": this.bankCode
-    };
-    this.yatraService.getBankCity(reqData).subscribe({
-      next: (res: any) => {
-        otherControl.options = [...res.data]; // Create a new array to trigger change detection
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    if (otherControl != null) {
+      otherControl.value = "";
+      otherControl.options = [];
+      const data = JSON.parse(event.target.value);
+      this.bankCode = data.id;
+      const reqData = {
+        "cityName": "",
+        "bankName": this.bankCode
+      };
+      this.yatraService.getBankCity(reqData).subscribe({
+        next: (res: any) => {
+          otherControl.options = [...res.data]; // Create a new array to trigger change detection
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+    else {
+      event.options.push(JSON.parse(event.value));
+    }
   }
 
   getBranchDetails(event: any, otherControl: any) {
-    otherControl.value = "";
-    otherControl.options = []; // Reset options to an empty array
+    if (otherControl != null) {
+      otherControl.value = "";
+      otherControl.options = []; // Reset options to an empty array
 
-    const data = JSON.parse(event.target.value);
-    this.bankCity = data.id as string;
+      const data = JSON.parse(event.target.value);
+      this.bankCity = data.id as string;
 
-    const reqData = {
-      "bankName": this.bankCode,
-      "cityName": this.bankCity
-    };
+      const reqData = {
+        "bankName": this.bankCode,
+        "cityName": this.bankCity
+      };
 
-    this.yatraService.getBranchDetails(reqData).subscribe({
-      next: (res: any) => {
-        otherControl.options = [...res.data]; // Create a new array to trigger change detection
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+      this.yatraService.getBranchDetails(reqData).subscribe({
+        next: (res: any) => {
+          otherControl.options = [...res.data]; // Create a new array to trigger change detection
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+    else {
+      event.options.push(JSON.parse(event.value));
+    }
   }
-
 
   setIfscCode(event: any, otherControl: any) {
     const data = JSON.parse(event.target.value);
@@ -2545,6 +3344,7 @@ export class YatraComponent {
       });
     }
   }
+
   getAllRelationship(control: any) {
     // this.spinner.show();
     this.yatraService.getRelationship().subscribe({
@@ -2629,63 +3429,20 @@ export class YatraComponent {
         return control;
     }
   }
-  // defaultSumInsured(control: any) {
-  //   control.subControls.forEach((subControl: any) => {
-  //     if (subControl.innerSubControls) {
-  //       subControl.innerSubControls.forEach((innerSubControls: any) => {
-  //         if (innerSubControls.coreControls && innerSubControls.name != "demoType") {
-  //           innerSubControls.coreControls.forEach((coreControl: any) => {
-  //             if (coreControl.name === "addOnSumInsured") {
-  //               console.log(coreControl);
-  //               let insuredMemberDetails = this.formData.insuredMemberDetails;
-  //               let annualIncome: any;
-  //               if (innerSubControls.name !== "Self") {
-  //                 insuredMemberDetails.forEach((member: any) => {
-  //                   if (member.relation === "Self") {
-  //                     this.selfAnnualIncome = Number(member.annualIncome);
-  //                   }
-  //                 });
-  //               }
-  //               insuredMemberDetails.forEach((member: any) => {
-  //                 if (member.relation == innerSubControls.name) {
-  //                   if (member.annualIncome != "") {
-  //                     annualIncome = Number(member.annualIncome);
-  //                   }
-  //                   else {
-  //                     annualIncome = this.selfAnnualIncome
-  //                   }
-  //                 }
-  //               });
-  //               const requestBody = {
-  //                 "coverType": control.name,
-  //                 "planType": "P1",
-  //                 "productId": (this.productId).toString() || "",
-  //                 "agentCode": this.agentCode,
-  //                 "annualIncome": annualIncome
-  //               }
-  //               this.yatraService.getSumInsuredList(requestBody).subscribe({
-  //                 next: (res: any) => {
-  //                   coreControl.options = res.data.siList
-  //                   console.log("coreControl.options ", coreControl.options);
 
-  //                 },
-  //                 error: (err: any) => {
-  //                   console.error(err);
-  //                 }
-  //               });
-  //             }
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
-  getNatureOfWorkByOccupation(event: any, subControl: any, parentControl: any, index: any) {
-    const parsedValue = JSON.parse(event.target.value);
-    const selectedControl = subControl;
+  getNatureOfWorkByOccupation(event: any, subControl: any, index: any) {
+    let parsedValue: any;
+    let selectedControl: any;
+    if (event == false) {
+      parsedValue = subControl
+    }
+    else {
+      parsedValue = JSON.parse(event.target.value);
+      selectedControl = subControl;
+    }
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
-        if (formControl.subControls) {
+        if (formControl.subControls && formControl.name == index.name) {
           formControl.subControls.forEach((subControl: any) => {
             if (subControl.innerSubControls) {
               subControl.innerSubControls.forEach((innerSubControls: any) => {
@@ -2699,28 +3456,28 @@ export class YatraComponent {
                       }]
                     } else if (parsedValue.name === 'Student' && coreControl.name == "occupationRisk") {
                       coreControl.options = [{
-                        "id": "2",
+                        "id": "1",
                         "value": "ND0277",
-                        "name": "Student"
+                        "name": "STUDENT"
                       }]
                     } else if (parsedValue.name === 'Not Employed' && coreControl.name == "occupationRisk") {
                       coreControl.options = [{
-                        "id": "6",
+                        "id": "1",
                         "value": "ND0306",
-                        "name": "UnEmployed"
+                        "name": "Unemployed"
                       }]
                     } else if (parsedValue.name === 'HouseWife/Husband' && coreControl.name == "occupationRisk") {
                       coreControl.options = [{
-                        "id": "3",
+                        "id": "1",
                         "value": "ND0209",
                         "name": "Housewife"
                       },
                       {
-                        "id": "3",
+                        "id": "1",
                         "value": "ND0207",
                         "name": "Househusband"
                       }]
-                    } else if (coreControl.name == "occupationRisk") {
+                    } else if ((parsedValue.name === 'Self Employed' || parsedValue.name === 'Salaried') && coreControl.name == "occupationRisk") {
                       this.yatraService.getNatureOfDuty().subscribe({
                         next: (res: any) => {
                           coreControl.options = res.data;
@@ -2736,45 +3493,52 @@ export class YatraComponent {
             }
           });
         } else if (formControl.dynamicControls) {
-          formControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
-            if (parsedValue.name === 'Retired' && (dynamicControl.name == "productMemberNatureWork")) {
-              dynamicControl.options = [{
-                "id": "1",
-                "value": "ND0410",
-                "name": "Retired"
-              }]
-            } else if (parsedValue.name === 'Student' && dynamicControl.name == "productMemberNatureWork") {
-              dynamicControl.options = [{
-                "id": "2",
-                "value": "ND0277",
-                "name": "Student"
-              }]
-            } else if (parsedValue.name === 'Not Employed' && dynamicControl.name == "productMemberNatureWork") {
-              dynamicControl.options = [{
-                "id": "6",
-                "value": "ND0306",
-                "name": "UnEmployed"
-              }]
-            } else if (parsedValue.name === 'HouseWife/Husband' && dynamicControl.name == "productMemberNatureWork") {
-              dynamicControl.options = [{
-                "id": "3",
-                "value": "ND0209",
-                "name": "Housewife"
-              },
-              {
-                "id": "3",
-                "value": "ND0207",
-                "name": "Househusband"
-              }]
-            } else if (dynamicControl.name == "productMemberNatureWork") {
-              this.yatraService.getNatureOfDuty().subscribe({
-                next: (res: any) => {
-                  dynamicControl.options = res.data;
+          console.log("index", parsedValue, event, subControl, index, formControl.dynamicControls[index + 1]);
+          if (parsedValue && typeof parsedValue === 'object' && 'name' in parsedValue) {
+            parsedValue = parsedValue.name;
+            index = index + 1;
+          }
+          formControl.dynamicControls[index].forEach((dynamicControl: any) => {
+            if (dynamicControl.name == "productMemberNatureWork") {
+              if (parsedValue == 'Retired' && (dynamicControl.name == "productMemberNatureWork")) {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0410",
+                  "name": "Retired"
+                },]
+              } else if (parsedValue == 'Student' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0277",
+                  "name": "STUDENT"
+                }]
+              } else if (parsedValue == 'Not Employed' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0306",
+                  "name": "Unemployed"
+                }]
+              } else if (parsedValue == 'HouseWife/Husband' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0209",
+                  "name": "Housewife"
                 },
-                error: (err: any) => {
-                  console.error(err);
-                }
-              });
+                {
+                  "id": "1",
+                  "value": "ND0207",
+                  "name": "Househusband"
+                }]
+              } else if ((parsedValue == 'Self Employed' || parsedValue == 'Salaried') && dynamicControl.name == "productMemberNatureWork") {
+                this.yatraService.getNatureOfDuty().subscribe({
+                  next: (res: any) => {
+                    dynamicControl.options = res.data;
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+              }
             }
           })
         }
@@ -2782,12 +3546,261 @@ export class YatraComponent {
     });
   }
 
+  getSumInsured(parentControl: any = null, control: any, subControl: any = null, innerControl: any = null, index: number, event: any = null) {
+    let isPostControlMethod = false;
+    console.log("parameters", parentControl, control, subControl, innerControl, index, event, this.proposer);
+    if (event != null) {
+      event = JSON.parse(event.target.value).name
+    } else {
+      event = parentControl.name == 'accidentPlus' ? 'P4' : 'P1';
+      isPostControlMethod = true
+    }
+    const selectedControl = subControl;
+    const memberWithIncome = this.formData.insuredMemberDetails.find((member: any) => member.annualIncome !== '');
+    if (memberWithIncome) {
+      this.proposer = memberWithIncome.relation;
+    }
+    this.form.formSections.forEach((section: any) => {
+      if (section.sectionTitle === "Optional Covers") {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.subControls && parentControl.name == formControl.name) {
+            formControl.subControls.forEach((subControl: any) => {
+              if (subControl.innerSubControls) {
+                subControl.innerSubControls.forEach((innerSubControls: any) => {
+                  if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
+                    innerSubControls.coreControls.forEach((coreControl: any) => {
+                      if ((innerControl?.name === 'plan') && coreControl.name === "addOnSumInsured") {
+                        let insuredMemberDetails = this.formData.insuredMemberDetails;
+                        index = (parentControl.name === 'accident' || parentControl.name === 'accidentPlus') ? 3 : 1;
+                        if (isPostControlMethod == false) {
+                          const parentGroup = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+                          const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                          const innerSubGroup = controlGroup?.controls[innerSubControls.name] as FormArray;
+                          const targetFormGroup = (innerSubGroup?.controls[index] as FormGroup).value;
+                          let planName = (JSON.parse(targetFormGroup.plan)).name
+                          if (selectedControl.name === this.proposer) {
+                            this.selectedPlan = planName;
+                            Object.keys(controlGroup?.controls || {}).forEach((key) => {
+                              const innerSubGroup = controlGroup?.controls[key] as FormGroup;
+                              if (key) {
+                                if (key !== this.proposer) {
+                                  (innerSubGroup?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                                }
+                              }
+                            });
+                          } else if (selectedControl.name != this.proposer) {
+                            if (event != this.selectedPlan) {
+                              const planControl = ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                              this.toast.error({ detail: "Error", summary: 'Please select the same plan as chosen by the Proposer.', duration: 3000 });
+                              return;
+                            }
+                          }
+                        }
+                        let annualIncome: any;
+                        let isEarning: number = 0;
+                        let memberAge: number = 0;
+                        //without self, unemployed members(who ever don't have annual income) can't take any cover
+                        if (selectedControl.name !== "Self") {
+                          insuredMemberDetails.forEach((member: any) => {
+                            if (member.relation === "Self") {
+                              this.selfAnnualIncome = Number(member.annualIncome);
+                            }
+                          });
+                        }
+                        insuredMemberDetails.forEach((member: any) => {
+                          if (member.relation == selectedControl.name) {
+                            if (member.annualIncome != "") {
+                              annualIncome = Number(member.annualIncome);
+                              isEarning = 1;
+                              memberAge = member.memberAge;
+                            }
+                            else {
+                              annualIncome = this.selfAnnualIncome;
+                              isEarning = 0;
+                              memberAge = member.memberAge;
+
+                            }
+                          }
+                        });
+                        const requestBody = {
+                          "coverType": parentControl.name || "",
+                          "planType": event || "",
+                          "productId": (this.productId).toString() || "",
+                          "agentCode": this.agentCode,
+                          "annualIncome": annualIncome || null,
+                          "occupation": this.selectedOccupation || null,
+                          "relation": selectedControl.name,
+                          "riskClass": this.selectedOccupationRisk || null,
+                          "IsEarning": isEarning || 0,
+                          "memberAge": memberAge || 0
+                        }
+                        this.yatraService.getSumInsuredList(requestBody).subscribe({
+                          next: (res: any) => {
+                            if (this.selfCoverSumInsured) {
+                              const filteredSiList = res.data.siList.filter((item: any) => item.value <= this.selfCoverSumInsured);
+                              console.log("Filtered siList after self Cover Sum insured", filteredSiList);
+                              coreControl.options = filteredSiList;
+                            }
+                            else {
+                              coreControl.options = res.data.siList;
+                              let defaultValue = res.data.siList[0].value;
+                              ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)
+                                ?.controls[innerSubControls.name] as FormArray)?.controls[index + 1] as FormGroup)?.controls[coreControl.name].setValue(defaultValue);
+                            }
+                          },
+                          error: (err: any) => {
+                            console.error(err);
+                          }
+                        });
+                      }
+
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  getSumInsuredListByPincode(topUpFlag: boolean, policyType: string, pinCode: string) {
+    if (!topUpFlag) return;
+    else {
+      let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+      let topUpProductId;
+      if (planName == 'Plan A') {
+        topUpProductId = '22'
+      } else {
+        topUpProductId = '23'
+      }
+      const reqData = {
+        "pincode": pinCode,
+        agentcode: this.agentCode,
+        productId: topUpProductId,
+        partnerId:this.partnerId
+      }
+      this.commonService.getPinCodeByCity(reqData).subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.data) {
+            if (policyType == 'Family Floater') {
+              const sumInsuredControl = this.dynamicFormGroup.get('sumInsuredForPlan');
+              if (sumInsuredControl) {
+                const sumInsuredList = res.data.sumInsuredList || [];
+                sumInsuredControl.setValue(''); // Reset current value
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'sumInsuredForPlan') {
+                      control.options = sumInsuredList.map((sumInsured: any) => ({
+                        name: sumInsured.name,
+                        value: sumInsured.value,
+                      }));
+                    }
+                  });
+                });
+              }
+              return;
+            }
+            else {
+              const sumInsuredList = res.data.sumInsuredList;
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.dynamicControls) {
+                    formControl.dynamicControls.forEach((controlGroup: any, index: number) => {
+                      controlGroup.forEach((control: any) => {
+                        if (control.name === 'sumInsuredForPlan') {
+                          control.options = sumInsuredList.map((item: any) => ({
+                            name: item.name,
+                            value: item.value,
+                          }));
+                        }
+                      });
+                    });
+                  }
+                });
+              });
+              return;
+            }
+          } else {
+            console.error('Failed to fetch sum Insured details.');
+          }
+        },
+        error: (err: any) => {
+          console.error('Error fetching sum Insured details:', err);
+        }
+      });
+    }
+  }
+
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
     this.changesMade = true;
     let eventValue = typeof event == 'boolean' ? event : event.target.value;
     if (control.name == 'totalPremium') {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == 'Optional Covers') {
+          section.formControls.forEach((Control: any) => {
+            if (Control.name == 'hlthMeter') {
+              Control.visible = this.selectedIndex == 0 ? true : false;
+              if (this.selectedIndex != 0) {
+                this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+                  const hasHLMTR = this.covers[index]?.some((cover: any) => cover.coverId === 'HLMTR');
+
+                  if (hasHLMTR) {
+                    this.changeOverLayDone('', Control, false);
+                    this.changeRecalculate(true);
+                    (((this.dynamicFormGroup.get(Control.name) as FormGroup)?.controls['addOnDetails'] as FormGroup).controls[member.relation] as FormArray).controls[0].get('memberCheckbox')?.setValue(false);
+                    (this.dynamicFormGroup.get(Control.name) as FormGroup)?.get('addOnCover')?.setValue(false);
+                    this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== 'HLMTR');
+                  }
+                })
+              }
+            }
+          });
+        }
+        if (section.sectionTitle == "Health Booster") {
+          section.formControls.forEach((control: any) => {
+            if (control.name == 'sumInsuredMultiply') {
+              let isTenureValid = this.formData.tenure > 1;
+              let isZoneValid = false;
+              const zoneRule = control.validationRules?.find((rule: any) => rule.type === 'zone-level-cover');
+
+              if (zoneRule) {
+                this.zoneRuleCoverValidation(zoneRule, control);
+                isZoneValid = this.formData.insuredMemberDetails.some((member: any) => {
+                  const selectedZone = member.zone;
+                  const selectedSumInsured = parseInt(member.sumInsured, 10);
+                  const zoneConfig = zoneRule.zones[selectedZone];
+
+                  return zoneConfig && selectedSumInsured >= zoneConfig.minSumInsured && selectedSumInsured <= zoneConfig.maxSumInsured;
+                });
+              }
+
+              control.visible = isTenureValid && isZoneValid;
+
+              // If selectedIndex is 0, reset values and remove covers
+              if (!isTenureValid) {
+                this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+                  const sumInsuredCover = this.covers[index]?.some((cover: any) => cover.coverId === 'HB-4-SIMULT');
+
+                  if (sumInsuredCover) {
+                    this.changeOverLayDone('', control, false);
+                    this.changeRecalculate(true);
+                    (((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls['addOnDetails'] as FormGroup)
+                      .controls[member.relation] as FormArray).controls[0].get('memberCheckbox')?.setValue(false);
+                    (this.dynamicFormGroup.get(control.name) as FormGroup)?.get('addOnCover')?.setValue(false);
+                    this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== 'HB-4-SIMULT');
+                  }
+                });
+              }
+            }
+          });
+        }
+      })
     }
+
+    console.log(event, control, parentControl, index, subControl, innerControl, indexj);
 
     if (control.name == 'agentId') {
       const isValidOption = control.options.some((opt: any) => opt.value === eventValue);
@@ -2827,6 +3840,105 @@ export class YatraComponent {
       });
     }
 
+    if (control.name == 'isAbhiEmployee' || control.name == 'isAffiliateEmployee') {
+      const isAbhiEmployeeValue = this.dynamicFormGroup.get('isAbhiEmployee')?.value;
+      const isAbhiAffiliateValue = this.dynamicFormGroup.get('isAffiliateEmployee')?.value;
+      console.log(isAbhiEmployeeValue);
+      if (isAbhiEmployeeValue === 'N' || isAbhiAffiliateValue === 'N') {
+        this.dynamicFormGroup.get('employeeId')?.setValue(null);
+        this.dynamicFormGroup.get('affiliateEmployeeId')?.setValue(null);
+
+        this.formData = {
+          ...this.formData,
+          employeeId: null,
+          affiliateEmployeeId: null,
+        };
+        this.getPremiumAmount();
+      }
+    }
+
+    // if(parentControl.name == 'multiCover' && innerControl.name == 'multiplyRiderDOB'){
+    //   const dob = event.target.value;
+
+
+    //   const dobArray = dob.split('-'); // [YYYY, MM, DD]
+    //   const formattedDOB = `${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`; // Convert to dd/MM/yyyy
+
+    //   const year = parseInt(dobArray[0]);
+    //   if(year.toString().length === 4){
+    //     console.log("Changed multi player dob",event.target.value);
+    //     const formControl = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup).get(control.name) as FormGroup).get(subControl.name)as FormArray).controls[indexj].get(innerControl.name);
+    //     console.log(formControl);
+        
+    //   }
+    // }
+
+    if (parentControl && parentControl.name === 'multiCover' && innerControl && innerControl.name === 'multiplyRiderDOB') {
+      const dob = event.target.value;
+      
+      const dobArray = dob.split('-'); // [YYYY, MM, DD]
+      const formattedDOB = `${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`; // Convert to dd/MM/yyyy
+    
+      const year = parseInt(dobArray[0]);
+      if (year.toString().length === 4) {
+        console.log("Changed multi player dob", event.target.value);
+    
+        const formControl = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)
+          .get(control.name) as FormGroup)
+          .get(subControl.name) as FormArray).controls[indexj].get(innerControl.name);
+    
+          const matchingMember = this.formData.insuredMemberDetails[index];
+          console.log(matchingMember,index);
+          
+        if (formControl) {
+          const today = new Date();
+          const birthDate = new Date(dob);
+          let age = today.getFullYear() - birthDate.getFullYear();
+    
+          // Adjust age if birthday hasn't occurred yet this year
+          if (
+            today.getMonth() < birthDate.getMonth() ||
+            (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
+    
+          console.log("Calculated Age:", age);
+    
+          // Remove existing validators
+          formControl.clearValidators();
+    
+          // If age is less than 18, add custom validator
+          if (age < 18) {
+            // innerControl.validators = [];
+            // innerControl.validators.push({
+            //   "message": "Age should be above 18.",
+            //   "validatorName": "ageInvalid",
+            // })
+            formControl.setErrors({ ageInvalid: true });
+            console.log(formControl);
+          }
+          else if(matchingMember.memberdob != event.target.value){
+            // innerControl.validators = [];
+            // innerControl.validators.push({
+            //   "message": "Member age mismatches.",
+            //   "validatorName": "memberAgeMismatch",
+            // })
+            formControl.setErrors({ memberAgeMismatch: true });
+            console.log(formControl);
+          }
+           else {
+            formControl.setErrors(null); // Remove validation error if age is valid
+          }
+    
+          // formControl.updateValueAndValidity(); // Update validation
+        }
+        console.log(formControl);
+      }
+      
+    }
+    
+
     if (control.name == "portingABHIPolicy") {
       const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
       if (selectedValue == 'Y') {
@@ -2861,11 +3973,12 @@ export class YatraComponent {
       //   }
       // }
     }
-    if (this.formData.productName === 'Active Secure' && control.name === 'addOnDetails') {
-      if (innerControl.name != "memberCheckbox") {
-        this.parsedValue = JSON.parse(event.target.value);
-      }
+    if (this.formData.productName === 'Activ Secure' && control.name === 'addOnDetails') {
       const selectedControl = subControl;
+      const memberWithIncome = this.formData.insuredMemberDetails.find((member: any) => member.annualIncome !== '');
+      if (memberWithIncome) {
+        this.proposer = memberWithIncome.relation;
+      }
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle === "Optional Covers") {
           section.formControls.forEach((formControl: any) => {
@@ -2875,150 +3988,120 @@ export class YatraComponent {
                   subControl.innerSubControls.forEach((innerSubControls: any) => {
                     if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
                       innerSubControls.coreControls.forEach((coreControl: any) => {
-                        if (innerControl.name == "addOnSumInsured") {
-                          if (selectedControl.name == 'Self') {
-                            this.selfCoverSumInsured = Number(event.target.value)
-                          }
-                        } else if (innerControl.name == "occupation") {
-                          if (selectedControl.name != 'Self') {
-                            this.selectedInnerControl = event.target.value
-                          }
-                        }
-                        else if (innerControl.name === 'plan' && coreControl.name === "addOnSumInsured") {
-                          let insuredMemberDetails = this.formData.insuredMemberDetails;
-                          let annualIncome: any;
-                          if (selectedControl.name !== "Self") {
-                            insuredMemberDetails.forEach((member: any) => {
-                              if (member.relation === "Self") {
-                                this.selfAnnualIncome = Number(member.annualIncome);
-                              }
-                            });
-                          }
-                          insuredMemberDetails.forEach((member: any) => {
-                            if (member.relation == selectedControl.name) {
-                              if (member.annualIncome != "") {
-                                annualIncome = Number(member.annualIncome);
-                              }
-                              else {
-                                annualIncome = this.selfAnnualIncome
+                        if (innerControl.name == "addOnSumInsured" || innerControl.name == 'weeklyCashLimit') {
+                          if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus' || parentControl.name == 'criticalIllness' || parentControl.name == 'cancerSecure') {
+                            if (selectedControl.name == this.proposer) {
+                              index = (parentControl.name === 'accident' || parentControl.name === 'accidentPlus') ? 3 : 1;
+                              this.selfCoverSumInsured = Number(event.target.value)
+                              const controlGroup = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup;
+                              if (selectedControl.name === this.proposer) {
+                                Object.keys(controlGroup?.controls || {}).forEach((key) => {
+                                  const innerSubGroup = controlGroup?.controls[key] as FormGroup;
+                                  if (key) {
+                                    if (key !== this.proposer) {
+                                      (innerSubGroup?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                                      (innerSubGroup?.controls[index + 1] as FormGroup)?.controls['addOnSumInsured'].setValue('');
+                                    }
+                                  }
+                                });
                               }
                             }
-                          });
-                          const requestBody = {
-                            "coverType": parentControl.name || "",
-                            "planType": JSON.parse(event.target.value).name || "",
-                            "productId": (this.productId).toString() || "",
-                            "agentCode": this.agentCode,
-                            "annualIncome": annualIncome || 0
                           }
-                          this.yatraService.getSumInsuredList(requestBody).subscribe({
-                            next: (res: any) => {
-                              if (selectedControl.name == 'Self') {
-                                coreControl.options = res.data.siList;
+                          else if (parentControl.name == 'temporaryTotalDisablementBenefit' || parentControl.name == 'loanProtect' || parentControl.name == 'emiProtect') {
+                            if (!this.selfWeeklyLimit) {
+                              this.selfWeeklyLimit = {}; // setting value for every parentControl at staring
+                            }
+                            if (selectedControl.name == 'Self') {
+                              this.selfWeeklyLimit[parentControl.name] = Number(event.target.value);
+                            } else {
+                              if (this.selfWeeklyLimit[parentControl.name]) {
+                                if (Number(event.target.value) > this.selfWeeklyLimit[parentControl.name]) {
+                                  this.toast.error({ detail: "Error", summary: 'Dependent SI should not be greater than Self SI.', duration: 3000 });
+                                  ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                }
+                              } else {
+                                if (parentControl.name == 'temporaryTotalDisablementBenefit') {
+                                  if (Number(event.target.value) > 0) {
+                                    this.toast.error({ detail: "Error", summary: 'Member unable to take TTD cover without Self.', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                  }
+                                }
+                                else {
+                                  let selfMember = this.formData.insuredMemberDetails.some((member: any) => member.relation === 'Self');
+                                  if (Number(event.target.value) > 0 && selfMember) {
+                                    this.toast.error({ detail: "Error", summary: 'Dependent SI should not be greater than Self SI.', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                  }
+                                }
                               }
-                              else if (selectedControl.name != 'Self') {
-                                insuredMemberDetails.forEach((member: any) => {
-                                  if (member.relation == selectedControl.name) {
-                                    if (member.annualIncome != "") {   //earning                            
-                                      const memberAnnualIncome = Number(member.annualIncome)
-                                      const occupationValue = this.selectedInnerControl ? JSON.parse(this.selectedInnerControl).name : ''
-                                      if (occupationValue == 'Self Employed') {
-                                        console.log("occupation value", occupationValue, "member anuual income", memberAnnualIncome);
-                                        const filteredSiList = res.data.siList.filter(
-                                          (item: any) =>
-                                            item.value <= 10000000 ||
-                                            (item.value > 10000000 && item.value <= memberAnnualIncome * 20)
-                                        );
-                                        console.log("Filtered siList for Self Employed:", filteredSiList);
-                                        coreControl.options = filteredSiList;
+                            }
+                          }
+
+                        } else if (innerControl.name == "occupation") {
+                          this.selectedOccupation = JSON.parse(event.target.value).name
+                        } else if (innerControl.name == "occupationRisk") {
+                          this.selectedOccupationRisk = JSON.parse(event.target.value).id
+                          if (this.selectedOccupation == 'Self Employed') {
+                            ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[3] as FormGroup)?.controls['plan'].setValue('');
+                            ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[4] as FormGroup)?.controls['addOnSumInsured'].setValue('');
+                          }
+                        }
+                        else if (innerControl.name == 'memberCheckbox' && (parentControl.name == 'accident' || parentControl.name == 'accidentPlus')) {
+                          //without self unemployed(who don't have annual income) members can't take policy
+                          this.formData.insuredMemberDetails.forEach((member: any) => {
+                            if (member.relation == selectedControl.name) {
+                              const selectedMemberCheckboxValue = ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].value;
+                              console.log("selected member checkbox value", selectedMemberCheckboxValue);
+                              if (selectedControl.name !== 'Self' && selectedMemberCheckboxValue == true) {
+                                if (member.annualIncome != "") { }
+                                else {
+                                  const parentGroup = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+                                  const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                                  if (!controlGroup || !controlGroup.controls['Self']) {
+                                    this.toast.warning({ detail: "Error", summary: 'Please contact branch office to login policies where Proposer doesn’t want to be covered in PA', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)
+                                      ?.controls[control.name] as FormGroup)
+                                      ?.controls[selectedControl.name] as FormArray)
+                                      ?.controls[0] as FormGroup)
+                                      .controls['memberCheckbox'].setValue(false);
+                                    return;
+                                  }
+                                  const innerSubGroup = controlGroup?.controls['Self'] as FormArray;
+                                  if (innerSubGroup) {
+                                    const controlNames = ["memberCheckbox", "occupation", "occupationRisk", "plan", "addOnSumInsured"];
+                                    let count = 0;
+                                    innerSubGroup.controls.forEach((group, idx) => {
+                                      const controlName = controlNames[idx];
+                                      if (controlName) {
+                                        const value = (group as FormGroup).controls[controlName]?.value;
+                                        console.log(value);
+                                        if (value === true || value !== '') count++;
                                       }
-                                      if (this.selfCoverSumInsured && (occupationValue != 'Self Employed' || occupationValue == '')) {
-                                        let maxLimit = 0;
-                                        switch (parentControl.name) {
-                                          case 'accident':
-                                            switch (selectedControl.name) {
-                                              case 'Spouse':
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
-                                                break;
-                                              default:
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
-                                                break;
-                                            }
-                                            break;
-                                          default:
-                                            maxLimit = Math.min(this.selfCoverSumInsured);
-                                            break;
-                                        }
-                                        const filteredSiList = res.data.siList.filter((item: any) => item.value <= maxLimit);
-                                        console.log("Filtered siList for other occupation in earning case:", filteredSiList);
-                                        coreControl.options = filteredSiList;
-                                      }
-                                      else {
-                                        coreControl.options = res.data.siList;
-                                      }
+                                    });
+                                    if (count < controlNames.length) {
+                                      this.toast.warning({ detail: "Error", summary: 'Please Select the Proposer', duration: 3000 });
+                                      ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].setValue(false)
                                     }
-                                    else {  //non earning
-                                      if (this.selfCoverSumInsured) {
-                                        let maxLimit = 0;
-                                        console.log("relation", selectedControl.name);
-                                        console.log("parentcontrol name", parentControl.name);
-                                        switch (parentControl.name) {
-                                          case 'accident':
-                                            switch (true) {
-                                              case selectedControl.name.includes('Son'):
-                                              case selectedControl.name.includes('Daughter'):
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
-                                                break;
-                                              default:
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
-                                                break;
-                                            }
-                                            break;
-                                          case 'criticalIllness':
-                                            switch (true) {
-                                              case selectedControl.name == 'Spouse':
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
-                                                break;
-                                              case selectedControl.name.includes('Son'):
-                                              case selectedControl.name.includes('Daughter'):
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
-                                                break;
-                                              default:
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1000000);
-                                                break;
-                                            }
-                                            break;
-                                          case 'cancerSecure':
-                                            switch (true) {
-                                              case selectedControl.name == 'Spouse':
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 3000000);
-                                                break;
-                                              case selectedControl.name.includes('Son'):
-                                              case selectedControl.name.includes('Daughter'):
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1500000);
-                                                break;
-                                              default:
-                                                maxLimit = Math.min(this.selfCoverSumInsured, 1000000);
-                                                break;
-                                            }
-                                            break;
-                                        }
-                                        const filteredSiList = res.data.siList.filter((item: any) => item.value <= maxLimit);
-                                        console.log("Filtered siList: in non earning case", filteredSiList);
-                                        coreControl.options = filteredSiList;
-                                      } else {
-                                        console.log("self sum insured is mandatory if member is non earning", this.selfCoverSumInsured);
+                                  }
+                                }
+                              } else if (selectedControl.name == 'Self' && selectedMemberCheckboxValue == false) {
+                                //whenever self membercheckbox is false, if any unemployed(who don't have annual income) membercheckbox is true , setting as false                                
+                                this.formData.insuredMemberDetails.forEach((member: any) => {
+                                  if (member.reletion != 'Self') {
+                                    const selectedValue = ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[member.relation] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].value;
+                                    if (member.annualIncome != '') { }
+                                    else {
+                                      if (selectedValue == true) {
+                                        ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[member.relation] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].setValue(false)
                                       }
                                     }
                                   }
                                 });
                               }
-                            },
-                            error: (err: any) => {
-                              console.error(err);
                             }
                           });
-                        } else if (innerControl.name == 'weeklyCashLimit' && coreControl.name === "addOnSumInsured") {
+                        }
+                        else if (innerControl.name == 'weeklyCashLimit' && coreControl.name === "addOnSumInsured" && parentControl.name == 'temporaryTotalDisablementBenefit') {
                           let sumInsured = Number(event.target.value) * 100
                           const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
                           const controlGroup = parentGroup?.controls[control.name] as FormGroup;
@@ -3043,10 +4126,13 @@ export class YatraComponent {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'decl2') {
+            const decl2Control = this.dynamicFormGroup.get('decl2');
             if (selectedValue === 'Y') {
-              this.dynamicFormGroup.get('decl2')?.setValue(false);
+              decl2Control?.setValue(false);
+              decl2Control?.disable();
             } else if (selectedValue === 'N') {
-              this.dynamicFormGroup.get('decl2')?.setValue(true);
+              decl2Control?.setValue(true);
+              decl2Control?.disable();
             }
           }
         })
@@ -3065,9 +4151,9 @@ export class YatraComponent {
       }
 
     }
-    if (control.name == 'correspondentPincode') {
-      this.getCityStateByPinByCorressponding();
-    }
+    // if (control.name == 'correspondentPincode') {
+    //   this.getCityStateByPinByCorressponding();
+    // }
 
     if (control.name == 'hospiCashCoverDetails') {
       console.log(subControl, event.target.checked, this.activeMemberTabIndex);
@@ -3200,22 +4286,28 @@ export class YatraComponent {
         else if (control.onChangeMethod == 'setDeductibleAmount') {
           this.resolveMethod(control.onChangeMethod, control, parentControl, index);
         }
+        else if (control.onChangeMethod == 'getSumInsuredListByPincode') {
+          let topUpFlag = this.dynamicFormGroup.get('benefitTopUpPlan')?.value
+          let policyType = this.dynamicFormGroup.get('memberPolicyType')?.value
+          let pinCode = this.dynamicFormGroup.get('proposerPincode')?.value.toString() || 0;
+          this.resolveMethod(control.onChangeMethod, topUpFlag, policyType, pinCode);
+        }
         else if (control.onChangeMethod == 'changeMainFormDependentControls') {
           if (!control.dependentControls) {
             let selectedOption;
-            if(control.name == 'paymentOption'){
+            if (control.name == 'paymentOption') {
               selectedOption = control.options.find((option: any) => option.value === selectedValue);
             }
-            else{
+            else {
               selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
             }
             this.resolveMethod(control.onChangeMethod, selectedOption.dependentControls)
           }
         }
-        else if (control.onChangeMethod == 'changeChronicCondition') {
-          this.changeChronicCondition(selectedValue, control);
+        else if (control.onChangeMethod == 'changeChronicCondition' || control.onChangeMethod == 'checkPortabilityApplicable') {
+          this.resolveMethod(control.onChangeMethod, control, selectedValue);
         } else if (control.onChangeMethod == 'getNatureOfWorkByOccupation') {
-          this.resolveMethod(control.onChangeMethod, event, control, parentControl, index);
+          this.resolveMethod(control.onChangeMethod, event, control, index, parentControl);
         }
         else if (control.onChangeMethod == 'setForSelfMember') {
           this.setForSelfMember(control, eventValue);
@@ -3229,7 +4321,17 @@ export class YatraComponent {
           this.resolveMethod(control.onChangeMethod, selectedOption?.dependentControls, eventValue);
         }
       } else {
-        this.resolveMethod(control.onChangeMethod, control, eventValue);
+        this.resolveMethod(control.onChangeMethod, control, eventValue, parentControl, index);
+      }
+    }
+
+    if (control.name == 'customerId') {
+      if (eventValue.length == 8) {
+        this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+        this.resolveMethod(control.methodName, control, eventValue);
+      }
+      else {
+        this.changeMainFormDependentControls(control.dependentControls, false, control.name);
       }
     }
     // else if (innerControl != null && innerControl.onChangeMethod) {
@@ -3326,13 +4428,15 @@ export class YatraComponent {
           }
         }
       } else if (innerControl.onChangeMethod == 'getNatureOfWorkByOccupation') {
-        this.resolveMethod(innerControl.onChangeMethod, event, subControl);
+        //let occupationData = JSON.parse(event.target.value).name;
+        this.resolveMethod(innerControl.onChangeMethod, event, subControl, parentControl);
+      } else if (innerControl.onChangeMethod == 'getSumInsured') {
+        this.resolveMethod(innerControl.onChangeMethod, parentControl, control, subControl, innerControl, index, event)
       }
       else {
         this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
       }
     }
-
     if (parentControl == null && control.name == 'ifscCode') {
       const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value || '';
       if (!ifscCodeDetails) {
@@ -3460,10 +4564,7 @@ export class YatraComponent {
           }
         });
       }
-
-
     }
-
 
     if ((parentControl !== null && parentControl.type == 'combinedCheckbox')) {
       if (control.type === 'select') {
@@ -3565,11 +4666,13 @@ export class YatraComponent {
         });
 
         if (parentControl.type == 'details') {
+          if (this.isQuote) {
+            this.isQuote = false;
+          }
           this.changeRecalculate(true);
         }
       }
     }
-
 
     if (parentControl == null && control.name == 'proposerPincode') {
       const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.toString().length || 0;
@@ -3577,45 +4680,56 @@ export class YatraComponent {
         const reqData = {
           "pincode": event.target.value,
           agentcode: this.agentCode,
-          productId: this.productId.toString()
+          productId: this.productId.toString(),
+          partnerId:this.partnerId
         }
         console.log(reqData);
 
         this.commonService.getPinCodeByCity(reqData).subscribe({
           next: (res) => {
             if (res.isSuccess && res.data) {
-              // Update city and state fields
-              this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
-              this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
+              console.log(res);
+              console.log(this.dynamicFormGroup.get('city'),res.data.city,this.dynamicFormGroup);
+              
+              this.dynamicFormGroup.get('city')?.setValue(res.data.city);
+              this.dynamicFormGroup.get('state')?.setValue(res.data.state);
 
               const zoneControl = this.dynamicFormGroup.get('zone');
               const zoneControlValue = this.dynamicFormGroup.get('zoneValue');
+              if (this.isQuote) {
+                this.isQuote = false;
+              }
               if (zoneControl) {
                 zoneControl.setValue(res.data.zone || '');
               }
               // zoneControl.enable();
               if (zoneControlValue) {
                 zoneControlValue.setValue(res.data.zoneValue);
+                const isZoneValueDisabled = this.form.formSections.some((section: any) =>
+                  section.formControls.some((control: any) => control.name === 'zoneValue' && control.disabled === true)
+                );
+
+                if (isZoneValueDisabled) {
+                  zoneControlValue.disable();
+                } else {
+                  zoneControlValue.enable();
+                }
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
                     if (control.name === 'zoneValue') {
                       control.options = res.data.upgradableZones;
-                      // .forEach((zoneOption: any) => {
-                      //   control.options.push({
-                      //     name: zoneOption.zone,
-                      //     value: zoneOption.zoneCode
-                      //   });
-                      // });
 
-                      // control.visible = true;
                     }
                   });
                 });
               }
 
               const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+              let sumInsuredList: { name: string, value: any }[] = [];
+              console.log(sumInsuredControl);
+
               if (sumInsuredControl) {
-                const sumInsuredList = res.data.sumInsuredList || [];
+                sumInsuredList = res.data.sumInsuredList || [];
                 sumInsuredControl.setValue(''); // Reset current value
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
@@ -3630,19 +4744,87 @@ export class YatraComponent {
                 });
               }
 
+              const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+              if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater' && insuredMemberDetails?.length > 0) {
+                insuredMemberDetails.controls.forEach((memberGroup: any) => {
+                  memberGroup.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                  memberGroup.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                  memberGroup.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                  memberGroup.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
+                  memberGroup.get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                })
+              }
+              else if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' && insuredMemberDetails?.length > 0) {
+                insuredMemberDetails.controls.forEach((memberGroup: any, idx: number) => {
+                  if (memberGroup.get('relation')?.getRawValue() == 'Self') {
+                    memberGroup.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                    memberGroup.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                    memberGroup.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                    memberGroup.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
+                    memberGroup.get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                    memberGroup.get('upgradableZones')?.setValue(res.data.upgradableZones);
+                    this.form.formSections.forEach((section: any) => {
+                      section.formControls.forEach((control: any) => {
+                        if (control.name === 'insuredMemberDetails' && control.dynamicControls) {
+
+                          if (control.dynamicControls[idx + 1]) {
+                            control.dynamicControls[idx + 1].forEach((dynamicFormControl: any) => {
+
+                              if (dynamicFormControl.name === 'zoneValue') {
+                                dynamicFormControl.options = res.data.upgradableZones;
+
+                              }
+                              if (dynamicFormControl.name === 'sumInsured') {
+                                dynamicFormControl.options = sumInsuredList.map((sumInsured: any) => ({
+                                  name: sumInsured.name,
+                                  value: sumInsured.value,
+                                }));
+
+                                // Get the current value of sumInsured
+                                const currentValue = memberGroup.get('sumInsured')?.value;
+
+                                // Check if currentValue exists in options
+                                const isValidValue = dynamicFormControl.options.some(
+                                  (option: any) => option.value === currentValue
+                                );
+
+                                // If valid, set the current value; otherwise, set the first option
+                                const newValue = isValidValue ? currentValue : dynamicFormControl.options[0]?.value;
+
+                                // Set values accordingly
+                                memberGroup.get('sumInsured')?.setValue(newValue);
+                                memberGroup.get('upgradableSumInsured')?.setValue(dynamicFormControl.options);
+                                if (!isValidValue) {
+                                  this.changeRecalculate(true);
+                                }
+                              }
+                            });
+                          }
+
+                          console.log(control.dynamicControls[idx + 1]);
+
+                          // control.options = sumInsuredList.map((sumInsured: any) => ({
+                          //   name: sumInsured.name,
+                          //   value: sumInsured.value,
+                          // }));
+                          // console.log(control.options);
+                        }
+                      });
+                    });
+                  }
+                })
+              }
+
 
             } else {
               console.error('Failed to fetch zone details.');
-              this.resetZoneAndLocationFields();
             }
           },
           error: (err: any) => {
             console.error('Error fetching zone details:', err);
-            this.resetZoneAndLocationFields();
           }
         });
-      } else {
-        this.resetZoneAndLocationFields();
       }
 
     }
@@ -3653,24 +4835,34 @@ export class YatraComponent {
           const reqdata = {
             "pincode": event.target.value,
             agentcode: this.agentCode,
-            productId: this.productId.toString()
+            productId: this.productId.toString(),
+            partnerId:this.partnerId
           }
           console.log(reqdata);
           // this.spinner.show();
           this.commonService.getPinCodeByCity(reqdata).subscribe({
             next: (res: any) => {
               if (res.isSuccess && res.data) {
-
                 if (res.data.upgradableZones.length > 0) {
                   const zoneOptions = res.data.upgradableZones;
                   parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                     if (dynamicControl.name == 'zoneValue') {
                       dynamicControl.options = zoneOptions;
+                      const isZoneValueDisabled = parentControl.dynamicControls[index + 1].some(
+                        (ctrl: IDynamicControl) => ctrl.name === 'zoneValue' && ctrl.disabled === true
+                      );
+
+                      if (isZoneValueDisabled) {
+                        (this.dynamicFormGroup.get(parentControl.name) as FormArray)
+                          .controls[index].get('upgradableZones')?.disable();
+                      } else {
+                        (this.dynamicFormGroup.get(parentControl.name) as FormArray)
+                          .controls[index].get('upgradableZones')?.enable();
+                      }
                     }
                   });
                   (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableZones')?.setValue(zoneOptions);
                 }
-
                 const sumInsuredList = res.data.sumInsuredList;
                 parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                   if (dynamicControl.name === 'sumInsured') {
@@ -3681,47 +4873,18 @@ export class YatraComponent {
                   }
                 });
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableSumInsured')?.setValue(sumInsuredList);
-                // parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
-                //   if (dynamicControl.name == 'sumInsured') {
-                //     dynamicControl.options = sumInsuredList.map((item: any) => ({
-                //       name: item.name,
-                //       value: item.value,
-                //     }));
-                //   }
-                // });
-
 
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(res.data.zone);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('city')?.setValue(res.data.city);
                 (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('state')?.setValue(res.data.state);
-
-                // // Locate the `zone` control and update its options
-                // const zoneControl = dynamicControls.find(dc => dc.name === 'zone');
-                // if (zoneControl) {
-                //   zoneControl.options = zoneOptions;
-                //   zoneControl.value = currentZoneCode;
-                // }
-
-                // const patchObject: { [key: string]: any } = {
-                //   city: res.data.city || '',
-                //   state: res.data.state || '',
-                //   zone: currentZoneName,
-                // };
-                // let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
-                // if (formArray && Array.isArray(formArray)) {
-                //   formArray[memberIndex] = { ...formArray[memberIndex], ...patchObject };
-                //   this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-                // }
               } else {
-                this.resetDynamicZoneFields(parentControl, index);
+                this.toast.warning({ detail: "Warning", summary: res.message, duration: 3000 });
               }
-              // this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-              // this.spinner.hide();
             },
             error: (err: any) => {
               this.toast.warning({ detail: "Warning", summary: err, duration: 3000 });
-              this.resetDynamicZoneFields(parentControl, index);
+              // this.resetDynamicZoneFields(parentControl, index);
             }
           });
         }
@@ -3750,9 +4913,6 @@ export class YatraComponent {
       }
       else if (selectedPrefix === 'Mx' || selectedPrefix === 'Others') {
         this.dynamicFormGroup.get('proposerGender')?.setValue('O');
-      }
-      else {
-        this.dynamicFormGroup.get('proposerGender')?.setValue('-');
       }
     }
     if (control.name == "chequeDate") {
@@ -3796,6 +4956,36 @@ export class YatraComponent {
         }
       });
     }
+    if (control.name == 'proposerGender') {
+      // let targetControl;
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'preFix') {
+            this.updatePrefixBasedOnGender(formControl);
+          }
+        })
+
+      })
+      this.toast.warning({ detail: "Warning", summary: "Your Premium will been revised on basis on gender", duration: 3000 });
+    }
+    if (parentControl == null && (control.name === 'sumInsured' || control.name === 'sumInsuredForPlan')) {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+      if (this.isQuote == true) {
+        this.isQuote = false;
+      }
+      if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater' && insuredMemberDetails?.length > 0) {
+        insuredMemberDetails.controls.forEach((memberGroup: any) => {
+          if (control.name === 'sumInsured') {
+            memberGroup.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+          }
+          else if (control.name === 'sumInsuredForPlan') {
+            memberGroup.get('sumInsuredForPlan')?.setValue(this.dynamicFormGroup.get('sumInsuredForPlan')?.value);
+          }
+        })
+        this.changeRecalculate(true);
+      }
+    }
   }
 
   calculateAge(dob: Date): string {
@@ -3819,33 +5009,6 @@ export class YatraComponent {
 
     return `${age}`;
   }
-
-
-
-
-
-  // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
-  //   let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
-
-  //   if (methodName == 'addOrRemoveAdditionalInsuredMember') {
-  //     filteredArgs = filteredArgs.slice(-1);
-
-  //   } else if (filteredArgs[filteredArgs.length - 1] == 'add' || filteredArgs[filteredArgs.length - 1] == 'remove') {
-  //     filteredArgs.pop();
-  //   }
-
-
-  //   const method = (this as any)[methodName] as Function;
-  //   if (method && typeof method === 'function') {
-  //     // method.bind(this)(...filteredArgs);
-  //     await Promise.resolve(method.bind(this)(...filteredArgs));
-  //     if (methodName == 'getProposerRelationship') {
-
-  //     }
-  //   } else {
-  //     console.error(`Method ${methodName} not found`);
-  //   }
-  // }
 
   async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
 
@@ -3891,8 +5054,6 @@ export class YatraComponent {
     }
   }
 
-
-
   handlePolicyTypeChange(control: any, planType: string | null = null): void {
     // const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
     // const pincodeControl = this.dynamicFormGroup.get('pincode');
@@ -3914,13 +5075,10 @@ export class YatraComponent {
         });
       });
     }, 0);
-
-
     // }
     // else {
     //   console.error('Sum Insured Control or Pincode Control not found in dynamicFormGroup.');
     // }
-
   }
 
   resetInsuredMembers(control: any, planType: any) {
@@ -3930,7 +5088,6 @@ export class YatraComponent {
 
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-
 
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle == "Insured Member Details") {
@@ -3977,88 +5134,87 @@ export class YatraComponent {
           while (section.formControls[1].dynamicControls.length > 1) {
             section.formControls[1].dynamicControls.pop();
           }
-
         }
       });
     }
   }
 
-  // setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
-  //   const eventValue = childControl.value;
-  //   this.form.formSections.forEach((section: any) => {
-  //     section.formControls.forEach((formControl: any) => {
-  //       if (formControl.dynamicControls && formControl.visible) {
-  //         // Check if dynamicControls[index] exists
-  //         if (formControl.dynamicControls[index]) {
-  //           formControl.dynamicControls[index].forEach((control: any) => {
-  //             if (control.name == childControl.otherControlName) {
-  //               if (control.validators && childControl.validationRules) {
-  //                 // Create a new array for validators to avoid mutating the original
-  //                 const newValidators: IValidator[] = control.validators.filter(
-  //                   (val: IValidator) => val.validatorName === 'required'
-  //                 );
+  setupRelationshipTypeValidationForPOS(childControl: IFormControl, index: any) {
+    const eventValue = childControl.value;
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.dynamicControls && formControl.visible) {
+          // Check if dynamicControls[index] exists
+          if (formControl.dynamicControls[index]) {
+            formControl.dynamicControls[index].forEach((control: any) => {
+              if (control.name == childControl.otherControlName) {
+                if (control.validators && childControl.validationRules) {
+                  // Create a new array for validators to avoid mutating the original
+                  const newValidators: IValidator[] = control.validators.filter(
+                    (val: IValidator) => val.validatorName === 'required'
+                  );
 
-  //                 console.log(this.formData, eventValue, childControl.validationRules);
+                  console.log(this.formData, eventValue, childControl.validationRules);
 
-  //                 // Determine the appropriate validation rule based on eventValue
-  //                 let rule;
-  //                 if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
-  //                   /^niece\d*$/i.test(eventValue) ||
-  //                   /^grand-son\d*$/i.test(eventValue) ||
-  //                   /^grand-daughter\d*$/i.test(eventValue)) {
-  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-  //                 }
-  //                 // else if ((/^nephew\d*$/i.test(eventValue) ||
-  //                 //   /^niece\d*$/i.test(eventValue) ||
-  //                 //   /^grand-son\d*$/i.test(eventValue) ||
-  //                 //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
-  //                 //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-  //                 // }
-  //                 else {
-  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
-  //                 }
+                  // Determine the appropriate validation rule based on eventValue
+                  let rule;
+                  if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
+                    /^niece\d*$/i.test(eventValue) ||
+                    /^grand-son\d*$/i.test(eventValue) ||
+                    /^grand-daughter\d*$/i.test(eventValue)) {
+                    rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  }
+                  // else if ((/^nephew\d*$/i.test(eventValue) ||
+                  //   /^niece\d*$/i.test(eventValue) ||
+                  //   /^grand-son\d*$/i.test(eventValue) ||
+                  //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                  //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  // }
+                  else {
+                    rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
+                  }
 
-  //                 if (rule) {
-  //                   newValidators.push(rule);
-  //                 }
+                  if (rule) {
+                    newValidators.push(rule);
+                  }
 
-  //                 const formControlInstance = this.dynamicFormGroup.get(control.name);
-  //                 control.validators = newValidators;
-  //                 if (formControlInstance) {
-  //                   const validators = newValidators
-  //                     .map(val => {
-  //                       if (val.validatorName === 'pattern' && val.pattern) {
-  //                         return Validators.pattern(val.pattern);
-  //                       }
-  //                       if (val.validatorName === 'required') {
-  //                         return Validators.required;
-  //                       }
-  //                       return null;
-  //                     })
-  //                     .filter((v): v is ValidatorFn => v !== null);
+                  const formControlInstance = this.dynamicFormGroup.get(control.name);
+                  control.validators = newValidators;
+                  if (formControlInstance) {
+                    const validators = newValidators
+                      .map(val => {
+                        if (val.validatorName === 'pattern' && val.pattern) {
+                          return Validators.pattern(val.pattern);
+                        }
+                        if (val.validatorName === 'required') {
+                          return Validators.required;
+                        }
+                        return null;
+                      })
+                      .filter((v): v is ValidatorFn => v !== null);
 
-  //                   formControlInstance.setValidators(validators);
-  //                   formControlInstance.updateValueAndValidity();
-  //                 }
-  //               }
-  //             }
-  //           });
-  //         }
-  //       }
-  //     });
-  //   });
-
-  //   // You can now set validators for the control using Angular's Form API, if needed
-  //   // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
-  //   // if (memberAgeControl) {
-  //   //   memberAgeControl.setValidators(newValidators.map(val => /* mapping logic to Angular Validators */));
-  //   //   memberAgeControl.updateValueAndValidity();
-  //   // }
-  // }
-
+                    formControlInstance.setValidators(validators);
+                    formControlInstance.updateValueAndValidity();
+                  }
+                }
+              }
+            });
+          }
+        }
+      });
+    });
+    // You can now set validators for the control using Angular's Form API, if needed
+    // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
+    // if (memberAgeControl) {
+    //   memberAgeControl.setValidators(newValidators.map(val => /* mapping logic to Angular Validators */));
+    //   memberAgeControl.updateValueAndValidity();
+    // }
+  }
 
   //different Implementation
   setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
+    console.log(childControl);
+
     const eventValue = childControl.value;
     let rule: any = null;
 
@@ -4076,8 +5232,6 @@ export class YatraComponent {
     });
 
     console.log(rule);
-
-
 
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
@@ -4141,7 +5295,6 @@ export class YatraComponent {
         }
       });
     });
-
     // You can now set validators for the control using Angular's Form API, if needed
     // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
     // if (memberAgeControl) {
@@ -4164,6 +5317,7 @@ export class YatraComponent {
       });
     });
   }
+
   decrement(controlName: any, childControlName: any) {
     const currentValue = this.dynamicFormGroup.get(controlName)?.value;
     if (currentValue > 0) {
@@ -4180,14 +5334,13 @@ export class YatraComponent {
     }
   }
 
-
   incrementMember(event: any, control: IFormControl, option: any) {
     // Prevent event propagation to the checkbox
     event.stopPropagation();
     const formGroup = this.dynamicFormGroup.get(control.name) as FormGroup;
     let index = parseInt(option.value.slice(-1), 10);
-    if (index >= 4 && this.formData.productName === 'Active Secure') {
-      this.toast.warning({ detail: "Warning", summary: "You can select a maximum of 4 sons or daughters for Active Secure.", duration: 3000 });
+    if (index >= 4 && this.formData.productName === 'Activ Secure') {
+      this.toast.warning({ detail: "Warning", summary: "You can select a maximum of 4 sons or daughters for Activ Secure.", duration: 3000 });
       return;
     }
     index += 1;
@@ -4328,16 +5481,24 @@ export class YatraComponent {
       this.yatraService.GetProposerRelationships(reqData).pipe(
         tap((res: any) => {
 
-          // Prepare form group
-          // const controlGroup = this.fb.group({});
+          const proposerGender = this.formData.proposerGender; // Get proposerGender from formData
 
-          // // For each relationship option, add a control
-          // res.data.relationShip.forEach((option: any) => {
-          //   controlGroup.addControl(option.value, new FormControl(false));
-          // });
-
-          // Remove previous insuredMembers control
-          // this.dynamicFormGroup.removeControl('insuredMembers');
+          res.data.relationShip.forEach((relation: any) => {
+            if (proposerGender === "F") {
+              if (relation.value === "Self") {
+                relation.imagePath = "assets/Spouse.png"; // Change Self to Spouse.png
+              } else if (relation.value === "Spouse") {
+                relation.imagePath = "assets/Self.png"; // Change Spouse to Self.png
+              }
+            } else {
+              // If proposerGender is Male, keep images unchanged
+              if (relation.value === "Self") {
+                relation.imagePath = "assets/Self.png";
+              } else if (relation.value === "Spouse") {
+                relation.imagePath = "assets/Spouse.png";
+              }
+            }
+          });
 
           // Add validators
           let controlValidators: any = [];
@@ -4348,16 +5509,6 @@ export class YatraComponent {
             if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
             if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
           });
-
-          // Adding the custom validation if required
-          // controlGroup.setValidators([...controlValidators, this.addCustomValidation()]);
-          // controlGroup.updateValueAndValidity();
-
-          // Add the new insuredMembers control
-          // this.dynamicFormGroup.addControl(control.name, controlGroup);
-
-          // Update control with the fetched options
-          // control.selectCheckboxOptions = res.data.relationShip;
 
           if (this.isQuote || this.quickQuoteRedirect || this.isPolicyDetailsFetch) {
 
@@ -4429,16 +5580,31 @@ export class YatraComponent {
               section.formControls.forEach((control: any) => {
                 if (control.name === 'insuredMembers') {
                   // Loop the options and see if the option has value true in the insuredMembers in formData
-                  control.selectCheckboxOptions.forEach((option: any) => {
-                    if (this.formData.insuredMembers[option.value] === true) {
-                      // Call logSelection function (pass null for event if not triggering through UI)
-                      this.logSelection(null, option, control);
-                    }
-                  });
+                  // control.selectCheckboxOptions.forEach((option: any) => {
+                  //   if (this.formData.insuredMembers[option.value] === true) {
+                  //     // Call logSelection function (pass null for event if not triggering through UI)
+                  //     this.logSelection(null, option, control);
+                  //   }
+                  // });
+                  console.log(control.selectCheckboxOptions, this.formData,this.dynamicFormGroup.getRawValue());
+
+
+                  if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 0) {
+                    this.formData.insuredMemberDetails.forEach((memberDetails: any) => {
+                      const matchingMemberOption = control.selectCheckboxOptions.find((option: any) =>
+                        memberDetails.relation === option.value
+                      );
+
+                      if (matchingMemberOption && this.formData.insuredMembers && this.formData.insuredMembers[matchingMemberOption.value] === true) {
+                        this.logSelection(null, matchingMemberOption, control);
+                      }
+                    })
+                  }
                 }
               });
             });
             this.flattenObject(this.formData);
+            // this.setInsuredMemberAndDetailsControlsValue(this.formData);
           }
           else {
 
@@ -4488,6 +5654,62 @@ export class YatraComponent {
     });
   }
 
+  setInsuredMemberAndDetailsControlsValue(formData: any) {
+    console.log(formData, this.dynamicFormGroup.value);
+    const insuredMemberGroup = this.dynamicFormGroup.get('insuredMembers');
+    const insuredMemberDetailsArray = this.dynamicFormGroup.get('insuredMemberDetails');
+    if (insuredMemberGroup && insuredMemberGroup instanceof FormGroup) {
+      Object.keys(formData.insuredMembers).forEach((key: any) => {
+        insuredMemberGroup.get(key)?.setValue(formData.insuredMembers[key]);
+      })
+    }
+    if (insuredMemberDetailsArray && insuredMemberDetailsArray instanceof FormArray) {
+      formData.insuredMemberDetails.forEach((obj: any) => {
+        // Find the matching index in the FormArray
+        const index = insuredMemberDetailsArray.controls.findIndex((control) => {
+          const relationshipType = control.get('relationshipType')?.value;
+          const relation = control.get('relation')?.value;
+
+          let parsedRelationshipValue: string | null = null;
+
+          // Check if relationshipType is a string that needs parsing
+          if (typeof relationshipType === "string") {
+            try {
+              const parsedRelationship = JSON.parse(relationshipType);
+              parsedRelationshipValue = parsedRelationship?.value?.toLowerCase() || null;
+            } catch (error) {
+              console.warn("Error parsing relationshipType:", error);
+            }
+            // Compare with obj.relation (case insensitive)
+            return parsedRelationshipValue === obj.relation.toLowerCase() || relation?.toLowerCase() === obj.relation.toLowerCase();
+          }
+          return false;
+        });
+
+        // If a match is found, update the corresponding FormGroup
+        if (index !== -1) {
+          console.log(obj);
+
+          Object.keys(obj).forEach((key2) => {
+            const memberControl = insuredMemberDetailsArray.at(index).get(key2) as any;
+            console.log(memberControl, obj[key2]);
+            if (memberControl && !(memberControl instanceof FormGroup)) {
+              memberControl?.setValue(obj[key2]);
+            }
+            else if (memberControl && (memberControl instanceof FormGroup)) {
+              Object.keys(obj[key2]).forEach((key3) => {
+                const innerControl = memberControl.get(key3);
+                if (innerControl) {
+                  innerControl.setValue(obj[key2][key3]);
+                }
+              })
+            }
+          });
+        }
+      });
+    }
+  }
+
   private getValidators(control: IFormControl) {
     let controlValidators: any = [];
     control.validators?.forEach((val: IValidator) => {
@@ -4500,11 +5722,10 @@ export class YatraComponent {
     return controlValidators;
   }
 
-
   addCustomValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const controlGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
-      if (controlGroup && this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
+      if (controlGroup && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
         const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
           key => controlGroup.controls[key].value === true
         );
@@ -4523,7 +5744,7 @@ export class YatraComponent {
   }
 
   logSelection(event: Event | null, option: any, controls: any) {
-    console.log(option, this.familyPair, this.selectedFamilyPair);
+    console.log(option, this.familyPair, this.selectedFamilyPair,this.form,this.dynamicFormGroup.getRawValue());
     // const checkbox = event.target as HTMLInputElement;
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     if (option.pairKey) {
@@ -4554,6 +5775,8 @@ export class YatraComponent {
     if (event != null) {
       this.isQuote = false;
       this.quickQuoteRedirect = false;
+    }
+    if (event != null || this.isPolicyDetailsFetch) {
       this.changeRecalculate(true);
     }
     if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
@@ -4631,6 +5854,7 @@ export class YatraComponent {
               formControl.dynamicControls?.push(tempControl);
               let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
               // let formArr;
+              console.log(tempControl, formArr);
 
               if (formArr != null) {
                 formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
@@ -4642,15 +5866,13 @@ export class YatraComponent {
                 this.dynamicFormGroup.addControl(controls.idProperty, formArr);
               }
 
-
-
               if (checkbox.checked == true && option.value == 'Self') {
                 // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
                 let index = -1;
                 let memberupgradableZones: IOptions[] = [];
                 let zoneWiseSI: IOptions[] = [];
                 if (formControl.dynamicControls) {
-                  for (let i = 0; i < formControl.dynamicControls.length; i++) {
+                  for (let i = 1; i < formControl.dynamicControls.length; i++) {
                     let element = formControl.dynamicControls[i];
                     try {
                       let parsedValue = JSON.parse(element[0].value);
@@ -4679,6 +5901,16 @@ export class YatraComponent {
                               });
                             });
                           }
+                          if (control.name == 'sumInsuredForPlan') {
+                            this.form.formSections.forEach(formSection => {
+                              formSection.formControls.forEach(formcontrol => {
+                                if (formcontrol.name == control.name) {
+                                  control.options = formcontrol.options;
+                                  //zoneWiseSI = formcontrol.options || [];
+                                }
+                              });
+                            });
+                          }
                         })
                         index = i;
                         break;
@@ -4695,8 +5927,14 @@ export class YatraComponent {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
-                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                if ((this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')) {
+                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.enable();  // Enable the control before setting the value
+                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.formData.zoneValue ?? this.dynamicFormGroup.get('zoneValue')?.value);
+                  (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.disable();
+                }
+                // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
@@ -4719,11 +5957,7 @@ export class YatraComponent {
                 // ageControl.value[index-1]['memberAge'] = this.dynamicFormGroup.get('memberAgeProposer')?.value;
                 // this.dynamicFormGroup.get(controls.idProperty)?.patchValue(ageControl.value);
                 // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-
-
                 // }
-
-
               }
               if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
                 (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
@@ -4731,6 +5965,9 @@ export class YatraComponent {
                   control.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
                   control.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
                   control.get('deductibleAmount')?.setValue(this.dynamicFormGroup.get('deductibleAmount')?.value);
+                  control.get('sumInsuredForPlan')?.setValue(this.dynamicFormGroup.get('sumInsuredForPlan')?.value);
+                  control.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                  control.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
                 })
               }
               this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
@@ -4794,7 +6031,6 @@ export class YatraComponent {
 
       }
       // }
-
       this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
     }
   }
@@ -4806,20 +6042,22 @@ export class YatraComponent {
     } else {
       controlGroup.setErrors({ required: true }); // Set required error if all controls are false
     }
-
   }
 
   getFormIndexValue() {
-    const formIndex = localStorage.getItem("formIndex") as string;
+    const formIndex = sessionStorage.getItem("formIndex") as string;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
+
   setFormIndexValue(value: number) {
-    localStorage.setItem("formIndex", value.toString());
+    sessionStorage.setItem("formIndex", value.toString());
   }
+
   incrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
   }
+
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);
@@ -4855,11 +6093,11 @@ export class YatraComponent {
     //     });
     //   });
     // }
-    if (this.selectedButton && !['offline', 'loanPayment', 'bankFundTransfer'].includes(this.selectedButton)) {
+    if (this.selectedButton && !['offline', 'loanPayment', 'bankFundTransfer', 'directdebit'].includes(this.selectedButton)) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
           // if (controls.name === 'offline' && controls.dependentControls) {
-          if ((controls.name === 'offline' || controls.name === 'loanPayment' || controls.name === 'bankFundTransfer') && controls.dependentControls) {
+          if ((controls.name === 'offline' || controls.name === 'loanPayment' || controls.name === 'bankFundTransfer' || controls.name === 'directdebit') && controls.dependentControls) {
             controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
@@ -4899,6 +6137,62 @@ export class YatraComponent {
         });
       });
     }
+    if (this.selectedButton !== 'offline') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'offline' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false;
+                if (controlToHide.name === "paymentOption" && controlToHide.options) {
+                  this.dynamicFormGroup.patchValue({ paymentOption: 'Cheque' });
+                  controlToHide.options.forEach((option: any) => {
+                    if (option.dependentControls) {
+                      this.form.formSections.forEach((section: any) => {
+                        section.formControls.forEach((control: any) => {
+                          if (control.label != "Total Premium/Incl tax") {
+                            if (option.dependentControls.some((item: any) => item.name === control.name && item.visibility)) {
+                              control.visible = false;
+                            }
+                          }
+                        });
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      });
+    }
+    ['autoDebit', 'emandate_payment'].forEach((button) => {
+      if (this.selectedButton !== button) {
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((controls: any) => {
+            if (controls.name === button && controls.dependentControls) {
+              controls.dependentControls.forEach((item: any) => {
+                const controlToHide = this.form.formSections
+                  .flatMap((sec: any) => sec.formControls)
+                  .find((ctrl: any) => ctrl.name === item);
+                if (controlToHide) {
+                  controlToHide.visible = false;
+                  const formControl = this.dynamicFormGroup.get(controlToHide.name);
+                  if (formControl) {
+                    formControl.disable();
+                    formControl.clearValidators();
+                    formControl.updateValueAndValidity();
+                  }
+                }
+              });
+            }
+          });
+        });
+      }
+    });
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton === 'sendLinkButton') {
       const reqData = {
@@ -4956,6 +6250,8 @@ export class YatraComponent {
                       return Validators.maxLength(val.maxLength);
                     } else if (val.validatorName === 'minlength' && val.minLength) {
                       return Validators.minLength(val.minLength);
+                    } else if (val.validatorName === 'requiredTrue') {
+                      return Validators.required;
                     }
                     return null;
                   }).filter(Boolean);
@@ -4992,7 +6288,6 @@ export class YatraComponent {
       });
     }
   }
-
 
   onEmailClick(control: any) {
     let requestBody: any = {};
@@ -5045,8 +6340,8 @@ export class YatraComponent {
   onOtpClick(control: any) {
     console.log(this.formData);
     let sendOTPReqeustBody: any = {};
-    sendOTPReqeustBody.emailId = this.formData.mobileNumber,
-      sendOTPReqeustBody.mobileNumber =
+    sendOTPReqeustBody.emailId = "",
+      sendOTPReqeustBody.mobileNumber = this.formData.mobileNumber,
       sendOTPReqeustBody.name = "",
       sendOTPReqeustBody.agentCode = this.agentCode;
 
@@ -5101,8 +6396,6 @@ export class YatraComponent {
         console.error(error);
 
       });
-
-
   }
 
   skipOTP() {
@@ -5114,7 +6407,6 @@ export class YatraComponent {
       });
     });
   }
-
 
   verifyOTP(control: any) {
     if (!this.otpRequestId) {
@@ -5197,8 +6489,6 @@ export class YatraComponent {
       (error) => {
         console.log("err", error);
       });
-
-
   }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
@@ -5209,19 +6499,18 @@ export class YatraComponent {
     }
     return classes.trim();
   }
+
   async onSubmit(event?: any) {
     this.changesMade = false;
+    if (this.clickedRecalculate)
+      this.clickedRecalculate = false;
     console.log("dynamic form group", this.formData, this.familyPair, this.selectedFamilyMembers);
     console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
     const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
     const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
 
-    if (insuredMembers < 2 && policyType == 'Family Floater') {
-      this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
-      return;
-    }
     if (this.form.formTitle == 'Total Premium') {
-      if (this.formData.productName === 'Active Secure') {
+      if (this.formData.productName === 'Activ Secure') {
         console.log("Form data:", this.formData);
         const requiredCoverIds = ['CIL', 'CANC', 'ACCD']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
@@ -5234,7 +6523,7 @@ export class YatraComponent {
         }
       }
 
-      if (this.dynamicFormGroup.get('deductible')) {
+      if (this.dynamicFormGroup.get('deductible') && this.formData.productName.includes('Super Health Top Up')) {
         if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
           this.toast.warning({ detail: "Warning", summary: "Deductible Cover is mandatory", duration: 3000 });
           return;
@@ -5262,9 +6551,11 @@ export class YatraComponent {
                 }
                 if (addOnDetail.occupation && memberSelected) {
                   member.occupationCode = addOnDetail.occupation == '' ? addOnDetail.occupation : JSON.parse(addOnDetail.occupation).value;
+                  member.productMemberOccupation = addOnDetail.occupation;
                 }
                 if (addOnDetail.occupationRisk && memberSelected) {
                   member.natureOfDutyCode = addOnDetail.occupationRisk == '' ? addOnDetail.occupationRisk : JSON.parse(addOnDetail.occupationRisk).value;
+                  member.productMemberNatureWork = addOnDetail.occupationRisk
                 }
               })
             }
@@ -5319,344 +6610,371 @@ export class YatraComponent {
 
     }
 
-    if (this.formData.productName.includes('Activ Care')) {
+    if (this.formData.productName && this.formData.productName.includes('Activ Care')) {
       this.dynamicFormGroup.get('familyPair')?.setValue(this.familyPair);
       this.dynamicFormGroup.get('selectedFamilyPair')?.setValue(this.selectedFamilyPair);
     }
 
-    if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
-      this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
-      return;
-    }
-    else {
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
-        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.every((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
-        });
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: `All people are 55 years or older.`,
-                  duration: 3000
-                });
-              }
-            }
-          });
-          event.stopPropogation();
+    // if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
+    //   this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
+    //   return;
+    // }
+    // else {
 
-        }
-      }
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-        const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.some((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
-        });
-
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: 'At least one person is 55 years or older.',
-                  duration: 3000
-                });
-              }
-            }
-          });
-          //event.stopPropogation();
-        }
-      }
-      if (this.dynamicFormGroup.valid &&
-        (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
-
-        //   // Flatten the form data
-        if (this.dynamicFormGroup.get('insuredMemberDetails')) {
-          this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
-          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
-            element.memberIndex = index + 1;
-          });
-          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
-            if (member.relation == 'Self' && (this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
-              || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))) {
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
-              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
-            }
-          })
-        }
-        if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
-          this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
-        }
-        const proposalRequiredDetails = {
-          totalPremium: this.dynamicFormGroup.getRawValue().totalPremium,
-          proposalNumber: this.proposalNum,
-          covers: this.covers,
-          PEDWaitingPeriod: this.pedWaitingPeriod ?? ""
-        };
-
-        sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
-        const tempPremiumAmount = this.dynamicFormGroup.getRawValue().totalPremium;
-
-        this.dynamicFormGroup.get('totalPremium')?.setValue(tempPremiumAmount);
-        this.dynamicFormGroup.get('covers')?.setValue(this.covers);
-        this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-        this.dynamicFormGroup.get('tenure')?.setValue(this.formData.tenure);
-        this.dynamicFormGroup.get('quoteIdDetails')?.setValue(this.QuoteNumber);
-        this.dynamicFormGroup.get('quoteId')?.setValue(this.formData.quoteId);
-        this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
-
-
-        // (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((memberGroup:any,index: number)=>{
-        //   memberGroup.get('covers')?.setValue(this.covers[index]);
-        // })
-
-        // if(this.dynamicFormGroup.getRawValue().tenureAmount){
-        //   this.dynamicFormGroup.getRawValue().tenureAmount = this.tenureAmount;
-        // }
-        // if(this.dynamicFormGroup.getRawValue().displayTaxList){
-        //   this.dynamicFormGroup.getRawValue().displayTaxList = this.displayTaxList;
-        // }
-        // this.saveData = JSON.parse(JSON.stringify(this.dynamicFormGroup.getRawValue()));
-        // this.flattenObjectInsert(this.saveData);
-        if (this.form.formTitle == 'Total Premium' && this.covers) {
-          this.mappingCoversAccordingtoMember(this.form);
-        }
-
-        this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
-        console.log(this.formData);
-        if (
-          this.formData &&
-          (this.formData['sumInsured'] == null || this.formData['sumInsured'] === undefined) &&
-          Array.isArray(this.formData.insuredMemberDetails) &&
-          this.formData.insuredMemberDetails.length > 0 &&
-          this.formData.insuredMemberDetails[0].sumInsured != null
-        ) {
-          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
-          this.dynamicFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
-        }
-        if (this.form.formTitle.includes("Health & Lifestyle")) {
-          await this.mappingForQuestionnaire(this.form);
-        }
-
-        if (this.form.formTitle.includes("Leads")) {
-          this.formData.noOfChildrens = this.kidCount;
-        }
-        this.allJsonForm[this.getFormIndexValue()] = this.form;
-
-        // if (this.form.saveBtnFunction) {
-        //   await this.resolveMethod(this.form.saveBtnFunction);
-        // }
-        if (this.form.saveBtnFunction) {
-          // if (this.form.saveBtnFunction === 'uploadSelectedDocument') {
-          //   await this.uploadSelectedDocument();
-          // } else {
-          try {
-            await this.resolveMethod(this.form.saveBtnFunction);
-          } catch (error: any) {
-            console.error("Process stopped due to error:", error.message);
-            return;
-          }
-        }
-        sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
-
-        if (this.form.formTitle.includes("Total Premium")) {
-          sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
-          sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
-          sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
-          sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
-          sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
-          sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
-          sessionStorage.setItem('selectedIndex', this.encryptionService.encrypt(this.selectedIndex));
-
-          if (this.QuoteNumber.length > 0) {
-            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-          }
-
-        }
-
-
-        if (this.dynamicFormGroup.get('leadFirstName') && this.dynamicFormGroup.get('leadMiddleName') &&
-          this.dynamicFormGroup.get('leadLastName') && this.dynamicFormGroup.get('leadMobileNo') &&
-          this.dynamicFormGroup.get('leadEmailId') && this.dynamicFormGroup.get('generateLead')) {
-          for (let i = 0; i < this.formData.insuredMemberDetails.length; i++) {
-            let relation = JSON.parse(this.formData.insuredMemberDetails[i].relationshipType);
-            if (relation.value == 'Self') {
-              this.formData.insuredMemberDetails[i].memberType = this.formData.insuredMemberDetails[i].relationshipType;
-              this.formData.insuredMemberDetails[i].firstName = this.dynamicFormGroup.get('leadFirstName')?.value;
-              this.formData.insuredMemberDetails[i].middleName = this.dynamicFormGroup.get('leadMiddleName')?.value;
-              this.formData.insuredMemberDetails[i].lastName = this.dynamicFormGroup.get('leadLastName')?.value;
-              this.formData.insuredMemberDetails[i].mobileNumber = this.dynamicFormGroup.get('leadMobileNo')?.value;
-              this.formData.insuredMemberDetails[i].emailId = this.dynamicFormGroup.get('leadEmailId')?.value;
-            }
-          }
-        }
-
-        console.log(this.dynamicFormGroup.getRawValue());
-
-        //   // for Store Form Data in Database
-        let reqData = {
-          "proposalNum": this?.formData?.proposalNumber,
-          "partnerId": this.partnerId,
-          "agentCode": this.agentCode,
-          "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
-          "formName": this.formSequence[this.getFormIndexValue()].formName,
-          "formConfig": JSON.stringify(this.formSequence),
-          "productId": this.productId.toString(),
-          "formId": this.formSequence[this.getFormIndexValue()].formId,
-          "jsonForm": JSON.stringify(this.form),
-          "formSequence": this.getFormIndexValue(),
-          "leadNumber": this.leadnumber,
-          "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
-        };
-        await this.yatraService.Insertorupdateformdata(reqData).subscribe({
-          next: (res: any) => {
-            this.leadnumber = res.data;
-
-            // Call getFormDataFromFormSequence only after insert/update is completed
-            if (this.getFormIndexValue() < this.formSequence.length - 1) {
-              this.incrementIndex();
-              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-            }
-
-            if (this.isQuote) {
-              this.isQuote = false;
-              sessionStorage.setItem("isQuote", this.isQuote.toString());
-            }
-
-            this.quickQuoteRedirect = false;
-          },
-          error: (err) => {
-            console.error(err);
-          }
-        });
-
-      }
-      else {
-        console.log('Form is invalid', this.dynamicFormGroup);
-
-        let firstInvalidTabIndex: number | null = null;
-        if (this.dynamicFormGroup.get('insuredMemberDetails')) {
-          this.form.formSections.forEach(section => {
-            section.formControls.forEach(control => {
-              if (control.dynamicControls) {
-                control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
-                  const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
-                  if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
-                    firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
-                  }
-                })
-              }
-            })
-          })
-        }
-
-        Object.keys(this.dynamicFormGroup.controls).forEach(field => {
-          const control = this.dynamicFormGroup.get(field);
-          if (control instanceof FormArray) {
-            control.controls.forEach(arrayControl => {
-              if (arrayControl instanceof FormGroup) {
-                Object.keys(arrayControl.controls).forEach(nestedField => {
-                  const nestedControl = arrayControl.get(nestedField);
-                  if (nestedControl instanceof FormGroup) {
-                    nestedControl?.markAsDirty({ onlySelf: true });
-                    nestedControl?.markAsTouched({ onlySelf: true });
-                    Object.keys(nestedControl.controls).forEach((innerField) => {
-                      const innerControl = nestedControl.get(innerField);
-                      innerControl?.markAsTouched({ onlySelf: true });
-                    })
-                  } else if (nestedControl instanceof FormArray) {
-                    Object.keys(nestedControl.controls).forEach((innerField) => {
-                      const innerControl = nestedControl.get(innerField);
-
-                      if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
-                        // Recursively mark inner controls as touched
-                        this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
-                      } else {
-                        innerControl?.markAsTouched({ onlySelf: true });
-                      }
-                    });
-                  }
-
-                  else
-                    nestedControl?.markAsTouched({ onlySelf: true });
-                });
-              } else {
-                arrayControl?.markAsTouched({ onlySelf: true });
-              }
-            });
-          }
-          else if (control instanceof FormGroup) {
-            control?.markAsDirty({ onlySelf: true });
-            const controlKeys = Object.keys(control.controls);
-
-            if (controlKeys.length > 0) {
-              controlKeys.forEach(key => {
-                const innerControl = control.controls[key];
-                if (innerControl instanceof FormGroup) {
-                  Object.keys(innerControl.controls).forEach((innerField) => {
-                    const innControl = innerControl.get(innerField);
-                    innControl?.markAsTouched({ onlySelf: true });
-                  })
-                }
-                else {
-                  innerControl?.markAsDirty({ onlySelf: true });
-                }
+    if (this.getFormIndexValue() == 0 && this.formData.productName && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      const ageFlag = insuredMemberDetails.controls.every((person: any) => {
+        return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
+      });
+      if (!ageFlag) {
+        insuredMemberDetails.controls.forEach((control: any, i: number) => {
+          const memberdobControl = control.get('memberdob');
+          if (memberdobControl) {
+            const age = this.calculateAge(memberdobControl.value);
+            if (age > "55") {
+              memberdobControl.setErrors(null);
+            } else {
+              memberdobControl.setValue('');
+              memberdobControl.setErrors({ required: true });
+              this.toast.warning({
+                detail: 'Warning',
+                summary: `All people are 55 years or older.`,
+                duration: 3000
               });
             }
           }
-          else {
-            control?.markAsTouched({ onlySelf: true });
+        });
+        event.stopPropogation();
+
+      }
+    }
+    if (this.getFormIndexValue() == 0 && this.formData.productName && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      const ageFlag = insuredMemberDetails.controls.some((person: any) => {
+        return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
+      });
+
+      if (!ageFlag) {
+        insuredMemberDetails.controls.forEach((control: any, i: number) => {
+          const memberdobControl = control.get('memberdob');
+          if (memberdobControl) {
+            const age = this.calculateAge(memberdobControl.value);
+            if (age > "55") {
+              memberdobControl.setErrors(null);
+            } else {
+              memberdobControl.setValue('');
+              memberdobControl.setErrors({ required: true });
+              this.toast.warning({
+                detail: 'Warning',
+                summary: 'At least one person is 55 years or older.',
+                duration: 3000
+              });
+            }
           }
         });
-        if (this.dynamicFormGroup.invalid) {
-          this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+        //event.stopPropogation();
+      }
+    }
+    if ( this.formData.productName && this.formData.productName.startsWith("Activ Fit")) {
+      this.isDeclarartionDiscountVisible = false;
+    }
+    if (this.dynamicFormGroup.valid &&
+      (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
 
-          this.scrollToFirstInvalidField();
-
-          if (firstInvalidTabIndex !== null) {
-            // Navigate to the first invalid tab
-            this.activeMemberTabIndex = firstInvalidTabIndex;
-            // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
-          }
-        }
-        else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-          this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
+      if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
+        this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
+        return;
       }
 
+      if (insuredMembers < 2 && policyType == 'Family Floater') {
+        this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+        return;
+      }
+
+      //   // Flatten the form data
+      if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+        this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
+        this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
+          element.memberIndex = index + 1;
+        });
+        this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
+          if (member.relation == 'Self' && (this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
+            || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))) {
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
+          }
+        })
+      }
+      if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
+        this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+      }
+      const proposalRequiredDetails = {
+        totalPremium: this.dynamicFormGroup.getRawValue().totalPremium,
+        proposalNumber: this.proposalNum,
+        covers: this.covers,
+        PEDWaitingPeriod: this.pedWaitingPeriod ?? ""
+      };
+      console.log(proposalRequiredDetails);
+
+
+      sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
+      const tempPremiumAmount = this.dynamicFormGroup.getRawValue().totalPremium;
+
+      this.dynamicFormGroup.get('totalPremium')?.setValue(tempPremiumAmount);
+      this.dynamicFormGroup.get('covers')?.setValue(this.covers);
+      this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+      this.dynamicFormGroup.get('tenure')?.setValue(this.formData.tenure);
+      this.dynamicFormGroup.get('quoteIdDetails')?.setValue(this.QuoteNumber);
+      this.dynamicFormGroup.get('quoteId')?.setValue(this.formData.quoteId);
+      this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+
+
+      // (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((memberGroup:any,index: number)=>{
+      //   memberGroup.get('covers')?.setValue(this.covers[index]);
+      // })
+
+      // if(this.dynamicFormGroup.getRawValue().tenureAmount){
+      //   this.dynamicFormGroup.getRawValue().tenureAmount = this.tenureAmount;
+      // }
+      // if(this.dynamicFormGroup.getRawValue().displayTaxList){
+      //   this.dynamicFormGroup.getRawValue().displayTaxList = this.displayTaxList;
+      // }
+      // this.saveData = JSON.parse(JSON.stringify(this.dynamicFormGroup.getRawValue()));
+      // this.flattenObjectInsert(this.saveData);
+
+      this.proposerFullName = this.formData.middleName?.trim()
+              ? `${this.formData.firstName} ${this.formData.middleName} ${this.formData.lastName}`
+              : `${this.formData.firstName} ${this.formData.lastName}`;
+
+      this.dynamicFormGroup.get('proposerFullName')?.setValue(this.proposerFullName);
+
+      if (this.form.formTitle == 'Total Premium' && this.covers) {
+        this.mappingCoversAccordingtoMember(this.form);
+      }
+
+      this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
+      console.log(this.formData);
+      if (
+        this.formData &&
+        (this.formData['sumInsured'] == null || this.formData['sumInsured'] === undefined) &&
+        Array.isArray(this.formData.insuredMemberDetails) &&
+        this.formData.insuredMemberDetails.length > 0 &&
+        this.formData.insuredMemberDetails[0].sumInsured != null
+      ) {
+        this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        this.dynamicFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
+        // this.formData['sumInsuredForPlan'] = this.formData.insuredMemberDetails[0].sumInsuredForPlan;
+        // this.dynamicFormGroup.get('sumInsuredForPlan')?.setValue(this.formData.insuredMemberDetails[0].sumInsuredForPlan);
+      }
+      if (this.form.formTitle.includes("Health & Lifestyle")) {
+        const canProceed = await this.mappingForQuestionnaire(this.form);
+        if (!canProceed) {
+          return;
+        }
+      }
+
+
+      if (this.form.formTitle.includes("Leads")) {
+        this.formData.noOfChildrens = this.kidCount;
+      }
+      this.allJsonForm[this.getFormIndexValue()] = this.form;
+
+      // if (this.form.saveBtnFunction) {
+      //   await this.resolveMethod(this.form.saveBtnFunction);
+      // }
+      if (this.form.saveBtnFunction) {
+        // if (this.form.saveBtnFunction === 'uploadSelectedDocument') {
+        //   await this.uploadSelectedDocument();
+        // } else {
+        try {
+          await this.resolveMethod(this.form.saveBtnFunction);
+        } catch (error: any) {
+          console.error("Process stopped due to error:", error.message);
+          return;
+        }
+      }
+      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+      sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
+
+      if (this.form.formTitle.includes("Total Premium")) {
+        sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
+        sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
+        sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+        sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+        sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+        sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+        sessionStorage.setItem('selectedIndex', this.encryptionService.encrypt(this.selectedIndex));
+
+        if (this.QuoteNumber.length > 0) {
+          this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+        }
+      }
+
+      if (this.dynamicFormGroup.get('leadFirstName') && this.dynamicFormGroup.get('leadMiddleName') &&
+        this.dynamicFormGroup.get('leadLastName') && this.dynamicFormGroup.get('leadMobileNo') &&
+        this.dynamicFormGroup.get('leadEmailId') && this.dynamicFormGroup.get('generateLead')) {
+        for (let i = 0; i < this.formData.insuredMemberDetails.length; i++) {
+          let relation = JSON.parse(this.formData.insuredMemberDetails[i].relationshipType);
+          if (relation.value == 'Self') {
+            this.formData.insuredMemberDetails[i].memberType = this.formData.insuredMemberDetails[i].relationshipType;
+            this.formData.insuredMemberDetails[i].firstName = this.dynamicFormGroup.get('leadFirstName')?.value;
+            this.formData.insuredMemberDetails[i].middleName = this.dynamicFormGroup.get('leadMiddleName')?.value;
+            this.formData.insuredMemberDetails[i].lastName = this.dynamicFormGroup.get('leadLastName')?.value;
+            this.formData.insuredMemberDetails[i].mobileNumber = this.dynamicFormGroup.get('leadMobileNo')?.value;
+            this.formData.insuredMemberDetails[i].emailId = this.dynamicFormGroup.get('leadEmailId')?.value;
+          }
+        }
+      }
+
+      console.log(this.dynamicFormGroup.getRawValue());
+
+      //   // for Store Form Data in Database
+      let reqData = {
+        "proposalNum": this?.formData?.proposalNumber,
+        "partnerId": this.partnerId,
+        "agentCode": this.agentCode,
+        "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+        "formName": this.formSequence[this.getFormIndexValue()].formName,
+        "formConfig": JSON.stringify(this.formSequence),
+        "productId": this.productId.toString(),
+        "formId": this.formSequence[this.getFormIndexValue()].formId,
+        "jsonForm": JSON.stringify(this.form),
+        "formSequence": this.getFormIndexValue(),
+        "leadNumber": this.leadnumber,
+        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+      };
+      await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+        next: (res: any) => {
+          this.leadnumber = res.data;
+          if (this.form.formTitle.includes("Leads") && !this.popupAlreadyShown && this.leadnumber !== this.lastLeadId) {
+            this.isLeadCreatedSuccessfully = true;
+            this.lastLeadId = this.leadnumber; // Store the new Lead ID
+            console.log(this.lastLeadId);
+            this.popupAlreadyShown = true; // Mark pop-up as shown
+          }
+
+          // Call getFormDataFromFormSequence only after insert/update is completed
+          if (this.getFormIndexValue() < this.formSequence.length - 1) {
+            this.incrementIndex();
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+          }
+
+          if (this.isQuote) {
+            this.isQuote = false;
+            sessionStorage.setItem("isQuote", this.isQuote.toString());
+          }
+
+          this.quickQuoteRedirect = false;
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+
     }
-    if (this.form.formTitle == 'Health & Lifestyle') {
-      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+    else {
+      console.log('Form is invalid', this.dynamicFormGroup);
+
+      let firstInvalidTabIndex: number | null = null;
+      if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+        this.form.formSections.forEach(section => {
+          section.formControls.forEach(control => {
+            if (control.dynamicControls) {
+              control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
+                const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
+                if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
+                  firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
+                }
+              })
+            }
+          })
+        })
+      }
+
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                if (nestedControl instanceof FormGroup) {
+                  nestedControl?.markAsDirty({ onlySelf: true });
+                  nestedControl?.markAsTouched({ onlySelf: true });
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+                    innerControl?.markAsTouched({ onlySelf: true });
+                  })
+                } else if (nestedControl instanceof FormArray) {
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+
+                    if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
+                      // Recursively mark inner controls as touched
+                      this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
+                    } else {
+                      innerControl?.markAsTouched({ onlySelf: true });
+                    }
+                  });
+                }
+
+                else
+                  nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+          const controlKeys = Object.keys(control.controls);
+
+          if (controlKeys.length > 0) {
+            controlKeys.forEach(key => {
+              const innerControl = control.controls[key];
+              if (innerControl instanceof FormGroup) {
+                Object.keys(innerControl.controls).forEach((innerField) => {
+                  const innControl = innerControl.get(innerField);
+                  innControl?.markAsTouched({ onlySelf: true });
+                })
+              }
+              else {
+                innerControl?.markAsDirty({ onlySelf: true });
+              }
+            });
+          }
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
+        }
+      });
+      if (this.dynamicFormGroup.invalid) {
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+
+        this.scrollToFirstInvalidField();
+
+        if (firstInvalidTabIndex !== null) {
+          // Navigate to the first invalid tab
+          this.activeMemberTabIndex = firstInvalidTabIndex;
+          // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
+        }
+      }
+      else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
     }
-    if (this.form.formTitle == 'Policy Summary') {
-      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+
+    if (this.dynamicFormGroup.invalid && this.form.formTitle == 'Total Premium' && this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover === true) {
+      this.toast.warning({ detail: "Warning", summary: "Kindly fill the details for selected Additional Cover", duration: 5000 })
     }
 
     if (this.dynamicFormGroup.contains('agentId')) {
@@ -5667,8 +6985,8 @@ export class YatraComponent {
         console.log("Updated agentCode in localStorage:", selectedAgentId);
       }
     }
-
   }
+
   changeMainFormDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
     visibility: boolean,
@@ -5682,7 +7000,7 @@ export class YatraComponent {
       controlName,
       parentControlName,
       controlIndex,
-      innerControl);
+      innerControl,this.formData,this.dynamicFormGroup.getRawValue(),this.form);
 
     const tempIndex = this.activeMemberTabIndex;
     setTimeout(() => {
@@ -5838,14 +7156,15 @@ export class YatraComponent {
                   });
                   this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
                   this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
-                  if (control.name == 'zoneValue' && control.type == 'select') {
-                    control.options = this.formData.availableZones.map((zone: any) => ({
+                  if (control.name == 'zoneValue' && control.type == 'select' && this.formData.availableZones) {
+                    control.options = this.formData.availableZones?.map((zone: any) => ({
                       name: zone,
                       value: zone
                     }));
                   }
                 } else {
                   this.dynamicFormGroup.get(control.name)?.clearValidators();
+                  if(control.name != 'zoneValue')
                   this.dynamicFormGroup.get(control.name)?.reset();
                 }
               }
@@ -6525,12 +7844,11 @@ export class YatraComponent {
   //   // this.setPremiumAmount();
   // }
 
-
   async getPremiumAmount() {
+    let disableNext = false;
     if (this.changesMade) {
       this.changeRecalculate(false);
     }
-
     console.log(this.formData);
 
     if (this.isQuote === false) {
@@ -6574,9 +7892,12 @@ export class YatraComponent {
         });
 
 
-        this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        if (this.formData.insuredMemberDetails[0]?.sumInsured != null && this.formData.insuredMemberDetails[0].sumInsured !== "") {
+          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        }
         this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
         this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
+        this.formData['sumInsuredForPlan'] = this.formData.insuredMemberDetails[0].sumInsuredForPlan;
 
         if (this.formData.memberPolicyType === 'Family Floater') {
           const pincode = this.formData.memberPolicyType === 'Family Floater'
@@ -6592,6 +7913,7 @@ export class YatraComponent {
             member.pincode = pincode
             member.zone = zone;
             member.zoneValue = zoneValue;
+            member.sumInsured = this.formData['sumInsured'];
             if (deductibleAmount != '') {
               member.deductibleAmount = deductibleAmount;
             }
@@ -6624,7 +7946,32 @@ export class YatraComponent {
             this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
             this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
+            // if (this.tenureAmount[i - 1] == 0) {
+            //   disableNext = true;
+            // }
           }
+
+
+
+          // Apply custom product-based logic
+          if (this.formData.productName === 'Arogya Sanjeevani') {
+            // Only check 0th location
+            disableNext = this.tenureAmount[0] === 0;
+          } else if (this.formData.productName.includes('Activ Care')) {
+            // Skip checking the 2nd index (index 1 in array)
+            disableNext = this.tenureAmount[0] === 0 || this.tenureAmount[1] === 0;
+            console.log(this.tenureAmount, disableNext);
+
+          }
+          else {
+            disableNext = this.tenureAmount.some(amount => amount === 0);
+          }
+
+
+          if (this.formData.productType != 'AS') {
+            this.disableFormControl(this.form, disableNext == true ? true : false);
+          }
+
 
           this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
           if (this.form.formTitle === 'Leads') {
@@ -6638,8 +7985,8 @@ export class YatraComponent {
             this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
 
           }
-
-          sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+          if (!this.clickedRecalculate)
+            sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
 
           // After setting tenureAmount and discountList, call setPremiumAmount()
           this.setPremiumAmount();
@@ -6653,7 +8000,6 @@ export class YatraComponent {
       }
     }
   }
-
 
   flattenObjectInsert(obj: any, prefix = '') {
     if (Array.isArray(obj)) {
@@ -6737,21 +8083,25 @@ export class YatraComponent {
             // formGroup?.get(key2)?.setValue(value[key2]);
             // }
             else if (formGroup?.get(key2) instanceof FormGroup) {
-              Object.keys(value[key2]).forEach((member: any) => {
-                if (formGroup?.get(key2)?.get(member) instanceof FormArray) {
-                  const addOnMemberDetails = formGroup?.get(key2)?.get(member) as FormArray;
-                  addOnMemberDetails.controls.forEach((control, index) => {
-                    // Set value only if the index exists in newValues
-                    if (value[key2][member][index]) {
-                      control.patchValue(value[key2][member][index]);
-                    }
-                  });
-                }
-                else {
-                  formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
-                }
+              console.log(key2, value[key2]);
+              if (value[key2]) {
+                Object.keys(value[key2]).forEach((member: any) => {
+                  if (formGroup?.get(key2)?.get(member) instanceof FormArray) {
+                    const addOnMemberDetails = formGroup?.get(key2)?.get(member) as FormArray;
+                    addOnMemberDetails.controls.forEach((control, index) => {
+                      // Set value only if the index exists in newValues
+                      if (value[key2][member][index]) {
+                        control.patchValue(value[key2][member][index]);
+                      }
+                    });
+                  }
+                  else {
+                    formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
+                  }
 
-              })
+                })
+              }
+
             }
             else {
               formGroup?.get(key2)?.setValue(value[key2]);
@@ -6770,7 +8120,6 @@ export class YatraComponent {
       }
     });
   }
-
 
   async fullQuotation(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -6853,12 +8202,7 @@ export class YatraComponent {
     });
   }
 
-
-
-
-
   /* AddOn Related Method */
-
   onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null, innerControl: any = null, indexj: number | null = null) {
     this.changesMade = true;
     if (parentControl.type === 'chronicquestionnaire') {
@@ -6952,7 +8296,10 @@ export class YatraComponent {
                     this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
                   }
                   else {
-                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                    if ((parentControl.name == 'comaBenefits' || parentControl.name == 'adventureSports' || parentControl.name == 'accidentPatienthospitalization' || parentControl.name == 'brokenBonesBenefit') && this.formData.productName == 'Activ Secure') { }
+                    else {
+                      this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                    }
                   }
                 }
               }
@@ -7013,7 +8360,7 @@ export class YatraComponent {
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
     }
 
-    if (this.formData.productName == 'Active Secure') {
+    if (this.formData.productName == 'Activ Secure') {
       if (parentControl.name == 'cancerSecure') {
         this.form.formSections.forEach((section: any) => {
           if (section.sectionTitle === "Optional Covers") {
@@ -7042,10 +8389,16 @@ export class YatraComponent {
             });
           }
         });
-      } else if (parentControl.name == 'accident') {
+      } else if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus') {
         this.form.formSections.forEach((section: any) => {
           if (section.sectionTitle === "Optional Covers") {
             section.formControls.forEach((formControl: any) => {
+              if (parentControl.name == 'accident' && formControl.name == 'accidentPlus') {
+                formControl.visible = true;
+              }
+              if (parentControl.name == 'accidentPlus' && formControl.name == 'accident') {
+                formControl.visible = true;
+              }
               if (formControl.name == 'accidentPatienthospitalization' || formControl.name == 'temporaryTotalDisablementBenefit'
                 || formControl.name == 'brokenBonesBenefit' || formControl.name == 'burnBenefit' || formControl.name == 'adventureSports'
                 || formControl.name == 'medicalExpenses' || formControl.name == 'emergencyAssistance' || formControl.name == 'emiProtect'
@@ -7062,6 +8415,7 @@ export class YatraComponent {
       }
     }
   }
+
 
   // addOnAdded(control: any, parentControl: any = null) {
 
@@ -7138,15 +8492,11 @@ export class YatraComponent {
 
   // }
 
-
-
-
-
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.getRawValue();
     console.log(addOnData);
-    
+
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
@@ -7155,6 +8505,7 @@ export class YatraComponent {
             let addOnSumInsured: any = 0;
             let weeklyCashLimit: any;
             let noOfDays: any;
+            let plan: any;
             if (parentControl.name == 'deductible') {
               addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
                 if (addOnDetail.addOnSumInsured) {
@@ -7183,6 +8534,8 @@ export class YatraComponent {
                 }
                 else if (addOnDetail.noOfDays) {
                   noOfDays = addOnDetail.noOfDays
+                } else if (addOnDetail.plan) {
+                  plan = addOnDetail.plan
                 }
                 if (coverName.includes('Personal Accident') && addOnDetail.occupation) {
                   member.occupationCode = JSON.parse(addOnDetail.occupation).value;
@@ -7204,6 +8557,7 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  plan: plan,
                   weeklyCashLimit: weeklyCashLimit,
                   noOfDays: noOfDays,
                 });
@@ -7221,6 +8575,7 @@ export class YatraComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  plan: plan,
                   weeklyCashLimit: weeklyCashLimit,
                   noOfDays: noOfDays,
                 });
@@ -7262,86 +8617,6 @@ export class YatraComponent {
               console.log(member);
 
             }
-            if (this.formData.productName == 'Active Secure') {
-              if (parentControl.name == 'cancerSecure') {
-                this.form.formSections.forEach((section: any) => {
-                  if (section.sectionTitle === "Optional Covers") {
-                    section.formControls.forEach((formControl: any) => {
-                      if (formControl.name == 'csSecondOpinion') {
-                        formControl.visible = true
-                      }
-                    });
-                  }
-                });
-              } else if (parentControl.name == 'criticalIllness') {
-                this.form.formSections.forEach((section: any) => {
-                  if (section.sectionTitle === "Optional Covers") {
-                    section.formControls.forEach((formControl: any) => {
-                      if (formControl.name == 'ciSecondOpinion') {
-                        formControl.visible = true
-                      }
-                    });
-                  }
-                });
-              } else if (parentControl.name == 'accident') {
-                this.form.formSections.forEach((section: any) => {
-                  if (section.sectionTitle === "Optional Covers") {
-                    section.formControls.forEach((formControl: any) => {
-                      if ([
-                        'accidentPatienthospitalization', 'temporaryTotalDisablementBenefit', 'brokenBonesBenefit',
-                        'burnBenefit', 'adventureSports', 'medicalExpenses', 'emergencyAssistance',
-                        'emiProtect', 'loanProtect', 'comaBenefits'
-                      ].includes(formControl.name)) {
-                        formControl.visible = true;
-                      }
-
-                      if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
-                        if (formControl.subControls) {
-                          formControl.subControls.forEach((subControl: any) => {
-                            if (subControl.innerSubControls) {
-                              subControl.innerSubControls.forEach((innerSubControl: any) => {
-                                if (innerSubControl.coreControls) {
-                                  innerSubControl.coreControls.forEach((coreControl: any, index: any) => {
-                                    if (coreControl.name == 'addOnSumInsured') {
-
-                                      const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
-                                      const controlGroup = parentGroup?.controls[control.name] as FormGroup;
-
-                                      if (innerSubControl.name !== "demoType" && innerSubControl.name !== "doneButton") {
-                                        const innerSubGroup = controlGroup?.controls[innerSubControl.name] as FormArray;
-                                        const targetFormGroup = innerSubGroup?.controls[index] as FormGroup;
-                                        const coreControls = targetFormGroup?.controls[coreControl.name] as FormControl;
-                                        if (coreControls) {
-                                          let member = this.formData.insuredMemberDetails.find((m: any) =>
-                                            m.covers.some((c: any) => c.coverId === 'ACCD' && m.relation === innerSubControl.name)
-                                          );
-                                          if (member) {
-                                            let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
-
-                                            if (accdCover && accdCover.value !== undefined) {
-                                              coreControls.setValue(1000000 >= accdCover.value ? accdCover.value : 1000000);
-                                            } else {
-                                              coreControls.setValue("");
-                                            }
-                                          } else {
-                                            coreControls.setValue("");
-                                          }
-                                        }
-                                      }
-                                    }
-                                  });
-                                }
-                              });
-                            }
-                          });
-                        }
-                      }
-
-                    });
-                  }
-                });
-              }
-            }
           }
         });
       } else if (addOnData.addOnDetails[key][0].memberCheckbox === false) {
@@ -7360,190 +8635,201 @@ export class YatraComponent {
         });
       }
     });
+
+    let selectedAddOn = parentControl.name;
+    console.log(selectedAddOn)
+    let isChecked = addOnData.addOnDetails
+      ? Object.values(addOnData.addOnDetails).some((members: any) =>
+        members.some((member: any) => member.memberCheckbox === true)
+      )
+      : false;
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        // Reset visibility for all add-ons when unchecking
+        if (!isChecked) {
+          formControl.visible = true;
+        }
+      });
+    });
+
+    console.log(isChecked);
+
+    if (isChecked) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          // Health Booster Section
+          if (section.sectionTitle === "Health Booster" || section.sectionTitle === "Optional Covers") {
+            if (selectedAddOn === "coPayment") {
+              if (["perClaim", "aggregateDeduct", "unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "perClaim") {
+              if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "unLimitedCare") {
+              if (["subLimits", "aggregateDeduct", "coPayment", "geographicalEmergency"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "aggregateDeduct") {
+              if (["perClaim", "unLimitedCare", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "subLimits") {
+              if (["unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "waiverCopay") {
+              if (["coPayment", "aggregateDeduct"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+          }
+
+          // Optional Covers Section
+          if (section.sectionTitle === "Optional Covers" || section.sectionTitle === "Health Booster") {
+            if (selectedAddOn === "geographicalEmergency") {
+              if (["unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "perClaim") {
+              if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+          }
+        });
+      });
+    }
+
+    if (this.formData.productName == 'Activ Secure') {
+      if (parentControl.name == 'cancerSecure') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'csSecondOpinion') {
+                formControl.visible = true
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'criticalIllness') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'ciSecondOpinion') {
+                formControl.visible = true
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (parentControl.name == 'accident' && formControl.name == 'accidentPlus') {
+                formControl.visible = false;
+              }
+              if (parentControl.name == 'accidentPlus' && formControl.name == 'accident') {
+                formControl.visible = false;
+              }
+              if ([
+                'accidentPatienthospitalization', 'temporaryTotalDisablementBenefit', 'brokenBonesBenefit',
+                'burnBenefit', 'adventureSports', 'medicalExpenses', 'emergencyAssistance',
+                'emiProtect', 'loanProtect', 'comaBenefits'
+              ].includes(formControl.name)) {
+                formControl.visible = true;
+                if (formControl.methodName) {
+                  this.resolveMethod(formControl.methodName, formControl, parentControl);
+                }
+              }
+              if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports' || formControl.name == 'brokenBonesBenefit' || formControl.name == 'medicalExpenses') {
+                if (formControl.subControls) {
+                  formControl.subControls.forEach((subControl: any) => {
+                    if (subControl.innerSubControls) {
+                      subControl.innerSubControls.forEach((innerSubControl: any) => {
+                        if (innerSubControl.coreControls) {
+                          innerSubControl.coreControls.forEach((coreControl: any, index: any) => {
+                            if (coreControl.name == 'addOnSumInsured') {
+                              const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
+                              const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+
+                              if (innerSubControl.name !== "demoType" && innerSubControl.name !== "doneButton") {
+                                const innerSubGroup = controlGroup?.controls[innerSubControl.name] as FormArray;
+                                const targetFormGroup = innerSubGroup?.controls[index] as FormGroup;
+                                const coreControls = targetFormGroup?.controls[coreControl.name] as FormControl;
+                                if (coreControls) {
+                                  let member = this.formData.insuredMemberDetails.find((m: any) =>
+                                    m.covers.some((c: any) => c.coverId === 'ACCD' && m.relation === innerSubControl.name)
+                                  );
+                                  if (member) {
+                                    let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
+                                    if (accdCover && accdCover.value !== undefined) {
+                                      if (parentControl.name == 'accidentPlus' && formControl.name == 'brokenBonesBenefit') {
+                                        let coverValue = accdCover.value;
+                                        let planDetails = JSON.parse(accdCover.plan);
+                                        let planName = planDetails.name;
+                                        coreControls.disable();
+                                        if (planName === 'P4') {
+                                          if (coverValue >= 500000 && coverValue <= 2500000) {
+                                            coreControls.setValue(100000);
+                                          } else if (coverValue >= 3000000 && coverValue <= 5000000) {
+                                            coreControls.setValue(300000);
+                                          } else if (coverValue >= 10000000 && coverValue <= 100000000) {
+                                            coreControls.setValue(500000);
+                                          }
+                                        } else if (planName === 'P5') {
+                                          if (coverValue >= 1000000 && coverValue <= 2000000) {
+                                            coreControls.setValue(100000);
+                                          } else if (coverValue >= 2500000 && coverValue <= 5000000) {
+                                            coreControls.setValue(300000);
+                                          } else if (coverValue >= 10000000 && coverValue <= 200000000) {
+                                            coreControls.setValue(500000);
+                                          }
+                                        }
+                                      }
+                                      else if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
+                                        coreControls.setValue(accdCover.value >= 1000000 ? 1000000 : accdCover.value);
+                                      } else if (formControl.name == 'medicalExpenses') {
+                                        coreControls.setValue(accdCover.value >= 10000000 ? 50000 : accdCover.value * 0.008);
+                                      }
+                                    } else {
+                                      coreControls.setValue("");
+                                    }
+                                  } else {
+                                    coreControls.setValue("");
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
+    }
   }
-
-
-  // addOnRemoved(control: any, parentControl: any) {
-
-
-  //   let reqData: {
-  //     productType: any;
-  //     overAllSIAge: number[];
-  //     totalPremium: number[][];
-  //     valueUnit: any[];
-  //     yearlyDiscount: number[];
-  //     zoneDiscount: number;
-  //     memberDiscount: number;
-  //     addOnList: any[];
-  //   };
-
-  //   var overAllSIAge: number[] = [];
-  //   var valueUnit: any[] = [];
-
-
-  //   this.formData['insuredMemberDetails'].forEach((member: any) => {
-  //     overAllSIAge.push(parseInt(member.memberAge));
-  //     valueUnit.push(null);
-  //   });
-
-
-  //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
-
-  //   const indexToRemove = this.addOnList.findIndex((addOn: any) => addOn.optionalId === addOnData.addOnId);
-
-  //   if (addOnData.addOnId === 'AHPA' && indexToRemove !== -1) {
-  //     this.isAHPAAdded = false;
-  //     this.AHPARiskValue = '';
-  //   }
-
-  //   if (indexToRemove !== -1) {
-  //     this.addOnList.splice(indexToRemove, 1);
-  //   }
-
-
-  //   reqData = {
-  //     productType: this.formData['productType'],
-  //     overAllSIAge: overAllSIAge,
-  //     totalPremium: this.premiumAmountDetails,
-  //     valueUnit: valueUnit,
-  //     yearlyDiscount: [0, 7.5, 10],
-  //     zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' || this.formData.productType == 'GHS' ? 0 : 9,
-  //     memberDiscount: 0,
-  //     addOnList: this.addOnList
-  //   };
-
-  //   if (this.formData['numberOfInsuredMembers'] > 1) {
-  //     reqData.memberDiscount = 5;
-  //   }
-
-
-
-  //   this.yatraService.getAddOnPremium(reqData).pipe(
-  //     // 1. Step: First process the API response
-  //     tap((response:any) => {
-
-  //       // Update tenure amounts
-  //       for (let i = 0; i < response.calculatedValuesList.length; i++) {
-  //         this.tenureAmount[i] = Math.round(response.calculatedValuesList[i]);
-  //       }
-
-  //       // Set other lists
-  //       this.taxList = response.taxList;
-  //       this.netPremiumList = response.netPremiumList;
-  //       this.totalPremiumList = response.totalPremiumList;
-  //       this.indPremiumList = response.indPremiumList;
-  //       this.addOnPremiumValueList = response.totalPremiumValue;
-
-  //       // Set discount values
-  //       const roundedDiscountValues = response.discountValueList.map((value: number) => Math.round(value));
-  //     }),
-  //     // 2. Step: Process the form controls after updating the tenureAmount
-  //     tap(() => {
-  //       this.form.formSections.forEach((section: any) => {
-  //         section.formControls.forEach((formControl: any) => {
-  //           if (formControl.name === 'totalPremium' && formControl.radioOptions) {
-  //             formControl.radioOptions.forEach((option: any, index: number) => {
-  //               const tenureAmount = this.tenureAmount[index];
-  //               option.label = `<b>Rs - ${tenureAmount}</b>`;
-  //               option.value = tenureAmount;
-
-  //               if (index === 0) {
-  //                 option.year = '1 year';
-  //               } else if (index === 1) {
-  //                 option.year = '2 years';
-  //                 option.discount = '7.5% off';
-  //               } else if (index === 2) {
-  //                 option.year = '3 years';
-  //                 option.discount = '10% off';
-  //               }
-
-  //               if (index === this.selectedIndex) {
-  //                 this.dynamicFormGroup.getRawValue().totalPremium = tenureAmount;
-  //               }
-  //             });
-  //           }
-  //         });
-  //       });
-  //     }),
-  //     // 3. Step: Process the add-on data
-  //     concatMap(() => {
-  //       let index = 0; // Initialize the index variable
-  //       const addOnProcessing = Object.keys(addOnData).map((key: string) => {
-  //         if (Array.isArray(addOnData[key])) {
-  //           const addOnDataArray = addOnData[key].at(0);
-  //           if (addOnDataArray.hasOwnProperty('addOnSumInsured')) {
-  //             let reqData = {
-  //               "optionalId": addOnData.addOnId,
-  //               "si": addOnDataArray.addOnSumInsured,
-  //               "optionalCoverName": addOnData.optionalCoverName,
-  //               "optionalCoverValue": addOnData.optionalCoverValue,
-  //               "premium": 0,
-  //               "riskClass": ""
-  //             };
-
-  //             if (addOnData.addOnId === 'AHPA') {
-  //               this.isAHPAAdded = true;
-  //               const occupationRisk = JSON.parse(addOnDataArray.occupationRisk);
-  //               this.AHPARiskValue = occupationRisk['value'];
-  //               reqData = { ...reqData, riskClass: occupationRisk['value'] };
-  //             }
-
-  //             if (this.selectedIndex !== -1) {
-  //               const addOnIndex = this.addOnList.findIndex((addOn: any) => addOn.optionalId === addOnData.addOnId);
-  //               reqData.premium = this.addOnPremiumValueList[addOnIndex][index][this.selectedIndex];
-  //             }
-
-  //             if (this.addOnDetails[index]) {
-  //               this.addOnDetails[index].push(reqData);
-  //             }
-
-  //             index++;
-  //           }
-  //         }
-  //         return of(null); // Map to observable
-  //       });
-  //       return of(...addOnProcessing); // Return observables as a pipeline
-  //     }),
-  //     // 4. Step: Finalize AHPA if it's added
-  //     tap(() => {
-  //       if (this.isAHPAAdded) {
-  //         this.addOnDetails.forEach((member: any) => {
-  //           member.forEach((addOn: any) => {
-  //             addOn.riskClass = this.AHPARiskValue;
-  //           });
-  //         });
-  //       }
-  //     })
-  //   ).subscribe({
-  //     next: () => {
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //     }
-  //   });
-  // }
-  // addOnRemoved(control: any, parentControl: any = null) {
-  //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
-
-  //   let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
-
-  //   // Iterate over each member and remove the specified add-on from the covers
-  //   modifiedInsuredMemberDetails.forEach((member: any) => {
-  //     // Get the coverId (addOnId) to be removed
-  //     const coverId = addOnData.addOnId;
-
-  //     // Remove the add-on from the covers array by filtering it out
-  //     member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
-  //   });
-
-  //   // Call the getPremiumAmount method after removing the add-on
-  //   // this.getPremiumAmount();
-  // }
 
   //New Remove addOn
   addOnRemoved(control: any, parentControl: any = null) {
+    console.log(control, parentControl)
     let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    console.log(addOnData)
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+    console.log(modifiedInsuredMemberDetails)
 
     // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
     modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
@@ -7560,46 +8846,56 @@ export class YatraComponent {
       }
     });
 
+    console.log(control.value)
+
+    if (control.value === false) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (section.sectionTitle === "Health Booster" || section.sectionTitle === "Optional Covers") {
+            switch (control.label) {
+              case "Co-Payment":
+                if (["perClaim", "aggregateDeduct", "unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Per Claim Deductible Cover":
+                if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Unlimited Care":
+                if (["subLimits", "aggregateDeduct", "coPayment", "geographicalEmergency"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Aggregate Deductible":
+                if (["perClaim", "unLimitedCare", "coPayment"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Sub-Limits":
+                if (["unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Waiver of Co pay":
+                if (["coPayment", "aggregateDeduct"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Geographical extension to include USA and Canada for Global Cover (Emergency Only)":
+                if (["unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+            }
+          }
+        });
+      });
+    }
     // Call getPremiumAmount after removing the add-on if needed
     // this.getPremiumAmount();
   }
-
-  // addOnRemoved(control: any, parentControl: any = null) {
-  //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
-  //   let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
-
-  //   // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
-  //   Object.keys(addOnData.addOnDetails).forEach((key) => {
-  //     if (!addOnData.addOnDetails[key][0].memberCheckbox) {
-  //       modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
-  //         if (member.relation === key) {
-  //           const coverId = addOnData.addOnId;
-
-  //           if (parentControl.name === 'deductible') {
-  //             // Remove deductible-specific properties
-
-  //           } else {
-  //             // Remove the add-on from the covers array of insuredMemberDetails
-  //             if (member.covers) {
-  //               member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
-  //             }
-
-  //             // Synchronize the change in the local covers variable
-  //             if (this.covers[index]) {
-  //               this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
-  //             }
-  //           }
-  //         }
-  //       });
-  //     }
-  //   });
-
-  //   // Call getPremiumAmount after removing the add-on if needed
-  //   // this.getPremiumAmount();
-  // }
-
-
-
 
   calculatePremiumPerype(insuredMembers: any): String {
     var premiumPerype = "";
@@ -7757,7 +9053,7 @@ export class YatraComponent {
                   // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
                   this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
                 }
-                else if (this.formData.productName === 'Active Secure' && this.dynamicFormGroup.getRawValue().totalPremium == null) {
+                else if (this.formData.productName === 'Activ Secure' && this.dynamicFormGroup.getRawValue().totalPremium == null) {
                   this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
                 }
                 // Update additional data
@@ -7776,6 +9072,9 @@ export class YatraComponent {
             this.dynamicFormGroup.get(formControl.name)?.setValue(this.tenureAmount[this.selectedIndex]);
           }
         }
+        else if (formControl.name == 'hlthMeter') {
+          formControl.visible = this.selectedIndex == 0 ? true : false;
+        }
       });
     });
   }
@@ -7786,6 +9085,7 @@ export class YatraComponent {
     );
     control.value = a;
   }
+
   displaySelectedAddons(control: any) {
     const coverNames: string[] = [];
     for (const key in this.formData) {
@@ -7816,6 +9116,7 @@ export class YatraComponent {
   isSectionCollapsed(sectionTitle: string): boolean {
     return !!this.collapsedSections[sectionTitle];
   }
+
   generateHeader(control: any, i: any) {
     const imagePath = JSON.parse(this.formData[control.name][i - 1].relationshipType)?.imagePath;
     return imagePath;
@@ -7824,13 +9125,12 @@ export class YatraComponent {
   addOnMemberAdded(subControl: any, parentControl: any = null) {
     if (parentControl != null) {
       let count = 0;
-      let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
+      let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.getRawValue();
       console.log(memberDetails);
       Object.keys(memberDetails).forEach(key => {
         let memberArray = memberDetails[key];
         // Check if memberCheckbox is false for any member and set other fields to empty
         let memberCheckbox = memberArray.find((member: any) => member.memberCheckbox === false);
-
         if (memberCheckbox) {
           memberArray.forEach((member: any) => {
             if (!member.memberCheckbox) {
@@ -7846,7 +9146,6 @@ export class YatraComponent {
                   if (memberFormGroupControl) {
                     memberFormGroupControl.setValue('');
                   }
-
                 }
               });
             }
@@ -7885,23 +9184,23 @@ export class YatraComponent {
 
                             let memberFormGroupControl = memberFormGroup.get(coreControl.name);
                             if (memberFormGroupControl?.value == '' && coreControl.type == 'text' && coreControl.name == 'addOnSumInsured') {
-                              console.log(innerSubControl,coreControl,this.formData);
+                              console.log(innerSubControl, coreControl, this.formData);
                               if (this.formData.memberPolicyType == 'Multi Individual') {
                                 // Find the insured member who matches the relation in innerSubControl.name
                                 const insuredMember = this.formData.insuredMemberDetails.find(
-                                    (member: any) => member.relation === innerSubControl.name
+                                  (member: any) => member.relation === innerSubControl.name
                                 );
-                            
+
                                 // If a matching insured member is found, set the sumInsured to memberFormGroupControl
                                 if (insuredMember) {
-                                    memberFormGroupControl.setValue(insuredMember.sumInsured);
+                                  memberFormGroupControl.setValue(insuredMember.sumInsured);
                                 }
-                            } else {
+                              } else {
                                 // If not Multi Individual, set the sumInsured from formData directly
                                 memberFormGroupControl.setValue(this.formData.sumInsured);
-                            }
-                            
-                              
+                              }
+
+
                             }
                             else if (memberFormGroupControl?.value == '') {
 
@@ -7948,9 +9247,9 @@ export class YatraComponent {
         else {
           control.controls[firstKey].setValue(true);
           this.changeOverLayDone(subControl, parentControl, true);
-          this.changeRecalculate(true);
           this.addOnAdded(subControl, parentControl);
         }
+        this.changeRecalculate(true);
       }
 
     }
@@ -7969,8 +9268,9 @@ export class YatraComponent {
       subControl.visible = false;
     }
   }
+
   closePopUp(control: any = null) {
-    if (this.dynamicFormGroup.get(control.name)?.invalid) {
+    if (control != null && this.dynamicFormGroup.get(control.name)?.invalid) {
       let dynamicControl = this.dynamicFormGroup.get(control.name);
       this.traverseFormGroup(dynamicControl as FormGroup);
       if (dynamicControl instanceof FormGroup) {
@@ -8029,9 +9329,11 @@ export class YatraComponent {
     })
     this.openPopUp();
   }
+
   openPopUp() {
     this.isOverlayVisible = true;
   }
+
   verifyKYC(control: any) {
     const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
     const panNumber = this.dynamicFormGroup.get('panNo')?.value;
@@ -8173,31 +9475,151 @@ export class YatraComponent {
     };
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
-        this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
-        this.spinner.hide();
-        control.disabled = true;
-        this.isPolicyDetailsFetch = true;
-        if (response.data['insuredMemberDetails'].length > 0) {
-          this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
-          const insuredMembers: { [key: string]: boolean } = {};
+        if (response.isSuccess) {
+          console.log(response.data.idProof.dependentControls);
+          this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
+          this.spinner.hide();
+          control.disabled = true;
+          this.isPolicyDetailsFetch = true;
+          if (response.data['insuredMemberDetails'].length > 0) {
+            this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
+            const insuredMembers: { [key: string]: boolean } = {};
 
-          response.data['insuredMemberDetails'].forEach((member: any) => {
-            insuredMembers[member.relation] = true; // Set as true
+            response.data['insuredMemberDetails'].forEach((member: any) => {
+              insuredMembers[member.relation] = true; // Set as true
+            });
+
+            this.formData['insuredMembers'] = insuredMembers;
+          }
+          if (response.data.idProof) {
+            try {
+              const idProofObj = JSON.parse(response.data.idProof);
+              console.log(idProofObj);
+              if (idProofObj.dependentControls) {
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    idProofObj.dependentControls.forEach((depControl: any) => {
+                      if (control.name === depControl.name) {
+                        control.visible = depControl.visibility;
+                        this.onInputChange(null, control);
+                      }
+                    });
+                  });
+                });
+              } else {
+                console.warn('dependentControls is missing in idProof.');
+              }
+            } catch (error) {
+              console.error('Error parsing idProof:', error);
+            }
+          }
+          if (response.data.gstDetails) {
+            try {
+              const gstDetailsObj = JSON.parse(response.data.gstDetails); // Parse JSON string
+              console.log("Parsed gstDetails:", gstDetailsObj);
+
+              const gstValue = gstDetailsObj.value; // Extract the GST value from parsed object
+
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name === "gstDetails" && control.options) {
+                    // Set options based on response directly
+                    control.options.forEach((option: { value: string; selected: boolean }) => {
+                      option.selected = option.value === gstValue;
+                    });
+
+                    control.value = gstValue; // Set the selected value in form
+
+                    // Update dependent controls visibility
+                    const selectedOption = control.options.find(
+                      (opt: { selected: boolean }) => opt.selected
+                    );
+
+                    selectedOption?.dependentControls.forEach(
+                      (depControl: { name: string; visibility: boolean }) => {
+                        const depField = section.formControls.find(
+                          (ctrl: { name: string }) => ctrl.name === depControl.name
+                        );
+
+                        if (depField) {
+                          depField.visible = depControl.visibility;
+                          this.onInputChange(null, depField);
+                        }
+                      }
+                    );
+                  }
+                });
+              });
+            } catch (error) {
+              console.error("Error parsing gstDetails:", error);
+            }
+          }
+          console.log(this.dynamicFormGroup.getRawValue(), response.data);
+
+          Object.keys(response.data).forEach((key: string) => {
+            const setPolicyDetails = this.dynamicFormGroup.get(key)
+            if (!(setPolicyDetails instanceof FormGroup)) {
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+            }
+            if (response.data.insuredMemberDetails && Array.isArray(response.data.insuredMemberDetails)) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.name === 'zoneValue') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableZones || [];
+                    }
+                    formControl.value = response.data.zoneValue || '';
+                  }
+                  if (formControl.name === 'sumInsured') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableSumInsured || [];
+                    }
+                    formControl.value = response.data.sumInsured || '';
+                  }
+                });
+
+                // 🔹 **Handle Sum Insured & Zone Value Inside Dynamic Controls**
+                if (section.sectionTitle === 'Insured Member Details') {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name === 'insuredMemberDetails' && Array.isArray(formControl.dynamicControls)) {
+                      formControl.dynamicControls.forEach((controlRow: any[]) => {
+                        controlRow.forEach((control: any) => {
+                          response.data.insuredMemberDetails.forEach((member: any) => {
+                            if (control.name === 'zoneValue') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableZones || [];
+                              }
+                              control.value = member.zoneValue || '';
+                            }
+                            if (control.name === 'sumInsured') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableSumInsured || [];
+                              }
+                              control.value = member.sumInsured || '';
+                            }
+                          });
+                        });
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            if (key == 'memberPolicyType') {
+              this.form.formSections.forEach((section: any) => {
+                const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
+                if (targetControl) {
+                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
+                }
+              });
+            }
           });
 
-          this.formData['insuredMembers'] = insuredMembers;
+
+
+        } else {
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
-        Object.keys(response.data).forEach((key: string) => {
-          this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
-          if (key == 'memberPolicyType') {
-            this.form.formSections.forEach((section: any) => {
-              const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
-              if (targetControl) {
-                this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
-              }
-            });
-          }
-        })
       },
       error: (error) => {
         this.spinner.hide();
@@ -8207,7 +9629,6 @@ export class YatraComponent {
     });
   }
 
-
   addDiseaseList(subControl?: any, control?: any) {
     if (this.isOverlayVisible) {
       this.isOverlayVisible = false;
@@ -8216,6 +9637,7 @@ export class YatraComponent {
       this.isOverlayVisible = true;
     }
   }
+
   addNewDisease(subControl: any, control: any) {
     // if (subControl.innerArrayControl.length < 2) {
     //   const innerarrayControl = subControl.innerArrayControl[0]
@@ -8269,11 +9691,15 @@ export class YatraComponent {
   }
 
   copyText(control: any) {
-    this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
+    if (control.name) {
+      this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
+    }
+    else {
+      this.clipboard.copy(control);
+    }
     this.toast.success({ detail: "Success", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
-
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     console.log(formData, this.covers);
@@ -8281,8 +9707,8 @@ export class YatraComponent {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
     const storedAgentCode = localStorage.getItem('parentCode')?.trim() || '';
-    const updatedAgentCode = (storedAgentCode || this.agentCode || '').trim();
-
+    const updatedAgentCode = (this.isHdfcFlow ||this.isAxisFlow? this.agentCode : storedAgentCode  || '').trim();
+ 
     const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: updatedAgentCode || '',
       productName: formData?.productName || '',
@@ -8370,15 +9796,18 @@ export class YatraComponent {
           memberGender: member?.memberGender || '',
           memberPincode: member?.pincode || '',
           preExistingDisease: member?.preExistingDisease || '',
-          memberIndex: member?.memberIndex || '',
+          memberIndex: member?.memberIndex ?? '',
           zone: member?.zone || '',
           zoneValue: member?.zoneValue || '',
           state: member?.state || '',
           city: member?.city || '',
           memberType: member?.memberType || '',
           memberSumInsured: member?.sumInsured || '',
+          membersumInsuredForPlan: member?.sumInsuredForPlan || '',
+          memberannualIncomeForPlan: member?.annualIncomeForPlan || '',
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
-          memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
+          //memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
+          memberDesignation: (member?.productMemberDesignation != '') ? JSON.parse(member?.productMemberOccupation).value || '' : '',
           // memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
           memberOccupation: (member?.productMemberOccupation != '') ? JSON.parse(member?.productMemberOccupation).value || '' : '',
           covers: this.covers[index] || [],
@@ -8398,6 +9827,10 @@ export class YatraComponent {
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
+      pennyDropVerify: this.formData?.pennyDropVerify || '',
+      pennyDropBankAccountNo: this.formData?.pennyDropBankAccountNo,
+      pennyDropIFSCCode: this.formData?.pennyDropIFSCCode,
+      pennyDropNameMatch: this.formData?.pennyDropNameMatch,
       QuoteId: formData?.quoteId || '',
       LeadId: formData?.leadNumber || '',
       proposerSalutation: formData?.preFix || '',
@@ -8411,10 +9844,18 @@ export class YatraComponent {
       proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
       proposerAddress1: formData?.permanentAddress1 || '',
       proposerAddress2: formData?.permanentAddress2 || '',
+      proposerAddress3: formData?.permanentAddress3 || '',
+      correspondingAddress1: formData?.proposerAddress1 || '',
+      correspondingAddress2: formData?.proposerAddress2 || '',
+      correspondingAddress3: formData?.proposerAddress3 || '',
+      isCorrespondingAddressSameAsProposerAddress: formData?.addressTitle1 || false,
+      proposerBenefitTopUpPlanFlag: formData?.benefitTopUpPlan || '',
+      proposerBenefitTopUpSelectedPlan: (formData.planName) ? this.jsonParse(formData?.planName, 'value') || '' : '',
       proposerCity: formData?.city || '',
       proposerState: formData?.state || '',
       proposerEmailId: formData?.emailId || '',
       proposerPincode: formData?.proposerPincode || '',
+      correspondingPincode: formData?.correspondentPincode || '',
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
       idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
@@ -8438,7 +9879,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      accountType: this.jsonParse(formData?.accountType, 'value') || '',
+      //accountType: this.jsonParse(formData?.accountType, 'value') || '',
+      accountType :(this.isAxisFlow || this.partnerId=='45')? this.jsonParse(formData?.accountCategory, 'value') || '': this.jsonParse(formData?.accountType, 'value') || '',
       bankAccountType: this.jsonParse(formData?.accountType, 'name') || '',
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
@@ -8464,6 +9906,10 @@ export class YatraComponent {
       affiliateEmployeeId: formData?.affiliateEmployeeId || '',
       isAffiliateEmployee: formData?.isAffiliateEmployee || '',
       nameOfTheAffiliate: formData?.nameOfTheAffiliate ? this.jsonParse(formData?.nameOfTheAffiliate, 'name') : '',
+      employeeId: formData?.employeeId || '',
+      refCode1: formData?.refCode1 || formData?.lgCode || '',
+      refCode2: formData?.refCode2 || formData?.crmCode || formData.cifCode || '',
+      refCode3: formData?.refCode3 || formData?.dcbLeadId || formData?.newGenApplication || ''
     };
     return mappedData;
   }
@@ -8471,16 +9917,29 @@ export class YatraComponent {
   async getFullQuoteViaOfflinePayment(documentId: any): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = this.dynamicFormGroup.getRawValue();
+
       console.log(this.selectedButton, data, this.formData, this.fullQuoteDocRelated, this.fullQuoteDocRelatedWithOutOffline);
       const formData = {
         policyType: 'New Business',
         paymentMethod: 'offline',
         premiumAmount: (this.formData?.totalPremium || '').toString(),
+        // instrumentNo: (this.selectedButton === 'loanPayment'
+        //   ? this.formData?.loanAccountNumber
+        //   : this.selectedButton === 'bankFundTransfer'
+        //     ? this.formData?.transactionReferanceId
+        //     : this.formData?.chequeNumber || ''
+        // ).toString(),
         instrumentNo: (this.selectedButton === 'loanPayment'
           ? this.formData?.loanAccountNumber
           : this.selectedButton === 'bankFundTransfer'
             ? this.formData?.transactionReferanceId
-            : this.formData?.chequeNumber || ''
+            : this.formData?.paymentOption === "Cheque"
+              ? this.formData?.chequeNumber
+              : this.formData?.paymentOption === "Demand Draft"
+                ? this.formData?.demandDraftNumber
+                : this.formData?.paymentOption === "Pay Order"
+                  ? this.formData?.payOrderNumber
+                  : ""
         ).toString(),
         instrumentDate: (this.formData?.chequeDate || this.formData?.transactionDate || '').toString(),
         policyNumber: "".toString(),
@@ -8494,7 +9953,7 @@ export class YatraComponent {
           : 'RTGS/ NEFT'
         ).toString(),
         source: "Retail".toString(),
-        documentId: (this.fullQuoteDocRelated || '').toString(),
+        documentId: '',
         proposalNum: this.proposalNum.toString(),
         productName: this.formData.productName || ''
       };
@@ -8519,14 +9978,28 @@ export class YatraComponent {
       this.yatraService.getFullQuoteViaOfflinePayment(formData).subscribe({
         next: (res: any) => {
           if (res?.isSuccess) {
-            this.formData.policyNumber = res.data.policyNumber || null;
-            this.formData.policyStatus = res.data.policyStatus || null;
-            this.formData.quoteValidFromDate = res.data.policyStartDate || null;
-            this.formData.quoteValidToDate = res.data.policyEndDate || null;
-            this.formData.ReceiptNumber = res.data.receiptNumber || null;
-            this.formData.customerId = res.data.customerId || null;
-            this.formData.applicationNumber = res.data.applicationNumber || null;
-
+            console.log(this.formData)
+            const mainProduct = res.data.find((product: any) => product.productId != '22' || product.productId != '23');
+            if (mainProduct) {
+              this.formData.policyNumber = mainProduct.policyNumber || null;
+              this.formData.policyStatus = mainProduct.policyStatus || null;
+              this.formData.quoteValidFromDate = mainProduct.policyStartDate || null;
+              this.formData.quoteValidToDate = mainProduct.policyEndDate || null;
+              this.formData.ReceiptNumber = mainProduct.receiptNumber || null;
+              this.formData.customerId = mainProduct.customerId || null;
+              this.formData.applicationNumber = mainProduct.applicationNumber || null;
+            }
+            const combiProduct = res.data.find((product: any) => product.productId == '22' || product.productId == '23');
+            if (combiProduct) {
+              this.formData.proposerFullName = this.proposerFullName || null;
+              this.formData.topUpPolicyNumber = combiProduct.policyNumber || null;
+              this.formData.topUpPolicyStatus = combiProduct.policyStatus || null;
+              this.formData.topUpQuoteValidFromDate = combiProduct.policyStartDate || null;
+              this.formData.topUpQuoteValidToDate = combiProduct.policyEndDate || null;
+              this.formData.topUpReceiptNumber = combiProduct.receiptNumber || null;
+              this.formData.topUpCustomerId = combiProduct.customerId || null;
+              this.formData.topUpApplicationNumber = combiProduct.applicationNumber || null;
+            }
             this.toast.success({
               detail: "Success",
               summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
@@ -8558,7 +10031,6 @@ export class YatraComponent {
     });
   }
 
-
   insertFullQuoteJson(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.mappedFormDataFullQuote(this.formData).then((data) => {
@@ -8569,6 +10041,9 @@ export class YatraComponent {
         this.yatraService.insertFullQuoteJson(req).subscribe({
           next: (res: any) => {
             resolve();
+            if (res.data) {
+              localStorage.setItem('isCheckSum', res.data.updated);
+            }
           },
           error: (err) => {
             console.error(err);
@@ -8629,6 +10104,7 @@ export class YatraComponent {
       this.feedBackMessage = true;
     }
   }
+
   submitFeedback() {
     let reqData: any = {};
     reqData.agentCode = this.agentCode;
@@ -8691,7 +10167,53 @@ export class YatraComponent {
     const appleStoreUrl = "https://apps.apple.com/in/app/activ-health/id1179005764";
     window.open(appleStoreUrl, '_blank');
   }
-  async mappingForQuestionnaire(form: any) {
+
+  async mappingForQuestionnaire(form: any): Promise<boolean> {
+    if (this.agentCode.startsWith("POS") && this.form.formTitle === 'Health & Lifestyle') {
+      if (this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover === true) {
+        this.toast.warning({
+          detail: 'Warning',
+          summary: 'Please contact branch',
+          duration: 3000
+        });
+        return false;
+      }
+    }
+    if (this.agentCode.startsWith("POS")) {
+      const dynamicValue = this.dynamicFormGroup.getRawValue();
+      console.log(dynamicValue);
+
+      let hasMemberWithDisease = false;
+
+      for (const key in dynamicValue) {
+        if (key.startsWith("productQuestions") || key.startsWith("chronicQuestions")) {
+          const questionData = dynamicValue[key];
+          console.log(questionData);
+
+          for (const relation in questionData) {
+            if (questionData[relation] === true) {
+              hasMemberWithDisease = true;
+              console.log(`Member ${relation} has a disease, cannot proceed`);
+              break;
+            }
+          }
+
+          if (hasMemberWithDisease) {
+            break;
+          }
+        }
+      }
+
+      if (hasMemberWithDisease) {
+        this.toast.warning({
+          detail: 'Warning',
+          summary: 'Please contact branch, as Health & Lifestyle questions are not applicable for this login.',
+          duration: 5000
+        });
+        return false;
+      }
+    }
+
     // let productQuestionnaire:any=[];
     const reqData = {
       partnerId: this.partnerId.toString(),
@@ -8884,15 +10406,12 @@ export class YatraComponent {
         dindex.addControl('productQuestionnaire', '');
 
         dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-      })
+      });
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     }
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   }
-    // });
   }
 
   backToleads() {
@@ -8904,6 +10423,7 @@ export class YatraComponent {
     this.router.navigate(['/products/comparison'], {
     });
   }
+
   validationErrorNotification(dynamicControl: any, aindex: any, coreControl: any, innerControl: any, innerSubControl: any) {
     if (dynamicControl instanceof FormArray) {
       dynamicControl.controls.forEach(arrayControl => {
@@ -8975,6 +10495,7 @@ export class YatraComponent {
       this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
     }
   }
+
   traverseFormGroup(formGroup: FormGroup | FormArray) {
     if (formGroup instanceof FormGroup) {
       Object.keys(formGroup.controls).forEach((key) => {
@@ -8999,6 +10520,7 @@ export class YatraComponent {
       });
     }
   };
+
   getDate(dateType: any): string {
     if (dateType === 'currentDate') {
       return this.currentDate;
@@ -9009,6 +10531,7 @@ export class YatraComponent {
     }
     return '';  // Default return if no valid date type is found
   }
+
   allPreselectMember(control: any) {
     const PED = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get(control.name)?.value
     this.pedWaitingPeriod = PED;
@@ -9155,9 +10678,15 @@ export class YatraComponent {
 
     }
     this.formData.insuredMemberDetails.forEach((member: any) => {
+      let newOptions;
       if (member.relation == parentControl.name) {
-        const sumInsured = member.sumInsured;
-        const newOptions = data[sumInsured];
+        if (this.formData.productName.includes('Activ Health Platinum')) {
+          const sumInsuredForPlan = member.sumInsuredForPlan;
+          newOptions = data[sumInsuredForPlan];
+        } else {
+          const sumInsured = member.sumInsured;
+          newOptions = data[sumInsured];
+        }
         control.options = newOptions;
       }
     })
@@ -9193,9 +10722,15 @@ export class YatraComponent {
     }
 
     this.formData.insuredMemberDetails.forEach((member: any) => {
+      let newOptions;
       if (member.relation == parentControl.name) {
-        const sumInsured = member.sumInsured;
-        const newOptions = data[sumInsured];
+        if (this.formData.productName.includes('Activ Health Platinum')) {
+          const sumInsuredForPlan = member.sumInsuredForPlan;
+          newOptions = data[sumInsuredForPlan];
+        } else {
+          const sumInsured = member.sumInsured;
+          newOptions = data[sumInsured];
+        }
         control.options = newOptions;
       }
     })
@@ -9225,7 +10760,6 @@ export class YatraComponent {
     };
   }
 
-
   pennyDrop(control: any, dataObj?: any) {
     if (control.dependentControls.includes("pennyBtn")) {
       this.changeMainFormDependentControls(control.dependentControls, true)
@@ -9244,6 +10778,18 @@ export class YatraComponent {
       next: (response: any) => {
         if (response.isSuccess && response.data) {
           this.pennyDropVerficationDetails = response.data;
+          // this.formData["pennyDropVerify"] = this.pennyDropVerficationDetails.pennyDropVerify;
+          // this.formData["pennyDropBankAccountNo"] = this.pennyDropVerficationDetails.pennyDropBankAccountNo;
+          // this.formData["pennyDropIFSCCode"] = this.pennyDropVerficationDetails.pennyDropIFSCCode;
+          // this.formData["pennyDropNameMatch"] = this.pennyDropVerficationDetails.pennyDropNameMatch;
+
+          console.log(this.pennyDropVerficationDetails);
+
+          this.dynamicFormGroup.addControl('pennyDropVerify', new FormControl(this.pennyDropVerficationDetails.pennyDropVerify));
+          this.dynamicFormGroup.addControl('pennyDropBankAccountNo', new FormControl(this.pennyDropVerficationDetails.pennyDropBankAccountNo));
+          this.dynamicFormGroup.addControl('pennyDropIFSCCode', new FormControl(this.pennyDropVerficationDetails.pennyDropIFSCCode));
+          this.dynamicFormGroup.addControl('pennyDropNameMatch', new FormControl(this.pennyDropVerficationDetails.pennyDropNameMatch));
+
           this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
         } else {
           // Handle error, you can show a message if required
@@ -9255,14 +10801,17 @@ export class YatraComponent {
       }
     });
   }
+
   openPlanSummary() {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
+
   shareKycURL(control: any) {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
+      quotationID: this.formData.quoteId || "",
       fullName: this.formData.accountHolderName,
       panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
@@ -9270,7 +10819,7 @@ export class YatraComponent {
       businessType: "NB",
       emailId: this.formData.emailId,
       agentCode: this.agentCode,
-      MobileNumber: "9642697588",
+      MobileNumber: this.formData.mobileNumber,
       ProductName: this.formData.productName,
       ProductCode: this.formData.productId
     };
@@ -9291,9 +10840,11 @@ export class YatraComponent {
       }
     );
   }
+
   skipKycURL(control: any) {
     const skipKycRequestBody = {
-      proposalOrPolicyNumber: this.proposalNum,
+      policyNumber: "",
+      proposalNumber: this.proposalNum,
       businessType: "NB"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
@@ -9341,7 +10892,9 @@ export class YatraComponent {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
-      fullName: this.formData.accountHolderName,
+      fullName: this.formData.middleName?.trim()
+        ? `${this.formData.firstName} ${this.formData.middleName} ${this.formData.lastName}`
+        : `${this.formData.firstName} ${this.formData.lastName}`,
       panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No",
@@ -9357,6 +10910,7 @@ export class YatraComponent {
       }
     );
   }
+
   checkKycDetail(control: any): void {
     // const isVisible = !(this.formData.verifyKYC !== "" || this.formData.kycStatus !== "" || this.formData.isKYCComplete);
     const isVisible = !this.verifyKYCStatus;
@@ -9392,49 +10946,63 @@ export class YatraComponent {
   }
 
   redirectToJustPay(control: any) {
+    const data = this.dynamicFormGroup.value;
+    // if (this.selectedButton === "enach" && (!data.emandateConsent || !data.emandateTerms)) {
+    //   this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+    //   return;
+    // }
+    // if (this.selectedButton === "autoDebit" && (!data.autoDebitConsent || !data.autoDebitTerms)) {
+    //   this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+    //   return;
+    // }
     // Handle the Juspay redirection for buttons other than Offline
-    if (this.selectedButton !== 'offline') {
-      const reqData = {
-        agentcode: this.agentCode,
-        proposalNumber: this.formData.proposalNumber,
-        paymentMethod: this.selectedButton === 'enach' ? 'emandate_payment' : this.selectedButton,
-        source: 'Retail',
-        policyType: 'NB',
-        policyNumber: '',
-        quoteNumber: this.formData.quoteId || "",
-        productName: this.formData.productName,
-        userType: 'Agent'
-      };
-      this.yatraService.justPayRedirection(reqData).subscribe({
-        next: (response: any) => {
-          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            if (this.selectedButton == 'sendLinkButton') {
-              this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-              // res = response.data.paymentURL;
+    console.log(this.dynamicFormGroup);
+    if (this.dynamicFormGroup.valid) {
+      if (this.selectedButton !== 'offline') {
+        const reqData = {
+          agentcode: this.agentCode,
+          proposalNumber: this.formData.proposalNumber,
+          paymentMethod: this.selectedButton === 'enach' ? 'emandate_payment' : this.selectedButton,
+          source: 'Retail',
+          policyType: 'NB',
+          policyNumber: '',
+          quoteNumber: this.formData.quoteId || "",
+          productName: this.formData.productName,
+          userType: 'Agent'
+        };
+        this.yatraService.justPayRedirection(reqData).subscribe({
+          next: (response: any) => {
+            if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+              if (this.selectedButton == 'sendLinkButton') {
+                this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+                // res = response.data.paymentURL;
+              }
+              else {
+                window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+              }
+            } else {
+              this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
+              console.error('Invalid payment link received:', response);
             }
-            else {
-              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-            }
-          } else {
-            this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
-            console.error('Invalid payment link received:', response);
+          },
+          error: (error) => {
+            this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
+            console.error('Error generating payment link:', error);
           }
-        },
-        error: (error) => {
-          this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
-        }
-      });
+        });
 
-      // this.router.navigate(['/renewal/paymentstatus'],{
-      //   queryParams: {
-      //     orderid: 'UP_241209_ef1cf656',
-      //     token: 'aa59deee594c4c90abd5737929d0302e'
-      //     // ,
-      //     // agentCode: '500013'
-      //   }
-      // });
-
+        // this.router.navigate(['/renewal/paymentstatus'],{
+        //   queryParams: {
+        //     orderid: 'UP_241209_ef1cf656',
+        //     token: 'aa59deee594c4c90abd5737929d0302e'
+        //     // ,
+        //     // agentCode: '500013'
+        //   }
+        // });
+      }
+    }
+    else {
+      this.toast.error({ detail: "Error", summary: 'Please fill the mandatory fields.', duration: 3000 });
     }
   }
 
@@ -9613,7 +11181,6 @@ export class YatraComponent {
         this.dynamicFormGroup?.controls[controlName]?.enable();
       });
     }
-
   }
 
   getCityStateByPin() {
@@ -9631,20 +11198,38 @@ export class YatraComponent {
   }
 
   getCityStateByPinByCorressponding() {
-    const reqData = {
-      "pincode": this.dynamicFormGroup.get('correspondentPincode')?.value.toString()
-    }
-    this.commonService.getPinCodeByCity(reqData).subscribe(res => {
-      if (res.isSuccess && res.data) {
-        // Update city and state fields
-        this.dynamicFormGroup.get('correspondingCity')?.setValue(res.data.city || '');
-        this.dynamicFormGroup.get('correspondingState')?.setValue(res.data.state || '');
+    const correspondencePincode = this.dynamicFormGroup.get('correspondentPincode')?.value;
 
-      }
-    });
+    if (correspondencePincode && correspondencePincode.toString().length === 6) {
+      const reqData = {
+        "pincode": String(correspondencePincode)
+      };
+
+      console.log(reqData);
+      this.commonService.getCommonPinCodeByCity(reqData).subscribe({
+        next: (res) => {
+          console.log(res)
+          if (res.isSuccess && res.data) {
+            this.dynamicFormGroup.get('correspondingCity')?.setValue(res.data.city || '');
+            this.dynamicFormGroup.get('correspondingState')?.setValue(res.data.state || '');
+          }
+        }
+      });
+    }
   }
 
   halfQuotation() {
+    const reqData1 = {
+      "proposalNum": this.proposalNum,
+      "isGoGreen": this.dynamicFormGroup.get("decl2")?.value
+    }
+    this.yatraService.getIsGoGreen(reqData1).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        console.log(reqData1);
+      }
+    })
+
     const reqData = {
       "proposalNum": this.proposalNum,
       "agentCode": this.agentCode
@@ -9652,19 +11237,31 @@ export class YatraComponent {
     this.yatraService.getHalfQuote(reqData).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
+          if (response.data.halfQuoteTotalPremium) {
+            this.tenureAmount[this.formData.tenure - 1] = response.data.halfQuoteTotalPremium ? Math.round(response.data.halfQuoteTotalPremium) : 0;
+            sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+            this.dynamicFormGroup.get('totalPremium')?.setValue(response.data.halfQuoteTotalPremium);
+          }
           this.toast.success({ detail: "Success", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
         }
         else {
-          this.toast.error({ detail: "Error", summary: response.message, duration: 3000 })
-          // this.form.formSections.forEach((section: any) => {
-          //   section.formControls.forEach((control: any) => {
-          //     if (control.name === 'next') {
-          //       control.disabled = true;
-          //     }
-          //   })
-          // });
+          this.toast.error({ detail: "Error", summary: response.message, duration: 4000 })
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((control: any) => {
+              if (control.name === 'next') {
+                control.disabled = true;
+              }
+            })
+          });
+          return;
         }
-        this.onSubmit();
+        if (this.formData.productName.startsWith("Activ Fit") && !this.isDeclarartionDiscountVisible && response.data) {
+          // if(this.formData.productName.startsWith("Activ Fit") && response.isSuccess){
+          this.declarationPopUp();
+        }
+        else {
+          this.onSubmit();
+        }
       },
       error: (err) => {
         this.toast.error({ detail: "Error", summary: 'Failed to generate half Quote', duration: 3000 });
@@ -9717,7 +11314,6 @@ export class YatraComponent {
         }
       );
     }
-
   }
 
   onSearchDocumentFromConfirmation() {
@@ -9750,39 +11346,59 @@ export class YatraComponent {
           const searchResponse = response.data.searchResponse;
           this.retrievedDocuments = searchResponse;
           if (searchResponse && searchResponse[0]?.error?.length > 0) {
-            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 2000 });
+            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 3000 });
             return;
           }
         } else {
-          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 3000 });
         }
       },
       (error: any) => {
         console.error("Search document error", error);
-        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 3000 });
       }
     );
   }
 
   setDeductibleAmount(control: any, parentControl: any = null, index: any = null) {
+    console.log("Inside this setDeductibleAmount",this.formData);
+    
     if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
       const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+      const sumInsuredForPlanControl = this.dynamicFormGroup.get('sumInsuredForPlan');
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'deductibleAmount') {
-            if (control.onChangeMethod == 'deductibleOptionsB') {
-              const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
-              this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+            let deductibleValue: any;
+            if (this.formData.productName.includes('Activ Health Platinum')) {
+              let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+              if (planName == 'Plan A') {
+                const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredForPlanControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((control: any) => {
+                  control.get('deductibleAmount')?.setValue(deductibleValue);
+                })
+              } else {
+                const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredForPlanControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((control: any) => {
+                  control.get('deductibleAmount')?.setValue(deductibleValue);
+                })
+              }
             }
             else {
-              const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
-              this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              if (control.onChangeMethod == 'deductibleOptionsB') {
+                deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              }
+              else {
+                deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              }
             }
           }
         })
-
       })
-
     }
     else if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
       const insuredMemberDetailsControl = this.dynamicFormGroup.get(parentControl.name) as FormArray;
@@ -9793,13 +11409,25 @@ export class YatraComponent {
             if (control.visible == true) {
               control.dynamicControls[0].forEach((dynamicControl: any) => {
                 if (dynamicControl.name == 'deductibleAmount') {
-                  if (dynamicControl.onChangeMethod == 'deductibleOptionsB') {
-                    const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
-                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                  if (this.formData.productName.includes('Activ Health Platinum')) {
+                    let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+                    if (planName == 'Plan A') {
+                      const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    } else {
+                      const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
                   }
                   else {
-                    const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
-                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    if (dynamicControl.onChangeMethod == 'deductibleOptionsB') {
+                      const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
+                    else {
+                      const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
                   }
                 }
               })
@@ -9807,22 +11435,34 @@ export class YatraComponent {
           })
         }
       })
-
     }
   }
 
-  restrictNumberLength(event: Event, maxLength: number): void {
+  restrictNumberLength(event: Event, maxLength: number,control:any=null,parentControl:any=null,subControl:any=null,innerControl:any=null,innerControlIndex:any=null): void {
     const inputElement = event.target as HTMLInputElement;
 
+    console.log(inputElement.name);
+    
     // Convert input value to a string and truncate if it exceeds maxLength
     if (inputElement.value.length > maxLength) {
       inputElement.value = inputElement.value.slice(0, maxLength);
     }
+    
+    if(control!=null && parentControl!=null && subControl!=null && innerControl!=null && innerControlIndex!=null){
+      const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+        const parentArray1 = parentArray.get(control.name) as FormGroup;
+        const parentArray2 = parentArray1.get(subControl.name) as FormArray;
+       const myFormControl =  parentArray2.controls[innerControlIndex].get(innerControl.name);
 
-    // Update the form control's value to match the truncated value
-    const formControl = this.dynamicFormGroup.get(inputElement.name);
-    if (formControl) {
-      formControl.setValue(inputElement.value);
+       myFormControl?.setValue(inputElement.value);
+    }
+    else{
+
+      // Update the form control's value to match the truncated value
+      const formControl = this.dynamicFormGroup.get(inputElement.name);
+      if (formControl) {
+        formControl.setValue(inputElement.value);
+      }
     }
   }
 
@@ -9850,9 +11490,8 @@ export class YatraComponent {
   }
 
   updateDesignationBasedOnAnnualincome(control: any, selectedControl: any, parentControl?: any) {
-    console.log("control name", control.name);
     let selectedRelation: string = '';
-    if (control.name == 'productMemberDesignation') {
+    if (control.name == 'productMemberOccupation') {
       selectedRelation = parentControl.dynamicControls[selectedControl][1].value // 1 is the index of relation object
     }
     else {
@@ -9901,11 +11540,84 @@ export class YatraComponent {
         }
       }
     });
+    const selectedMember = this.formData.insuredMemberDetails.find(
+      (member: any) => member.relation === selectedRelation
+    );
+    let occupationData = null;
+    if (selectedMember && selectedMember.productMemberOccupation) {
+      occupationData = JSON.parse(selectedMember.productMemberOccupation).name;
+    }
+    this.getNatureOfWorkByOccupation(false, occupationData, selectedControl);
   }
+
+  // setSIValues(parentControl: any, control: any, selectedControl: any, coreControl: any, index: any, event: any = null) {
+  //   let annualIncome: any;
+  //   this.getSumInsured(parentControl, control, selectedControl, coreControl, index, event)
+  
+  // }
+  setSIValues(parentControl: any, control: any, selectedControl: any, coreControl: any, index: any, event: any = null) {
+    let annualIncome: any;
+    if (parentControl.name == 'temporaryTotalDisablementBenefit' || parentControl.name == 'emiProtect' || parentControl.name == 'loanProtect') {
+      this.formData.insuredMemberDetails.forEach((member: any) => {
+        if (member.relation == selectedControl.name) {
+          if (member.annualIncome != "") {
+            annualIncome = Number(member.annualIncome);
+          }
+        }
+      });
+    }
+    const requestBody = {
+      "coverType": parentControl.name || "",
+      "planType": null,
+      "productId": (this.productId).toString() || "",
+      "agentCode": this.agentCode,
+      "annualIncome": annualIncome || null,
+      "occupation": null,
+      "relation": selectedControl.name,
+      "riskClass": null
+    }
+    this.yatraService.getSumInsuredList(requestBody).subscribe({
+      next: (res: any) => {
+        coreControl.options = res.data.siList;
+        let defaultValue = res.data.siList[0].name;
+        ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)
+          ?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup)?.controls[coreControl.name].setValue(defaultValue);
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  // updatePrefixBasedOnGender(control: any): void {
+  //   if (this.formData?.proposerGender || this.dynamicFormGroup.get('proposerGender')?.value !='') {
+  //     const proposerGender = this.formData.proposerGender || this.dynamicFormGroup.get('proposerGender')?.value;
+  //     console.log(proposerGender)
+  //     const disabledSalutations = this.salutationMapping[proposerGender] || [];
+
+  //     control.options = control.options.map((option: any) => ({
+  //       ...option,
+  //       disabled: disabledSalutations.includes(option.name),
+  //     }));
+
+  //     console.log(control.options)
+
+  //     // Optionally set a default value
+  //     const defaultOption = control.options.find(
+  //       (option: any) => !option.disabled
+  //     );
+  //     control.value = defaultOption ? defaultOption.value : '';
+  //   }
+  // }
+
   updatePrefixBasedOnGender(control: any): void {
-    if (this.formData?.proposerGender) {
-      const proposerGender = this.formData.proposerGender;
-      console.log(proposerGender)
+    const proposerGenderControl = this.dynamicFormGroup.get('proposerGender');
+    const proposerGender = (proposerGenderControl && proposerGenderControl.value !== '')
+      ? proposerGenderControl.value
+      : this.formData?.proposerGender;
+
+    if (proposerGender) {
+      console.log(proposerGender);
       const disabledSalutations = this.salutationMapping[proposerGender] || [];
 
       control.options = control.options.map((option: any) => ({
@@ -9913,16 +11625,14 @@ export class YatraComponent {
         disabled: disabledSalutations.includes(option.name),
       }));
 
-      console.log(control.options)
+      console.log(control.options);
 
       // Optionally set a default value
-      const defaultOption = control.options.find(
-        (option: any) => !option.disabled
-      );
+      const defaultOption = control.options.find((option: any) => !option.disabled);
       control.value = defaultOption ? defaultOption.value : '';
+      this.dynamicFormGroup.get(control.name)?.setValue(control.value);
     }
   }
-
 
   restrictKeyPress(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
@@ -9999,6 +11709,13 @@ export class YatraComponent {
     formData.append("Files", event[0]);
     formData.append("UniqueNumber", policyNum);
 
+    let documentData = {
+      proposalNum: this.proposalNum,
+      documentData: {
+        [event[0].name]: base64File.split(',')[1]
+      }
+    };
+
     let obj: any
     switch (control.name) {
       case 'neftStatementUpload':
@@ -10036,10 +11753,10 @@ export class YatraComponent {
         break;
 
       case 'documentProofUpload':
-        this.commonService.uploadDocument(formData).subscribe(
+        this.commonService.insertProposerDocuments(documentData).subscribe(
           async (res: any) => {
             if (res.isSuccess) {
-              this.fullQuoteDocRelated = res.data.uploadResponse[0].globalId
+              //this.fullQuoteDocRelated = res.data.uploadResponse[0].globalId
               // this.documentId = res.data.uploadResponse[0].globalId;
               // this.uploadInfo.push({
               //   name : control,
@@ -10074,17 +11791,9 @@ export class YatraComponent {
         break;
 
       default:
-        this.commonService.uploadDocument(formData).subscribe(
+        this.commonService.insertProposerDocuments(documentData).subscribe(
           async (res: any) => {
             if (res.isSuccess) {
-              // this.documentId = res.data.uploadResponse[0].globalId;
-              let arr = [];
-              arr.push({
-                "name": control?.name,
-                "data": res.data.uploadResponse[0].globalId
-              });
-
-              this.insertDocByIdwithProof(arr)
 
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
             } else {
@@ -10108,6 +11817,7 @@ export class YatraComponent {
         break;
     }
   }
+
   async modifyThankYouJson() {
     // if (this.formData.paymentMode === 'offline') {
     //   console.log(this.formData);
@@ -10117,10 +11827,15 @@ export class YatraComponent {
       proposalNumber: this.proposalNum
     };
 
+    this.proposerFullName = this.formData.middleName?.trim()
+              ? `${this.formData.firstName} ${this.formData.middleName} ${this.formData.lastName}`
+              : `${this.formData.firstName} ${this.formData.lastName}`;
+
     // Convert Observable to Promise
     await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
       .then((res: any) => {
         if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
+          this.formData.proposerFullName = this.proposerFullName || null;
           this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
           this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
           this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
@@ -10140,8 +11855,7 @@ export class YatraComponent {
               ? [false, false, true]
               : data.paymentStatus.toUpperCase() === 'PENDING'
                 ? [false, true, false]
-                : [false, false, false]; // Default case
-
+                : [false, false, false]; // Default case        
         this.form.formSections.forEach((formSection: any, i: any) => {
           formSection.formControls.forEach((formControl: any) => {
             if (formControl.idProperty === true || formControl.idProperty === false) {
@@ -10149,33 +11863,46 @@ export class YatraComponent {
                 formControl.visible = status[0];
               } else if (formControl.name === 'labelB') {
                 formControl.visible = status[1];
-                this.form.formSections[i + 1].visible = status[0];
-                this.form.formSections[i + 2].visible = status[0];
-                this.form.formSections[i + 3].visible = status[0];
-                this.form.formSections[i + 4].visible = status[0];
+                // this.form.formSections[i + 1].visible = status[0];
+                // this.form.formSections[i + 2].visible = status[0];
+                // this.form.formSections[i + 3].visible = status[0];
+                // this.form.formSections[i + 4].visible = status[0];
               } else if (formControl.name === 'labelC') {
                 formControl.visible = status[2];
                 if (res.data.errorMessage) {
                   formControl.label = res.data.errorMessage;
                 }
-                this.form.formSections[i + 1].visible = status[0];
-                this.form.formSections[i + 2].visible = status[0];
-                this.form.formSections[i + 3].visible = status[0];
-                this.form.formSections[i + 4].visible = status[0];
+                // this.form.formSections[i + 1].visible = status[0];
+                // this.form.formSections[i + 2].visible = status[0];
+                // this.form.formSections[i + 3].visible = status[0];
+                // this.form.formSections[i + 4].visible = status[0];
               }
             }
           });
         });
+        // if (this.formData.productName == "Activ Health Platinum Enhanced") {
+        //   this.form.formSections.forEach((section: any) => {
+        //     if (section.sectionTitle == "Details of Super Top UP Policy") 
+        //       if(this.formData.benefitTopUpPlan == true){ section.visible = true }
+        //       else if(this.formData.benefitTopUpPlan != true){ section.visible = false }
+        //   });
+        // }
+        // else{
+        //   this.form.formSections.forEach((section: any) => {
+        //     if (section.sectionTitle == "Details of Super Top UP Policy") 
+        //       section.visible = false
+        //   });
+        // }
       })
       .catch((err) => {
         console.log(err);
       });
-    // }
+    // }    
   }
 
   setPreviousPolicyYears(control: any, index: any, policyLength: any = 0) {
-
     console.log(index, policyLength);
+
     if (control.options.length == 0) {
       const currentYear = new Date().getFullYear();
       let yearOptions = [];
@@ -10199,7 +11926,6 @@ export class YatraComponent {
           });
         }
       }
-
       control.options = yearOptions;
     }
   }
@@ -10221,11 +11947,10 @@ export class YatraComponent {
         section.formControls.forEach((formControl: any, index: any) => {
           if (formControl.name == 'insuredMemberDetails') {
             if (this.formData[formControl.name]) {
-              if (this.formData[formControl.name]) {
-                formControl.value = this.formData[formControl.name].length;
-              }
+              formControl.value = this.formData[formControl.name].length;
+
               formControl.dynamicControls[0].forEach((dynamicControl: any) => {
-                if (dynamicControl.innerArrayControl) {
+                if (dynamicControl.innerArrayControl && dynamicControl.name == 'previousPolicyDetails') {
                   dynamicControl.visible = isPortability;
                   if (isPortability) {
                     let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
@@ -10339,26 +12064,51 @@ export class YatraComponent {
   }
 
   duplicateForAllMembers(innerControl: any, control: any, parentControl: any, index: number) {
-    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
-    const currentGroup = formArray.controls[index] as FormGroup;
+    console.log(innerControl, control, parentControl, index);
 
-    // Get the value of the control in the current group
-    const currentValues = currentGroup.get(control.name)?.value;
+    parentControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
+      if (dynamicControl.name == 'otherMemberCopyControl') {
+        dynamicControl.visible = true;
+      }
+    })
+    this.isOverlayVisible = true;
+  }
 
-    // Traverse all other indices in the FormArray
-    formArray.controls.forEach((group, idx) => {
-      if (idx !== index) {
-        const otherGroup = group as FormGroup;
+  duplicateForSelectedMembers(subControl: any, control: any, index: number) {
+    console.log(subControl, control, index);
 
-        // Update each key in the other group
-        Object.keys(currentValues).forEach(key => {
-          if (otherGroup.get(control.name)?.get(key)) {
-            otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
+    const formArray = this.dynamicFormGroup.get(control.name) as FormArray;
+    const currentGroup = formArray.controls[index - 1] as FormGroup;
+    const activePolicyArray = currentGroup.get('activePolicyDetails') as FormArray;
+    const currentValues = activePolicyArray.at(0).value;
+
+    console.log(currentValues);
+    const currentControlGroup = currentGroup.get(subControl.name);
+    console.log(currentControlGroup?.value);
+
+    Object.keys(currentControlGroup?.value).forEach((key) => {
+
+      if (currentControlGroup?.value[key] == true) {
+        formArray.controls.forEach((group, idx) => {
+          if (group.get('relation')?.value == key.toString()) {
+            const otherGroup = group as FormGroup;
+
+            console.log(otherGroup);
+
+            const otherActivePolicyArray = otherGroup.get('activePolicyDetails') as FormArray;
+            const excludedKeys = ['activePolicyFirstName', 'activePolicyMiddleName', 'activePolicyLastName'];
+            Object.keys(currentValues).forEach(key2 => {
+              if (otherActivePolicyArray.at(0) && !excludedKeys.includes(key2)) {
+                otherActivePolicyArray.at(0)?.get(key2)?.setValue(currentValues[key2]);
+              }
+            });
           }
+          console.log(group.value);
+
         });
       }
-    });
-    // this.onClickReq(parentControl.value[index + 1]);
+    })
+    this.closeOverlay(subControl);
   }
 
   duplicatePortabilityPolicyForAllMembers(innerControl: any, control: any, parentControl: any, index: number, indexj: number) {
@@ -10369,7 +12119,6 @@ export class YatraComponent {
 
     const innerFormArr = currentGroup.get(control.name) as FormArray;
 
-
     // Get the value of the control in the current group
     const currentValues = innerFormArr.controls[indexj]?.value;
 
@@ -10378,6 +12127,12 @@ export class YatraComponent {
       if (idx !== index) {
         const otherGroup = group as FormGroup;
         const otherInnerFormArr = otherGroup.get(control.name) as FormArray;
+        for (let innerIndex = 0; innerIndex <= indexj; innerIndex++) {
+          if (!otherInnerFormArr.controls[innerIndex]) {
+            this.addMorePortabilityPolicies(innerControl, control, parentControl, idx);
+          }
+        }
+
         // Update each key in the other group
         Object.keys(currentValues).forEach(key => {
           // if (otherGroup.get(control.name)?.get(key)) {
@@ -10414,7 +12169,6 @@ export class YatraComponent {
     }
     this.commonService.openDialog(obj1, (res: any) => {
       if (res) {
-
       }
     });
   }
@@ -10423,13 +12177,16 @@ export class YatraComponent {
     const formGroupValue = (this.dynamicFormGroup.get(obj) as FormGroup)?.value;
     return formGroupValue ? Object.keys(formGroupValue) : [];
   }
+
   isBooleanTrue(control: any, key: any): boolean {
     const formGroupValue = (this.dynamicFormGroup.get(control) as FormGroup)?.value;
     return typeof formGroupValue?.[key] === 'boolean' && formGroupValue[key] === true;
   }
+
   formatKey(key: string): string {
     return key.charAt(0).toUpperCase() + key.slice(1); // Capitalize the first letter
   }
+
   enableABHAConcent(): boolean {
     const insuredMemberDetailsArray = this.dynamicFormGroup?.get('insuredMemberDetails') as FormArray;
     const firstFormGroup = insuredMemberDetailsArray.controls[0] as FormGroup;
@@ -10440,8 +12197,8 @@ export class YatraComponent {
     } else {
       return false
     }
-
   }
+
   onVerifyClick(control: any) {
 
     // let requestBody: any = {};
@@ -10550,8 +12307,8 @@ export class YatraComponent {
     //     }
     //   });
     // });
-
   }
+
   parseJson(value: string): any[] {
     try {
       return JSON.parse(value || "[]");
@@ -10598,9 +12355,6 @@ export class YatraComponent {
     // } else {
     //   this.toast.error('Please fill all the required details.');
     // }
-
-
-
   }
 
   addMorePolicies(innerControl: any, control: any, parentControl: any, index: number) {
@@ -10665,8 +12419,6 @@ export class YatraComponent {
                 policyLength = innerControl.innerArrayControl.length;
               }
             });
-
-
             formControl.dynamicControls[index + 1] = targetDynamicControls;
           }
         })
@@ -10683,22 +12435,15 @@ export class YatraComponent {
 
         let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
         console.log(control.innerArrayControl.length - 1, control);
-
         console.log(this.form);
-
 
         innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control, policyLength));
       }
-
       console.log(this.form, this.dynamicFormGroup);
     }
     else {
       this.toast.warning({ detail: "Warning", summary: 'You can add a maximum of 4 policies.', duration: 3000 });
     }
-
-
-
-
   }
 
   addMoreClaimPolicies(innerControl: any, control: any, parentControl: any, index: number) {
@@ -10719,7 +12464,13 @@ export class YatraComponent {
     // formArr.push(this.initializeDynamicFormControls(tempArrayControl, control.innerArrayControl.length - 1, control));
 
     let tempControl = JSON.parse(JSON.stringify(control.innerArrayControl[0]));
-    console.log(tempControl);
+    console.log(tempControl, this.formData);
+
+    if (this.formData.productName === 'Arogya Sanjeevani') {
+      tempControl.splice(0, 1); // Removes the first element
+      console.log(tempControl);
+
+    }
 
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
@@ -10732,8 +12483,6 @@ export class YatraComponent {
               innerControl.innerArrayControl.push([...tempControl]);
             }
           });
-
-
           formControl.dynamicControls[index + 1] = targetDynamicControls;
         }
       })
@@ -10743,16 +12492,13 @@ export class YatraComponent {
     let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     // let formArr;
 
-
     if (formArr != null) {
       formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       console.log(formArr);
 
       let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
       console.log(control.innerArrayControl.length - 1, control);
-
       console.log(this.form);
-
 
       innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
     }
@@ -10829,7 +12575,6 @@ export class YatraComponent {
     }
   }
 
-
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
     const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
     const control = formArray?.controls[index]?.get(controlName) as FormGroup;
@@ -10859,11 +12604,11 @@ export class YatraComponent {
     }
   }
 
-
   isOptionSelected(subControl: any, value: string): boolean {
     const selectedValues = this.dynamicFormGroup.get(subControl.name)?.value || [];
     return selectedValues.includes(value);
   }
+
   toggleOptionsVisibility(index: any, controlName: string) {
     console.log(this.showOptions, controlName, index);
     this.clickedInside = true;
@@ -10878,6 +12623,7 @@ export class YatraComponent {
     this.showOptions[controlName][index] = !this.showOptions[controlName][index];
     console.log(this.showOptions);
   }
+
   getSelectedDiseases(control: any, index: any, subControl: string): string {
     const controlName: any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
     const selectedKeys = Object.keys(controlName?.value).filter(key => controlName?.value[key] === true);
@@ -10888,7 +12634,7 @@ export class YatraComponent {
     // }
     const formArray = this.dynamicFormGroup.get(control) as FormArray;
 
-    if (this.formData.productName.includes('VYTL') && formArray) {
+    if (this.formData.productName && this.formData.productName.includes('VYTL') && formArray) {
       const hasAnyTrue: boolean[] = [];
 
       // Build the hasAnyTrue array to track boolean values for each member
@@ -10949,16 +12695,26 @@ export class YatraComponent {
             console.log(member);
 
             const memberControlCheckbox = member.get('memberCheckbox');
+            const memberAddOnSumInsuredControl = member.get('addOnSumInsured');
+            const memberRoomTypeControl = member.get('roomType');
             console.log(memberControlCheckbox);
 
             if (memberControlCheckbox) {
               memberControlCheckbox.disable();
             }
+
+            if (memberAddOnSumInsuredControl) {
+              memberAddOnSumInsuredControl.disable();
+            }
+
+            if (memberRoomTypeControl) {
+              memberRoomTypeControl.disable();
+            }
           })
 
         }
       })
-    } else if (this.formData.productName == 'Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+    } else if (this.formData.productName == 'Activ Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
       console.log(addOnDetailsControl);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -10977,18 +12733,18 @@ export class YatraComponent {
               memberControlCheckbox.disable();
             }
           })
-
         }
       })
     }
   }
+
   selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
     console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
     const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
     console.log(addOnControlGroup, this.formData.memberPolicyType)
     if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
-      Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+      Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
         console.log(Key, index);
         if (index != 0) {
           const memberArray = addOnDetailsControl?.get(Key) as FormArray;
@@ -11025,7 +12781,44 @@ export class YatraComponent {
 
       })
     }
-    else if (this.formData.productName == 'Active Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+    else if (this.formData.productName == 'Activ Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+      const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+      if (parentControl.name == 'medicalExpenses' || parentControl.name == 'brokenBonesBenefit' || parentControl.name == 'burnBenefit') {
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              console.log("membercontrol checkbox", memberControlCheckbox, memberControlCheckbox.status);
+              //MEMBER CHECKBOX STATUS(VALID,DISABLED)
+              if (memberControlCheckbox && memberControlCheckbox.status != 'DISABLED') {
+                memberControlCheckbox.setValue(event.target.checked);
+              }
+            })
+          }
+
+        })
+      } else {
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              if (memberControlCheckbox) {
+                memberControlCheckbox.setValue(event.target.checked);
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+
+  setForAllOtherMember(event: any, coreControl: any, subControl: any, parentControl: any) {
+    console.log(event.target.value, coreControl, subControl, parentControl);
+    const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+    console.log(addOnControlGroup, this.formData.memberPolicyType)
+    if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
       Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
         console.log(Key, index);
@@ -11035,25 +12828,29 @@ export class YatraComponent {
 
           memberArray.controls.forEach((member: any) => {
             console.log(member);
-            const memberControlCheckbox = member.get('memberCheckbox');
-            console.log(memberControlCheckbox);
+            const addOnSumInsuredControl = member.get('addOnSumInsured');
 
-            if (memberControlCheckbox) {
-              memberControlCheckbox.setValue(event.target.checked);
+            if (addOnSumInsuredControl) {
+              addOnSumInsuredControl.setValue(event.target.value);
+            }
+            const memberRoomTypeControl = member.get('roomType');
+            if (memberRoomTypeControl) {
+              memberRoomTypeControl.setValue(event.target.value);
             }
           })
+
         }
 
       })
     }
   }
+
   disableControlForAllOtherMembers(control: any) {
     if (control.name == 'burnBenefit' || control.name == 'brokenBonesBenefit') {
       const addOnControlGroup = this.dynamicFormGroup.get(control.name);
       if (addOnControlGroup) {
         const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
         Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
-          console.log(Key, index);
           if (index != 0) {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
@@ -11070,7 +12867,6 @@ export class YatraComponent {
       if (addOnControlGroup) {
         const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
         Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
-          console.log(Key, index);
           if (index != 0) {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
@@ -11084,19 +12880,17 @@ export class YatraComponent {
       }
     }
   }
+
   autoSelectControlValueForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
     if (parentControl.name == 'burnBenefit' || parentControl.name == 'brokenBonesBenefit') {
-      console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
       const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
       if (addOnControlGroup) {
         const addOnDetailsControl = addOnControlGroup.get(subControl.name);
         console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
         Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
-          console.log(Key, index);
           if (index != 0) {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
-              console.log(member);
               const memberControlCheckbox = member.get('addOnSumInsured');
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
@@ -11113,11 +12907,9 @@ export class YatraComponent {
         const addOnDetailsControl = addOnControlGroup.get(subControl.name);
         console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
         Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
-          console.log(Key, index);
           if (index != 0) {
             const memberArray = addOnDetailsControl?.get(Key) as FormArray;
             memberArray.controls.forEach((member: any) => {
-              console.log(member);
               const memberControlCheckbox = member.get('noOfDays');
               if (memberControlCheckbox) {
                 memberControlCheckbox.setValue(event.target.value);
@@ -11129,6 +12921,83 @@ export class YatraComponent {
       }
     }
   }
+
+  disableMemberCheckBoxUnderAge(control: any) {
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      if (member.memberAge < 18 && (member.annualIncome == '' || member.annualIncome == undefined)) {
+        if (memberControlCheckbox) {
+          memberControlCheckbox.disable();
+        }
+      }
+    })
+  }
+
+  disableMemberCheckboxForNoIncomeAndNonPASelection(control: any, parentControl: any) {
+    let paMembers = this.formData.insuredMemberDetails
+      .filter((member: any) => member.covers.some((cover: any) => cover.coverId === "ACCD"))
+      .map((member: any) => member.relation);
+    console.log("PA Members:", paMembers);
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const selectedMemberControl = ((this.dynamicFormGroup.get(parentControl.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)?.controls[member.relation] as FormArray;
+      const annualIncome = member.annualIncome;
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      if (control.name == 'temporaryTotalDisablementBenefit') {
+        const occupation = ((selectedMemberControl?.controls[1] as FormGroup)?.controls['occupation'] as FormControl)?.value;
+        const occupationRisk = ((selectedMemberControl?.controls[2] as FormGroup)?.controls['occupationRisk'] as FormControl)?.value;
+        const occupationValue = occupation ? (JSON.parse(occupation)).value : '';
+        const occupationRiskValue = occupationRisk ? (JSON.parse(occupationRisk)).id : '';
+        //If risk class is 3 or no annualincome or occupation is retired that member is not eligible for ttdc      
+        //if a member having annual income,occupation risk is not class 3 and occupation is not retired then that member is eligible to take ttdc
+        const isEligible = (occupationRiskValue != "3" && annualIncome != '' && occupationValue != 'O464');
+        const hasPACover = paMembers.includes(member.relation);
+        // If not eligible(false) or doesn't have PA cover(false), disable checkbox
+        if (!isEligible || !hasPACover) {
+          if (memberControlCheckbox) {
+            memberControlCheckbox.disable();
+          }
+        }
+      } else if (control.name == 'loanProtect' || control.name == 'emiProtect') {
+        const isEligible = (annualIncome !== '');
+        const hasPACover = paMembers.includes(member.relation);
+        // If member Ddoesn't have annual income & doesn't have PA cover(false), disable checkbox
+        if (!isEligible || !hasPACover) {
+          if (memberControlCheckbox) {
+            memberControlCheckbox.disable();
+          }
+        }
+      }
+    });
+  }
+
+  disableMemberCheckboxForNonPASelection(control: any, parentControl: any) {
+    let paMembers = this.formData.insuredMemberDetails
+      .filter((member: any) => member.covers.some((cover: any) => cover.coverId === "ACCD"))
+      .map((member: any) => member.relation);
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      //check whether member selected PA or not
+      const hasPACover = paMembers.includes(member.relation);
+      if (!hasPACover) {
+        if (memberControlCheckbox) {
+          memberControlCheckbox.disable();
+        }
+      } else {
+        console.log(`${member.relation} is eligible for ${control.name} cover`);
+      }
+    });
+  }
+
   markNestedControlsAsTouched(control: AbstractControl): void {
     // If the control is a FormGroup, iterate over its controls
     if (control instanceof FormGroup) {
@@ -11146,175 +13015,6 @@ export class YatraComponent {
     }
   }
 
-  // defaultAddOn(control: any) {
-  //   const addOnControl = this.dynamicFormGroup.get(control.name);
-  //   const addOnCoverControl = addOnControl?.get('addOnCover');
-  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
-  //   const addOnIdControl = addOnControl?.get('addOnId');
-  //   const addOnCoverNameControl = addOnControl?.get('optionalCoverName');
-
-  //   const addOnData = addOnControl?.getRawValue();
-  //   const modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
-
-  //   if (!addOnDetailsControl || !addOnData) {
-  //     console.warn('Add-on details control or data is not found.');
-  //     return;
-  //   }
-
-  //   // Ensure addOnCover and memberCheckbox values are true
-  //   addOnCoverControl?.setValue(true);
-
-  //   if(addOnCoverNameControl?.value.includes('Personal Accident')){
-  //     Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-  //       const memberArray = addOnDetailsControl.get(key) as FormArray;
-
-  //       console.log(memberArray);
-
-  //       memberArray.controls.forEach((member: any) => {
-  //         console.log(member);
-
-  //         const memberControlCheckbox = member.get('memberCheckbox');
-  //         const occupationControl = member.get('occupation');
-  //         const occupationRiskControl = member.get('occupationRisk');
-  //         const addOnSumInsuredControl = member.get('addOnSumInsured')
-
-  //         console.log(memberControlCheckbox, occupationControl, occupationRiskControl);
-
-
-  //         if (memberControlCheckbox) {
-  //           memberControlCheckbox.setValue(true);
-
-  //           if (key === 'Self') {
-  //             // Disable the checkbox for 'Self'
-  //             memberControlCheckbox.disable();
-  //             addOnCoverControl?.disable();
-  //           }
-  //         }
-
-  //         if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-  //           console.log(control.subControls[1].innerSubControls);
-
-  //           // Set default values for occupation and occupationRisk by iterating through coreControls
-  //           const innerControls = control.subControls[1].innerSubControls || [];
-  //           const coreControls = innerControls[0]?.coreControls || [];
-
-  //           if (occupationControl) {
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'occupation' && occupationControl && occupationControl.value === '') {
-  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
-  //                 if (defaultOption) {
-  //                   occupationControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-
-  //           if (occupationRiskControl) {
-  //             console.log(occupationRiskControl);
-
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'occupationRisk' && occupationRiskControl && occupationRiskControl.value === '') {
-  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
-  //                 if (defaultOption) {
-  //                   occupationRiskControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-
-  //           if (addOnSumInsuredControl) {
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl && addOnSumInsuredControl.value === '') {
-  //                 const defaultOption = coreControl.options?.[0]?.value;
-  //                 if (defaultOption) {
-  //                   addOnSumInsuredControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-  //         }
-
-  //         console.log(occupationControl, occupationRiskControl);
-  //         const addOnData = addOnControl?.value;
-  //         console.log(addOnData,addOnControl);
-
-
-  //         // Check if the checkbox is enabled and checked
-  //         // if (memberControlCheckbox.value) {
-  //         modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-  //           if (insuredMember.relation === key) {
-  //             const coverId = addOnIdControl?.value;
-  //             const coverName = addOnCoverNameControl?.value || '';
-
-  //             let addOnSumInsured = 0;
-  //             let coverFound = false;
-
-  //             const addOnDetails = addOnData.addOnDetails[key];
-  //             addOnDetails.forEach((detail: any) => {
-  //               if (detail.addOnSumInsured) {
-  //                 addOnSumInsured = detail.addOnSumInsured;
-  //               } else if (detail.roomType) {
-  //                 addOnSumInsured = detail.roomType;
-  //               }
-
-  //               if (coverName.includes('Personal Accident') && detail.occupation) {
-  //                 insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-  //               }
-
-  //               if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-  //                 insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-  //               }
-  //             });
-
-  //             if (!insuredMember.covers) {
-  //               insuredMember.covers = [];
-  //             }
-
-  //             insuredMember.covers.forEach((cover: any) => {
-  //               if (cover.coverId === coverId) {
-  //                 cover.value = addOnSumInsured;
-  //                 coverFound = true;
-  //               }
-  //             });
-
-  //             if (!coverFound) {
-  //               insuredMember.covers.push({
-  //                 coverId,
-  //                 value: addOnSumInsured,
-  //                 coverName
-  //               });
-  //             }
-
-  //             if (!this.covers[index]) {
-  //               this.covers[index] = [];
-  //             }
-
-  //             const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-  //             if (coverInCovers) {
-  //               coverInCovers.value = addOnSumInsured;
-  //             } else {
-  //               this.covers[index].push({
-  //                 coverId,
-  //                 value: addOnSumInsured,
-  //                 coverName
-  //               });
-  //             }
-  //           }
-  //         });
-  //         // }
-
-  //       });
-  //     });
-  //   }
-  //   else{
-  //     if(this.formData['memberPolicyType']== 'Family Floater'){
-
-  //     }
-  //   }
-
-
-  // }
-
   defaultAddOn(control: any) {
     const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
@@ -11329,276 +13029,6 @@ export class YatraComponent {
       console.warn('Add-on details control or data is not found.');
       return;
     }
-
-
-
-    // if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-    //   let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
-    //   let isSelfPresent = false;
-    //   // Check for age validation rules
-    //   const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
-    //   if (ageValidationRule) {
-    //     this.checkForAgeValidations(control); // Call the age validation method
-    //   }
-
-    //   const memberSumInsuredValidationRule = control.validationRules?.find((rule: any) => rule.type === 'memberLevelSumInsured');
-    //   if (memberSumInsuredValidationRule) {
-    //     this.memberSumInsuredValidationMethod(memberSumInsuredValidationRule);
-    //   }
-
-    //   console.log("After disabling based on member", this.form);
-
-
-    //   const zoneValidationRule = control.validationRules?.find((rule: any) => rule.type === 'zoneWiseValidation');
-
-    //   const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
-    //   const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over';
-    //   if (portabilityValidationRule && this.formData['typeOfBusiness'] == 'Roll Over') {
-    //     this.setPortabilityValidationRule(portabilityValidationRule, control);
-    //   }
-
-    //   // Existing "Personal Accident" logic
-    //   Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-    //     const memberArray = addOnDetailsControl.get(key) as FormArray;
-
-    //     memberArray.controls.forEach((member: any) => {
-    //       const memberControlCheckbox = member.get('memberCheckbox');
-    //       const occupationControl = member.get('occupation');
-    //       const occupationRiskControl = member.get('occupationRisk');
-    //       const addOnSumInsuredControl = member.get('addOnSumInsured');
-
-    //       // Skip processing if member control is disabled
-    //       if (memberControlCheckbox?.disabled) {
-    //         console.log(`Skipping disabled member: ${key}`);
-    //         return;
-    //       }
-
-    //       if (memberControlCheckbox) {
-
-    //         if (!isPortabilityRuleAvailable && !portabilityValidationRule) {
-    //           memberControlCheckbox.setValue(true);
-    //           if (key === 'Self') {
-    //             isSelfPresent = true;
-    //             // Disable the checkbox for 'Self'
-    //             memberControlCheckbox.disable();
-    //           }
-    //         }
-    //         else if (isPortabilityRuleAvailable) {
-    //           if (portabilityValidationRule.allMemberSelected) {
-    //             memberControlCheckbox.setValue(true);
-    //           }
-    //           if (portabilityValidationRule.allMemberDisabled) {
-    //             memberControlCheckbox.disable();
-    //           }
-    //         }
-
-    //         shouldEnableAddOnCover = true; // Set the flag if any checkbox is enabled
-    //       }
-
-    //       if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-    //         console.log(control.subControls);
-
-    //         const innerControls = control.subControls[1].innerSubControls || [];
-    //         const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
-    //         const coreControls = matchingInnerControl?.coreControls || [];
-
-    //         if (occupationControl) {
-    //           coreControls.forEach((coreControl: any) => {
-    //             if (coreControl.name === 'occupation' && occupationControl.value === '') {
-    //               const defaultOption = JSON.stringify(coreControl.options?.[0]);
-    //               if (defaultOption) {
-    //                 occupationControl.setValue(defaultOption);
-    //               }
-    //             }
-    //           });
-    //         }
-
-    //         if (occupationRiskControl) {
-    //           coreControls.forEach((coreControl: any) => {
-    //             if (coreControl.name === 'occupationRisk' && occupationRiskControl.value === '') {
-    //               const defaultOption = JSON.stringify(coreControl.options?.[0]);
-    //               if (defaultOption) {
-    //                 occupationRiskControl.setValue(defaultOption);
-    //               }
-    //             }
-    //           });
-    //         }
-
-    //         if (addOnSumInsuredControl) {
-    //           coreControls.forEach((coreControl: any) => {
-    //             if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl.value === '') {
-    //               const defaultOption = coreControl.options?.[0]?.value;
-    //               if (defaultOption) {
-    //                 addOnSumInsuredControl.setValue(defaultOption);
-    //               }
-    //             }
-    //           });
-    //         }
-    //       }
-
-    //       // modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-    //       //   if (insuredMember.relation === key) {
-    //       //     const coverId = addOnIdControl?.value;
-    //       //     const coverName = addOnCoverNameControl?.value || '';
-
-    //       //     let addOnSumInsured = 0;
-    //       //     let coverFound = false;
-
-    //       //     const addOnDetails = addOnControl?.value.addOnDetails[key];
-    //       //     addOnDetails.forEach((detail: any) => {
-    //       //       if (detail.addOnSumInsured) {
-    //       //         addOnSumInsured = detail.addOnSumInsured;
-    //       //       } else if (detail.roomType) {
-    //       //         addOnSumInsured = detail.roomType;
-    //       //       }
-
-    //       //       if (coverName.includes('Personal Accident') && detail.occupation) {
-    //       //         insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-    //       //       }
-
-    //       //       if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-    //       //         insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-    //       //       }
-    //       //     });
-
-    //       //     if (!insuredMember.covers) {
-    //       //       insuredMember.covers = [];
-    //       //     }
-
-    //       //     insuredMember.covers.forEach((cover: any) => {
-    //       //       if (cover.coverId === coverId) {
-    //       //         cover.value = addOnSumInsured;
-    //       //         coverFound = true;
-    //       //       }
-    //       //     });
-
-    //       //     if (!coverFound) {
-    //       //       insuredMember.covers.push({
-    //       //         coverId,
-    //       //         value: addOnSumInsured,
-    //       //         coverName
-    //       //       });
-    //       //     }
-
-    //       //     if (!this.covers[index]) {
-    //       //       this.covers[index] = [];
-    //       //     }
-
-    //       //     const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-    //       //     if (coverInCovers) {
-    //       //       coverInCovers.value = addOnSumInsured;
-    //       //     } else {
-    //       //       this.covers[index].push({
-    //       //         coverId,
-    //       //         value: addOnSumInsured,
-    //       //         coverName
-    //       //       });
-    //       //     }
-    //       //   }
-    //       // });
-
-
-
-    //       if (!portabilityValidationRule || isPortabilityRuleAvailable) {
-    //         modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-    //           if (insuredMember.relation === key) {
-    //             const coverId = addOnIdControl?.value;
-    //             const coverName = addOnCoverNameControl?.value || '';
-
-    //             let addOnSumInsured = 0;
-    //             let coverFound = false;
-
-    //             const addOnDetails = addOnControl?.value.addOnDetails[key];
-    //             addOnDetails.forEach((detail: any) => {
-    //               if (detail.addOnSumInsured) {
-    //                 addOnSumInsured = detail.addOnSumInsured;
-    //               } else if (detail.roomType) {
-    //                 addOnSumInsured = detail.roomType;
-    //               }
-
-    //               if (coverName.includes('Personal Accident') && detail.occupation) {
-    //                 insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-    //               }
-
-    //               if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-    //                 insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-    //               }
-    //             });
-
-    //             if (!insuredMember.covers) {
-    //               insuredMember.covers = [];
-    //             }
-
-    //             insuredMember.covers.forEach((cover: any) => {
-    //               if (cover.coverId === coverId) {
-    //                 cover.value = addOnSumInsured;
-    //                 coverFound = true;
-    //               }
-    //             });
-
-    //             if (!coverFound) {
-    //               insuredMember.covers.push({
-    //                 coverId,
-    //                 value: addOnSumInsured,
-    //                 coverName
-    //               });
-    //             }
-
-    //             if (!this.covers[index]) {
-    //               this.covers[index] = [];
-    //             }
-
-    //             const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-    //             if (coverInCovers) {
-    //               coverInCovers.value = addOnSumInsured;
-    //             } else {
-    //               this.covers[index].push({
-    //                 coverId,
-    //                 value: addOnSumInsured,
-    //                 coverName
-    //               });
-    //             }
-    //           }
-    //         });
-    //       }
-
-    //     });
-    //   });
-
-    //   // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
-    //   if (shouldEnableAddOnCover) {
-    //     console.log(shouldEnableAddOnCover);
-
-    //     let zoneValidationRuleApplicable = false;
-    //     if (zoneValidationRule) {
-    //       zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
-    //         (insuredMember: any) => insuredMember.zone === 'Zone I'
-    //       );
-    //     }
-
-
-    //     if (portabilityValidationRule) {
-
-    //       if (isPortabilityRuleAvailable) {
-    //         addOnCoverControl?.setValue(true);
-    //       }
-    //       else {
-    //         addOnCoverControl?.setValue(false);
-    //       }
-    //     }
-    //     else {
-    //       addOnCoverControl?.setValue(true);
-    //     }
-
-    //     if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
-    //       addOnCoverControl?.disable();
-    //     }
-
-    //   }
-    //   else {
-    //     addOnCoverControl?.setValue(false);
-    //   }
-    // }
     if (addOnCoverNameControl?.value.includes('Personal Accident')) {
       let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
       let isSelfPresent = false;
@@ -11641,47 +13071,6 @@ export class YatraComponent {
           const matchingMember = this.formData.insuredMemberDetails.find(
             (insuredMember: any) => key === insuredMember.relation
           );
-
-          // let minSumInsured = portabilityValidationRule?.minSumInsured;
-          // let maxSumInsured = portabilityValidationRule?.maxSumInsured;
-
-          // if (isPortabilityRuleAvailable && portabilityValidationRule?.policyRules) {
-          //   const policyRule = portabilityValidationRule.policyRules.find(
-          //     (rule: any) => rule.policyType === this.formData.memberPolicyType
-          //   );
-
-          //   if (policyRule?.ageBasedRules) {
-          //     const ageThreshold = policyRule.ageBasedRules.ageThreshold;
-
-          //     if (parseInt(matchingMember.memberAge) < ageThreshold) {
-          //       const belowThresholdRules = policyRule.ageBasedRules.belowThreshold;
-          //       if (belowThresholdRules) {
-          //         // minSumInsured = belowThresholdRules.minSumInsured || minSumInsured;
-          //         // maxSumInsured = belowThresholdRules.maxSumInsured || maxSumInsured;
-          //         if (memberControlCheckbox) {
-          //           memberControlCheckbox.setValue(belowThresholdRules.selected);
-          //           if (belowThresholdRules.disabled) {
-          //             memberControlCheckbox.disable();
-          //           }
-
-          //         }
-          //       }
-          //     } else {
-          //       const aboveThresholdRules = policyRule.ageBasedRules.aboveThreshold;
-          //       if (aboveThresholdRules) {
-          //         console.log(memberControlCheckbox);
-
-          //         if (memberControlCheckbox) {
-          //           memberControlCheckbox.setValue(aboveThresholdRules.selected);
-          //           if (aboveThresholdRules.disabled) {
-          //             memberControlCheckbox.disable();
-          //           }
-
-          //         }
-          //       }
-          //     }
-          //   }
-          // }
 
           if (isPortabilityRuleAvailable && portabilityValidationRule?.policyRules) {
             const policyRule = portabilityValidationRule.policyRules.find(
@@ -11737,7 +13126,25 @@ export class YatraComponent {
             if (occupationControl) {
               coreControls.forEach((coreControl: any) => {
                 if (coreControl.name === 'occupation' && occupationControl.value === '') {
-                  const defaultOption = JSON.stringify(coreControl.options?.[0]);
+                  let defaultOption = JSON.stringify(coreControl.options?.[0]);
+
+                  if ((this.formData.hasOwnProperty(control.name) && this.formData[control.name].addOnCover == true)) {
+                    let existingValue = this.formData[control.name].addOnDetails;
+                    Object.keys(existingValue).forEach((memberKey: any) => {
+                      if (memberKey == key) {
+                        console.log(existingValue[memberKey]);
+
+                        const valueObj = existingValue[memberKey].find((item: any) =>
+                          item.occupation
+                        );
+
+                        if (valueObj) {
+                          defaultOption = valueObj.occupation;
+                        }
+                      }
+                    })
+                  }
+                  console.log(defaultOption);
                   if (defaultOption) {
                     occupationControl.setValue(defaultOption);
                   }
@@ -11748,7 +13155,23 @@ export class YatraComponent {
             if (occupationRiskControl) {
               coreControls.forEach((coreControl: any) => {
                 if (coreControl.name === 'occupationRisk' && occupationRiskControl.value === '') {
-                  const defaultOption = JSON.stringify(coreControl.options?.[0]);
+                  let defaultOption = JSON.stringify(coreControl.options?.[0]);
+                  if ((this.formData.hasOwnProperty(control.name) && this.formData[control.name].addOnCover == true)) {
+                    let existingValue = this.formData[control.name].addOnDetails;
+                    Object.keys(existingValue).forEach((memberKey: any) => {
+                      if (memberKey == key) {
+                        console.log(existingValue[memberKey]);
+
+                        const valueObj = existingValue[memberKey].find((item: any) =>
+                          item.occupationRisk
+                        );
+
+                        if (valueObj) {
+                          defaultOption = valueObj.occupationRisk;
+                        }
+                      }
+                    })
+                  }
                   if (defaultOption) {
                     occupationRiskControl.setValue(defaultOption);
                   }
@@ -11759,7 +13182,23 @@ export class YatraComponent {
             if (addOnSumInsuredControl) {
               coreControls.forEach((coreControl: any) => {
                 if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl.value === '') {
-                  const defaultOption = coreControl.options?.[0]?.value;
+                  let defaultOption = coreControl.options?.[0]?.value;
+                  if ((this.formData.hasOwnProperty(control.name) && this.formData[control.name].addOnCover == true)) {
+                    let existingValue = this.formData[control.name].addOnDetails;
+                    Object.keys(existingValue).forEach((memberKey: any) => {
+                      if (memberKey == key) {
+                        console.log(existingValue[memberKey]);
+
+                        const valueObj = existingValue[memberKey].find((item: any) =>
+                          item.addOnSumInsured
+                        );
+
+                        if (valueObj) {
+                          defaultOption = valueObj.addOnSumInsured;
+                        }
+                      }
+                    })
+                  }
                   if (defaultOption) {
                     addOnSumInsuredControl.setValue(defaultOption);
                   }
@@ -11843,27 +13282,6 @@ export class YatraComponent {
         }
       });
 
-      // if (shouldEnableAddOnCover) {
-      //   let zoneValidationRuleApplicable = false;
-      //   if (zoneValidationRule) {
-      //     zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
-      //       (insuredMember: any) => insuredMember.zone === 'Zone I'
-      //     );
-      //   }
-
-      //   if (isPortabilityRuleAvailable) {
-      //     addOnCoverControl?.setValue(true);
-      //   } else {
-      //     addOnCoverControl?.setValue(false);
-      //   }
-
-      //   if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
-      //     addOnCoverControl?.disable();
-      //   }
-      // } else {
-      //   addOnCoverControl?.setValue(false);
-      // }
-
       if (shouldEnableAddOnCover) {
         console.log(shouldEnableAddOnCover);
 
@@ -11873,7 +13291,6 @@ export class YatraComponent {
             (insuredMember: any) => insuredMember.zone === 'Zone I'
           );
         }
-
 
         if (portabilityValidationRule) {
 
@@ -11900,6 +13317,7 @@ export class YatraComponent {
 
     else {
       // New logic for validationRules
+      console.log(control, this.dynamicFormGroup.value, this.formData);
       const validationRules = control.validationRules || [];
 
       const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
@@ -11908,121 +13326,586 @@ export class YatraComponent {
         this.checkForAgeValidations(control); // Call the age validation method
       }
 
-      const matchingRule = validationRules.find(
-        (rule: any) => rule.policyType === this.formData['memberPolicyType']
-      );
+      const optionsRule = control.validationRules?.find((rule: any) => rule.type === 'zone-level-optionchanges');
 
-      console.log(matchingRule);
+      if (optionsRule) {
+        this.zoneWiseOptionRuleValidation(optionsRule, control);
+        console.log(this.form)
+      }
 
+      validationRules.forEach((rule: any) => {
+        const matchingRule = rule.policyType === this.formData['memberPolicyType'] ? rule : null;
+        if (matchingRule) {
 
-      if (matchingRule) {
-        const { allMemberSelected, allMemberDisabled } = matchingRule;
+          if (matchingRule.type == 'policy-level') {
+            const { allMemberSelected, allMemberDisabled } = matchingRule;
 
-        if (allMemberSelected) {
-          console.log(addOnCoverControl);
+            if (allMemberSelected) {
+              console.log(addOnCoverControl);
 
-          addOnCoverControl?.setValue(true);
-        }
-        if (allMemberDisabled) {
-          addOnCoverControl?.disable();
-        }
+              addOnCoverControl?.setValue(true);
+            }
+            if (allMemberDisabled) {
+              addOnCoverControl?.disable();
+            }
+            // Only start iteration if allMemberSelected or allMemberDisabled is true
+            if (allMemberSelected || allMemberDisabled) {
+              Object.keys(addOnDetailsControl.getRawValue()).forEach((key: any) => {
+                const memberArray = addOnDetailsControl.get(key) as FormArray;
 
-        // Only start iteration if allMemberSelected or allMemberDisabled is true
-        if (allMemberSelected || allMemberDisabled) {
-          Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-            const memberArray = addOnDetailsControl.get(key) as FormArray;
+                memberArray.controls.forEach((member: any) => {
+                  const memberControlCheckbox = member.get('memberCheckbox');
+                  const addOnSumInsuredControl = member.get('addOnSumInsured') || member.get('roomType');
+                  let isDisabledByAgeValidation = false;
+                  if (ageValidationRule) {
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => key === insuredMember.relation
+                    );
 
-            memberArray.controls.forEach((member: any) => {
-              const memberControlCheckbox = member.get('memberCheckbox');
-              const addOnSumInsuredControl = member.get('addOnSumInsured');
-              let isDisabledByAgeValidation = false;
-              if (ageValidationRule) {
+                    if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
+                      isDisabledByAgeValidation = true;
+                    }
+                  }
+
+                  // Handle allMemberSelected
+                  if (allMemberSelected && memberControlCheckbox && !isDisabledByAgeValidation) {
+                    memberControlCheckbox.setValue(true);
+                  }
+
+                  // Handle allMemberDisabled
+                  if (allMemberDisabled) {
+                    if (memberControlCheckbox) {
+                      memberControlCheckbox.disable();
+                    }
+                    // if (addOnSumInsuredControl) {
+                    //   addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
+                    // }
+                  }
+
+                  // Set addOnSumInsured value logic if the control exists
+                  if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
+                    // const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
+
+                    const coreControls = control.subControls[1]?.innerSubControls?.find(
+                      (valueOfOption: any) => valueOfOption.name == key
+                    ).coreControls || [];
+                    console.log(coreControls)
+                    let addOnSumInsured = '';
+
+                    coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name === 'addOnSumInsured' || coreControl.name === 'roomType') {
+                        let optionValue = null;
+                        console.log(coreControl.value)
+                        if (coreControl.value != '') {
+                          optionValue = coreControl.value
+                        }
+                        else if (this.formData.hasOwnProperty(control.name) && this.formData[control.name].addOnCover == true && coreControl.options) {
+                          let existingValue = this.formData[control.name].addOnDetails;
+                          console.log(existingValue);
+
+                          let dynamicFormGroupValue = this.dynamicFormGroup.getRawValue()[control.name].addOnDetails;
+                          console.log(dynamicFormGroupValue);
+
+                          Object.keys(dynamicFormGroupValue).forEach((memberKey: any) => {
+                            if (memberKey == key && existingValue[memberKey]) {
+                              console.log(existingValue[memberKey]);
+
+                              const valueObj = existingValue[memberKey].find((item: any) =>
+                                item.roomType || item.addOnSumInsured
+                              );
+
+                              if (valueObj) {
+                                optionValue = valueObj.roomType || valueObj.addOnSumInsured;
+                              }
+                            }
+                            else if (memberKey == key) {
+                              optionValue = coreControl.options[0].value;
+                            }
+                          })
+
+                        }
+                        else if (coreControl.options && coreControl.options.length > 0) {
+                          optionValue = coreControl.options[0].value;
+                        }
+                        // if (coreControl.options?.[0]?.value) {
+                        //   addOnSumInsured = coreControl.options[0].value;
+                        // } 
+                        if (optionValue) {
+                          addOnSumInsured = optionValue;
+                        }
+                        else {
+                          const memberDetail = modifiedInsuredMemberDetails.find(
+                            (member: any) => member.relation === key
+                          );
+                          addOnSumInsured = memberDetail?.sumInsured || '';
+                        }
+
+                        if (addOnSumInsuredControl && addOnSumInsured !== '') {
+                          addOnSumInsuredControl.setValue(addOnSumInsured);
+                        }
+                      }
+                    });
+
+                    // Update insuredMemberDetails logic
+                    modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                      if (insuredMember.relation === key) {
+                        const coverId = addOnIdControl?.value;
+                        const coverName = addOnCoverNameControl?.value || '';
+
+                        if (!insuredMember.covers) {
+                          insuredMember.covers = [];
+                        }
+
+                        const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                        if (existingCover) {
+                          existingCover.value = addOnSumInsured;
+                        } else {
+                          insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                        }
+
+                        if (!this.covers[index]) {
+                          this.covers[index] = [];
+                        }
+
+                        const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                        if (existingCoverInCovers) {
+                          existingCoverInCovers.value = addOnSumInsured;
+                        } else {
+                          this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                        }
+                      }
+                    });
+                  }
+                });
+              });
+            }
+
+            //Below code Regarding dependentControls in health Booster additional cover
+            if (control.dependentAddOnControls && Array.isArray(control.dependentAddOnControls)) {
+              control.dependentAddOnControls.forEach((dependentControl: any) => {
+                console.log(dependentControl)
+
+                const dependentAddOnName = dependentControl.dependentAddOnName;
+                const requiredVisibility = dependentControl.visibility;
+
+                console.log(dependentAddOnName, requiredVisibility)
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name === dependentAddOnName && formControl.visible === true) {
+                      // Update the visibility of the matching control
+                      formControl.visible = requiredVisibility;
+                    }
+                  });
+                });
+              });
+            }
+            // this.form.formSections.forEach((section: any) => {
+            //   section.formControls.forEach((formControl: any) => {
+            //     console.log(section,formControl)
+            //     // Check if the form control has dependentAddOnControls
+            //     if (formControl.dependentAddOnControls && Array.isArray(formControl.dependentAddOnControls)) {
+            //       formControl.dependentAddOnControls.forEach((dependentControl: any) => {
+            //         console.log(dependentControl)
+            //         // Extract dependentAddOnName and visibility from JSON
+            //         const dependentAddOnName = dependentControl.dependentAddOnName;
+            //         const requiredVisibility = dependentControl.visibility; // Expected visibility (false in JSON)
+            //         console.log(dependentAddOnName,requiredVisibility)
+            //         // Iterate over all controls to check if any has the same dependentAddOnName
+            //         this.form.formSections.forEach((sec: any) => {
+            //           sec.formControls.forEach((ctrl: any) => {
+            //             if (ctrl.name === dependentAddOnName && ctrl.visible === true) {
+            //               // Update the visibility of the matching control
+            //               ctrl.visible = requiredVisibility;
+            //             }
+            //           });
+            //         });
+            //       });
+            //     }
+            //   });
+            // });
+
+          }
+          if (matchingRule.type == 'state-level') {
+            // Extract state-level validation rules
+            const { states, sumInsuredThreshold, rules } = matchingRule;
+            let shouldEnableAddOnCover = false;
+            let isSelfPresent = false;
+            Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+              const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+              memberArray.controls.forEach((member: any) => {
+                const memberControlCheckbox = member.get('memberCheckbox');
+                const addOnSumInsuredControl = member.get('addOnSumInsured');
+                let isDisabledByAgeValidation = false;
+                let isMemberStateApplicable = false;
+                let isMemberSumInsuredApplicable = true;
                 const matchingMember = this.formData.insuredMemberDetails.find(
                   (insuredMember: any) => key === insuredMember.relation
                 );
+                if (ageValidationRule) {
 
-                if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
-                  isDisabledByAgeValidation = true;
+                  if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
+                    isDisabledByAgeValidation = true;
+                  }
                 }
-              }
 
-              // Handle allMemberSelected
-              if (allMemberSelected && memberControlCheckbox && !isDisabledByAgeValidation) {
-                memberControlCheckbox.setValue(true);
-              }
+                if (states.includes(matchingMember.state)) {
+                  isMemberStateApplicable = true;
+                }
 
-              // Handle allMemberDisabled
-              if (allMemberDisabled) {
+                if (parseInt(matchingMember.sumInsured) > sumInsuredThreshold) {
+                  isMemberSumInsuredApplicable = false;
+                }
+
+                if (!isDisabledByAgeValidation && isMemberStateApplicable && isMemberSumInsuredApplicable) {
+
+                  const isSelf = key === 'Self';
+
+                  // Fetch rule for the relation type (Self or Others)
+                  const memberRule = rules[isSelf ? 'Self' : 'Others'];
+
+                  if (isSelf) {
+                    isSelfPresent = true;
+                  }
+
+                  // Apply selected/disabled logic based on the rule
+                  if (memberRule?.selected) {
+                    memberControlCheckbox?.setValue(memberRule?.selected);
+                    shouldEnableAddOnCover = true;
+                  }
+                  if (memberRule?.disabled) {
+                    memberControlCheckbox?.disable();
+                  }
+
+                  // Set addOnSumInsured value logic if the control exists
+                  if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
+                    const coreControls = control.subControls[1]?.innerSubControls?.find(
+                      (valueOfOption: any) => valueOfOption.name == key
+                    ).coreControls || [];
+                    let addOnSumInsured = '';
+
+                    coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name === 'addOnSumInsured') {
+                        let optionValue = null;
+                        console.log(coreControl.value)
+                        if (coreControl.value != '') {
+                          optionValue = coreControl.value
+                        }
+                        else if (this.formData.hasOwnProperty(control.name) && this.formData[control.name].addOnCover == true && coreControl.options) {
+                          let existingValue = this.formData[control.name].addOnDetails;
+                          console.log(existingValue);
+
+                          let dynamicFormGroupValue = this.dynamicFormGroup.getRawValue()[control.name].addOnDetails;
+                          console.log(dynamicFormGroupValue);
+
+                          Object.keys(dynamicFormGroupValue).forEach((memberKey: any) => {
+                            if (memberKey == key && existingValue[memberKey]) {
+                              console.log(existingValue[memberKey]);
+
+                              const valueObj = existingValue[memberKey].find((item: any) =>
+                                item.roomType || item.addOnSumInsured
+                              );
+
+                              if (valueObj) {
+                                optionValue = valueObj.roomType || valueObj.addOnSumInsured;
+                              }
+                            }
+                            else if (memberKey == key) {
+                              optionValue = coreControl.options[0].value;
+                            }
+                          })
+
+                        }
+                        else if (coreControl.options && coreControl.options.length > 0) {
+                          optionValue = coreControl.options[0].value;
+                        }
+                        // if (coreControl.options?.[0]?.value) {
+                        //   addOnSumInsured = coreControl.options[0].value;
+                        // } 
+                        if (optionValue) {
+                          addOnSumInsured = optionValue;
+                        } else {
+                          const memberDetail = modifiedInsuredMemberDetails.find(
+                            (member: any) => member.relation === key
+                          );
+                          addOnSumInsured = memberDetail?.sumInsured || '';
+                        }
+
+                        if (addOnSumInsuredControl && addOnSumInsured !== '') {
+                          addOnSumInsuredControl.setValue(addOnSumInsured);
+                        }
+                      }
+                    });
+
+                    // Update insuredMemberDetails logic
+                    modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                      if (insuredMember.relation === key) {
+                        const coverId = addOnIdControl?.value;
+                        const coverName = addOnCoverNameControl?.value || '';
+
+                        if (!insuredMember.covers) {
+                          insuredMember.covers = [];
+                        }
+
+                        const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                        if (existingCover) {
+                          existingCover.value = addOnSumInsured;
+                        } else {
+                          insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                        }
+
+                        if (!this.covers[index]) {
+                          this.covers[index] = [];
+                        }
+
+                        const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                        if (existingCoverInCovers) {
+                          existingCoverInCovers.value = addOnSumInsured;
+                        } else {
+                          this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                        }
+                      }
+                    });
+                  }
+                }
+
+              });
+            });
+            addOnCoverControl?.setValue(shouldEnableAddOnCover);
+            if (isSelfPresent) {
+              addOnCoverControl?.disable();
+            }
+          }
+          if (matchingRule.type == 'sumInsured-level') {
+            if (matchingRule.policyType == 'Family Floater' && parseInt(this.formData['sumInsured']) >= parseInt(matchingRule.sumInsuredThreshold)) {
+              control.visible = matchingRule.visibleAddOn;
+            }
+            else if (matchingRule.policyType == 'Multi Individual') {
+              // const sumInsuredThreshold = matchingRule.sumInsuredThreshold;
+
+              const { sumInsuredThreshold, rules } = matchingRule;
+              Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+                const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+                memberArray.controls.forEach((member: any) => {
+                  const memberControlCheckbox = member.get('memberCheckbox');
+                  const addOnSumInsuredControl = member.get('addOnSumInsured');
+                  const matchingMember = this.formData.insuredMemberDetails.find(
+                    (insuredMember: any) => key === insuredMember.relation
+                  );
+
+                  if (parseInt(matchingMember.sumInsured) >= sumInsuredThreshold) {
+                    const memberRule = rules[key == 'Self' ? 'Self' : 'Others'];
+
+                    if (memberRule?.selected) {
+                      memberControlCheckbox?.setValue(memberRule?.selected);
+                    }
+                    if (memberRule?.disabled) {
+                      memberControlCheckbox?.disable();
+                    }
+                  }
+                });
+              });
+            }
+          }
+        }
+      })
+
+      const genderRule = control.validationRules?.find((rule: any) => rule.type === 'gender-level');
+
+      if (genderRule) {
+        this.genderRuleValidation(genderRule, control);
+      }
+
+      const zoneRule = control.validationRules?.find((rule: any) => rule.type === 'zone-level-cover');
+
+      if (zoneRule) {
+        this.zoneRuleCoverValidation(zoneRule, control);
+      }
+
+      const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
+      const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] === 'Roll Over';
+
+      if (isPortabilityRuleAvailable) {
+        const policyRule = portabilityValidationRule.policyRules.find(
+          (rule: any) => rule.policyType === this.formData.memberPolicyType
+        );
+
+        if (policyRule?.ageBasedRules) {
+          Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+            const memberArray = addOnDetailsControl.get(key) as FormArray;
+            let isMemberSelected = false;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              const addOnSumInsuredControl = member.get('addOnSumInsured');
+              const matchingMember = this.formData.insuredMemberDetails.find(
+                (insuredMember: any) => key === insuredMember.relation
+              );
+
+              if (!matchingMember || (!memberControlCheckbox && !addOnSumInsuredControl)) return;
+
+              const minAgeThreshold = policyRule.ageBasedRules.minAgeThreshold;
+              const maxAgeThreshold = policyRule.ageBasedRules.maxAgeThreshold;
+
+              // Apply age validation: Disable if outside valid age range (5-65)
+              if (parseInt(matchingMember.memberAge) < minAgeThreshold || parseInt(matchingMember.memberAge) > maxAgeThreshold) {
                 if (memberControlCheckbox) {
+                  memberControlCheckbox.setValue(false);
                   memberControlCheckbox.disable();
                 }
-                // if (addOnSumInsuredControl) {
-                //   addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
-                // }
-              }
+              } else {
 
-              // Set addOnSumInsured value logic if the control exists
-              if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
-                const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
-                let addOnSumInsured = '';
-
-                coreControls.forEach((coreControl: any) => {
-                  if (coreControl.name === 'addOnSumInsured') {
-                    if (coreControl.options?.[0]?.value) {
-                      addOnSumInsured = coreControl.options[0].value;
-                    } else {
-                      const memberDetail = modifiedInsuredMemberDetails.find(
-                        (member: any) => member.relation === key
-                      );
-                      addOnSumInsured = memberDetail?.memberSumInsured || '';
+                // Logic for Multi Individual (MI)
+                if (this.formData.memberPolicyType === 'Multi Individual') {
+                  if (key === 'Self' && memberControlCheckbox) {
+                    memberControlCheckbox.setValue(policyRule.ageBasedRules.self.selected);
+                    isMemberSelected = policyRule.ageBasedRules.self.selected;
+                    if (policyRule.ageBasedRules.self.disabled) {
+                      memberControlCheckbox.disable();
                     }
-
-                    if (addOnSumInsuredControl && addOnSumInsured !== '') {
-                      addOnSumInsuredControl.setValue(addOnSumInsured);
+                    addOnCoverControl?.setValue(true);
+                    addOnCoverControl?.disable();
+                  } else if (memberControlCheckbox) {
+                    memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                    isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                    if (policyRule.ageBasedRules.otherMembers.disabled) {
+                      memberControlCheckbox.disable();
                     }
                   }
-                });
+                }
 
-                // Update insuredMemberDetails logic
-                modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-                  if (insuredMember.relation === key) {
-                    const coverId = addOnIdControl?.value;
-                    const coverName = addOnCoverNameControl?.value || '';
+                // Logic for Family Floater (FF)
+                if (this.formData.memberPolicyType === 'Family Floater') {
+                  const isSelfPresent = this.formData.insuredMemberDetails.some(
+                    (insuredMember: any) => insuredMember.relation === 'Self'
+                  );
 
-                    if (!insuredMember.covers) {
-                      insuredMember.covers = [];
+                  if (isSelfPresent) {
+                    if (key === 'Self' && memberControlCheckbox) {
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.self.selected);
+                      isMemberSelected = policyRule.ageBasedRules.self.selected;
+                      memberControlCheckbox.disable();
+                      addOnCoverControl?.disable();
+
+                    } else if (memberControlCheckbox) {
+                      console.log(key, policyRule.ageBasedRules.otherMembers.selected);
+
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                      isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                      memberControlCheckbox.disable();
                     }
+                    addOnCoverControl?.setValue(true);
 
-                    const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
-                    if (existingCover) {
-                      existingCover.value = addOnSumInsured;
-                    } else {
-                      insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                  } else {
+                    // If self is not present, first member is selectable
+                    const firstMember = this.formData.insuredMemberDetails[0]?.relation;
+                    if (firstMember === key && memberControlCheckbox) {
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.ifNoSelf.selected);
+                      isMemberSelected = policyRule.ageBasedRules.ifNoSelf.selected;
+                      if (!policyRule.ageBasedRules.ifNoSelf.disabled) {
+                        memberControlCheckbox.enable();
+                      } else {
+                        memberControlCheckbox.disable();
+                      }
+                    } else if (memberControlCheckbox) {
+                      console.log(key, policyRule.ageBasedRules.otherMembers.selected);
+                      isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                      memberControlCheckbox.disable();
                     }
-
-                    if (!this.covers[index]) {
-                      this.covers[index] = [];
-                    }
-
-                    const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-                    if (existingCoverInCovers) {
-                      existingCoverInCovers.value = addOnSumInsured;
-                    } else {
-                      this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
-                    }
+                    addOnCoverControl?.setValue(true);
                   }
-                });
+                }
+
+
+                let addOnSumInsured = addOnSumInsuredControl?.value || '';
+                if (addOnSumInsured == '') {
+                  console.log(matchingMember);
+
+                  addOnSumInsured = matchingMember.sumInsured || '';
+                  if (addOnSumInsuredControl) {
+                    addOnSumInsuredControl.setValue(addOnSumInsured);
+                  }
+                }
+
+                // **Only add members where checkbox is TRUE**
+                if (addOnSumInsuredControl && isMemberSelected) {
+                  modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                    if (insuredMember.relation === key) {
+                      const coverId = addOnIdControl?.value;
+                      const coverName = addOnCoverNameControl?.value || '';
+
+                      if (!insuredMember.covers) {
+                        insuredMember.covers = [];
+                      }
+
+                      const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                      if (existingCover) {
+                        existingCover.value = addOnSumInsured;
+                      } else {
+                        insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                      }
+
+                      if (!this.covers[index]) {
+                        this.covers[index] = [];
+                      }
+
+                      const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                      if (existingCoverInCovers) {
+                        existingCoverInCovers.value = addOnSumInsured;
+                      } else {
+                        this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                      }
+                    }
+                  });
+                }
               }
             });
           });
         }
       }
+
+      const chronicCareRule = control.validationRules?.find((rule: any) => rule.type === 'chronicCare');
+      if (chronicCareRule) {
+        this.chronicCareValidation(chronicCareRule, control);
+      }
     }
   }
 
+  genderRuleValidation(genderRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnCoverControl = addOnControl?.get('addOnCover');
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+    const minAge: number = genderRule.minAgeThreshold;
 
+    if (addOnDetailsControl) {
+      Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+        const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+        const matchingMember = this.formData.insuredMemberDetails.find(
+          (insuredMember: any) => key === insuredMember.relation
+        );
+        console.log(matchingMember);
+
+        memberArray.controls.forEach((member: any) => {
+          const memberControlCheckbox = member.get('memberCheckbox');
+          const addOnSumInsuredControl = member.get('addOnSumInsured');
+          if (matchingMember && (matchingMember.memberGender != genderRule.applicableGender || parseInt(matchingMember.memberAge) < minAge)) {
+            if (memberControlCheckbox) {
+              memberControlCheckbox.disable();
+            }
+            if (addOnSumInsuredControl) {
+              addOnSumInsuredControl.disable();
+            }
+          }
+        });
+      });
+    }
+  }
 
   checkForAgeValidations(control: any) {
+    console.log(control);
+
     const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
@@ -12052,10 +13935,9 @@ export class YatraComponent {
       }
     }
 
-
     // Ensure maxAge and minAge are defined
     if (maxAge !== null && minAge !== null) {
-      this.formData.insuredMemberDetails.forEach((member: any) => {
+      this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
         console.log(member);
 
         let memberAge: number | null = null;
@@ -12078,29 +13960,31 @@ export class YatraComponent {
           Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
             // Use explicit non-null assertion for maxAge and minAge
             if (member.relation === key && (memberAge! > maxAge! || memberAge! < minAge!)) {
-              const memberArray = addOnDetailsControl?.get(key) as FormArray;
+              const parentFormGroup = addOnDetailsControl as FormGroup; // Ensure it's a FormGroup
 
-              memberArray.controls.forEach((formGroup: AbstractControl) => {
-                if (formGroup instanceof FormGroup) {
-                  Object.keys(formGroup.controls).forEach((controlName) => {
-                    formGroup.get(controlName)?.disable();
-                  });
+              if (parentFormGroup?.get(key) instanceof FormArray) {
+                parentFormGroup.removeControl(key); // Removes the entire FormArray
+                console.log(`FormArray '${key}' removed from the FormGroup.`);
+              }
+
+              control.subControls.forEach((subControl: any) => {
+                if (subControl.innerSubControls) {
+                  let innerIndex = subControl.innerSubControls.findIndex((member: any) => member.name === key);
+
+                  // If found, remove from the array
+                  if (innerIndex !== -1) {
+                    subControl.innerSubControls.splice(innerIndex, 1);
+                  }
                 }
-              });
-
-              console.log('All controls in the FormGroup are disabled:', memberArray);
+              })
             }
           });
         }
-
-
       });
     } else {
       console.warn('MaxAge or MinAge not defined in validation rules.');
     }
   }
-
-
 
   memberSumInsuredValidationMethod(memberSumInsuredValidationRule: any) {
     console.log('Member Sum Insured Validation Rule Found:', memberSumInsuredValidationRule);
@@ -12205,7 +14089,6 @@ export class YatraComponent {
     // Additional logic to be added based on further instructions
   }
 
-
   alterSumInsuredOptions(event: any, innerControl: any = null, control: any, parentControl: any = null, index: any = null, indexj: any = null, memberControl: any = null) {
     console.log("Inside alter", event, innerControl, control, parentControl, index, indexj, memberControl);
     console.log(this.dynamicFormGroup.get(parentControl.name), this.form);
@@ -12293,11 +14176,10 @@ export class YatraComponent {
           //   }
           // })
         }
-
       }
     }
-
   }
+
   mappingCoversAccordingtoMember(form: any) {
     let allCover: any = {
       covers: {}
@@ -12345,6 +14227,7 @@ export class YatraComponent {
       },
     });
   }
+
   @HostListener('document:click', ['$event.target'])
   onClickOutside(targetElement: HTMLElement): void {
     if (!this.clickedInside && this.showOptions) {
@@ -12357,6 +14240,7 @@ export class YatraComponent {
     }
     this.clickedInside = false;
   }
+
   stopPropagation(event: Event): void {
     // Prevent the click event from propagating to the document
     event.stopPropagation();
@@ -12432,10 +14316,8 @@ export class YatraComponent {
     }
     else {
       console.log(this.formData.productName);
-
       const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
       const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
-
       if (insuredMembers < 2 && policyType == 'Family Floater') {
         this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
         return;
@@ -12496,14 +14378,20 @@ export class YatraComponent {
       //     return;
       //   }
       // }
+      this.clickedRecalculate = true;
       if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
         this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
       }
+      console.log(this.form);
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == 'Super Top Up Plan') {
+          section.visible = true;
+        }
+      })
       this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
     }
-
   }
 
   checkPolicyStartDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
@@ -12563,12 +14451,7 @@ export class YatraComponent {
           return;
         }
       }
-
-      // If all validations pass, proceed with further processing
     }
-
-
-
   }
 
   checkPolicyEndDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
@@ -12992,6 +14875,11 @@ export class YatraComponent {
           }
         });
       }
+      // else if(section.sectionTitle === "Health Add On"){
+      //   section.formControls.forEach((control: any) => {
+
+      //   })
+      // }
     });
   }
 
@@ -13099,11 +14987,7 @@ export class YatraComponent {
                 }
               }
             })
-
             formControl.dynamicControls[controlIndex] = targetDynamicControl;
-
-
-
           }
         })
       })
@@ -13112,14 +14996,15 @@ export class YatraComponent {
 
   }
 
-  changeChronicCondition(eventValue: any, control: any) {
+  changeChronicCondition(control: any, eventValue: any) {
     console.log(eventValue);
+    eventValue = this.dynamicFormGroup.get('typeOfBusiness')?.value || control.value;
 
     if (eventValue == 'Roll Over') {
       this.dynamicFormGroup.get(control.otherControlName)?.setValue('N');
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
-          if (formControl.name == control.otherControlName) {
+          if (control.otherControlName && formControl.name == control.otherControlName) {
             formControl.visible = false;
           }
         })
@@ -13128,13 +15013,48 @@ export class YatraComponent {
     else {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
-          if (formControl.name == control.otherControlName) {
+          if (control.otherControlName && formControl.name == control.otherControlName) {
             formControl.visible = true;
           }
         })
       })
     }
+    this.checkPortabilityApplicable(eventValue, control);
+  }
 
+  checkPortabilityApplicable(eventValue: any, control: any) {
+
+    if (eventValue == 'Roll Over') {
+      const today = new Date();
+
+      this.formData.insuredMemberDetails.forEach((member: any) => {
+        if (member.previousPolicyDetails && member.previousPolicyDetails.length > 0) {
+          member.previousPolicyDetails.forEach((policy: any) => {
+            if (policy.previousPolicyEndDate) {
+              const policyEndDate = new Date(policy.previousPolicyEndDate);
+
+              // Check if policy end date is valid
+              if (isNaN(policyEndDate.getTime())) {
+                console.warn(`Invalid policy end date for ${member.relation}`);
+                return;
+              }
+
+              // Check if policy has expired
+              if (policyEndDate < today) {
+                this.toast.warning({
+                  detail: "Error",
+                  summary: "Portabily is not applicable for the uploaded policy.",
+                  duration: 3000
+                });
+                this.dynamicFormGroup.get(control.name)?.setValue('NB');
+              } else {
+                console.log(`Policy for ${member.relation} is still active until ${policy.previousPolicyEndDate}`);
+              }
+            }
+          });
+        }
+      });
+    }
   }
 
   setForSelfMember(control: any, eventValue: any) {
@@ -13146,35 +15066,29 @@ export class YatraComponent {
     // Ensure insuredMemberDetails is a FormArray before proceeding
     if (insuredMemberDetails && insuredMemberDetails.controls) {
       insuredMemberDetails.controls.forEach((group: AbstractControl) => {
-        const relation = group.get('relation')?.value;
-
-        // Check if relation is 'Self'
-        // if (relation === 'Self') {
-        //   if(control.name == 'emailId'){
-        //     group.get('emailId')?.setValue(eventValue);
-        //   }
-
-        //   if(control.name == 'occupation'){
-        //     group.get('productMemberDesignation')?.setValue(eventValue);
-        //   }
-
-        //   if(control.name == 'memberDobProposer'){
-        //     group.get('memberdob')?.setValue(eventValue);
-        //     group.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-        //   }
-
-        //   if(control.name == 'pincode'){
-        //     this.dynamicFormGroup.get('')
-        //   }
-        // }
+        const relation = group.get('relation')?.value ?? JSON.parse(group.get('relationshipType')?.value || '{}').value;
 
         if (relation === 'Self') {
-          if(control.name == 'memberDobProposer'){
+          if (control.name == 'memberDobProposer') {
             group.get('memberdob')?.setValue(eventValue);
             group.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
           }
-          else{
+          else if (control.name == 'proposerPincode') {
+            group.get('pincode')?.setValue(eventValue);
+            group.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+            group.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+          }
+          else {
             group.get(control.otherControlName)?.setValue(eventValue);
+            if (control.name == 'proposerGender') {
+              this.changeRecalculate(true);
+            }
+          }
+        }
+        else if (relation === 'Spouse') {
+          if (control.name == 'proposerGender') {
+            group.get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value === 'M' ? 'F' : 'M');
+            this.changeRecalculate(true);
           }
         }
 
@@ -13182,4 +15096,809 @@ export class YatraComponent {
     }
   }
 
+  checkGHSPolicyEndDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
+    console.log(event, innerControl, control, parentControl, index, indexj);
+
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+    const memberControl = memberGroupInnerControlGroup?.get(innerControl.name);
+
+    if (event.target.value) {
+      console.log("Entered Date:", event.target.value);
+
+      // Extract year from the date string
+      const enteredDate = event.target.value;
+      const dateParts = enteredDate.split("-");
+      if (dateParts.length !== 3) {
+        console.warn("Invalid date format:", enteredDate);
+        return;
+      }
+
+      let year = Number(dateParts[0]); // Convert the year string to a number
+
+      // Ensure year is a reasonable, complete 4-digit year
+      const currentYear = new Date().getFullYear();
+      if (year < 1900 || year > 9999) {
+        console.warn("Invalid year:", year);
+        return;
+      }
+
+      // Convert string to a valid date object
+      const policyEndDate = new Date(enteredDate);
+      const currentDate = new Date();
+
+      // Check if policy end date is in the future
+      if (policyEndDate <= currentDate) {
+        this.toast.warning({
+          detail: "Error",
+          summary: "Policy end date should be greater than the current date.",
+          duration: 3000
+        });
+
+        // Reset the form control value
+        memberControl?.setValue(null);
+      }
+    }
+  }
+
+  modifyDeclarationForm() {
+    const vTure = ['sendLink', 'sendOTPBtn', 'skipOTP'];
+    const vFalse = ['verifyLink', 'verifyOTP', 'otpField'];
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((control: any) => {
+        if (vTure.includes(control.name)) {
+          control.visible = true;
+        } else if (vFalse.includes(control.name)) {
+          control.visible = false;
+        } else if (control.name === 'next') {
+          control.disabled = true;
+        }
+      });
+    });
+  }
+
+  checkForSelf(control: any, index: number, parentIndex: any) {
+
+    const selfIndex = this.formData.insuredMemberDetails.findIndex((member: any) => member.relation === 'Self');
+    const selfMember = this.formData.insuredMemberDetails[selfIndex];
+
+    console.log(control, parentIndex, selfIndex, selfMember);
+
+    if (selfIndex == parentIndex - 1) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'insuredMemberDetails' && formControl.dynamicControls) {
+            console.log(formControl.innerArrayControl);
+
+            formControl.dynamicControls[parentIndex].forEach((subControl: any) => {
+
+
+              if (subControl.name == 'activePolicyDetails' && subControl.innerArrayControl) {
+                console.log(subControl);
+
+                subControl.innerArrayControl[1].forEach((innerSubControl: any) => {
+                  if (innerSubControl.name == 'activePolicyFirstName') {
+                    innerSubControl.value = selfMember.firstName;
+                    console.log(innerSubControl);
+
+                  }
+                  if (innerSubControl.name == 'activePolicyMiddleName') {
+                    innerSubControl.value = selfMember.middleName;
+                  }
+                  if (innerSubControl.name == 'activePolicyLastName') {
+                    innerSubControl.value = selfMember.lastName;
+                  }
+                })
+              }
+            })
+          }
+        })
+      })
+
+    }
+  }
+
+  setActivePolicyField(subControl: any, eventValue: any, control: any, index: any) {
+
+    console.log(subControl, eventValue, control, index);
+
+    const formGroup = this.dynamicFormGroup.get(control.name) as FormArray;
+    console.log('FormGroup:', formGroup);
+
+    const formArrayAtIndex = formGroup.at(index - 1) as FormGroup;
+    console.log('FormArray at index - 1:', formArrayAtIndex);
+
+    const activePolicyDetails = formArrayAtIndex.get('activePolicyDetails') as FormArray;
+    console.log('Active Policy Details:', activePolicyDetails);
+
+    const firstPolicyDetail = activePolicyDetails.at(0) as FormGroup;
+    console.log('First Policy Detail:', firstPolicyDetail);
+
+    const targetControl = firstPolicyDetail.get(subControl.otherControlName);
+    console.log(`Target Control (${control.otherControlName}):`, targetControl);
+
+    if (targetControl) {
+      targetControl.setValue(eventValue);
+      console.log(`Set value to:`, eventValue);
+    } else {
+      console.warn(`Control ${control.otherControlName} not found.`);
+    }
+  }
+
+  declarationPopUp(): Promise<void> {
+    return Promise.resolve().then(() => {
+      this.isDeclarartionDiscountVisible = true;
+      console.log(this.isDeclarartionDiscountVisible);
+      console.log(this.formData);
+    });
+  }
+
+  declarationSendLink(item: any) {
+    if (item === 'NULL') {
+      this.isLinkAndSendButton = true; // Assign NULL
+    } else {
+      if (item == "true") {
+        const reqData = {
+          proposalNumber: this.proposalNum,
+          agentCode: this.agentCode
+        };
+        this.yatraService.customertesturl(reqData).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.customerUrl = res.data;
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        })
+      }
+      this.isPopupLink = item as boolean; // Convert string to boolean
+      this.isLinkAndSendButton = false;
+    }
+  }
+
+  verifyDiscountTest() {
+    const reqData = {
+      proposalNumber: this.proposalNum,
+    }
+    this.customerService.getproposaltest(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          if (res.data) {
+            this.isGoodHealthDiscount = res.data.isSubmit
+          }
+          this.halfQuotation();
+        }
+        else {
+          this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+      }
+    })
+  }
+
+  onChangeLeadCreationPopUp() {
+    this.isLeadCreatedSuccessfully = false;
+  }
+
+  verifyCustomerOTP(control: any) {
+    const index = this.getFormIndexValue();
+    console.log(this.dynamicFormGroup.get(control.nameProperty));
+    if (this.dynamicFormGroup.get(control.nameProperty)?.valid) {
+      const reqData = {
+        "customerID": this.dynamicFormGroup.get('customerId')?.value.toString(),
+        "otpKey": this.customerOtpKey,
+        "otpValue": this.dynamicFormGroup.get(control.nameProperty)?.value.toString()
+      }
+      this.yatraService.setValidateOTP(reqData).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res.isSuccess) {
+            console.log(res.data);
+            if (index != 0) {
+              this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+            }
+            else {
+              this.allAccountDetails = JSON.parse(res.data);
+              this.isCustomerAccountDetails = true;
+              this.isAccountList = true;
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((controls: any) => {
+                  if (controls.name == 'CustomerOTP') {
+                    // controls.value = ""
+                    // this.dynamicFormGroup.get(controls.name)?.reset();
+                    // this.formData[controls.name] = null;
+                    controls.visible = false
+                  }
+                  else if (controls.name == 'resetCustomerOTP' || controls.name == 'countDown' || controls.name == 'verifyCustomerOTP') {
+                    controls.visible = false;
+                  }
+                })
+              })
+            }
+          }
+          else {
+            this.toast.error({ detail: "Error", summary: res.message, duration: 3000 });
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          // this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+        }
+      })
+    }
+    else {
+      this.toast.error({ detail: "Error", summary: 'Please Field Customer OTP', duration: 3000 });
+    }
+  }
+
+  getCustomerrequestOtp(control: any) {
+    const index = this.getFormIndexValue();
+    const reqData = {
+      "customerID": this.dynamicFormGroup.get(control.name)?.value ? this.dynamicFormGroup.get(control.name)?.value.toString() : this.formData.customerId.toString(),
+      "requestType": index === 0 ? "leadStage" : "paymentStage"
+    }
+    this.yatraService.getRequestOtp(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          console.log(res.data);
+          if (index != 0) {
+            this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'CustomerOTP') {
+                  controls.value = ""
+                  this.dynamicFormGroup.get(controls.name)?.reset();
+                  this.formData[controls.name] = null;
+                }
+              })
+            })
+          }
+          else {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'countDown') {
+                  this.startTimer(controls);
+                }
+              })
+            })
+          }
+          this.customerOtpKey = res.data;
+        }
+        else {
+          this.toast.error({ detail: "Error", summary: res.message, duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        // this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+      }
+    })
+  }
+
+  toggleSelection(accountNumber: string, event: any) {
+    if (event.target.checked) {
+      this.selectedAccounts = accountNumber; // Add selected account
+    } else {
+      this.selectedAccounts = ""; // Remove if unchecked
+    }
+  }
+
+  submitSelectedAccounts(item: any) {
+    const resBody = this.allAccountDetails.GetCustomerDetails_OtpCKYCResponse.ResBody;
+    const resHdr = this.allAccountDetails.GetCustomerDetails_OtpCKYCResponse.ResHdr.ServiceContext;
+    if (item == 'AccountList') {
+      this.isAccountList = false;
+
+      this.customerDetailsList = [
+        { label: 'Customer ID', name: 'customerId', value: resBody.CustomerID },
+        { label: 'Prefix', name: 'preFix', value: resBody.Title.replace('.', '') },
+        { label: 'Req Ref Num', name: 'reqRedNum', value: resHdr.ReqRefNum },
+        { label: 'First Name', name: 'firstName', value: resBody.CustomerFirstName },
+        { label: 'Middle Name', name: 'middleName', value: resBody.CustomerMiddleName },
+        { label: 'Last Name', name: 'lastName', value: resBody.CustomerLastName },
+        { label: 'Email ID', name: 'emailId', value: resBody.EmailID },
+        { label: 'Mobile Number', name: 'mobileNumber', value: resBody.MobileNumber },
+        { label: 'Proposer Pincode', name: 'proposerPincode', value: resBody.Ppincode },
+        { label: 'CKYC Number', name: 'ckycNo', value: resBody['CKYC Number'] },
+        { label: 'City', name: 'city', value: resBody.Pcity },
+        { label: 'State', name: 'state', value: resBody.Pstate },
+        { label: 'Gender', name: 'proposerGender', value: resBody.Gender },
+        { label: 'Date of Birth', name: 'memberDobProposer', value: resBody.DateofBirth.split(' ')[0] },
+        { label: 'Age', name: 'memberAgeProposer', value: this.calculateAge(resBody.DateofBirth.split(' ')[0]) },
+        { label: 'Account Numbers', name: 'accountNumber', value: this.selectedAccounts },
+        { label: 'PAN Number', name: 'panNo', value: resBody.PANCardNumber },
+        { label: 'Bank Branch', name: 'bankBranch', value: resBody.BranchName },
+        { label: 'Permanent Address 1', name: 'permanentAddress1', value: resBody.PAddressLine1 },
+        { label: 'Permanent Address 2', name: 'permanentAddress2', value: resBody.PAddressLine2 },
+        { label: 'Permanent Address 3', name: 'permanentAddress3', value: resBody.PAddressLine3 }
+      ];
+
+    }
+    else if (item == 'Final') {
+      this.customerDetailsList.forEach((item: any) => {
+        if (item.name) {
+          this.dynamicFormGroup.get(item.name)?.setValue(item.value);
+          this.dynamicFormGroup.get(item.name)?.disable();
+        }
+      });
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if (control.name == 'proposerPincode') {
+            const event = { target: { value: resBody.Ppincode } };
+            this.onInputChange(event, control);
+          }
+        });
+      })
+      console.log(this.dynamicFormGroup.value);
+      this.isCustomerAccountDetails = false;
+    }
+  }
+
+  getBankDetailsByAccountNo(control: any) {
+    console.log(control);
+    const reqData = {
+      "AccountNo": control.value
+    };
+    this.yatraService.getBankDetailsByAccountNo(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res); // Create a new array to trigger change detection
+        const data = JSON.parse(res.data);
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle == 'Enter Bank Account Details') {
+            section.formControls.forEach((scontrol: any) => {
+              if (scontrol.name == 'confAccountNumber') {
+                // scontrol.value = control.value;
+                this.dynamicFormGroup.get('confAccountNumber')?.setValue(control.value.replace(/\D/g, ''));
+                console.log(scontrol);
+              }
+              else if (scontrol.name == 'bankName') {
+                scontrol.value = this.stringifyObject(scontrol.options.find((option: IOptions) => data.GetBankDetailsResponse.ResBody.BankName === option.id) || scontrol.value);
+                this.dynamicFormGroup.get('bankName')?.setValue(scontrol.value);
+                console.log(scontrol);
+                let bankDetails: any[] = [];
+
+                bankDetails = scontrol.options || [];
+                const reqData = { ifscCode: data.GetBankDetailsResponse.ResBody.IFSCCode };
+                this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
+                  next: (response: any) => {
+                    if (response.isSuccess && response.data) {
+                      const matchingBank = bankDetails.find((bank) => bank.name === response.data.bankName);
+                      const nobj = {
+                        id: matchingBank ? matchingBank.id : "Unknown",
+                        value: response.data.bankName,
+                        name: response.data.bankName
+                      };
+                      this.form.formSections.forEach((section: any) => {
+                        section.formControls.forEach((formControl: any) => {
+                          if (formControl.name == "bankName" && formControl.onChangeMethod) {
+                            this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                          } else if (formControl.name == "bankName") {
+                            this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+                          }
+                        });
+                      });
+                      this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+
+                      if (response.data.bankName) {
+                        const cityReqData = { cityName: "", bankName: response.data.bankName };
+                        this.yatraService.getBankCity(cityReqData).subscribe({
+                          next: (cityRes: any) => {
+                            const cityDetails = cityRes.data || [];
+                            const matchingCity = cityDetails.find((city: any) => city.name === response.data.bankCity);
+                            const cobj = {
+                              id: matchingCity ? matchingCity.id : "Unknown",
+                              value: response.data.bankCity,
+                              name: response.data.bankCity
+                            };
+
+                            if (scontrol.onChangeMethod != null && "bankCity" != null) {
+                              this.form.formSections.forEach((section: any) => {
+                                section.formControls.forEach((formControl: any) => {
+                                  if (formControl.name == "bankCity") {
+                                    const event = {
+                                      target: {
+                                        value: JSON.stringify(nobj)
+                                      }
+                                    };
+                                    this.getBankCity(event, formControl);
+                                  }
+                                });
+                              });
+                            }
+                            this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
+                            const branchReqData = {
+                              bankName: response.data.bankName,
+                              cityName: response.data.cityName
+                            };
+                            this.yatraService.getBranchDetails(branchReqData).subscribe({
+                              next: (branchRes: any) => {
+                                const branchDetails = branchRes.data || [];
+                                const matchingBranch = branchDetails.find(
+                                  (branch: any) => branch.name === response.data.bankBranch
+                                );
+                                const branchObj = {
+                                  id: matchingBranch ? matchingBranch.id : "Unknown",
+                                  value: matchingBranch.value,
+                                  name: matchingBranch.name
+                                };
+                                if (scontrol.onChangeMethod != null && "bankBranch" != null) {
+                                  this.form.formSections.forEach((section: any) => {
+                                    section.formControls.forEach((formControl: any) => {
+                                      if (formControl.name == "bankBranch") {
+                                        const event = {
+                                          target: {
+                                            value: JSON.stringify(cobj)
+                                          }
+                                        };
+                                        this.getBranchDetails(event, formControl);
+                                      }
+                                    });
+                                  });
+                                }
+                                this.dynamicFormGroup.get('bankBranch')?.setValue(JSON.stringify(branchObj) || '');
+                              },
+                              error: (err) => {
+                                console.error('Error fetching branch details', err);
+                              }
+                            });
+                          },
+                          error: (err) => {
+                            console.error('Error fetching city details', err);
+                          }
+                        });
+                      }
+                    } else {
+                      this.toast.warning({
+                        detail: "Warning",
+                        summary: 'Failed to Fetch Bank Details',
+                        duration: 3000
+                      });
+                    }
+                  },
+                  error: (err) => {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: 'Failed to Fetch Bank Details',
+                      duration: 3000
+                    });
+                  }
+                });
+
+              }
+              // else if(scontrol.name == 'bankName'){
+              //   scontrol.options.forEach((option: IOptions) => {
+              //     scontrol.value = data.GetBankDetailsResponse.ResBody.BankName == option.id ? this.stringifyObject(option) : option.value;
+              //   });
+              // }
+              else if (scontrol.name == 'ifscCode') {
+                this.dynamicFormGroup.get('ifscCode')?.setValue(data.GetBankDetailsResponse.ResBody.IFSCCode);
+              }
+              // else if(scontrol.name == 'micrCode'){
+              //   this.dynamicFormGroup.get('micrCode')?.setValue(data.GetBankDetailsResponse.ResBody.MICRCode);
+              // }
+            });
+          }
+        })
+        console.log(this.dynamicFormGroup.value);
+        // this.dynamicFormGroup.get('bankName')?.setValue(data.GetBankDetailsResponse.ResBody.BankName);
+        // // this.dynamicFormGroup.get('bankCity')?.setValue(res.GetBankDetailsResponse.ResBody.);
+        // // this.dynamicFormGroup.get('bankBranch')?.setValue(item.value);
+        // this.dynamicFormGroup.get('ifscCode')?.setValue(data.GetBankDetailsdataponse.ResBody.IFSCCode);
+        // this.dynamicFormGroup.get('micrCode')?.setValue(data.GetBankDetailsResponse.ResBody.MICRCode);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  resetTimer(control: any) {
+    console.log(control);
+  }
+
+  startTimer(control: any) {
+    if (control.visible == true) {
+      control.value = 30;
+      if (this.isTimerRunning) return; // Prevent multiple timers from starting
+      this.isTimerRunning = true;
+
+      const timer$ = interval(1000).pipe(take(control.value));
+
+      timer$.subscribe({
+        next: () => {
+          control.value--;
+          if (control.value === 0 && control.visible == true) {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'verifyCustomerOTP') {
+                  controls.visible = false;
+                }
+                else if (controls.name == 'resetCustomerOTP') {
+                  controls.visible = true;
+                }
+                else if (controls.name == control.name) {
+                  controls.visible = false;
+                }
+              })
+            })
+          }
+        },
+        complete: () => {
+          this.isTimerRunning = false;
+        }
+      });
+    }
+  }
+
+  resetOtp(control: any) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.name == 'verifyCustomerOTP') {
+          controls.visible = true;
+        }
+        else if (controls.name == 'countDown') {
+          controls.visible = true;
+        }
+        else if (controls.name == 'resetCustomerOTP') {
+          controls.visible = false;
+        }
+        else if (controls.name == 'CustomerOTP') {
+          controls.visible = true
+        }
+        else if (controls.name == 'customerId') {
+          this.getCustomerrequestOtp(controls);
+        }
+      })
+    })
+  }
+
+  zoneRuleCoverValidation(zoneRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+    if (!addOnDetailsControl) return;
+
+    let isAnyMemberEligible = false;
+
+    Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+      const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+      const matchingMember = this.formData.insuredMemberDetails.find(
+        (insuredMember: any) => key === insuredMember.relation
+      );
+
+      if (!matchingMember) return;
+
+      const selectedZone = matchingMember.zone;
+      const selectedSumInsured = parseInt(matchingMember.sumInsured, 10);
+      const zoneConfig = zoneRule.zones[selectedZone];
+
+      if (!zoneConfig) return;
+
+      const minSumInsured = zoneConfig.minSumInsured;
+      const maxSumInsured = zoneConfig.maxSumInsured;
+      memberArray.controls.forEach((member: any) => {
+        const memberControlCheckbox = member.get('memberCheckbox');
+
+        if (selectedSumInsured < minSumInsured || selectedSumInsured > maxSumInsured) {
+          memberControlCheckbox?.disable();
+        } else {
+          memberControlCheckbox?.enable();
+          isAnyMemberEligible = true;
+        }
+      });
+    });
+    if (this.formData.tenure && isAnyMemberEligible) {
+      control.visible = this.formData.tenure == 1 ? false : true;
+    }
+    else {
+      control.visible = isAnyMemberEligible
+    }
+    this.disableForAllOtherMembers(control);
+  }
+
+  getAutoIdValue() {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((control: any) => {
+        if (control.name === "idProof") {
+          console.log(control)
+          if (control.value != '' && control.value != null) {
+            var idValue = JSON.parse(control.value);
+            this.changeMainFormDependentControls(idValue.dependentControls, true, control.name);
+          }
+        }
+      });
+    });
+  }
+
+  zoneWiseOptionRuleValidation(optionsRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+    if (!addOnDetailsControl) return;
+
+    Object.keys(addOnDetailsControl.getRawValue()).forEach((key: any) => {
+      const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+      const matchingMember = this.formData.insuredMemberDetails.find(
+        (insuredMember: any) => key === insuredMember.relation
+      );
+
+      if (!matchingMember) return;
+
+      const selectedZone = matchingMember.zone;
+      const zoneConfig = optionsRule.zones[selectedZone];
+      if (!zoneConfig) return;
+
+      const allowedOptionLabel = zoneConfig.selectedOption;
+      memberArray.controls.forEach((member: any) => {
+        const addOnSumInsuredControl = member.get('addOnSumInsured');
+        if (addOnSumInsuredControl) {
+          const matchingOption = addOnSumInsuredControl.value;
+          // Check if the selected option matches the allowed option
+          if (matchingOption !== allowedOptionLabel) {
+            // Set the allowed option and disable the control
+            if (control.subControls) {
+              control.subControls.forEach((subCtrl: any) => {
+                // Check if innerSubControls exist within addOnDetails
+                if (subCtrl.name === 'addOnDetails' && subCtrl.innerSubControls) {
+                  subCtrl.innerSubControls.forEach((innerSubCtrl: any) => {
+                    // Loop through coreControls to find addOnSumInsured
+                    if (innerSubCtrl.name === key && innerSubCtrl.coreControls) {
+                      innerSubCtrl.coreControls.forEach((coreCtrl: any) => {
+                        if (coreCtrl.name === 'addOnSumInsured' && coreCtrl.options) {
+                          const setOptionValue = coreCtrl.options.find(
+                            (option: any) => option.name === allowedOptionLabel
+                          )?.value
+                          addOnSumInsuredControl.setValue(setOptionValue);
+                          coreCtrl.value = setOptionValue
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            addOnSumInsuredControl.disable();
+          } else {
+            addOnSumInsuredControl.disable();
+          }
+        }
+      });
+    });
+  }
+
+  chronicCareValidation(chronicCareRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+    if (!addOnDetailsControl) return;
+
+    // Iterate through all members in addOnDetails
+    Object.keys(addOnDetailsControl.getRawValue()).forEach((key: any) => {
+      const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+      // Find the corresponding member details
+      const matchingMember = this.formData.insuredMemberDetails.find(
+        (insuredMember: any) => key === insuredMember.relation
+      );
+
+      if (!matchingMember) return;
+
+      const hasChronicDisease = !!matchingMember.chronicDiseases;
+
+      console.log(`Member: ${key}, Chronic Disease: ${matchingMember.chronicDiseases || 'None'}`);
+
+      memberArray.controls.forEach((member: any) => {
+        const memberControlCheckbox = member.get('memberCheckbox');
+        const addOnSumInsuredControl = member.get('addOnSumInsured');
+
+        if (memberControlCheckbox) {
+          if (hasChronicDisease) {
+            // If chronic disease exists, select and disable the checkbox
+            memberControlCheckbox.setValue(true);
+            memberControlCheckbox.disable();
+          } else {
+            // If no chronic disease, uncheck and disable the checkbox
+            memberControlCheckbox.setValue(false);
+            memberControlCheckbox.disable();
+          }
+        }
+
+        // Handle addOnSumInsured logic if required
+        if (addOnSumInsuredControl && hasChronicDisease) {
+          const coreControls =
+            control.subControls[1]?.innerSubControls?.find(
+              (innerCtrl: any) => innerCtrl.name === key
+            )?.coreControls || [];
+
+          let addOnSumInsured = '';
+
+          coreControls.forEach((coreControl: any) => {
+            if (coreControl.name === 'addOnSumInsured' && coreControl.options) {
+              let optionValue = coreControl.value || '';
+
+              if (!optionValue && coreControl.options.length > 0) {
+                optionValue = coreControl.options[0].value; // Select the first option if nothing is selected
+              }
+
+              if (optionValue) {
+                addOnSumInsured = optionValue;
+                addOnSumInsuredControl.setValue(addOnSumInsured);
+              }
+            }
+          });
+
+          // Update insuredMemberDetails with selected cover
+          this.formData.insuredMemberDetails.forEach((insuredMember: any) => {
+            if (insuredMember.relation === key) {
+              const coverId = control.subControls.find((c: any) => c.name === 'addOnId')?.value || '';
+              const coverName = control.subControls.find((c: any) => c.name === 'optionalCoverName')?.value || '';
+
+              if (!insuredMember.covers) {
+                insuredMember.covers = [];
+              }
+
+              const existingCover = insuredMember.covers.find(
+                (cover: any) => cover.coverId === coverId
+              );
+
+              if (existingCover) {
+                existingCover.value = addOnSumInsured;
+              } else {
+                insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+              }
+            }
+          });
+        }
+      });
+    });
+  }
+
+  disableFormControl(form: any, disability: any) {
+    console.log("Inside disable form Control", disability, this.dynamicFormGroup);
+
+    // if (disability)
+    //   this.dynamicFormGroup.get('next')?.disable();
+    // else
+    //   this.dynamicFormGroup.get('next')?.enable();
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'next') {
+          console.log(formControl);
+
+          formControl.disabled = disability;
+        }
+      })
+    })
+  }
+
+  async getBaseCallerDetails() {
+    const requestBody = {
+      "baseCallerId": this.agentCode
+    }
+    await this.yatraService.getBaseCallerDetails(requestBody).subscribe({
+      next: (res: any) => {
+        console.log("Response Data:", res.data); // Debugging the response structure
+        let sample = JSON.parse(res.data)
+        this.baseCallerDetails = sample.data.baseCallerDetails;
+        console.log(this.dynamicFormGroup, this.baseCallerDetails)
+        Object.keys(this.baseCallerDetails).forEach((key) => {
+          this.dynamicFormGroup.get(key)?.setValue(this.baseCallerDetails[key])
+        });
+      },
+      error: (err) => {
+        console.error("API Error:", err);
+      }
+    });
+  }
 }

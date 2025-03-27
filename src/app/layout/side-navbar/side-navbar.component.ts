@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RugService } from 'src/app/rug/rug.service';
@@ -26,8 +25,8 @@ export class SideNavbarComponent {
     { id: 7, displayName: 'Customers', path: 'customers/customersList', imagePath: 'assets/Img/icon_menu_customers_grey.svg' },
     { id: 8, displayName: 'Proposals', path: 'proposals/proposalsList', imagePath: 'assets/Img/icon_menu_proposal.png' },
     // { id: 9, displayName: 'My Performance', path: 'performance/my-performance', imagePath: 'assets/Img/icon_menu_performance.png' },
-    { id: 10, displayName: 'Upload Report', path: 'performance/upload-performance', imagePath: 'assets/Img/icon_menu_uploadreports.png' },
-    { id: 11, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_menu_events.png' },
+    { id: 11, displayName: 'Upload Report', path: 'performance/upload-performance', imagePath: 'assets/Img/icon_menu_uploadreports.png' },
+    { id: 12, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_menu_events.png' },
   ];
 
   agentCode: any;
@@ -35,7 +34,6 @@ export class SideNavbarComponent {
   constructor(
     private router: Router,
     private loginService: CommonService,
-    private toast: NgToastService,
     private authService: AuthService,
     private rugService: RugService
   ) { }
@@ -43,7 +41,7 @@ export class SideNavbarComponent {
   ngOnInit(): void {
     this.rugService.currentStatus.subscribe(flag => this.isSideNavVisible = !flag);
     this.agentCode = localStorage.getItem('agentCode');
-    this.formIndex = localStorage.getItem('formIndex');
+    this.formIndex = sessionStorage.getItem('formIndex');
     if(this.agentCode == '467896' && this.formIndex >= 8){
       this.isSideNavVisible = false
     }else if(this.agentCode == '467899'){
@@ -114,16 +112,28 @@ export class SideNavbarComponent {
       this.isActive = state;
       this.loginService.setValue(state)
     });
-    const channel = localStorage.getItem('channel');
+    const channel = this.authService?.getUserInfo()?.channel?.toUpperCase();
 
-    if (channel === 'agency' || channel === 'AGENCY') {
-      this.sideMenuList.push({
-        id: 9,
-        displayName: 'My Performance',
-        path: 'performance/my-performance',
-        imagePath: 'assets/Img/icon_menu_performance.png'
-      });
-    }
+    if (channel === 'AGENCY') {
+      const performanceItem = {
+          id: 9,
+          displayName: 'My Performance',
+          path: 'performance/my-performance',
+          imagePath: 'assets/Img/icon_menu_performance.png'
+      };
+        const claimsIndex = this.sideMenuList.findIndex(item => item.displayName === 'Claims');
+        this.sideMenuList.splice(claimsIndex + 1, 0, performanceItem);
+
+        const commision = {
+          id: 10,
+          displayName: 'Commission',
+          path: 'commission/commissionStatement',
+          imagePath: 'assets/Img/icon_menu_performance.png'
+      };
+        const performanceIndex = this.sideMenuList.findIndex(item => item.displayName === 'My Performance');
+        this.sideMenuList.splice(performanceIndex + 1, 0, commision); 
+  }
+  
   }  
   // Handle route redirection
   redirect(route: string): void {
@@ -175,9 +185,7 @@ export class SideNavbarComponent {
   
   // Handle user logout
   logOut(): void {
-    this.toast.success({ detail: 'Success', summary: 'Agent Logout successfully!!', duration: 2000 });
     this.loginService.signOut();
-    this.router.navigate(['']);
   }
   closeSidebar(){
     this.loginService.toggleSidebar(!this.loginService.getValue());

@@ -14,6 +14,31 @@ export const payment = {
       "class": "kyc-container",
       "formControls": [
         {
+          "name": "ifPEP",
+          "label": "Are you a (Politically Exposed Person) or relative of PEP?",
+          "visibleLabel": true,
+          "class": "radio-button",
+          "toolTipMessage": "*Politically Exposed Persons* (PEPs) are individual who have been entrusted with prominent public functions by a foreign country, including the heads of States of Governments, senior politicians, senior government or judicial or military officers, senior executives of state-owned corporation and important political party officials.",
+          "value": "N",
+          "visible": true,
+          "methodName": "checkPEPDetail",
+          "radioOptions": [
+            {
+              "name": "Y",
+              "label": "Yes",
+              "value": "Y",
+              "selected": false
+            },
+            {
+              "name": "N",
+              "label": "No",
+              "value": "N",
+              "selected": true
+            }
+          ],
+          "type": "radio"
+        },
+        {
           "name": "checkKycControl",
           "label": "Check KYC",
           "type": "text",
@@ -140,11 +165,15 @@ export const payment = {
         },
         {
           "name": "emandate_payment",
-          "label": "E-Nach",
+          "label": "E-Mandate",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
-          "dependentControls": ["nextOnline"],
+          "dependentControls": [
+            "nextOnline",
+            "emandateConsent",
+            "emandateTerms"
+          ],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
@@ -154,7 +183,11 @@ export const payment = {
           "visibleLabel": false,
           "visible": true,
           "type": "button",
-          "dependentControls": ["nextOnline"],
+          "dependentControls": [
+            "nextOnline",
+            "autoDebitConsent",
+            "autoDebitTerms"
+          ],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-AutoDebit",
           "methodName": "onButtonClick"
         },
@@ -178,17 +211,13 @@ export const payment = {
           "methodName": "onButtonClick",
           "dependentControls": [
             "paymentOption",
-            "totalPremium",
-            "chequeNumber",
-            "chequeDate",
-            "paymentAccountNumber",
-            "paymentIfscCode",
-            "paymentBankName",
+            // "totalPremium",
+            // "chequeNumber",
+            // "chequeDate",
+            // "paymentIfscCode",
+            // "paymentBankName",
             "chequeCopy",
             "documentProofUpload",
-            "paymentBankCityName",
-            "paymentBankBranchName",
-            "paymentMicrCode",
             "nextOffline"
           ]
         },
@@ -198,6 +227,66 @@ export const payment = {
           "type": "button",
           "class": "resend-link-btn",
           "visible": false
+        },
+        {
+          "name": "autoDebitConsent",
+          "visibleLabel": true,
+          "visible": false,
+          "label": "I hereby give my unconditional consent to debit my mentioned account for the premiums for Aditya Birla Health Insurance Policies",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "value": false,
+          "validators": [
+            {
+              "validatorName": "requiredTrue",
+              "message": "Please tick this condition to proceed"
+            }
+          ]
+        },
+        {
+          "name": "autoDebitTerms",
+          "visibleLabel": true,
+          "visible": false,
+          "label": "I hereby declared that the premium paid under this transaction is being paid by me end/or my family through a bank account or Credit/Debit card registered in his/ her name or through a prepaid payment instrument (wallet) held by me in their name and it is not third party payment made by any other person",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "value": false,
+          "validators": [
+            {
+              "validatorName": "requiredTrue",
+              "message": "Please tick this condition to proceed"
+            }
+          ]
+        },
+        {
+          "name": "emandateConsent",
+          "visibleLabel": true,
+          "visible": false,
+          "label": "I hereby give my unconditional consent to debit my mentioned account for the premiums for Aditya Birla Health Insurance Policies",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "value": false,
+          "validators": [
+            {
+              "validatorName": "requiredTrue",
+              "message": "Please tick this condition to proceed"
+            }
+          ]
+        },
+        {
+          "name": "emandateTerms",
+          "visibleLabel": true,
+          "visible": false,
+          "label": "I hereby declared that the premium paid under this transaction is being paid by me end/or my family through a bank account or Credit/Debit card registered in his/ her name or through a prepaid payment instrument (wallet) held by me in their name and it is not third party payment made by any other person",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "value": false,
+          "validators": [
+            {
+              "validatorName": "requiredTrue",
+              "message": "Please tick this condition to proceed"
+            }
+          ]
         },
         {
           "name": "paymentOption",
@@ -212,7 +301,7 @@ export const payment = {
             {
               "name": "Cheque",
               "value": "Cheque",
-              "selected": true,
+              "selected": false,
               "dependentControls": [
                 {
                   "name": "totalPremium",
@@ -232,7 +321,7 @@ export const payment = {
                 },
                 {
                   "name": "paymentAccountNumber",
-                  "visibility": true
+                  "visibility": false
                 },
                 {
                   "name": "paymentBankName",
@@ -240,15 +329,15 @@ export const payment = {
                 },
                 {
                   "name": "paymentBankCityName",
-                  "visibility": true
+                  "visibility": false
                 },
                 {
                   "name": "paymentBankBranchName",
-                  "visibility": true
+                  "visibility": false
                 },
                 {
                   "name": "paymentMicrCode",
-                  "visibility": true
+                  "visibility": false
                 },
                 {
                   "name": "payOrderNumber",
@@ -257,7 +346,15 @@ export const payment = {
                 {
                   "name": "payOrderDate",
                   "visibility": false
-                }
+                },
+                {
+                  "name": "demandDraftNumber",
+                  "visibility": false
+                },
+                {
+                  "name": "demandDraftDate",
+                  "visibility": false
+                },
               ]
             },
             {
@@ -286,19 +383,11 @@ export const payment = {
                   "visibility": false
                 },
                 {
-                  "name": "ifscCode",
+                  "name": "paymentIfscCode",
                   "visibility": true
                 },
                 {
-                  "name": "bankName",
-                  "visibility": true
-                },
-                {
-                  "name": "chequeNumber",
-                  "visibility": true
-                },
-                {
-                  "name": "chequeDate",
+                  "name": "paymentBankName",
                   "visibility": true
                 },
                 {
@@ -329,11 +418,11 @@ export const payment = {
                   "visibility": true
                 },
                 {
-                  "name": "ifscCode",
+                  "name": "paymentIfscCode",
                   "visibility": true
                 },
                 {
-                  "name": "bankName",
+                  "name": "paymentBankName",
                   "visibility": true
                 },
                 {
@@ -353,6 +442,13 @@ export const payment = {
                   "visibility": false
                 }
               ]
+            }
+          ],
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Payment Option is required field"
             }
           ]
         },
@@ -430,12 +526,22 @@ export const payment = {
             {
               "validatorName": "required",
               "required": true,
-              "message": "Enter 6 Digits DD Number it is required field."
+              "message": "Demand Draft Number is required."
             },
             {
               "validatorName": "pattern",
               "pattern": "^(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[0-9]{6}$",
-              "message": "Enter 6 Digits DD Number it is required field."
+              "message": "Enter a valid 6-digit Demand Draft Number."
+            },
+            {
+              "validatorName": "maxlength",
+              "maxLength": 6,
+              "message": "Maximum length is 6 digits."
+            },
+            {
+              "validatorName": "minlength",
+              "minLength": 6,
+              "message": "Minimum length is 6 digits."
             }
           ]
         },
@@ -451,12 +557,22 @@ export const payment = {
             {
               "validatorName": "required",
               "required": true,
-              "message": "Enter 6 Digits PayOrder Number it is required field."
+              "message": "Pay Order Number is required."
             },
             {
               "validatorName": "pattern",
               "pattern": "^(?!0{6})(?!1{6})(?!2{6})(?!3{6})(?!4{6})(?!5{6})(?!6{6})(?!7{6})(?!8{6})(?!9{6})(?!123456)(?!654321)[0-9]{6}$",
-              "message": "Enter 6 Digits PayOrder Number it is required field."
+              "message": "Enter a valid 6-digit Pay Order Number."
+            },
+            {
+              "validatorName": "maxlength",
+              "maxLength": 6,
+              "message": "Maximum length is 6 digits."
+            },
+            {
+              "validatorName": "minlength",
+              "minLength": 6,
+              "message": "Minimum length is 6 digits."
             }
           ]
         },
@@ -469,8 +585,8 @@ export const payment = {
           "maxDateLength": "currentDate",
           "type": "date",
           "value": "",
-          "disabled": true,
-          "methodName": "currentDateValue",
+          // "disabled": true,
+          // "methodName": "currentDateValue",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
@@ -485,8 +601,12 @@ export const payment = {
           "label": "Demand Draft Date",
           "visible": false,
           "visibleLabel": true,
+          "minDateLength": "currentDate",
+          "maxDateLength": "currentDate",
           "type": "date",
           "value": "",
+          // "disabled": true,
+          // "methodName": "currentDateValue",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
@@ -501,8 +621,12 @@ export const payment = {
           "label": "Pay Order Date",
           "visible": false,
           "visibleLabel": true,
+          "minDateLength": "currentDate",
+          "maxDateLength": "currentDate",
           "type": "date",
           "value": "",
+          // "disabled": true,
+          // "methodName": "currentDateValue",
           "class": "col-12 col-md-6 col-lg-4",
           "validators": [
             {
@@ -513,24 +637,42 @@ export const payment = {
           ]
         },
         {
-          "name": "paymentBankName",
-          "label": "Bank Name",
-          "visible": false,
+          "name": "paymentIfscCode",
+          "label": "IFSC Code",
           "visibleLabel": true,
-          "getAllOption": "getAllBankDetails",
-          "onChangeMethod": "getBankCity",
-          "otherControlName": "paymentBankCityName",
-          "type": "select",
+          "visible": false,
+          "type": "text",
+          "disabled": false,
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
-          "options": [],
           "validators": [
             {
               "validatorName": "required",
               "required": true,
-              "message": "Bank name is required field"
+              "message": "IFSC is required field"
             }
           ]
+        },
+        {
+          "name": "paymentBankName",
+          "label": "Bank Name",
+          "visible": false,
+          "visibleLabel": true,
+          "disabled": true,
+          // "getAllOption": "getAllBankDetails",
+          // "onChangeMethod": "getBankCity",
+          // "otherControlName": "paymentBankCityName",
+          "type": "text",
+          "value": "",
+          "class": "col-12 col-md-6 col-lg-4",
+          // "options": [],
+          // "validators": [
+          //   {
+          //     "validatorName": "required",
+          //     "required": true,
+          //     "message": "Bank name is required field"
+          //   }
+          // ]
         },
         {
           "name": "paymentBankCityName",
@@ -567,23 +709,6 @@ export const payment = {
               "validatorName": "required",
               "required": true,
               "message": "Bank Branch is required field"
-            }
-          ]
-        },
-        {
-          "name": "paymentIfscCode",
-          "label": "IFSC Code",
-          "visibleLabel": true,
-          "visible": false,
-          "type": "text",
-          "disabled": true,
-          "value": "",
-          "class": "col-12 col-md-6 col-lg-4",
-          "validators": [
-            {
-              "validatorName": "required",
-              "required": true,
-              "message": "IFSC is required field"
             }
           ]
         },
@@ -668,6 +793,15 @@ export const payment = {
           "class": "col-12 col-md-6 col-lg-3",
           "value": "",
           "disabled": true
+        },
+        {
+          "name": "nextNotWork",
+          "label": "Next",
+          "visibleLabel": false,
+          "visible": true,
+          "disabled": true,
+          "type": "button",
+          "class" : "col-12 col-md-6 col-lg-2 next-btn disabled ng-star-inserted",
         },
         {
           "name": "nextOffline",
@@ -849,12 +983,12 @@ export const leads = {
             {
               "validatorName": "required",
               "required": true,
-              "message": "Nominee number is required field"
+              "message": "Nominee Contact No is required field"
             },
             {
               "validatorName": "pattern",
               "pattern": "^[6-9]\\d{9}$",
-              "message": "Mobile No is not valid"
+              "message": "Nominee Contact No is not valid"
             }
           ]
         },
@@ -889,18 +1023,18 @@ export const leads = {
           "value": "",
           "disabled": false,
           "class": "col-12 col-md-6 col-lg-4",
-          // "validators": [
-          //   {
-          //     "validatorName": "required",
-          //     "required": true,
-          //     "message": "Mobile No is required field"
-          //   },
-          //   {
-          //     "validatorName": "pattern",
-          //     "pattern": "^[6-9]\\d{9}$",
-          //     "message": "Mobile No is not valid"
-          //   }
-          // ]
+          "validators": [
+            {
+              "validatorName": "required",
+              "required": true,
+              "message": "Appointee Contact No is required field"
+            },
+            {
+              "validatorName": "pattern",
+              "pattern": "^[6-9]\\d{9}$",
+              "message": "Appointee Contact No is not valid"
+            }
+          ]
         },
         {
           "name": "appointeeRelationWithNominee",
@@ -953,16 +1087,16 @@ export const leads = {
             }
           ]
         },
-        {
-          "name": "Nominee Details",
-          "label": "Save",
-          "visibleLabel": false,
-          "visible": true,
-          "type": "button",
-          "disabled": false,
-          "class": " col-12 send-link-btn send-btn",
-          "methodName": "checkleadValidation"
-        },
+        // {
+        //   "name": "Nominee Details",
+        //   "label": "Save",
+        //   "visibleLabel": false,
+        //   "visible": true,
+        //   "type": "button",
+        //   "disabled": false,
+        //   "class": " col-12 send-link-btn send-btn",
+        //   "methodName": "checkleadValidation"
+        // },
       ]
     },
     {
@@ -1047,6 +1181,7 @@ export const leads = {
           "getAllOption": "getAllBankDetails",
           "onChangeMethod": "getBankCity",
           "otherControlName": "bankCity",
+          "methodName":"getBankCity",
           "type": "select",
           "value": "",
           "disabled": false,
@@ -1117,14 +1252,96 @@ export const leads = {
             }
           ]
         },
+        // {
+        //   "name": "Bank Account Details",
+        //   "label": "Save",
+        //   "visibleLabel": false,
+        //   "visible": true,
+        //   "type": "button",
+        //   "class": "col-12 send-link-btn send-btn",
+        //   "methodName": "checkleadValidation"
+        // },
+      ]
+    },
+    {
+      "sectionTitle": "Health Returns For Renewal",
+      "visible": true,
+      "visibleLabel": true,
+      "class": "section-title",
+      "formControls": [
         {
-          "name": "Bank Account Details",
-          "label": "Save",
-          "visibleLabel": false,
+          "name": "healthReturnUse",
           "visible": true,
-          "type": "button",
-          "class": "col-12 send-link-btn send-btn",
-          "methodName": "checkleadValidation"
+          "value": false,
+          "visibleLabel": true,
+          "label": "Use Health Returns",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "methodName": "healthReturnsCall",
+          "dependentControls":["healthReturnUsage","healthReturnNote"],
+        },
+        {
+          "name": "healthReturn",
+          "label": "Total Available Health Returns",
+          "visibleLabel": true,
+          "visible": true,
+          "type": "text",
+          "value": "0",
+          "disabled": true,
+          "class": "col-12 col-md-6 col-lg-4",
+        },
+        {
+          "name": "healthReturnUsage",
+          "label": "Health Returns to be used",
+          "visibleLabel": true,
+          "visible": false,
+          "type": "number",
+          "value": 0,
+          "class": "col-12 col-md-6 col-lg-4",
+          "validators": [
+            {
+              "validatorName": "pattern",
+              "pattern": "^[1-9][0-9]*$",  
+              "message": "The value entered should be a positive number greater than 0."
+            },            
+            {
+              "validatorName": "max",
+              "maxValueKey": "min(formData.netPremium, formData.healthReturn)",
+              "message": ""
+            }
+          ]
+        },
+        {
+          "name": "healthReturnNote",
+          "visible": false,
+          "visibleLabel": true,
+          "label": "Note - HealthReturns can be redeemed only upto the Net Premium Amount",
+          "class": "col-md-16 section-paragraph",
+          "type": "paragraph"
+        }
+      ]
+    },
+    {
+      "sectionTitle": "Declaration",
+      "visible": true,
+      "visibleLabel": true,
+      "class": "section-title",
+      "formControls": [
+        {
+          "name": "consentCheck",
+          "visible": true,
+          "value": false,
+          "visibleLabel": true,
+          "label": "I agree to receive the policy document and supporting documents and communications on my registered email or Mobile number shared with the Company, I shall specifically request the company in need of physical copy of policy document",
+          "class": "col-md-12 acceptTermsCheck",
+          "type": "checkbox",
+          "methodName": "consentCheckboxSelection", 
+          "validators": [
+            {
+              "validatorName": "requiredTrue",
+              "message": "Please tick this condition to proceed"
+            }
+          ]
         },
       ]
     },
@@ -1175,10 +1392,19 @@ export const leads = {
           "disabled": true
         },
         {
-          "name": "next",
+          "name": "nextNotWork",
           "label": "Next",
           "visibleLabel": false,
           "visible": true,
+          "disabled": true,
+          "type": "button",
+          "class" : "col-12 col-md-6 col-lg-2 next-btn disabled ng-star-inserted",
+        },
+        {
+          "name": "next",
+          "label": "Next",
+          "visibleLabel": false,
+          "visible": false,
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
           "methodName": "onSubmit",

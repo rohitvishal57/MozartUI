@@ -407,7 +407,7 @@ export class ClaimsListViewComponent implements OnInit {
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
-        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimNumber}/${row.policyNumber}`]);
+        this.router.navigate([`/claims/detailsView/${row.id}/${encodeURIComponent(row.claimNumber)}/${encodeURIComponent(row.policyNumber)}`]);
       },
       (error) => {
         console.error('Error fetching claim details', error);

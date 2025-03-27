@@ -43,7 +43,7 @@
                       <p-tabView [(activeIndex)]="activeIndex" (onChange)="onTabChange($event)">
                        <p-tabPanel header="Health Add-Ons"></p-tabPanel> 
                        <p-tabPanel header="Optional Covers"></p-tabPanel> 
-      
+                       <p-tabPanel header="FAQs"></p-tabPanel>
                       </p-tabView>
                     </div>
                   </div>
@@ -63,6 +63,490 @@
                               </div>
                             </div>
                           </div>
+
+                           <!--FAQ start-->
+                        <div class="tabview_cardContent" *ngIf="displayInfo === 'FAQs'">
+                          <div class="body_flex_column">
+                            <div class="row">
+                              <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                <div class="field_searchMain">
+                                  <input id="filterfaq" name="filterfaq" type="text" placeholder="What can we help you with?"
+                                    class="filterSearch"   [(ngModel)]="searchQuestiontName"  (input)="questionSearch()" >
+                                  <img src="assets/Img/icon_magnify_grey.svg">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-12 faq_section">
+                                <div class="accordion" id="faq_sectionMain">
+                                  <div class="accordion-item" *ngFor="let faq of faqs; let i = index">
+                                    <h2 class="accordion-header" [id]="'faq_question_' + faq.id">
+                                      <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                      [attr.data-bs-target]="'#faq_answer_' + faq.id"
+                                      [attr.aria-controls]="'faq_answer_' + faq.id"
+                                      [class.collapsed]="i !== 0"
+                                      [attr.aria-expanded]="i === 0 ? 'true' : 'false'">
+                                  {{ faq.question }}
+                              </button>
+                                    </h2>
+                                    <div [id]="'faq_answer_' + faq.id"  class="accordion-collapse collapse" [ngClass]="{'show': i === 0}"
+                                      [attr.aria-labelledby]="'faq_question_' + faq.id" data-bs-parent="#faq_sectionMain">
+                                      <div class="accordion-body">
+                                        <p [innerHTML]="faq.description"></p>
+
+                                        <div *ngFor="let section of faq.points">
+                                          <h6>{{ section.title }}</h6>
+                                          <ul class="tick_round">
+                                            <li *ngFor="let item of section.items">
+                                              <img src="assets/Img/icon_tick_green_bg.svg">
+                                              <div class="feature-text" [innerHTML]="item"></div>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                          <!--FAQ start-->
+                          <div class="tabview_cardContent"  *ngIf= "displayInfo === 'FAQs'" style="display:none">
+                            <div class="body_flex_column">
+                              <div class="row">
+                                  <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                    <div class="field_searchMain">
+                                      <input id="filterfaq" name="filterfaq" type="text" placeholder="What can we help you with?" class="filterSearch">
+                                      <img src="assets/Img/icon_magnify_grey.svg">
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-12 faq_section">
+                                  <div class="accordion" id="faq_sectionMain">
+                                    <!--item 1-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_1">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_1" aria-expanded="true" aria-controls="faq_answer_1">
+                                          Is there an age limit for opting for a Critical Illness plan?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_1" class="accordion-collapse collapse show" aria-labelledby="faq_question_1" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>At Aditya Birla Health Insurance, we provide you a range of unique health insurance benefits such as:-</p>
+                                          <h6>HealthReturns<sup>TM</sup></h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Earn rewards for adopting a healthy lifestyle
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Earn back up to 30% of your health insurance premium
+                                            </div></li>
+                                          </ul>
+                                          <h6>Chronic Management Program</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              <a href="https://www.adityabirlacapital.com/healthinsurance/chronic-management-program" target="_blank">Chronic Management Program</a> is specially designed program for management of chronic illness like asthma, diabetes, hypertension etc.
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Day 1 cover for chronic conditions
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Automatic upgrade to the program if you develop a chronic condition during your policy tenure
+                                            </div></li>
+                                          </ul>
+                                          <h6>Second E Opinion</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Second opinions in case of critical illnesses are covered
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Panel of expert doctors including inpernational specialists
+                                            </div></li>
+                                          </ul>
+                                          <h6>Choice of Hospital Room</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Freedom to use a shared room or a private room during your hospital stay.
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              If treated in a lower room category, than what you are eligible for, you can earn back <a href="https://www.adityabirlacapital.com/healthinsurance/#!/health-returns" target="_blank">HealthReturns<sup>TM</sup>.</a>
+                                            </div></li>
+                                          </ul>
+                                          <h6>Day 1 Cover</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Get insurance coverage right from Day 1 in case of chronic diseases on OPD expenses. (Hospitalization still has 90 day waiting period)
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Day 1 Cover is applicable for diseases such as Hypertension, Asthma, Diabetes and High Cholesterol
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 2-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_2">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_2" aria-expanded="false" aria-controls="faq_answer_2">
+                                          Advantages of Buying a Health Insurance Policy
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_2" class="accordion-collapse collapse" aria-labelledby="faq_question_2" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Benefits of health insurance are plenty.  Illnesses and injuries are  an unavoidable aspect of life.  Given the escalating medical treatment costs, health care tends to become a financial burden.  Health insurance is the need of the hour as it makes quality health careaffordable for everyone.  Beside covering your medical care costs, there are several other benefits of health insurance such as no claim bonus, top up plans, cashless facility, tax benefits, free health check-up and much more.</p>
+                                          <h6>Tax Benefits</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              The premium paid towards <a href="https://www.adityabirlacapital.com/healthinsurance/#!/homepage" target="_blank">health insurance</a> is deductible from taxable income under the section 80D of the Income Tax Act 1961.
+                                            </div></li>
+                                          </ul>
+                                          <h6>No Claim Bonus</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              For every claim-free year, you will be eligible for a no-claim bonus that increases progressively with each year of policy renewal until it reaches 50% of the policy premium.  The No Claim Bonus gets added to your sum insured which in turn enhances your claim/coverage amount.
+                                            </div></li>
+                                          </ul>
+                                          <h6>Free Health Check-Up</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Health Insurance companies cover annual health check-ups in a bid to encourage its customers to stay healthy.
+                                            </div></li>
+                                          </ul>
+                                          <h6>Cashless Facility</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Under a cashless facility, health insurance companies settle the medical bills directly with your healthcare providers. Hence, you are saved form the hassle of making the initial payment and then waiting for the claim.
+                                            </div></li>
+                                          </ul>
+                                          <h6>Coverage for OPD Expenses</h6>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Obtain coverage for expenses incurred during OPD visits as well as diagnostic tests.
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 3-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_3">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_3" aria-expanded="false" aria-controls="faq_answer_3">
+                                          Why do I need a health insurance plan?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_3" class="accordion-collapse collapse" aria-labelledby="faq_question_3" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>An Illness or an injury can strike without any warning, moreover, the cost of medical treatment is skyrocketing in the present time.  Hence medical insurance plans have become imperative in order to avoid financial stress when medical emergencies strike.  By taking up a <a href="https://www.adityabirlacapital.com/homepage" target="_blank">halth insurance</a> policy, you can focus on your recovery, rather than worrying about finances.</p>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 4-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_4">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_4" aria-expanded="false" aria-controls="faq_answer_4">
+                                          What are the factors affecting health insurance premium?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_4" class="accordion-collapse collapse" aria-labelledby="faq_question_4" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Before you buy medical insurance online, it is very important to understand the factors affecting the medical insurance premium, which are as follows:-</p>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Amount of coverage required
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Age
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Previous/ current medical history
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Tobacco use/ Smoking
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              BMI (Body Mass Index)
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Lifestyle factors such as occupation, area of residence etc
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Other factors as required by the Insurer
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 5-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_5">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_5" aria-expanded="false" aria-controls="faq_answer_5">
+                                          Should I opt for an individual plan or a family floater insurance plan?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_5" class="accordion-collapse collapse" aria-labelledby="faq_question_5" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>In a Family floater health insurance plan a single Sum Insured in shared by all members whereas in an Individual policy each member is entitled to have a separate Sum Insured.  If you choose an individualmedical insurance policy then you would have to pay the premium according to the Sum Insured opted for each member.  In a family floater health insurane policy you pay premium for a single Sum Insured based on the ages of the members in the medicalim policy.  While choosing individual vs family floater, health insurance premium should not be the onlydeciding factor. You should choose the mediclaim policy type basis your need to have a coverage e.g. Individual health insurance policy provides coverage limits for each member thus providing substantial coverage and in a family floater mediclaim policy coverage limit is shared.  Your choice can vary basis family type, number of members and need for health insurance coverage.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 6-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_6">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_6" aria-expanded="false" aria-controls="faq_answer_6">
+                                          What is the importance of cashless health insurance plans?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_6" class="accordion-collapse collapse" aria-labelledby="faq_question_6" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>When medical emergencies strike, the last thing you want to do is worry about making payments. Under a cashless health insurance policy, the health insurance company makes the payment directly to the cashless hospital. Hence at the time of a medical emergency you don't have to worry about carrying cash/ arranging for funds.  If you buy medical insurance policy, it's wise to ensure that it is a cashless policy.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 7-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_7">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_7" aria-expanded="false" aria-controls="faq_answer_7">
+                                          What is health insurance portability?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_7" class="accordion-collapse collapse" aria-labelledby="faq_question_7" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Health insurance portability lets you transfer your health insurance policy from your existing health care provider to another.  Under health insurance portability, accumulated health insurance benefits such as no claim bonuses and waiting period remain the same.  Hence, if you are not satisfied with your existing health insurance company, you can switch without losing the accumulated benefits.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 8-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_8">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_8" aria-expanded="false" aria-controls="faq_answer_8">
+                                          What are exclusions of Aditya Birla Health Insurance plan?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_8" class="accordion-collapse collapse" aria-labelledby="faq_question_8" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>The following aspects are not included under health insurance benefits.</p>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Surgeries such as joint replacement, cosmetic surgery, and dental surgery
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Alternative treatments such as homeopathic & Ayurvedic
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Illnesses and injuries occurring with the waiting period
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 9-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_9">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_9" aria-expanded="false" aria-controls="faq_answer_9">
+                                          What is a no claim bonus health insurance benefit?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_9" class="accordion-collapse collapse" aria-labelledby="faq_question_9" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Under a no claim bonus health insurance benefit, the medical insurance holder will receive a bonus for every claim-free year.  No claim bonuses are a progressive benefit that keeps increasing with each year of renewal.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 10-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_10">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_10" aria-expanded="false" aria-controls="faq_answer_10">
+                                          Why are my HealthReturns<sup>TM</sup> not reflecting?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_10" class="accordion-collapse collapse" aria-labelledby="faq_question_10" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>In order to earn up-to 30% of your premium back as HealthReturnsTM in You need to</p>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Download the active health app and register with your member id and OTP to create user name and password
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Link your wearable or Fitness App
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Get your healthy heart score by Booking Free Health Assessment via App or Website / <a href="https://www.adityabirlacapital.com/healthinsurance/health-assesment/ha-request" target="_blank">click here to book</a>
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Live healthy and earn Active Dayz
+                                            </div></li>
+                                          </ul>
+                                          <p>
+                                            If the HealthReturns<sup>TM</sup> is still not reflecting, please write into our support team/ raise a Service Request on the app and we will see what we can do to assist further.
+                                          </p>
+                                          <p>You can reach us at <a href="mailto:care.healthinsurance@adityabirlacapital.com">care.healthinsurance@adityabirlacapital.com</a></p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 11-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_11">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_11" aria-expanded="false" aria-controls="faq_answer_11">
+                                          Are exclusions and waiting periods as mentioned in policy wordings applicable for a claim against HealthReturns<sup>TM</sup>?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_11" class="accordion-collapse collapse" aria-labelledby="faq_question_11" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Permanent exclusions and waiting periods do not apply under the HealthReturns<sup>TM</sup> benefit.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 12-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_12">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_12" aria-expanded="false" aria-controls="faq_answer_12">
+                                          How can I utilize my earned HealthReturns<sup>TM</sup>?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_12" class="accordion-collapse collapse" aria-labelledby="faq_question_12" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Funds under HealthReturns<sup>TM</sup> may be utilized for:</p>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              In-patient medical expenses and day care treatment, provided that the sum insured, cumulative bonus and reloaded sum insured (if applicable) are exhausted during the policy year.
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Payment of co-payment and deductible (wherever applicable).
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              For non-payable claims, in case of an in-patient hospitalization or day care treatment.
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Non-medical expenses, that would not otherwise be payable under the policy.
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Out-patient expenses up to the value of accrued funds, subject to complete utilization of OPD expenses (if opted under the policy)
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Alternative treatments or you can also utilize the funds under HealthReturns<sup>TM</sup> to pay your premium for the renewal of the policy.
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 13-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_13">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_13" aria-expanded="false" aria-controls="faq_answer_13">
+                                          What is a Health Assessment<sup>TM</sup>?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_13" class="accordion-collapse collapse" aria-labelledby="faq_question_13" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Health Assessment<sup>TM</sup> is a simple health exam that measures the insured person on the parameters of MER (including BP, BMI, HWR and smoking status), fasting blood sugar and total cholesterol.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 14-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_14">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_14" aria-expanded="false" aria-controls="faq_answer_14">
+                                          How is a Healthy Heart Score<sup>TM</sup> calculated?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_14" class="accordion-collapse collapse" aria-labelledby="faq_question_14" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>For calculating the Healthy Heart Score<sup>TM</sup>, we have provided access to a free Health Assessment<sup>TM</sup> test namely - MER (including BP, BMI, HWR and smoking status), Fasting Blood Sugar, Total Cholesterol will be carried out at one go and at least once every policy year.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 15-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_15">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_15" aria-expanded="false" aria-controls="faq_answer_15">
+                                          What if I can't download the Activ Health app?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_15" class="accordion-collapse collapse" aria-labelledby="faq_question_15" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>In case you can't download the app for some reason, you can also get a Fitness Assessment Test done every 6 months at any of our partnered centers.  Your Health Returns<sup>TM</sup> will then be calculated based on your Fitness Assessment Level and your Healthy Heart Score<sup>TM</sup>.  For example, FA Level 5+ Green Heart Score=30% Health Returns<sup>TM</sup></p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 16-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_16">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_16" aria-expanded="false" aria-controls="faq_answer_16">
+                                          How can I use my HealthReturns<sup>TM</sup>?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_16" class="accordion-collapse collapse" aria-labelledby="faq_question_16" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>You can use your HealthReturns<sup>TM</sup> to:</p>
+                                          <ul class="tick_round">
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Pay for your next policy premium
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Pay for medicines
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Pay for diagnostic tests
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Pay for health emergencies
+                                            </div></li>
+                                            <li><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
+                                              Pay for alternative treatments
+                                            </div></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 17-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_17">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_17" aria-expanded="false" aria-controls="faq_answer_17">
+                                          Do I need to pay to get my Healthy Heart Score<sup>TM</sup>?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_17" class="accordion-collapse collapse" aria-labelledby="faq_question_17" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>The charges for one Health Assessment in a policy year, done at our medical network providers/ empaneled service providers, is borne by us as part of the "Health Check up program".</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 18-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_18">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_18" aria-expanded="false" aria-controls="faq_answer_18">
+                                          Is the Healthy Heart Score<sup>TM</sup> a medical test that my doctor/dietitian can refer to?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_18" class="accordion-collapse collapse" aria-labelledby="faq_question_18" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>Yes, your doctor or dietitian can refer to your Healthy Heart Score<sup>TM</sup> report.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!--item 19-->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="faq_question_19">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_answer_19" aria-expanded="false" aria-controls="faq_answer_19">
+                                          How often do I have to getmy Healthy Heart Score<sup>TM</sup> generated?
+                                        </button>
+                                      </h2>
+                                      <div id="faq_answer_19" class="accordion-collapse collapse" aria-labelledby="faq_question_19" data-bs-parent="#faq_sectionMain">
+                                        <div class="accordion-body">
+                                          <p>You need to get your Healthy Heart Score<sup>TM</sup> generated at least once during a policy year, at one of our medical network providers/ empaneled service providers.  The score remains valid for a period of 12 months.</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                       </div>
                   </div>
                 </div>
@@ -73,7 +557,7 @@
       </section>
       <div class="row mt-3">
         <div class="col-12">
-          <button type="button" id="buynow-details" name="buynow-details" class="btn_red btn_products btn_buy" (click)="buyNow(state)">
+          <button type="button" id="buynow-details" name="buynow-details" class="btn_red btn_products btn_buy" (click)="buyNow(state)" [disabled]="disableBuyJourney">
             <img src="assets/Img/trolley1.svg" alt="">
             {{"Buy Now" | translate}}
         </button>

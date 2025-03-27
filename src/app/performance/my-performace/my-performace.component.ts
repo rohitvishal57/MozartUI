@@ -19,12 +19,14 @@ export class MyPerformaceComponent {
   selectedView: string = "list";
   // docType: string = "Monthly";
   annualClubPerformance: any;
+  annualClubPerformanceCount: any;
+  reqObj: any;
   campaignPerformance: any;
   agentPerformanceData: any;
   page: number = 1;
   first: number = 0;
   rows: number = 10;
-  agentCode :any = '';
+  agentCode: any = '';
   commissionForm!: FormGroup;
   years: any;
   months: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -40,9 +42,9 @@ export class MyPerformaceComponent {
   ];
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   constructor(
-    private activatedRoute : ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private performanceService: PerformanceService, private languageService: LanguageService,
-    private translateService: TranslateService,private formBuilder: FormBuilder,private toast: NgToastService
+    private translateService: TranslateService, private formBuilder: FormBuilder, private toast: NgToastService
   ) { }
   ngOnInit(): void {
     window.scrollTo(0, 0); // Scroll to top when the component is initialized
@@ -62,12 +64,11 @@ export class MyPerformaceComponent {
     }
     this.getPerformanceData();
     this.getPerformanceDetailedViewCount();
-    this.getPerformanceDetailedList();
   }
 
-  ngAfterViewInit(){
-    this.activatedRoute.queryParams.subscribe((params : any) => {
-      let routeLeadStatus  = params['status'];
+  ngAfterViewInit() {
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      let routeLeadStatus = params['status'];
       this.tabGroup.selectedIndex = routeLeadStatus;
     });
   }
@@ -83,72 +84,76 @@ export class MyPerformaceComponent {
 
   getPerformanceData() {
     let reqObj = {
-        agentCode: this.agentCode
+      agentCode: this.agentCode
     }
     this.performanceService.getPerformanceDataApi(reqObj).subscribe(
       (response) => {
-        // if (response.isSuccess == true && response.statusCode == "200") {
-        if (response) {
-        this.agentPerformanceData = response.data;
-        this.annualClubPerformance = response.data.annualClubPermormance;
-        this.campaignPerformance = response.data.campaignPermormance;
+        if (response.isSuccess == "true" && response.statusCode == "200") {
+          this.agentPerformanceData = response.data;
+          this.annualClubPerformance = response.data.annualClubPermormance;
+          this.campaignPerformance = response.data.campaignPermormance;
         }
         else { console.error("API request was not successful."); }
       },
       (error) => {
-        console.error("Error from getRenewalsList API:", error);
+        console.error("Error from getPerformanceDetails API:", error);
       }
     );
   }
   getPerformanceDetailedViewCount() {
     let reqObj = {
       agent_Code: this.agentCode,
-      isViewed: true
-  }
-  this.performanceService.getPerformanceDetailedViewLatestCount(reqObj).subscribe(
-    (response) => {
-
-      if (response.isSuccess == true && response.statusCode == "200") {
-      }
-      else { console.error("API request was not successful."); }
-    },
-    (error) => {
-      console.error("Error from getRenewalsList API:", error);
+      isViewed: false
     }
-  );
+    this.performanceService.getPerformanceDetailedViewLatestCount(reqObj).subscribe(
+      (response) => {
+        if (response.isSuccess && response.statusCode == "200") {
+          this.annualClubPerformanceCount = parseInt(response.data.annualClubPerformanceCount);
+          if (this.annualClubPerformanceCount > 0) {
+            this.getPerformanceDetailedList();
+          }
+        }
+        else { console.error("API request was not successful."); }
+      },
+      (error) => {
+        console.error("Error from getPerformanceDetailedViewListCount API:", error);
+      }
+    );
   }
-  getPerformanceDetailedList(){
-    let reqObj = {
+  getPerformanceDetailedList() {
+    this.reqObj = {
       agentCode: this.agentCode,
       start: this.page,
       length: this.rows,
       isViewed: true
-  }
-  this.performanceService.getPerformanceDetailedViewList(reqObj).subscribe(
-    (response) => {
-      // if (response.isSuccess == true && response.statusCode == "200") {
-        if (response) {
-        this.detailedList = response?.data?.agentProposalsDetailedViewLists||[];
-      }
-      else { console.error("API request was not successful."); }
-    },
-    (error) => {
-      console.error("Error from getRenewalsList API:", error);
     }
-  );
+    if (this.annualClubPerformanceCount > 0) {
+      this.reqObj.isViewed = false;
+      this.reqObj.length = this.annualClubPerformanceCount;
+    }
+    this.performanceService.getPerformanceDetailedViewList(this.reqObj).subscribe(
+      (response) => {
+        if (response.isSuccess && response.statusCode == "200") {
+          this.detailedList = response?.data?.agentProposalsDetailedViewLists || [];
+        }
+        else { console.error("API request was not successful."); }
+      },
+      (error) => {
+        console.error("Error from getPerformanceDetailedViewList API:", error);
+      }
+    );
   }
   onTabChanged(event: any): void {
     this.selectedTabIndex = event.index;
     console.log(this.selectedTabIndex);
-    if(this.selectedTabIndex == 1){
+    if (this.selectedTabIndex == 1) {
 
     }
   }
-  toggleView(key: any){
+  toggleView(key: any) {
     console.log(key);
     this.docType = key;
   }
-
 
   fetchCommissionStatement() {
     let requestbody: any = this.commissionForm.getRawValue();
@@ -158,12 +163,12 @@ export class MyPerformaceComponent {
       (respose) => {
         if (respose.isSuccess) {
           let commissionDetails = respose?.data?.searchResponse[0];
-          if(commissionDetails.fileName && commissionDetails.omniDocIndex){
-            this.downloadStatement(commissionDetails.omniDocIndex, commissionDetails.fileName);
-          }else{
-            this.toast.warning({ detail: "Warning", summary: 'There are no commission statements to download.', duration: 2000 }); 
+          if (commissionDetails.fileName && commissionDetails.omniDocImageIndex) {
+            this.downloadStatement(commissionDetails.omniDocImageIndex, commissionDetails.fileName);
+          } else {
+            this.toast.warning({ detail: "Warning", summary: 'There are no commission statements to download.', duration: 2000 });
           }
-        }else{
+        } else {
           this.toast.warning({ detail: "Warning", summary: 'Failed to fetch commission statement.', duration: 2000 });
         }
       },
@@ -175,7 +180,7 @@ export class MyPerformaceComponent {
 
   downloadStatement(omniDocImageIndex: string, fileName: string) {
     let requestBody: any = {};
-    requestBody.agentCode =  this.agentCode;
+    requestBody.agentCode = this.agentCode;
     requestBody.downloadRequest = [{
       omniDocImageIndex: omniDocImageIndex,
       fileName: fileName
@@ -183,7 +188,7 @@ export class MyPerformaceComponent {
 
     this.performanceService.downloadCommissionStatement(requestBody).subscribe(
       (response) => {
-        try{
+        try {
           if (response.isSuccess) {
             const blob = this.base64ToBlob(response?.data?.downloadResponse[0]?.byteArray, 'application/pdf');
             const url = window.URL.createObjectURL(blob);
@@ -194,12 +199,12 @@ export class MyPerformaceComponent {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-            this.toast.success({ detail: "Success", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
-          }else{
+            this.toast.success({ detail: "Success", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 });
+          } else {
             this.toast.warning({ detail: "Warning", summary: 'Failed to download commission statement.', duration: 2000 });
           }
-        }catch(error){
-          console.log('errror download pdf',error);
+        } catch (error) {
+          console.log('errror download pdf', error);
         }
       }, (error) => {
         console.log('Failed to download commission statement', error);

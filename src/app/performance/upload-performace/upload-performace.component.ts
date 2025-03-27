@@ -58,7 +58,7 @@ export class UploadPerformaceComponent implements OnInit{
         this.performanceService.uploadPerformancefile(data).subscribe(
           (response: any) => { 
             console.log(response);
-            if (response) {
+            if (response?.isSuccess) {
               console.log(response);
               this.toast.success({
                 detail: 'Success',
@@ -66,7 +66,7 @@ export class UploadPerformaceComponent implements OnInit{
               });
             }
             else {
-              this.toast.error({ detail: "Error", summary:"API request was not successful.", duration: 5000 });
+              this.toast.error({ detail: "Error", summary:response?.message, duration: 5000 });
               console.error("API request was not successful.");
             }
           },
@@ -105,5 +105,11 @@ export class UploadPerformaceComponent implements OnInit{
   }
   onSubmit(){
     console.log(this.performanceUploadForm.value);
+  }
+  downloadFile(fileName: string): void {
+    const link = document.createElement('a');
+    link.href = `assets/performance-assets/${fileName}`;
+    link.download = fileName;
+    link.click();
   }
 }

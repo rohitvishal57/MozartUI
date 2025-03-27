@@ -25,8 +25,10 @@ export class OtpPopupComponent implements OnInit{
   isCaptchaOne: boolean = false;
   otpValidateResponse: any;
   submitted: any;
-  isCaptchaValidated: boolean = false;
+  isCaptchaValidated: boolean | null = null;
   otpResponse: any;
+  isOtpValid: boolean | null = null;
+  isOtpRequired: boolean | null = null;
   constructor(private fb: FormBuilder,private yatraService: YatraService,private toast: NgToastService,
     private dialogRef: MatDialogRef<OtpPopupComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
@@ -124,7 +126,21 @@ export class OtpPopupComponent implements OnInit{
     this.input5.nativeElement.value +
     this.input6.nativeElement.value;
   }
+  resetOtpFields() {
+    this.input1.nativeElement.value = '';
+    this.input2.nativeElement.value = '';
+    this.input3.nativeElement.value = '';
+    this.input4.nativeElement.value = '';
+    this.input5.nativeElement.value = '';
+    this.input6.nativeElement.value = '';
+    
+    this.otpInfoObject = ''; // Clear the OTP object
+    this.isOtpValid = null;  // Reset validation flags
+    this.isOtpRequired = null;
+  }
+  
   async resendOtp(){
+    this.resetOtpFields();
     const userCaptcha = this.form.get('captchaInput')?.value;
     this.submitted = true;
     if (userCaptcha === this.captchaText || userCaptcha.toUpperCase() === 'ABHI') {
@@ -160,6 +176,15 @@ export class OtpPopupComponent implements OnInit{
     }
   }
   async validateOtp(){
+    console.log(this.otpInfoObject);
+    if (!this.otpInfoObject || this.otpInfoObject.length < 6) {
+      this.isOtpRequired = true;
+      this.isOtpValid = null;
+      this.toast.warning({ detail: "Warning", summary: "Please enter a valid 6-digit OTP", duration: 3000 });
+      return;
+    } else {
+      this.isOtpRequired = false;
+    }
     let reqObjBody = {
       leadId : this.data.leadId,
       otp: this.otpInfoObject
@@ -171,12 +196,21 @@ export class OtpPopupComponent implements OnInit{
         console.log(this.otpValidateResponse);
 
         if (this.otpValidateResponse.statusCode == 200 && this.otpValidateResponse.isSuccess == true) {
+          this.isOtpValid = true;
           this.toast.success({ detail: "Success", summary: this.otpValidateResponse.message, duration: 3000 });
           this.dialogRef.close(this.otpValidateResponse);
+        }
+        else if (this.otpValidateResponse.statusCode == 400 && this.otpValidateResponse.isSuccess == false) {
+          this.isOtpValid = false;
+          this.toast.warning({ detail: "Warning", summary: this.otpValidateResponse.message, duration: 3000 });
+        }
+        else {
+          this.isOtpValid = false; // Mark OTP as invalid
         }
       },
       error: (error) => {
         console.log(error);
+        this.toast.error({ detail: "Error", summary: error, duration: 3000 });
       }
     });
   }

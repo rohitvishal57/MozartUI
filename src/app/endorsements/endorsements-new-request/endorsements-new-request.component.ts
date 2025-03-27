@@ -45,32 +45,32 @@ export class EndorsementsNewRequestComponent implements OnInit {
     {
       name: "Aadhar Card Update",
       value: "aadharNumber",
-      CtstID:"ABHI_Endorsement_Request5"
+      CtstID: "ABHI_Endorsement_Request5"
     },
     {
       name: "Pancard Update",
       value: "panNumber",
-      CtstID:"ABHI_Endorsement_Request4"
+      CtstID: "ABHI_Endorsement_Request4"
     },
     {
       name: "Change my Primary Registered Number",
       value: "primaryContactNumber",
-      CtstID:"ABHI_Endorsement_Request15"
+      CtstID: "ABHI_Endorsement_Request15"
     },
     {
       name: "Change my Alternate number",
       value: "alternateContactNumber",
-      CtstID:"ABHI_Endorsement_Request8"
+      CtstID: "ABHI_Endorsement_Request8"
     },
     {
       name: "Change in my Email ID",
       value: "email",
-      CtstID:"ABHI_Endorsement_Request10"
+      CtstID: "ABHI_Endorsement_Request10"
     },
     {
       name: "Change my Alternate Email ID",
       value: "alternateEmail",
-      CtstID:"ABHI_Endorsement_Request6"
+      CtstID: "ABHI_Endorsement_Request6"
     },
     /* {
       name: "Change my Primary Registered Number- Member",
@@ -95,7 +95,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     {
       name: "Change of Nominee",
       value: "nomineeContact",
-      CtstID:"ABHI_Endorsement_Request2"
+      CtstID: "ABHI_Endorsement_Request2"
     },
     /* {
       name: "Change in Address",
@@ -121,7 +121,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   validatedMobileNumber: any;
   CaseSubSubTypeValue: any;
   agentCode: any = '';
-  // otpValue = new FormControl;
   showOtpSection: boolean = false;
   requestId: any;
   otpObj: any;
@@ -150,18 +149,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private yatraService: YatraService,
     private languageService: LanguageService,
     private translateService: TranslateService) {
-      this.policyNoChangeSubject.pipe(
-        debounceTime(300), // wait for 300ms after the last keyup event
-      ).subscribe(value => {
-        this.onChange(value);
-      });
+    this.policyNoChangeSubject.pipe(
+      debounceTime(300), // wait for 300ms after the last keyup event
+    ).subscribe(value => {
+      this.onChange(value);
+    });
   }
-  
+
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
-          this.translateService.use('en'); // Fallback to English if translation file is missing
+          this.translateService.use('en');
         }
       });
     });
@@ -183,7 +182,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       address2: [''],
       pincode: [''],
       endorsementDetails: this.formBuilder.group({
-        // otpValue: [''],
         aadharNumber: [''],
         alternateContactNumber: [''],
         email: [''],
@@ -269,10 +267,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.caseCreationForm.get('addNotes').reset();
     this.selctedFileName = "";
     this.showOtpSection = false;
-    if (value == "") {
-      this.caseCreationForm.get('policyNumber').reset();
+    value == "" && this.caseCreationForm.get('policyNumber').reset();
+    if (this.isPolicyExistsForAgent(value)) {
+      this.getPolicyMembers(value);
+    } else {
+      this.showPolicyNotAssociatedError(value);
     }
-    this.getPolicyMembers(value);
   }
 
   getPolicyMembers(value: string) {
@@ -286,7 +286,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policyMembersList = resp?.data?.policyMembersList;
           this.getMemberIdList(this.policyMembersList);
-          this.isPolicyExistsForAgent(value);
+          !this.isPolicyExistsForAgent(value) && this.showPolicyNotAssociatedError(value);
         } else {
           this.openErrorModal(resp?.message);
         }
@@ -294,7 +294,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       (err) => {
         console.log(err);
         this.openErrorModal(err);
-    });
+      });
   }
 
   getMemberIdList(membersList: Array<any>) {
@@ -314,7 +314,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     const filteredValue = this.activityList?.filter((x: any) => {
       const normalizedValue = this._normalizeValue(x.policyNumber);
       return normalizedValue ? normalizedValue.includes(filterValue) : false;
-    });  
+    });
     return filteredValue;
   }
 
@@ -330,16 +330,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
     const isPolicyPresent = this.policiesListData.some(
       (policy) => policy.policyNumber === policyNo
     );
-    if(!isPolicyPresent) {
-      this.MemberIdList = [];  // Handle New Endorsement Requests for Policies Not Associated with the Agent
-      const msg = `No Members were found for the given Policy Number: ${policyNo}`
-      this.openErrorModal(msg);
-    }
+    return isPolicyPresent;
+  }
+
+  showPolicyNotAssociatedError(policyNo: string) {
+    this.MemberIdList = [];  // Handle New Endorsement Requests for Policies Not Associated with the Agent
+    const msg = `The provided policy number (${policyNo}) is not associated with this agent.`
+    this.openErrorModal(msg);
   }
 
   endorsementChange(event: any) {
+    debugger;
     const value = event.target.value;
-    // this.caseCreationForm.get('endorsementDetails').setValue("");
     this.caseCreationForm.get('endorsementDetails').reset();
     this.caseCreationForm.get('addNotes').reset();
     this.caseCreationForm.get("currentPolicyDetails").reset();
@@ -361,7 +363,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'alternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.alternateMobileNumber || "No policy data available");
     }
     if (value == 'internationalContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('internationalContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
@@ -385,7 +387,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'memberPrimaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo|| "No policy data available" );
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo || "No policy data available");
     }
     if (value == 'memberAlternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -399,7 +401,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'alternateEmail') {
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Email_Id || "No policy data available");
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.alternateEmailId || "No policy data available");
     }
     if (value == 'memberEmail') {
       this.caseCreationForm.get("endorsementDetails").get('memberEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
@@ -419,16 +421,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value === 'panNumber' || value === 'aadharNumber') {
       this.uploadDoc = true;
       this.showOtpSection = false;
-      //this.isDisabled = false;
     } else {
       this.uploadDoc = false;
       this.showOtpSection = true;
-     // this.isDisabled = true;
     }
 
     if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.showOtpSection = false;
-     // this.isDisabled = false;
     }
 
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {
@@ -454,14 +453,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
   currentNomineeDetails(): string {
     const nomineeFirstName = this.externalPolicyData?.nomineeFirstName || "";
     const nomineeMiddleName = this.externalPolicyData?.nomineeMiddleName || "";
-    const nomineeLastName = this.externalPolicyData?.nomineeLastName || "";    
+    const nomineeLastName = this.externalPolicyData?.nomineeLastName || "";
     const relationship = this.externalPolicyData?.nomineeRelation;
     const nomineeContactNo = this.externalPolicyData?.nomineeContactNumber;
 
     const fullName = [nomineeFirstName, nomineeMiddleName, nomineeLastName].filter(name => name).join(" ");
-  
+
     let policyDetails = "";
-  
+
     if (fullName || relationship || nomineeContactNo) {
       if (fullName) {
         policyDetails += fullName;
@@ -481,9 +480,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
     } else {
       policyDetails = "No policy data available";
     }
-  
+
     return policyDetails;
-  }  
+  }
 
   onKeydown(e: any) {
     return Helper.isNumberValidation(e);
@@ -540,13 +539,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
   getAddress() {
     let addressParts: string[] = [];
     if (this.caseCreationForm.get("address1")?.value) {
-        addressParts.push(this.caseCreationForm.get("address1")?.value);
+      addressParts.push(this.caseCreationForm.get("address1")?.value);
     }
     if (this.caseCreationForm.get("address2")?.value) {
-        addressParts.push(this.caseCreationForm.get("address2")?.value);
+      addressParts.push(this.caseCreationForm.get("address2")?.value);
     }
     if (this.caseCreationForm.get("pincode")?.value) {
-        addressParts.push(this.caseCreationForm.get("pincode")?.value);
+      addressParts.push(this.caseCreationForm.get("pincode")?.value);
     }
     const address = addressParts.join(', ');
     const finalAddress = address.trim().length > 0 ? address : null;
@@ -596,7 +595,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         AttachmentType: null,
         CaseSubSubType: this.CaseSubSubTypeValue.name,
         CtstID: this.CaseSubSubTypeValue.CtstID,
-        Source:'Seller_Portal',
+        Source: 'Seller_Portal',
         CaseSubType: "Endorsement",
         CaseTitle: null,
         CaseType: "Endorsement",
@@ -640,49 +639,49 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-          if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess && resp?.data?.response?.caseId != null) {
-            if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
-              if (!this.selectedFile) {
-                this.isFilenotSelected = true;
-                return;
-              }
-              let caseID = resp.data.response.caseId;
-              let ccID = caseID.replace(/[$-]/g, '');
-              let file = this.selectedFile;
-              let fileExt = file.name.replace(/^.*\./, '');
-              const data = new FormData();
-              if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
-                data.append('Files', file)
-                data.append('CaseId', ccID)
-                data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
-                data.append('agentCode', this.agentCode)
-
-                this.endorsement_service.endorsementUploadFilesApi(data)
-                  .pipe()
-                  .subscribe((Respevent: any) => {
-                    let event: any = Respevent;
-                    if (Respevent?.data && Respevent?.statusCode == "200" && Respevent?.isSuccess) {
-                      this.openModal(resp);
-                    }
-                    else if (Respevent?.message) {
-                      this.toast.error({ detail: 'Error', summary: Respevent.message, duration: 5000 });
-                      this.backToEndorsment();
-                    }  else if (Respevent == null || Respevent?.message == undefined) {
-                      this.toast.error({ detail: 'Error', summary: "File upload was not successfull. Try again later!", duration: 5000, });
-                      this.backToEndorsment();
-                    }
-                  }, (error: any) => {
-                    this.openErrorModal(error);
-                  });
-              }
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess && resp?.data?.response?.caseId != null) {
+          if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
+            if (!this.selectedFile) {
+              this.isFilenotSelected = true;
+              return;
             }
-            else {
-              this.openModal(resp);
+            let caseID = resp.data.response.caseId;
+            let ccID = caseID.replace(/[$-]/g, '');
+            let file = this.selectedFile;
+            let fileExt = file.name.replace(/^.*\./, '');
+            const data = new FormData();
+            if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
+              data.append('Files', file)
+              data.append('CaseId', ccID)
+              data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
+              data.append('agentCode', this.agentCode)
+
+              this.endorsement_service.endorsementUploadFilesApi(data)
+                .pipe()
+                .subscribe((Respevent: any) => {
+                  let event: any = Respevent;
+                  if (Respevent?.data && Respevent?.statusCode == "200" && Respevent?.isSuccess) {
+                    this.openModal(resp);
+                  }
+                  else if (Respevent?.message) {
+                    this.toast.error({ detail: 'Error', summary: Respevent.message, duration: 5000 });
+                    this.backToEndorsment();
+                  } else if (Respevent == null || Respevent?.message == undefined) {
+                    this.toast.error({ detail: 'Error', summary: "File upload was not successfull. Try again later!", duration: 5000, });
+                    this.backToEndorsment();
+                  }
+                }, (error: any) => {
+                  this.openErrorModal(error);
+                });
             }
           }
           else {
-            this.openErrorModal(resp?.message);
+            this.openModal(resp);
           }
+        }
+        else {
+          this.openErrorModal(resp?.message);
+        }
       },
       (err) => {
         console.log(err);
@@ -694,29 +693,29 @@ export class EndorsementsNewRequestComponent implements OnInit {
   backToEndorsment() {
     this._router.navigate(["endorsements"]);
   }
-  
+
   openModal(resp: any) {
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       //width: '400px',
       disableClose: true,
-      panelClass:"messageModal-mat",
+      panelClass: "messageModal-mat",
       data: {
-        type: 'success', 
+        type: 'success',
         title: 'Endorsement',
         message: `Endorsement No: ${resp.data.response.caseId}`
       },
     });
 
     dialogRef.afterClosed().subscribe(() => {
-        this.backToEndorsment();
+      this.backToEndorsment();
     });
   }
 
-  openErrorModal(msg: string){
+  openErrorModal(msg: string) {
     const dialogRef = this.dialog.open(SuccessErrorModalComponent, {
       //width: '400px',
       disableClose: true,
-      panelClass:"messageModal-mat",
+      panelClass: "messageModal-mat",
       data: {
         type: 'error',
         message: msg
@@ -730,14 +729,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
     let fileExt;
     this.isFilenotSelected = false;
     this.fileSizeError = false;
-    
+
     if (e) {
       files = e.target.files;
       file = files[0];
       if (!file) {
         return;
       }
-  
+
       if (file.size > 10 * 1024 * 1024) {
         this.fileSizeError = true;
         e.target.value = '';
@@ -745,7 +744,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         this.selectedFile = null;
         return;
       }
-  
+
       this.selectedFile = file;
       this.selctedFileName = this.selectedFile.name;
       fileExt = this.selectedFile.name.replace(/^.*\./, '');
@@ -754,7 +753,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = file.name;
     this.documentType = file.type;
     this.documentSize = this.convertBytesToKB(file.size);
-  
+
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
       this.showNote = false;
       this.showDocInfo = true;
@@ -837,7 +836,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
             this.closeOtpPopup();
             //this.isDisabled = false;
             this.sendOtptDisabled = false;
-          }  
+          }
           else {
             this.errorMessage = resp.message;
             //this.isDisabled = false;
@@ -934,10 +933,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
-  
+
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;
-  
+
       if (index < 5) {
         this.ngZone.run(() => {
           setTimeout(() => {
@@ -950,10 +949,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
         btnElement && btnElement.focus();
       }
     }
-  
+
     else if (event.key === 'Backspace') {
       this.otp[index] = '';
-  
+
       if (index > 0) {
         this.ngZone.run(() => {
           setTimeout(() => {
@@ -963,7 +962,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         });
       }
     }
-  
+
     else if (event.key === 'Tab') {
       event.preventDefault();
       this.ngZone.run(() => {
@@ -988,33 +987,33 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
     }
   }
-get isSubmitDisabled(): boolean {
-  const selectedType = this.caseCreationForm.get('endorsementType').value;
-  
-  const otpRequiredTypes = [
-    'alternateContactNumber', 
-    'internationalContactNumber', 
-    'primaryContactNumber', 
-    'memberPrimaryContactNumber', 
-    'memberAlternateContactNumber',
-    'email',
-    'alternateEmail',
-    'memberEmail',
-    'memberAlternateEmail'
-  ];
-  
-  const isFormInvalid = !this.caseCreationForm.valid;
-  
-  const isOtpNotValidated = otpRequiredTypes.includes(selectedType) && this.sendOtptDisabled;
-  
-  const isDocumentMissing =                                               // Check document upload for PAN and Aadhar
-    (selectedType === 'panNumber' || selectedType === 'aadharNumber') && 
-    (!this.selectedFile || this.isFilenotSelected);
-  
-  return (
-    isFormInvalid || 
-    isOtpNotValidated || 
-    isDocumentMissing
-  );
-}  
+  get isSubmitDisabled(): boolean {
+    const selectedType = this.caseCreationForm.get('endorsementType').value;
+
+    const otpRequiredTypes = [
+      'alternateContactNumber',
+      'internationalContactNumber',
+      'primaryContactNumber',
+      'memberPrimaryContactNumber',
+      'memberAlternateContactNumber',
+      'email',
+      'alternateEmail',
+      'memberEmail',
+      'memberAlternateEmail'
+    ];
+
+    const isFormInvalid = !this.caseCreationForm.valid;
+
+    const isOtpNotValidated = otpRequiredTypes.includes(selectedType) && this.sendOtptDisabled;
+
+    const isDocumentMissing =                                               // Check document upload for PAN and Aadhar
+      (selectedType === 'panNumber' || selectedType === 'aadharNumber') &&
+      (!this.selectedFile || this.isFilenotSelected);
+
+    return (
+      isFormInvalid ||
+      isOtpNotValidated ||
+      isDocumentMissing
+    );
+  }
 }

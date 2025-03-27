@@ -22,10 +22,18 @@ export interface IFullQuoteMapping {
     proposerWhatsAppNo: string
     proposerAddress1: string
     proposerAddress2: string
+    proposerAddress3: string
+    correspondingAddress1: string
+    correspondingAddress2: string
+    correspondingAddress3: string
+    isCorrespondingAddressSameAsProposerAddress: boolean
+    proposerBenefitTopUpPlanFlag:boolean
+    proposerBenefitTopUpSelectedPlan: string
     proposerCity: string
     proposerState: string
     proposerEmailId: string
     proposerPincode: string
+    correspondingPincode: string
     idProof: string
     idNo: string
     proposerAnnualIncome: string
@@ -76,6 +84,14 @@ export interface IFullQuoteMapping {
     affiliateEmployeeId : string
     isAffiliateEmployee:string
     nameOfTheAffiliate : string
+    employeeId: string
+    pennyDropVerify: string
+    pennyDropBankAccountNo: string
+    pennyDropIFSCCode: string
+    pennyDropNameMatch: string
+    refCode1: string
+    refCode2:string
+    refCode3: string
 }
 
 export interface InsuredMemberDetail {

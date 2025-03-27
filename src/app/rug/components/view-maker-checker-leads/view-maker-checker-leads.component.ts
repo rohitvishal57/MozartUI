@@ -6,6 +6,8 @@ import { RugService } from '../../rug.service';
 import { AdminService } from '../../Admin/admin.service';
 import { AuditpopupComponent } from '../auditpopup/auditpopup.component';
 import { SuccesspopupComponent } from '../successpopup/successpopup.component';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-view-maker-checker-leads',
   templateUrl: './view-maker-checker-leads.component.html',
@@ -29,7 +31,9 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
  private adminService: AdminService,
     private formBuilder: FormBuilder,
     private rugService: RugService,
-    private matdialogue: MatDialog
+    private matdialogue: MatDialog,
+    private yatraService: YatraService,
+     private toast: NgToastService
   ) { }
   currentPage = 1;
   itemsPerPage = 10;
@@ -44,6 +48,7 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
   first: number = 0;
   rows: number = 10;
   displayedAVs: any[] = [];
+  policyDetails:any = [];
   ngOnInit(): void {
     this.viewLeadForm = this.formBuilder.group({
       mobileNumber: [''],
@@ -101,37 +106,45 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     this.getAllLeads();
   }
   
-  actionLead(lead: any){
-    console.log(lead);
-    localStorage.setItem('leadId', lead.leadId)
-    let data = {
-      partnerId: lead.partnerId,
-      productId: lead.productId
-    }
+  actionLead(lead: any) {
+    let reqObj = {
+      "leadId": lead.leadId
+    };
 
-    // if(lead.planName == 'Health Pro'){
-    //   data.partnerId =  45
-    //   data.productId = 26
-      
-    // }else if(lead.planName == 'Health Pro Infinity'){
-    //   data.partnerId =  45
-    //   data.productId = 27
-    // }else if(lead.planName == 'Group Activ Secure'){
-    //   data.partnerId =  45
-    //   data.productId = 29
-    // }else{
-    //   data.partnerId =  45
-    //   data.productId = 29
-    // }
+    this.rugService.getTcPolicyInfoByLeadId(reqObj).subscribe({
+      next: (res: any) => {
+        res = JSON.parse(res.data).data;
+        this.policyDetails = res.policyDetails;
+        console.log(this.policyDetails);
+        let data = {
+          partnerId: lead.partnerId,
+          productId: lead.productId
+        };
+        if (this.policyDetails && this.policyDetails.length > 0) {
+          const quoteType = this.policyDetails[0].quoteType;
+          if (quoteType === "FULLQUOTE") {
+            this.toast.success({ detail: "Success", summary: "Policy is already generated for this Lead Id", duration: 3000 });
+          } else {
+            console.log(lead);
+            localStorage.setItem('leadId', lead.leadId);
+            this.router.navigate(['rug'], {
+              state: { productData: data }
+            });
+          }
+        } else {
+          localStorage.setItem('leadId', lead.leadId);
+          this.router.navigate(['rug'], {
+            state: { productData: data }
+          });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Error fetching policy details!");
+      }
+    });
+}
 
-    this.router.navigate(['rug'], {
-      state: { productData: data}
-   });
-    // let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
-    // let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
-    // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
-
-  }
   updateDisplayedData(): void {
     const startIndex = this.first;
     const endIndex = this.first + this.rows;
@@ -139,27 +152,27 @@ export class ViewMakerCheckerLeadsComponent implements OnInit{
     this.displayedAVs = this.allLeads.slice(startIndex, endIndex);
     console.log(this.displayedAVs)
   }
-  auditLead(lead: any){
-   let reqObj = {
-            leadId: lead.leadId 
-          };
-      
-          this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
-            let res = JSON.parse(response.data);
-            console.log(res.data.allAudit)
-            const dialogRef = this.matdialogue.open(AuditpopupComponent, {
-              width: "1000px",
-              autoFocus: false,
-              data: res.data.allAudit
-            });
-            dialogRef.afterClosed().subscribe((result: any) => {
-              console.log(result);
-            });
-          },
-            (error:any) => {
-              console.error("API Error:", error);
-            }
-          );
+  auditLead(lead: any) {
+    let reqObj = {
+      leadId: lead.leadId
+    };
+
+    this.adminService.getAllAudit(reqObj).subscribe((response: any) => {
+      let res = JSON.parse(response.data);
+      console.log(res.data.allAudit)
+      const dialogRef = this.matdialogue.open(AuditpopupComponent, {
+        width: "1000px",
+        autoFocus: false,
+        data: res.data.allAudit
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+      });
+    },
+      (error: any) => {
+        console.error("API Error:", error);
+      }
+    );
   }
   
   onSubmit(){

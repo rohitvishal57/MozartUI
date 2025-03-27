@@ -65,5 +65,22 @@
 
       </form>
     </div>
+    <div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isSummaryClicked">
+      <div class="modal-dialog">
+        <div class="modal-content" style="padding-bottom: 12px;">
+          <form class="card-body accordionCard section-title">
+            <div class="modal-body" style="padding-top: 0;">
+              <div *ngIf="isSummaryClicked">
+                <app-proposal-summary [formData1]="formData1"></app-proposal-summary>
+              </div>
+            </div>
+     
+            <div class="modal-footer">
+              <button type="button" id="amlConsent" name="amlConsent" class="btn-submit" style="padding: 10px 26px;" (click)="closeSummaryPopUp()">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -49,6 +49,13 @@ import { LeadCheckComponent } from './components/lead-check/lead-check.component
 import { HdfcCreateBataLeadsComponent } from "./components/hdfc/hdfc-create-bata-leads/hdfc-create-bata-leads.component";
 import { HdfcBataLeadsListComponent } from "./components/hdfc/hdfc-bata-leads-list/hdfc-bata-leads-list.component";
 import { HdfcJourneySelectionsComponent } from "./components/hdfc/hdfc-journey-selections/hdfc-journey-selections.component";
+import { BataavLeadsListComponent } from "./components/hdfc/bataav-leads-list/bataav-leads-list.component";
+import { EasypayCheckComponent } from './easypay-check/easypay-check.component';
+import { PaymentCheckComponent } from './payment-check/payment-check.component';
+import { SharedModule } from "../shared/shared.module";
+import { NotValidPopupComponent } from "./not-valid-popup/not-valid-popup.component";
+import { BataDetailsComponent } from "./components/hdfc/bata-details/bata-details.component";
+import { PolicyCheckComponent } from "./policy-check/policy-check.component";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -89,7 +96,13 @@ export function HttpLoaderFactory(http: HttpClient) {
         LeadCheckComponent,
         HdfcCreateBataLeadsComponent,
         HdfcBataLeadsListComponent,
-        HdfcJourneySelectionsComponent
+        HdfcJourneySelectionsComponent,
+        BataavLeadsListComponent,
+        EasypayCheckComponent,
+        PaymentCheckComponent,
+        NotValidPopupComponent,
+        BataDetailsComponent,
+        PolicyCheckComponent
     ],
     
     imports: [
@@ -99,6 +112,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         ReactiveFormsModule,
         RugRoutingModule,
         MyMaterialModule,
+        SharedModule,
         FormsModule,
         TranslateModule.forRoot({
             loader: {

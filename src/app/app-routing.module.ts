@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
+import { AuthGuard } from './authorize/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,27 +20,33 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard/dashboard.module').then((m) => m.DashboardModule)
+    loadChildren: () => import('./dashboard/dashboard/dashboard.module').then((m) => m.DashboardModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'leads',
-    loadChildren: () => import('./leads/leads.module').then((m) => m.LeadsModule)
+    loadChildren: () => import('./leads/leads.module').then((m) => m.LeadsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'claims',
-    loadChildren: () => import('./claims/claims-view/claims-view.module').then((m) => m.ClaimsViewModule)
+    loadChildren: () => import('./claims/claims-view/claims-view.module').then((m) => m.ClaimsViewModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'events',
-    loadChildren: () => import('./events/events-new/events.module').then((m) => m.EventsModule)
+    loadChildren: () => import('./events/events-new/events.module').then((m) => m.EventsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'endorsements',
-    loadChildren: () => import('./endorsements/endorsements-requests/endorsements-requests.module').then((m) => m.EndorsementsRequestsModule)
+    loadChildren: () => import('./endorsements/endorsements-requests/endorsements-requests.module').then((m) => m.EndorsementsRequestsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'products',
-    loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule)
+    loadChildren: () => import('./product/products/products.module').then((m) => m.ProductsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'products/hdfc',
@@ -73,7 +80,8 @@ const routes: Routes = [
   },
   {
     path: 'renewal',
-    loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
+    loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: '',
@@ -94,6 +102,10 @@ const routes: Routes = [
   {
     path: 'performance',
     loadChildren: () => import("./performance/performance.module").then((m) => m.PerformanceModule)
+  },
+  {
+    path: 'commission',
+    loadChildren: () => import("./commissionstatement/commissionstatement.module").then((m) => m.CommissionstatementModule)
   },
   {
     path: '',

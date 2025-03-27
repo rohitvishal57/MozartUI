@@ -32,7 +32,6 @@ export class NotificationsComponent {
   }
 
   notificationInfo() {
-    debugger;
    this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
       (response) => {
       this.notifications = response?.data;

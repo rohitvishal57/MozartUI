@@ -88,9 +88,9 @@ export class LeadsService {
     return this.http.post<any>(url, requestBody);
   }
 
-  getOccupationInfo():Observable<any>{
+  getOccupationInfo(requestBody:any):Observable<any>{
     const getOccupationRequestURL = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
-    return this.http.get<any>(getOccupationRequestURL);
+    return this.http.post<any>(getOccupationRequestURL, requestBody);
   }
   
   downloadAllLeads(requestBody:any){

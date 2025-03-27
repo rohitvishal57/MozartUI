@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { RugService } from '../../rug.service';
 import { AdminService } from '../../Admin/admin.service';
 import { AuditpopupComponent } from '../auditpopup/auditpopup.component';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { NgToastService } from 'ng-angular-popup';
 // import { ApiService } from 'src/app/core/services/api.service';
 // import { AuditPopupComponent } from 'src/app/shared/components/audit-popup/audit-popup.component';
 // import { SuccessPopupComponent } from 'src/app/shared/components/success-popup/success-popup.component';
@@ -34,7 +36,8 @@ export class ViewLeadsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private rugService: RugService,
     private adminService: AdminService,
-    private matdialogue: MatDialog
+    private matdialogue: MatDialog,
+    private toast: NgToastService
   ) { }
   currentPage = 1;
   itemsPerPage = 10;
@@ -51,6 +54,7 @@ export class ViewLeadsComponent implements OnInit {
   displayedAVs: any[] = [];
   mobileNumber: string = ""
   leadId: string = '';
+  policyDetails:any = [];
   ngOnInit(): void {
     this.viewLeadForm = this.formBuilder.group({
       mobileNumber: [''],
@@ -145,36 +149,45 @@ export class ViewLeadsComponent implements OnInit {
   }
 
   actionLead(lead: any) {
-    console.log(lead);
-    localStorage.setItem('leadId', lead.leadId)
-    let data = {
-      partnerId: lead.partnerId,
-      productId: lead.productId
-    }
+    let reqObj = {
+      "leadId": lead.leadId
+    };
 
-    // if (lead.planName == 'Health Pro') {
-    //   data.partnerId = 45
-    //   data.productId = 26
-
-    // } else if (lead.planName == 'Health Pro Infinity') {
-    //   data.partnerId = 45
-    //   data.productId = 27
-    // } else if (lead.planName == 'Group Activ Secure') {
-    //   data.partnerId = 45
-    //   data.productId = 29
-    // } else {
-    //   data.partnerId = 45
-    //   data.productId = 29
-    // }
-
-    this.router.navigate(['rug'], {
-      state: { productData: data }
+    this.rugService.getTcPolicyInfoByLeadId(reqObj).subscribe({
+      next: (res: any) => {
+        res = JSON.parse(res.data).data;
+        this.policyDetails = res.policyDetails;
+        console.log(this.policyDetails);
+        let data = {
+          partnerId: lead.partnerId,
+          productId: lead.productId
+        };
+        if (this.policyDetails && this.policyDetails.length > 0) {
+          const quoteType = this.policyDetails[0].quoteType;
+          if (quoteType === "FULLQUOTE") {
+            this.toast.success({ detail: "Success", summary: "Policy is already generated for this Lead Id", duration: 3000 });
+          } else {
+            console.log(lead);
+            localStorage.setItem('leadId', lead.leadId);
+            this.router.navigate(['rug'], {
+              state: { productData: data }
+            });
+          }
+        } else {
+          localStorage.setItem('leadId', lead.leadId);
+          this.router.navigate(['rug'], {
+            state: { productData: data }
+          });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Error fetching policy details!");
+      }
     });
-    // let ecrytpedLeadID = this.apiService.encryptUrlData(lead.leadId);
-    // let encodedURILeadId = encodeURIComponent(ecrytpedLeadID);
-    // this.router.navigate(['web/tls_create_proposal/'+ encodedURILeadId]);
+}
 
-  }
+
 
   auditLead(lead: any) {
     let reqObj = {

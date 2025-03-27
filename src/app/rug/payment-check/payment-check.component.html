@@ -1,0 +1,46 @@
+<!--Body start-->
+<main class="siteBody siteBody_renewJourney" *ngIf="paymentStatus != 'FAILED'">
+    <!--Main Columns start-->
+    <div class="contentBody bodyColumns-1 mobile-flex-column" >
+        
+        
+        <div class="bodyColumn body_flex_column">
+            <section class="white_container">
+                <div class="main_commonError">
+                    <div class="submain_commonError">
+                        <img src="assets/Img/icon_no_leadid.svg">
+                        <h6>Sorry</h6>
+                        <p>{{displayMessage}}</p>
+                        <button class="next-btn" (click)="callJustpay()">try Again</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        
+    </div>
+
+    <!--Main Columns end-->
+  </main>
+<main  *ngIf="paymentStatus == 'FAILED'">
+
+    <div class="contentBody bodyColumns-1 mobile-flex-column">
+          
+          
+      <div class="bodyColumn body_flex_column">
+          <section class="white_container">
+              <div class="main_commonError">
+                  <div class="submain_commonError">
+                      <img src="assets/Img/icon_no_leadid.svg">
+                      <h6>Sorry</h6>
+                      <p>{{displayMessage}}</p>
+                      <button class="next-btn" (click)="callJustpay()">try Again</button>
+                  </div>
+              </div>
+          </section>
+      </div>
+      
+      
+  </div>
+</main>
+  <!--Body end-->

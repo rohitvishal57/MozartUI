@@ -2,17 +2,16 @@ import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExcelServiceService {
-  
-  constructor() { }
+  constructor() {}
 
   exportAsExcelFile(json: any[], excelFileName: string): void {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
     const workbook: XLSX.WorkBook = {
       Sheets: { 'data': worksheet },
-      SheetNames: ['data']
+      SheetNames: ['data'],
     };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);
@@ -23,10 +22,11 @@ export class ExcelServiceService {
     const link = document.createElement('a');
     const url = URL.createObjectURL(data);
     link.href = url;
+    link.target = '_blank'; // Ensure the file is downloaded and not opened
     link.download = fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION;
     link.click();
     setTimeout(() => {
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url); // Cleanup the object URL
     }, 100);
   }
 }

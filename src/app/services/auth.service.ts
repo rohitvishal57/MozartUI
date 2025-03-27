@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +8,29 @@ export class AuthService {
 
   private tokenKey = 'token';  // Key for localStorage/sessionStorage
 
+  constructor() {}
+
+  channelVal = this.getUserInfo()?.channel?.toUpperCase();
+  isFLSLogin = this.getUserInfo()?.teamList?.length > 0
+
+  private channelSubject = new BehaviorSubject<string>(this.channelVal);
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isFLSLogin);
+
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  channel$ = this.channelSubject.asObservable();
+
+  setChannel(channel: string): void {
+    this.channelSubject.next(channel);
+  }
+
+  isFLSLoginExists(value: boolean): void {
+    this.isLoggedInSubject.next(value);
+  }
+
   // Store token
   storeToken(token: string): void {
     localStorage.setItem(this.tokenKey, token); // You can use sessionStorage if required
+    sessionStorage.setItem(this.tokenKey, token);
   }
 
   // Retrieve token
@@ -25,6 +46,10 @@ export class AuthService {
   // Optional: Check if token exists
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  isSessionTokenExists(): boolean {
+    return !!sessionStorage.getItem(this.tokenKey);
   }
 
   getUserInfo() {

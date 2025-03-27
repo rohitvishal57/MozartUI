@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, inject, Inject, Renderer2 } from '@angular/core';
+import { Component, inject, Inject, Input, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
@@ -24,6 +24,7 @@ export class ProposalSummaryComponent {
   selectedButton: any;
   isBBPlanDetailsVisible: boolean = false;
   isPlanDetailsVisible: boolean = false;
+  @Input() formData1: any;
 
 
   constructor(

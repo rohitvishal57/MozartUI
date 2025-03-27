@@ -1,0 +1,33 @@
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: var(--mdc-dialog-container-shape, 4px);
+    background: transparent;
+    border-radius: 0;
+}
+.rug_ModalMain .popup-modal-content{
+	padding: 24px 24px 0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 1);
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 12px 20px #00000026;
+}
+
+.rug_ModalMain .popup-modal-body {
+    padding: 32px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.rug_ModalMain .popup-modal-footer {
+    padding: 0 0 24px;
+    gap: 8px;
+}
+.rug_ModalMain .popup-modal-header h6, .rug_ModalMain .popup-modal-header .popup-content-title,
+.rug_ModalMain .popup-modal-body h6, .rug_ModalMain .popup-modal-body .popup-content-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--black-color);
+    margin: 0;
+}
+.rug_ModalMain .popup-modal-body h6, .rug_ModalMain .popup-modal-body .popup-content-title {
+    font-size: 18px;
+}

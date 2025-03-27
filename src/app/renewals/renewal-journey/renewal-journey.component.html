@@ -1,9 +1,9 @@
 <div class="main-container" *ngIf="showHtmlContent==true">
 
-    <div class="main-subContainer">
+    <div class="main-subContainer main-subContainer-renewal">
 
-        <div class="left-nav left-nav-hideMobile" *ngIf="formIndex != 5">
-            <!-- <div class="left-navInner left-main-cnt">
+        <div class="left-nav">
+            <div class="left-navInner left-main-cnt" *ngIf="formIndex != 3">
                 <div class="yourProgress bcl_main">
                     <h1>{{"Your Progress" | translate}}</h1>
                     <div class="processBtnGroup">
@@ -20,7 +20,7 @@
                           <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': ![2].includes(formIndex), 'block-hide': [2].includes(formIndex)}">
                           <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': [2].includes(formIndex) , 'block-hide': ![2].includes(formIndex)}">{{"Payment" | translate}}
                       </button>
-                  </div> -->
+                  </div>
                     <!-- <div class="progressDetails"> -->
                         <!-- <div class="details" *ngFor="let case of formSequence;index as i;">
                     <div class="step-count" >
@@ -53,8 +53,8 @@
                   <p>This will help them browse later</p>
                   <a>Send brochure</a>
                 </div> -->
-                <!-- </div>
-            </div> -->
+                </div>
+            </div>
         </div>
         <div class="right-panel">
             <form [formGroup]="renewalFormGroup" style="margin-bottom: 20%;">
@@ -96,6 +96,37 @@
                                     </small>
                                 </div>
 
+                                <!-- ----------- -->
+                                <!-- <div *ngIf="['word'].includes(control.type)"
+                                [class]="control.class" class="typecss" [hidden]="!control.visible">
+                                <div class="input-container">
+                                    <input *ngIf="!control.disabled" class="inputField_Text"
+                                        formControlName="{{ control.name }}" [type]="control.type"
+                                        [ngClass]="{'has-value': hasAnyValue(control)}" [id]="control.name"
+                                        [name]="control.name" (change)="onInputChange($event, control)">
+                                    <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                                        formControlName="{{ control.name }}" [type]="control.type"
+                                        [id]="control.name" [name]="control.name"
+                                        [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
+                                        (change)="onInputChange($event, control)" readonly>
+                                    <label *ngIf="control.visibleLabel">{{ control.label?(control.label |
+                                        translate):''}}
+                                        <span *ngIf="control.validators">*</span>
+                                    </label>
+                                </div>
+                              </div> -->
+
+                              <div *ngIf="control.type === 'word'" [class]="control.class" class="typecss renewal_nonEdit"
+                                    [hidden]="!control.visible">
+                                    <div class="label-value-container">
+                                        <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ?
+                                            (control.label |
+                                            translate) : '' }}</label>
+                                        <div class="value-text">{{ control.value }}</div>
+                                    </div>
+                                </div>
+                                 <!-- --------------- -->
+
                                 <!--Type date-->
                                 <div *ngIf="control.type==='date'" [class]="control.class" class="typecss" [hidden]="!control.visible">
                                   <div class="input-container">
@@ -125,16 +156,20 @@
                                     <label class="radio-option-label" *ngIf="control.visibleLabel === true"
                                         [innerHTML]="control.label ? (control.label | translate) : ''">
                                         <span *ngIf="control.validators">*</span>
-                                    </label>
+                                        </label>
+                                        <div class="tooltip-wrapper">
+                                        <span class="info-icon" *ngIf="control.toolTipMessage">
+                                            <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                                        </span>
+                                        <span class="tooltip-text tooltip-textidnumber">{{ control.toolTipMessage }}</span>
+                                        </div>
                                     <div class="radio-button">
                                         <div [class]="control.class" *ngFor="let option of control.radioOptions">
-                                            <input type="radio" [formControlName]="control.name" [name]="control.name"
-                                                [id]="control.name" [value]="option.value" style="margin-right: 10px;"
-                                                [disabled]="control.disabled ?? false"
-                                                (change)="onInputChange($event, control)">
-                                            <label [innerHTML]="option.label ? (option.label | translate) : ''"></label>
+                                        <input type="radio" [formControlName]="control.name" [name]="control.name" [id]="control.name"
+                                            [value]="option.value" style="margin-right: 10px;" (change)="onInputChange($event, control)">
+                                        <label [innerHTML]="option.label ? (option.label | translate) : ''"></label>
                                         </div>
-                                    </div>
+                                 </div>
                                 </div>
 
                                 <div *ngIf="control.type === 'banner'" [class]="control.class" class="banner-container">
@@ -513,6 +548,16 @@
                                                                             translate) : ''}}
                                                                         </small>
                                                                     </div>
+                                                                    <div *ngIf="subControl.type === 'word'" [class]="subControl.class" class="typecss renewal_nonEdit"
+                                                                        [hidden]="!subControl.visible">
+                                                                        <div class="label-value-container">
+                                                                            <label *ngIf="subControl.visibleLabel" class="label-text">
+                                                                                {{ subControl.label ? (subControl.label | translate) : '' }}
+                                                                            </label>
+                                                                            <div class="value-text">{{ memberDetail[i-1]?.[subControl.name] }}</div>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div *ngIf="subControl.type==='date'"
                                                                         [class]="subControl.class" class="typecss"
                                                                         [hidden]="!subControl.visible">
@@ -868,7 +913,7 @@
                                 <div *ngIf="control.type === 'checkbox' && control.visible" class="checkbox-error">
                                     <div [class]="control.class" style="display: -webkit-box;">
                                       <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"
-                                        [name]="control.name" id="{{control.name}}" class="checkbox-label"
+                                        [name]="control.name" id="{{control.name}}" class="checkbox-label" (change)="onInputChange($event, control)"
                                        />
                                       <label [for]="control.name"
                                         [innerHTML]="getLabels(control?.label) ? (getLabels(control?.label) | translate) : ''"
@@ -1320,3 +1365,145 @@
     </div>
   </div>
 </div>
+
+  <div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isKycModalVisible">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">KYC Confirmation</h5>
+          <button type="button" class="close-btn" (click)="continueWithExistingKyc()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="para-rate-18">
+                Your KYC details are <strong>{{ formData.firstName }} {{ formData.lastName }} {{ formData.memberDobProposer }}</strong>
+            </p>
+          <form [formGroup]="kycForm">
+            <div class="kyc-confirmation">
+                <p>
+                    Are you a PEP (Politically Exposed Person) or a relative of a PEP?
+                    <span class="tooltip-wrapper">
+                        <span class="info-icon">
+                            <img src="assets/Img/icon_black_info.svg" alt="tooltip" />
+                        </span>
+                        <span class="tooltip-text">
+                            *Politically Exposed Persons* (PEPs) are individuals who have been entrusted with prominent 
+                            public functions by a foreign country, including the heads of States or Governments, senior 
+                            politicians, senior government or judicial or military officers, senior executives of 
+                            state-owned corporations, and important political party officials.
+                        </span>
+                    </span>                    
+                </p>
+                
+                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                  <label>
+                    <input type="radio" formControlName="pepStatus" value="Y"> Yes
+                  </label>
+                  <label>
+                    <input type="radio" formControlName="pepStatus" value="N"> No
+                  </label>
+                </div>
+            </div>
+            <div class="kyc-confirmation" style="display: flex; align-items: center;">
+              <input type="checkbox" id="kycCheckbox" formControlName="kycConfirmed" class="checkbox-label">
+              <label for="kycCheckbox" class="checkboxes" style="margin-left: 5px;">
+                I confirm that my existing KYC details are correct and to the best of my knowledge.
+              </label>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-footer">
+         <button type="button" class="btn-submit" [disabled]="!kycForm.get('kycConfirmed')?.value"
+            (click)="continueWithExistingKyc()">
+            Wish to continue
+          </button>
+          <button type="button" class="btn-submit" (click)="redoKyc()">Redo - KYC</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isHealthDeclarationVisible">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Good Health Declaration for Insured Members</h5>
+          <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="para-rate-18">
+            Did you / insured members suffer from or are currently suffering from or have developed, 
+            been investigated for, or advised to take medical opinion or advised surgery for any 
+            disease/illness/injury/accident/medical/surgical condition other than common cold or viral fever?
+          </p>
+  
+          <form [formGroup]="healthDeclarationForm">
+            <div class="member-list-container">
+
+            <div *ngFor="let member of memberDetail; let i = index">
+              <div class="member-section">
+                <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+          
+                <div class="radio-group spaced-radio" style="display: flex; gap: 20px; align-items: center; margin-bottom: 10px; margin-top: 10px;">
+                  <label>
+                    <input type="radio" [formControlName]="'GHDApplicable' + i" 
+                           (change)="toggleInputField(i, 'yes')" value="yes"> Yes
+                  </label>
+                  <label>
+                    <input type="radio" [formControlName]="'GHDApplicable' + i" 
+                           (change)="toggleInputField(i, 'no')" value="no"> No
+                  </label>
+                </div>
+          
+                <!-- Show input fields if "Yes" is selected -->
+                <!-- <div *ngIf="member.showInputField">
+                  <div class="input-container typecss">
+                    <input
+                      [formControlName]="'GHDRemarks' + i"
+                      [name]="'GHDRemarks' + i"
+                      [id]="'GHDRemarks' + i"
+                      class="inputField_Text"
+                      type="text"
+                      [ngClass]="{'has-value': healthDeclarationForm.get('GHDRemarks' + i)?.value}"
+                    />
+                    <label>GHD Remarks <span class="text-danger">*</span></label>
+                  </div>
+                  <small *ngIf="healthDeclarationForm.get('GHDRemarks' + i)?.invalid && healthDeclarationForm.get('GHDRemarks' + i)?.touched"
+                         class="text-danger">
+                    This field is required.
+                  </small>
+                </div> -->
+                <div class="feedback-message" *ngIf="member.showInputField">
+                    <div class="message-label">
+                      <p class="para-rate-lable">GHD Remarks</p>
+                    </div>
+                    <div class="textarea-wrapper">
+                      <textarea class="input-textBox" id="notes" placeholder="Enter GHD Remarks" [formControlName]="'GHDRemarks' + i"></textarea>
+                    </div>
+                    <small *ngIf="healthDeclarationForm.get('GHDRemarks' + i)?.invalid && healthDeclarationForm.get('GHDRemarks' + i)?.touched"
+                         class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+            </div>
+            </div>
+          </form>
+          
+          
+        </div>
+  
+        <div class="modal-footer">
+         <div class="btn-group w-100 d-flex gap-3">
+          <button type="button" class="btn-submit" (click)="closeModal()">Close</button>
+          <button type="button" class="btn-submit" [disabled]="!healthDeclarationForm.valid" (click)="confirmHealthDeclaration()">
+            Renew
+          </button>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  

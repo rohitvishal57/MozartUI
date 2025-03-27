@@ -22,42 +22,45 @@
                 <div class="col-12">
                     <div class="cardViewMain">
                         <div class="cardViewWraper">
-                            <div class="cardViewItem" *ngFor="let item of ProductList">
-                                <header>
-                                    <div class="body_flex_row">
-                                        <img *ngIf="item.partnerId !== 14 && item.partnerId !== 45"
-                                            src="assets/logo/activeOne.svg">
-                                        <h6>{{ item.productName?(item.productName | translate): ''}}</h6>
+                            <ng-container *ngFor="let item of ProductList">
+
+                                <div class="cardViewItem" *ngIf="item.productId != 31">
+                                    <header>
+                                        <div class="body_flex_row">
+                                            <img *ngIf="(item.partnerId !== 14 && item.partnerId !== 45) ||  item.businessType === 'Retail' " 
+                                                src="assets/logo/activeOne.svg">
+                                            <h6>{{ item.productName?(item.productName | translate): ''}}</h6>
+                                        </div>
+                                        <button *ngIf="(item.partnerId !== 14 && item.partnerId !== 45) ||  item.businessType === 'Retail' "  type="button"
+                                            id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload"
+                                            title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img
+                                                src="./assets/Img/icon_download_grey.svg"></button>
+                                    </header>
+                                    <div class="cardViewBody">
+                                        <p>{{item.productDescription | translate}}</p>
                                     </div>
-                                    <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
-                                        id="btn-downloadProduct" name="btn-downloadProduct" class="btn_cardDownload"
-                                        title="Download Brochure" (click)="donwloadBrowcher(item.productName)"><img
-                                            src="./assets/Img/icon_download_grey.svg"></button>
-                                </header>
-                                <div class="cardViewBody">
-                                    <p>{{item.productDescription | translate}}</p>
+                                    <footer>
+                                        <div class="btn_groupAction">
+                                            <button type="button" id="buynow" name="buynow" value="buynow"
+                                                class="btn_red btn_products btn_buy" [disabled]="disableBuyJourney" (click)="buyNow(item)">
+                                                <img src="assets/Img/trolley1.svg" alt="">
+                                                {{"Buy Now" | translate}}
+                                            </button>
+                                            <button *ngIf="(item.partnerId !== 14 && item.partnerId !== 45) ||  item.businessType === 'Retail' " type="button"
+                                                id="viewdetails" name="viewdetails" value="viewdetails"
+                                                class="btn_pink btn_products" (click)="productsDetail(item)">{{"View
+                                                details" | translate}}</button>
+                                            <button *ngIf="(item.partnerId !== 14 && item.partnerId !== 45) ||  item.businessType === 'Retail' " type="button"
+                                                id="addtocompare" name="addtocompare" value="addtocompare"
+                                                class="btn_grey btn_products btn_addtocompare"
+                                                (click)="addToCompareProducts(item)">
+                                                <img src="assets/Img/left-and-right-arrows1.svg" alt="">
+                                                {{"Add to Compare" | translate}}
+                                            </button>
+                                        </div>
+                                    </footer>
                                 </div>
-                                <footer>
-                                    <div class="btn_groupAction">
-                                        <button type="button" id="buynow" name="buynow" value="buynow"
-                                            class="btn_red btn_products btn_buy" (click)="buyNow(item)">
-                                            <img src="assets/Img/trolley1.svg" alt="">
-                                            {{"Buy Now" | translate}}
-                                        </button>
-                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
-                                            id="viewdetails" name="viewdetails" value="viewdetails"
-                                            class="btn_pink btn_products" (click)="productsDetail(item)">{{"View
-                                            details" | translate}}</button>
-                                        <button *ngIf="item.partnerId !== 14 && item.partnerId !== 45" type="button"
-                                            id="addtocompare" name="addtocompare" value="addtocompare"
-                                            class="btn_grey btn_products btn_addtocompare"
-                                            (click)="addToCompareProducts(item)">
-                                            <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                            {{"Add to Compare" | translate}}
-                                        </button>
-                                    </div>
-                                </footer>
-                            </div>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
@@ -167,7 +170,7 @@
                                 <p>{{item.productDescription}}</p>
                                 <div class="product-button">
                                     <button type="button" id="buynow2" name="buynow2" class="get"
-                                        (click)="buyNow(item)">
+                                        (click)="buyNow(item)" [disabled]="disableBuyJourney">
                                         <img src="assets/Img/trolley1.svg" alt="">
                                         Buy Now
                                     </button>

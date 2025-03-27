@@ -601,6 +601,76 @@ button {
   width: 14px;
   height: 14px;
 }
+.download_abcd {
+  border-radius: 12px;
+  border: 1px solid #fff;
+  background: #FFF4D9;
+  padding: 24px;
+}
+.download_abcd > span {
+  color: #15171a;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 24px;
+  line-height: normal;
+}
+.download_abcd > p {
+  color: #5d6167;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  margin: 12px 0 20px;
+}
+.download_qr_btn_grid {
+  display: grid;
+  grid-template-columns: 65% auto;
+  grid-gap: 10px;
+  gap: 10px;
+}
+.dowlond_col{
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 16px;
+  flex-direction: column;
+}
+.dowlond_app_col{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dowlond_col img {
+  max-width: 192px;
+  width: 100%;
+}
+.dowlond_col p {
+  color: #353941;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 12px;
+  line-height: 17px;
+  margin-bottom: 0;
+  line-height: normal;
+}
+.dowlond_app_col > .dowlond_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 5px;
+}
+.dowlond_app_col > .dowlond_col img {
+  max-width: 20px;
+}
+.dowlond_app_col > .dowlond_col > a > span {
+  color: #c91429;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 12px;
+  line-height: normal;
+}
+/*--mainMenu_abcSolution start--*/
 .abcSolution {
   position: relative;
 }
@@ -613,10 +683,107 @@ button {
   box-shadow: 0 20px 48px #00000029;
   border-radius: 10px;
   border-width: 0 !important;
+  padding: 0;
   position: absolute;
   inset: 0 0 auto auto !important;
   transform: translateY(30px);
 }
+.mainMenu_abcSolution .common_nav_grid_wrapper {
+  width: 100%;
+  display: grid;
+  margin: 0 auto;
+  background: #fff;
+  /* box-shadow: 0 20px 48px #00000029; */
+  border-radius: 20px;
+  overflow: hidden;
+  /* height: 75vh; */
+}
+.mainMenu_abcSolution .common_nav_grid_wrapper .all_solutions_url_grid_wrapper {
+  display: grid;
+  grid-template-columns: auto auto 23% auto;
+  grid-gap: 20px;
+  gap: 20px;
+  padding: 32px;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.mainMenu_abcSolution .common_nav_grid_wrapper .all_solutions_outlink_scanner_wrapper {
+  background: #FFFBF0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+}
+.all_solutions_url_col .url_col_head{
+  display: flex;
+  color: #000;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: normal;
+  margin-bottom: 18px;
+}
+.url_list_ul, .outlinks_ul {
+  list-style: none;
+}
+.url_list_ul > li {
+  margin-bottom: 4px;
+} 
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution .url_list_ul > li > a {
+  color: #000 ;
+  font-family: "Anek Latin", sans-serif;
+  font-size: 15px;
+  font-weight: 400 ;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px ;
+  width: 100%;
+  transition: .5s;
+  border-radius: 8px ;
+  background: transparent;
+  border-width: 0 ;
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution .url_list_ul > li > a:hover {
+  color: #c91429 ;
+  background: rgba(201, 20, 41, .05) ;
+  transition: .5s;
+}
+.url_list_ul > li > a > img {
+  max-width: 24px;
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution ul.outlinks_ul > li {
+  margin-bottom: 12px;
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution ul.outlinks_ul > li > a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  transition: all .3s ease;
+  font-family: "Anek Latin", sans-serif;
+  color: #000;
+  font-size: 14px;
+  background: transparent;
+  border-width: 0 ;
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution ul.outlinks_ul > li > a:hover {
+  color: #c91429;
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution ul.outlinks_ul > li > a:hover img {
+  transform: rotate(45deg);
+}
+.siteHeader .abcLinksMain .abcTopLinks .abcSolution .mainMenu_abcSolution .download_abcd a {
+  border-width: 0 ;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 0;
+}
+/*--mainMenu_abcSolution end--*/
 .siteHeader .logoMain {
   width: 100%;
   border-bottom: 0.1rem solid #EBEBEC;
@@ -657,11 +824,13 @@ button {
 
 .siteHeader .logoTagMain {
   padding: 0 28px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .siteHeader .logoTagMain .logoTagText {
   padding: 5px 0;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 12px;
   font-weight: 500;
   color: var(--secondary-red-color);
@@ -773,7 +942,8 @@ button {
   max-height: 80vh;
   flex-direction: column;
   position: relative;
-  padding-bottom: 60px;
+  /* padding-bottom: 60px; */
+  padding-bottom: 30px;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_links{
   /* max-height: 400px; */
@@ -1112,6 +1282,15 @@ button {
   width: 18px;
   height: 18px;
   filter: brightness(0) invert(1);
+}
+.btn_cardDownload_text {
+  width: auto;
+  color: #fff;
+  display: flex;
+  gap: 5px;
+}
+.btn_cardDownload_text:hover{
+  color: #f7c2c2;
 }
 .btn_md {
   font-size: 14px;
@@ -2838,7 +3017,13 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 400;
   color: var(--text-black-2e);
 }
-
+.tableSubMain .table .table-renewalPremium.policyStartEndDate {
+  width: 90%;
+}
+.tableSubMain .table .policyStartEndDate .row-renewalPremium .lable {
+  font-size: 10px;
+  font-weight: 500;
+}
 .tableSubMain .table .table-modification {
   display: flex;
   max-width: 90px;
@@ -3814,6 +3999,12 @@ input[type="search"]::-webkit-search-results-decoration {
     border-radius: 16px;
     padding: 0px 8px;
 }
+
+.marked-option{
+  background-color: #FFF !important;
+  border: 2px solid #c72229 !important;
+  color: #c72229;
+}
 .insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label {
     background: #FEE0DD;
 }
@@ -4559,6 +4750,9 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .modal-customerFeedback .modal-dialog {
   max-width: 400px;
+}
+.modal-customerFeedback.modal-tagLead .modal-dialog {
+  max-width: 70%;
 }
 .modal-customerFeedback .modal-body {
   padding: 22px 0 24px;
@@ -5792,7 +5986,10 @@ background: var(--white-color);
   font-weight: normal !important;
 }
 .tableSubMain .table .table-renewalPremium {
-  width: 150px;
+  width: 135px;
+}
+.tableSubMain .table .policyStartEndDate{
+  width: 82px;
 }
 .ui-error-proposal{
   position: absolute;
@@ -7018,3 +7215,56 @@ height: 0;
   word-break: break-word;
 }
 /*--Hospital Cash Cover css end--*/
+
+.timer_main {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.timer_main .icon_timer {
+  width: 20px;
+  display: flex;
+}
+.timer_main .icon_timer img {
+  width: 100%;
+}
+.timer_main .timer_content {
+  font-family: "Anek Latin", sans-serif !important;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 13px;
+  color: #4C4C4C;
+}
+.timer_main .timer_content .timer_count {
+  color: #C7222A;
+  font-weight: 600;
+}
+/*---Axis BB popup start--*/
+.rug_ModalMain .popup-modal-content{
+	padding: 24px 24px 0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 1);
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 12px 20px #00000026;
+}
+.rug_ModalMain .popup-modal-body {
+    padding: 32px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.rug_ModalMain .popup-modal-footer {
+    padding: 0 0 24px;
+    gap: 8px;
+}
+.rug_ModalMain .popup-modal-header h6, .rug_ModalMain .popup-modal-header .popup-content-title,
+.rug_ModalMain .popup-modal-body h6, .rug_ModalMain .popup-modal-body .popup-content-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--black-color);
+    margin: 0;
+}
+.rug_ModalMain .popup-modal-body h6, .rug_ModalMain .popup-modal-body .popup-content-title {
+    font-size: 18px;
+}
+/*---Axis BB popup end--*/

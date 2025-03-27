@@ -24,7 +24,7 @@ export class QuoteService {
   }
   Getproductlist2(reqData:any){
     // const  getquotefortopsellingproducts = `https://localhost:7188/getquotefortopsellingproducts`;
-    const  getquotefortopsellingproducts = this.configService.config.baseUrl1 + this.configService.config.getquotefortopsellingproducts;
+    const  getquotefortopsellingproducts = this.configService.config.baseUrl + this.configService.config.getquotefortopsellingproducts;
     return this.httpService.post(getquotefortopsellingproducts,reqData)
   }
   Getproductdetailsandfeatures(reqData:any){
@@ -39,5 +39,12 @@ export class QuoteService {
   downloadQuote(reqData:any){
     const  quoteUrl = this.configService.config.baseUrl + this.configService.config.downloadQuote;
     return this.httpService.post<any>(quoteUrl,reqData)
+  }
+
+  getProductAddOnList(reqData:any){
+    const  addOnUrl = this.configService.config.baseUrl + this.configService.config.getProductAddOnList;
+    console.log(addOnUrl);
+    
+    return this.httpService.post<any>(addOnUrl,reqData)
   }
 }

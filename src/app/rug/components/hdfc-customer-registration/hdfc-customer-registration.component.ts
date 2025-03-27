@@ -27,7 +27,7 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
       // Initialize userValidations form group
       this.customerValidations = this.formBuilder.group({
         mobilenumber: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
-        email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]]
+        email: ['', [Validators.required, Validators.pattern(/^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/)]]
       });
       // this.customerForm = this.formBuilder.group({
       //   mobilenumber: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
@@ -43,12 +43,17 @@ export class HdfcCustomerRegistrationComponent implements OnInit {
   }
 
   onsubmit(){
+    debugger;
+    this.submitted = true;
     let requestBody : any ={};
     requestBody.mobileNumber = this.customerValidations.get("mobilenumber")?.value;
     requestBody.emailId = this.customerValidations.get("email")?.value;
     requestBody.productName = this.productInformation.productName;
-    requestBody.agentcode=  'I0002484';
-
+    requestBody.agentcode=  '2100465';
+ 
+    if (this.customerValidations.invalid) {
+      return;
+    }
     this.rugService.sendCommunication(requestBody).subscribe(
       (response: any) => {
         if (JSON.parse(response.data).isSuccess) {

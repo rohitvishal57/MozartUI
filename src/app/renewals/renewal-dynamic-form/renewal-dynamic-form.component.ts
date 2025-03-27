@@ -6,7 +6,7 @@ import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, interval, lastValueFrom, take, tap } from 'rxjs';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
@@ -18,13 +18,8 @@ import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { RenewalsService } from 'src/app/renewals/renewals.service';
 import { CustomersService } from 'src/app/customers/customers.service';
 import { SharedModalComponent } from 'src/app/shared/components/shared-modal/shared-modal.component';
-import { Options } from '@angular-slider/ngx-slider';
-import { LogarithmicScale } from 'chart.js';
-import { thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
-import { policySummary } from 'src/assets/styles/renewals-forms/lead';
-import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
-import { payment } from 'src/assets/styles/renewals-forms/payment';
-import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
+import { FocusTrap } from 'primeng/focustrap';
+import { new_combinedForms_renewals } from 'src/assets/styles/renewals-forms/new_combined';
 
 @Component({
   selector: "app-renewal-dynamic-form",
@@ -35,15 +30,15 @@ export class RenewalDynamicFormComponent {
   // @ViewChild('fileInput') fileInput!: ElementRef;
   form!: IForm;
   fb = inject(FormBuilder)
-  renewalFormGroup: FormGroup = this.fb.group({});
+  dynamicFormGroup: FormGroup = this.fb.group({});
   private dynamicStyle!: HTMLLinkElement;
+  forms: any[] = [new_combinedForms_renewals]
 
   insurancetypecode: any;
   productid: any;
   verticalCode: any;
   Code: any;
   proposalNum: any;
-  formIndex:any = 0;
 
 
   idProofType: string = '';
@@ -71,8 +66,6 @@ export class RenewalDynamicFormComponent {
   tenureAmount: any[] = [0, 0, 0];
   premiumAmountDetails: number[][] = [];
   addOnList: any[] = [];
-  existingRelations: any[] = [];
-
 
   isBBPlanDetailsVisible: boolean = false;
   premiumDetails: any[][] = [];
@@ -86,7 +79,8 @@ export class RenewalDynamicFormComponent {
   mainData: any;
   customerId: any;
   public showHtmlContent: any;
-  formSequence: any[] = [ new_combinedForms,totalPremium,policySummary,payment,thankYou];  agentCode: any;
+  formSequence: any[] = [];
+  agentCode: any;
   productName: any;
   avaibleZone: any;
   productStartDate: any;
@@ -145,8 +139,15 @@ export class RenewalDynamicFormComponent {
   verifyKYCStatus: boolean | undefined;
   otpRequestId: string = "";
   requestId: string = "";
-  parsedValue:any;
-  selfAnnualIncome:any;
+  parsedValue: any;
+  selfAnnualIncome: any;
+  selfCoverSumInsured: any;
+  selfWeeklyLimit: any;
+  selectedOccupation: any;
+  selectedOccupationRisk: any;
+  selectedPlan = 'P1';
+  proposer = '';
+  clickedRecalculate = false;
 
   salutationMapping: { [key: string]: string[] } = {
     M: ['Mrs', 'Miss', 'Ms', 'Mx'],
@@ -156,6 +157,7 @@ export class RenewalDynamicFormComponent {
   pennyDropVerficationByOCRDetails: any;
   uploadInfo: { name: any; data: any; }[] | null = null;
   fullQuoteDocRelated: any;
+  fullQuoteDocRelatedWithOutOffline: any[] = [];
 
   //hospiCashCoverVariables
   familyGroup = '';
@@ -168,9 +170,25 @@ export class RenewalDynamicFormComponent {
   //Activ Care variables
   familyPair = '';
   selectedFamilyPair: string[] = [];
-  policyNumber: any;
-
-
+  isHdfcFlow: boolean = false;
+  isDeclarartionDiscountVisible: boolean = false;
+  isPopupLink: boolean | undefined = false;
+  isLinkAndSendButton: boolean = false;
+  customerUrl: any;
+  isGoodHealthDiscount: boolean = false;
+  isLeadCreatedSuccessfully: boolean = false;
+  private lastLeadId: string | null = null;
+  private popupAlreadyShown: boolean = false;
+  customerOtpKey: any;
+  allAccountDetails: any;
+  isCustomerAccountDetails: boolean = false;
+  isAccountList: boolean = false;
+  selectedAccounts: any = "";
+  customerDetailsList: any[] = [];
+  isTimerRunning = false;
+  memberDetails: any;
+  baseDate: any;
+  coverList: any[] = [];
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -181,163 +199,233 @@ export class RenewalDynamicFormComponent {
     private renewalService: RenewalsService, private customerService: CustomersService) {
   }
 
-  async ngOnInit() {
-    this.showHtmlContent = false;
-    if (localStorage.getItem('agentCode')) {
-      this.agentCode = localStorage.getItem('agentCode');
+  ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en');
+        }
+      });
+    });
+
+    if (this.router.url.includes("hdfc")) {
+      this.isHdfcFlow = true;
     }
-    localStorage.getItem('formIndex');
 
-    // Extract data from history state
-    const stateData = history.state;
-    const decryptedFormData = this.encryptionService.decrypt(stateData.formData);
-    if (stateData && Object.keys(stateData).length > 0) {
-      if (decryptedFormData.transactionId) {
-        this.transactionId = decryptedFormData.transactionId;
-        if (decryptedFormData.token) {
-          localStorage.setItem('token', decryptedFormData.token);
-        }
-        this.getKycStatus();
+    this.showHtmlContent = false;
+    this.formSequence = history.state.formSequence;
+
+    console.log(this.formSequence);
+
+
+    if (localStorage.getItem('code'))
+      this.Code = localStorage.getItem('code');
+
+    if (localStorage.getItem('agentCode'))
+      this.agentCode = localStorage.getItem('agentCode');
+    // this.agencyCode = history.state.productData.agencyCode;
+    if (history.state && history.state.productData) {
+      if (history.state.productData.productId)
+        this.productId = history.state.productData.productId;
+      if (history.state.productData.partnerId)
+        this.partnerId = history.state.productData.partnerId;
+      if (history.state.productData.proposalNum)
+        this.proposalNum = history.state.productData.proposalNum;
+      if (history.state.productData.tenureAmounts) {
+        this.tenureAmount = history.state.productData.tenureAmounts;
       }
-      else if (decryptedFormData.orderid) {
-        this.orderId = decryptedFormData.orderid;
-        if (decryptedFormData.token) {
-          localStorage.setItem('token', decryptedFormData.token);
+      if (history.state.productData.quickQuoteRedirect) {
+        this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
+      }
+      if (history.state.productData.leadId) {
+        this.leadNumber = history.state.productData.leadId;
+      }
+      if (history.state.productData.productComparison) {
+        this.productComparison = history.state.productData.productComparison;
+      }
+      if (history.state.productData.tenure) {
+        this.formData = { ...this.formData, tenure: history.state.productData.tenure }
+      }
+
+
+      if (history.state.productData.selectedAddons) {
+        this.selectedAddons = history.state.productData.selectedAddons
+      }
+    }
+
+    // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    if (Object.keys(this.route.snapshot.queryParams).length) {
+      this.route.queryParams.subscribe(async params => {
+        if (params['transactionId']) {
+          this.transactionId = params['transactionId'];
+          if (params['token']) {
+            localStorage.setItem('token', params['token']);
+          }
+          this.getKycStatus();
         }
-        this.getPaymentStatus();
-      } else {
-        if (decryptedFormData) {
-          console.log(this.getFormIndexValue().toString());
-          
-          const renewalInfoRequestBody = {
-            policy_Number: decryptedFormData.policyNumber
-          };
-          await this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe({
-            next: async (res: any) => {
-              this.formSequence = this.formSequence || [];
-              this.form = this.formSequence[this.getFormIndexValue()];
-              console.log(this.getFormIndexValue());
-              this.formData = res.data;
-              console.log(this.formData);
-              
-              if (this.formData) {
-                const proposalRequiredDetails: { totalPremium: any; proposalNumber: any;
-                  covers?: any; PEDWaitingPeriod?: any;  // Make covers an optional property
-                  } = { totalPremium: this.formData.totalPremium, proposalNumber: this.proposalNum};
+        else if (params['orderid']) {
+          this.orderId = params['orderid'];
+          if (params['token']) {
+            localStorage.setItem('token', params['token']);
+          }
+          this.getPaymentStatus();
+        }
+        else {
+          const decryptedData = this.encryptionService.decrypt(params['data']);
+          if (params['redirect'] == 'HDFC') {
+            if (params['token']) {
+              localStorage.setItem('token', params['token']);
+            }
+            if (decryptedData.agentCode) {
+              localStorage.setItem('agentCode', decryptedData.agentCode);
+            }
 
-                if (this.formData.covers) {
-                  proposalRequiredDetails.covers = this.formData.covers;
-                  proposalRequiredDetails.PEDWaitingPeriod = "";
-                }
-                if (this.formData.waitingPED && this.formData.waitingPED.pedWaitingPeriod) {
-                  proposalRequiredDetails.PEDWaitingPeriod = this.formData.waitingPED.pedWaitingPeriod;
-                }
-                if (this.formData.tenureAmount) {
-                  this.tenureAmount = this.formData.tenureAmount;
-                }
+            this.setFormIndexValue(decryptedData.currentFormSequence as number);
+            const reqData = {
+              "partnerId": decryptedData.partnerId,
+              "productId": decryptedData.productId
+            }
+            const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
+            this.formSequence = JSON.parse(res.data.formSequence);
+            this.isHdfcFlow = true;
+          }
+          if (decryptedData) {
+            this.leadnumber = decryptedData.leadId;
+            this.agentCode = decryptedData.agentCode;
+            this.partnerId = decryptedData.partnerId;
+            this.productId = decryptedData.productId;
+            if (decryptedData.isLead && !params['redirect'] && params['redirect'] != 'HDFC') {
+              this.quickQuoteRedirect = decryptedData.isLead;
+            }
+            // this.formData.proposalNumber = decryptedData.proposalNum;
+            this.proposalNum = decryptedData.proposalNum;
 
-                if (this.formData.displayTaxList) {
-                  this.displayTaxList = this.formData.displayTaxList;
+            decryptedData.currentFormSequence = this.getFormIndexValue().toString();
+            await this.yatraService.Getform(decryptedData).subscribe({
+              next: async (res: any) => {
+                this.formSequence = JSON.parse(res.data.formConfig) || [];
+                this.form = JSON.parse(res.data.jsonFormData);
+                this.formData = JSON.parse(res.data.formData);
+                console.log(this.form, this.formData, this.productId, this.partnerId);
+                if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 1) {
+                  this.quickQuoteRedirect = false;
                 }
+                if (decryptedData.firstName || decryptedData.proposerGender) {
+                  this.formData = {
+                    firstName: decryptedData.firstName || "",
+                    proposerGender: decryptedData.proposerGender || ""
+                  }
+                }
+                if (this.formData) {
+                  const proposalRequiredDetails: {
+                    totalPremium: any;
+                    proposalNumber: any;
+                    covers?: any;
+                    PEDWaitingPeriod?: any;  // Make covers an optional property
+                  } = {
+                    totalPremium: this.formData.totalPremium,
+                    proposalNumber: this.proposalNum
+                  };
 
-                if (this.formData.covers) {
-                  this.covers = this.formData.covers;
-                }
+                  if (this.formData.covers) {
+                    proposalRequiredDetails.covers = this.formData.covers;
+                    proposalRequiredDetails.PEDWaitingPeriod = "";
+                  }
+                  if (this.formData.waitingPED && this.formData.waitingPED.pedWaitingPeriod) {
+                    proposalRequiredDetails.PEDWaitingPeriod = this.formData.waitingPED.pedWaitingPeriod;
+                  }
+                  if (this.formData.tenureAmount) {
+                    this.tenureAmount = this.formData.tenureAmount;
+                  }
 
-                if (this.formData.quoteIdDetails) {
-                  this.QuoteNumber = this.formData.quoteIdDetails;
-                }
-                if (this.formData?.insuredMemberDetails?.length > 0) {
-                  this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-                    if (member.covers) {
-                      this.covers[index] = member.covers;
+                  if (this.formData.displayTaxList) {
+                    this.displayTaxList = this.formData.displayTaxList;
+                  }
+
+                  if (this.formData.covers) {
+                    this.covers = this.formData.covers;
+                  }
+
+                  if (this.formData.quoteIdDetails) {
+                    this.QuoteNumber = this.formData.quoteIdDetails;
+                  }
+                  if (decryptedData.currentFormSequence === "8") {
+                    await this.modifyThankYouJson();
+                    // this.formData.policyNumber = decryptedData.policyNumber ?? this.formData.policyNumber;
+                    // this.formData.policyStatus = decryptedData.policyStatus ?? this.formData.policyStatus;
+                    // this.formData.quoteValidFromDate = decryptedData.policyStartDate ?? this.formData.quoteValidFromDate;
+                    // this.formData.quoteValidToDate = decryptedData.policyEndDate ?? this.formData.quoteValidToDate;
+                    // this.formData.ReceiptNumber = decryptedData.ReceiptNumber ?? this.formData.ReceiptNumber;
+                    // this.formData.customerId = decryptedData.customerId ?? this.formData.customerId;
+                    // this.formData.applicationNumber = decryptedData.applicationNumber ?? this.formData.applicationNumber;
+                  }
+                  // if (decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED') {
+                  //   this.toast.error({ detail: "Error", summary: "Payment is Pending", duration: 3000 });
+                  // }
+                  if (decryptedData.verifyKyc == true) {
+                    this.verifyKYCStatus = true;
+                  }
+
+                  if (await this.getFormIndexValue() == 7) {
+                    const req = {
+                      proposalNum: this.proposalNum
+                    };
+
+                    try {
+                      // Use firstValueFrom to convert the Observable to a Promise
+                      const value: any = await firstValueFrom(this.commonService.getkycstatus(req));
+                      // Now you can update this.verifyKYCStatus with the result
+                      this.verifyKYCStatus = value.data.kycStatus;
+                    } catch (err) {
+                      // Handle any error if the Observable fails
+                      console.error('Error fetching KYC status:', err);
                     }
-                    if (member.relation) {
-                      this.existingRelations.push(member.relation);            
+                  }
+                  sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
+
+                  if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
+                    const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
+
+                    // Check if proposalNumber matches
+                    if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
+                      this.totalPremium = proposalRequiredDetails.totalPremium;
+                      this.covers = proposalRequiredDetails.covers;
+                      this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
                     }
+                    else {
+                      this.totalPremium = 0;
+                      this.covers = [];
+                    }
+                  }
+                }
+
+                if (this.isHdfcFlow) {
+                  let controlerNames = ['firstName', 'middleName', 'lastName', 'emailId', 'permanentAddress1', 'permanentAddress2', 'proposerPincode',
+                    'memberDobProposer', 'memberAgeProposer', 'mobileNumber', 'panNo'];
+                  console.log(" this.form", this.form);
+                  console.log(" this.form", this.formData);
+
+                  this.form.formSections.forEach((section: any) => {
+                    section.formControls.forEach((control: any) => {
+                      if (controlerNames.includes(control.name) && control.name in this.formData && this.formData[control.name] !== '' && this.formData[control.name] !== null) {
+                        control.disabled = true;
+                      }
+                    });
                   });
                 }
-                // if (decryptedFormData.currentFormSequence === "8") {
-                //   await this.modifyThankYouJson();
-                //   // this.formData.policyNumber = decryptedData.policyNumber ?? this.formData.policyNumber;
-                //   // this.formData.policyStatus = decryptedData.policyStatus ?? this.formData.policyStatus;
-                //   // this.formData.quoteValidFromDate = decryptedData.policyStartDate ?? this.formData.quoteValidFromDate;
-                //   // this.formData.quoteValidToDate = decryptedData.policyEndDate ?? this.formData.quoteValidToDate;
-                //   // this.formData.ReceiptNumber = decryptedData.ReceiptNumber ?? this.formData.ReceiptNumber;
-                //   // this.formData.customerId = decryptedData.customerId ?? this.formData.customerId;
-                //   // this.formData.applicationNumber = decryptedData.applicationNumber ?? this.formData.applicationNumber;
-                // }
-                // if (decryptedData.paymentStatus == 'PENDING' || decryptedData.paymentStatus == 'FAILED') {
-                //   this.toast.error({ detail: "Error", summary: "Payment is Pending", duration: 3000 });
-                // }
-                if (decryptedFormData.verifyKyc == true) {
-                  this.verifyKYCStatus = true;
-                }
-                sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
 
-                if (sessionStorage.getItem('proposalRequiredDetails') && proposalRequiredDetails.PEDWaitingPeriod) {
-                  const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
-
-                  // Check if proposalNumber matches
-                  if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
-                    this.totalPremium = proposalRequiredDetails.totalPremium;
-                    this.covers = proposalRequiredDetails.covers;
-                    // this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
-                  }
-                  else {
-                    this.totalPremium = 0;
-                    this.covers = [];
-                  }
-                }
+                // this.initializeRequiredData();
+                this.initializeForm();
+              },
+              error: (err) => {
+                console.log(err);
               }
-              this.initializeForm();
-            },
-            error: (err) => {
-              console.log(err);
-            }
-          });
+            });
+          }
         }
-      }
-
-      // if (stateData.formData) {
-      //   if ('isFullQuoteSuccess' in decryptedFormData) {
-      //     this.rowData = decryptedFormData;
-      //   }
-      //   try {
-      //     if ( decryptedFormData.policyNumber && !['SUCCESS', 'INITIATED', 'PENDING', 'INPROGRESS'].includes(decryptedFormData.paymentStatus) &&
-      //       !(decryptedFormData?.paymentStatus?.startsWith('IN')) && (decryptedFormData?.fullQuoteStatus === undefined || 
-      //       (decryptedFormData?.isFullQuoteSuccess !== true && decryptedFormData?.isFullQuoteSuccess !== false))) {
-      //       const renewalInfoRequestBody = {
-      //         policy_Number: decryptedFormData.policyNumber
-      //       };
-      //       const response: any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
-      //       this.formData = { ...this.formData, ...decryptedFormData, ...response.data, };
-      //     }
-      //   } catch (error) {
-      //     console.error('Error fetching renewal info:');
-      //   }
-      //   this.formData = {  ...decryptedFormData ,...this.formData,};
-      // }
-      if (stateData.formSequence) {
-        this.formSequence = this.encryptionService.decrypt(stateData.formSequence);
-      }
-      // if (stateData.journeyProcess) {
-      //   this.journeyProcess = this.encryptionService.decrypt(stateData.journeyProcess);
-      // }
-      if (stateData.formIndex) {
-        localStorage.setItem('formIndex', stateData.formIndex);
-      }
-      if (stateData.proposalNum) {
-        this.proposalNum = this.encryptionService.decrypt(stateData.proposalNum);
-      }
-      try {
-        if (stateData.policyNumber) {
-          this.policyNumber = this.encryptionService.decrypt(stateData.policyNumber);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      });
     } else {
+      // Retrieve form data based on form sequence if available
       if (this.formSequence && this.formSequence.length > 0) {
         this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
       } else {
@@ -346,22 +434,42 @@ export class RenewalDynamicFormComponent {
     }
     this.customerFeedbackForm = this.fb.group({
       message: [''],
-      rating: [null, Validators.required],
+      rating: [null, Validators.required], // Add rating to the form
     });
+
   }
 
-  
-
-  initializeRequiredData() {
+  async initializeRequiredData() {
     if (sessionStorage.getItem('allFormData') != null)
       this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
+    console.log(this.formData);
+    this.baseDate =this.formData;
+    // await this.updateRelationValues();
+    this.memberDetails = this.baseDate.insuredMemberDetails ? this.baseDate.insuredMemberDetails : "";
+
+
+
     if (sessionStorage.getItem('insuredMemberDetails') != null)
       this.insuredMemberDetails = this.encryptionService.decrypt(sessionStorage.getItem('insuredMemberDetails') as string)
-    if (sessionStorage.getItem('policyNumber') != null) {
-      this.policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('proposalId') as string);
+
+    if (sessionStorage.getItem('leadId') != null) {
+      this.leadId = this.encryptionService.decrypt(sessionStorage.getItem('leadId') as string);
     }
     else {
-      this.policyNumber = "";
+      this.leadId = "";
+    }
+    if (sessionStorage.getItem("isQuote")) {
+      this.isQuote = sessionStorage.getItem("isQuote") == 'true'
+    }
+    else {
+      this.isQuote = false;
+    }
+
+    if (sessionStorage.getItem('proposalId') != null) {
+      this.proposalId = this.encryptionService.decrypt(sessionStorage.getItem('proposalId') as string);
+    }
+    else {
+      this.proposalId = "";
     }
 
     // if (sessionStorage.getItem('quoteId') != null) {
@@ -375,6 +483,10 @@ export class RenewalDynamicFormComponent {
     if (this.formData.noOfChildrens) {
       this.kidCount = this.formData.noOfChildrens;
     }
+    if (sessionStorage.getItem('quoteNo') != null) {
+      this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
+    }
+
     if (sessionStorage.getItem('taxList') != null) {
       this.taxList = this.encryptionService.decrypt(sessionStorage.getItem('taxList') as string);
     }
@@ -410,19 +522,21 @@ export class RenewalDynamicFormComponent {
       const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
 
       // Check if proposalNumber matches
-      // if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
-      //   this.totalPremium = proposalRequiredDetails.totalPremium;
-      //   this.covers = proposalRequiredDetails.covers;
-      //   // this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
-      // }
-      // else {
-      //   this.totalPremium = 0;
-      //   this.covers = [];
-      // }
+      if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
+        this.totalPremium = proposalRequiredDetails.totalPremium;
+        this.covers = proposalRequiredDetails.covers ?? [];
+        this.pedWaitingPeriod = proposalRequiredDetails.PEDWaitingPeriod
+      }
+      else {
+        this.totalPremium = 0;
+        this.covers = [];
+      }
+
+      console.log(this.covers);
+
     }
   }
-
-  async getFormDataFromFormSequence(formId?: any) {
+  async getFormDataFromFormSequence(formId: any) {
     this.initializeRequiredData();
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
@@ -491,36 +605,59 @@ export class RenewalDynamicFormComponent {
         }
       })
     }
-    // const reqData = {
-    //   partnerId: this.partnerId.toString(),
-    //   productId: this.productId.toString(),
-    //   formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
-    //   proposalNum: this.proposalNum,
-    //   agentCode: this.agentCode,
-    //   leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
-    //   isLead: this.quickQuoteRedirect == false ? false : true,
-    //   currentFormSequence: this.getFormIndexValue().toString()
-    // }
+    const reqData = {
+      partnerId: this.partnerId.toString(),
+      productId: this.productId.toString(),
+      formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
+      proposalNum: this.proposalNum,
+      agentCode: localStorage.getItem('parentCode') || localStorage.getItem('agentCode'),
+      leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
+      isLead: this.quickQuoteRedirect == false ? false : true,
+      currentFormSequence: this.getFormIndexValue().toString()
+    }
 
-
-    // await this.yatraService.Getform(reqData).subscribe({
-    //   next: async (res: any) => {
-
-    //     this.formSequence = JSON.parse(res.data.formConfig) || [];
-
-    //     this.form = JSON.parse(res.data.jsonFormData);
-    //     console.log("form", this.form);
-
-    //     this.formData = {
-    //       ...this.formData,  // existing form data
-    //       ...JSON.parse(res.data.formData)  // parsed response data
-    //     };
-    console.log(this.form);
+    console.log(reqData);
     
-    this.form = this.formSequence[this.getFormIndexValue()];
+    await this.yatraService.Getform(reqData).subscribe({
+      next: async (res: any) => {
 
+        this.formSequence = JSON.parse(res.data.formConfig) || [];
+
+        this.form = JSON.parse(res.data.jsonFormData);
+        // this.form = this.forms[0];
+        console.log("form", this.form);
+        this.form.formSections.forEach((section) => {
+              if (section.sectionTitle === "Bottom Section") {
+                section.formControls.forEach((formControl: IFormControl) => {
+                  if (["proposalNumber"].includes(formControl.name)) {
+                    formControl.name="policyNumber";
+                    formControl.label = "Policy Number"
+                  }
+                });
+              }
+            });
+
+        if (this.isHdfcFlow) {
+          let controlerNames = ['firstName', 'middleName', 'lastName', 'emailId', 'permanentAddress1', 'permanentAddress2', 'proposerPincode',
+            'memberDobProposer', 'memberAgeProposer', 'mobileNumber', 'panNo'];
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((control: any) => {
+              if (controlerNames.includes(control.name) && control.name in this.formData && this.formData[control.name] !== '' && this.formData[control.name] !== null) {
+                control.disabled = true;
+              }
+            });
+          });
+          console.log("formData", this.formData);
+
+
+        }
+
+        this.formData = {
+          ...this.formData,  // existing form data
+          ...JSON.parse(res.data.formData)  // parsed response data
+        };
+        console.log(this.formData);
         if (this.form.formTitle == 'Insurance Details') {
-          console.log(this.formData);
 
           if (this.formData['familyGroup']) {
             this.familyGroup = this.formData['familyGroup'];
@@ -538,128 +675,257 @@ export class RenewalDynamicFormComponent {
           }
         }
         //activeCare
-        if(this.formData['familyPair']){
+        if (this.formData['familyPair']) {
           this.familyPair = this.formData['familyPair'];
         }
 
-        if(this.formData['selectedFamilyPair']){
+        if (this.formData['selectedFamilyPair']) {
           this.selectedFamilyPair = this.formData['selectedFamilyPair'];
         }
         console.log(this.form, this.formSequence, this.formData);
         if (this.getFormIndexValue() == 8) {
           this.modifyThankYouJson();
         }
+        if (this.form.formTitle == 'Payment') {
+          let reqData = {
+            "proposalNum": this?.formData?.proposalNumber,
+            "partnerId": this.partnerId,
+            "agentCode": this.agentCode,
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+            "formName": this.formSequence[this.getFormIndexValue()].formName,
+            "formConfig": JSON.stringify(this.formSequence),
+            "productId": this.productId.toString(),
+            "formId": this.formSequence[this.getFormIndexValue()].formId,
+            "jsonForm": JSON.stringify(this.form),
+            "formSequence": this.getFormIndexValue(),
+            "leadNumber": this.leadnumber,
+            "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+          };
+          await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+            next: (res: any) => {
+              this.leadnumber = res.data;
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        }
+        if (this.getFormIndexValue() == 6) {
+          const isCheckSum = localStorage.getItem('isCheckSum');
+          if (isCheckSum == '0') {
+            this.modifyDeclarationForm();
+          }
+        }
         this.initializeForm();
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   }
-    // });
+      }
+    });
   }
 
-  async initializeForm() {
-    this.showHtmlContent = false;
-    this.dynamciallyLoadCSS(this.form);
-    console.log(this.form);
-    
-    this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((control: any) => {
-        // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
-        // console.log(policyindex);
-        if (control.dynamicControls) {
-          console.log(control.name, control, this.formData);
-
-          if (this.formData[control.name] && control.visible == true) {
-            console.log(control.dynamicControls[0], this.formData.planType);
-            if (this.formData[control.name]) {
-              control.value = this.formData[control.name].length;
-            }
-            console.log(control.value);
-            control.dynamicControls = control.dynamicControls.slice(0, 1)
-            this.formData[control.name].forEach((member: any, index: number) => {
-              let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-              console.log(tempDynamicControl);
-              tempDynamicControl.forEach((innerElement: any) => {
-                if (!["relationshipType"].includes(innerElement.name)) {
-                  innerElement.disabled = true;
-                }                
-              });
-              control.dynamicControls.push(tempDynamicControl)
-              control.dynamicControls[index + 1].forEach((innerControl: any) => {
-                if (innerControl.name == 'relation') {
-                  innerControl.value = member.relation
-                }
-                if (innerControl.name == 'covers') {
-                  innerControl.value = this.covers[index];
-                }
-                if (innerControl.name == 'zoneValue') {
-                  innerControl.options = member.upgradableZones;
-                }
-              })
-            })
-            console.log("form",this.form);
-          }
-        }
-        else {
-          if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
+ async initializeForm() {
+     console.log(this.form, this.formData, this.questionFormData, this.productId, this.partnerId, 'hhhh');
+     this.showHtmlContent = false;
+     this.dynamciallyLoadCSS(this.form);
+     this.form.formSections.forEach((section: any) => {
+       section.formControls.forEach((control: any) => {
+         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
+         if (control.dynamicControls) {
+ 
+           if (this.formData[control.name] && (control.visible == true || this.quickQuoteRedirect == true)) {
+             if (this.formData[control.name]) {
+               control.value = this.formData[control.name].length;
+             }
+             control.dynamicControls = control.dynamicControls.slice(0, 1)
+             this.formData[control.name].forEach((member: any, index: number) => {
+               // let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+               let tempDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[0]))
+ 
+               console.log(tempDynamicControl, member, 'tempDynamicControl');
+ 
+ 
+               tempDynamicControl.forEach((innerControl: any) => {
+                 if (innerControl.name == 'relation') {
+                   innerControl.value = member.relation
+                 }
+                 if (innerControl.name == 'covers') {
+                   innerControl.value = this.covers[index];
+                 }
+                 if (innerControl.name == 'zoneValue') {
+                   innerControl.options = member.upgradableZones;
+                 }
+                 if (innerControl.name == 'sumInsured') {
+                   innerControl.options = member.upgradableSumInsured;
+                 }
+ 
+                 if (innerControl.name == 'previousCurrentPolicyDetails' && innerControl.type == 'claimInfo') {
+                   if (member.previousCurrentPolicyDetails && member.previousCurrentPolicyDetails.length > 0) {
+ 
+                     innerControl.visible = true;
+                     member.previousCurrentPolicyDetails.forEach((previousPolicyDetails: any) => {
+                       const tempInnerArrayControl = JSON.parse(JSON.stringify(innerControl.innerArrayControl[0]));
+                       Object.keys(previousPolicyDetails).forEach((key) => {
+                         if (
+                           (key == 'additionalInfoClaim' || key == 'diseaseName' || key == 'dateOfDiagnosis' ||
+                             key == 'lastConsultationDate' || key == 'nameOfSurgery' || key == 'treatmentDetails' ||
+                             key == 'disability' || key == 'periodOfHospitalisation' || key == 'anyOtherInformation')
+                           && previousPolicyDetails[key] !== ''
+                         ) {
+                           // Find and update the corresponding control to make it visible
+                           const tempInnerControl = tempInnerArrayControl.find((ctrl: any) => ctrl.name === key);
+                           if (tempInnerControl) {
+                             tempInnerControl.visible = true;
+                           }
+                         }
+                       });
+                       innerControl.innerArrayControl.push(tempInnerArrayControl);
+                     });
+                   }
+ 
+                 }
+ 
+                 // if (innerControl.name == 'previousPolicyDetails' &&  member.previousPolicyDetails?.length > 0) {
+                 //   innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                 //   console.log(innerControl.innerArrayControl);
+ 
+                 //   for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                 //     // Create a fresh template copy for each iteration
+                 //     let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+ 
+                 //     if (i === 0) {
+                 //       // For the first index, push the full template
+                 //       innerControl.innerArrayControl.push(freshTemplate);
+                 //     } else {
+                 //       // Create a customized version for subsequent indices
+                 //       let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                 //       customizedInnerArrayControl.forEach((controlElement: any) => {
+                 //         if (controlElement.name == 'policyIndex') {
+                 //           controlElement.label = 'Policy ' + (i + 1);
+                 //         }
+                 //       });
+                 //       innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                 //     }
+                 //   }
+                 // }
+ 
+ 
+                 if (
+                   this.formData['ckycNo'] &&
+                   member.relation === 'Self' &&
+                   ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
+                 ) {
+                   innerControl.disabled = true; // Disable the control
+                 }
+               })
+ 
+               control.dynamicControls.push(tempDynamicControl);
+ 
+             })
+           }
+         }
+         // else if (control.subControls && this.formData[control.name]) {
+         //   control.subControls.forEach((subControl: ISubControl) => {
+         //     if (subControl.name == 'addOnDetails') {
+         //       subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
+         //       this.formData['insuredMemberDetails'].forEach((member: any) => {
+         //         if (subControl.innerSubControls) {
+         //           let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+         //           const tempRelationshipType = JSON.parse(member.relationshipType);
+         //           tempInnerControl.label = tempRelationshipType.value;
+         //           tempInnerControl.name = tempRelationshipType.value;
+         //           subControl.innerSubControls.push(tempInnerControl)
+         //         }
+         //       })
+         //     }
+         //   })
+ 
+         // }
+         const value = this.formData[control.name];
+         if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+           control.value = JSON.parse(this.formData[control.name]).value;
+         }
+         else {
+           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
+             control.value = this.formData[control.name];
+           }
+           if(control.name == "memberPolicyType") {
             control.value = this.formData[control.name];
+            control.options?.forEach((option: any) => {
+              option.selected = option.value == control.value;
+          });
           }
-        }
-      });
-    });
-
-    console.log(this.form, this.formData);
-    if (this.form?.formSections) {
-      this.renewalFormGroup = this.fb.group({});
-      this.form.formSections.forEach((section) => {
-        section.formControls.forEach(async (control: IFormControl) => {
-          console.log(section, control);
-          if (control.dynamicControls) {
-            if (control.visible == true) {
-              let tempFormArray = this.fb.array([]);
-              for (let i = 1; i < control.dynamicControls.length; i++) {
-                tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i));
-              }
-              this.renewalFormGroup.addControl(control.name, tempFormArray);
-            }
-          }
-          else if (control.subControls) {
+         }
+       });
+     });
+     if (this.form?.formSections) {
+       this.dynamicFormGroup = this.fb.group({});
+       this.form.formSections.forEach((section) => {
+        let trueKeys: any;
+         section.formControls.forEach(async (control: IFormControl) => {
+           if (control.dynamicControls) {
+             console.log(control.dynamicControls, 'control.dynamicControls[i]')
+             if (control.visible == true) {
+               let tempFormArray = this.fb.array([]);
+ 
+               for (let i = 1; i < control.dynamicControls.length; i++) {
+ 
+                 tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i, control));
+               }
+               this.dynamicFormGroup.addControl(control.name, tempFormArray);
+             }
+           }
+           else if (control.subControls) {
             if (control.type == 'questionnaire') {
+              if (this.formData.productName == 'Activ Secure') {
+                if (control.label && (control.label.includes('throat condition') || control.label.includes('pre-existing conditions')
+                  || control.label.includes('Parents, brothers or sisters') || control.label.includes('alcohol / tobacco'))) {
+                  const hasRequiredCover = this.formData.insuredMemberDetails.some((member: any) =>
+                    member.covers.some((cover: any) => ['CIL', 'CANC', 'DCBC'].includes(cover.coverId))
+                  );
+                  control.visible = hasRequiredCover;
+                }
+                else if (control.label && (control.label.includes('Hazardous occupations') || control.label.includes('disability conditions'))) {
+                  const hasRequiredCover = this.formData.insuredMemberDetails.some((member: any) =>
+                    member.covers.some((cover: any) => ['ACCD'].includes(cover.coverId))
+                  );
+                  control.visible = hasRequiredCover;
+                }
+              }
               let demoMember: any;
               let demoTypeIndex: any;
               let doneButton: any;
-              console.log(control);
               if (control.subControls) {
                 demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
                 demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
                 doneButton = control.subControls.find(control => control.name === 'doneButton');
-                console.log(control);
                 control.subControls = [
                   ...control.subControls.slice(demoMember, demoMember + 1),
                   ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
                 ]; // Keep the first control (or reset)
-                console.log(control);
               }
-              console.log(this.formData['insuredMemberDetails']);
               this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
-                console.log(member, this.formData[control.name], control);
                 if (control.subControls) {
                   let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
                   let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
+                  const tempRelationshipType = typeof member.relationshipType === "string" 
+                                                ? JSON.parse(member.relationshipType) : member.relationshipType;
+                  if (control.label && control.label.toLowerCase().includes('pregnant')) {
+                    // Check if 'Spouse' is selected in insuredMemberDetails
+                    const isSpouseSelected = tempInnerControl.innerArrayControl[0][0].allowedRelations.includes(tempRelationshipType.value) && member.memberGender == 'F';
 
-                  const tempRelationshipType = JSON.parse(member.relationshipType);
+                    if (!isSpouseSelected) {
+                      control.visible = false;
+                      return; // Stop further execution
+                    }
+                  }
                   tempMemberControl.label = tempRelationshipType.value;
                   tempMemberControl.name = tempRelationshipType.value.toLowerCase();
                   tempInnerControl.label = tempRelationshipType.value;
                   tempInnerControl.name = tempRelationshipType.value;
-                  console.log(tempInnerControl);
                   if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
                     for (const key in this.formData[control.name]) {
                       const value = this.formData[control.name][key];
                       if (key == tempRelationshipType.value.toLowerCase()) {
                         if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
                           // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
-                          console.log(key, value);
                           tempMemberControl.value = true;
                           tempInnerControl.visible = true;
                           this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
@@ -672,280 +938,799 @@ export class RenewalDynamicFormComponent {
                   else {
                     tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
                   }
+                  if (this.formData.productName == 'Activ Secure') {
+                    if (['Hazardous occupations', 'disability conditions'].some(q => control.label?.includes(q))) {
+                      // Filter members who have ACCD cover
+                      const hasACCD = member.covers.some((cover: any) => cover.coverId === 'ACCD');
+                      if (hasACCD) {
+                        control.subControls?.push(tempMemberControl);
+                        control.subControls?.push(tempInnerControl);
+                      }
+                      return;
+                    }
+                    if (['throat condition', 'pre-existing conditions', 'Parents, brothers or sisters', 'alcohol / tobacco'].some(q => control.label?.includes(q))) {
+                      // Check if the member (spouse) has CIL, DCBC, or CANC cover
+                      const hasRequiredCover = member.covers.some((cover: any) => ['CIL', 'CANC', 'DCBC'].includes(cover.coverId));
+                      if (hasRequiredCover) {
+                        control.subControls?.push(tempMemberControl);
+                        control.subControls?.push(tempInnerControl);
+                      }
+                    }
+                    this.form.formSections.forEach((section: any) => {
+                      if (section.sectionTitle === "Health & Lifestyle") {
+                        section.formControls.forEach((formControl: any) => {
+                          if (
+                            formControl.subControls &&
+                            (formControl.label.includes("Parents, brothers or sisters") ||
+                              formControl.label.includes("throat condition") ||
+                              formControl.label.includes("alcohol / tobacco"))
+                          ) {
+                            formControl.subControls.forEach((subControl: any) => {
+                              if (subControl.name != "demoType" && subControl.innerArrayControl) {
+                                subControl.isButton = false;
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
 
-                  control.subControls?.push(tempMemberControl);
-                  control.subControls?.push(tempInnerControl);
-                  console.log(control);
+
+                  }
+                  else {
+                    control.subControls?.push(tempMemberControl);
+                    control.subControls?.push(tempInnerControl);
+                  }
                 }
               });
               control.subControls?.push(doneButton);
-              console.log(control);
-              this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
+              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
             }
-            else if (control.type == 'combinedCheckbox') {
-              console.log(control.name);
-
-              control.subControls.forEach((subControl: ISubControl) => {
-                if (subControl.name == 'addOnDetails') {
-                  const addOnId = control.subControls?.find(sub => sub.name === 'addOnId')?.value;
-
-
-                  let demoTypeIndex: any;
-                  let doneButton: any;
-                  if (subControl.innerSubControls) {
-                    demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
-                    doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
-                    // Slice the array to retain demoType and doneButton only
-                    subControl.innerSubControls = [
-                      ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
-                      // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
-                    ]; // Keep the first control (or reset)
+            else if (control.type == 'chronicquestionnaire') {
+              let matchedControls: any[] = [];
+              let visibleMatchedControls: any[] = [];
+              let checkHyp = false;
+              this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {                           //           const newItem = this.formData.insuredMemberDetails.find((item: any) => item.relation === tempRelationshipType.value);
+                // let trueKeys = Object.keys(member.chronicDiseases).filter(key => member.chronicDiseases[key]);
+                const chronicDiseases = member.chronicDiseases || {}
+                trueKeys = Object.keys(chronicDiseases)
+                  .filter(key => member.chronicDiseases[key])
+                  .map(key => key.toLowerCase());
+                if (this.formData.productName.includes('VYTL') && trueKeys.length > 0 && trueKeys.includes(control.nameProperty.toLowerCase())) {
+                  const hasHypertensionAndHyperlipidemia = trueKeys.includes('hypertension') && trueKeys.includes('hyperlipidemia');
+                  const hasAsthmaAndCopd = trueKeys.includes('asthma') && trueKeys.includes('copd');
+                  if (control.nameProperty?.toLowerCase() === 'hypertension') {
+                    if (hasHypertensionAndHyperlipidemia) {
+                      control.label = 'Hypertension/Hyperlipidemia';
+                      control.visible = true;
+                    }
+                    else {
+                      control.label = 'Hypertension';
+                      control.visible = true;
+                    }
                   }
-                  console.log(subControl.innerSubControls);
-                  this.formData['insuredMemberDetails'].forEach((member: any) => {
-                    let matchingCover;
-                    if (member.covers)
-                      matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
-
-
-                    if (matchingCover) {
-                      // Update addOnCover to true
-                      const addOnCoverControl = control.subControls?.find(sub => sub.name === 'addOnCover');
-                      if (addOnCoverControl) {
-                        addOnCoverControl.value = true;
-                      }
+                  else if (control.nameProperty?.toLowerCase() === 'hyperlipidemia') {
+                    if (hasHypertensionAndHyperlipidemia) {
+                      checkHyp = true;
+                      control.visible = false;
+                      return; // Skip this iteration
                     }
-                    if (subControl.innerSubControls) {
-                      let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
-                      console.log(tempInnerControl, member);
+                    else {
+                      control.visible = true;
+                    }
+                  }
+                  // Skip the iteration if the condition is met for Asthma/COPD
+                  else if (control.nameProperty?.toLowerCase() === 'asthma') {
+                    if (hasAsthmaAndCopd) {
+                      control.label = 'Asthma/COPD';
+                      control.visible = true;
+                    }
+                    else {
+                      control.label = 'Asthma';
+                      control.visible = true;
+                    }
+                  }
+                  else if (control.nameProperty?.toLowerCase() === 'copd') {
+                    if (hasAsthmaAndCopd) {
+                      control.visible = false;
+                      return; // Skip this iteration
+                    }
+                    else {
+                      control.visible = true;
+                    }
+                  }
+                  // Default logic for other controls
+                  else if (trueKeys.includes(control.nameProperty?.toLowerCase())) {
+                    control.visible = true;
+                  } else {
+                    // control.visible = false;
+                  }
+                }
+                else {
+                  control.visible = true;
+                }
 
-                      // const tempRelationshipType = JSON.parse(member.relationshipType);
-                      const tempRelationshipType = member.relationshipType;
-                      tempInnerControl.label = tempRelationshipType.value;
-                      tempInnerControl.name = tempRelationshipType.value;
-                      if (subControl.conditionCheck) {
-                        tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-                          if (corecontrol.dependentControls && this.formData[control.name]) {
-                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
-                            corecontrol.dependentControls.forEach((question: any) => {
-                              let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
-                              newcontrol.visible = newvalue;
-                              console.log(corecontrol.name, question, newcontrol, newvalue);
-                            })
-                            console.log(this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name], control, subControl, tempRelationshipType.value, index, corecontrol);
+                console.log(member, member.chronicDiseases, trueKeys, control);
+                const isControlInTrueKeys = control?.nameProperty?.toLowerCase && trueKeys.includes(control.nameProperty.toLowerCase());
+                // Store matching control information in the array if condition is true
+                if (isControlInTrueKeys) {
+                  matchedControls.push(member);
+                  visibleMatchedControls.push(true);
+                }
+              })
+              if (matchedControls.length > 0) {
+                let demoMember: any;
+                let demoTypeIndex: any;
+                let doneButton: any;
+                if (control.subControls) {
+                  demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
+                  demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
+                  doneButton = control.subControls.find(control => control.name === 'doneButton');
+                  control.subControls = [
+                    ...control.subControls.slice(demoMember, demoMember + 1),
+                    ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                  ]; // Keep the first control (or reset)
+                }
+                matchedControls.forEach((member: any, i: any) => {
+                  if (control.subControls) {
+                    let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
+                    let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
+                    const tempRelationshipType = JSON.parse(member.relationshipType);
+                    tempMemberControl.label = tempRelationshipType.value;
+                    tempMemberControl.name = tempRelationshipType.value.toLowerCase();
+                    tempMemberControl.visible = visibleMatchedControls[i];
+                    tempInnerControl.label = tempRelationshipType.value;
+                    tempInnerControl.name = tempRelationshipType.value;
+                    tempMemberControl.value = visibleMatchedControls[i];
+                    tempMemberControl.disabled = visibleMatchedControls[i];
+                    tempInnerControl.visible = visibleMatchedControls[i];
+                    if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
+                      for (const key in this.formData[control.name]) {
+                        const value = this.formData[control.name][key];
+                        if (key == tempRelationshipType.value.toLowerCase()) {
+                          if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
+                            tempMemberControl.value = true;
+                            tempInnerControl.visible = true;
                           }
-                        })
-                      }
-
-                      if (matchingCover) {
-                        // Update sumInsured value
-                        const sumInsuredControl = tempInnerControl.coreControls.find(
-                          (core: any) => core.name === 'addOnSumInsured'
-                        );
-                        if (sumInsuredControl) {
-                          sumInsuredControl.value = matchingCover.value;
-                        }
-
-                        // Update memberCheckbox to true
-                        const memberCheckboxControl = tempInnerControl.coreControls.find(
-                          (core: any) => core.name === 'memberCheckbox'
-                        );
-                        if (memberCheckboxControl) {
-                          memberCheckboxControl.value = true;
                         }
                       }
-                      subControl.innerSubControls?.push(tempInnerControl);
                     }
-                  });
-                  subControl.innerSubControls?.push(doneButton);
+
+                    control.subControls?.push(tempMemberControl);
+                    control.subControls?.push(tempInnerControl);
+                  }
+                });
+                control.subControls?.push(doneButton);
+                this.dynamicFormGroup.addControl(control.name, this.initializeSubControls((control.subControls.slice(2)), null, control));
+              }
+              else {
+                control.visible = false;
+              }
+
+            }
+             else {
+               if ((control.name == 'chronicCare' || control.name == 'chronicManagement') && this.formData['isChronicCare'] == 'N') {
+                 control.visible = false;
+               }
+               control.subControls.forEach((subControl: ISubControl) => {
+                 if (subControl.name == 'addOnCover' && control.name == 'deductible') {
+                   subControl.value = true;
+                 }
+                 if (control.isDefault) {
+                   const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                   if (addOnCoverControl) {
+                     addOnCoverControl.value = true;
+                   }
+                 }
+                 if (subControl.name == 'addOnDetails') {
+                   let demoTypeIndex: any;
+                   let doneButton: any;
+                   if (subControl.innerSubControls) {
+                     demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
+                     doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
+                     // Slice the array to retain demoType and doneButton only
+                     subControl.innerSubControls = [
+                       ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                       // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
+                     ]; // Keep the first control (or reset)
+                   }
+                   this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
+                     if (subControl.innerSubControls) {
+                       let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+                       const tempRelationshipType = typeof member.relationshipType === "string" 
+                       ? JSON.parse(member.relationshipType) 
+                       : member.relationshipType;
+                       tempInnerControl.label = tempRelationshipType.value;
+                       tempInnerControl.name = tempRelationshipType.value;
+                       if (control.name == 'deductible') {
+                         tempInnerControl.coreControls.forEach((coreControl: any) => {
+                           if (coreControl.type == 'checkbox') {
+                             coreControl.value = true;
+                           }
+                           else if (coreControl.type == 'select') {
+                             coreControl.value = member.deductibleAmount;
+                           }
+                         })
+                       }
+ 
+                       if (control.isDefault) {
+                         let addOnSumInsured = 0;
+                         tempInnerControl.coreControls.forEach((coreControl: any) => {
+                           if (coreControl.name == 'memberCheckbox') {
+                             coreControl.value = true;
+                           }
+                           if (coreControl.name == 'addOnSumInsured') {
+                             addOnSumInsured = coreControl.value;
+                           }
+                         })
+ 
+                         const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                         const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+ 
+                         if (coverId && coverName) {
+                           // Initialize member.covers if not present
+                           if (!member.covers) {
+                             member.covers = [];
+                           }
+ 
+                           // Check and push into member.covers if not already present
+                           let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                           if (!memberCoverExists) {
+                             member.covers.push({
+                               coverId: coverId,
+                               value: addOnSumInsured, // Add appropriate value if needed
+                               coverName: coverName
+                             });
+                           }
+ 
+                           // Initialize this.covers[index] if not present
+                           if (!this.covers[index]) {
+                             this.covers[index] = [];
+                           }
+ 
+                           // Check and push into this.covers[index] if not already present
+                           let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                           if (!coverExistsInCovers) {
+                             this.covers[index].push({
+                               coverId: coverId,
+                               value: addOnSumInsured, // Add appropriate value if needed
+                               coverName: coverName
+                             });
+                           }
+ 
+                         }
+ 
+                       }
+ 
+                       if (subControl.conditionCheck) {
+                         console.log(subControl, this.formData, tempInnerControl);
+ 
+                         if (member.chronicDiseases != "") {
+                           tempInnerControl.coreControls.forEach((coreControl: any) => {
+                             if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                               coreControl.value = true;
+                             }
+                           });
+ 
+                           const addOnCoverControl = control.subControls?.find((subControl: any) => subControl.name === 'addOnCover');
+                           if (addOnCoverControl) {
+                             addOnCoverControl.value = true;
+                           }
+ 
+                           const coverId = control.subControls?.find((subControl: any) => subControl.name === 'addOnId')?.value;
+                           const coverName = control.subControls?.find((subControl: any) => subControl.name === 'optionalCoverName')?.value;
+ 
+                           if (coverId && coverName) {
+                             // Initialize member.covers if not present
+                             if (!member.covers) {
+                               member.covers = [];
+                             }
+ 
+                             // Check and push into member.covers if not already present
+                             let memberCoverExists = member.covers.some((cover: any) => cover.coverId === coverId);
+                             if (!memberCoverExists) {
+                               member.covers.push({
+                                 coverId: coverId,
+                                 value: 0, // Add appropriate value if needed
+                                 coverName: coverName
+                               });
+                             }
+ 
+                             // Initialize this.covers[index] if not present
+                             if (!this.covers[index]) {
+                               this.covers[index] = [];
+                             }
+ 
+                             // Check and push into this.covers[index] if not already present
+                             let coverExistsInCovers = this.covers[index].some((cover: any) => cover.coverId === coverId);
+                             if (!coverExistsInCovers) {
+                               this.covers[index].push({
+                                 coverId: coverId,
+                                 value: 0, // Add appropriate value if needed
+                                 coverName: coverName
+                               });
+                             }
+                           }
+                         }
+ 
+ 
+                         tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
+                           if (corecontrol.dependentControls && this.formData[control.name]) {
+                             const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                             console.log(newvalue);
+ 
+                             corecontrol.dependentControls.forEach((question: any) => {
+                               let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
+                               newcontrol.visible = newvalue;
+                             })
+                           }
+                         })
+                       }
+                       subControl.innerSubControls?.push(tempInnerControl);
+                     }
+                   });
+                   subControl.innerSubControls?.push(doneButton);
+                 }
+               });
+               await this.existingCoverDetailMapping();
+               this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
+             }
+             console.log(this.formData,this.dynamicFormGroup.value,this.covers,this.coverList);
+             
+ 
+             if (control.isDefault) {
+ 
+               this.dynamicFormGroup.get(control.name)?.get('addOnCover')?.disable();
+               console.log(this.dynamicFormGroup.get(control.name)?.get('addOnDetails'));
+               const addOnDetailsGroup = this.dynamicFormGroup.get(control.name)?.get('addOnDetails') as FormGroup;
+               Object.keys(addOnDetailsGroup.value).forEach((key) => {
+                 console.log(addOnDetailsGroup.get(key));
+                 (addOnDetailsGroup.get(key) as FormArray).controls[0].get('memberCheckbox')?.disable();
+               })
+             }
+             if (control.postControlCreationMethod) {
+               this.resolveMethod(control.postControlCreationMethod, control);
+             }
+             if (control.type == 'combinedCheckbox') {
+               control.subControls.forEach((subControl: any) => {
+                 if (subControl.name == 'addOnDetails' && subControl.conditionCheck) {
+                   this.formData['insuredMemberDetails'].forEach((member: any) => {
+                     if (subControl.innerSubControls) {
+                       subControl.innerSubControls.forEach((innerSubControl: any, index: number) => {
+                         if (innerSubControl.name == member.relation && member.chronicDiseases != "") {
+                           console.log(member.chronicDiseases);
+                           innerSubControl.coreControls.forEach((coreControl: any) => {
+                             if (coreControl.name == 'memberCheckbox' || member.chronicDiseases.includes(coreControl.name)) {
+                               this.onInputChange(true, subControl, control, index, innerSubControl, coreControl);
+                             }
+                           })
+                         }
+                       })
+                     }
+                   })
+                 }
+               })
+             }
+           }
+           else if (control.innerArrayControl) {
+             if (control.visible == true) {
+               let tempFormArray = this.fb.array([]);
+               for (let i = 1; i < control.innerArrayControl.length; i++) {
+                 tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i, control));
+               }
+ 
+               this.dynamicFormGroup.addControl(control.name, tempFormArray);
+             }
+           }
+           else {
+ 
+             if (control.type === 'date') {
+               const lowerCaseName = control.name.toLowerCase();
+               if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
+                 const currentDate = new Date();
+                 const currentYear = currentDate.getFullYear();
+                 const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                 const currentDay = String(currentDate.getDate()).padStart(2, '0');
+ 
+                 // Construct dobRegex pattern as a string
+                 const dobPattern =
+                   `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
+                   `-(0[1-9]|1[0-2])` + // All valid months for past years
+                   `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
+                   `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
+                   `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
+ 
+                 // Push the pattern as a validator to the control
+                 control.validators?.push({
+                   validatorName: "pattern",
+                   pattern: dobPattern, // Use the constructed string pattern here
+                   message: "Date of Birth should not exceed the current date and must be in yyyy-MM-dd format."
+                 });
+               }
+             }
+             let controlValidators: any = [];
+             if (control.validators && control.visible == true) {
+               control.validators.forEach((val: IValidator) => {
+                 if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                 if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                 if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                 if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                 if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+                 if (val.validatorName === 'requiredTrue') {
+                   // Custom validator for checkboxes
+                   controlValidators.push((formControl: AbstractControl) => {
+                     return formControl.value === true ? null : { requiredTrue: val.message || 'This field is required' };
+                   });
+                 }
+               })
+             }
+             // if(control.type=='select' && control.methodName && control.options?.length==0){
+             //   this.callMethod(control.methodName,control);
+             // }
+             if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
+               // Only call resolveMethod if selectCheckboxOptions is empty
+               // if (control.selectCheckboxOptions.length === 0) {
+               //   await this.resolveMethod(control.methodName, control);
+ 
+               // }
+               // After resolving, add the control to the dynamic form group
+               const controlGroup = this.fb.group({});
+               control.selectCheckboxOptions.forEach(option => {
+                 controlGroup.addControl(option.value, new FormControl(false));
+               });
+               this.dynamicFormGroup.addControl(control.name, controlGroup);
+             }
+             if (['text', 'email', 'password', 'number', 'date', 'summary', 'displaycovers'].includes(control.type) && control.methodName) {
+               if (control.otherControlName) {
+                 this.callMethod(control.methodName, control, section)
+               }
+               else {
+                 this.resolveMethod(control.methodName, control)
+               }
+             }
+ 
+             if (control.type === 'select' && control.options) {
+               // Call the method to get all options if defined and options array is empty
+               if (control.getAllOption && control.options.length === 0) {
+                 this.callMethod(control.getAllOption, control);
+               }
+               else if (control.options.length === 0 && control.name == 'zoneValue') {
+                 control.options = this.formData['upgradableZones'];
+                 // this.formData['upgradableZones'].forEach((zoneOption: any) =>
+                 // {
+                 //   control.options = [];
+                 //   control.options.push({
+                 //     name: zoneOption.zone.toString(), // Display name
+                 //     value: zoneOption.zoneCode.toString() // Corresponding value
+                 //   });
+                 // });
+               }
+ 
+ 
+ 
+ 
+               // If the control's value is empty, set it based on the selected options
+               if (control.value === "" || control.value) {
+                 // Set control value if any option is selected
+                 if (control.options && control.options.length > 0) {
+                   control.options.forEach((option: IOptions) => {
+                     if (option.selected) {
+                       control.value = option.id ? this.stringifyObject(option) : option.value;
+                     }
+                   });
+                 }
+ 
+                 // Call the methodName method after setting the value if defined
+                 if (control.methodName) {
+                   await this.resolveMethod(control.methodName, control);
+                 }
+               }
+               else if (control.value != "" && (this.quickQuoteRedirect || this.isQuote === true) && control.methodName) {
+                 await this.resolveMethod(control.methodName, control);
+                 // if (control.name == 'insuredMembers') {
+                 //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+                 //   control.selectCheckboxOptions?.forEach((option: any) => {
+                 //     if (this.formData.insuredMembers[option.value] === true) {
+                 //       // Call logSelection function (pass null for event if not triggering through UI)
+                 //       this.logSelection(null, option, control);
+                 //     }
+                 //   })
+                 // }
+ 
+               }
+             }
+ 
+             if (control.type === 'customizeSelect' && control.options) {
+               // Call the method to get all options if defined and options array is empty
+               if (control.getAllOption && control.options.length === 0) {
+                 this.callMethod(control.getAllOption, control);
+               }
+             }
+ 
+             if (control.type == 'radio') {
+ 
+               if (control.value == "")
+                 control.value = control.radioOptions?.find(option => option.selected)?.value || "";
+ 
+               if (control.methodName)
+                 this.callMethod(control.methodName, control);
+             }
+ 
+             if (control.type == 'custom-radio' && control.methodName) {
+               this.resolveMethod(control.methodName, control);
+             }
+             const radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
+ 
+             if (radioOptionsControl) {
+               radioOptionsControl.valueChanges.subscribe((value: string) => {
+ 
+                 this.form.formSections.forEach((section: any) => {
+                   section.formControls.forEach((formControl: any) => {
+                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
+                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
+                       if (this.QuoteNumber.length > 0) {
+                         this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                       }
+                       this.formData.tenure = this.selectedIndex + 1;
+                     }
+                   });
+                 });
+               })
+             }
+ 
+             if (control.type == 'boldtext' && control.methodName) {
+               this.resolveMethod(control.methodName);
+             }
+ 
+             if (control.name == 'totalPremium' && this.totalPremium != 0) {
+               this.dynamicFormGroup.addControl(control.name, new FormControl(this.totalPremium, controlValidators));
+             }
+             else
+               this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+ 
+             // if (control.name == 'memberDobProposer') {
+             //   console.log(control, this.dynamicFormGroup.get(control.name));
+             // }
+             if (control.type == 'custom-radio' && this.formData[control.name]) {
+               const radioControl = this.dynamicFormGroup.get(control.name);
+               if (radioControl) {
+                 control.radioOptions?.forEach((option: any, index: number) => {
+                   if (option.value == this.formData[control.name]) {
+                     radioControl.setValue(option.value);
+                     this.selectedIndex = index;
+                   }
+                 });
+               }
+             }
+ 
+           }
+ 
+           if (control.disabled && control.name != "totalPremium" ) {
+             this.dynamicFormGroup.get(control.name)?.disable();
+           }
+         });
+       });
+
+       if(this.form.formTitle == "Total Premium"){
+        this.formData['insuredMemberDetails'].forEach((member: any) => {
+          let memberCovers = this.coverList.find((item: any) => item.relation === member.relation);
+          if (memberCovers) {
+              member.covers = memberCovers.covers; 
+          } else {
+              member.covers = [];
+          }
+         });
+         this.covers = this.coverList.map((item: any) => item.covers);
+         console.log(this.covers,this.formData);
+       }
+       
+          
+      
+      //  if(this.form.formTitle == "Total Premium"){
+      //   await this.existingCoverDetailMapping();
+      //  } 
+       if (this.agentCode.startsWith("POS")) {
+         this.form.formSections.forEach((section: any) => {
+           if (section.sectionTitle.includes("Optional Covers")) {
+             const criticalIllnessControl = section.formControls.find((control: any) => control.name === "criticalIllness");
+ 
+             if (criticalIllnessControl) {
+               criticalIllnessControl.visible = false;
+             }
+           }
+         });
+       }
+ 
+       if (this.isQuote) {
+         let nameList = [];
+         const parsedName = this.parseName(this.dynamicFormGroup.get('firstName'));
+         nameList.push(parsedName);
+         this.dynamicFormGroup.get('firstName')?.setValue(nameList[0].firstName);
+         this.dynamicFormGroup.get('middleName')?.setValue(nameList[0].middleName);
+         this.dynamicFormGroup.get('lastName')?.setValue(nameList[0].lastName);
+ 
+         if (this.formData?.proposerPincode) {
+           console.log("Proposer Pincode:", this.formData.proposerPincode);
+ 
+           const pincode = this.formData.proposerPincode;
+ 
+           // Prepare request data for API call
+           const reqData = {
+             pincode,
+             agentCode: this.agentCode,
+             productId: this.productId.toString(),
+           };
+           console.log(reqData);
+ 
+           // Fetch sumInsured based on pincode
+           this.commonService.getPinCodeByCity(reqData).subscribe({
+             next: (res: any) => {
+               if (res.isSuccess && res.data) {
+                 const upgradableSumInsured = res.data.sumInsuredList || [];
+                 console.log("Fetched Sum Insured List:", upgradableSumInsured);
+ 
+                 // Update sumInsured options for the first member
+                 const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+                 if (sumInsuredControl) {
+                   sumInsuredControl.setValue(''); // Clear previous value
+                 }
+                 this.form.formSections.forEach((section: any) => {
+                   section.formControls.forEach((control: any) => {
+                     if (control.name === 'sumInsured') {
+                       control.options = upgradableSumInsured.map((item: any) => ({
+                         ...item,
+                       }));
+                     }
+                   });
+                 });
+ 
+                 // Update sumInsured options for other member
+                 this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+                   console.log(`Setting options for Member ${index + 1}:`, member);
+                   member.upgradableSumInsured = upgradableSumInsured;
+                   console.log(upgradableSumInsured, this.formData)
+ 
+                   // const memberSumInsuredControl = this.dynamicFormGroup.get(`insuredMemberDetails${index + 1}.sumInsured`);
+                   // console.log(memberSumInsuredControl);
+ 
+                   // if (memberSumInsuredControl) {
+                   //   console.log("Updated Sum Insured Options:", upgradableSumInsured);
+                   //   memberSumInsuredControl.setValue(''); // Clear current value for the member
+                   // } else {
+                   //   console.warn(`No sumInsured control found for Member ${index + 1}`);
+                   // }
+ 
+                 });
+                 console.log("Final Sum Insured Options Updated Successfully.");
+               } else {
+                 console.error("Failed to fetch sumInsured. Resetting options.");
+               }
+             },
+             error: (err: any) => {
+               console.error("Error fetching sumInsured:", err);
+             },
+           });
+         }
+ 
+       }
+       this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
+ 
+       console.log(this.dynamicFormGroup, 'dynamicFormGroup')
+       //dynamic css
+       // this.showHtmlContent = true;
+       // if(this.form.formTitle == 'Total Premium' && window.performance?.navigation.type === 1){
+       //   this.getPremiumAmount();
+       // }
+ 
+       this.flattenObject(this.formData);
+       this.spinner.hide();
+     }
+ 
+     console.log(this.form);
+ 
+ 
+ 
+     if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
+       //this.customerFeedbackModule.show();
+       this.isFeedBackModalVisible = true;
+     }
+ 
+     //  if(this.formData.productName==='Active Secure' && this.form.formTitle == 'Total Premium'){
+     //   this.sumInsuredList();
+     //  }
+ 
+   }
+
+   async existingCoverDetailMapping(){
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach(async (control: IFormControl) => {
+        if (control.subControls) {
+          control.subControls.forEach((subControl: ISubControl) => {
+            if (subControl.name == 'addOnDetails') {
+              this.formData['insuredMemberDetails'].forEach((member: any) => {
+                if (subControl.innerSubControls) {
+                  subControl.innerSubControls.forEach((innerSubControl:any) => {
+                  if(member.relation == innerSubControl.name){
+                    const coverId = control.subControls?.find((sub) => sub.name === 'addOnId')?.value;
+                    const existingCover = member.covers?.find((cover: any) => cover.coverId === coverId);
+                    if (coverId && existingCover) {  
+                      innerSubControl.coreControls.forEach((coreControl: any) => {
+                        if (coreControl.name == "addOnSumInsured"){
+                          coreControl.value = existingCover.value;
+                        }
+                        if(coreControl.name == "occupationRisk"){
+                          const matchingOption = coreControl.options.find((opt: any) => opt.name?.toString().toLowerCase() === member.natureOfDuty?.toString().toLowerCase());
+                          if (matchingOption) {
+                            coreControl.value = JSON.stringify(matchingOption);
+                          }
+                        }
+                        if(coreControl.name == "occupation"){
+                          const matchingOption = coreControl.options.find((opt: any) => opt.value?.toString().toLowerCase() === member.occupation?.toString().toLowerCase());
+                          if (matchingOption) {
+                            coreControl.value = JSON.stringify(matchingOption);
+                          }
+                        }
+                        if(coreControl.name=="memberCheckbox")coreControl.value = true
+                      });
+                      control.subControls?.forEach((subControl: any) => {
+                        if (subControl.name == 'addOnCover'){ 
+                          subControl.value = true;
+                          if(existingCover.isMandatory)subControl.disabled = true;
+                        }
+                      });
+                      let memberCovers = this.coverList.find((item: any) => item.relation === member.relation);
+                      if (!memberCovers) {
+                          this.coverList.push({
+                              relation: member.relation,
+                              covers: [{ 
+                                  coverId: existingCover.coverId, 
+                                  value: existingCover.value, 
+                                  isMandatory: existingCover.isMandatory 
+                              }]
+                          });
+                      } else {
+                          const coverExists = memberCovers.covers.some((cover: any) => cover.coverId === existingCover.coverId);
+                          if (!coverExists) {
+                              memberCovers.covers.push({
+                                  coverId: existingCover.coverId, 
+                                  value: existingCover.value, 
+                                  isMandatory: existingCover.isMandatory
+                              });
+                          }
+                      }
+                    }
+                  }
+                  })
                 }
               });
             }
-
-            console.log(this.initializeSubControls(control.subControls));
-
-            this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
-          }
-          else {
-            if (control.type === 'date') {
-              const lowerCaseName = control.name.toLowerCase();
-              if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
-                const currentDate = new Date();
-                const currentYear = currentDate.getFullYear();
-                const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-                const currentDay = String(currentDate.getDate()).padStart(2, '0');
-
-                // Construct dobRegex pattern as a string
-                const dobPattern =
-                  `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
-                  `-(0[1-9]|1[0-2])` + // All valid months for past years
-                  `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
-                  `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
-                  `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
-
-                // Push the pattern as a validator to the control
-                control.validators?.push({
-                  validatorName: "pattern",
-                  pattern: dobPattern, // Use the constructed string pattern here
-                  message: "Date of Birth should not exceed the current date and must be in yyyy-MM-dd format."
-                });
-              }
-            }
-            let controlValidators: any = [];
-            if (control.validators && control.visible == true) {
-              control.validators.forEach((val: IValidator) => {
-                if (val.validatorName === 'required') controlValidators.push(Validators.required);
-                if (val.validatorName === 'email') controlValidators.push(Validators.email);
-                if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
-                if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
-                if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
-                if (val.validatorName === 'requiredTrue') {
-                  // Custom validator for checkboxes
-                  controlValidators.push((formControl: AbstractControl) => {
-                    return formControl.value === true ? null : { requiredTrue: val.message || 'This field is required' };
-                  });
-                }
-              })
-            }
-            // if(control.type=='select' && control.methodName && control.options?.length==0){
-            //   this.callMethod(control.methodName,control);
-            // }
-            // if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
-            //   // Only call resolveMethod if selectCheckboxOptions is empty
-            //   // if (control.selectCheckboxOptions.length === 0) {
-            //   //   await this.resolveMethod(control.methodName, control);
-
-            //   // }
-            //   // After resolving, add the control to the dynamic form group
-            //   const controlGroup = this.fb.group({});
-            //   control.selectCheckboxOptions.forEach(option => {
-            //     controlGroup.addControl(option.value, new FormControl(false));
-            //   });
-            //   this.renewalFormGroup.addControl(control.name, controlGroup);
-            // }
-            if (['text', 'email', 'password', 'number', 'date', 'summary','paragraph'].includes(control.type) && control.methodName) {
-              if (control.otherControlName) {
-                this.callMethod(control.methodName, control, section)
-              }
-              else {
-                this.resolveMethod(control.methodName, control)
-              }
-            }
-            if (control.type === 'select' && control.options) {
-              // Call the method to get all options if defined and options array is empty
-              if (control.getAllOption && control.options.length === 0) {
-                this.callMethod(control.getAllOption, control);
-              }
-              else if (control.options.length === 0 && control.name == 'zoneValue') {
-                control.options = this.formData['upgradableZones'];
-              }
-
-              // If the control's value is empty, set it based on the selected options
-              if (control.value === "") {
-                // Set control value if any option is selected
-                if (control.options && control.options.length > 0) {
-                  control.options.forEach((option: IOptions) => {
-                    if (option.selected) {
-                      control.value = option.id ? this.stringifyObject(option) : option.value;
-                    }
-                  });
-                }
-
-                // Call the methodName method after setting the value if defined
-
-              }
-              if (control.methodName) {
-                await this.resolveMethod(control.methodName, control);
-                // this.handlePolicyTypeChange(control,control.value);
-              }
-            }
-            if (control.type == 'button' && control.methodName == "checkKycDetail") {
-              this.resolveMethod(control.methodName, control);
-            }
-
-            // if (control.type == 'radio') {
-
-            //   control.value = control.radioOptions?.find(option => option.selected)?.value || "";
-
-            //   if (control.methodName)
-            //     this.callMethod(control.methodName, control);
-            // }
-
-            if (control.type == 'custom-radio' && control.methodName) {
-              this.resolveMethod(control.methodName, control);
-            }
-            // const radioOptionsControl = this.renewalFormGroup.get('totalPremium');
-
-            // if (radioOptionsControl) {
-            //   radioOptionsControl.valueChanges.subscribe((value: string) => {
-
-            //     this.form.formSections.forEach((section: any) => {
-            //       section.formControls.forEach((formControl: any) => {
-            //         if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
-            //           this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
-            //           // if (this.QuoteNumber.length > 0) {
-            //           //   this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-            //           // }
-            //           this.formData.tenure = this.selectedIndex + 1;
-            //           console.log(this.selectedIndex, this.formData);
-            //         }
-            //       });
-            //     });
-            //   })
-            // }
-
-            if (control.name == 'totalPremium' && this.totalPremium != 0) {
-              console.log(this.totalPremium);
-              this.renewalFormGroup.addControl(control.name, new FormControl(this.totalPremium, controlValidators));
-            }
-            else {
-              console.log(control);
-
-              this.renewalFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
-              console.log(this.renewalFormGroup.value);
-
-            }
-
-            if (control.disabled) {
-              this.disableFormControl(control.name);
-            }
-
-
-            if (control.type == 'custom-radio' && this.formData[control.name]) {
-              const radioControl = this.renewalFormGroup.get(control.name);
-              if (radioControl) {
-                control.radioOptions?.forEach((option: any, index: number) => {
-                  if (option.value == this.formData[control.name]) {
-                    radioControl.setValue(option.value);
-                    this.selectedIndex = index;
-                  }
-                });
-              }
-            }
-
-          }
-        });
+          });
+        }
       });
-      // this.renewalFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
-      //dynamic css
-      // this.showHtmlContent = true;
-      console.log(this.form);
-      console.log(this.renewalFormGroup.value, this.formData);
+    });
+   }
 
+   async updateRelationValues() {
+    let memberDetails = [...this.formData.insuredMemberDetails]; 
+    let sonCount = 1;
+    let daughterCount = 1;
+    memberDetails = memberDetails.map(member => {
+        if (member.relation === "Dependent Son") {
+            return { ...member, relation: `Son${sonCount++}` };
+        } else if (member.relation === "Dependent Daughter") {
+            return { ...member, relation: `Daughter${daughterCount++}` }; 
+        }
+        return member; 
+    });
 
+    this.formData = { ...this.formData, insuredMemberDetails: memberDetails };
 
-      // this.flattenObject(this.formData);
-      // this.spinner.hide();
-    }
+    console.log(memberDetails, this.formData); 
+}  
 
-    if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
-      this.isFeedBackModalVisible = true;
-    }
-
-  }
-
-  initializeSubControls(subControls: any, controlGroup: any = null, policyLength: any = 0) {
-    console.log(subControls, controlGroup);
+  initializeSubControls(subControls: any, controlGroup: any = null, parentControl: any = null) {
+    console.log(this.formData,this.form);
+    
     let formGroup: any
     if (controlGroup) {
       formGroup = controlGroup;
@@ -974,15 +1759,21 @@ export class RenewalDynamicFormComponent {
         if (control.innerArrayControl) {
           if (control.visible) {
             let tempFormArray = this.fb.array([]);
-            console.log(control.innerArrayControl);
             for (let i = 1; i < control.innerArrayControl.length; i++) {
-              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i));
+              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i, control));
             }
             formGroup.addControl(control.name, tempFormArray);
           }
           else {
             formGroup.addControl(control.name, new FormArray([]));
           }
+        }
+        if (control.extraBenefitsControls) {
+          let tempFormArray = this.fb.array([]);
+          for (let i = 0; i < control.extraBenefitsControls.length; i++) {
+            tempFormArray.push(this.initializeDynamicFormControls(control.extraBenefitsControls[i], i, control));
+          }
+          formGroup.addControl(control.name, tempFormArray);
         }
 
         if (control.innerSubControls) {
@@ -994,16 +1785,20 @@ export class RenewalDynamicFormComponent {
         else if (control.coreControls) {
           let tempFormArray = this.fb.array([]);
           for (let i = 0; i < control.coreControls.length; i++) {
-            tempFormArray.push(this.initializeSubControls(control.coreControls[i]))
+            tempFormArray.push(this.initializeSubControls(control.coreControls[i], null, control))
           }
           formGroup.addControl(control.name, tempFormArray);
         }
-        else if (!control.displayOnly || control.displayOnly === false)
+        else if (!control.displayOnly || control.displayOnly === false) {
           if (this.selectedAddons.length > 0 && this.selectedAddons.find((addon: any) => addon === control.label) && control.type === 'checkbox') {
             formGroup.addControl(control.name, new FormControl(true, controlValidators));
           } else {
             formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
           }
+        }
+        if (control.disabled) {
+          formGroup.get(control.name)?.disable();
+        }
       });
     }
     else {
@@ -1019,7 +1814,25 @@ export class RenewalDynamicFormComponent {
       }
       if (subControls.type == 'select' && subControls.getAllOption) {
         if (subControls.options?.length == 0) {
-          this.callMethod(subControls.getAllOption, subControls);
+          if (this.formData.productName == 'Activ Health Platinum Enhanced' && subControls.getAllOption == 'deductibleOptionsA') {
+            let planName = JSON.parse(this.formData.planName).value
+            if (planName == 'Plan B') {
+              subControls.getAllOption = 'deductibleOptionsB'
+            }
+          }
+          this.resolveMethod(subControls.getAllOption, subControls, parentControl);
+        }
+      }
+      if (subControls.type == 'select' && subControls.value === "") {
+        if (subControls.options && subControls.options.length > 0) {
+          subControls.options.forEach((option: IOptions) => {
+            if (option.selected) {
+              subControls.value = option.id ? this.stringifyObject(option) : option.value;
+            }
+          });
+        }
+        else {
+          this.resolveMethod(subControls.methodName, subControls, parentControl)
         }
       }
       if (subControls.type == 'questionnaire' && subControls.innerControls) {
@@ -1033,9 +1846,8 @@ export class RenewalDynamicFormComponent {
       if (subControls.innerArrayControl) {
         if (subControls.visible) {
           let tempFormArray = this.fb.array([]);
-          console.log(subControls.innerArrayControl);
           for (let i = 1; i < subControls.innerArrayControl.length; i++) {
-            tempFormArray.push(this.initializeDynamicFormControls(subControls.innerArrayControl[i], i));
+            tempFormArray.push(this.initializeDynamicFormControls(subControls.innerArrayControl[i], i, subControls));
           }
           formGroup.setValue(subControls.name, tempFormArray);
         }
@@ -1043,16 +1855,38 @@ export class RenewalDynamicFormComponent {
           formGroup.addControl(subControls.name, new FormArray([]));
         }
       }
-      formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
+      if (subControls.extraBenefitsControls) {
+        const tempFormArray = this.fb.array<FormGroup>([]);
+        for (let i = 0; i < subControls.extraBenefitsControls.length; i++) {
+          // const currentControl = subControls.extraBenefitsControls[i];      
+          // const formGroup = this.fb.group({
+          //   [currentControl.name]: [currentControl.value || null],
+          // });      
+          // tempFormArray.push(formGroup);
+          tempFormArray.push(this.initializeSubControls(subControls.extraBenefitsControls[i], null, subControls))
+
+        }
+        formGroup.addControl(subControls.name, tempFormArray);
+      }
+      else {
+        formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators));
+      }
+      // if (subControls.postControlCreationMethod) {
+      //   this.resolveMethod(subControls.postControlCreationMethod, subControls);
+      // }
       // return new FormControl(subControls.value,controlValidators);
+      if (subControls.disabled) {
+        formGroup.get(subControls.name)?.disable();
+      }
     }
-
-
-
+    // console.log(formGroup);
+    console.log(this.form,this.formData);
+    
     return formGroup;
   }
 
-  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null, policyLength: any = 0) {
+  initializeDynamicFormControls(dynamicFormControls: any, index: any = null, parentControl: any = null, policyLength: any = 0, parentIndex: any = null) {
+    console.log(parentControl, index, parentIndex);
 
     let formGroup: any = this.fb.group({})
     dynamicFormControls.forEach((control: IDynamicControl) => {
@@ -1077,18 +1911,70 @@ export class RenewalDynamicFormComponent {
           }
         }
         formGroup.addControl(control.name, tempFormArray);
-      } else if (control.innerControls && control.visible == true) {
-        let innerGroup = this.initializeDynamicFormControls(control.innerControls);
+      }
+      else if (control.innerControls && control.visible == true) {
+        let innerGroup = this.initializeDynamicFormControls(control.innerControls, index, control);
         formGroup.addControl(control.name, innerGroup);
-      } else if (control.innerArrayControl && control.visible == true) {
+      }
+      else if (control.innerArrayControl && control.visible == true) {
         let tempFormArray = this.fb.array([]);
         for (let z = 1; z < control.innerArrayControl.length; z++) {
-          tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control));
+          tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[z], z, control, null, index));
         }
         formGroup.addControl(control.name, tempFormArray);
         console.log(formGroup, tempFormArray, control)
         // formGroup.setValue(control.name, tempFormArray);
-      } else {
+      }
+      // else if(control.innerSubControls){
+
+      //   if(control.type == 'overlayControl'){
+      //     let tempFormGroup: any = this.fb.group({});
+      //     let doneButton: any;
+      //     doneButton = control.innerSubControls.find(subControl => subControl.name === 'doneButton');
+      //     this.formData.insuredMemberDetails.forEach((member:any,idx: number)=>{
+
+      //     })
+
+      //   }
+      // }
+      else if (control.innerSubControls) {
+        if (control.type === 'overlayControl') {
+          let tempFormGroup: any = this.fb.group({});
+          let doneButton: any;
+
+          // Find and remove the doneButton temporarily
+          doneButton = control.innerSubControls.find(subControl => subControl.name === 'doneButton');
+          control.innerSubControls = control.innerSubControls.filter(subControl => subControl.name !== 'doneButton');
+
+          this.formData.insuredMemberDetails.forEach((member: any, idx: number) => {
+            console.log(idx, index);
+
+            if (idx !== index - 1) {
+              // Keep only demoType and create a deep copy
+              let demoTypeControl = control.innerSubControls?.find(subControl => subControl.name === 'demoType');
+              let newControl = JSON.parse(JSON.stringify(demoTypeControl));
+
+              // Modify the name and label using member.relation
+              newControl.name = member.relation;
+              newControl.label = member.relation;
+
+              // Push the modified control to innerSubControls
+              control.innerSubControls?.push(newControl);
+
+              // Create a new control in tempFormGroup and set the value as false
+              tempFormGroup.addControl(newControl.name, this.fb.control(false));
+            }
+          });
+
+          // Push the doneButton back to innerSubControls
+          control.innerSubControls.push(doneButton);
+
+          formGroup.addControl(control.name, tempFormGroup);
+        }
+        console.log(formGroup);
+
+      }
+      else if (!control.innerArrayControl) {
         let controlValidators: any = [];
         if (control.validators && control.visible == true) {
           control.validators.forEach((val: IValidator) => {
@@ -1132,10 +2018,13 @@ export class RenewalDynamicFormComponent {
           if (control.options?.length == 0) {
             this.callMethod(control.getAllOption, control);
           }
-        }else if (control.type == 'select' && control.methodName) {
-          this.resolveMethod(control.methodName, control, index);
         }
-
+        else if (control.type == 'select' && control.methodName == 'updateDesignationBasedOnAnnualincome') {
+          this.resolveMethod(control.methodName, control, index, parentControl)
+        }
+        else if (control.type == 'select' && control.methodName) {
+          this.resolveMethod(control.methodName, control, index, policyLength);
+        }
         if (control.type == 'select' && control.value === "") {
           // Set control value if any option is selected
           if (control.options && control.options.length > 0) {
@@ -1147,14 +2036,13 @@ export class RenewalDynamicFormComponent {
           }
         }
 
+
         if (control.name == 'memberIndex' && index != null) {
           control.value = index - 1;
         }
 
         if (control.type == 'text' && control.methodName) {
-          this.resolveMethod(control.methodName, control, index);
-          console.log(control.methodName, this.form);
-
+          this.resolveMethod(control.methodName, control, index, parentIndex);
         }
         if (control.type == 'radio' && control.radioOptions) {
           let initialValue = control.radioOptions.find((option) => option.selected === true)?.value;
@@ -1164,17 +2052,15 @@ export class RenewalDynamicFormComponent {
           formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
         }
       }
-      if(control.name != "relationshipType"){
-       if (control.disabled) {
+      if (control.disabled) {
         formGroup.get(control.name)?.disable();
-       }
       }
-    })
 
+    })
     return formGroup;
   }
 
- dynamciallyLoadCSS(form: IForm) {
+  dynamciallyLoadCSS(form: IForm) {
     let tf: string = "default.css";
     if (form.themeFile) tf = form.themeFile;
     this.dynamicStyle = this.renderer.createElement('link');
@@ -1208,16 +2094,16 @@ export class RenewalDynamicFormComponent {
   ): string {
     let myFormControl: any;
     if (innerControl != null && innerSubControl != null && subControl == null) {
-      myFormControl = parentControl != null && index != null ? ((((this.renewalFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormArray)
-        ?.controls[index] as FormGroup)?.controls[innerControl.name] as FormGroup).get(control.name) : this.renewalFormGroup.get(innerSubControl.name);
+      myFormControl = parentControl != null && index != null ? ((((this.dynamicFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormArray)
+        ?.controls[index] as FormGroup)?.controls[innerControl.name] as FormGroup).get(control.name) : this.dynamicFormGroup.get(innerSubControl.name);
     }
     else if (innerControl != null && innerSubControl != null) {
-      myFormControl = parentControl != null && index != null ? ((((this.renewalFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
+      myFormControl = parentControl != null && index != null ? ((((this.dynamicFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
-        .controls[innerControl.name].get(control.name) : this.renewalFormGroup.get(innerSubControl.name);
+        .controls[innerControl.name].get(control.name) : this.dynamicFormGroup.get(innerSubControl.name);
     }
     else if (innerControl != null && innerSubControl == null && parentControl != null && index != null && innerSubControlIndex != null) {
-      const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+      const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       const memberGroup = formArray.at(index) as FormGroup;
       const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
@@ -1226,17 +2112,17 @@ export class RenewalDynamicFormComponent {
 
     }
     else if (innerControl != null && parentControl != null && index != null && subControl == null) {
-      myFormControl = (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
+      myFormControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
     }
     else if (subControl != null && index != null) {
-      myFormControl = parentControl != null && index != null ? ((this.renewalFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(control.name)
-        : this.renewalFormGroup.get(control.name);
+      myFormControl = parentControl != null && index != null ? ((this.dynamicFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(control.name)
+        : this.dynamicFormGroup.get(control.name);
     }
     else if (subControl != null && parentControl != null && index == null) {
-      myFormControl = ((this.renewalFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup).get(control.name);
+      myFormControl = ((this.dynamicFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup).get(control.name);
     }
     else {
-      myFormControl = parentControl != null && index != null ? (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.renewalFormGroup.get(control.name)
+      myFormControl = parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.dynamicFormGroup.get(control.name)
     }
     let errorMessage = ''
     if (innerControl != null && parentControl != null && index != null && subControl == null) {
@@ -1261,7 +2147,7 @@ export class RenewalDynamicFormComponent {
       control.validators?.forEach((val) => {
         if (myFormControl?.hasError(val.validatorName as string)) {
           if (control.name == 'insuredMembers' && val.validatorName == 'required') {
-            if (this.renewalFormGroup.get('planType')?.value == 'Multi Individual') {
+            if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
               errorMessage = val.message as string + 'one'
             }
             else {
@@ -1287,7 +2173,7 @@ export class RenewalDynamicFormComponent {
     // console.log('sukhadev5', SubIndex);
     let myFormControl: any;
 
-    const parentArray = this.renewalFormGroup.get(innerControl?.name) as FormArray;
+    const parentArray = this.dynamicFormGroup.get(innerControl?.name) as FormArray;
     const parentArray1 = parentArray.controls[index] as FormGroup;
     const parentArray2 = parentArray1.controls[parentControl?.name] as FormArray;
     const parentArray3 = parentArray2.controls[SubIndex] as FormGroup;
@@ -1297,7 +2183,7 @@ export class RenewalDynamicFormComponent {
     control.validators?.forEach((val) => {
       if (myFormControl?.hasError(val.validatorName as string)) {
         if (control.name == 'insuredMembers' && val.validatorName == 'required') {
-          if (this.renewalFormGroup.get('planType')?.value == 'Multi Individual') {
+          if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
             errorMessage = val.message as string + 'one'
           }
           else {
@@ -1324,14 +2210,14 @@ export class RenewalDynamicFormComponent {
     // console.log(control, parentControl, index, subControl, innerControl, innerSubControl,innerSubControlIndex);
     let myControl: AbstractControl | null | undefined;
     if (innerControl != null && innerSubControl != null && subControl == null && parentControl != null && index != null) {
-      const parentArray = this.renewalFormGroup.get(control.name) as FormGroup;
+      const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormArray;
       const parentArray2 = parentArray1.controls[index] as FormGroup;
       const parentArray3 = parentArray2.controls[innerControl.name] as FormArray;
       myControl = parentArray3.get(innerSubControl.name);
     }
     else if (innerControl != null && innerSubControl != null && parentControl != null && index != null) {
-      const parentArray = this.renewalFormGroup.get(control.name) as FormGroup;
+      const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormGroup;
       const parentArray2 = parentArray1.controls[subControl.name] as FormArray;
       const parentArray3 = parentArray2.controls[index] as FormGroup;
@@ -1339,7 +2225,7 @@ export class RenewalDynamicFormComponent {
       myControl = parentArray3.controls[innerControl.name].get(innerSubControl.name);
     }
     else if (innerControl != null && innerSubControl == null && parentControl != null && index != null && innerSubControlIndex != null) {
-      const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+      const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       const memberGroup = formArray.at(index) as FormGroup;
       const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
@@ -1347,26 +2233,28 @@ export class RenewalDynamicFormComponent {
 
     }
     else if (innerControl != null && parentControl != null && index != null) {
-      myControl = (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
+      myControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.get(innerControl.name)
     }
     else if (subControl != null && parentControl != null && index != null) {
-      const parentArray = this.renewalFormGroup.get(control.name) as FormGroup;
+      const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormArray;
       const parentArray2 = parentArray1.controls[index] as FormGroup;
 
       myControl = parentArray2.get(subControl.name);
     }
     else if (subControl != null && parentControl != null && index == null) {
-      const parentArray = this.renewalFormGroup.get(control.name) as FormGroup;
+      const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
       const parentArray1 = parentArray.controls[parentControl.name] as FormGroup;
 
       myControl = parentArray1.get(subControl.name);
     }
     else if (parentControl != null && index != null) {
-      const parentArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
-      myControl = parentArray.controls[index].get(control.name);
+      const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      if (parentArray) {
+        myControl = parentArray.controls[index].get(control.name);
+      }
     } else {
-      myControl = this.renewalFormGroup.get(control.name);
+      myControl = this.dynamicFormGroup.get(control.name);
     }
 
     if (myControl instanceof FormControl) {
@@ -1386,7 +2274,7 @@ export class RenewalDynamicFormComponent {
     SubIndex: any | null = null
   ): boolean {
     let myControl: AbstractControl | null | undefined;
-    const parentArray = this.renewalFormGroup.get(innerControl?.name) as FormArray;
+    const parentArray = this.dynamicFormGroup.get(innerControl?.name) as FormArray;
     const parentArray1 = parentArray.controls[index] as FormGroup;
     const parentArray2 = parentArray1.controls[parentControl?.name] as FormArray;
     const parentArray3 = parentArray2.controls[SubIndex] as FormGroup;
@@ -1409,7 +2297,7 @@ export class RenewalDynamicFormComponent {
   ): boolean {
 
     let myControl: AbstractControl | null | undefined;
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const memberGroup = formArray.at(index) as FormGroup;
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
@@ -1430,7 +2318,7 @@ export class RenewalDynamicFormComponent {
 
     let errorMessage = ''
     let myControl: AbstractControl | null | undefined;
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const memberGroup = formArray.at(index) as FormGroup;
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
@@ -1444,9 +2332,46 @@ export class RenewalDynamicFormComponent {
     })
     return errorMessage;
   }
+  changingVisibility(flag: boolean) {
+    let policyType: any;
+    const pinCode = this.dynamicFormGroup.get('proposerPincode')?.value.toString() || 0;
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (section.sectionTitle == 'Personal Details') {
+          if (formControl.name == 'memberPolicyType') {
+            policyType = this.dynamicFormGroup.get('memberPolicyType')?.value
+          }
+          if ((formControl.name == 'annualIncomeForPlan' || formControl.name == 'sumInsuredForPlan') && policyType == 'Family Floater') {
+            formControl.visible = flag;
+          }
+          if (formControl.name == 'sumInsuredForPlan' && policyType == 'Family Floater') {
+            this.getSumInsuredListByPincode(flag, policyType, pinCode);
+            return;
+          }
+        }
+        if (formControl.dynamicControls) {
+          formControl.dynamicControls.forEach((controlGroup: any, index: number) => {
+            if (index === 0) return; // Skip the 0th index (demoType)
+            let proposer = '';
+            controlGroup.forEach((control: any) => {
+              if (control.name === 'relation' && index == 1) {
+                proposer = control.value;
+              }
+              if ((control.name === 'annualIncomeForPlan' || control.name === 'sumInsuredForPlan') && policyType === 'Multi Individual') {
+                control.visible = flag;
+              }
+              if (control.name === 'sumInsuredForPlan' && proposer != '' && policyType === 'Multi Individual') {
+                this.getSumInsuredListByPincode(flag, policyType, pinCode);
+              }
+            });
+          });
+        }
+      });
+    });
+  }
 
   onCheckboxSelect(controlName: string, event?: any) {
-    const control = this.renewalFormGroup.get(controlName);
+    const control = this.dynamicFormGroup.get(controlName);
     if (control) {
       control.markAsTouched();
       control.updateValueAndValidity();
@@ -1455,14 +2380,16 @@ export class RenewalDynamicFormComponent {
       case 'addressTitle1':
         this.getPermanentAddressDetails(event.target.checked);
         break;
-
+      case 'benefitTopUpPlan':
+        this.changingVisibility(event.target.checked)
+        break;
       default:
         break;
     }
   }
 
   // hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | IDynamicControl | ISubControl | null = null, index: number | null = null,innerControl: any= null): boolean {
-  //   return parentControl != null && index != null ? (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.renewalFormGroup.get(control.name)?.value
+  //   return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
   // }
 
   hasAnyValue(
@@ -1474,7 +2401,9 @@ export class RenewalDynamicFormComponent {
     subControl: any = null
   ): boolean {
     if (parentControl != null && index != null) {
-      const parentFormArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+
+      const parentFormArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+
       const childControl = parentFormArray.controls[index].get(control.name);
 
       // If innerControl is not null, check its value
@@ -1490,7 +2419,7 @@ export class RenewalDynamicFormComponent {
     }
 
     // For controls outside FormArray, check for innerControl if provided
-    const mainControl = this.renewalFormGroup.get(control.name);
+    const mainControl = this.dynamicFormGroup.get(control.name);
     if (innerControl != null) {
       return !!mainControl?.get(innerControl.name)?.value;
     }
@@ -1500,43 +2429,43 @@ export class RenewalDynamicFormComponent {
 
   hasInnerValue(control: any, parentControl: any | null = null, innerControl: any | null = null, index: any | null = null) {
     const formControl = parentControl != null && index != null ?
-      ((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value
-      : this.renewalFormGroup.get(control.name);
+      ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value
+      : this.dynamicFormGroup.get(control.name);
     return formControl;
   }
   hasChronicValue(control: any, parentControl: any | null = null, innerControl: any | null = null, chronicControl: any | null = null, index: any | null = null) {
-    const formControl = ((this.renewalFormGroup.get(control.name) as FormGroup)?.get(parentControl.name)?.get(innerControl.name)?.value);
+    const formControl = ((this.dynamicFormGroup.get(control.name) as FormGroup)?.get(parentControl.name)?.get(innerControl.name)?.value);
     return formControl;
   }
   hasSubValue(control: any, parentControl: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, index: any | null = null) {
     const formControl = parentControl != null && index != null ?
-      (((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup).controls[innerControl.name] as FormArray).controls[index].get(innerSubControl.name)?.value
-      : this.renewalFormGroup.get(control.name);
+      (((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup).controls[innerControl.name] as FormArray).controls[index].get(innerSubControl.name)?.value
+      : this.dynamicFormGroup.get(control.name);
     return formControl;
   }
   hasInnerSubValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null) {
     const formControl = parentControl != null && index != null
-      ? ((((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
+      ? ((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
         .controls[innerControl.name].get(innerSubControl.name)
-      : this.renewalFormGroup.get(control.name);
+      : this.dynamicFormGroup.get(control.name);
     // formControl?.markAsTouched();
     return formControl ? formControl.value : null;
   }
   hasSubInnerValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, indexj: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, benefitControl: any | null = null) {
-    console.log("hasSubInnerValue", control, parentControl, subControl, index, innerControl, innerSubControl, benefitControl, this.renewalFormGroup, subControl.coreControls[index].name);
+    console.log("hasSubInnerValue", control, parentControl, subControl, index, innerControl, innerSubControl, benefitControl, this.dynamicFormGroup, subControl.coreControls[index].name);
     const formControl = parentControl != null && index != null
-      ? ((((((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
+      ? ((((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
         .controls[subControl.coreControls[index].name] as FormArray)
         .controls[indexj] as FormGroup).get(benefitControl.name)
-      : this.renewalFormGroup.get(control.name);
+      : this.dynamicFormGroup.get(control.name);
     // formControl?.markAsTouched();
     return formControl ? formControl.value : null;
   }
 
   hasAnyActiveValue(control: any, subControl: any, index: any, parentControl: any, subIndex?: any) {
-    const selectedValue = (((this.renewalFormGroup.get(parentControl.name) as FormGroup)).controls[index - 1].get(subControl.name) as FormGroup).controls[subIndex].get(control.name)?.value
+    const selectedValue = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)).controls[index - 1].get(subControl.name) as FormGroup).controls[subIndex].get(control.name)?.value
     return selectedValue ? selectedValue : null;
   }
 
@@ -1551,7 +2480,7 @@ export class RenewalDynamicFormComponent {
 
   //   const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
   //   const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-  //   const control = this.renewalFormGroup.get(inputName);
+  //   const control = this.dynamicFormGroup.get(inputName);
   //   if (file) {
   //     // Clear previous errors
   //     control?.setErrors(null);
@@ -1655,7 +2584,7 @@ export class RenewalDynamicFormComponent {
       }
       return null;
     };
-    const firstInvalidControlName = findInvalidControlId(this.renewalFormGroup.controls);
+    const firstInvalidControlName = findInvalidControlId(this.dynamicFormGroup.controls);
     if (firstInvalidControlName) {
       const firstInvalidElement = document.getElementById(firstInvalidControlName);
       if (firstInvalidElement) {
@@ -1666,11 +2595,13 @@ export class RenewalDynamicFormComponent {
   }
 
   uploadPolicyDocument() {
-    const insurerControl = this.renewalFormGroup.get('getInsurerDetails');
+    const insurerControl = this.dynamicFormGroup.get('getInsurerDetails');
     if (this.selectedFile && insurerControl && insurerControl.value) {
       const formData = new FormData();
       formData.append('Files', this.selectedFile);
-      formData.append('NameOfInsuranceCompany', insurerControl.value); // Dynamic value from the form control
+      formData.append('NameOfInsuranceCompany', insurerControl.value);
+      formData.append('AgentCode', this.agentCode);
+      formData.append('ProductId', this.productId);
 
       // this.spinner.show();
 
@@ -1678,10 +2609,14 @@ export class RenewalDynamicFormComponent {
         next: (response: any) => {
           this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
           this.spinner.hide();
+          console.log(response.data)
 
           this.isPolicyDetailsFetch = true;
 
-          if (response.data['insuredMemberDetails'].length > 0) {
+          const insuredMembersData = response.data?.insuredMembers || {};
+          const hasValidMembers = Object.values(insuredMembersData).some(value => value === true);
+
+          if (hasValidMembers) {
             this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
             const insuredMembers: { [key: string]: boolean } = {};
 
@@ -1690,20 +2625,79 @@ export class RenewalDynamicFormComponent {
             });
 
             this.formData['insuredMembers'] = insuredMembers;
+          } else {
+            // Reset insuredMembers if all are false
+            this.formData['insuredMembers'] = {};
           }
 
+          // Set form values but handle memberPolicyType separately
           Object.keys(response.data).forEach((key: string) => {
-            this.renewalFormGroup.get(key)?.setValue(response.data[key]);
+            if (key !== 'insuredMembers') {
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+            }
+
+            if (response.data.insuredMemberDetails && Array.isArray(response.data.insuredMemberDetails)) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.name === 'zoneValue') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableZones || [];
+                    }
+                    formControl.value = response.data.zoneValue || '';
+                  }
+                  if (formControl.name === 'sumInsured') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableSumInsured || [];
+                    }
+                    formControl.value = response.data.sumInsured || '';
+                  }
+                });
+
+                // 🔹 **Handle Sum Insured & Zone Value Inside Dynamic Controls**
+                if (section.sectionTitle === 'Insured Member Details') {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name === 'insuredMemberDetails' && Array.isArray(formControl.dynamicControls)) {
+                      formControl.dynamicControls.forEach((controlRow: any[]) => {
+                        controlRow.forEach((control: any) => {
+                          response.data.insuredMemberDetails.forEach((member: any) => {
+                            if (control.name === 'zoneValue') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableZones || [];
+                              }
+                              control.value = member.zoneValue || '';
+                            }
+                            if (control.name === 'sumInsured') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableSumInsured || [];
+                              }
+                              control.value = member.sumInsured || '';
+                            }
+                          });
+                        });
+                      });
+                    }
+                  });
+                }
+              });
+            }
 
             if (key === 'memberPolicyType') {
               this.form.formSections.forEach((section: any) => {
                 const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
                 if (targetControl) {
-                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
+                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyType']);
                 }
               });
             }
           });
+
+          // if (response.data.upgradableZones) {
+          //   this.dynamicFormGroup.get('upgradableZones')?.setValue(response.data.upgradableZones);
+          // }
+
+          // if (response.data.upgradableSumInsured) {
+          //   this.dynamicFormGroup.get('upgradableSumInsured')?.setValue(response.data.upgradableSumInsured);
+          // }
 
         },
         error: (error) => {
@@ -1761,10 +2755,13 @@ export class RenewalDynamicFormComponent {
       value = value.slice(0, 10);
     }
     input.value = value;
+    if (control.onChangeMethod && control.onChangeMethod == 'setForSelfMember') {
+      this.setForSelfMember(control, value);
+    }
     if (subControl) {
-      this.renewalFormGroup.get(`${control.name}.${i}.${subControl.name}`)?.setValue(value);
+      this.dynamicFormGroup.get(`${control.name}.${i}.${subControl.name}`)?.setValue(value);
     } else {
-      this.renewalFormGroup.get(control.name)?.setValue(value);
+      this.dynamicFormGroup.get(control.name)?.setValue(value);
     }
   }
 
@@ -1816,10 +2813,19 @@ export class RenewalDynamicFormComponent {
     });
   }
 
-  getAllProposerOccupation(control: any) {
-    this.yatraService.getProposerOccupation().subscribe({
+  getAllProposerOccupation(control: any, otherControl: any) {
+    const reqData = {
+      "agentCode":localStorage.getItem('agentCode')
+      }; 
+    this.yatraService.getProposerOccupation(reqData).subscribe({
       next: (res: any) => {
         control.options = res.data;
+        if(control.value){
+          const matchingOption = control.options.find((opt: any) => opt.value?.toString().toLowerCase() === control.value?.toString().toLowerCase());
+          if (matchingOption) {
+            control.value = JSON.stringify(matchingOption);
+          }
+        }
       },
       error: (err: any) => {
         console.error(err);
@@ -1831,6 +2837,12 @@ export class RenewalDynamicFormComponent {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
         control.options = res.data;
+        if(control.value){
+          const matchingOption = control.options.find((opt: any) => opt.name?.toString().toLowerCase() === control.value?.toString().toLowerCase());
+          if (matchingOption) {
+            control.value = JSON.stringify(matchingOption);
+          }
+        }
       },
       error: (err: any) => {
         console.error(err);
@@ -1974,8 +2986,8 @@ export class RenewalDynamicFormComponent {
 
   setIfscCode(event: any, otherControl: any) {
     const data = JSON.parse(event.target.value);
-    this.renewalFormGroup.get('ifscCode')?.setValue(data.id);
-    this.renewalFormGroup.get('micrCode')?.setValue(data.value);
+    this.dynamicFormGroup.get('ifscCode')?.setValue(data.id);
+    this.dynamicFormGroup.get('micrCode')?.setValue(data.value);
     this.changeMainFormDependentControls(['pennyBtn'], true)
   }
 
@@ -2076,81 +3088,417 @@ export class RenewalDynamicFormComponent {
     }
   }
 
-  getSumInsuredValues(event: any, parentcontrol: any, otherControl: any, agentCode: string) {
-    // console.log("sum insured",event,parentcontrol,otherControl,agentCode);
-
-    // const requestBody={
-    //   "coverType": "string",
-    //   "planType": "string",
-    //   "productId": "string",
-    //   "agentCode": "string",
-    //   "annualIncome": 0
-    // }
-    // this.yatraService.getSumInsuredList(requestBody).subscribe({
-    //   next: (res: any) => {
-    //     // this.ActiveSecureSIvalues = res.data.sumInsuredJson;
-    //     const sumInsuredListValue=JSON.parse(res.data.sumInsuredJson)
-    //     this.ActiveSecureSIvalues = sumInsuredListValue
-    //   },
-    //   error: (err: any) => {
-    //     console.error(err);
-    //   }
-    // });
-    // console.log("active secure values",this.ActiveSecureSIvalues,typeof this.ActiveSecureSIvalues);
-    // const isPos = agentCode.startsWith('pos') ? 1 : 0;
-    // const coverTypeMap: { [key: string]: string } = {
-    //   accident: 'PA',
-    //   criticalIllness: 'CI',
-    //   cancerSecure: 'CC'
-    // };
-
-    // const coverType = coverTypeMap[parentcontrol.name];
-    // console.log("Cover Type:", coverType);
-    // const data = JSON.parse(event.target.value);
-    // console.log("form data in getSumInsuredValues",this.formData);
-
-    // if (coverType) {
-    //   const filteredValues = this.ActiveSecureSIvalues.filter((item:any) =>
-    //     item.planType === data.name && 
-    //     item.isPos === isPos.toString() &&
-    //     item.coverType === coverType
-    //   );
-    //   console.log("Filtered Values:", filteredValues);
-    //   console.log(filteredValues[0].siList);
-    //   if (filteredValues.length > 0) {
-    //     const siList = filteredValues[0].siList;
-    //     this.formData.insuredMemberDetails.forEach((member:any) => {
-    //       const maxAllowedValue = parseInt(member.annualIncome) * 12;    
-    //       const filteredSIList = siList.filter((item: any) => item.value < maxAllowedValue);    
-    //       otherControl.options = filteredSIList;
-    //       console.log(`Assigned Sum Insured Values to otherControl for member ${member.firstName}:`, filteredSIList);
-    //     })
-    //   } else {
-    //     console.log("No matching values found in ActiveSecureSIvalues.");
-    //     otherControl.options = []; // Clear options if no match is found
-    //   }
-    // } else {
-    //   console.log("Invalid coverType for parentcontrol.name:", parentcontrol.name);
-    // }
+  getNatureOfWorkByOccupation(event: any, subControl: any, index: any) {
+    let parsedValue: any;
+    let selectedControl: any;
+    if (event == false) {
+      parsedValue = subControl
+    }
+    else {
+      parsedValue = JSON.parse(event.target.value);
+      selectedControl = subControl;
+    }
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.subControls && formControl.name == index.name) {
+          formControl.subControls.forEach((subControl: any) => {
+            if (subControl.innerSubControls) {
+              subControl.innerSubControls.forEach((innerSubControls: any) => {
+                if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
+                  innerSubControls.coreControls.forEach((coreControl: any) => {
+                    if (parsedValue.name === 'Retired' && coreControl.name == "occupationRisk") {
+                      coreControl.options = [{
+                        "id": "1",
+                        "value": "ND0410",
+                        "name": "Retired"
+                      }]
+                    } else if (parsedValue.name === 'Student' && coreControl.name == "occupationRisk") {
+                      coreControl.options = [{
+                        "id": "1",
+                        "value": "ND0277",
+                        "name": "STUDENT"
+                      }]
+                    } else if (parsedValue.name === 'Not Employed' && coreControl.name == "occupationRisk") {
+                      coreControl.options = [{
+                        "id": "1",
+                        "value": "ND0306",
+                        "name": "Unemployed"
+                      }]
+                    } else if (parsedValue.name === 'HouseWife/Husband' && coreControl.name == "occupationRisk") {
+                      coreControl.options = [{
+                        "id": "1",
+                        "value": "ND0209",
+                        "name": "Housewife"
+                      },
+                      {
+                        "id": "1",
+                        "value": "ND0207",
+                        "name": "Househusband"
+                      }]
+                    } else if ((parsedValue.name === 'Self Employed' || parsedValue.name === 'Salaried') && coreControl.name == "occupationRisk") {
+                      this.yatraService.getNatureOfDuty().subscribe({
+                        next: (res: any) => {
+                          coreControl.options = res.data;
+                        },
+                        error: (err: any) => {
+                          console.error(err);
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        } else if (formControl.dynamicControls) {
+          console.log("index", parsedValue, event, subControl, index, formControl.dynamicControls[index + 1]);
+          if (parsedValue && typeof parsedValue === 'object' && 'name' in parsedValue) {
+            parsedValue = parsedValue.name;
+            index = index + 1;
+          }
+          formControl.dynamicControls[index].forEach((dynamicControl: any) => {
+            if (dynamicControl.name == "productMemberNatureWork") {
+              if (parsedValue == 'Retired' && (dynamicControl.name == "productMemberNatureWork")) {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0410",
+                  "name": "Retired"
+                },]
+              } else if (parsedValue == 'Student' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0277",
+                  "name": "STUDENT"
+                }]
+              } else if (parsedValue == 'Not Employed' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0306",
+                  "name": "Unemployed"
+                }]
+              } else if (parsedValue == 'HouseWife/Husband' && dynamicControl.name == "productMemberNatureWork") {
+                dynamicControl.options = [{
+                  "id": "1",
+                  "value": "ND0209",
+                  "name": "Housewife"
+                },
+                {
+                  "id": "1",
+                  "value": "ND0207",
+                  "name": "Househusband"
+                }]
+              } else if ((parsedValue == 'Self Employed' || parsedValue == 'Salaried') && dynamicControl.name == "productMemberNatureWork") {
+                this.yatraService.getNatureOfDuty().subscribe({
+                  next: (res: any) => {
+                    dynamicControl.options = res.data;
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+              }
+            }
+          })
+        }
+      });
+    });
   }
-  
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
-    console.log(event, control, parentControl, index, subControl, innerControl, indexj);
-    console.log(event.target.value);
-    console.log(typeof event);
 
+  getSumInsured(parentControl: any = null, control: any, subControl: any = null, innerControl: any = null, index: number, event: any = null) {
+    let isPostControlMethod = false;
+    console.log("parameters", parentControl, control, subControl, innerControl, index, event, this.proposer);
+    if (event != null) {
+      event = JSON.parse(event.target.value).name
+    } else {
+      event = parentControl.name == 'accidentPlus' ? 'P4' : 'P1';
+      isPostControlMethod = true
+    }
+    const selectedControl = subControl;
+    const memberWithIncome = this.formData.insuredMemberDetails.find((member: any) => member.annualIncome !== '');
+    if (memberWithIncome) {
+      this.proposer = memberWithIncome.relation;
+    }
+    this.form.formSections.forEach((section: any) => {
+      if (section.sectionTitle === "Optional Covers") {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.subControls && parentControl.name == formControl.name) {
+            formControl.subControls.forEach((subControl: any) => {
+              if (subControl.innerSubControls) {
+                subControl.innerSubControls.forEach((innerSubControls: any) => {
+                  if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
+                    innerSubControls.coreControls.forEach((coreControl: any) => {
+                      if ((innerControl?.name === 'plan') && coreControl.name === "addOnSumInsured") {
+                        let insuredMemberDetails = this.formData.insuredMemberDetails;
+                        index = (parentControl.name === 'accident' || parentControl.name === 'accidentPlus') ? 3 : 1;
+                        if (isPostControlMethod == false) {
+                          const parentGroup = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+                          const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                          const innerSubGroup = controlGroup?.controls[innerSubControls.name] as FormArray;
+                          const targetFormGroup = (innerSubGroup?.controls[index] as FormGroup).value;
+                          let planName = (JSON.parse(targetFormGroup.plan)).name
+                          if (selectedControl.name === this.proposer) {
+                            this.selectedPlan = planName;
+                            Object.keys(controlGroup?.controls || {}).forEach((key) => {
+                              const innerSubGroup = controlGroup?.controls[key] as FormGroup;
+                              if (key) {
+                                if (key !== this.proposer) {
+                                  (innerSubGroup?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                                }
+                              }
+                            });
+                          } else if (selectedControl.name != this.proposer) {
+                            if (event != this.selectedPlan) {
+                              const planControl = ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                              this.toast.error({ detail: "Error", summary: 'Please select the same plan as chosen by the Proposer.', duration: 3000 });
+                              return;
+                            }
+                          }
+                        }
+                        let annualIncome: any;
+                        let isEarning: number = 0;
+                        let memberAge: number = 0;
+                        //without self, unemployed members(who ever don't have annual income) can't take any cover
+                        if (selectedControl.name !== "Self") {
+                          insuredMemberDetails.forEach((member: any) => {
+                            if (member.relation === "Self") {
+                              this.selfAnnualIncome = Number(member.annualIncome);
+                            }
+                          });
+                        }
+                        insuredMemberDetails.forEach((member: any) => {
+                          if (member.relation == selectedControl.name) {
+                            if (member.annualIncome != "") {
+                              annualIncome = Number(member.annualIncome);
+                              isEarning = 1;
+                              memberAge = member.memberAge;
+                            }
+                            else {
+                              annualIncome = this.selfAnnualIncome;
+                              isEarning = 0;
+                              memberAge = member.memberAge;
+
+                            }
+                          }
+                        });
+                        const requestBody = {
+                          "coverType": parentControl.name || "",
+                          "planType": event || "",
+                          "productId": (this.productId).toString() || "",
+                          "agentCode": this.agentCode,
+                          "annualIncome": annualIncome || null,
+                          "occupation": this.selectedOccupation || null,
+                          "relation": selectedControl.name,
+                          "riskClass": this.selectedOccupationRisk || null,
+                          "IsEarning": isEarning || 0,
+                          "memberAge": memberAge || 0
+                        }
+                        this.yatraService.getSumInsuredList(requestBody).subscribe({
+                          next: (res: any) => {
+                            if (this.selfCoverSumInsured) {
+                              const filteredSiList = res.data.siList.filter((item: any) => item.value <= this.selfCoverSumInsured);
+                              console.log("Filtered siList after self Cover Sum insured", filteredSiList);
+                              coreControl.options = filteredSiList;
+                            }
+                            else {
+                              coreControl.options = res.data.siList;
+                              let defaultValue = res.data.siList[0].value;
+                              ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)
+                                ?.controls[innerSubControls.name] as FormArray)?.controls[index + 1] as FormGroup)?.controls[coreControl.name].setValue(defaultValue);
+                            }
+                          },
+                          error: (err: any) => {
+                            console.error(err);
+                          }
+                        });
+                      }
+
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+  getSumInsuredListByPincode(topUpFlag: boolean, policyType: string, pinCode: string) {
+    if (!topUpFlag) return;
+    else {
+      let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+      let topUpProductId;
+      if (planName == 'Plan A') {
+        topUpProductId = '22'
+      } else {
+        topUpProductId = '23'
+      }
+      const reqData = {
+        "pincode": pinCode,
+        agentcode: this.agentCode,
+        productId: topUpProductId
+      }
+      this.commonService.getPinCodeByCity(reqData).subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.data) {
+            if (policyType == 'Family Floater') {
+              const sumInsuredControl = this.dynamicFormGroup.get('sumInsuredForPlan');
+              if (sumInsuredControl) {
+                const sumInsuredList = res.data.sumInsuredList || [];
+                sumInsuredControl.setValue(''); // Reset current value
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'sumInsuredForPlan') {
+                      control.options = sumInsuredList.map((sumInsured: any) => ({
+                        name: sumInsured.name,
+                        value: sumInsured.value,
+                      }));
+                    }
+                  });
+                });
+              }
+              return;
+            }
+            else {
+              const sumInsuredList = res.data.sumInsuredList;
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.dynamicControls) {
+                    formControl.dynamicControls.forEach((controlGroup: any, index: number) => {
+                      controlGroup.forEach((control: any) => {
+                        if (control.name === 'sumInsuredForPlan') {
+                          control.options = sumInsuredList.map((item: any) => ({
+                            name: item.name,
+                            value: item.value,
+                          }));
+                        }
+                      });
+                    });
+                  }
+                });
+              });
+              return;
+            }
+          } else {
+            console.error('Failed to fetch sum Insured details.');
+          }
+        },
+        error: (err: any) => {
+          console.error('Error fetching sum Insured details:', err);
+        }
+      });
+    }
+  }
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null, benefitControl: any = null) {
+    console.log(parentControl,event);
     this.changesMade = true;
     let eventValue = typeof event == 'boolean' ? event : event.target.value;
     if (control.name == 'totalPremium') {
-      this.renewalFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.tenureAmount[this.selectedIndex]);
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == 'Optional Covers') {
+          section.formControls.forEach((Control: any) => {
+            if (Control.name == 'hlthMeter') {
+              Control.visible = this.selectedIndex == 0 ? true : false;
+              if (this.selectedIndex != 0) {
+                this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+                  const hasHLMTR = this.covers[index]?.some((cover: any) => cover.coverId === 'HLMTR');
+
+                  if (hasHLMTR) {
+                    this.changeOverLayDone('', Control, false);
+                    this.changeRecalculate(true);
+                    (((this.dynamicFormGroup.get(Control.name) as FormGroup)?.controls['addOnDetails'] as FormGroup).controls[member.relation] as FormArray).controls[0].get('memberCheckbox')?.setValue(false);
+                    (this.dynamicFormGroup.get(Control.name) as FormGroup)?.get('addOnCover')?.setValue(false);
+                    this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== 'HLMTR');
+                  }
+                })
+              }
+            }
+          });
+        }
+      })
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Health Booster") {
+          section.formControls.forEach((control: any) => {
+            if (control.name == 'sumInsuredMultiply') {
+              control.visible = this.selectedIndex > 0 ? true : false;
+              if (!(this.selectedIndex > 0)) {
+                this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+                  const sumInsuredCover = this.covers[index]?.some((cover: any) => cover.coverId === 'HB-4-SIMULT');
+
+                  if (sumInsuredCover) {
+                    this.changeOverLayDone('', control, false);
+                    this.changeRecalculate(true);
+                    (((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls['addOnDetails'] as FormGroup).controls[member.relation] as FormArray).controls[0].get('memberCheckbox')?.setValue(false);
+                    (this.dynamicFormGroup.get(control.name) as FormGroup)?.get('addOnCover')?.setValue(false);
+                    this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== 'HB-4-SIMULT');
+                  }
+                })
+              }
+            }
+          });
+        }
+      })
+    }
+
+    console.log(event, control, parentControl, index, subControl, innerControl, indexj);
+
+    if (control.name == 'agentId') {
+      const isValidOption = control.options.some((opt: any) => opt.value === eventValue);
+      console.log(isValidOption)
+
+      if (!isValidOption) {
+        this.dynamicFormGroup.get('agentId')?.setErrors({ invalidOption: true });
+        this.toast.warning({
+          detail: "Warning",
+          summary: "Invalid Agent ID selected. Please choose from the given options.",
+          duration: 3000
+        });
+        this.dynamicFormGroup.get(control.name)?.setValue('');
+      }
     }
 
     if (control.name == 'previousPolicyDetails') {
       this.changeRecalculate(true);
     }
+    if (control.name == 'employeeId') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name == "employeeCalculate") {
+            controls.disabled = false;
+          }
+        });
+      });
+    }
+
+    if (control.name == 'affiliateEmployeeId') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name == "employeeAffiliateCalculate") {
+            controls.disabled = false;
+          }
+        });
+      });
+    }
+
+    if (control.name == 'isAbhiEmployee' || control.name == 'isAffiliateEmployee') {
+      const isAbhiEmployeeValue = this.dynamicFormGroup.get('isAbhiEmployee')?.value;
+      const isAbhiAffiliateValue = this.dynamicFormGroup.get('isAffiliateEmployee')?.value;
+      console.log(isAbhiEmployeeValue);
+      if (isAbhiEmployeeValue === 'N' || isAbhiAffiliateValue === 'N') {
+        this.dynamicFormGroup.get('employeeId')?.setValue(null);
+        this.dynamicFormGroup.get('affiliateEmployeeId')?.setValue(null);
+
+        this.formData = {
+          ...this.formData,
+          employeeId: null,
+          affiliateEmployeeId: null,
+        };
+        this.getPremiumAmount();
+      }
+    }
 
     if (control.name == "portingABHIPolicy") {
-      const selectedValue = (((this.renewalFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
+      const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name)?.value;
       if (selectedValue == 'Y') {
         this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
         this.form.formSections.forEach((section: any) => {
@@ -2174,7 +3522,7 @@ export class RenewalDynamicFormComponent {
       //   this.toast.error({ detail: "Error", summary: 'Port will not be allowed for the proposal.', duration: 3000 });
       // } else {
       //   if (parseInt(eventValue) < 1000000) {
-      //     const selectedValue = (((this.renewalFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name) as FormControl;
+      //     const selectedValue = (((this.dynamicFormGroup.get(subControl.name) as FormGroup)).controls[index - 1].get(parentControl.name) as FormGroup).controls[indexj].get(control.name) as FormControl;
       //     selectedValue.setValue(null);
       //     selectedValue.setErrors({ required: true });
       //     this.toast.error({ detail: "Error", summary: 'Sum insured should not be less than 1000000', duration: 3000 });
@@ -2183,188 +3531,175 @@ export class RenewalDynamicFormComponent {
       //   }
       // }
     }
-    if (this.formData.productName === 'Active Secure' && control.name === 'addOnDetails') {
-      if (innerControl.name != "memberCheckbox") {
-        this.parsedValue = JSON.parse(event.target.value);
+    if (this.formData.productName === 'Activ Secure' && control.name === 'addOnDetails') {
+      const selectedControl = subControl;
+      const memberWithIncome = this.formData.insuredMemberDetails.find((member: any) => member.annualIncome !== '');
+      if (memberWithIncome) {
+        this.proposer = memberWithIncome.relation;
       }
-      const selectedControl= subControl;
       this.form.formSections.forEach((section: any) => {
-       if(section.sectionTitle === "Optional Covers"){
-        section.formControls.forEach((formControl: any) => {
-          if (formControl.subControls && parentControl.name == formControl.name) {
-            formControl.subControls.forEach((subControl: any) => {
-              if (subControl.innerSubControls) {
-                subControl.innerSubControls.forEach((innerSubControls: any) => {
-                  if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
-                    innerSubControls.coreControls.forEach((coreControl: any) => {
-                      if ((this.parsedValue && this.parsedValue.name === 'Retired') && coreControl.name == "occupationRisk") {
-                        coreControl.options = [{
-                          "id": "1",
-                          "value": "ND0410",
-                          "name": "Retired"
-                        }]
-                      } else if ((this.parsedValue && this.parsedValue.name === 'STUDENT') && coreControl.name == "occupationRisk") {
-                        coreControl.options = [{
-                          "id": "2",
-                          "value": "ND0277",
-                          "name": "STUDENT"
-                        }]
-                      } else if ((this.parsedValue && this.parsedValue.name === 'Not Employed') && coreControl.name == "occupationRisk") {
-                        coreControl.options = [{
-                          "id": "6",
-                          "value": "ND0306",
-                          "name": "UnEmployed"
-                        }]
-                      } else if ((this.parsedValue && this.parsedValue.name === 'HouseWife/Husband') && coreControl.name == "occupationRisk") {
-                        coreControl.options = [{
-                          "id": "3",
-                          "value": "ND0209",
-                          "name": "Housewife"
-                        },
-                        {
-                          "id": "3",
-                          "value": "ND0207",
-                          "name": "Househusband"
-                        }]
-                      }else if(innerControl.name == "occupation" && coreControl.name == "occupationRisk"){
-                          this.yatraService.getNatureOfDuty().subscribe({
-                            next: (res: any) => {
-                              coreControl.options = res.data;
-                            },
-                            error: (err: any) => {
-                              console.error(err);
+        if (section.sectionTitle === "Optional Covers") {
+          section.formControls.forEach((formControl: any) => {
+            if (formControl.subControls && parentControl.name == formControl.name) {
+              formControl.subControls.forEach((subControl: any) => {
+                if (subControl.innerSubControls) {
+                  subControl.innerSubControls.forEach((innerSubControls: any) => {
+                    if (innerSubControls.coreControls && selectedControl.name == innerSubControls.name) {
+                      innerSubControls.coreControls.forEach((coreControl: any) => {
+                        if (innerControl.name == "addOnSumInsured" || innerControl.name == 'weeklyCashLimit') {
+                          if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus' || parentControl.name == 'criticalIllness' || parentControl.name == 'cancerSecure') {
+                            if (selectedControl.name == this.proposer) {
+                              index = (parentControl.name === 'accident' || parentControl.name === 'accidentPlus') ? 3 : 1;
+                              this.selfCoverSumInsured = Number(event.target.value)
+                              const controlGroup = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup;
+                              if (selectedControl.name === this.proposer) {
+                                Object.keys(controlGroup?.controls || {}).forEach((key) => {
+                                  const innerSubGroup = controlGroup?.controls[key] as FormGroup;
+                                  if (key) {
+                                    if (key !== this.proposer) {
+                                      (innerSubGroup?.controls[index] as FormGroup)?.controls['plan'].setValue('');
+                                      (innerSubGroup?.controls[index + 1] as FormGroup)?.controls['addOnSumInsured'].setValue('');
+                                    }
+                                  }
+                                });
+                              }
+                            }
+                          }
+                          else if (parentControl.name == 'temporaryTotalDisablementBenefit' || parentControl.name == 'loanProtect' || parentControl.name == 'emiProtect') {
+                            if (!this.selfWeeklyLimit) {
+                              this.selfWeeklyLimit = {}; // setting value for every parentControl at staring
+                            }
+                            if (selectedControl.name == 'Self') {
+                              this.selfWeeklyLimit[parentControl.name] = Number(event.target.value);
+                            } else {
+                              if (this.selfWeeklyLimit[parentControl.name]) {
+                                if (Number(event.target.value) > this.selfWeeklyLimit[parentControl.name]) {
+                                  this.toast.error({ detail: "Error", summary: 'Dependent SI should not be greater than Self SI.', duration: 3000 });
+                                  ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                }
+                              } else {
+                                if (parentControl.name == 'temporaryTotalDisablementBenefit') {
+                                  if (Number(event.target.value) > 0) {
+                                    this.toast.error({ detail: "Error", summary: 'Member unable to take TTD cover without Self.', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                  }
+                                }
+                                else {
+                                  let selfMember = this.formData.insuredMemberDetails.some((member: any) => member.relation === 'Self');
+                                  if (Number(event.target.value) > 0 && selfMember) {
+                                    this.toast.error({ detail: "Error", summary: 'Dependent SI should not be greater than Self SI.', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup).controls[innerControl.name].setValue('');
+                                  }
+                                }
+                              }
+                            }
+                          }
+
+                        } else if (innerControl.name == "occupation") {
+                          this.selectedOccupation = JSON.parse(event.target.value).name
+                        } else if (innerControl.name == "occupationRisk") {
+                          this.selectedOccupationRisk = JSON.parse(event.target.value).id
+                          if (this.selectedOccupation == 'Self Employed') {
+                            ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[3] as FormGroup)?.controls['plan'].setValue('');
+                            ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[innerSubControls.name] as FormArray)?.controls[4] as FormGroup)?.controls['addOnSumInsured'].setValue('');
+                          }
+                        }
+                        else if (innerControl.name == 'memberCheckbox' && (parentControl.name == 'accident' || parentControl.name == 'accidentPlus')) {
+                          //without self unemployed(who don't have annual income) members can't take policy
+                          this.formData.insuredMemberDetails.forEach((member: any) => {
+                            if (member.relation == selectedControl.name) {
+                              const selectedMemberCheckboxValue = ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].value;
+                              console.log("selected member checkbox value", selectedMemberCheckboxValue);
+                              if (selectedControl.name !== 'Self' && selectedMemberCheckboxValue == true) {
+                                if (member.annualIncome != "") { }
+                                else {
+                                  const parentGroup = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+                                  const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                                  if (!controlGroup || !controlGroup.controls['Self']) {
+                                    this.toast.warning({ detail: "Error", summary: 'Please contact branch office to login policies where Proposer doesn’t want to be covered in PA', duration: 3000 });
+                                    ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)
+                                      ?.controls[control.name] as FormGroup)
+                                      ?.controls[selectedControl.name] as FormArray)
+                                      ?.controls[0] as FormGroup)
+                                      .controls['memberCheckbox'].setValue(false);
+                                    return;
+                                  }
+                                  const innerSubGroup = controlGroup?.controls['Self'] as FormArray;
+                                  if (innerSubGroup) {
+                                    const controlNames = ["memberCheckbox", "occupation", "occupationRisk", "plan", "addOnSumInsured"];
+                                    let count = 0;
+                                    innerSubGroup.controls.forEach((group, idx) => {
+                                      const controlName = controlNames[idx];
+                                      if (controlName) {
+                                        const value = (group as FormGroup).controls[controlName]?.value;
+                                        console.log(value);
+                                        if (value === true || value !== '') count++;
+                                      }
+                                    });
+                                    if (count < controlNames.length) {
+                                      this.toast.warning({ detail: "Error", summary: 'Please Select the Proposer', duration: 3000 });
+                                      ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[selectedControl.name] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].setValue(false)
+                                    }
+                                  }
+                                }
+                              } else if (selectedControl.name == 'Self' && selectedMemberCheckboxValue == false) {
+                                //whenever self membercheckbox is false, if any unemployed(who don't have annual income) membercheckbox is true , setting as false                                
+                                this.formData.insuredMemberDetails.forEach((member: any) => {
+                                  if (member.reletion != 'Self') {
+                                    const selectedValue = ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[member.relation] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].value;
+                                    if (member.annualIncome != '') { }
+                                    else {
+                                      if (selectedValue == true) {
+                                        ((((this.dynamicFormGroup.get(formControl.name) as FormGroup)?.controls[control.name] as FormGroup)?.controls[member.relation] as FormArray)?.controls[0] as FormGroup).controls['memberCheckbox'].setValue(false)
+                                      }
+                                    }
+                                  }
+                                });
+                              }
                             }
                           });
-                      }
-                      else if (innerControl.name ==='plan' && coreControl.name === "addOnSumInsured") {
-                        let insuredMemberDetails = this.formData.insuredMemberDetails;
-                        let annualIncome: any;
-                        if(selectedControl.name !== "Self"){
-                          insuredMemberDetails.forEach((member:any) => {
-                            if (member.relation === "Self") {
-                              this.selfAnnualIncome = Number(member.annualIncome);
-                            }
-                          }); 
                         }
-                        insuredMemberDetails.forEach((member:any) => {
-                          if(member.relation == selectedControl.name){
-                            if(member.annualIncome!= ""){
-                              annualIncome =  Number(member.annualIncome); 
-                            }
-                            else{
-                              annualIncome=this.selfAnnualIncome
-                            }
+                        else if (innerControl.name == 'weeklyCashLimit' && coreControl.name === "addOnSumInsured" && parentControl.name == 'temporaryTotalDisablementBenefit') {
+                          let sumInsured = Number(event.target.value) * 100
+                          const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
+                          const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+                          if (innerSubControls.name !== "demoType" && innerSubControls.name !== "doneButton") {
+                            const innerSubGroup = controlGroup?.controls[innerSubControls.name] as FormArray;
+                            const targetFormGroup = innerSubGroup?.controls[index + 1] as FormGroup;
+                            const coreControls = targetFormGroup?.controls[coreControl.name].setValue(sumInsured);
                           }
-                        });                     
-                        const requestBody={
-                          "coverType": parentControl.name || "",
-                          "planType": JSON.parse(event.target.value).name || "",
-                          "productId": (this.productId).toString()||"",
-                          "agentCode":this.agentCode,
-                          "annualIncome":annualIncome || 0
                         }
-                        this.yatraService.getSumInsuredList(requestBody).subscribe({
-                          next: (res: any) => {
-                            coreControl.options = res.data.siList;
-                          },
-                          error: (err: any) => {
-                            console.error(err);
-                          }
-                        });
-                      }
-                      else if (innerControl.name == "memberCheckbox" && coreControl.name == "occupation") {
-                        if (selectedControl.name == "Self") {
-                          coreControl.options = [{
-                            "id": "1",
-                            "value": "O464",
-                            "name": "Retired"
-                          },
-                          {
-                            "id": "3",
-                            "value": "O553",
-                            "name": "Salaried"
-                          },
-                          {
-                            "id": "6",
-                            "value": "O556",
-                            "name": "Self Employed"
-                          }]
-                        } else {
-                          coreControl.options = [{
-                            "id": "1",
-                            "value": "O464",
-                            "name": "Retired"
-                          },
-                          {
-                            "id": "2",
-                            "value": "O490",
-                            "name": "Student"
-                          },
-                          {
-                            "id": "6",
-                            "value": "O554",
-                            "name": "Not Employed"
-                          },
-                          {
-                            "id": "3",
-                            "value": "O555",
-                            "name": "HouseWife/Husband"
-                          }]
-                        }
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-       }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
       });
     }
     if (control.name == 'physicalcopy' && control.type == 'radio') {
-      const selectedValue = this.renewalFormGroup.get(control.name)?.value;
+      const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'decl2') {
+            const decl2Control = this.dynamicFormGroup.get('decl2');
             if (selectedValue === 'Y') {
-              this.renewalFormGroup.get('decl2')?.setValue(false);
+              decl2Control?.setValue(false);
+              decl2Control?.disable();
             } else if (selectedValue === 'N') {
-              this.renewalFormGroup.get('decl2')?.setValue(true);
+              decl2Control?.setValue(true);
+              decl2Control?.disable();
             }
           }
         })
       })
     }
-
-    if (parentControl?.name === "wellnessCoach") {
-      let memberDetails = this.renewalFormGroup.get(parentControl.name)?.get(control.name)?.value;
-      console.log("member details", memberDetails)
-      // Check if all member checkboxes are selected
-      let areAllSelected = Object.keys(memberDetails).every(
-        key => memberDetails[key][0].memberCheckbox === true
-      );
-
-      if (areAllSelected) {
-        // Deselect all checkboxes
-        Object.keys(memberDetails).forEach(key => {
-          memberDetails[key][0].memberCheckbox = false;
-        });
-      } else {
-        // Select all checkboxes if not all are selected
-        Object.keys(memberDetails).forEach(key => {
-          memberDetails[key][0].memberCheckbox = true;
-        });
-      }
-      this.renewalFormGroup.get(parentControl.name)?.get(control.name)?.setValue(memberDetails);
-    }
-
-
     if (control.name == 'confAccountNumber') {
-
-      if (this.renewalFormGroup.get('confAccountNumber')?.value != this.renewalFormGroup.get('accountNumber')?.value) {
+      if (this.dynamicFormGroup.get('confAccountNumber')?.value != this.dynamicFormGroup.get('accountNumber')?.value) {
         this.toast.error({ detail: "Error", summary: 'AccountNumber and Confirm confAccountNumber should be matched', duration: 3000 });
-        const idNumberControl = this.renewalFormGroup.get('confAccountNumber');
+        const idNumberControl = this.dynamicFormGroup.get('confAccountNumber');
         idNumberControl?.setValidators([
           Validators.required
         ]);
@@ -2374,9 +3709,9 @@ export class RenewalDynamicFormComponent {
       }
 
     }
-    if (control.name == 'correspondentPincode') {
-      this.getCityStateByPinByCorressponding();
-    }
+    // if (control.name == 'correspondentPincode') {
+    //   this.getCityStateByPinByCorressponding();
+    // }
 
     if (control.name == 'hospiCashCoverDetails') {
       console.log(subControl, event.target.checked, this.activeMemberTabIndex);
@@ -2406,7 +3741,7 @@ export class RenewalDynamicFormComponent {
         else {
           const checkbox = event.target as HTMLInputElement;
           checkbox.checked = false;
-          const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+          const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
           const memberGroup = formArray.at(index) as FormGroup;
           const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
           const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
@@ -2441,7 +3776,7 @@ export class RenewalDynamicFormComponent {
               const familyMemberAge = this.calculateAge(event.target.value);
               console.log(familyMemberAge);
 
-              const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+              const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
               const memberGroup = formArray.at(index) as FormGroup;
               const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
               const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
@@ -2468,13 +3803,13 @@ export class RenewalDynamicFormComponent {
       if (control.type === 'radio') {
         let selectedValue = '';
         if (parentControl == null)
-          selectedValue = this.renewalFormGroup.get(control.name)?.value;
+          selectedValue = this.dynamicFormGroup.get(control.name)?.value;
         else if (parentControl != null && index != null) {
           if (subControl == null && innerControl != null) {
-            selectedValue = (this.renewalFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
           }
           else
-            selectedValue = (this.renewalFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+            selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
         }
 
         eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
@@ -2501,25 +3836,39 @@ export class RenewalDynamicFormComponent {
           this.resolveMethod(control.onChangeMethod, dependent, eventValue);
         }
       }
-      // else {
-      //   // If not a radio control, just resolve using the control
-      //   this.resolveMethod(control.onChangeMethod, control, eventValue);
-      // }
-
-
-      if (control.type === 'select') {
-        const selectedValue = this.renewalFormGroup.get(control.name)?.value;
+      else if (control.type === 'select') {
+        const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
         if (control.dependentControls) {
           this.resolveMethod(control.onChangeMethod, control, eventValue);
         }
         else if (control.onChangeMethod == 'setDeductibleAmount') {
           this.resolveMethod(control.onChangeMethod, control, parentControl, index);
         }
+        else if (control.onChangeMethod == 'getSumInsuredListByPincode') {
+          let topUpFlag = this.dynamicFormGroup.get('benefitTopUpPlan')?.value
+          let policyType = this.dynamicFormGroup.get('memberPolicyType')?.value
+          let pinCode = this.dynamicFormGroup.get('proposerPincode')?.value.toString() || 0;
+          this.resolveMethod(control.onChangeMethod, topUpFlag, policyType, pinCode);
+        }
         else if (control.onChangeMethod == 'changeMainFormDependentControls') {
           if (!control.dependentControls) {
-            const selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
+            let selectedOption;
+            if (control.name == 'paymentOption') {
+              selectedOption = control.options.find((option: any) => option.value === selectedValue);
+            }
+            else {
+              selectedOption = control.options.find((option: any) => option.value === JSON.parse(selectedValue).value);
+            }
             this.resolveMethod(control.onChangeMethod, selectedOption.dependentControls)
           }
+        }
+        else if (control.onChangeMethod == 'changeChronicCondition' || control.onChangeMethod == 'checkPortabilityApplicable') {
+          this.resolveMethod(control.onChangeMethod, control, selectedValue);
+        } else if (control.onChangeMethod == 'getNatureOfWorkByOccupation') {
+          this.resolveMethod(control.onChangeMethod, event, control, index, parentControl);
+        }
+        else if (control.onChangeMethod == 'setForSelfMember') {
+          this.setForSelfMember(control, eventValue);
         }
         else {
           eventValue = selectedValue === 'Others' ? true : false;
@@ -2530,21 +3879,31 @@ export class RenewalDynamicFormComponent {
           this.resolveMethod(control.onChangeMethod, selectedOption?.dependentControls, eventValue);
         }
       } else {
-        this.resolveMethod(control.onChangeMethod, control, eventValue);
+        this.resolveMethod(control.onChangeMethod, control, eventValue, parentControl, index);
+      }
+    }
+
+    if (control.name == 'customerId') {
+      if (eventValue.length == 8) {
+        this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+        this.resolveMethod(control.methodName, control, eventValue);
+      }
+      else {
+        this.changeMainFormDependentControls(control.dependentControls, false, control.name);
       }
     }
     // else if (innerControl != null && innerControl.onChangeMethod) {
     //   if (innerControl.type === 'radio') {
-    //     console.log(this.renewalFormGroup);
+    //     console.log(this.dynamicFormGroup);
     //     let selectedValue = '';
     //     if (parentControl == null)
-    //       selectedValue = this.renewalFormGroup.get(control.name)?.value;
+    //       selectedValue = this.dynamicFormGroup.get(control.name)?.value;
     //     else if (parentControl != null && index != null) {
     //       if (subControl == null && innerControl != null) {
-    //         selectedValue = (this.renewalFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
+    //         selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.get(innerControl.name)?.value;
     //       }
     //       else
-    //         selectedValue = (this.renewalFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+    //         selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
     //     }
     //     console.log(selectedValue);
 
@@ -2580,15 +3939,68 @@ export class RenewalDynamicFormComponent {
       this.resolveMethod(parentControl.onChangeMethod);
     }
     if (innerControl != null && innerControl.onChangeMethod) {
-      this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
-    }
+      if (innerControl.onChangeMethod == 'changeHospiCoverDependentControls') {
+        if (innerControl.type === 'radio') {
+          console.log(this.dynamicFormGroup);
+          let selectedValue = '';
+          if (parentControl == null)
+            selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+          else if (parentControl != null && index != null) {
+            if (subControl == null && innerControl != null && indexj != null) {
+              const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+              if (parentArray && parentArray.controls[index]) {
+                const childArray = parentArray.controls[index].get(control.name) as FormArray;
+                if (childArray && childArray.controls[indexj]) {
+                  selectedValue = childArray.controls[indexj].get(innerControl.name)?.value;
+                }
+              }
 
+              //  ((this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name) ? as FormArray).controls[indexj].get(innerControl.name)?.value;
+            }
+            else
+              selectedValue = (this.dynamicFormGroup.get(parentControl.name) as FormArray)?.controls[index - 1].get(control.name)?.value
+          }
+          console.log(selectedValue);
+
+          eventValue = selectedValue === 'yes' || selectedValue === 'Y' ? true : false;
+
+          let selectedOption;
+          // Find the selected option by value
+          if (innerControl != null) {
+            selectedOption = innerControl.radioOptions.find((option: any) => option.value === selectedValue);
+          }
+          else {
+            selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+          }
+
+          // Check if the control or the selected option has dependentControls
+          const dependent = control.dependentControls
+            ? control.dependentControls
+            : selectedOption?.dependentControls ?? control;
+
+          console.log(dependent);
+
+
+          if (parentControl != null && index != null) {
+            this.resolveMethod(innerControl.onChangeMethod, dependent, eventValue, control.name, parentControl.name, index, innerControl.name, indexj);
+          }
+        }
+      } else if (innerControl.onChangeMethod == 'getNatureOfWorkByOccupation') {
+        //let occupationData = JSON.parse(event.target.value).name;
+        this.resolveMethod(innerControl.onChangeMethod, event, subControl, parentControl);
+      } else if (innerControl.onChangeMethod == 'getSumInsured') {
+        this.resolveMethod(innerControl.onChangeMethod, parentControl, control, subControl, innerControl, index, event)
+      }
+      else {
+        this.resolveMethod(innerControl.onChangeMethod, event, innerControl, control, parentControl, index, indexj, subControl);
+      }
+    }
     if (parentControl == null && control.name == 'ifscCode') {
-      const ifscCodeDetails = this.renewalFormGroup.get('ifscCode')?.value || '';
+      const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value || '';
       if (!ifscCodeDetails) {
         // Clear the bankName and micrCode fields
-        this.renewalFormGroup.get('bankName')?.setValue('');
-        this.renewalFormGroup.get('micrCode')?.setValue('');
+        this.dynamicFormGroup.get('bankName')?.setValue('');
+        this.dynamicFormGroup.get('micrCode')?.setValue('');
         return; // Exit the function
       }
       if (ifscCodeDetails.length == 11) {
@@ -2609,13 +4021,13 @@ export class RenewalDynamicFormComponent {
                   this.form.formSections.forEach((section: any) => {
                     section.formControls.forEach((formControl: any) => {
                       if (formControl.name == "bankName" && formControl.onChangeMethod) {
-                        this.renewalFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                        this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
                       } else if (formControl.name == "bankName") {
-                        this.renewalFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+                        this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
                       }
                     });
                   });
-                  this.renewalFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+                  this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
 
                   if (response.data.bankName) {
                     const cityReqData = { cityName: "", bankName: response.data.bankName };
@@ -2643,7 +4055,7 @@ export class RenewalDynamicFormComponent {
                             });
                           });
                         }
-                        this.renewalFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
+                        this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
                         const branchReqData = {
                           bankName: response.data.bankName,
                           cityName: response.data.cityName
@@ -2673,7 +4085,7 @@ export class RenewalDynamicFormComponent {
                                 });
                               });
                             }
-                            this.renewalFormGroup.get('bankBranch')?.setValue(JSON.stringify(branchObj) || '');
+                            this.dynamicFormGroup.get('bankBranch')?.setValue(JSON.stringify(branchObj) || '');
                           },
                           error: (err) => {
                             console.error('Error fetching branch details', err);
@@ -2758,14 +4170,14 @@ export class RenewalDynamicFormComponent {
         });
         // Clear age control value if DOB is invalid
         if (parentControl != null && index != null) {
-          const ageControl = this.renewalFormGroup.get(parentControl.name);
+          const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
             ageControl.value[index][control.dependentControls[0]] = "";
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
-            this.renewalFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
           }
         } else {
-          const ageControl = this.renewalFormGroup.get(control.dependentControls[0]);
+          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
           if (ageControl) {
             ageControl.setValue("");
             ageControl.markAsTouched();
@@ -2776,44 +4188,48 @@ export class RenewalDynamicFormComponent {
       else if (year.toString().length === 4) {
         // Valid year: Proceed with age calculation and form patching if DOB is valid
         if (parentControl != null && index != null) {
-          const ageControl = this.renewalFormGroup.get(parentControl.name);
+          const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
             ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
-            this.renewalFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
           }
         } else {
-          const ageControl = this.renewalFormGroup.get(control.dependentControls[0]);
+          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
           if (dob && ageControl) {
             ageControl.markAsTouched();
             const age = this.calculateAge(dob);
             ageControl.setValue(age);
           }
+          this.setForSelfMember(control, eventValue);
         }
       }
     }
 
     if (parentControl == null && control.name == 'zoneValue') {
       const selectedZone = control.options.find((option: any) =>
-        option.value == this.renewalFormGroup.get(control.name)?.value
+        option.value == this.dynamicFormGroup.get(control.name)?.value
       );
       if (selectedZone) {
-        this.renewalFormGroup.get('zone')?.setValue(selectedZone.name);
+        this.dynamicFormGroup.get('zone')?.setValue(selectedZone.name);
       }
     } else if (parentControl != null && parentControl.dynamicControls) {
       if (parentControl.dynamicControls.length > index + 1) {
         parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
           if (dynamicControl.name == 'zoneValue' && dynamicControl.options) {
             const selectedZone = dynamicControl.options.find((option: any) =>
-              option.value == (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.value
+              option.value == (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.value
             );
             if (selectedZone) {
-              (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(selectedZone.name);
+              (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(selectedZone.name);
             }
           }
         });
 
         if (parentControl.type == 'details') {
+          if (this.isQuote) {
+            this.isQuote = false;
+          }
           this.changeRecalculate(true);
         }
       }
@@ -2821,7 +4237,7 @@ export class RenewalDynamicFormComponent {
 
 
     if (parentControl == null && control.name == 'proposerPincode') {
-      const pinCodeLength = this.renewalFormGroup.get('proposerPincode')?.value.toString().length || 0;
+      const pinCodeLength = this.dynamicFormGroup.get('proposerPincode')?.value.toString().length || 0;
       if (pinCodeLength === 6) {
         const reqData = {
           "pincode": event.target.value,
@@ -2833,38 +4249,45 @@ export class RenewalDynamicFormComponent {
         this.commonService.getPinCodeByCity(reqData).subscribe({
           next: (res) => {
             if (res.isSuccess && res.data) {
-              // Update city and state fields
-              this.renewalFormGroup.get('city')?.setValue(res.data.city || '');
-              this.renewalFormGroup.get('state')?.setValue(res.data.state || '');
+              this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
+              this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
 
-              const zoneControl = this.renewalFormGroup.get('zone');
-              const zoneControlValue = this.renewalFormGroup.get('zoneValue');
+              const zoneControl = this.dynamicFormGroup.get('zone');
+              const zoneControlValue = this.dynamicFormGroup.get('zoneValue');
+              if (this.isQuote) {
+                this.isQuote = false;
+              }
               if (zoneControl) {
                 zoneControl.setValue(res.data.zone || '');
               }
               // zoneControl.enable();
               if (zoneControlValue) {
                 zoneControlValue.setValue(res.data.zoneValue);
+                const isZoneValueDisabled = this.form.formSections.some((section: any) =>
+                  section.formControls.some((control: any) => control.name === 'zoneValue' && control.disabled === true)
+                );
+
+                if (isZoneValueDisabled) {
+                  zoneControlValue.disable();
+                } else {
+                  zoneControlValue.enable();
+                }
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
                     if (control.name === 'zoneValue') {
                       control.options = res.data.upgradableZones;
-                      // .forEach((zoneOption: any) => {
-                      //   control.options.push({
-                      //     name: zoneOption.zone,
-                      //     value: zoneOption.zoneCode
-                      //   });
-                      // });
 
-                      // control.visible = true;
                     }
                   });
                 });
               }
 
-              const sumInsuredControl = this.renewalFormGroup.get('sumInsured');
+              const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+              let sumInsuredList: { name: string, value: any }[] = [];
+              console.log(sumInsuredControl);
+
               if (sumInsuredControl) {
-                const sumInsuredList = res.data.sumInsuredList || [];
+                sumInsuredList = res.data.sumInsuredList || [];
                 sumInsuredControl.setValue(''); // Reset current value
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
@@ -2879,19 +4302,87 @@ export class RenewalDynamicFormComponent {
                 });
               }
 
+              const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+              if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater' && insuredMemberDetails?.length > 0) {
+                insuredMemberDetails.controls.forEach((memberGroup: any) => {
+                  memberGroup.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                  memberGroup.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                  memberGroup.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                  memberGroup.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
+                  memberGroup.get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                })
+              }
+              else if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' && insuredMemberDetails?.length > 0) {
+                insuredMemberDetails.controls.forEach((memberGroup: any, idx: number) => {
+                  if (memberGroup.get('relation')?.getRawValue() == 'Self') {
+                    memberGroup.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                    memberGroup.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                    memberGroup.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                    memberGroup.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
+                    memberGroup.get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                    memberGroup.get('upgradableZones')?.setValue(res.data.upgradableZones);
+                    this.form.formSections.forEach((section: any) => {
+                      section.formControls.forEach((control: any) => {
+                        if (control.name === 'insuredMemberDetails' && control.dynamicControls) {
+
+                          if(control.dynamicControls[idx + 1]){
+                            control.dynamicControls[idx + 1].forEach((dynamicFormControl: any) => {
+
+                              if (dynamicFormControl.name === 'zoneValue') {
+                                dynamicFormControl.options = res.data.upgradableZones;
+                                
+                              }
+                              if (dynamicFormControl.name === 'sumInsured') {
+                                dynamicFormControl.options = sumInsuredList.map((sumInsured: any) => ({
+                                  name: sumInsured.name,
+                                  value: sumInsured.value,
+                                }));
+  
+                                // Get the current value of sumInsured
+                                const currentValue = memberGroup.get('sumInsured')?.value;
+  
+                                // Check if currentValue exists in options
+                                const isValidValue = dynamicFormControl.options.some(
+                                  (option: any) => option.value === currentValue
+                                );
+  
+                                // If valid, set the current value; otherwise, set the first option
+                                const newValue = isValidValue ? currentValue : dynamicFormControl.options[0]?.value;
+  
+                                // Set values accordingly
+                                memberGroup.get('sumInsured')?.setValue(newValue);
+                                memberGroup.get('upgradableSumInsured')?.setValue(dynamicFormControl.options);
+                                if (!isValidValue) {
+                                  this.changeRecalculate(true);
+                                }
+                              }
+                            });
+                          }
+
+                          console.log(control.dynamicControls[idx + 1]);
+
+                          // control.options = sumInsuredList.map((sumInsured: any) => ({
+                          //   name: sumInsured.name,
+                          //   value: sumInsured.value,
+                          // }));
+                          // console.log(control.options);
+                        }
+                      });
+                    });
+                  }
+                })
+              }
+
 
             } else {
               console.error('Failed to fetch zone details.');
-              this.resetZoneAndLocationFields();
             }
           },
           error: (err: any) => {
             console.error('Error fetching zone details:', err);
-            this.resetZoneAndLocationFields();
           }
         });
-      } else {
-        this.resetZoneAndLocationFields();
       }
 
     }
@@ -2909,17 +4400,26 @@ export class RenewalDynamicFormComponent {
           this.commonService.getPinCodeByCity(reqdata).subscribe({
             next: (res: any) => {
               if (res.isSuccess && res.data) {
-
                 if (res.data.upgradableZones.length > 0) {
                   const zoneOptions = res.data.upgradableZones;
                   parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                     if (dynamicControl.name == 'zoneValue') {
                       dynamicControl.options = zoneOptions;
+                      const isZoneValueDisabled = parentControl.dynamicControls[index + 1].some(
+                        (ctrl: IDynamicControl) => ctrl.name === 'zoneValue' && ctrl.disabled === true
+                      );
+
+                      if (isZoneValueDisabled) {
+                        (this.dynamicFormGroup.get(parentControl.name) as FormArray)
+                          .controls[index].get('upgradableZones')?.disable();
+                      } else {
+                        (this.dynamicFormGroup.get(parentControl.name) as FormArray)
+                          .controls[index].get('upgradableZones')?.enable();
+                      }
                     }
                   });
-                  (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableZones')?.setValue(zoneOptions);
+                  (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableZones')?.setValue(zoneOptions);
                 }
-
                 const sumInsuredList = res.data.sumInsuredList;
                 parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
                   if (dynamicControl.name === 'sumInsured') {
@@ -2929,48 +4429,19 @@ export class RenewalDynamicFormComponent {
                     }));
                   }
                 });
-                (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableSumInsured')?.setValue(sumInsuredList);
-                // parentControl.dynamicControls[index + 1].forEach((dynamicControl: IDynamicControl) => {
-                //   if (dynamicControl.name == 'sumInsured') {
-                //     dynamicControl.options = sumInsuredList.map((item: any) => ({
-                //       name: item.name,
-                //       value: item.value,
-                //     }));
-                //   }
-                // });
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('upgradableSumInsured')?.setValue(sumInsuredList);
 
-
-                (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
-                (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(res.data.zone);
-                (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('city')?.setValue(res.data.city);
-                (this.renewalFormGroup.get(parentControl.name) as FormArray).controls[index].get('state')?.setValue(res.data.state);
-
-                // // Locate the `zone` control and update its options
-                // const zoneControl = dynamicControls.find(dc => dc.name === 'zone');
-                // if (zoneControl) {
-                //   zoneControl.options = zoneOptions;
-                //   zoneControl.value = currentZoneCode;
-                // }
-
-                // const patchObject: { [key: string]: any } = {
-                //   city: res.data.city || '',
-                //   state: res.data.state || '',
-                //   zone: currentZoneName,
-                // };
-                // let formArray: any = this.renewalFormGroup.get(parentControl.name)?.value;
-                // if (formArray && Array.isArray(formArray)) {
-                //   formArray[memberIndex] = { ...formArray[memberIndex], ...patchObject };
-                //   this.renewalFormGroup.get(parentControl.name)?.patchValue(formArray);
-                // }
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zoneValue')?.setValue(res.data.zoneValue);
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('zone')?.setValue(res.data.zone);
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('city')?.setValue(res.data.city);
+                (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get('state')?.setValue(res.data.state);
               } else {
-                this.resetDynamicZoneFields(parentControl, index);
+                this.toast.warning({ detail: "Warning", summary: res.message, duration: 3000 });
               }
-              // this.renewalFormGroup.get(parentControl.name)?.patchValue(formArray);
-              // this.spinner.hide();
             },
             error: (err: any) => {
               this.toast.warning({ detail: "Warning", summary: err, duration: 3000 });
-              this.resetDynamicZoneFields(parentControl, index);
+              // this.resetDynamicZoneFields(parentControl, index);
             }
           });
         }
@@ -2992,16 +4463,13 @@ export class RenewalDynamicFormComponent {
     if (parentControl == null && control.name === 'preFix') {
       const selectedPrefix = event.target.value;
       if (selectedPrefix === 'Mr') {
-        this.renewalFormGroup.get('proposerGender')?.setValue('M');
+        this.dynamicFormGroup.get('proposerGender')?.setValue('M');
       }
       else if (selectedPrefix === 'Mrs' || selectedPrefix === 'Ms' || selectedPrefix === 'Miss') {
-        this.renewalFormGroup.get('proposerGender')?.setValue('F');
+        this.dynamicFormGroup.get('proposerGender')?.setValue('F');
       }
       else if (selectedPrefix === 'Mx' || selectedPrefix === 'Others') {
-        this.renewalFormGroup.get('proposerGender')?.setValue('O');
-      }
-      else {
-        this.renewalFormGroup.get('proposerGender')?.setValue('-');
+        this.dynamicFormGroup.get('proposerGender')?.setValue('O');
       }
     }
     if (control.name == "chequeDate") {
@@ -3011,14 +4479,14 @@ export class RenewalDynamicFormComponent {
         const formattedDate = currentDate.toISOString().split('T')[0]; // Format to yyyy-MM-dd
         event.target.value = formattedDate; // Reset the input value to current date
         control.value = formattedDate; // Update the control's value
-        this.renewalFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
+        this.dynamicFormGroup.get(control.name)?.setValue(formattedDate); // Update the FormControl              
       }
     }
     if (control.name === "dateOfDiagnosis") {
       const inputValue = event.target.value;
       if (!inputValue) {
         control.value = null;
-        this.renewalFormGroup.get(control.name)?.setValue(null);
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
         return;
       }
       const inputDate = new Date(inputValue);
@@ -3026,15 +4494,53 @@ export class RenewalDynamicFormComponent {
       if (isNaN(inputDate.getTime())) {
         event.target.value = '';
         control.value = null;
-        this.renewalFormGroup.get(control.name)?.setValue(null);
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
         this.toast.warning({ detail: "Warning", summary: "Invalid date format.", duration: 3000 });
         return;
       }
       if (inputDate > currentDate) {
         event.target.value = '';
         control.value = null;
-        this.renewalFormGroup.get(control.name)?.setValue(null);
+        this.dynamicFormGroup.get(control.name)?.setValue(null);
         this.toast.warning({ detail: "Warning", summary: "Date cannot be in the future.", duration: 3000 });
+      }
+    }
+    if (control.type == 'radio' && control.dependentControls) {
+      console.log((event.target as HTMLInputElement).value);
+      parentControl.innerControls.forEach((element: any) => {
+        if (control.dependentControls.includes(element.name)) {
+          element.visible = !element.visible;
+        }
+      });
+    }
+    if (control.name == 'proposerGender') {
+      // let targetControl;
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'preFix') {
+            this.updatePrefixBasedOnGender(formControl);
+          }
+        })
+
+      })
+      this.toast.warning({ detail: "Warning", summary: "Your Premium will been revised on basis on gender", duration: 3000 });
+    }
+    if (parentControl == null && (control.name === 'sumInsured' || control.name === 'sumInsuredForPlan')) {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+      if (this.isQuote == true) {
+        this.isQuote = false;
+      }
+      if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater' && insuredMemberDetails?.length > 0) {
+        insuredMemberDetails.controls.forEach((memberGroup: any) => {
+          if (control.name === 'sumInsured') {
+            memberGroup.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+          }
+          else if (control.name === 'sumInsuredForPlan') {
+            memberGroup.get('sumInsuredForPlan')?.setValue(this.dynamicFormGroup.get('sumInsuredForPlan')?.value);
+          }
+        })
+        this.changeRecalculate(true);
       }
     }
   }
@@ -3060,33 +4566,6 @@ export class RenewalDynamicFormComponent {
 
     return `${age}`;
   }
-
-
-
-
-
-  // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
-  //   let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
-
-  //   if (methodName == 'addOrRemoveAdditionalInsuredMember') {
-  //     filteredArgs = filteredArgs.slice(-1);
-
-  //   } else if (filteredArgs[filteredArgs.length - 1] == 'add' || filteredArgs[filteredArgs.length - 1] == 'remove') {
-  //     filteredArgs.pop();
-  //   }
-
-
-  //   const method = (this as any)[methodName] as Function;
-  //   if (method && typeof method === 'function') {
-  //     // method.bind(this)(...filteredArgs);
-  //     await Promise.resolve(method.bind(this)(...filteredArgs));
-  //     if (methodName == 'getProposerRelationship') {
-
-  //     }
-  //   } else {
-  //     console.error(`Method ${methodName} not found`);
-  //   }
-  // }
 
   async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
 
@@ -3115,7 +4594,7 @@ export class RenewalDynamicFormComponent {
         // If the result is a Promise, await it; otherwise, wrap it in Promise.resolve()
         if (result && typeof result.then === 'function') {
           await result; // It's already a Promise, so await it
-        } else {
+        } else if (result != undefined) {
           await Promise.resolve(result); // Wrap non-Promise results into a Promise
         }
 
@@ -3135,22 +4614,18 @@ export class RenewalDynamicFormComponent {
 
 
   handlePolicyTypeChange(control: any, planType: string | null = null): void {
-    console.log(this.form);
-    console.log(planType, control, this.renewalFormGroup.value);
+    // const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
+    // const pincodeControl = this.dynamicFormGroup.get('pincode');
+    // if (sumInsuredControl || pincodeControl) {
 
     if (planType == null)
       planType = control.value;
-    console.log(control);
     setTimeout(() => {
 
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
           if (formControl.name == 'insuredMembers') {
-            console.log(this.formData, this.form);
-
-            if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS') && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS')) {
-              console.log(planType);
-
+            if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS' || this.formData.productVariant == "Preferred 1") && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS' && this.formData.productVariant != "Preferred 1")) {
               this.resetInsuredMembers(control, planType);
               this.getProposerRelationship(formControl);
             }
@@ -3159,13 +4634,18 @@ export class RenewalDynamicFormComponent {
         });
       });
     }, 0);
+
+
+    // }
+    // else {
+    //   console.error('Sum Insured Control or Pincode Control not found in dynamicFormGroup.');
+    // }
+
   }
 
   resetInsuredMembers(control: any, planType: any) {
-    console.log("member ->",this.form, control, planType,"member <-");
-
-    this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(0);
-    // this.renewalFormGroup.removeControl('insuredMemberDetails');
+    this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
+    this.dynamicFormGroup.removeControl('insuredMemberDetails');
     if (planType === 'Multi Individual') {
 
       if (control.dependentControls)
@@ -3188,16 +4668,17 @@ export class RenewalDynamicFormComponent {
     else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
-      // console.log(this.form);
 
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle == "Insured Member Details") {
-          section.formControls[0].visible = false;
-          section.formControls[1].visible = true;
-          while (section.formControls[0].dynamicControls.length > 1) {
-            section.formControls[0].dynamicControls.pop();
+          if (section.formControls.length > 1) {
+            section.formControls[0].visible = false;
+            section.formControls[1].visible = true;
+            while (section.formControls[0].dynamicControls.length > 1) {
+              section.formControls[0].dynamicControls.pop();
+            }
+            section.visible = false;
           }
-          section.visible = false;
         }
       });
     }
@@ -3213,7 +4694,7 @@ export class RenewalDynamicFormComponent {
             section.formControls[0].dynamicControls.pop();
           }
 
-          while (section.formControls[1].dynamicControls.length > 1) {  
+          while (section.formControls[1].dynamicControls.length > 1) {
             section.formControls[1].dynamicControls.pop();
           }
 
@@ -3222,8 +4703,104 @@ export class RenewalDynamicFormComponent {
     }
   }
 
+  // setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
+  //   const eventValue = childControl.value;
+  //   this.form.formSections.forEach((section: any) => {
+  //     section.formControls.forEach((formControl: any) => {
+  //       if (formControl.dynamicControls && formControl.visible) {
+  //         // Check if dynamicControls[index] exists
+  //         if (formControl.dynamicControls[index]) {
+  //           formControl.dynamicControls[index].forEach((control: any) => {
+  //             if (control.name == childControl.otherControlName) {
+  //               if (control.validators && childControl.validationRules) {
+  //                 // Create a new array for validators to avoid mutating the original
+  //                 const newValidators: IValidator[] = control.validators.filter(
+  //                   (val: IValidator) => val.validatorName === 'required'
+  //                 );
+
+  //                 console.log(this.formData, eventValue, childControl.validationRules);
+
+  //                 // Determine the appropriate validation rule based on eventValue
+  //                 let rule;
+  //                 if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
+  //                   /^niece\d*$/i.test(eventValue) ||
+  //                   /^grand-son\d*$/i.test(eventValue) ||
+  //                   /^grand-daughter\d*$/i.test(eventValue)) {
+  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+  //                 }
+  //                 // else if ((/^nephew\d*$/i.test(eventValue) ||
+  //                 //   /^niece\d*$/i.test(eventValue) ||
+  //                 //   /^grand-son\d*$/i.test(eventValue) ||
+  //                 //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+  //                 //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+  //                 // }
+  //                 else {
+  //                   rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
+  //                 }
+
+  //                 if (rule) {
+  //                   newValidators.push(rule);
+  //                 }
+
+  //                 const formControlInstance = this.dynamicFormGroup.get(control.name);
+  //                 control.validators = newValidators;
+  //                 if (formControlInstance) {
+  //                   const validators = newValidators
+  //                     .map(val => {
+  //                       if (val.validatorName === 'pattern' && val.pattern) {
+  //                         return Validators.pattern(val.pattern);
+  //                       }
+  //                       if (val.validatorName === 'required') {
+  //                         return Validators.required;
+  //                       }
+  //                       return null;
+  //                     })
+  //                     .filter((v): v is ValidatorFn => v !== null);
+
+  //                   formControlInstance.setValidators(validators);
+  //                   formControlInstance.updateValueAndValidity();
+  //                 }
+  //               }
+  //             }
+  //           });
+  //         }
+  //       }
+  //     });
+  //   });
+
+  //   // You can now set validators for the control using Angular's Form API, if needed
+  //   // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
+  //   // if (memberAgeControl) {
+  //   //   memberAgeControl.setValidators(newValidators.map(val => /* mapping logic to Angular Validators */));
+  //   //   memberAgeControl.updateValueAndValidity();
+  //   // }
+  // }
+
+
+  //different Implementation
   setupRelationshipTypeValidation(childControl: IFormControl, index: any) {
+    console.log(childControl);
+
     const eventValue = childControl.value;
+    let rule: any = null;
+
+    this.form.formSections.forEach((innerSection: any) => {
+      innerSection.formControls.forEach((innerControl: any) => {
+        if (innerControl.name === 'insuredMembers' && innerControl.selectCheckboxOptions) {
+          const matchingOption = innerControl.selectCheckboxOptions.find(
+            (option: any) => option.name === eventValue
+          );
+          if (matchingOption && matchingOption.validationRule) {
+            rule = JSON.parse(matchingOption.validationRule);
+          }
+        }
+      });
+    });
+
+    console.log(rule);
+
+
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.dynamicControls && formControl.visible) {
@@ -3240,25 +4817,28 @@ export class RenewalDynamicFormComponent {
                   console.log(this.formData, eventValue, childControl.validationRules);
 
                   // Determine the appropriate validation rule based on eventValue
-                  let rule;
-                  if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue)) {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-                  }
-                  else if ((/^nephew\d*$/i.test(eventValue) ||
-                    /^niece\d*$/i.test(eventValue) ||
-                    /^grand-son\d*$/i.test(eventValue) ||
-                    /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
-                  }
-                  else {
-                    rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
-                  }
+
+                  // if (/^son\d*$/i.test(eventValue) || /^daughter\d*$/i.test(eventValue) || /^nephew\d*$/i.test(eventValue) ||
+                  //   /^niece\d*$/i.test(eventValue) ||
+                  //   /^grand-son\d*$/i.test(eventValue) ||
+                  //   /^grand-daughter\d*$/i.test(eventValue)) {
+                  //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  // }
+                  // // else if ((/^nephew\d*$/i.test(eventValue) ||
+                  // //   /^niece\d*$/i.test(eventValue) ||
+                  // //   /^grand-son\d*$/i.test(eventValue) ||
+                  // //   /^grand-daughter\d*$/i.test(eventValue)) && this.formData['productName'] == 'Activ One VYTL') {
+                  // //   rule = childControl.validationRules.find((rule: any) => rule.type === 'child');
+                  // // }
+                  // else {
+                  //   rule = childControl.validationRules.find((rule: any) => rule.type === 'adult');
+                  // }
 
                   if (rule) {
                     newValidators.push(rule);
                   }
 
-                  const formControlInstance = this.renewalFormGroup.get(control.name);
+                  const formControlInstance = this.dynamicFormGroup.get(control.name);
                   control.validators = newValidators;
                   if (formControlInstance) {
                     const validators = newValidators
@@ -3284,28 +4864,32 @@ export class RenewalDynamicFormComponent {
       });
     });
 
-
+    // You can now set validators for the control using Angular's Form API, if needed
+    // const memberAgeControl = (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(childControl.otherControlName);
+    // if (memberAgeControl) {
+    //   memberAgeControl.setValidators(newValidators.map(val => /* mapping logic to Angular Validators */));
+    //   memberAgeControl.updateValueAndValidity();
+    // }
   }
 
-
   increment(controlName: any, childControlName: any) {
-    const currentValue = this.renewalFormGroup.get(controlName)?.value;
-    this.renewalFormGroup.get(controlName)?.setValue(currentValue + 1);
+    const currentValue = this.dynamicFormGroup.get(controlName)?.value;
+    this.dynamicFormGroup.get(controlName)?.setValue(currentValue + 1);
     this.form.formSections.forEach(formsection => {
       formsection.formControls.forEach(formControl => {
         if (formControl.dynamicControls && formControl.name == childControlName) {
           let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
           formControl.dynamicControls.push(tempDynamicControl)
-          let formArr = this.renewalFormGroup.get(childControlName) as FormArray;
+          let formArr = this.dynamicFormGroup.get(childControlName) as FormArray;
           formArr.push(this.initializeDynamicFormControls(tempDynamicControl));
         }
       });
     });
   }
   decrement(controlName: any, childControlName: any) {
-    const currentValue = this.renewalFormGroup.get(controlName)?.value;
+    const currentValue = this.dynamicFormGroup.get(controlName)?.value;
     if (currentValue > 0) {
-      this.renewalFormGroup.get(controlName)?.setValue(currentValue - 1);
+      this.dynamicFormGroup.get(controlName)?.setValue(currentValue - 1);
       this.form.formSections.forEach(formsection => {
         formsection.formControls.forEach(formControl => {
           if (formControl.dynamicControls && formControl.name == childControlName) {
@@ -3313,23 +4897,23 @@ export class RenewalDynamicFormComponent {
           }
         });
       });
-      let formArr = this.renewalFormGroup.get(childControlName) as FormArray;
+      let formArr = this.dynamicFormGroup.get(childControlName) as FormArray;
       formArr.removeAt(formArr.length - 1);
     }
   }
 
 
-  incrementMember(event: any, control: IFormControl, option: any) {   
+  incrementMember(event: any, control: IFormControl, option: any) {
     // Prevent event propagation to the checkbox
     event.stopPropagation();
-    const formGroup = this.renewalFormGroup.get(control.name) as FormGroup;
+    const formGroup = this.dynamicFormGroup.get(control.name) as FormGroup;
     let index = parseInt(option.value.slice(-1), 10);
-    if (index >= 4  && this.formData.productName === 'Active Secure') {
-      this.toast.warning({detail: "Warning",summary: "You can select a maximum of 4 sons or daughters for Active Secure.",duration: 3000});
+    if (index >= 4 && this.formData.productName === 'Activ Secure') {
+      this.toast.warning({ detail: "Warning", summary: "You can select a maximum of 4 sons or daughters for Activ Secure.", duration: 3000 });
       return;
     }
     index += 1;
-    if ((index <= 4 && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.renewalFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.renewalFormGroup.get('memberPolicyType')?.value == 'Individual') {
+    if ((index <= 4 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Individual') {
       const baseName = option.value.replace(/\d+$/, '');
       const newControlName = baseName + index;
       // Add the new control with a unique name
@@ -3367,25 +4951,125 @@ export class RenewalDynamicFormComponent {
     }
   }
 
+  // getProposerRelationship(control: IFormControl): Promise<any> {
+  //   // Showing the spinner before making the API call
+  //   this.spinner.show();
+
+  //   // Wrapping the asynchronous operation in a promise
+  //   return new Promise((resolve, reject) => {
+  //     const reqData = {
+  //       agencyCode: this.partnerId,
+  //       insuranceTypeCode: 101,
+  //       productId: this.productId,
+  //       policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
+  //     };
+
+
+  //     // Calling the API service
+  //     this.service.GetProposerRelationships(reqData).subscribe({
+  //       next: (res) => {
+
+  //         // Prepare form group
+  //         const controlGroup = this.fb.group({});
+
+  //         // For each relationship option, add a control
+  //         res.relationShip.forEach((option: any) => {
+  //           controlGroup.addControl(option.value, new FormControl(false));
+  //         });
+
+  //         // Remove previous insuredMembers control
+  //         this.dynamicFormGroup.removeControl('insuredMembers');
+
+  //         // Add validators
+  //         let controlValidators: any = [];
+  //         control.validators?.forEach((val: IValidator) => {
+  //           if (val.validatorName === 'required') controlValidators.push(Validators.required);
+  //           if (val.validatorName === 'email') controlValidators.push(Validators.email);
+  //           if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+  //           if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+  //           if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+  //         });
+
+  //         // controlGroup.setValidators([...controlValidators, this.addCustomValidation()]);
+  //         // controlGroup.updateValueAndValidity();
+  //         // controlGroup.setErrors({ required: true });
+
+  //         // Add the new insuredMembers control
+  //         this.dynamicFormGroup.addControl(control.name, controlGroup);
+
+
+  //         // Update control with the fetched options
+  //         control.selectCheckboxOptions = res.relationShip;
+
+  //         if (this.isQuote) {
+  //           this.form.formSections.forEach((section: any) => {
+  //             section.formControls.forEach((control: any) => {
+  //               if (control.name == 'insuredMembers') {
+  //                 //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+  //                 control.selectCheckboxOptions.forEach((option: any) => {
+  //                   if (this.formData.insuredMembers[option.value] === true) {
+  //                     // Call logSelection function (pass null for event if not triggering through UI)
+  //                     this.logSelection(null, option, control);
+  //                   }
+  //                 })
+  //               }
+  //             })
+
+  //           })
+  //         }
+  //         // Hide the spinner once the response is processed
+  //         this.spinner.hide();
+  //         this.flattenObject(this.formData);
+
+
+
+  //         // Resolve the promise when API response is processed successfully
+  //         resolve(res);
+  //       },
+  //       error: (err) => {
+  //         console.error(err);
+  //         this.spinner.hide();
+
+  //         // Reject the promise on error
+  //         reject(err);
+  //       }
+  //     });
+  //   });
+  // }
+
   getProposerRelationship(control: IFormControl): Promise<any> {
-
-    console.log("member proposer called");
-
-
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
       const reqData = {
-        productId: "1",
-        policyType: this.renewalFormGroup.get('memberPolicyType')?.value,
+        productId: this.productId.toString(),
+        policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
       };
 
-      console.log(reqData);
 
       // API call wrapped in pipe
       this.yatraService.GetProposerRelationships(reqData).pipe(
         tap((res: any) => {
-          console.log(res, "API Response Received");
 
+          // const proposerGender = this.formData.proposerGender; // Get proposerGender from formData
+
+          // res.data.relationShip.forEach((relation: any) => {
+          //   if (proposerGender === "F") {
+          //     if (relation.value === "Self") {
+          //       relation.imagePath = "assets/Spouse.png"; // Change Self to Spouse.png
+          //     } else if (relation.value === "Spouse") {
+          //       relation.imagePath = "assets/Self.png"; // Change Spouse to Self.png
+          //     }
+          //   } else {
+          //     // If proposerGender is Male, keep images unchanged
+          //     if (relation.value === "Self") {
+          //       relation.imagePath = "assets/Self.png";
+          //     } else if (relation.value === "Spouse") {
+          //       relation.imagePath = "assets/Spouse.png";
+          //     }
+          //   }
+          // });
+
+          // Add validators
           let controlValidators: any = [];
           control.validators?.forEach((val: IValidator) => {
             if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -3395,90 +5079,118 @@ export class RenewalDynamicFormComponent {
             if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
           });
 
-          const formDataRelations = Object.keys(this.formData.insuredMembers)
-            .filter(
-              (relation) =>
-                !res.data.relationShip.some((option: any) => option.value === relation)
-            )
-            .map((relation) => {
-              const baseName = relation.replace(/\d+$/, '');
-              const imagePath = res.data.relationShip.find(
-                (option: any) => option.value.startsWith(baseName)
-              )?.imagePath || ''; // Get the imagePath if available
+          if (this.isQuote || this.quickQuoteRedirect || this.isPolicyDetailsFetch || this.formData.policyNumber) {
 
-              const id = res.data.relationShip.find(
-                (option: any) => option.value.startsWith(baseName)
-              )?.id || '';
-              return {
-                id,
-                value: relation,
-                name: relation,
-                isIncrement: false, // Default; will update dynamically
-                imagePath,
+            // Process formData.insuredMembers for additional relations
+            const formDataRelations = Object.keys(this.formData.insuredMembers)
+              .filter(
+                (relation) =>
+                  !res.data.relationShip.some((option: any) => option.value === relation)
+              )
+              .map((relation) => {
+                const baseName = relation.replace(/\d+$/, '');
+                const imagePath = res.data.relationShip.find(
+                  (option: any) => option.value.startsWith(baseName)
+                )?.imagePath || ''; // Get the imagePath if available
 
-              };
+                const id = res.data.relationShip.find(
+                  (option: any) => option.value.startsWith(baseName)
+                )?.id || '';
+                return {
+                  id,
+                  value: relation,
+                  name: relation,
+                  isIncrement: false, // Default; will update dynamically
+                  imagePath,
+
+                };
+              });
+
+
+            // Merge API and formData relations
+            const mergedOptions = [...res.data.relationShip];
+
+
+            const groupedRelations: Record<string, any[]> = mergedOptions.reduce((acc: Record<string, any[]>, option: any) => {
+              const baseName = option.value.replace(/\d+$/, ''); // Remove numeric suffix
+              const isNumericSuffix = /\d$/.test(option.value); // Check if last character is a number
+
+              // Only include relations with numeric suffix (e.g., Son1, Son2, Daughter1, etc.)
+              if (isNumericSuffix) {
+                if (!acc[baseName]) acc[baseName] = [];
+                acc[baseName].push(option);
+              }
+              return acc;
+            }, {});
+            // Ensure each option has a unique `id` and update `isIncrement` logic
+            Object.values(groupedRelations).forEach((group) => {
+              group.forEach((relation, idx) => {
+                // Only the last member in the group gets the increment button
+                relation.isIncrement = idx === group.length - 1;
+              });
+            });
+            // Update control options with merged and processed options
+            control.selectCheckboxOptions = mergedOptions;
+
+            // Prepare form group
+            const controlGroup = this.fb.group({});
+
+            // For each relationship option, add a control
+            control.selectCheckboxOptions.forEach((option: any) => {
+              controlGroup.addControl(option.value, new FormControl(false));
             });
 
-          console.log(formDataRelations);
+            // Remove previous insuredMembers control
+            this.dynamicFormGroup.removeControl('insuredMembers');
 
-          // Merge API and formData relations
-          const mergedOptions = [...res.data.relationShip, ...formDataRelations];
-
-          console.log(mergedOptions)
-
-          const groupedRelations: Record<string, any[]> = mergedOptions.reduce((acc: Record<string, any[]>, option: any) => {
-            const baseName = option.value.replace(/\d+$/, ''); // Remove numeric suffix
-            const isNumericSuffix = /\d$/.test(option.value); // Check if last character is a number
-
-            // Only include relations with numeric suffix (e.g., Son1, Son2, Daughter1, etc.)
-            if (isNumericSuffix) {
-              if (!acc[baseName]) acc[baseName] = [];
-              acc[baseName].push(option);
-            }
-            return acc;
-          }, {});
-
-          console.log(groupedRelations);
-
-
-          // Ensure each option has a unique `id` and update `isIncrement` logic
-          Object.values(groupedRelations).forEach((group) => {
-            group.forEach((relation, idx) => {
-              // Only the last member in the group gets the increment button
-              relation.isIncrement = idx === group.length - 1;
+            // Add the new insuredMembers control
+            this.dynamicFormGroup.addControl(control.name, controlGroup);
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((control: any) => {
+                if (control.name === 'insuredMembers') {
+                  // Loop the options and see if the option has value true in the insuredMembers in formData
+                  control.selectCheckboxOptions.forEach((option: any) => {
+                    if (this.formData.insuredMembers[option.value] === true) {
+                      // Call logSelection function (pass null for event if not triggering through UI)
+                      this.logSelection(null, option, control);
+                    }
+                  });
+                }
+              });
             });
-          });
+            this.flattenObject(this.formData);
+            // this.setInsuredMemberAndDetailsControlsValue(this.formData);
+          }
+          else {
 
-          console.log(mergedOptions);
+            // Update control with the fetched options
+            control.selectCheckboxOptions = res.data.relationShip;
 
+            // Prepare form group
+            const controlGroup = this.fb.group({});
 
-          // Update control options with merged and processed options
-          control.selectCheckboxOptions = mergedOptions;
+            // For each relationship option, add a control
+            control.selectCheckboxOptions?.forEach((option: any) => {
+              controlGroup.addControl(option.value, new FormControl(false));
+            });
 
-          // Prepare form group
-          const controlGroup = this.fb.group({});
+            // Remove previous insuredMembers control
+            this.dynamicFormGroup.removeControl('insuredMembers');
 
-          // For each relationship option, add a control
-          control.selectCheckboxOptions.forEach((option: any) => {
-            controlGroup.addControl(option.value, new FormControl(false));
-          });
+            // Add the new insuredMembers control
+            this.dynamicFormGroup.addControl(control.name, controlGroup);
+          }
 
-          // Remove previous insuredMembers control
-          this.renewalFormGroup.removeControl('insuredMembers');
+          // if (this.isPolicyDetailsFetch) {
 
-          // Add the new insuredMembers control
-          this.renewalFormGroup.addControl(control.name, controlGroup);
+          // }
 
-          console.log(control);
-          console.log(this.formData, this.form, this.renewalFormGroup);
-
-          this.flattenObject(this.formData);
-
+          // Process formData for flattening if needed
 
         }),
         tap(() => {
           // Hide the spinner once the response is processed
-          // this.spinner.hide();
+          this.spinner.hide();
         })
       ).subscribe({
         next: (res) => {
@@ -3488,13 +5200,69 @@ export class RenewalDynamicFormComponent {
         error: (err) => {
           // Hide the spinner and handle error
           console.error(err);
-          // this.spinner.hide();
+          this.spinner.hide();
 
           // Reject the promise on error
           reject(err);
         }
       });
     });
+  }
+
+  setInsuredMemberAndDetailsControlsValue(formData: any) {
+    console.log(formData, this.dynamicFormGroup.value);
+    const insuredMemberGroup = this.dynamicFormGroup.get('insuredMembers');
+    const insuredMemberDetailsArray = this.dynamicFormGroup.get('insuredMemberDetails');
+    if (insuredMemberGroup && insuredMemberGroup instanceof FormGroup) {
+      Object.keys(formData.insuredMembers).forEach((key: any) => {
+        insuredMemberGroup.get(key)?.setValue(formData.insuredMembers[key]);
+      })
+    }
+    if (insuredMemberDetailsArray && insuredMemberDetailsArray instanceof FormArray) {
+      formData.insuredMemberDetails.forEach((obj: any) => {
+        // Find the matching index in the FormArray
+        const index = insuredMemberDetailsArray.controls.findIndex((control) => {
+          const relationshipType = control.get('relationshipType')?.value;
+          const relation = control.get('relation')?.value;
+
+          let parsedRelationshipValue: string | null = null;
+
+          // Check if relationshipType is a string that needs parsing
+          if (typeof relationshipType === "string") {
+            try {
+              const parsedRelationship = JSON.parse(relationshipType);
+              parsedRelationshipValue = parsedRelationship?.value?.toLowerCase() || null;
+            } catch (error) {
+              console.warn("Error parsing relationshipType:", error);
+            }
+            // Compare with obj.relation (case insensitive)
+            return parsedRelationshipValue === obj.relation.toLowerCase() || relation?.toLowerCase() === obj.relation.toLowerCase();
+          }
+          return false;
+        });
+
+        // If a match is found, update the corresponding FormGroup
+        if (index !== -1) {
+          console.log(obj);
+
+          Object.keys(obj).forEach((key2) => {
+            const memberControl = insuredMemberDetailsArray.at(index).get(key2) as any;
+            console.log(memberControl, obj[key2]);
+            if (memberControl && !(memberControl instanceof FormGroup)) {
+              memberControl?.setValue(obj[key2]);
+            }
+            else if (memberControl && (memberControl instanceof FormGroup)) {
+              Object.keys(obj[key2]).forEach((key3) => {
+                const innerControl = memberControl.get(key3);
+                if (innerControl) {
+                  innerControl.setValue(obj[key2][key3]);
+                }
+              })
+            }
+          });
+        }
+      });
+    }
   }
 
   private getValidators(control: IFormControl) {
@@ -3512,14 +5280,14 @@ export class RenewalDynamicFormComponent {
 
   addCustomValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const controlGroup = this.renewalFormGroup.get('insuredMembers') as FormGroup;
-      if (controlGroup && this.renewalFormGroup.get('planType')?.value == 'Multi Individual') {
+      const controlGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
+      if (controlGroup && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
         const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
           key => controlGroup.controls[key].value === true
         );
         return hasAtLeastOneSelected ? null : { required: true };
       }
-      else if (controlGroup && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      else if (controlGroup && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
         const selectedCount = Object.keys(controlGroup.controls).filter(
           key => controlGroup.controls[key].value === true
         ).length;
@@ -3532,281 +5300,307 @@ export class RenewalDynamicFormComponent {
   }
 
   logSelection(event: Event | null, option: any, controls: any) {
-    console.log(option,this.familyPair,this.selectedFamilyPair);
-    // const checkbox = event.target as HTMLInputElement;
-    const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
-    if (option.pairKey) {
-      if (this.familyPair == '' || option.pairKey == this.familyPair) {
-        if (checkbox.checked == true) {
-          this.familyPair = option.pairKey;
-          this.selectedFamilyPair.push(option.name);
+      console.log(option, this.familyPair, this.selectedFamilyPair);
+      // const checkbox = event.target as HTMLInputElement;
+      const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
+      if (option.pairKey) {
+        if (this.familyPair == '' || option.pairKey == this.familyPair) {
+          if (checkbox.checked == true) {
+            this.familyPair = option.pairKey;
+            this.selectedFamilyPair.push(option.name);
+          }
+          else {
+            const labelIndex = this.selectedFamilyPair.indexOf(option.name);
+            if (labelIndex > -1) {
+              this.selectedFamilyPair.splice(labelIndex, 1);
+            }
+  
+            if (this.selectedFamilyPair.length === 0) {
+              this.familyPair = '';
+            }
+          }
         }
-        else{
-          const labelIndex = this.selectedFamilyPair.indexOf(option.name);
-          if (labelIndex > -1) {
-            this.selectedFamilyPair.splice(labelIndex, 1);
-          }
-
-          if (this.selectedFamilyPair.length === 0) {
-            this.familyPair = '';
-          }
+        else {
+          checkbox.checked = false;
+          console.log(controls);
+          this.dynamicFormGroup.get(controls.name)?.get(option.name)?.setValue(false);
+          this.toast.warning({ detail: "Warning", summary: "Invalid family combination", duration: 3000 });
+          return;
         }
       }
-      else {
+      if (event != null) {
+        this.isQuote = false;
+        this.quickQuoteRedirect = false;
+        // this.changeRecalculate(true);
+      }
+      if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+        this.toast.warning({ detail: "Warning", summary: "Cannot select more than 4 childrens", duration: 3000 });
         checkbox.checked = false;
-        console.log(controls);
-        this.renewalFormGroup.get(controls.name)?.get(option.name)?.setValue(false);
-        this.toast.warning({ detail: "Warning", summary: "Invalid family combination", duration: 3000 });
         return;
       }
-    }
-    if (event != null) {
-      this.isQuote = false;
-      this.quickQuoteRedirect = false;
-      this.changeRecalculate(true);
-    }
-    if (this.kidCount >= 4 && checkbox.checked && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "Warning", summary: "Cannot select more than 4 childrens", duration: 3000 });
-      checkbox.checked = false;
-      return;
-    }
-    else {
-      this.form.formSections.forEach(formsection => {
-        formsection.formControls.forEach(formControl => {
-          if (checkbox.checked == true) {
-            // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
-            //   formControl.value = "";
-            //   this.renewalFormGroup.get("totalPremium")?.setValue("");
-            // }
-
-            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-              if (option.value.includes('Son') || option.value.includes('Daughter')) {
-                this.kidCount++;
-              }
-              formsection.visible = true;
-              if ((this.isQuote == true && this.isPolicyDetailsFetch) || this.quickQuoteRedirect == true) {
-                formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
-                this.isQuote = false;
-                this.quickQuoteRedirect == false;
-              }
-              let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              console.log(tempControl)
-              tempControl[0].value = JSON.stringify(option);
-              tempControl[1].value = option.value;
-              tempControl[2].value = option.memberRelationCode;
-              if (this.isQuote || this.quickQuoteRedirect) {
-                tempControl.forEach((temp) => {
-                  console.log(this.formData);
-
-                  if (temp.name == 'zoneValue') {
-                    temp.options = this.formData['upgradableZones'];
-                  }
-                  if (temp.name == 'sumInsured') {
-                    this.formData['insuredMemberDetails']?.forEach((member: any) => {
-                      if (member.relation === option.value) {
-                        temp.options = member.upgradableSumInsured;
-                      }
-                    });
-                  }
-                })
-              }
-              console.log(this.form);
-
-              if (option.gender) {
-                tempControl.forEach((temp) => {
-                  if (temp.name == 'memberGender') {
-                    temp.value = option.gender;
-                    temp.disabled = true;
-                  }
-                })
-              }
-              else {
-                const proposerGender = this.renewalFormGroup.get('proposerGender')?.value;
-
-                tempControl.forEach((temp) => {
-                  if (temp.name === 'memberGender') {
-                    if (option.name === 'Self') {
-                      temp.value = proposerGender;
-                      temp.disabled = true;
-                    } else if (proposerGender !== 'O') {
-                      temp.value = proposerGender === 'M' ? 'F' : 'M';
-                      temp.disabled = true;
+      else {
+        this.form.formSections.forEach(formsection => {
+          formsection.formControls.forEach(formControl => {
+            if (checkbox.checked == true) {
+              // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
+              //   formControl.value = "";
+              //   this.dynamicFormGroup.get("totalPremium")?.setValue("");
+              // }
+              // console.log(option, 'option')
+              if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
+                if (option?.value?.includes('Son') || option?.value?.includes('Daughter')) {
+                  this.kidCount++;
+                }
+                formsection.visible = true;
+                if ((this.isQuote == true && this.isPolicyDetailsFetch) || this.quickQuoteRedirect == true) {
+                  formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
+                  this.isQuote = false;
+                  this.quickQuoteRedirect == false;
+                }
+                console.log(formControl.dynamicControls[0], 'formcontrol')
+                let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+                tempControl[0].value = JSON.stringify(option);
+                tempControl[1].value = option.value;
+                tempControl[2].value = option.value;
+                if (this.isQuote || this.quickQuoteRedirect) {
+                  tempControl.forEach((temp) => {
+                    console.log(this.formData);
+  
+                    if (temp.name == 'zoneValue') {
+                      temp.options = this.formData['upgradableZones'];
                     }
-                    // If proposerGender is 'O' and not 'Self', do nothing (no value set, no disable).
-                  }
+                    if (temp.name == 'sumInsured') {
+                      this.formData['insuredMemberDetails']?.forEach((member: any) => {
+                        if (member.relation === option.value) {
+                          temp.options = member.upgradableSumInsured;
+                        }
+                      });
+                    }
+                  })
+                }
+                console.log(this.form);
+  
+                if (option.gender) {
+                  tempControl.forEach((temp) => {
+                    if (temp.name == 'memberGender') {
+                      temp.value = option.gender;
+                      // temp.disabled = true;
+                    }
+                  })
+                }
+                else {
+                  const proposerGender = this.dynamicFormGroup.get('proposerGender')?.value;
+  
+                  tempControl.forEach((temp) => {
+                    if (temp.name === 'memberGender') {
+                      if (option.name === 'Self') {
+                        temp.value = proposerGender;
+                        // temp.disabled = true;
+                      } else if (proposerGender !== 'O') {
+                        temp.value = proposerGender === 'M' ? 'F' : 'M';
+                        // temp.disabled = true;
+                      }
+                      // If proposerGender is 'O' and not 'Self', do nothing (no value set, no disable).
+                    }
+                  });
+                }
+  
+                formControl.dynamicControls?.push(tempControl);
+                console.log(formControl, 'formControl1')
+                // Assuming formControl.dynamicControls is an array of arrays with objects
+                formControl.dynamicControls.forEach(array => {
+                  // Loop through each array within dynamicControls
+                  array.forEach(item => {
+                    // Check if the object has the key 'name' and its value is 'sumInsured'
+                    if (item.label === 'Sum Insured') {
+                      console.log(item, 'item')
+                      // Assign the 'options' to the found object
+                      item.options = [
+                        { "name": "500000", "value": 500000 },
+                        { "name": "700000", "value": 700000 },
+                        { "name": "1000000", "value": 1000000 },
+                        { "name": "1500000", "value": 1500000 },
+                        { "name": "2000000", "value": 2000000 },
+                        { "name": "2500000", "value": 2500000 },
+                        { "name": "5000000", "value": 5000000 },
+                        { "name": "7500000", "value": 7500000 },
+                        { "name": "10000000", "value": 10000000 },
+                        { "name": "20000000", "value": 20000000 }
+                      ];
+                    }
+  
+                  });
                 });
-              }
-
-              formControl.dynamicControls?.push(tempControl);
-              let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-              // let formArr;
-
-              if (formArr != null) {
-                formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1, formControl));
-              }
-              else {
-                formArr = this.fb.array([]);
-                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1, formControl));
-                this.renewalFormGroup.addControl(controls.idProperty, formArr);
-              }
-
-
-
-              if (checkbox.checked == true && option.value == 'Self') {
-                // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
-                let index = -1;
-                let memberupgradableZones: IOptions[] = [];
-                let zoneWiseSI: IOptions[] = [];
-                if (formControl.dynamicControls) {
-                  for (let i = 0; i < formControl.dynamicControls.length; i++) {
-                    let element = formControl.dynamicControls[i];
-                    try {
-                      let parsedValue = JSON.parse(element[0].value);
-                      if (parsedValue.value === option.value) {
-                        element.forEach((control: any) => {
-                          if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName') {
-                            control.disabled = true
-                          }
-                          if (control.name == 'zoneValue') {
-                            this.form.formSections.forEach(formSection => {
-                              formSection.formControls.forEach(formcontrol => {
-                                if (formcontrol.name == control.name) {
-                                  control.options = formcontrol.options;
-                                  memberupgradableZones = formcontrol.options || [];
-                                }
-                              });
-                            });
-                          }
-                          if (control.name == 'sumInsured') {
-                            this.form.formSections.forEach(formSection => {
-                              formSection.formControls.forEach(formcontrol => {
-                                if (formcontrol.name == control.name) {
-                                  control.options = formcontrol.options;
-                                  zoneWiseSI = formcontrol.options || [];
-                                }
-                              });
-                            });
-                          }
-                        })
-                        index = i;
-                        break;
+  
+                let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                // let formArr;
+  
+                if (formArr != null) {
+                  formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                  formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1, formControl));
+                }
+                else {
+                  formArr = this.fb.array([]);
+                  formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1, formControl));
+                  this.dynamicFormGroup.addControl(controls.idProperty, formArr);
+                }
+  
+  
+  
+                if (checkbox.checked == true && option.value == 'Self') {
+                  // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
+                  let index = -1;
+                  let memberupgradableZones: IOptions[] = [];
+                  let zoneWiseSI: IOptions[] = [];
+                  if (formControl.dynamicControls) {
+                    for (let i = 0; i < formControl.dynamicControls.length; i++) {
+                      let element = formControl.dynamicControls[i];
+                      try {
+                        // let parsedValue = JSON.parse(element[0].value);
+                        // if (parsedValue.value === option.value) {
+                        //   element.forEach((control: any) => {
+                        //     if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName') {
+                        //       control.disabled = true
+                        //     }
+                        //     if (control.name == 'zoneValue') {
+                        //       this.form.formSections.forEach(formSection => {
+                        //         formSection.formControls.forEach(formcontrol => {
+                        //           if (formcontrol.name == control.name) {
+                        //             control.options = formcontrol.options;
+                        //             memberupgradableZones = formcontrol.options || [];
+                        //           }
+                        //         });
+                        //       });
+                        //     }
+                        //     if (control.name == 'sumInsured') {
+                        //       this.form.formSections.forEach(formSection => {
+                        //         formSection.formControls.forEach(formcontrol => {
+                        //           if (formcontrol.name == control.name) {
+                        //             control.options = formcontrol.options;
+                        //             zoneWiseSI = formcontrol.options || [];
+                        //           }
+                        //         });
+                        //       });
+                        //     }
+                        //   })
+                        //   index = i;
+                        //   break;
+                        // }
+                      } catch (e) {
+                        console.error('Error parsing JSON:', e);
                       }
-                    } catch (e) {
-                      console.error('Error parsing JSON:', e);
                     }
                   }
+  
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.markAsTouched();
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('annualIncome')?.setValue(this.dynamicFormGroup.get('annualIncome')?.value);
+                  // if (this.dynamicFormGroup.get('occupation')) {
+                  //   if (this.dynamicFormGroup.get('occupation')?.value != '')
+                  //     (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
+                  // }
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableSumInsured')?.setValue(zoneWiseSI);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(zoneWiseSI);
+                  // const ageControl = this.dynamicFormGroup.get(controls.idProperty);
+                  // if(ageControl){
+                  // ageControl.value[index-1]['memberAge'] = this.dynamicFormGroup.get('memberAgeProposer')?.value;
+                  // this.dynamicFormGroup.get(controls.idProperty)?.patchValue(ageControl.value);
+                  // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+  
+  
+                  // }
+  
+  
                 }
-
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.renewalFormGroup.get('memberDobProposer')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.renewalFormGroup.get('memberAgeProposer')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.markAsTouched();
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.renewalFormGroup.get('proposerGender')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.renewalFormGroup.get('proposerPincode')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('city')?.setValue(this.renewalFormGroup.get('city')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zone')?.setValue(this.renewalFormGroup.get('zone')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.renewalFormGroup.get('zoneValue')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.renewalFormGroup.get('emailId')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.renewalFormGroup.get('firstName')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.renewalFormGroup.get('middleName')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.renewalFormGroup.get('lastName')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.renewalFormGroup.get('mobileNumber')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.renewalFormGroup.get('preFix')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.renewalFormGroup.get('height')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.renewalFormGroup.get('weight')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.renewalFormGroup.get('heightInches')?.value);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('annualIncome')?.setValue(this.renewalFormGroup.get('annualIncome')?.value);
-                if (this.renewalFormGroup.get('occupation')) {
-                  if (this.renewalFormGroup.get('occupation')?.value != '')
-                    (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('productMemberDesignation')?.setValue(this.renewalFormGroup.get('occupation')?.value);
-                }
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableSumInsured')?.setValue(zoneWiseSI);
-                // (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(zoneWiseSI);
-                // const ageControl = this.renewalFormGroup.get(controls.idProperty);
-                // if(ageControl){
-                  // ageControl.value[index-1]['memberAge'] = this.renewalFormGroup.get('memberAgeProposer')?.value;
-                  // this.renewalFormGroup.get(controls.idProperty)?.patchValue(ageControl.value);
-                  // (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.renewalFormGroup.get('memberAgeProposer')?.value);
-                  
-
+                // if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+                //   (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
+                //     control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+                //     control.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                //     control.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                //     control.get('deductibleAmount')?.setValue(this.dynamicFormGroup.get('deductibleAmount')?.value);
+                //   })
                 // }
-                
-                
+                // this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
               }
-              if (this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
-                  control.get('sumInsured')?.setValue(this.renewalFormGroup.get('sumInsured')?.value);
-                  control.get('zone')?.setValue(this.renewalFormGroup.get('zone')?.value);
-                  control.get('zoneValue')?.setValue(this.renewalFormGroup.get('zoneValue')?.value);
-                  control.get('deductibleAmount')?.setValue(this.renewalFormGroup.get('deductibleAmount')?.value);
-                })
-              }
-              this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(this.renewalFormGroup.get('numberOfInsuredMembers')?.value + 1);
+  
             }
-
-          }
-          else if (checkbox.checked == false) {
-            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-              if (option.value.includes('Son') || option.value.includes('Daughter')) {
-                this.kidCount--;
-              }
-
-              // Find the index of the dynamic control to be removed
-              let index = formControl.dynamicControls?.findIndex((element: any) => element[1].value == option.value);
-
-              if (index !== undefined && index !== -1) {
-                // Remove the dynamic control from formControl.dynamicControls
-                formControl.dynamicControls?.splice(index, 1);
-
-                // Remove the corresponding FormArray element
-                let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-                formArr.removeAt(index - 1);
-
-                // Hide the form section if no elements are left in the FormArray
-                if (formArr.length == 0) {
-                  formsection.visible = false;
+            else if (checkbox.checked == false) {
+              if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
+                if (option.value.includes('Son') || option.value.includes('Daughter')) {
+                  this.kidCount--;
                 }
-
-                // Remove entries from formData that match the deselected member's index or value
-                Object.keys(this.formData).forEach(key => {
-                  if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-                    delete this.formData[key];
+  
+                // Find the index of the dynamic control to be removed
+                let index = formControl.dynamicControls?.findIndex((element: any) => element[1].value == option.value);
+  
+                if (index !== undefined && index !== -1) {
+                  // Remove the dynamic control from formControl.dynamicControls
+                  formControl.dynamicControls?.splice(index, 1);
+  
+                  // Remove the corresponding FormArray element
+                  let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                  formArr.removeAt(index - 1);
+  
+                  // Hide the form section if no elements are left in the FormArray
+                  if (formArr.length == 0) {
+                    formsection.visible = false;
                   }
-                  if (key.includes(option.value)) {
-                    delete this.formData[key];
+  
+                  // Remove entries from formData that match the deselected member's index or value
+                  Object.keys(this.formData).forEach(key => {
+                    if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
+                      delete this.formData[key];
+                    }
+                    if (key.includes(option.value)) {
+                      delete this.formData[key];
+                    }
+                  });
+  
+                  // Update this.covers to remove the cover for the deselected member
+                  if (this.covers[index - 1]) {
+                    this.covers.splice(index - 1, 1);
                   }
-                });
-
-                // Update this.covers to remove the cover for the deselected member
-                if (this.covers[index - 1]) {
-                  this.covers.splice(index - 1, 1);
+                  // Update the number of insured members
+                  this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(
+                    this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1
+                  );
                 }
-                // Update the number of insured members
-                this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(
-                  this.renewalFormGroup.get('numberOfInsuredMembers')?.value - 1
-                );
               }
             }
-          }
-
-        });
-      })
-      // const numberOfInsuredMembersControl = this.renewalFormGroup.get('numberOfInsuredMembers');
-      // if (numberOfInsuredMembersControl) {
-      //   const numberOfInsuredMembers = numberOfInsuredMembersControl.value;
-
-      const insuredMembersFormGroup = this.renewalFormGroup.get('insuredMembers') as FormGroup;
-      if (insuredMembersFormGroup) {
-        insuredMembersFormGroup.setValidators(this.addCustomValidation());
-        insuredMembersFormGroup.updateValueAndValidity();
-
+  
+          });
+        })
+        // const numberOfInsuredMembersControl = this.dynamicFormGroup.get('numberOfInsuredMembers');
+        // if (numberOfInsuredMembersControl) {
+        //   const numberOfInsuredMembers = numberOfInsuredMembersControl.value;
+  
+        const insuredMembersFormGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
+        if (insuredMembersFormGroup) {
+          insuredMembersFormGroup.setValidators(this.addCustomValidation());
+          insuredMembersFormGroup.updateValueAndValidity();
+  
+        }
+        // }
+  
+        this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
       }
-      // }
-
-      this.updateValueAndGroupError(this.renewalFormGroup.get(controls.name) as FormGroup);
     }
-  }
 
   updateValueAndGroupError(controlGroup: FormGroup) {
     const anyTrue = Object.values(controlGroup.controls).some(control => control.value === true);
@@ -3819,22 +5613,19 @@ export class RenewalDynamicFormComponent {
   }
 
   getFormIndexValue() {
-    const formIndex = localStorage.getItem("formIndex") as string;
+    const formIndex = sessionStorage.getItem("formIndex") as string;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
-    localStorage.setItem("formIndex", value.toString());
+    sessionStorage.setItem("formIndex", value.toString());
   }
   incrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
-    this.formIndex=currentIndex+1;
   }
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex - 1);
-    this.formIndex=currentIndex-1;
-
   }
 
   onPrevious(control: any) {
@@ -3846,7 +5637,7 @@ export class RenewalDynamicFormComponent {
 
   onButtonClick(control: any) {
     this.selectedButton = control.name;
-    const paymentModeControl = this.renewalFormGroup.get('paymentMode');
+    const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
     if (paymentModeControl) {
       paymentModeControl.setValue(this.selectedButton);
     }
@@ -3867,17 +5658,18 @@ export class RenewalDynamicFormComponent {
     //     });
     //   });
     // }
-    if (this.selectedButton !== 'offline') {
+    if (this.selectedButton && !['offline', 'loanPayment', 'bankFundTransfer', 'directdebit'].includes(this.selectedButton)) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
-          if (controls.name === 'offline' && controls.dependentControls) {
+          // if (controls.name === 'offline' && controls.dependentControls) {
+          if ((controls.name === 'offline' || controls.name === 'loanPayment' || controls.name === 'bankFundTransfer' || controls.name === 'directdebit') && controls.dependentControls) {
             controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
                 .find((ctrl: any) => ctrl.name === item);
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for offline
-                const formControl = this.renewalFormGroup.get(controlToHide.name);
+                const formControl = this.dynamicFormGroup.get(controlToHide.name);
                 if (formControl) {
                   formControl.disable();
                   formControl.clearValidators();
@@ -3891,14 +5683,14 @@ export class RenewalDynamicFormComponent {
     } else {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
-          if (controls.name !== 'offline' && controls.dependentControls) {
+          if ((controls.name !== 'offline' || controls.name !== 'loanPayment' || controls.name !== 'bankFundTransfer') && controls.dependentControls) {
             controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
                 .find((ctrl: any) => ctrl.name === item);
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for other buttons
-                const formControl = this.renewalFormGroup.get(controlToHide.name);
+                const formControl = this.dynamicFormGroup.get(controlToHide.name);
                 if (formControl) {
                   formControl.disable();
                   formControl.clearValidators();
@@ -3910,6 +5702,62 @@ export class RenewalDynamicFormComponent {
         });
       });
     }
+    if (this.selectedButton !== 'offline') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'offline' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false;
+                if (controlToHide.name === "paymentOption" && controlToHide.options) {
+                  this.dynamicFormGroup.patchValue({ paymentOption: 'Cheque' });
+                  controlToHide.options.forEach((option: any) => {
+                    if (option.dependentControls) {
+                      this.form.formSections.forEach((section: any) => {
+                        section.formControls.forEach((control: any) => {
+                          if (control.label != "Total Premium/Incl tax") {
+                            if (option.dependentControls.some((item: any) => item.name === control.name && item.visibility)) {
+                              control.visible = false;
+                            }
+                          }
+                        });
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      });
+    }
+    ['autoDebit', 'emandate_payment'].forEach((button) => {
+      if (this.selectedButton !== button) {
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((controls: any) => {
+            if (controls.name === button && controls.dependentControls) {
+              controls.dependentControls.forEach((item: any) => {
+                const controlToHide = this.form.formSections
+                  .flatMap((sec: any) => sec.formControls)
+                  .find((ctrl: any) => ctrl.name === item);
+                if (controlToHide) {
+                  controlToHide.visible = false;
+                  const formControl = this.dynamicFormGroup.get(controlToHide.name);
+                  if (formControl) {
+                    formControl.disable();
+                    formControl.clearValidators();
+                    formControl.updateValueAndValidity();
+                  }
+                }
+              });
+            }
+          });
+        });
+      }
+    });
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton === 'sendLinkButton') {
       const reqData = {
@@ -3928,7 +5776,7 @@ export class RenewalDynamicFormComponent {
         next: (response: any) => {
           if (response.data.paymentLink && response.data.paymentLink !== null && response.data.paymentLink !== '') {
             if (this.selectedButton == 'sendLinkButton') {
-              this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
+              this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentLink);
               // res = response.data.paymentLink;
             }
             else {
@@ -3954,7 +5802,7 @@ export class RenewalDynamicFormComponent {
             if (controls.name == item) {
               controls.visible = true;
               // control.disabled = true;
-              const formControl = this.renewalFormGroup.get(controls.name);
+              const formControl = this.dynamicFormGroup.get(controls.name);
               if (formControl) {
                 formControl.enable();
                 if (controls.validators) {
@@ -3967,6 +5815,8 @@ export class RenewalDynamicFormComponent {
                       return Validators.maxLength(val.maxLength);
                     } else if (val.validatorName === 'minlength' && val.minLength) {
                       return Validators.minLength(val.minLength);
+                    } else if (val.validatorName === 'requiredTrue') {
+                      return Validators.required;
                     }
                     return null;
                   }).filter(Boolean);
@@ -3991,7 +5841,7 @@ export class RenewalDynamicFormComponent {
           list.forEach((item: any) => {
             if (controls.name == item) {
               controls.visible = false;
-              const formControl = this.renewalFormGroup.get(control.name);
+              const formControl = this.dynamicFormGroup.get(control.name);
               if (formControl) {
                 formControl.disable();
                 formControl.clearValidators();
@@ -4056,8 +5906,8 @@ export class RenewalDynamicFormComponent {
   onOtpClick(control: any) {
     console.log(this.formData);
     let sendOTPReqeustBody: any = {};
-    sendOTPReqeustBody.emailId = this.formData.mobileNumber,
-      sendOTPReqeustBody.mobileNumber =
+    sendOTPReqeustBody.emailId = "",
+      sendOTPReqeustBody.mobileNumber = this.formData.mobileNumber,
       sendOTPReqeustBody.name = "",
       sendOTPReqeustBody.agentCode = this.agentCode;
 
@@ -4066,14 +5916,46 @@ export class RenewalDynamicFormComponent {
         if (res.isSuccess) {
           if (res.message == 'Success') {
             this.otpRequestId = res.data.requestId;
-            control.visible = false;
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.dependentControls) {
+                  controls.dependentControls.forEach((item: any) => {
+                    const controlToHide = section.formControls.find((c: any) => c.name === item);
+                    if (controlToHide && controlToHide.name != "sendLink") {
+                      controlToHide.visible = false; // Hide all dependent controls initially
+                    }
+                  });
+                }
+              });
+            });
+
+            // Show the dependent controls for the currently clicked button
+            if (control.dependentControls) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((controls: any) => {
+                  control.dependentControls.forEach((item: any) => {
+                    if (controls.name === item) {
+                      controls.visible = true; // Show the dependent controls for this button
+                    }
+                  });
+                });
+              });
+            }
 
             this.toast.success({
               detail: "Success",
               summary: `Communication has been sent Successfully`,
               duration: 3000,
             });
+            control.visible = false;
           }
+        }
+        else {
+          this.toast.error({
+            detail: "Error",
+            summary: res.message,
+            duration: 3000,
+          });
         }
       },
       (error) => {
@@ -4081,31 +5963,17 @@ export class RenewalDynamicFormComponent {
 
       });
 
+
+  }
+
+  skipOTP() {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((controls: any) => {
-        if (controls.dependentControls) {
-          controls.dependentControls.forEach((item: any) => {
-            const controlToHide = section.formControls.find((c: any) => c.name === item);
-            if (controlToHide && controlToHide.name != "sendLink") {
-              controlToHide.visible = false; // Hide all dependent controls initially
-            }
-          });
+        if (controls.name == "next") {
+          controls.disabled = false;
         }
       });
     });
-
-    // Show the dependent controls for the currently clicked button
-    if (control.dependentControls) {
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((controls: any) => {
-          control.dependentControls.forEach((item: any) => {
-            if (controls.name === item) {
-              controls.visible = true; // Show the dependent controls for this button
-            }
-          });
-        });
-      });
-    }
   }
 
 
@@ -4120,7 +5988,7 @@ export class RenewalDynamicFormComponent {
     let verifyRequest: any = {}
     verifyRequest.agentCode = this.agentCode;
     verifyRequest.requestId = this.otpRequestId;
-    verifyRequest.otpNumber = this.renewalFormGroup.value.otpField.toString();
+    verifyRequest.otpNumber = this.dynamicFormGroup.value.otpField.toString();
     verifyRequest.mobileNumber = this.formData.mobileNumber;
     verifyRequest.eMailId = this.formData.emailId;
     this.yatraService.verifyOTP(verifyRequest).subscribe(
@@ -4150,7 +6018,7 @@ export class RenewalDynamicFormComponent {
             "proposalNum": this?.formData?.proposalNumber,
             "partnerId": this.partnerId,
             "agentCode": this.agentCode,
-            "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
             "formName": this.formSequence[this.getFormIndexValue()].formName,
             "formConfig": JSON.stringify(this.formSequence),
             "productId": this.productId.toString(),
@@ -4204,17 +6072,222 @@ export class RenewalDynamicFormComponent {
   }
   async onSubmit(event?: any) {
     this.changesMade = false;
-    console.log("dynamic form group", this.formData,this.familyPair,this.selectedFamilyMembers);
-    console.log(this.renewalFormGroup.getRawValue(), this.renewalFormGroup, this.form);
-    const policyType = this.renewalFormGroup.get('memberPolicyType')?.value;
-    const insuredMembers = this.renewalFormGroup.get('numberOfInsuredMembers')?.value;
+     if (!this.dynamicFormGroup.valid) {
+          Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+            const control = this.dynamicFormGroup.get(field);
+            if (control instanceof FormArray) {
+              control.controls.forEach(arrayControl => {
+                if (arrayControl instanceof FormGroup) {
+                  Object.keys(arrayControl.controls).forEach(nestedField => {
+                    const nestedControl = arrayControl.get(nestedField);
+                    if (nestedControl instanceof FormGroup) {
+                      nestedControl?.markAsDirty({ onlySelf: true });
+                      nestedControl?.markAsTouched({ onlySelf: true });
+                      Object.keys(nestedControl.controls).forEach((innerField) => {
+                        const innerControl = nestedControl.get(innerField);
+                        innerControl?.markAsTouched({ onlySelf: true });
+                      })
+                    } else if (nestedControl instanceof FormArray) {
+                      Object.keys(nestedControl.controls).forEach((innerField) => {
+                        const innerControl = nestedControl.get(innerField);
     
-    if (insuredMembers < 2 && policyType == 'Family Floater') {
-      this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
-      return;
+                        if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
+                          // Recursively mark inner controls as touched
+                          this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
+                        } else {
+                          innerControl?.markAsTouched({ onlySelf: true });
+                        }
+                      });
+                    }
+    
+                    else
+                      nestedControl?.markAsTouched({ onlySelf: true });
+                  });
+                } else {
+                  arrayControl?.markAsTouched({ onlySelf: true });
+                }
+              });
+            }
+            else if (control instanceof FormGroup) {
+              control?.markAsDirty({ onlySelf: true });
+              const controlKeys = Object.keys(control.controls);
+    
+              if (controlKeys.length > 0) {
+                controlKeys.forEach(key => {
+                  const innerControl = control.controls[key];
+                  if (innerControl instanceof FormGroup) {
+                    Object.keys(innerControl.controls).forEach((innerField) => {
+                      const innControl = innerControl.get(innerField);
+                      innControl?.markAsTouched({ onlySelf: true });
+                    })
+                  }
+                  else {
+                    innerControl?.markAsDirty({ onlySelf: true });
+                  }
+                });
+              }
+            }
+            else {
+              control?.markAsTouched({ onlySelf: true });
+            }
+          });
+          if (this.dynamicFormGroup.invalid) {
+            this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+    
+            this.scrollToFirstInvalidField();
+          }
+          return;
+        }
+    if (this.clickedRecalculate)
+      this.clickedRecalculate = false;
+    const data= this.dynamicFormGroup.value;
+    console.log("dynamic form group", this.formData, this.familyPair, this.selectedFamilyMembers);
+    console.log(this.dynamicFormGroup.getRawValue(), this.dynamicFormGroup, this.form);
+    const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
+    const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
+    
+    if(this.form.formTitle == 'Policy Details'){
+      let updateAddress :any;
+      let updateMember : any;
+      let addMember : any;
+      if(this.baseDate.proposerAddress1 != data.proposerAddress1 || this.baseDate.proposerPincode != data.proposerPincode || 
+        this.baseDate.proposerAddress3 != data.proposerAddress3  || this.baseDate.proposerAddress2 != data.proposerAddress2 ){
+         updateAddress = {
+          address1 : data.proposerAddress1,
+          proposerPincode : data.proposerPincode,
+          address3 : data.proposerAddress3,
+          address2 : data.proposerAddress2,
+          state : data.state || this.baseDate.state || "",
+          city : data.city || this.baseDate.city || ""
+         }
+      } else {
+        updateAddress = "";
+      }
+      const tempMember = data.insuredMemberDetails.filter((member: any) => !member.memberId || member.memberId == "" );
+      if (tempMember) {
+        let mappedMembers = tempMember.map((membersInfo: any, index: number) => {
+          const parseJSON = (jsonString: any) => {
+              try {
+                  return typeof jsonString === "string" ? JSON.parse(jsonString) : jsonString;
+              } catch (error) {
+                  console.error("Invalid JSON:", error);
+                  return {};
+              }
+          };
+          const relationshipType = parseJSON(membersInfo?.relationshipType);
+          const natureOfDuty = parseJSON(membersInfo?.natureOfDuty);
+          const designation = parseJSON(membersInfo?.designation);
+          const occupation = parseJSON(membersInfo?.occupation);
+      
+            return JSON.stringify({
+                memberNo: "",
+                firstName: membersInfo?.firstName ?? "",
+                middleName: membersInfo?.middleName ?? "",
+                lastName: membersInfo?.lastName ?? "",
+                mobileNumber: membersInfo?.mobileNumber ?? "",
+                emailId: membersInfo?.emailId ?? "",
+                memberGender: membersInfo?.memberGender ?? "",
+                memberdob: membersInfo?.memberDob ?? "",
+                height: membersInfo?.height ?? "",
+                weight: membersInfo?.weight ?? "",
+                relationCode: relationshipType?.id ?? "",
+                relation: /Son\d*$/.test(relationshipType?.value) ? "Dependent Son" : /Daughter\d*$/.test(relationshipType?.value)
+                             ? "Dependent Daughter" : relationshipType?.value ?? "",
+                preFix: membersInfo?.preFix ?? "",
+                annualIncome: membersInfo?.annualIncome ?? "",
+                natureOfDuty: natureOfDuty?.name ?? "",
+                designation: designation?.name ?? "",
+                occupation: occupation?.name ?? "",
+                sumInsured: membersInfo?.sumInsured ?? "",
+            });
+        });
+      
+        addMember = mappedMembers.length > 0 ? mappedMembers : "";
+      } else {
+        addMember = "";
+      }
+      const tempUpdateMember = data.insuredMemberDetails.filter((member: any) => member.memberId);
+      if (tempUpdateMember && tempUpdateMember.length > 0) {
+        let mappedMembers = tempUpdateMember
+          .filter((membersInfo: any) => {
+            const existingMember = this.baseDate.insuredMemberDetails.find(
+              (baseMember: any) => baseMember.memberId === membersInfo.memberId
+            );
+            return (
+              existingMember?.mobileNumber !== membersInfo.mobileNumber ||
+              existingMember?.emailId !== membersInfo.emailId
+            );
+          })
+          .map((membersInfo: any) =>
+            JSON.stringify({
+              memberId: membersInfo.memberId,
+              mobileNumber: membersInfo?.mobileNumber ?? "",
+              emailId: membersInfo?.emailId ?? "",
+            })
+          );
+        updateMember = mappedMembers.length > 0 ? mappedMembers : "";
+      } else {
+        updateMember = "";
+      }
+      
+      const leadPageRequestBody = {
+        PolicyNumber : this.baseDate.policyNumber || "",
+        AddMembers : addMember ? addMember : [],
+        UpdateMembers : updateMember ? updateMember : [],
+        addressDetails : updateAddress ? JSON.stringify(updateAddress) : ""
+      }
+      
+      try {
+        const resp: any = await lastValueFrom(this.renewalService.updateRenewalMemberAndAddress(leadPageRequestBody));
+        
+        if (resp.data.isSuccess) {
+          const res = resp;
+          this.QuoteNumber = [];
+    
+          for (let i = 1; i <= 3; i++) {
+            const premiumKey = `tenure${i}Premium`;
+            // const discountKey = `t${i}DiscountAmount`;
+            const Quote = `tenure${i}QuoteNumber`;
+            // const basePremiumKey = `t${i}BasePremium`;
+            // const taxKey = `t${i}TaxAmount`;
+    
+            this.QuoteNumber.push(res.data[Quote]);
+            this.tenureAmount[i - 1] = res.data[premiumKey] ? Math.round(res.data[premiumKey]) : 0;
+            // this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+            // this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
+            // this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;            
+          }
+          this.formData.quoteId = this.QuoteNumber[this.selectedIndex]; 
+          if (this.form.formTitle === 'Policy Details') {
+            sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+            // sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+            // sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+            // sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+    
+            this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+            // this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+          }       
+          this.formData.insuredMemberDetails = this.formData.insuredMemberDetails.map((member: any) => {
+            const matchedMember = JSON.parse(resp.data.tenure1memberDetails).find((tMember: any) => tMember.memberId === member.memberId);
+            return matchedMember ? { ...member, memberId: matchedMember.memberId } : member;
+          });
+
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+
+      console.log(data,leadPageRequestBody);
+
     }
+
+    console.log(this.form,'this.form');
+    console.log(this.dynamicFormGroup.value);
+    console.log(this.formData);
+    
+
     if (this.form.formTitle == 'Total Premium') {
-      if (this.formData.productName === 'Active Secure') {
+      if (this.formData.productName === 'Activ Secure') {
         console.log("Form data:", this.formData);
         const requiredCoverIds = ['CIL', 'CANC', 'ACCD']
         const hasEmptyRequiredCovers = this.formData.insuredMemberDetails.some((member: any) => {
@@ -4222,17 +6295,62 @@ export class RenewalDynamicFormComponent {
           return validCovers.length === 0 || validCovers.every((cover: any) => !cover.value || cover.value === 0);
         });
         if (hasEmptyRequiredCovers) {
-          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or ACCD(Personal Accident)) selected.", duration: 3000 });
+          this.toast.warning({ detail: "Warning", summary: "Each member must have at least one valid cover (CIL, CANC, or ACCD(Personal Accident)) selected.", duration: 4000 });
           return;
         }
       }
 
-      if (this.renewalFormGroup.get('deductible')) {
-        if (this.renewalFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
+      if (this.dynamicFormGroup.get('deductible')) {
+        if (this.dynamicFormGroup.get('deductible')?.get('addOnCover')?.value == false) {
           this.toast.warning({ detail: "Warning", summary: "Deductible Cover is mandatory", duration: 3000 });
           return;
         }
       }
+
+      if (this.dynamicFormGroup.contains('accident')) {
+        if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+          this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+        }
+        let addOnData = this.dynamicFormGroup.get('accident')?.getRawValue();
+        console.log(addOnData);
+        this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
+          Object.keys(addOnData.addOnDetails).forEach((key) => {
+            if (key == member.relation) {
+              let memberSelected = false;
+              addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+
+                if (addOnDetail.memberCheckbox) {
+                  memberSelected = true;
+                  // console.log(addOnDetail);
+                  // member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+                  // console.log(member);
+
+                }
+                if (addOnDetail.occupation && memberSelected) {
+                  member.occupationCode = addOnDetail.occupation == '' ? addOnDetail.occupation : JSON.parse(addOnDetail.occupation).value;
+                  member.productMemberOccupation = addOnDetail.occupation;
+                }
+                if (addOnDetail.occupationRisk && memberSelected) {
+                  member.natureOfDutyCode = addOnDetail.occupationRisk == '' ? addOnDetail.occupationRisk : JSON.parse(addOnDetail.occupationRisk).value;
+                  member.productMemberNatureWork = addOnDetail.occupationRisk
+                }
+              })
+            }
+          })
+          const dynamicForm = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+          while (dynamicForm.length <= index) {
+            dynamicForm.push(new FormGroup({}));
+          }
+
+          const dindex = dynamicForm.at(index) as FormGroup;
+          Object.keys(member).forEach((key: string) => {
+            dindex.addControl(key, new FormControl(member[key]));
+          });
+        })
+      }
+
+
     }
 
     if (this.form.formTitle == 'Insurance Details' && this.formData.productName == 'Activ One SAVR') {
@@ -4243,10 +6361,10 @@ export class RenewalDynamicFormComponent {
       }
       else {
         // Set values for the controls
-        const familyGroupControl = this.renewalFormGroup.get('familyGroup');
-        const selectedFamilyMembersControl = this.renewalFormGroup.get('selectedFamilyMembers');
-        const hospiCashSelectedControl = this.renewalFormGroup.get('hospiCashSelected');
-        const hospiCashTabControl = this.renewalFormGroup.get('hospiCashTab');
+        const familyGroupControl = this.dynamicFormGroup.get('familyGroup');
+        const selectedFamilyMembersControl = this.dynamicFormGroup.get('selectedFamilyMembers');
+        const hospiCashSelectedControl = this.dynamicFormGroup.get('hospiCashSelected');
+        const hospiCashTabControl = this.dynamicFormGroup.get('hospiCashTab');
 
         // Ensure each control exists and then set their values
         if (familyGroupControl) {
@@ -4269,329 +6387,389 @@ export class RenewalDynamicFormComponent {
 
     }
 
-    if(this.formData.productName.includes('Activ Care')){
-      this.renewalFormGroup.get('familyPair')?.setValue(this.familyPair);
-      this.renewalFormGroup.get('selectedFamilyPair')?.setValue(this.selectedFamilyPair);
+    if (this.formData.productName.includes('Activ Care')) {
+      this.dynamicFormGroup.get('familyPair')?.setValue(this.familyPair);
+      this.dynamicFormGroup.get('selectedFamilyPair')?.setValue(this.selectedFamilyPair);
     }
 
-    if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
-      this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
-      return;
-    }
-    else {
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.renewalFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
-        const insuredMemberDetails = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.every((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
-        });
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: `All people are 55 years or older.`,
-                  duration: 3000
-                });
-              }
-            }
-          });
-          event.stopPropogation();
+    // if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
+    //   this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
+    //   return;
+    // }
+    // else {
 
-        }
-      }
-      if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-        const insuredMemberDetails = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
-        const ageFlag = insuredMemberDetails.controls.some((person: any) => {
-          return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
-        });
-
-        if (!ageFlag) {
-          insuredMemberDetails.controls.forEach((control: any, i: number) => {
-            const memberdobControl = control.get('memberdob');
-            if (memberdobControl) {
-              const age = this.calculateAge(memberdobControl.value);
-              if (age > "55") {
-                memberdobControl.setErrors(null);
-              } else {
-                memberdobControl.setValue('');
-                memberdobControl.setErrors({ required: true });
-                this.toast.warning({
-                  detail: 'Warning',
-                  summary: 'At least one person is 55 years or older.',
-                  duration: 3000
-                });
-              }
-            }
-          });
-          //event.stopPropogation();
-        }
-      }
-      if (this.renewalFormGroup.valid &&
-        (!this.renewalFormGroup.get('nationality') || JSON.parse(this.renewalFormGroup.get('nationality')?.value as any).value === 'Indian')) {
-
-        //   // Flatten the form data
-        if (this.renewalFormGroup.get('insuredMemberDetails')) {
-          this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(this.renewalFormGroup.get('insuredMemberDetails')?.value.length);
-          this.renewalFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
-            element.memberIndex = index + 1;
-          });
-          this.renewalFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
-            if (member.relation == 'Self' && (this.renewalFormGroup.get('memberDobProposer') || this.renewalFormGroup.get('memberAgeProposer') || this.renewalFormGroup.get('proposerGender')
-              || this.renewalFormGroup.get('emailId') || this.renewalFormGroup.get('firstName') || this.renewalFormGroup.get('middleName') || this.renewalFormGroup.get('lastName') || this.renewalFormGroup.get('preFix'))) {
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.renewalFormGroup.get('preFix')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.renewalFormGroup.get('memberDobProposer')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.renewalFormGroup.get('memberAgeProposer')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.renewalFormGroup.get('proposerGender')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.renewalFormGroup.get('emailId')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.renewalFormGroup.get('firstName')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.renewalFormGroup.get('middleName')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.renewalFormGroup.get('lastName')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.renewalFormGroup.get('mobileNumber')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('city')?.setValue(this.renewalFormGroup.get('city')?.value);
-              (this.renewalFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('productMemberDesignation')?.setValue(JSON.parse(this.renewalFormGroup.get('occupation')?.value).value);
-            }
-          })
-        }
-        if (!this.pedWaitingPeriod && this.renewalFormGroup.get('waitingPED') && (this.renewalFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
-          this.pedWaitingPeriod = (this.renewalFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
-        }
-        const proposalRequiredDetails = {
-          totalPremium: this.renewalFormGroup.getRawValue().totalPremium,
-          proposalNumber: this.proposalNum,
-          covers: this.covers,
-          PEDWaitingPeriod: this.pedWaitingPeriod ?? ""
-        };
-
-        sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
-        const tempPremiumAmount = this.renewalFormGroup.getRawValue().totalPremium;
-
-        this.renewalFormGroup.get('totalPremium')?.setValue(tempPremiumAmount);
-        this.renewalFormGroup.get('covers')?.setValue(this.covers);
-        this.renewalFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-        this.renewalFormGroup.get('tenure')?.setValue(this.formData.tenure);
-        this.renewalFormGroup.get('quoteIdDetails')?.setValue(this.QuoteNumber);
-        this.renewalFormGroup.get('quoteId')?.setValue(this.formData.quoteId);
-        this.renewalFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
-
-        if (this.form.formTitle == 'Total Premium' && this.covers) {
-          this.mappingCoversAccordingtoMember(this.form);
-        }
-
-        this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-        console.log(this.formData);
-        if (
-          this.formData &&
-          (this.formData['sumInsured'] == null || this.formData['sumInsured'] === undefined) &&
-          Array.isArray(this.formData.insuredMemberDetails) &&
-          this.formData.insuredMemberDetails.length > 0 &&
-          this.formData.insuredMemberDetails[0].sumInsured != null
-        ) {
-          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
-          this.renewalFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
-        }
-        if (this.form.formTitle.includes("Health & Lifestyle")) {
-          await this.mappingForQuestionnaire(this.form);
-        }
-
-        if (this.form.formTitle.includes("Leads")) {
-          this.formData.noOfChildrens = this.kidCount;
-        }
-        this.allJsonForm[this.getFormIndexValue()] = this.form;
-
-        // if (this.form.saveBtnFunction) {
-        //   await this.resolveMethod(this.form.saveBtnFunction);
-        // }
-        if (this.form.saveBtnFunction) {
-          // if (this.form.saveBtnFunction === 'uploadSelectedDocument') {
-          //   await this.uploadSelectedDocument();
-          // } else {
-          try {
-            await this.resolveMethod(this.form.saveBtnFunction);
-          } catch (error: any) {
-            console.error("Process stopped due to error:", error.message);
-            return;
-          }
-        }
-        sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
-
-        if (this.form.formTitle.includes("Total Premium")) {
-          sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
-          sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
-          sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
-          sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
-          sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
-          sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
-          sessionStorage.setItem('selectedIndex', this.encryptionService.encrypt(this.selectedIndex));
-
-          if (this.QuoteNumber.length > 0) {
-            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-          }
-
-        }
-
-
-        if (this.renewalFormGroup.get('leadFirstName') && this.renewalFormGroup.get('leadMiddleName') &&
-          this.renewalFormGroup.get('leadLastName') && this.renewalFormGroup.get('leadMobileNo') &&
-          this.renewalFormGroup.get('leadEmailId') && this.renewalFormGroup.get('generateLead')) {
-          for (let i = 0; i < this.formData.insuredMemberDetails.length; i++) {
-            let relation = JSON.parse(this.formData.insuredMemberDetails[i].relationshipType);
-            if (relation.value == 'Self') {
-              this.formData.insuredMemberDetails[i].memberType = this.formData.insuredMemberDetails[i].relationshipType;
-              this.formData.insuredMemberDetails[i].firstName = this.renewalFormGroup.get('leadFirstName')?.value;
-              this.formData.insuredMemberDetails[i].middleName = this.renewalFormGroup.get('leadMiddleName')?.value;
-              this.formData.insuredMemberDetails[i].lastName = this.renewalFormGroup.get('leadLastName')?.value;
-              this.formData.insuredMemberDetails[i].mobileNumber = this.renewalFormGroup.get('leadMobileNo')?.value;
-              this.formData.insuredMemberDetails[i].emailId = this.renewalFormGroup.get('leadEmailId')?.value;
-            }
-          }
-        }
-
-        console.log(this.renewalFormGroup.getRawValue());
-
-        //   // for Store Form Data in Database
-        // let reqData = {
-        //   "proposalNum": this?.formData?.proposalNumber,
-        //   "partnerId": this.partnerId,
-        //   "agentCode": this.agentCode,
-        //   "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
-        //   "formName": this.formSequence[this.getFormIndexValue()].formName,
-        //   "formConfig": JSON.stringify(this.formSequence),
-        //   "productId": this.productId.toString(),
-        //   "formId": this.formSequence[this.getFormIndexValue()].formId,
-        //   "jsonForm": JSON.stringify(this.form),
-        //   "formSequence": this.getFormIndexValue(),
-        //   "leadNumber": this.leadnumber,
-        //   "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
-        // };
-        // await this.yatraService.Insertorupdateformdata(reqData).subscribe({
-        //   next: (res: any) => {
-        //     this.leadnumber = res.data;
-
-            // Call getFormDataFromFormSequence only after insert/update is completed
-            if (this.getFormIndexValue() < this.formSequence.length - 1) {
-              this.incrementIndex();
-              this.getFormDataFromFormSequence();
-            }
-
-        //   },
-        //   error: (err) => {
-        //     console.error(err);
-        //   }
-        // });
-
-      }
-      else {
-        console.log('Form is invalid', this.renewalFormGroup);
-
-        let firstInvalidTabIndex: number | null = null;
-        if (this.renewalFormGroup.get('insuredMemberDetails')) {
-          this.form.formSections.forEach(section => {
-            section.formControls.forEach(control => {
-              if (control.dynamicControls) {
-                control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
-                  const formGroup = (this.renewalFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
-                  if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
-                    firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
-                  }
-                })
-              }
-            })
-          })
-        }
-
-        Object.keys(this.renewalFormGroup.controls).forEach(field => {
-          const control = this.renewalFormGroup.get(field);
-          if (control instanceof FormArray) {
-            control.controls.forEach(arrayControl => {
-              if (arrayControl instanceof FormGroup) {
-                Object.keys(arrayControl.controls).forEach(nestedField => {
-                  const nestedControl = arrayControl.get(nestedField);
-                  if (nestedControl instanceof FormGroup) {
-                    nestedControl?.markAsDirty({ onlySelf: true });
-                    nestedControl?.markAsTouched({ onlySelf: true });
-                    Object.keys(nestedControl.controls).forEach((innerField) => {
-                      const innerControl = nestedControl.get(innerField);
-                      innerControl?.markAsTouched({ onlySelf: true });
-                    })
-                  } else if (nestedControl instanceof FormArray) {
-                    Object.keys(nestedControl.controls).forEach((innerField) => {
-                      const innerControl = nestedControl.get(innerField);
-
-                      if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
-                        // Recursively mark inner controls as touched
-                        this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
-                      } else {
-                        innerControl?.markAsTouched({ onlySelf: true });
-                      }
-                    });
-                  }
-
-                  else
-                    nestedControl?.markAsTouched({ onlySelf: true });
-                });
-              } else {
-                arrayControl?.markAsTouched({ onlySelf: true });
-              }
-            });
-          }
-          else if (control instanceof FormGroup) {
-            control?.markAsDirty({ onlySelf: true });
-            const controlKeys = Object.keys(control.controls);
-
-            if (controlKeys.length > 0) {
-              controlKeys.forEach(key => {
-                const innerControl = control.controls[key];
-                if (innerControl instanceof FormGroup) {
-                  Object.keys(innerControl.controls).forEach((innerField) => {
-                    const innControl = innerControl.get(innerField);
-                    innControl?.markAsTouched({ onlySelf: true });
-                  })
-                }
-                else {
-                  innerControl?.markAsDirty({ onlySelf: true });
-                }
+    if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      const ageFlag = insuredMemberDetails.controls.every((person: any) => {
+        return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
+      });
+      if (!ageFlag) {
+        insuredMemberDetails.controls.forEach((control: any, i: number) => {
+          const memberdobControl = control.get('memberdob');
+          if (memberdobControl) {
+            const age = this.calculateAge(memberdobControl.value);
+            if (age > "55") {
+              memberdobControl.setErrors(null);
+            } else {
+              memberdobControl.setValue('');
+              memberdobControl.setErrors({ required: true });
+              this.toast.warning({
+                detail: 'Warning',
+                summary: `All people are 55 years or older.`,
+                duration: 3000
               });
             }
           }
-          else {
-            control?.markAsTouched({ onlySelf: true });
+        });
+        event.stopPropogation();
+
+      }
+    }
+    if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+      const ageFlag = insuredMemberDetails.controls.some((person: any) => {
+        return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
+      });
+
+      if (!ageFlag) {
+        insuredMemberDetails.controls.forEach((control: any, i: number) => {
+          const memberdobControl = control.get('memberdob');
+          if (memberdobControl) {
+            const age = this.calculateAge(memberdobControl.value);
+            if (age > "55") {
+              memberdobControl.setErrors(null);
+            } else {
+              memberdobControl.setValue('');
+              memberdobControl.setErrors({ required: true });
+              this.toast.warning({
+                detail: 'Warning',
+                summary: 'At least one person is 55 years or older.',
+                duration: 3000
+              });
+            }
           }
         });
-        if (this.renewalFormGroup.invalid) {
-          this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
-          
-          this.scrollToFirstInvalidField();
-          
-          if (firstInvalidTabIndex !== null) {
-            // Navigate to the first invalid tab
-            this.activeMemberTabIndex = firstInvalidTabIndex;
-            // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
-          }
-        }
-        else if (this.renewalFormGroup.get('nationality') && this.renewalFormGroup.get('nationality')?.value !== 'Indian')
-          this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
+        //event.stopPropogation();
+      }
+    }
+    if (this.formData.productName.startsWith("Activ Fit")) {
+      this.isDeclarartionDiscountVisible = false;
+    }
+    if (this.dynamicFormGroup.valid &&
+      (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
+
+      if ((policyType === 'Multi Individual' || policyType === 'Individual') && insuredMembers < 1) {
+        this.toast.warning({ detail: "Warning", summary: "At least one member must be selected for Multi Individual policy", duration: 3000 });
+        return;
       }
 
+      if (insuredMembers < 2 && policyType == 'Family Floater') {
+        this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+        return;
+      }
+
+      //   // Flatten the form data
+      if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+        this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
+        this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
+          element.memberIndex = index + 1;
+        });
+        this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
+          if (member.relation == 'Self' && (this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
+            || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))) {
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+            (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('productMemberDesignation')?.setValue(this.dynamicFormGroup.get('occupation')?.value);
+          }
+        })
+      }
+      if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
+        this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+      }
+      const proposalRequiredDetails = {
+        totalPremium: this.dynamicFormGroup.getRawValue().totalPremium,
+        proposalNumber: this.proposalNum,
+        covers: this.covers,
+        PEDWaitingPeriod: this.pedWaitingPeriod ?? ""
+      };
+      console.log(proposalRequiredDetails);
+
+
+      sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
+      const tempPremiumAmount = this.dynamicFormGroup.getRawValue().totalPremium;
+
+      this.dynamicFormGroup.get('totalPremium')?.setValue(tempPremiumAmount);
+      this.dynamicFormGroup.get('covers')?.setValue(this.covers);
+      this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+      this.dynamicFormGroup.get('tenure')?.setValue(this.formData.tenure);
+      this.dynamicFormGroup.get('quoteIdDetails')?.setValue(this.QuoteNumber);
+      this.dynamicFormGroup.get('quoteId')?.setValue(this.formData.quoteId);
+      this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+
+
+      // (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((memberGroup:any,index: number)=>{
+      //   memberGroup.get('covers')?.setValue(this.covers[index]);
+      // })
+
+      // if(this.dynamicFormGroup.getRawValue().tenureAmount){
+      //   this.dynamicFormGroup.getRawValue().tenureAmount = this.tenureAmount;
+      // }
+      // if(this.dynamicFormGroup.getRawValue().displayTaxList){
+      //   this.dynamicFormGroup.getRawValue().displayTaxList = this.displayTaxList;
+      // }
+      // this.saveData = JSON.parse(JSON.stringify(this.dynamicFormGroup.getRawValue()));
+      // this.flattenObjectInsert(this.saveData);
+      if (this.form.formTitle == 'Total Premium' && this.covers) {
+        this.mappingCoversAccordingtoMember(this.form);
+      }
+
+      // this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
+      this.formData = {
+        ...this.formData, 
+        ...this.dynamicFormGroup.getRawValue(),
+        insuredMemberDetails: this.dynamicFormGroup.getRawValue().insuredMemberDetails?.map((member: any, index: any) => ({
+            ...this.formData.insuredMemberDetails?.[index], // Keep existing values if present
+            ...member // Merge updated values, including new members
+        })) || []
+    };
+    
+    
+      console.log(this.formData);
+      if (
+        this.formData &&
+        (this.formData['sumInsured'] == null || this.formData['sumInsured'] === undefined) &&
+        Array.isArray(this.formData.insuredMemberDetails) &&
+        this.formData.insuredMemberDetails.length > 0 &&
+        this.formData.insuredMemberDetails[0].sumInsured != null
+      ) {
+        this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        this.dynamicFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
+        // this.formData['sumInsuredForPlan'] = this.formData.insuredMemberDetails[0].sumInsuredForPlan;
+        // this.dynamicFormGroup.get('sumInsuredForPlan')?.setValue(this.formData.insuredMemberDetails[0].sumInsuredForPlan);
+      }
+      if (this.form.formTitle.includes("Health & Lifestyle")) {
+        const canProceed = await this.mappingForQuestionnaire(this.form);
+        if (!canProceed) {
+          return;
+        }
+      }
+
+
+      if (this.form.formTitle.includes("Leads")) {
+        this.formData.noOfChildrens = this.kidCount;
+      }
+      this.allJsonForm[this.getFormIndexValue()] = this.form;
+
+      // if (this.form.saveBtnFunction) {
+      //   await this.resolveMethod(this.form.saveBtnFunction);
+      // }
+      if (this.form.saveBtnFunction) {
+        // if (this.form.saveBtnFunction === 'uploadSelectedDocument') {
+        //   await this.uploadSelectedDocument();
+        // } else {
+        try {
+          await this.resolveMethod(this.form.saveBtnFunction);
+        } catch (error: any) {
+          console.error("Process stopped due to error:", error.message);
+          return;
+        }
+      }
+      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+      sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
+
+      if (this.form.formTitle.includes("Total Premium")) {
+        sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
+        sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
+        sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+        sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+        sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+        sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+        sessionStorage.setItem('selectedIndex', this.encryptionService.encrypt(this.selectedIndex));
+
+        if (this.QuoteNumber.length > 0) {
+          this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+        }
+
+      }
+
+
+      if (this.dynamicFormGroup.get('leadFirstName') && this.dynamicFormGroup.get('leadMiddleName') &&
+        this.dynamicFormGroup.get('leadLastName') && this.dynamicFormGroup.get('leadMobileNo') &&
+        this.dynamicFormGroup.get('leadEmailId') && this.dynamicFormGroup.get('generateLead')) {
+        for (let i = 0; i < this.formData.insuredMemberDetails.length; i++) {
+          let relation = JSON.parse(this.formData.insuredMemberDetails[i].relationshipType);
+          if (relation.value == 'Self') {
+            this.formData.insuredMemberDetails[i].memberType = this.formData.insuredMemberDetails[i].relationshipType;
+            this.formData.insuredMemberDetails[i].firstName = this.dynamicFormGroup.get('leadFirstName')?.value;
+            this.formData.insuredMemberDetails[i].middleName = this.dynamicFormGroup.get('leadMiddleName')?.value;
+            this.formData.insuredMemberDetails[i].lastName = this.dynamicFormGroup.get('leadLastName')?.value;
+            this.formData.insuredMemberDetails[i].mobileNumber = this.dynamicFormGroup.get('leadMobileNo')?.value;
+            this.formData.insuredMemberDetails[i].emailId = this.dynamicFormGroup.get('leadEmailId')?.value;
+          }
+        }
+      }
+
+      console.log(this.dynamicFormGroup.getRawValue());
+
+      let formIndex = Number(sessionStorage.getItem('formIndex'));
+      let popupAlreadyShown = localStorage.getItem('leadPopupShown');
+
+      //   // for Store Form Data in Database
+      let reqData = {
+        "proposalNum": this?.formData?.proposalNumber,
+        "partnerId": this.partnerId,
+        "agentCode": this.agentCode,
+        "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
+        "formName": this.formSequence[this.getFormIndexValue()].formName,
+        "formConfig": JSON.stringify(this.formSequence),
+        "productId": this.productId.toString(),
+        "formId": this.formSequence[this.getFormIndexValue()].formId,
+        "jsonForm": JSON.stringify(this.form),
+        "formSequence": this.getFormIndexValue(),
+        "leadNumber": this.leadnumber,
+        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+      };
+      // await this.yatraService.Insertorupdateformdata(reqData).subscribe({
+      //   next: (res: any) => {
+      //     this.leadnumber = res.data;
+      //     if (this.form.formTitle.includes("Leads") && !this.popupAlreadyShown && this.leadnumber !== this.lastLeadId) {
+      //       this.isLeadCreatedSuccessfully = true;
+      //       this.lastLeadId = this.leadnumber; // Store the new Lead ID
+      //       console.log(this.lastLeadId);
+      //       this.popupAlreadyShown = true; // Mark pop-up as shown
+      //     }
+
+      //     // Call getFormDataFromFormSequence only after insert/update is completed
+          if (this.getFormIndexValue() < this.formSequence.length - 1) {
+            this.incrementIndex();
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+          }
+
+      //     if (this.isQuote) {
+      //       this.isQuote = false;
+      //       sessionStorage.setItem("isQuote", this.isQuote.toString());
+      //     }
+
+      //     this.quickQuoteRedirect = false;
+      //   },
+      //   error: (err) => {
+      //     console.error(err);
+      //   }
+      // });
+
     }
-    if (this.form.formTitle == 'Health & Lifestyle') {
-      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
-    }
-    if (this.form.formTitle == 'Policy Summary') {
-      console.log("self legth", this.formData.insuredMemberDetails[0]?.productQuestionnaire?.length);
-      console.log("spouse legth", this.formData.insuredMemberDetails[1]?.productQuestionnaire?.length);
+    else {
+      console.log('Form is invalid', this.dynamicFormGroup);
+
+      let firstInvalidTabIndex: number | null = null;
+      if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+        this.form.formSections.forEach(section => {
+          section.formControls.forEach(control => {
+            if (control.dynamicControls) {
+              control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
+                const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
+                if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
+                  firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
+                }
+              })
+            }
+          })
+        })
+      }
+
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                if (nestedControl instanceof FormGroup) {
+                  nestedControl?.markAsDirty({ onlySelf: true });
+                  nestedControl?.markAsTouched({ onlySelf: true });
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+                    innerControl?.markAsTouched({ onlySelf: true });
+                  })
+                } else if (nestedControl instanceof FormArray) {
+                  Object.keys(nestedControl.controls).forEach((innerField) => {
+                    const innerControl = nestedControl.get(innerField);
+
+                    if (innerControl instanceof FormArray || innerControl instanceof FormGroup) {
+                      // Recursively mark inner controls as touched
+                      this.markNestedControlsAsTouched(innerControl);  // You'd need to implement this function
+                    } else {
+                      innerControl?.markAsTouched({ onlySelf: true });
+                    }
+                  });
+                }
+
+                else
+                  nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+          const controlKeys = Object.keys(control.controls);
+
+          if (controlKeys.length > 0) {
+            controlKeys.forEach(key => {
+              const innerControl = control.controls[key];
+              if (innerControl instanceof FormGroup) {
+                Object.keys(innerControl.controls).forEach((innerField) => {
+                  const innControl = innerControl.get(innerField);
+                  innControl?.markAsTouched({ onlySelf: true });
+                })
+              }
+              else {
+                innerControl?.markAsDirty({ onlySelf: true });
+              }
+            });
+          }
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
+        }
+      });
+      if (this.dynamicFormGroup.invalid) {
+        this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
+
+        this.scrollToFirstInvalidField();
+
+        if (firstInvalidTabIndex !== null) {
+          // Navigate to the first invalid tab
+          this.activeMemberTabIndex = firstInvalidTabIndex;
+          // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
+        }
+      }
+      else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "Warning", summary: "Indian residency is required", duration: 3000 })
     }
 
-   console.log("formDone");
-   
+    if (this.dynamicFormGroup.invalid && this.form.formTitle == 'Total Premium' && this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover === true) {
+      this.toast.warning({ detail: "Warning", summary: "Kindly fill the details for selected Additional Cover", duration: 5000 })
+    }
+
+    if (this.dynamicFormGroup.contains('agentId')) {
+      const selectedAgentId = this.dynamicFormGroup.get('agentId')?.value;
+
+      if (selectedAgentId) {
+        localStorage.setItem('parentCode', selectedAgentId);
+        console.log("Updated agentCode in localStorage:", selectedAgentId);
+      }
+    }
   }
   changeMainFormDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
@@ -4601,6 +6779,13 @@ export class RenewalDynamicFormComponent {
     controlIndex: number | null = null,
     innerControl: any = null
   ) {
+    console.log(dependentControlNames,
+      visibility,
+      controlName,
+      parentControlName,
+      controlIndex,
+      innerControl);
+
     const tempIndex = this.activeMemberTabIndex;
     setTimeout(() => {
       if (dependentControlNames) {
@@ -4608,10 +6793,8 @@ export class RenewalDynamicFormComponent {
           // Extract control name and visibility from either string or object
           const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
           const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
-          console.log(dependentName, dependentVisibility);
           this.form.formSections.forEach((section: IFormSections) => {
             section.formControls.forEach((control: IFormControl) => {
-              console.log(section, control);
               if (control.dynamicControls && controlIndex != null && control.dynamicControls.length > controlIndex) {
                 const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
                 targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
@@ -4634,87 +6817,94 @@ export class RenewalDynamicFormComponent {
               else if (control.name == parentControlName && control.subControls) {
                 control.subControls.forEach((subControl: any) => {
                   if (subControl.name == controlName && controlIndex != null) {
-                   if (subControl.innerSubControls) {
-                    subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
-                      if (innerControl.name == dependentName) {
-                        innerControl.visible = visibility;
-                        let dparentControl = this.renewalFormGroup.get(control.name) as FormGroup;
-                        let dcontrol = dparentControl.get(subControl.name) as FormGroup;
-                        let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
-                        let dindexj = dsubControl.at(zindex) as FormGroup;
-                        let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
-                        if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
-                          innerControl.dependentControls.forEach((dependentName: string) => {
-                            // Find the dependent control in coreControls
-                            const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
-                              (control: any) => control.name === dependentName
-                            );
-                            let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
-
-                            if (dependentControl) {
-                              dependentControl.visible = visibility;
-                              dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
-                              dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
-                              Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                                dinnercontrol.removeControl(element);
-                              });
+                    if (subControl.innerSubControls) {
+                      subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
+                        if (innerControl.name == dependentName) {
+                          innerControl.visible = visibility;
+                          let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
+                          let dcontrol = dparentControl.get(subControl.name) as FormGroup;
+                          let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
+                          let dindexj = dsubControl.at(zindex) as FormGroup;
+                          let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
+                          if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                            if (dinnercontrol instanceof FormControl) {
+                              dinnercontrol.setValue(false);
                             }
-                          });
-                        }
-                        if (innerControl.innerControls && innerControl.visible == true) {
-                          this.initializeSubControls(innerControl.innerControls, dinnercontrol)
-                        }
-                        else if (innerControl.innerControls && innerControl.visible == false) {
-                          Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                            dinnercontrol.removeControl(element);
-                          });
-                        }
-                      }
-                    })
-                   } else if (subControl.innerArrayControl) {
-                    subControl.innerArrayControl[controlIndex].forEach((innerControl: any, zindex: any) => {
-                      if (innerControl.name == dependentName) {
-                        innerControl.visible = visibility;
-                        let dparentControl = this.renewalFormGroup.get(control.name) as FormGroup;
-                        let dcontrol = dparentControl.get(subControl.name) as FormArray;
-                        // let dsubControl = dcontrol.get(subControl.innerArrayControl[controlIndex].name) as FormArray;
-                        let dindexj = dcontrol.at(controlIndex) as FormGroup;
-                        let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
-                        if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
-                          if (dinnercontrol instanceof FormControl) {
-                            dinnercontrol.setValue(false);
+                            innerControl.dependentControls.forEach((dependentName: string) => {
+                              // Find the dependent control in coreControls
+                              const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
+                                (control: any) => control.name === dependentName
+                              );
+                              let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
+
+                              if (dependentControl) {
+                                dependentControl.visible = visibility;
+                                dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
+                                dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
+                                Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                                  dinnercontrol.removeControl(element);
+                                });
+                              }
+                              // else {
+                              //   console.log('Dependent Control not found for:', dependentName);
+                              // }
+                            });
                           }
-                          innerControl.dependentControls.forEach((dependentName: string) => {
-                            // Find the dependent control in coreControls
-                            const dependentControlIndex = subControl.innerArrayControl[controlIndex].coreControls.findIndex(
-                              (control: any) => control.name === dependentName
-                            );
-                            let dependentControl = subControl.innerArrayControl[controlIndex].coreControls[dependentControlIndex];
+                          if (innerControl.innerControls && innerControl.visible == true) {
+                            this.initializeSubControls(innerControl.innerControls, dinnercontrol)
+                          }
+                          else if (innerControl.innerControls && innerControl.visible == false) {
+                            Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                              dinnercontrol.removeControl(element);
+                            });
+                          }
+                        }
+                      })
+                    }
+                    else if (subControl.innerArrayControl) {
+                      subControl.innerArrayControl[controlIndex].forEach((innerControl: any, zindex: any) => {
+                        if (innerControl.name == dependentName) {
+                          innerControl.visible = visibility;
+                          let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
+                          let dcontrol = dparentControl.get(subControl.name) as FormArray;
+                          // let dsubControl = dcontrol.get(subControl.innerArrayControl[controlIndex].name) as FormArray;
+                          let dindexj = dcontrol.at(controlIndex) as FormGroup;
+                          let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
+                          if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                            if (dinnercontrol instanceof FormControl) {
+                              dinnercontrol.setValue(false);
+                            }
+                            innerControl.dependentControls.forEach((dependentName: string) => {
+                              // Find the dependent control in coreControls
+                              const dependentControlIndex = subControl.innerArrayControl[controlIndex].coreControls.findIndex(
+                                (control: any) => control.name === dependentName
+                              );
+                              let dependentControl = subControl.innerArrayControl[controlIndex].coreControls[dependentControlIndex];
 
-                            if (dependentControl) {
-                              dependentControl.visible = visibility;
-                              dindexj = dcontrol.at(controlIndex) as FormGroup;
-                              dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
-                              Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                                dinnercontrol.removeControl(element);
-                              });
-                            }
-                            else {
-                              console.log('Dependent Control not found for:', dependentName);
-                            }
-                          });
+                              if (dependentControl) {
+                                dependentControl.visible = visibility;
+                                dindexj = dcontrol.at(controlIndex) as FormGroup;
+                                dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
+                                Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                                  dinnercontrol.removeControl(element);
+                                });
+                              }
+                              else {
+                                console.log('Dependent Control not found for:', dependentName);
+                              }
+                            });
+                          }
+                          if (innerControl.innerControls && innerControl.visible == true) {
+                            this.initializeSubControls(innerControl.innerControls, dinnercontrol)
+                          }
+                          else if (innerControl.innerControls && innerControl.visible == false) {
+                            Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                              dinnercontrol.removeControl(element);
+                            });
+                          }
                         }
-                        if (innerControl.innerControls && innerControl.visible == true) {
-                          this.initializeSubControls(innerControl.innerControls, dinnercontrol)
-                        }
-                        else if (innerControl.innerControls && innerControl.visible == false) {
-                          Object.keys(dinnercontrol.controls).forEach((element: any) => {
-                            dinnercontrol.removeControl(element);
-                          });
-                        }
-                      }
-                    })
-                   }
+                      })
+                    }
                   }
                 })
               }
@@ -4730,6 +6920,13 @@ export class RenewalDynamicFormComponent {
                   }
                 })
               }
+              else if (control.name == parentControlName && control.innerArrayControl && controlIndex != null) {
+                control.innerArrayControl[controlIndex].forEach((innerControl: any) => {
+                  if (innerControl.name == dependentName) {
+                    innerControl.visible = visibility;
+                  }
+                })
+              }
               else if (control.name === dependentName) {
                 control.visible = dependentVisibility;
                 if (dependentVisibility) {
@@ -4741,8 +6938,8 @@ export class RenewalDynamicFormComponent {
                     if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
-                  this.renewalFormGroup.get(control.name)?.setValidators(controlValidators);
-                  this.renewalFormGroup.get(control.name)?.updateValueAndValidity();
+                  this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+                  this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
                   if (control.name == 'zoneValue' && control.type == 'select') {
                     control.options = this.formData.availableZones.map((zone: any) => ({
                       name: zone,
@@ -4750,8 +6947,8 @@ export class RenewalDynamicFormComponent {
                     }));
                   }
                 } else {
-                  this.renewalFormGroup.get(control.name)?.clearValidators();
-                  this.renewalFormGroup.get(control.name)?.reset();
+                  this.dynamicFormGroup.get(control.name)?.clearValidators();
+                  this.dynamicFormGroup.get(control.name)?.reset();
                 }
               }
             });
@@ -4762,7 +6959,6 @@ export class RenewalDynamicFormComponent {
     }, 0);
 
     this.activeMemberTabIndex = tempIndex;
-    console.log(this.form);
   }
 
   changeHospiCoverDependentControls(dependentControlNames: (string | { name: string; visibility: boolean })[],
@@ -4774,7 +6970,7 @@ export class RenewalDynamicFormComponent {
     innerControlIndex: any = null) {
 
 
-    console.log(controlName, parentControlName, controlIndex, innerControl, innerControlIndex);
+    console.log(dependentControlNames, visibility, controlName, parentControlName, controlIndex, innerControl, innerControlIndex);
 
     if (dependentControlNames) {
       dependentControlNames.forEach((dependent) => {
@@ -4788,12 +6984,11 @@ export class RenewalDynamicFormComponent {
               console.log(targetDynamicControl);
 
               targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
-                console.log(dynamicControl);
                 if (dynamicControl.name == controlName && dynamicControl.subControls) {
                   dynamicControl.subControls[innerControlIndex].forEach((innerControl: any) => {
                     if (innerControl.name == dependentName) {
-                      innerControl.visible = visibility;
-                      if (visibility) {
+                      innerControl.visible = dependentVisibility;
+                      if (dependentVisibility) {
                         const controlValidators: any[] = [];
                         innerControl?.validators?.forEach((validator: any) => {
                           if (validator.validatorName === 'required') controlValidators.push(Validators.required);
@@ -4803,7 +6998,7 @@ export class RenewalDynamicFormComponent {
                           if (validator.validatorName === 'pattern') controlValidators.push(Validators.pattern(validator.pattern));
                         });
 
-                        const formArray = this.renewalFormGroup.get(parentControlName) as FormArray;
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
                         console.log(formArray);
 
                         const memberGroup = formArray.at(controlIndex) as FormGroup;
@@ -4823,11 +7018,59 @@ export class RenewalDynamicFormComponent {
 
                       }
                       else {
-                        const formArray = this.renewalFormGroup.get(parentControlName) as FormArray;
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
                         const memberGroup = formArray.at(controlIndex) as FormGroup;
                         const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
                         const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
                         const memberGroupInnerControl = memberGroupInnerControlGroup.get(innerControl.name);
+                        memberGroupInnerControl?.clearValidators();
+                        memberGroupInnerControl?.updateValueAndValidity();
+                      }
+                    }
+                  })
+                }
+                else if (dynamicControl.name == controlName && dynamicControl.innerArrayControl) {
+                  console.log(dynamicControl);
+
+                  dynamicControl.innerArrayControl[innerControlIndex + 1].forEach((innerControl: any) => {
+                    if (innerControl.name == dependentName) {
+                      innerControl.visible = dependentVisibility;
+                      if (dependentVisibility) {
+                        const controlValidators: any[] = [];
+                        innerControl?.validators?.forEach((validator: any) => {
+                          if (validator.validatorName === 'required') controlValidators.push(Validators.required);
+                          if (validator.validatorName === 'email') controlValidators.push(Validators.email);
+                          if (validator.validatorName === 'minlength') controlValidators.push(Validators.minLength(validator.minLength));
+                          if (validator.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(validator.maxLength));
+                          if (validator.validatorName === 'pattern') controlValidators.push(Validators.pattern(validator.pattern));
+                        });
+
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                        console.log(formArray);
+
+                        const memberGroup = formArray.at(controlIndex) as FormGroup;
+                        console.log(memberGroup);
+
+                        const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+                        console.log(memberGroupControlArray);
+
+                        const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+                        console.log(memberGroupInnerControlGroup);
+
+                        const memberGroupInnerControl = memberGroupInnerControlGroup.get(innerControl.name);
+                        console.log(memberGroupInnerControl);
+
+                        memberGroupInnerControl?.setValidators(controlValidators);
+                        memberGroupInnerControl?.updateValueAndValidity();
+
+                      }
+                      else {
+                        const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                        const memberGroup = formArray.at(controlIndex) as FormGroup;
+                        const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+                        const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+                        const memberGroupInnerControl = memberGroupInnerControlGroup.get(innerControl.name);
+                        memberGroupInnerControl?.value == true ? memberGroupInnerControl?.value == false : memberGroupInnerControl?.setValue('');
                         memberGroupInnerControl?.clearValidators();
                         memberGroupInnerControl?.updateValueAndValidity();
                       }
@@ -4845,7 +7088,7 @@ export class RenewalDynamicFormComponent {
             //       subControl.innerSubControls[controlIndex].coreControls.forEach((innerControl: any, zindex: any) => {
             //         if (innerControl.name == dependentName) {
             //           innerControl.visible = visibility;
-            //           let dparentControl = this.renewalFormGroup.get(control.name) as FormGroup;
+            //           let dparentControl = this.dynamicFormGroup.get(control.name) as FormGroup;
             //           let dcontrol = dparentControl.get(subControl.name) as FormGroup;
             //           let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
             //           let dindexj = dsubControl.at(zindex) as FormGroup;
@@ -4910,8 +7153,8 @@ export class RenewalDynamicFormComponent {
             //       if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
             //       if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
             //     });
-            //     this.renewalFormGroup.get(control.name)?.setValidators(controlValidators);
-            //     this.renewalFormGroup.get(control.name)?.updateValueAndValidity();
+            //     this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+            //     this.dynamicFormGroup.get(control.name)?.updateValueAndValidity();
             //     if (control.name == 'zoneValue' && control.type == 'select') {
             //       control.options = this.formData.availableZones.map((zone: any) => ({
             //         name: zone,
@@ -4919,8 +7162,8 @@ export class RenewalDynamicFormComponent {
             //       }));
             //     }
             //   } else {
-            //     this.renewalFormGroup.get(control.name)?.clearValidators();
-            //     this.renewalFormGroup.get(control.name)?.reset();
+            //     this.dynamicFormGroup.get(control.name)?.clearValidators();
+            //     this.dynamicFormGroup.get(control.name)?.reset();
             //   }
             // }
           });
@@ -4930,8 +7173,69 @@ export class RenewalDynamicFormComponent {
     }
   }
 
+  // changeHospiCoverDependentControls(
+  //   dependentControlNames: (string | { name: string; visibility: boolean })[],
+  //   visibility: boolean,
+  //   controlName: string,
+  //   parentControlName: string,
+  //   controlIndex: number | null = null,
+  //   innerControl: any = null,
+  //   innerControlIndex: any = null
+  // ) {
+  //   console.log(controlName, parentControlName, controlIndex, innerControl, innerControlIndex);
+
+  //   if (dependentControlNames) {
+  //     dependentControlNames.forEach((dependent) => {
+  //       // Extract control name and visibility from either string or object
+  //       const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
+  //       const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
+
+  //       // Get the dynamic form control hierarchy
+  //       const formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+  //       if (!formArray || controlIndex === null) return;
+
+  //       const memberGroup = formArray.at(controlIndex) as FormGroup;
+  //       const memberGroupControlArray = memberGroup.get(controlName) as FormArray;
+  //       if (!memberGroupControlArray || innerControlIndex === null) return;
+
+  //       const memberGroupInnerControlGroup = memberGroupControlArray.at(innerControlIndex) as FormGroup;
+  //       const memberGroupInnerControl = memberGroupInnerControlGroup.get(dependentName);
+
+  //       if (memberGroupInnerControl) {
+  //         // Set visibility of the control
+  //         if (dependentVisibility) {
+  //           // Add validations if visible
+  //           const controlValidators: any[] = [];
+  //           innerControl?.validators?.forEach((validator: any) => {
+  //             if (validator.validatorName === 'required') controlValidators.push(Validators.required);
+  //             if (validator.validatorName === 'email') controlValidators.push(Validators.email);
+  //             if (validator.validatorName === 'minlength') controlValidators.push(Validators.minLength(validator.minLength));
+  //             if (validator.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(validator.maxLength));
+  //             if (validator.validatorName === 'pattern') controlValidators.push(Validators.pattern(validator.pattern));
+  //           });
+  //           memberGroupInnerControl.setValidators(controlValidators);
+  //           memberGroupInnerControl.updateValueAndValidity();
+  //         } else {
+  //           // Remove validations if not visible
+  //           memberGroupInnerControl.clearValidators();
+  //           memberGroupInnerControl.updateValueAndValidity();
+  //           memberGroupInnerControl.setValue(false); // Reset value to false
+  //         }
+
+  //         // Update the visibility in the control object
+  //         innerControl.visible = dependentVisibility;
+  //       }
+  //     });
+
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
+
+
+
+
   generateLeadAndProposalId(control: any) {
-    if (this.renewalFormGroup.valid) {
+    if (this.dynamicFormGroup.valid) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
           if (formControl.name == control.name) {
@@ -4949,143 +7253,573 @@ export class RenewalDynamicFormComponent {
         "proposalNum": this.proposalNum,
         "productId": this.productid,
         "insuranceTypeCode": this.insurancetypecode,
-        "leadFirstName": this.renewalFormGroup.get('leadFirstName')?.value,
-        "leadLastName": this.renewalFormGroup.get('leadLastName')?.value,
-        "leadMobileNo": this.renewalFormGroup.get('leadMobileNo')?.value,
-        "leadEmailId": this.renewalFormGroup.get('leadEmailId')?.value,
+        "leadFirstName": this.dynamicFormGroup.get('leadFirstName')?.value,
+        "leadLastName": this.dynamicFormGroup.get('leadLastName')?.value,
+        "leadMobileNo": this.dynamicFormGroup.get('leadMobileNo')?.value,
+        "leadEmailId": this.dynamicFormGroup.get('leadEmailId')?.value,
       }
+      // this.adminService.insertLeadDetails(reqData).subscribe({
+      //   next: (res) => {
+      //     this.leadId = res.leadId;
+      //     this.proposalId = res.proposalId;
+      //     this.quoteId = res.quoteId;
+      //     sessionStorage.setItem("leadId", this.encryptionService.encrypt(this.leadId));
+      //     this.dynamicFormGroup.addControl("leadId", this.fb.control(this.leadId));
+      //     sessionStorage.setItem("proposalId", this.encryptionService.encrypt(this.proposalId));
+      //     this.dynamicFormGroup.addControl("proposalId", this.fb.control(this.proposalId));
+      //     sessionStorage.setItem("quoteId", this.encryptionService.encrypt(this.quoteId));
+      //     this.dynamicFormGroup.addControl("quoteId", this.fb.control(this.quoteId));
+      //     this.toast.success({ detail: "Success", summary: "Lead Created Successfully.", duration: 3000 });
+
+      //   },
+      //   error: (err) => {
+      //     console.error(err);
+      //   }
+      // });
     }
     else {
-      Object.keys(this.renewalFormGroup.controls).forEach(field => {
-        const control = this.renewalFormGroup.get(field);
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
         control?.markAsTouched({ onlySelf: true });
       });
       this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
   }
 
+  // async getPremiumAmount() {
+
+  //   if (this.changesMade) {
+  //     this.changeRecalculate(false);
+  //   }
+
+  //   if (this.isQuote == false) {
+  //     if (Object.keys(this.formData).length > 0) {
+  //       // const modifiedInsuredMemberDetails = JSON.parse(JSON.stringify(this.formData));
+  //       this.formData.insuredMemberDetails.forEach((member: any) => {
+
+  //         // Only set 'covers' if it doesn't exist
+  //         if (!member.hasOwnProperty('covers')) {
+  //           member['covers'] = [];
+  //         }
+
+  //         // Only set 'isChronic' if it doesn't exist
+  //         if (!member.hasOwnProperty('isChronic')) {
+  //           member['isChronic'] = "No";
+  //         }
+
+  //         // Only set 'chronicDiseases' if it doesn't exist
+  //         if (!member.hasOwnProperty('chronicDiseases')) {
+  //           member['chronicDiseases'] = null;
+  //         }
+
+  //         // Only set 'roomCategory' if it doesn't exist
+  //         if (!member.hasOwnProperty('roomCategory')) {
+  //           member['roomCategory'] = "";
+  //         }
+
+  //         // Assign 'memberRelationCode' based on the relation, only if it's not already set
+  //         if (!member.hasOwnProperty('memberRelationCode')) {
+  //           if (member.relation === 'Self') {
+  //             member['memberRelationCode'] = 24;
+  //           } else if (member.relation === 'Spouse') {
+  //             member['memberRelationCode'] = 22;
+  //           } else if (member.relation.includes('Son')) {
+  //             member['memberRelationCode'] = 23;
+  //           } else if (member.relation.includes('Daughter')) {
+  //             member['memberRelationCode'] = 19;
+  //           }
+  //         }
+  //       });
+
+
+  //       if (this.formData['sumInsured'] == null) {
+  //         this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+  //       }
+
+  //       this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
+  //       this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
+
+  //       if (this.formData.memberPolicyType == 'Family Floater') {
+  //         this.formData.insuredMemberDetails.forEach((member: any) => {
+  //           member.pincode = this.formData['proposerPincode']
+  //         })
+  //       }
+  //       else
+  //         this.formData['proposerPincode'] = this.formData.insuredMemberDetails[0].pincode;
+
+
+  //       let reqData = {
+  //         "agentCode": this.agentCode,
+  //         "productId": this.productId,
+  //         "quoteData": JSON.stringify(this.formData)
+  //       }
+
+
+  //       this.commonService.GetSingleProductQuote(reqData).pipe(
+  //         tap((res: any) => {
+  //           this.spinner.hide();
+  //           // Update tenureAmount and discountList after receiving the response
+  //           this.QuoteNumber = [];
+  //           for (let i = 1; i <= 3; i++) {
+  //             const premiumKey = `tenure${i}Premium`;
+  //             const discountKey = `t${i}DiscountPercentage`;
+  //             const Quote = `tenure${i}QuoteNumber`
+  //             this.QuoteNumber.push(res.data[Quote]);
+
+  //             this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
+  //             this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+  //           }
+  //           this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+  //           // this.formData.tenure = this.selectedIndex;
+
+  //           if(this.form.formTitle =='Total Premium'){
+
+  //             this.formData.tenureAmount = this.tenureAmount;
+  //             this.formData.displayTaxList = this.displayTaxList;
+  //           }
+  //           sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+  //         })
+  //       ).subscribe({
+  //         next: () => {
+  //           // After setting tenureAmount and discountList, call setPremiumAmount()
+  //           this.setPremiumAmount();
+  //           this.spinner.hide();
+  //         },
+  //         error: (err) => {
+  //           this.spinner.hide();
+  //         }
+  //       });
+
+
+  //     }
+  //   }
+
+
+  //   // this.premiumDetails = [];
+  //   // this.premiumAmountDetails = [];
+  //   // var relationShip: string = '';
+  //   // var maxAge: number = 0;
+
+  //   // if (this.formData.planType === 'Multi Individual' || this.formData.planType === 'Individual') {
+  //   //   relationShip = 'Multi Individual'
+  //   // }
+  //   // else {
+  //   //   this.formData.insuredMemberDetails.forEach((member: any) => {
+  //   //     if (relationShip.length > 0)
+  //   //       relationShip += ','
+
+  //   //     relationShip += JSON.parse(member.relationshipType).value;
+
+  //   //     if (member.memberAge > maxAge) {
+  //   //       maxAge = member.memberAge;
+  //   //     }
+
+  //   //   })
+  //   // }
+
+  //   // if (Object.keys(this.formData).length > 0) {
+  //   //   const modifiedInsuredMemberDetails = JSON.parse(JSON.stringify(this.formData));
+  //   //   modifiedInsuredMemberDetails.insuredMemberDetails.forEach((member: any) => {
+  //   //     const relationshipValue = JSON.parse(member.relationshipType);
+  //   //     member.relationshipType = relationshipValue.value;
+  //   //     member['relationShip'] = relationShip;
+  //   //     member['prodCd'] = ''
+  //   //     if (this.formData.memberPolicyType == 'Family Floater') {
+  //   //       member['sumInsured'] = this.formData.memberSumInsured;
+  //   //       member['zone'] = this.formData.zone;
+  //   //       member['city'] = this.formData.city;
+  //   //       member.prodCd = this.formData.memberPlan;
+  //   //       member.memberAge = maxAge;
+  //   //       member['pincode'] = this.formData.pincode;
+  //   //       // member['preExistingDisease'] = "no";
+  //   //     }
+  //   //   });
+
+
+  //   //   if (modifiedInsuredMemberDetails.productType == 'AS') {
+  //   //     const transformedInsuredMemberDetails: any[] = [];
+
+  //   //     modifiedInsuredMemberDetails.insuredMemberDetails.forEach((member: any) => {
+
+  //   //       var commonDetails = {};
+  //   //       Object.keys(member).forEach((key: string) => {
+  //   //         if (!Array.isArray(member[key])) {
+  //   //           if (key === "isEarning") {
+  //   //             if (member[key])
+  //   //               commonDetails = { ...commonDetails, "isEarning": 1 };
+  //   //             else
+  //   //               commonDetails = { ...commonDetails, "isEarning": 0 };
+  //   //           }
+  //   //           else
+  //   //             commonDetails = { ...commonDetails, [key]: member[key] };
+  //   //         }
+  //   //       });
+
+
+
+  //   //       Object.keys(member).forEach((key: string) => {
+
+  //   //         if (Array.isArray(member[key]) && member[key].length > 0) {
+
+  //   //           const addOn = member[key][0];
+  //   //           const firstKey = Object.keys(addOn)[0];
+
+  //   //           if (addOn[firstKey]) {
+  //   //             if (addOn.coverType == "PA") {
+  //   //               addOn['riskClass'] = JSON.parse(addOn.natureOfDuties).value;
+  //   //             }
+  //   //             transformedInsuredMemberDetails.push({ ...commonDetails, ...addOn });
+  //   //           }
+  //   //         }
+  //   //       });
+  //   //     });
+  //   //     modifiedInsuredMemberDetails.insuredMemberDetails = transformedInsuredMemberDetails;
+  //   //   }
+  //   //   var reqData = {
+  //   //     code: this.Code,
+  //   //     insuranceTypeCode: this.insurancetypecode,
+  //   //     productId: this.productid,
+  //   //     configuration_Json: JSON.stringify(modifiedInsuredMemberDetails)
+  //   //   };
+
+
+
+  //   //   try {
+
+  //   //     let quoteResponse: any;
+
+  //   //     if (this.formData.productType == 'AF') {
+  //   //       quoteResponse = await new Promise((resolve, reject) => {
+  //   //         this.service.getActiveFitQoute(reqData).subscribe({
+  //   //           next: (res) => {
+  //   //             resolve(res)
+  //   //           },
+  //   //           error: (err) => { reject(err) }
+  //   //         });
+  //   //       });
+  //   //     }
+  //   //     else {
+  //   //       quoteResponse = await new Promise((resolve, reject) => {
+  //   //         this.service.getQoute(reqData).subscribe({
+  //   //           next: (res) => {
+  //   //             resolve(res)
+  //   //           },
+  //   //           error: (err) => { reject(err) }
+  //   //         });
+  //   //       });
+  //   //     }
+
+  //   //     if (this.formData.planType == 'Multi Individual' || this.formData.planType == 'Individual') {
+  //   //       quoteResponse.forEach((element: any) => {
+  //   //         element.prmMemDtlSecureEntity.forEach((member: any) => {
+  //   //           let tempArray: number[] = [];
+  //   //           member.premium.forEach((premium: any) => {
+  //   //             // if (premium.tenure === 1) {
+  //   //             //   this.tenureAmount[premium.te] += premium.premium || 0;
+  //   //             // } else if (premium.tenure === 2) {
+  //   //             //   this.tenure2Total += premium.premium || 0;
+  //   //             // } else if (premium.tenure === 3) {
+  //   //             //   this.tenure3Total += premium.premium || 0;
+  //   //             // }
+  //   //             this.tenureAmount[premium.tenure - 1] += premium.premium || 0;
+  //   //             tempArray.push(premium.premium);
+  //   //           });
+
+  //   //           this.premiumDetails.push(member.premium);
+  //   //           this.premiumAmountDetails.push(tempArray);
+  //   //         });
+  //   //       });
+  //   //       sessionStorage.setItem("premiumAmountDetails", this.encryptionService.encrypt(this.premiumAmountDetails));
+  //   //     }
+  //   //     else {
+  //   //       quoteResponse.forEach((element: any) => {
+  //   //         let tempArray: number[] = [];
+  //   //         element.prmMemDtlSecureEntity[0].premium.forEach((premium: any) => {
+  //   //           this.tenureAmount[premium.tenure - 1] += premium.premium || 0;
+  //   //           tempArray.push(premium.premium);
+  //   //         });
+
+  //   //         this.premiumAmountDetails.push(tempArray);
+  //   //       })
+
+  //   //       for (let i = 0; i < this.formData.numberOfInsuredMembers - 1; i++) {
+  //   //         this.premiumAmountDetails.push([0, 0, 0]);
+  //   //       }
+  //   //     }
+
+
+
+  //   //     this.tenureAmount.forEach(member => {
+
+  //   //     })
+
+  //   //     // Second API Call
+  //   //     let reqData2: {
+  //   //       productType: any;
+  //   //       overAllSIAge: number[];
+  //   //       totalPremium: number[][];
+  //   //       valueUnit: any[];
+  //   //       yearlyDiscount: number[];
+  //   //       zoneDiscount: number;
+  //   //       memberDiscount: number;
+  //   //       addOnList: any[];
+  //   //     };
+
+  //   //     var overAllSIAge: number[] = [];
+  //   //     var valueUnit: any[] = [];
+
+
+  //   //     this.formData['insuredMemberDetails'].forEach((member: any) => {
+  //   //       overAllSIAge.push(parseInt(member.memberAge));
+  //   //       valueUnit.push(null);
+  //   //     });
+
+  //   //     reqData2 = {
+  //   //       productType: this.formData['productType'],
+  //   //       overAllSIAge: overAllSIAge,
+  //   //       totalPremium: this.premiumAmountDetails,
+  //   //       valueUnit: valueUnit,
+  //   //       yearlyDiscount: [0, 7.5, 10],
+  //   //       zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' || this.formData.productType == 'GHS' ? 0 : 9,
+  //   //       memberDiscount: 0,
+  //   //       addOnList: this.addOnList
+  //   //     };
+
+  //   //     if (this.formData['numberOfInsuredMembers'] > 1 && this.formData['planType'] == 'Multi Individual') {
+  //   //       reqData2.memberDiscount = 5;
+  //   //     }
+  //   //     this.spinner.show();
+
+
+
+  //   //     const addOnPremiumResponse: any = await new Promise((resolve, reject) => {
+  //   //       this.service.getAddOnPremium(reqData2).subscribe({
+  //   //         next: (response) => resolve(response),
+  //   //         error: (err) => reject(err)
+  //   //       });
+  //   //     });
+
+  //   //     addOnPremiumResponse.calculatedValuesList.forEach((member: number, index: number) => {
+  //   //       this.tenureAmount[index] = Math.round(member)
+  //   //     })
+
+
+  //   //     this.taxList = addOnPremiumResponse.taxList;
+  //   //     this.netPremiumList = addOnPremiumResponse.netPremiumList;
+  //   //     this.totalPremiumList = addOnPremiumResponse.totalPremiumList;
+  //   //     this.indPremiumList = addOnPremiumResponse.indPremiumList;
+  //   //     this.addOnPremiumValueList = addOnPremiumResponse.totalPremiumValue;
+
+  //   //     const roundedDiscountValues = addOnPremiumResponse.discountValueList.map((value: number) => Math.round(value));
+  //   //     this.displayTaxList = addOnPremiumResponse.taxList.map((value: number) => Math.round(value));
+
+  //   //     // this.dynamicFormGroup.get('premiumAmount')?.setValue(this.tenure1Total);
+
+  //   //     sessionStorage.setItem('displayTaxList', this.encryptionService.encrypt(this.displayTaxList))
+  //   //     sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount))
+  //   //     this.changeDetectorRef.detectChanges();
+  //   //     this.spinner.hide();
+  //   //   } catch (err) {
+  //   //     console.error(err);
+  //   //     this.spinner.hide();
+  //   //   }
+  //   // }
+  //   // this.setPremiumAmount();
+  // }
+
+
   async getPremiumAmount() {
     if (this.changesMade) {
       this.changeRecalculate(false);
     }
-   if (Object.keys(this.formData).length > 0) {
 
-    this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
-      // Initialize member's properties with default values if undefined
-      member['covers'] = this.covers[index] ?? [];
-      if (member.chronicDiseases) {
-        if (typeof member.chronicDiseases === 'object') {
-          member['chronicDiseases'] = Object.keys(member.chronicDiseases)
-            .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
-            .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
-            .join(','); // Join with a comma and space
-          member['isChronic'] = "YES";
+    console.log(this.formData);
 
-        }
-        else if (typeof member.chronicDiseases === 'string') {
-          member.chronicDiseases = member.chronicDiseases;
-        }
-        else {
-          member['chronicDiseases'] = null;
-          member['isChronic'] = member['isChronic'] ?? "No";
-          // Set to empty string if no valid chronic diseases
-        }
-      }
-      else if (member.chronicDiseases == "") {
-        member['chronicDiseases'] = null;
-        member['isChronic'] = member['isChronic'] ?? "No";
-      }
+    if (this.isQuote === false) {
+      if (Object.keys(this.formData).length > 0) {
 
-      // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
-      member['roomCategory'] = member['roomCategory'] ?? "";
-      // member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
+        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+          // Initialize member's properties with default values if undefined
+          member['covers'] = this.covers[index] ?? [];
+          if (member.chronicDiseases) {
+            if (typeof member.chronicDiseases === 'object') {
+              member['chronicDiseases'] = Object.keys(member.chronicDiseases)
+                .filter(disease => member.chronicDiseases[disease]) // Filter diseases with a value of true
+                .map(disease => disease.charAt(0).toUpperCase() + disease.slice(1)) // Capitalize the first letter
+                .join(','); // Join with a comma and space
+              member['isChronic'] = "YES";
 
-      // Add previousPolicyDetails if the control exists and value is not empty
-      const previousPolicyControl = this.renewalFormGroup.get(['insuredMemberDetails', index, 'previousPolicyDetails']);
-      if (previousPolicyControl && previousPolicyControl.value !== "") {
-        member['previousPolicyDetails'] = previousPolicyControl.value;
-      }
-    });
- 
-    const data = this.formData;
-    const requestPayload = {
-      productId: data.productId,
-      agentCode: this.agentCode.toString(), // Fill in agent code manually if available
-      proposerPincode: data.proposerPincode || "",
-      productCode: data.planCode || "", // Assuming planCode maps to productCode
-      memberPolicyType: data.memberPolicyType || "",
-      typeOfBusiness: data.typeOfBusiness || "",
-      isEmployee: data.isEmployee || false,
-      sumInsured: data.insuredMemberDetails?.[0]?.sumInsured || "",
-      numberOfInsuredMembers: data.numberOfInsuredMembers || "",
-      insuredMemberDetails: data.insuredMemberDetails.map((member: any, index: number) => ({
-        roomCategory: "", // If roomCategory is determined dynamically, set it here
-        memberAge: this.calculateAge(member.memberDob), // Calculate age from DOB
-        sumInsured: member.sumInsured || "",
-        isChronic: member.isChronic || "N", // Assuming default as 'N'
-        chronicDiseases: member.chronicDiseases || "",
-        zone: data.zoneValue || "", // Assuming `zoneValue` is the zone
-        memberGender: member.memberGender || "",
-        memberDob: member.memberDob || "",
-        relation: member.relation || "",
-        memberRelationCode: member.relationshipType?.relationCode || "",
-        natureOfDuty: member.productMemberNatureWork || "",
-        riskClass: "", // Risk class not provided in the input data
-        designation: member.productMemberDesignation || "",
-        covers: this.covers[index] || []
-      }))
-    };
-    let reqData = {
-      "agentCode": this.agentCode,
-      "productId": 1,
-      "quoteData": JSON.stringify(this.formData)
-    };
-    try {
-      const res: any = await new Promise((resolve, reject) => {
-        this.commonService.GetSingleProductQuote(reqData).subscribe({
-          next: (response) => resolve(response),
-          error: (error) => reject(error)
+            }
+            else if (typeof member.chronicDiseases === 'string') {
+              member.chronicDiseases = member.chronicDiseases;
+            }
+            else {
+              member['chronicDiseases'] = null;
+              member['isChronic'] = member['isChronic'] ?? "No";
+              // Set to empty string if no valid chronic diseases
+            }
+          }
+          else if (member.chronicDiseases == "") {
+            member['chronicDiseases'] = null;
+            member['isChronic'] = member['isChronic'] ?? "No";
+          }
+
+          // member['chronicDiseases'] = member['chronicDiseases'] ?? null;
+          member['roomCategory'] = member['roomCategory'] ?? "";
+          member['pedWaitingPeriod'] = this.pedWaitingPeriod ?? null;
+
+          // Add previousPolicyDetails if the control exists and value is not empty
+          const previousPolicyControl = this.dynamicFormGroup.get(['insuredMemberDetails', index, 'previousPolicyDetails']);
+          if (previousPolicyControl && previousPolicyControl.value !== "") {
+            member['previousPolicyDetails'] = previousPolicyControl.value;
+          }
         });
-      });
-      // Update tenureAmount and discountList after receiving the response
-      this.QuoteNumber = [];
-      for (let i = 1; i <= 3; i++) {
-        const premiumKey = `tenure${i}Premium`;
-        const discountKey = `t${i}DiscountPercentage`;
-        const Quote = `tenure${i}QuoteNumber`;
-        const basePremiumKey = `t${i}BasePremium`;
-        const taxKey = `t${i}TaxAmount`;
-        this.QuoteNumber.push(res.data[Quote]);
 
-        this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
-        this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
-        this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
-        this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
+
+        if (this.formData.insuredMemberDetails[0]?.sumInsured != null && this.formData.insuredMemberDetails[0].sumInsured !== "") {
+          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        }
+        this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
+        this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
+        this.formData['sumInsuredForPlan'] = this.formData.insuredMemberDetails[0].sumInsuredForPlan;
+
+        if (this.formData.memberPolicyType === 'Family Floater') {
+          const pincode = this.formData.memberPolicyType === 'Family Floater'
+            ? this.formData['proposerPincode']
+            : this.formData.insuredMemberDetails[0].pincode;
+          const zone = this.formData['zone'];
+          const zoneValue = this.formData['zoneValue'];
+          let deductibleAmount: any = '';
+          if (this.formData['deductibleAmount']) {
+            deductibleAmount = this.formData['deductibleAmount'];
+          }
+          this.formData.insuredMemberDetails.forEach((member: any) => {
+            member.pincode = pincode
+            member.zone = zone;
+            member.zoneValue = zoneValue;
+            member.sumInsured = this.formData['sumInsured'];
+            if (deductibleAmount != '') {
+              member.deductibleAmount = deductibleAmount;
+            }
+          });
+        }
+
+        let reqData = {
+          "agentCode": this.agentCode,
+          "productId": this.productId,
+          "quoteData": JSON.stringify(this.formData)
+        };
+
+        const mappedData = {
+          quotationNumber: this.formData.quoteId,
+          policynumber: this.formData.policyNumber,
+          members: this.formData.insuredMemberDetails.map((member: any) => ({
+            memberId: member.memberId,
+            optionalCoverDetails: member.covers.map((cover: any) => ({
+              coverid: cover.coverId,
+              coversi: cover.value.toString(),
+              coverpartcode: "",
+              isselected: "Y",
+            })),
+            memberPeds: []
+          }))
+        };
+        console.log(mappedData,this.formData,this.dynamicFormGroup.value);
+        
+        if(this.changesMade){
+          try {
+            const resp: any = await lastValueFrom(this.renewalService.updateCoverDetails(mappedData));
+            
+            if (resp.data.isSuccess) {
+              const res = resp;
+              this.QuoteNumber = [];
+        
+              for (let i = 1; i <= 3; i++) {
+                const premiumKey = `tenure${i}Premium`;
+                // const discountKey = `t${i}DiscountAmount`;
+                const Quote = `tenure${i}QuoteNumber`;
+                // const basePremiumKey = `t${i}BasePremium`;
+                // const taxKey = `t${i}TaxAmount`;
+        
+                this.QuoteNumber.push(res.data[Quote]);
+                this.tenureAmount[i - 1] = res.data[premiumKey] ? Math.round(res.data[premiumKey]) : 0;
+                // this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+                // this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
+                // this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;            
+              }
+              console.log(this.QuoteNumber,this.tenureAmount);
+              
+        
+              this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+        
+              if (this.form.formTitle === 'Policy Details') {
+                sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+                // sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+                // sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+                // sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+        
+                this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+                // this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+              }
+              this.setPremiumAmount();
+            }
+          } catch (error) {
+            console.error("API call failed:", error);
+          }
+        }
+        
+
+        // try {
+        //   const res: any = await new Promise((resolve, reject) => {
+        //     this.commonService.GetSingleProductQuote(reqData).subscribe({
+        //       next: (response) => resolve(response),
+        //       error: (error) => reject(error)
+        //     });
+        //   });
+        //   // Update tenureAmount and discountList after receiving the response
+        //   this.QuoteNumber = [];
+        //   for (let i = 1; i <= 3; i++) {
+        //     const premiumKey = `tenure${i}Premium`;
+        //     const discountKey = `t${i}DiscountAmount`;
+        //     const Quote = `tenure${i}QuoteNumber`;
+        //     const basePremiumKey = `t${i}BasePremium`;
+        //     const taxKey = `t${i}TaxAmount`;
+        //     this.QuoteNumber.push(res.data[Quote]);
+
+        //     this.tenureAmount[i - 1] = res.data[premiumKey] ? Math.round(res.data[premiumKey]) : 0;
+        //     this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+        //     this.taxList[i - 1] = res.data[taxKey] ? res.data[taxKey] : 0;
+        //     this.basePremiumList[i - 1] = res.data[basePremiumKey] ? res.data[basePremiumKey] : 0;
+        //   }
+
+        //   this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+        //   if (this.form.formTitle === 'Leads') {
+        //     // this.formData.tenureAmount = this.tenureAmount;
+        //     // this.formData.displayTaxList = this.displayTaxList;
+        //     sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+        //     sessionStorage.setItem('discountList', this.encryptionService.encrypt(this.discountList));
+        //     sessionStorage.setItem('taxList', this.encryptionService.encrypt(this.taxList));
+        //     sessionStorage.setItem('basePremiumList', this.encryptionService.encrypt(this.basePremiumList));
+        //     this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+        //     this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+
+        //   }
+        //   if (!this.clickedRecalculate)
+        //     sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+
+        //   // After setting tenureAmount and discountList, call setPremiumAmount()
+        //   this.setPremiumAmount();
+
+        // } catch (error) {
+        //   console.error("Error while fetching product tenure", error);
+        // } finally {
+        //   this.spinner.hide();
+        //   window.scrollTo({ top: 0, behavior: 'smooth' });
+        // }
       }
-
-      this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-      // if (this.form.formTitle === 'Leads') {
-      //   // this.formData.tenureAmount = this.tenureAmount;
-      //   // this.formData.displayTaxList = this.displayTaxList;
-      //   this.renewalFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-      //   this.renewalFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
-      // }
-
-      console.log(this.formData, this.form, this.renewalFormGroup.value);
-
-      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-
-      // After setting tenureAmount and discountList, call setPremiumAmount()
-      this.setPremiumAmount();
-
-    } catch (error) {
-      console.error("Error while fetching product tenure", error);
-    } finally {
-      // this.spinner.hide();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-   }
   }
+
 
   flattenObjectInsert(obj: any, prefix = '') {
     if (Array.isArray(obj)) {
@@ -5114,10 +7848,10 @@ export class RenewalDynamicFormComponent {
       const newKey = prefix + key;
       if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
         if (typeof value === 'object' && value !== null && 'id' in value) {
-          this.renewalFormGroup.get(newKey)?.patchValue(value);
+          this.dynamicFormGroup.get(newKey)?.patchValue(value);
         }
-        else if (this.renewalFormGroup.get(newKey) instanceof FormGroup) {
-          const formGroup = this.renewalFormGroup.get(newKey);
+        else if (this.dynamicFormGroup.get(newKey) instanceof FormGroup) {
+          const formGroup = this.dynamicFormGroup.get(newKey);
           Object.keys(value).forEach((key2) => {
             // if (key2 == 'covers') {
             //   console.log(formGroup?.get(key2), typeof formGroup?.get(key2));
@@ -5169,21 +7903,25 @@ export class RenewalDynamicFormComponent {
             // formGroup?.get(key2)?.setValue(value[key2]);
             // }
             else if (formGroup?.get(key2) instanceof FormGroup) {
-              Object.keys(value[key2]).forEach((member: any) => {
-                if (formGroup?.get(key2)?.get(member) instanceof FormArray) {
-                  const addOnMemberDetails = formGroup?.get(key2)?.get(member) as FormArray;
-                  addOnMemberDetails.controls.forEach((control, index) => {
-                    // Set value only if the index exists in newValues
-                    if (value[key2][member][index]) {
-                      control.patchValue(value[key2][member][index]);
-                    }
-                  });
-                }
-                else {
-                  formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
-                }
+              console.log(key2, value[key2]);
+              if (value[key2]) {
+                Object.keys(value[key2]).forEach((member: any) => {
+                  if (formGroup?.get(key2)?.get(member) instanceof FormArray) {
+                    const addOnMemberDetails = formGroup?.get(key2)?.get(member) as FormArray;
+                    addOnMemberDetails.controls.forEach((control, index) => {
+                      // Set value only if the index exists in newValues
+                      if (value[key2][member][index]) {
+                        control.patchValue(value[key2][member][index]);
+                      }
+                    });
+                  }
+                  else {
+                    formGroup?.get(key2)?.get(member)?.setValue(value[key2][member]);
+                  }
 
-              })
+                })
+              }
+
             }
             else {
               formGroup?.get(key2)?.setValue(value[key2]);
@@ -5196,15 +7934,17 @@ export class RenewalDynamicFormComponent {
         }
       }
       else {
-        if (this.renewalFormGroup.get(newKey) && this.renewalFormGroup.get(newKey)?.value == "") {
-          this.renewalFormGroup.get(newKey)?.patchValue(value);
+        if (this.dynamicFormGroup.get(newKey) && this.dynamicFormGroup.get(newKey)?.value == "") {
+          this.dynamicFormGroup.get(newKey)?.patchValue(value);
         }
       }
     });
   }
 
+
   async fullQuotation(): Promise<void> {
     return new Promise((resolve, reject) => {
+      // this.spinner.show();
       this.mappedFormDataFullQuote(this.formData)
         .then((data) => {
           const reqData: any = {
@@ -5225,8 +7965,8 @@ export class RenewalDynamicFormComponent {
                 this.formData.quoteValidToDate = responseData.policyEndDate || null;
                 this.formData.ReceiptNumber = responseData.receiptNumber || null;
                 this.formData.customerId = responseData.customerId || null;
-                // Merging updated formData with renewalFormGroup values
-                this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+                // Merging updated formData with dynamicFormGroup values
+                this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
 
                 // Encrypting and saving formData to session storage
                 sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
@@ -5283,6 +8023,10 @@ export class RenewalDynamicFormComponent {
     });
   }
 
+
+
+
+
   /* AddOn Related Method */
 
   onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null, innerControl: any = null, indexj: number | null = null) {
@@ -5306,8 +8050,8 @@ export class RenewalDynamicFormComponent {
     }
     if ((event.target.type === 'checkbox' && event.target.checked)) {
       if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
-        const firstKey = Object.keys((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
-        (this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls[firstKey].setValue(false);
+        const firstKey = Object.keys((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
+        (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[firstKey].setValue(false);
         this.showOverlay(parentControl);
       }
 
@@ -5317,7 +8061,7 @@ export class RenewalDynamicFormComponent {
         parentControl.subControls.forEach((subControl: any) => {
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
-            let parentCode = this.renewalFormGroup.get(parentControl.name) as FormGroup;
+            let parentCode = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
             let controlCode = parentCode.get(subControl.name) as FormArray;
             if (event.target.checked == true) {
               if (index) {
@@ -5363,7 +8107,7 @@ export class RenewalDynamicFormComponent {
                     else {
                       subControl.innerSubControls[i].coreControls[j].visible = false;
                     }
-                    let newcontrol = (this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`) as any);
+                    let newcontrol = (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`) as any);
                     if (newcontrol instanceof FormGroup) {
                       Object.keys(newcontrol.controls).forEach((element: any) => {
                         newcontrol.removeControl(element);
@@ -5373,12 +8117,15 @@ export class RenewalDynamicFormComponent {
                       newcontrol.setValue(false);
                     }
                   }
-                  else if (this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true || this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == false) {
+                  else if (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true || this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == false) {
 
-                    this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
+                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
                   }
                   else {
-                    this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                    if ((parentControl.name == 'comaBenefits' || parentControl.name == 'adventureSports' || parentControl.name == 'accidentPatienthospitalization' || parentControl.name == 'brokenBonesBenefit') && this.formData.productName == 'Activ Secure') { }
+                    else {
+                      this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                    }
                   }
                 }
               }
@@ -5396,7 +8143,7 @@ export class RenewalDynamicFormComponent {
             subControl.visible = event.target.checked;
             if (event.target.checked == false) {
               subControl.innerArrayControl = subControl.innerArrayControl?.slice(0, 2);
-              let formArray = (this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
+              let formArray = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
               formArray.clear();
 
               // Remove all items from the FormArray
@@ -5438,18 +8185,159 @@ export class RenewalDynamicFormComponent {
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
     }
+
+    if (this.formData.productName == 'Activ Secure') {
+      if (parentControl.name == 'cancerSecure') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'csSecondOpinion') {
+                if (formControl.visible) {
+                  formControl.visible = false;
+                  this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                  this.onCheckboxChange(event, formControl.subControls[0], formControl, null);
+                }
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'criticalIllness') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'ciSecondOpinion') {
+                if (formControl.visible) {
+                  formControl.visible = false;
+                  this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                  this.onCheckboxChange(event, formControl.subControls[0], formControl, null);
+                }
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (parentControl.name == 'accident' && formControl.name == 'accidentPlus') {
+                formControl.visible = true;
+              }
+              if (parentControl.name == 'accidentPlus' && formControl.name == 'accident') {
+                formControl.visible = true;
+              }
+              if (formControl.name == 'accidentPatienthospitalization' || formControl.name == 'temporaryTotalDisablementBenefit'
+                || formControl.name == 'brokenBonesBenefit' || formControl.name == 'burnBenefit' || formControl.name == 'adventureSports'
+                || formControl.name == 'medicalExpenses' || formControl.name == 'emergencyAssistance' || formControl.name == 'emiProtect'
+                || formControl.name == 'loanProtect' || formControl.name == 'comaBenefits') {
+                if (formControl.visible) {
+                  formControl.visible = false;
+                  this.dynamicFormGroup.get(`${formControl.name}.${formControl.subControls[0].name}`)?.setValue(false);
+                  this.onCheckboxChange(event, formControl.subControls[0], formControl, null);
+                }
+              }
+            });
+          }
+        });
+      }
+    }
   }
+
+
+  // addOnAdded(control: any, parentControl: any = null) {
+
+  //   let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+  //   let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+
+  //   Object.keys(addOnData.addOnDetails).forEach((key) => {
+  //     // Check if memberCheckbox is true for the current member
+  //     if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
+  //       modifiedInsuredMemberDetails.forEach((member: any) => {
+  //         // Find the matching member by relation (e.g., Self, Spouse, etc.)
+  //         if (member.relation == key) {
+  //           let addOnSumInsured: any = 0;
+  //           const coverId = addOnData.addOnId;
+  //           const coverName = addOnData.additionalCoverName;
+  //           let coverFound = false;
+
+  //           if (!member.covers) {
+  //             member['covers'] = [];
+  //           }
+
+  //           addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+  //             if (addOnDetail.addOnSumInsured) {
+  //               addOnSumInsured = addOnDetail.addOnSumInsured;
+  //             }
+  //             if (addOnData.addOnId == 'PA' && addOnDetail.occupation) {
+  //               member['occupationCode'] = JSON.parse(addOnDetail.occupation).value;
+  //             }
+  //             if (addOnData.addOnId == 'PA' && addOnDetail.occupationRisk) {
+  //               member['natureOfDutyCode'] = JSON.parse(addOnDetail.occupationRisk).value;
+  //             }
+  //           });
+
+  //           // if(addOnData.addOnId == 'PA'){
+  //           //   member['occupationCode'] = JSON.parse(addOnData.addOnDetails[key][1].occupation).id;
+  //           //   member['natureOfDutyCode'] = JSON.parse(addOnData.addOnDetails[key][1].occupationRisk).id;
+  //           // }
+
+  //           // Check if the add-on (coverId) is already present in the covers array
+  //           member.covers.forEach((cover: any) => {
+  //             if (cover.coverId === coverId) {
+  //               // Update the existing add-on with the new sum insured
+  //               cover.value = addOnSumInsured;
+  //               coverFound = true;
+  //             }
+  //           });
+
+  //           // If the add-on is not found, push it as a new cover
+  //           if (!coverFound) {
+  //             member.covers.push({
+  //               coverId: coverId,
+  //               value: addOnSumInsured,
+  //               coverName: coverName
+  //             });
+  //           }
+  //         }
+  //       });
+  //     }
+  //     else if (addOnData.addOnDetails[key][0].memberCheckbox === false) {
+  //       modifiedInsuredMemberDetails.forEach((member: any) => {
+  //         // Find the matching member by relation (e.g., Self, Spouse, etc.)
+  //         if (member.relation == key) {
+  //           const coverId = addOnData.addOnId;
+
+  //           if (member.covers) {
+  //             // Remove the add-on by filtering out the cover with the matching coverId
+  //             member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
+  //           }
+  //         }
+  //       });
+  //     }
+  //   });
+  //   // this.getPremiumAmount();
+
+  // }
+
+
+
+
 
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {
-    let addOnData = this.renewalFormGroup.get(parentControl.name)?.getRawValue();
-    let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+    let addOnData = this.dynamicFormGroup.get(parentControl.name)?.getRawValue();
+    console.log(addOnData);
+    console.log(control,parentControl);
+    
 
+    let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
     Object.keys(addOnData.addOnDetails).forEach((key) => {
       if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
         modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
           if (member.relation === key) {
             let addOnSumInsured: any = 0;
+            let weeklyCashLimit: any;
+            let noOfDays: any;
+            let plan: any;
             if (parentControl.name == 'deductible') {
               addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
                 if (addOnDetail.addOnSumInsured) {
@@ -5473,6 +8361,14 @@ export class RenewalDynamicFormComponent {
                 else if (addOnDetail.roomType) {
                   addOnSumInsured = addOnDetail.roomType;
                 }
+                else if (addOnDetail.weeklyCashLimit) {
+                  weeklyCashLimit = addOnDetail.weeklyCashLimit
+                }
+                else if (addOnDetail.noOfDays) {
+                  noOfDays = addOnDetail.noOfDays
+                } else if (addOnDetail.plan) {
+                  plan = addOnDetail.plan
+                }
                 if (coverName.includes('Personal Accident') && addOnDetail.occupation) {
                   member.occupationCode = JSON.parse(addOnDetail.occupation).value;
                 }
@@ -5493,6 +8389,9 @@ export class RenewalDynamicFormComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  plan: plan,
+                  weeklyCashLimit: weeklyCashLimit,
+                  noOfDays: noOfDays,
                 });
               }
 
@@ -5508,11 +8407,13 @@ export class RenewalDynamicFormComponent {
                   coverId: coverId,
                   value: addOnSumInsured,
                   coverName: coverName,
+                  plan: plan,
+                  weeklyCashLimit: weeklyCashLimit,
+                  noOfDays: noOfDays,
                 });
               }
 
             }
-
             if (parentControl.name == 'chronicCare') {
               const chronicDiseases: string[] = [];
 
@@ -5566,12 +8467,202 @@ export class RenewalDynamicFormComponent {
         });
       }
     });
+
+    let selectedAddOn = parentControl.name;
+    console.log(selectedAddOn)
+    let isChecked = addOnData.addOnDetails
+      ? Object.values(addOnData.addOnDetails).some((members: any) =>
+        members.some((member: any) => member.memberCheckbox === true)
+      )
+      : false;
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        // Reset visibility for all add-ons when unchecking
+        if (!isChecked) {
+          formControl.visible = true;
+        }
+      });
+    });
+
+    console.log(isChecked);
+
+    if (isChecked) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          // Health Booster Section
+          if (section.sectionTitle === "Health Booster" || section.sectionTitle === "Optional Covers") {
+            if (selectedAddOn === "coPayment") {
+              if (["perClaim", "aggregateDeduct", "unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "perClaim") {
+              if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "unLimitedCare") {
+              if (["subLimits", "aggregateDeduct", "coPayment", "geographicalEmergency"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "aggregateDeduct") {
+              if (["perClaim", "unLimitedCare", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "subLimits") {
+              if (["unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "waiverCopay") {
+              if (["coPayment", "aggregateDeduct"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+          }
+
+          // Optional Covers Section
+          if (section.sectionTitle === "Optional Covers" || section.sectionTitle === "Health Booster") {
+            if (selectedAddOn === "geographicalEmergency") {
+              if (["unLimitedCare"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+            if (selectedAddOn === "perClaim") {
+              if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                formControl.visible = false;
+              }
+            }
+          }
+        });
+      });
+    }
+
+
+    if (this.formData.productName == 'Activ Secure') {
+      if (parentControl.name == 'cancerSecure') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'csSecondOpinion') {
+                formControl.visible = true
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'criticalIllness') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name == 'ciSecondOpinion') {
+                formControl.visible = true
+              }
+            });
+          }
+        });
+      } else if (parentControl.name == 'accident' || parentControl.name == 'accidentPlus') {
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle === "Optional Covers") {
+            section.formControls.forEach((formControl: any) => {
+              if (parentControl.name == 'accident' && formControl.name == 'accidentPlus') {
+                formControl.visible = false;
+              }
+              if (parentControl.name == 'accidentPlus' && formControl.name == 'accident') {
+                formControl.visible = false;
+              }
+              if ([
+                'accidentPatienthospitalization', 'temporaryTotalDisablementBenefit', 'brokenBonesBenefit',
+                'burnBenefit', 'adventureSports', 'medicalExpenses', 'emergencyAssistance',
+                'emiProtect', 'loanProtect', 'comaBenefits'
+              ].includes(formControl.name)) {
+                formControl.visible = true;
+                if (formControl.methodName) {
+                  this.resolveMethod(formControl.methodName, formControl, parentControl);
+                }
+              }
+              if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports' || formControl.name == 'brokenBonesBenefit' || formControl.name == 'medicalExpenses') {
+                if (formControl.subControls) {
+                  formControl.subControls.forEach((subControl: any) => {
+                    if (subControl.innerSubControls) {
+                      subControl.innerSubControls.forEach((innerSubControl: any) => {
+                        if (innerSubControl.coreControls) {
+                          innerSubControl.coreControls.forEach((coreControl: any, index: any) => {
+                            if (coreControl.name == 'addOnSumInsured') {
+                              const parentGroup = this.dynamicFormGroup.get(formControl.name) as FormGroup;
+                              const controlGroup = parentGroup?.controls[control.name] as FormGroup;
+
+                              if (innerSubControl.name !== "demoType" && innerSubControl.name !== "doneButton") {
+                                const innerSubGroup = controlGroup?.controls[innerSubControl.name] as FormArray;
+                                const targetFormGroup = innerSubGroup?.controls[index] as FormGroup;
+                                const coreControls = targetFormGroup?.controls[coreControl.name] as FormControl;
+                                if (coreControls) {
+                                  let member = this.formData.insuredMemberDetails.find((m: any) =>
+                                    m.covers.some((c: any) => c.coverId === 'ACCD' && m.relation === innerSubControl.name)
+                                  );
+                                  if (member) {
+                                    let accdCover = member.covers.find((c: any) => c.coverId === 'ACCD');
+                                    if (accdCover && accdCover.value !== undefined) {
+                                      if (parentControl.name == 'accidentPlus' && formControl.name == 'brokenBonesBenefit') {
+                                        let coverValue = accdCover.value;
+                                        let planDetails = JSON.parse(accdCover.plan);
+                                        let planName = planDetails.name;
+                                        coreControls.disable();
+                                        if (planName === 'P4') {
+                                          if (coverValue >= 500000 && coverValue <= 2500000) {
+                                            coreControls.setValue(100000);
+                                          } else if (coverValue >= 3000000 && coverValue <= 5000000) {
+                                            coreControls.setValue(300000);
+                                          } else if (coverValue >= 10000000 && coverValue <= 100000000) {
+                                            coreControls.setValue(500000);
+                                          }
+                                        } else if (planName === 'P5') {
+                                          if (coverValue >= 1000000 && coverValue <= 2000000) {
+                                            coreControls.setValue(100000);
+                                          } else if (coverValue >= 2500000 && coverValue <= 5000000) {
+                                            coreControls.setValue(300000);
+                                          } else if (coverValue >= 10000000 && coverValue <= 200000000) {
+                                            coreControls.setValue(500000);
+                                          }
+                                        }
+                                      }
+                                      else if (formControl.name == 'comaBenefits' || formControl.name == 'adventureSports') {
+                                        coreControls.setValue(accdCover.value >= 1000000 ? 1000000 : accdCover.value);
+                                      } else if (formControl.name == 'medicalExpenses') {
+                                        coreControls.setValue(accdCover.value >= 10000000 ? 50000 : accdCover.value * 0.008);
+                                      }
+                                    } else {
+                                      coreControls.setValue("");
+                                    }
+                                  } else {
+                                    coreControls.setValue("");
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
+    }
   }
 
   //New Remove addOn
   addOnRemoved(control: any, parentControl: any = null) {
-    let addOnData = this.renewalFormGroup.get(parentControl.name)?.value;
+    console.log(control, parentControl)
+    let addOnData = this.dynamicFormGroup.get(parentControl.name)?.value;
+    console.log(addOnData)
     let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+    console.log(modifiedInsuredMemberDetails)
 
     // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
     modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
@@ -5588,9 +8679,60 @@ export class RenewalDynamicFormComponent {
       }
     });
 
+    console.log(control.value)
+
+    if (control.value === false) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (section.sectionTitle === "Health Booster" || section.sectionTitle === "Optional Covers") {
+            switch (control.label) {
+              case "Co-Payment":
+                if (["perClaim", "aggregateDeduct", "unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Per Claim Deductible Cover":
+                if (["aggregateDeduct", "coPayment"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Unlimited Care":
+                if (["subLimits", "aggregateDeduct", "coPayment", "geographicalEmergency"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Aggregate Deductible":
+                if (["perClaim", "unLimitedCare", "coPayment"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Sub-Limits":
+                if (["unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Waiver of Co pay":
+                if (["coPayment", "aggregateDeduct"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+              case "Geographical extension to include USA and Canada for Global Cover (Emergency Only)":
+                if (["unLimitedCare"].includes(formControl.name)) {
+                  formControl.visible = true;
+                }
+                break;
+            }
+          }
+        });
+      });
+    }
+
     // Call getPremiumAmount after removing the add-on if needed
     // this.getPremiumAmount();
   }
+
+
+
 
   calculatePremiumPerype(insuredMembers: any): String {
     var premiumPerype = "";
@@ -5622,14 +8764,14 @@ export class RenewalDynamicFormComponent {
 
       })
 
-      if (this.renewalFormGroup.get('proposerState')?.value == "") {
+      if (this.dynamicFormGroup.get('proposerState')?.value == "") {
         const reqdata = {
-          "pincode": this.renewalFormGroup.get('proposerPincode')?.value
+          "pincode": this.dynamicFormGroup.get('proposerPincode')?.value
         }
         // this.commonService.getPinCodeByCity(reqdata).subscribe({
         //   next: (res) => {
-        //     this.renewalFormGroup.get('proposerCity')?.setValue(res.strcity);
-        //     this.renewalFormGroup.get('proposerState')?.setValue(res.strstate);
+        //     this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
+        //     this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
         //   },
         //   error: (err) => {
         //     console.error(err)
@@ -5673,6 +8815,8 @@ export class RenewalDynamicFormComponent {
   }
 
   setPremiumAmount(control?: any) {
+    console.log(this.formData);
+    // this.formData.tenure = 1;
     if (this.formData.tenure) {
       this.selectedIndex = this.formData.tenure - 1;
     }
@@ -5701,7 +8845,7 @@ export class RenewalDynamicFormComponent {
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
                 // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
+                //   this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
                 //   this.selectedIndex = index;
                 //   this.formData.tenure = this.selectedIndex + 1;
                 // }
@@ -5712,7 +8856,7 @@ export class RenewalDynamicFormComponent {
                 option.year = "2 years"
                 option.discount = "7.5% off"
                 // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
+                //   this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
                 //   this.selectedIndex = index;
                 //   this.formData.tenure = this.selectedIndex + 1;
                 // }
@@ -5723,29 +8867,33 @@ export class RenewalDynamicFormComponent {
                 option.year = "3 years"
                 option.discount = "10% off"
                 // if (this.selectedIndex == index) {
-                //   this.renewalFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
+                //   this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[index];
                 //   this.selectedIndex = index;
                 //   this.formData.tenure = this.selectedIndex + 1;
                 // }
               }
               if (this.selectedIndex === index) {
-                let radioOptionsControl = this.renewalFormGroup.get('totalPremium');
+                let radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
                 if (!radioOptionsControl) {
                   // Add control if it doesn't exist
-                  this.renewalFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
-                  // radioOptionsControl = this.renewalFormGroup.get('totalPremium');
+                  this.dynamicFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
+                  // radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
                 }
 
                 // if (radioOptionsControl) {
                 //   radioOptionsControl.setValue(this.tenureAmount[this.selectedIndex], { emitEvent: true });
-                //   // this.renewalFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
+                //   // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
                 // }
-                option.selected = true;
-                if (this.renewalFormGroup.getRawValue().totalPremium) {
 
-                  // this.renewalFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
-                  // this.renewalFormGroup.get('totalPremium')?.setValue(option.value);
-                  this.renewalFormGroup.get('totalPremium')?.patchValue(option.value);
+                option.selected = true;
+                if (this.dynamicFormGroup.getRawValue().totalPremium != null || this.dynamicFormGroup.getRawValue().totalPremium == 0) {
+
+                  // this.dynamicFormGroup.getRawValue().totalPremium = this.tenureAmount[this.selectedIndex];
+                  // this.dynamicFormGroup.get('totalPremium')?.setValue(option.value);
+                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
+                }
+                else if (this.formData.productName === 'Activ Secure' && this.dynamicFormGroup.getRawValue().totalPremium == null) {
+                  this.dynamicFormGroup.get('totalPremium')?.patchValue(option.value);
                 }
                 // Update additional data
                 if (this.QuoteNumber.length > 0) {
@@ -5760,8 +8908,11 @@ export class RenewalDynamicFormComponent {
           }
 
           if (this.form.formTitle != 'Total Premium') {
-            this.renewalFormGroup.get(formControl.name)?.setValue(this.tenureAmount[this.selectedIndex]);
+            this.dynamicFormGroup.get(formControl.name)?.setValue(this.tenureAmount[this.selectedIndex]);
           }
+        }
+        else if (formControl.name == 'hlthMeter') {
+          formControl.visible = this.selectedIndex == 0 ? true : false;
         }
       });
     });
@@ -5773,7 +8924,6 @@ export class RenewalDynamicFormComponent {
     );
     control.value = a;
   }
-
   displaySelectedAddons(control: any) {
     const coverNames: string[] = [];
     for (const key in this.formData) {
@@ -5804,21 +8954,33 @@ export class RenewalDynamicFormComponent {
   isSectionCollapsed(sectionTitle: string): boolean {
     return !!this.collapsedSections[sectionTitle];
   }
-  generateHeader(control: any, i: any) {  
-    const imagePath = (this.renewalFormGroup.get(control.name) as FormArray)?.controls[i - 1].value['relationshipType'].imagePath;
-    return imagePath;
+  generateHeader(control: any, i: any) {
+    const data =this.dynamicFormGroup.value
+    if (!control?.name || !data?.[control.name]?.[i - 1]?.relationshipType) {
+        return '';
+    }
+    let relationshipType = data[control.name][i - 1].relationshipType;
+    if (typeof relationshipType === 'string') {
+        try {
+            relationshipType = JSON.parse(relationshipType);
+        } catch (error) {
+            console.error('Error parsing relationshipType:', error);
+            return '';
+        }
+    }
+    return relationshipType?.imagePath || '';
   }
+
 
   addOnMemberAdded(subControl: any, parentControl: any = null) {
     if (parentControl != null) {
       let count = 0;
-      let memberDetails = this.renewalFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
-      console.log(memberDetails);
+      let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
+      console.log(memberDetails,this.dynamicFormGroup.value,this.form);
       Object.keys(memberDetails).forEach(key => {
         let memberArray = memberDetails[key];
         // Check if memberCheckbox is false for any member and set other fields to empty
         let memberCheckbox = memberArray.find((member: any) => member.memberCheckbox === false);
-
         if (memberCheckbox) {
           memberArray.forEach((member: any) => {
             if (!member.memberCheckbox) {
@@ -5826,7 +8988,7 @@ export class RenewalDynamicFormComponent {
               Object.keys(member).forEach(memberKey => {
                 if (memberKey !== 'memberCheckbox') {
                   member[memberKey] = '';
-                  let memberArrayControl = (this.renewalFormGroup.get(parentControl.name)?.get(subControl.name)?.get(key)) as FormArray;
+                  let memberArrayControl = (this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.get(key)) as FormArray;
                   let memberFormGroup = memberArrayControl.controls.find((group: AbstractControl) => {
                     return (group as FormGroup).get(memberKey)
                   }) as FormGroup;
@@ -5834,7 +8996,6 @@ export class RenewalDynamicFormComponent {
                   if (memberFormGroupControl) {
                     memberFormGroupControl.setValue('');
                   }
-
                 }
               });
             }
@@ -5842,7 +9003,7 @@ export class RenewalDynamicFormComponent {
         } else {
           count++;
           let dependentControls: string[] = [];
-          let tempControlArray = (((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.get(subControl.name) as FormGroup)?.get(key) as FormArray);
+          let tempControlArray = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.get(subControl.name) as FormGroup)?.get(key) as FormArray);
           let breakFlag = false;
           this.form.formSections.forEach((section: IFormSections) => {
             if (breakFlag) return;
@@ -5873,7 +9034,23 @@ export class RenewalDynamicFormComponent {
 
                             let memberFormGroupControl = memberFormGroup.get(coreControl.name);
                             if (memberFormGroupControl?.value == '' && coreControl.type == 'text' && coreControl.name == 'addOnSumInsured') {
-                              memberFormGroupControl.setValue(this.formData.sumInsured);
+                              console.log(innerSubControl, coreControl, this.formData);
+                              if (this.formData.memberPolicyType == 'Multi Individual') {
+                                // Find the insured member who matches the relation in innerSubControl.name
+                                const insuredMember = this.formData.insuredMemberDetails.find(
+                                  (member: any) => member.relation === innerSubControl.name
+                                );
+
+                                // If a matching insured member is found, set the sumInsured to memberFormGroupControl
+                                if (insuredMember) {
+                                  memberFormGroupControl.setValue(insuredMember.sumInsured);
+                                }
+                              } else {
+                                // If not Multi Individual, set the sumInsured from formData directly
+                                memberFormGroupControl.setValue(this.formData.sumInsured);
+                              }
+
+
                             }
                             else if (memberFormGroupControl?.value == '') {
 
@@ -5909,9 +9086,9 @@ export class RenewalDynamicFormComponent {
       });
 
       // ?.controls[0].setValue(false);
-      let control = this.renewalFormGroup.get(parentControl.name) as FormGroup;
+      let control = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
       if (control) {
-        const firstKey = Object.keys((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
+        const firstKey = Object.keys((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
         // Get the first key
         if (count == 0) {
           control.controls[firstKey].setValue(false);
@@ -5920,17 +9097,19 @@ export class RenewalDynamicFormComponent {
         else {
           control.controls[firstKey].setValue(true);
           this.changeOverLayDone(subControl, parentControl, true);
-          this.changeRecalculate(true);
           this.addOnAdded(subControl, parentControl);
         }
+        this.changeRecalculate(true);
       }
 
     }
     this.closeOverlay(subControl, parentControl);
+    console.log(this.formData,this.dynamicFormGroup.value);
+    
   }
 
   closeOverlay(subControl: any, control: any = null) {
-    if (subControl.conditionCheck && (this.renewalFormGroup.get(control.name) as FormGroup).invalid) {
+    if (subControl.conditionCheck && (this.dynamicFormGroup.get(control.name) as FormGroup).invalid) {
       console.log("sub control", subControl);
       this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 })
     }
@@ -5941,10 +9120,9 @@ export class RenewalDynamicFormComponent {
       subControl.visible = false;
     }
   }
-
   closePopUp(control: any = null) {
-    if (this.renewalFormGroup.get(control.name)?.invalid) {
-      let dynamicControl = this.renewalFormGroup.get(control.name);
+    if (control != null && this.dynamicFormGroup.get(control.name)?.invalid) {
+      let dynamicControl = this.dynamicFormGroup.get(control.name);
       this.traverseFormGroup(dynamicControl as FormGroup);
       if (dynamicControl instanceof FormGroup) {
         Object.keys(dynamicControl.controls).forEach(arrayControl => {
@@ -6002,14 +9180,12 @@ export class RenewalDynamicFormComponent {
     })
     this.openPopUp();
   }
-
   openPopUp() {
     this.isOverlayVisible = true;
   }
-
   verifyKYC(control: any) {
-    const proposerDOB = this.renewalFormGroup.get('memberDobProposer')?.value;
-    const panNumber = this.renewalFormGroup.get('panNo')?.value;
+    const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
+    const panNumber = this.dynamicFormGroup.get('panNo')?.value;
 
     if (!proposerDOB || !panNumber) {
       this.toast.warning({ detail: "Warning", summary: "Both DOB and Pan No are mandatory for KYC", duration: 3000 });
@@ -6034,8 +9210,8 @@ export class RenewalDynamicFormComponent {
           if (typeof response.data === 'object' && response.data !== null) {
             Object.keys(response.data).forEach((key: any) => {
               const fieldValue = response.data[key];
-              this.renewalFormGroup.get(key)?.setValue(fieldValue)
-              const insuredMemberDetailsControl = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
+              this.dynamicFormGroup.get(key)?.setValue(fieldValue)
+              const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
 
               if (insuredMemberDetailsControl) {
                 insuredMemberDetailsControl.controls.forEach((control: any, index: any) => {
@@ -6088,7 +9264,7 @@ export class RenewalDynamicFormComponent {
               });
             });
 
-            // const zoneControl = this.renewalFormGroup.get('zone');
+            // const zoneControl = this.dynamicFormGroup.get('zone');
             // if (control.name == 'zone' && control.type == 'select') {
             //   this.formData.availableZones.forEach((zoneOption: any) => {
             //     control.value = this.formData.proposerZone;
@@ -6127,7 +9303,7 @@ export class RenewalDynamicFormComponent {
         // else {
         //   console.error('Expected response.data to be an object, but received:', response.data);
         // }
-        // this.renewalFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
+        // this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
       },
       error: (error) => {
         this.spinner.hide();
@@ -6142,37 +9318,157 @@ export class RenewalDynamicFormComponent {
   }
 
   getPolicyDetails(control: any) {
-    const policyNumberDetails = this.renewalFormGroup.get('getPolicyNumber')?.value;
+    const policyNumberDetails = this.dynamicFormGroup.get('getPolicyNumber')?.value;
     const reqData = {
       policyNumber: policyNumberDetails
     };
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
-        this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
-        this.spinner.hide();
-        control.disabled = true;
-        this.isPolicyDetailsFetch = true;
-        if (response.data['insuredMemberDetails'].length > 0) {
-          this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
-          const insuredMembers: { [key: string]: boolean } = {};
+        if (response.isSuccess) {
+          console.log(response.data.idProof.dependentControls);
+          this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
+          this.spinner.hide();
+          control.disabled = true;
+          this.isPolicyDetailsFetch = true;
+          if (response.data['insuredMemberDetails'].length > 0) {
+            this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
+            const insuredMembers: { [key: string]: boolean } = {};
 
-          response.data['insuredMemberDetails'].forEach((member: any) => {
-            insuredMembers[member.relation] = true; // Set as true
+            response.data['insuredMemberDetails'].forEach((member: any) => {
+              insuredMembers[member.relation] = true; // Set as true
+            });
+
+            this.formData['insuredMembers'] = insuredMembers;
+          }
+          if (response.data.idProof) {
+            try {
+              const idProofObj = JSON.parse(response.data.idProof);
+              console.log(idProofObj);
+              if (idProofObj.dependentControls) {
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    idProofObj.dependentControls.forEach((depControl: any) => {
+                      if (control.name === depControl.name) {
+                        control.visible = depControl.visibility;
+                        this.onInputChange(null, control);
+                      }
+                    });
+                  });
+                });
+              } else {
+                console.warn('dependentControls is missing in idProof.');
+              }
+            } catch (error) {
+              console.error('Error parsing idProof:', error);
+            }
+          }
+          if (response.data.gstDetails) {
+            try {
+              const gstDetailsObj = JSON.parse(response.data.gstDetails); // Parse JSON string
+              console.log("Parsed gstDetails:", gstDetailsObj);
+
+              const gstValue = gstDetailsObj.value; // Extract the GST value from parsed object
+
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name === "gstDetails" && control.options) {
+                    // Set options based on response directly
+                    control.options.forEach((option: { value: string; selected: boolean }) => {
+                      option.selected = option.value === gstValue;
+                    });
+
+                    control.value = gstValue; // Set the selected value in form
+
+                    // Update dependent controls visibility
+                    const selectedOption = control.options.find(
+                      (opt: { selected: boolean }) => opt.selected
+                    );
+
+                    selectedOption?.dependentControls.forEach(
+                      (depControl: { name: string; visibility: boolean }) => {
+                        const depField = section.formControls.find(
+                          (ctrl: { name: string }) => ctrl.name === depControl.name
+                        );
+
+                        if (depField) {
+                          depField.visible = depControl.visibility;
+                          this.onInputChange(null, depField);
+                        }
+                      }
+                    );
+                  }
+                });
+              });
+            } catch (error) {
+              console.error("Error parsing gstDetails:", error);
+            }
+          }
+          console.log(this.dynamicFormGroup.getRawValue(), response.data);
+
+          Object.keys(response.data).forEach((key: string) => {
+            const setPolicyDetails = this.dynamicFormGroup.get(key)
+            if (!(setPolicyDetails instanceof FormGroup)) {
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+            }
+            if (response.data.insuredMemberDetails && Array.isArray(response.data.insuredMemberDetails)) {
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((formControl: any) => {
+                  if (formControl.name === 'zoneValue') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableZones || [];
+                    }
+                    formControl.value = response.data.zoneValue || '';
+                  }
+                  if (formControl.name === 'sumInsured') {
+                    if (!formControl.options || formControl.options.length === 0) {
+                      formControl.options = response.data.upgradableSumInsured || [];
+                    }
+                    formControl.value = response.data.sumInsured || '';
+                  }
+                });
+
+                // 🔹 **Handle Sum Insured & Zone Value Inside Dynamic Controls**
+                if (section.sectionTitle === 'Insured Member Details') {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name === 'insuredMemberDetails' && Array.isArray(formControl.dynamicControls)) {
+                      formControl.dynamicControls.forEach((controlRow: any[]) => {
+                        controlRow.forEach((control: any) => {
+                          response.data.insuredMemberDetails.forEach((member: any) => {
+                            if (control.name === 'zoneValue') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableZones || [];
+                              }
+                              control.value = member.zoneValue || '';
+                            }
+                            if (control.name === 'sumInsured') {
+                              if (!control.options || control.options.length === 0) {
+                                control.options = member.upgradableSumInsured || [];
+                              }
+                              control.value = member.sumInsured || '';
+                            }
+                          });
+                        });
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            if (key == 'memberPolicyType') {
+              this.form.formSections.forEach((section: any) => {
+                const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
+                if (targetControl) {
+                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
+                }
+              });
+            }
           });
 
-          this.formData['insuredMembers'] = insuredMembers;
+
+
+        } else {
+          this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
         }
-        Object.keys(response.data).forEach((key: string) => {
-          this.renewalFormGroup.get(key)?.setValue(response.data[key]);
-          if (key == 'memberPolicyType') {
-            this.form.formSections.forEach((section: any) => {
-              const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
-              if (targetControl) {
-                this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
-              }
-            });
-          }
-        })
       },
       error: (error) => {
         this.spinner.hide();
@@ -6191,7 +9487,6 @@ export class RenewalDynamicFormComponent {
       this.isOverlayVisible = true;
     }
   }
-
   addNewDisease(subControl: any, control: any) {
     // if (subControl.innerArrayControl.length < 2) {
     //   const innerarrayControl = subControl.innerArrayControl[0]
@@ -6209,11 +9504,11 @@ export class RenewalDynamicFormComponent {
     let tempControl = subControl.innerArrayControl[0].map((element: any) => ({ ...element }));
 
     subControl.innerArrayControl.push(tempControl);
-    const controlNames = Object.keys((this.renewalFormGroup.get(control.name) as FormGroup)?.controls || {});
+    const controlNames = Object.keys((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls || {});
     const subName = controlNames.find(name => name === subControl.name);
 
     if (subName) {  // Check if abc is not undefined
-      let formArr = (this.renewalFormGroup.get(control.name) as FormGroup)?.controls[subName] as FormArray;
+      let formArr = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subName] as FormArray;
       formArr.push(this.initializeDynamicFormControls(tempControl, subControl.innerArrayControl.length - 1, subControl));
       // formArr.push(this.initializeDynamicFormControls(subControl.innerArrayControl[0], subControl.innerArrayControl.length - 1));
     }
@@ -6224,7 +9519,7 @@ export class RenewalDynamicFormComponent {
 
     if (subControl.innerArrayControl.length > 1) {
       subControl.innerArrayControl?.splice(index, 1);
-      let formArray = (this.renewalFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray;
+      let formArray = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray;
       formArray.removeAt(index - 1);
       Object.keys(this.formData).forEach(key => {
         if (key.startsWith(`${control.name}.${subControl.name}.${index - 1}.`)) {
@@ -6239,25 +9534,33 @@ export class RenewalDynamicFormComponent {
       // }, 0);
       // subControl.innerArrayControl.splice(index, 1);
 
-      // ((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray)?.removeAt(index);
+      // ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray)?.removeAt(index);
       this.changeDetectorRef.detectChanges();
     }
   }
 
   copyText(control: any) {
-    this.clipboard.copy(this.renewalFormGroup.get(control.name)?.value);
+    if (control.name) {
+      this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
+    }
+    else {
+      this.clipboard.copy(control);
+    }
     this.toast.success({ detail: "Success", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
+
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     console.log(formData, this.covers);
 
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     const idNo = formData?.aadharIdNo || formData?.passportIdNo || formData?.licenseIdNo || formData?.voterIdNo || formData?.marksheetIdNo || '';
+    const storedAgentCode = localStorage.getItem('parentCode')?.trim() || '';
+    const updatedAgentCode = (storedAgentCode || this.agentCode || '').trim();
 
     const mappedData: Partial<IFullQuoteMapping> = {
-      agentCode: this.agentCode || '',
+      agentCode: updatedAgentCode || '',
       productName: formData?.productName || '',
       productCode: formData?.productId || '',
       planCode: formData?.planCode || '',
@@ -6343,15 +9646,18 @@ export class RenewalDynamicFormComponent {
           memberGender: member?.memberGender || '',
           memberPincode: member?.pincode || '',
           preExistingDisease: member?.preExistingDisease || '',
-          memberIndex: member?.memberIndex || '',
+          memberIndex: member?.memberIndex ?? '',
           zone: member?.zone || '',
           zoneValue: member?.zoneValue || '',
           state: member?.state || '',
           city: member?.city || '',
           memberType: member?.memberType || '',
           memberSumInsured: member?.sumInsured || '',
+          membersumInsuredForPlan: member?.sumInsuredForPlan || '',
+          memberannualIncomeForPlan: member?.annualIncomeForPlan || '',
           memberNatureOfDuty: JSON.parse(member?.productMemberNatureWork).name || '',
-          memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
+          //memberDesignation: JSON.parse(member?.productMemberDesignation).name || '',
+          memberDesignation: (member?.productMemberDesignation != '') ? JSON.parse(member?.productMemberOccupation).value || '' : '',
           // memberOccupation: JSON.parse(member?.productMemberOccupation).value || '',
           memberOccupation: (member?.productMemberOccupation != '') ? JSON.parse(member?.productMemberOccupation).value || '' : '',
           covers: this.covers[index] || [],
@@ -6362,10 +9668,19 @@ export class RenewalDynamicFormComponent {
           deductibleAmount: member?.deductibleAmount || '',
           previousPolicyDetails: member?.previousPolicyDetails || [],
           hospiCashCoverDetails: member?.hospiCashCoverDetails || [],
-          activePolicyDetails: member?.activePolicyDetails || []
+          activePolicyDetails: member?.activePolicyDetails || [],
+          personalHabitDetail: member?.personalHabitDetail || '',
+          isSmoking: member.isSmoking || '',
+          isTobacco: member.isTobacco || '',
+          alcohol: member.alcohol || '',
+          previousCurrentPolicyDetails: member?.previousCurrentPolicyDetails || ''
         };
       }) || [],
       CKYCNo: this.formData?.ckycNo || '',
+      pennyDropVerify: this.formData?.pennyDropVerify || '',
+      pennyDropBankAccountNo: this.formData?.pennyDropBankAccountNo,
+      pennyDropIFSCCode: this.formData?.pennyDropIFSCCode,
+      pennyDropNameMatch: this.formData?.pennyDropNameMatch,
       QuoteId: formData?.quoteId || '',
       LeadId: formData?.leadNumber || '',
       proposerSalutation: formData?.preFix || '',
@@ -6379,10 +9694,18 @@ export class RenewalDynamicFormComponent {
       proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
       proposerAddress1: formData?.permanentAddress1 || '',
       proposerAddress2: formData?.permanentAddress2 || '',
+      proposerAddress3: formData?.permanentAddress3 || '',
+      correspondingAddress1: formData?.proposerAddress1 || '',
+      correspondingAddress2: formData?.proposerAddress2 || '',
+      correspondingAddress3: formData?.proposerAddress3 || '',
+      isCorrespondingAddressSameAsProposerAddress: formData?.addressTitle1 || false,
+      proposerBenefitTopUpPlanFlag: formData?.benefitTopUpPlan || '',
+      proposerBenefitTopUpSelectedPlan: (formData.planName) ? this.jsonParse(formData?.planName, 'value') || '' : '',
       proposerCity: formData?.city || '',
       proposerState: formData?.state || '',
       proposerEmailId: formData?.emailId || '',
       proposerPincode: formData?.proposerPincode || '',
+      correspondingPincode: formData?.correspondentPincode || '',
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
       idNo: idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
@@ -6428,32 +9751,75 @@ export class RenewalDynamicFormComponent {
       appointeeName: formData?.appointeeName || '',
       appointeeMobileNumber: formData?.appointeeContactNo || '',
       appointeeRelationCode: formData?.appointeeRelationWithNominee ? this.jsonParse(formData.appointeeRelationWithNominee, 'value') : '',
-      lrFlag: formData?.lrFlag || ''
+      lrFlag: formData?.lrFlag || '',
+      affiliateEmployeeId: formData?.affiliateEmployeeId || '',
+      isAffiliateEmployee: formData?.isAffiliateEmployee || '',
+      nameOfTheAffiliate: formData?.nameOfTheAffiliate ? this.jsonParse(formData?.nameOfTheAffiliate, 'name') : '',
+      employeeId: formData?.employeeId || '',
     };
     return mappedData;
   }
 
   async getFullQuoteViaOfflinePayment(documentId: any): Promise<void> {
     return new Promise((resolve, reject) => {
-      const data = this.renewalFormGroup.getRawValue();
+      const data = this.dynamicFormGroup.getRawValue();
+      console.log(this.selectedButton, data, this.formData, this.fullQuoteDocRelated, this.fullQuoteDocRelatedWithOutOffline);
       const formData = {
         policyType: 'New Business',
-        paymentMethod: (this.selectedButton || '').toString(),
+        paymentMethod: 'offline',
         premiumAmount: (this.formData?.totalPremium || '').toString(),
-        instrumentNo: (this.formData?.chequeNumber || '').toString(),
-        instrumentDate: (this.formData?.chequeDate || '').toString(),
+        // instrumentNo: (this.selectedButton === 'loanPayment'
+        //   ? this.formData?.loanAccountNumber
+        //   : this.selectedButton === 'bankFundTransfer'
+        //     ? this.formData?.transactionReferanceId
+        //     : this.formData?.chequeNumber || ''
+        // ).toString(),
+        instrumentNo: (this.selectedButton === 'loanPayment'
+          ? this.formData?.loanAccountNumber
+          : this.selectedButton === 'bankFundTransfer'
+            ? this.formData?.transactionReferanceId
+            : this.formData?.paymentOption === "Cheque"
+              ? this.formData?.chequeNumber
+              : this.formData?.paymentOption === "Demand Draft"
+                ? this.formData?.demandDraftNumber
+                : this.formData?.paymentOption === "Pay Order"
+                  ? this.formData?.payOrderNumber
+                  : ""
+        ).toString(),
+        instrumentDate: (this.formData?.chequeDate || this.formData?.transactionDate || '').toString(),
         policyNumber: "".toString(),
         agentCode: (this.agentCode || '').toString(),
         bankName: (this.formData?.bankName).toString(),
         bankAccountNumber: (this.formData?.accountNumber).toString(),
         IFSC: (this.formData?.ifscCode || '').toString(),
         micrNo: (this.formData?.micrCode || '').toString(),
-        instrumentType: (this.formData.paymentOption || '').toString(),
+        instrumentType: (this.selectedButton === 'offline'
+          ? this.formData?.paymentOption
+          : 'RTGS/ NEFT'
+        ).toString(),
         source: "Retail".toString(),
-        documentId: (this.fullQuoteDocRelated || '').toString(),
+        documentId: '',
         proposalNum: this.proposalNum.toString(),
         productName: this.formData.productName || ''
       };
+      // const formData = {
+      //   policyType: 'New Business',
+      //   paymentMethod: (this.selectedButton || '').toString(),
+      //   premiumAmount: (this.formData?.totalPremium || '').toString(),
+      //   instrumentNo: (this.formData?.chequeNumber || '').toString(),
+      //   instrumentDate: (this.formData?.chequeDate || '').toString(),
+      //   policyNumber: "".toString(),
+      //   agentCode: (this.agentCode || '').toString(),
+      //   bankName: (this.formData?.bankName).toString(),
+      //   bankAccountNumber: (this.formData?.accountNumber).toString(),
+      //   IFSC: (this.formData?.ifscCode || '').toString(),
+      //   micrNo: (this.formData?.micrCode || '').toString(),
+      //   instrumentType: (this.formData.paymentOption || '').toString(),
+      //   source: "Retail".toString(),
+      //   documentId: (this.fullQuoteDocRelated || '').toString(),
+      //   proposalNum: this.proposalNum.toString(),
+      //   productName: this.formData.productName || ''
+      // };
       this.yatraService.getFullQuoteViaOfflinePayment(formData).subscribe({
         next: (res: any) => {
           if (res?.isSuccess) {
@@ -6496,6 +9862,7 @@ export class RenewalDynamicFormComponent {
     });
   }
 
+
   insertFullQuoteJson(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.mappedFormDataFullQuote(this.formData).then((data) => {
@@ -6506,6 +9873,9 @@ export class RenewalDynamicFormComponent {
         this.yatraService.insertFullQuoteJson(req).subscribe({
           next: (res: any) => {
             resolve();
+            if (res.data) {
+              localStorage.setItem('isCheckSum', res.data.updated);
+            }
           },
           error: (err) => {
             console.error(err);
@@ -6566,14 +9936,16 @@ export class RenewalDynamicFormComponent {
       this.feedBackMessage = true;
     }
   }
-
   submitFeedback() {
     let reqData: any = {};
     reqData.agentCode = this.agentCode;
     reqData.rating = this.customerFeedbackForm.value.rating;
     reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
-    reqData.customerId = "";
+    reqData.policyNumber = this.formData.policyNumber || '';
+    reqData.proposalNumber = this.formData.proposalNumber;
+    reqData.customerId = this.formData.customerId || '';
     this.yatraService.submitFeedback(reqData).subscribe((response) => {
+      this.closeIsFeedBackModalVisible();
       this.toast.success({ detail: 'Success', summary: 'Feedback submitted successfully! Thank you for your input.' });
     }, (error) => {
       this.toast.error({ detail: 'Error', summary: 'Failed to submit feedback. Please try again later.' });
@@ -6585,30 +9957,31 @@ export class RenewalDynamicFormComponent {
   closeIsFeedBackModalVisible() {
     let reqData = {
       "proposalNum": this?.formData?.proposalNumber,
-      // "partnerId": this.partnerId,
+      "partnerId": this.partnerId,
       "agentCode": this.agentCode,
-      "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+      "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
       "formName": this.formSequence[this.getFormIndexValue()].formName,
       "formConfig": JSON.stringify(this.formSequence),
-      // "productId": this.productId.toString(),
+      "productId": this.productId.toString(),
       "formId": this.formSequence[this.getFormIndexValue()].formId,
       "jsonForm": JSON.stringify(this.form),
       "formSequence": this.getFormIndexValue(),
-      // "leadNumber": this.leadnumber,
-      // "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+      "leadNumber": this.leadnumber,
+      "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
     };
+    this.yatraService.Insertorupdateformdata(reqData).subscribe({
+      next: (res: any) => {
+        this.leadnumber = res.data;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
 
-    // console.log(reqData, this.dynamicFormGroup.getRawValue());
-
-    // this.yatraService.Insertorupdateformdata(reqData).subscribe({
-    //   next: (res: any) => {
-    //     console.log(res);
-    //     // this.leadnumber = res.data;
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //   }
-    // });
+    const loggedInAgentCode = localStorage.getItem('agentCode');
+    if (loggedInAgentCode) {
+      localStorage.setItem('parentCode', loggedInAgentCode);
+    }
     this.isFeedBackModalVisible = false;
   }
 
@@ -6625,8 +9998,52 @@ export class RenewalDynamicFormComponent {
     const appleStoreUrl = "https://apps.apple.com/in/app/activ-health/id1179005764";
     window.open(appleStoreUrl, '_blank');
   }
+  async mappingForQuestionnaire(form: any): Promise<boolean> {
+    if (this.agentCode.startsWith("POS") && this.form.formTitle === 'Health & Lifestyle') {
+      if (this.formData.hasOwnProperty('chronicCare') && this.formData.chronicCare.addOnCover === true) {
+        this.toast.warning({
+          detail: 'Warning',
+          summary: 'Please contact branch',
+          duration: 3000
+        });
+        return false;
+      }
+    }
+    if (this.agentCode.startsWith("POS")) {
+      const dynamicValue = this.dynamicFormGroup.getRawValue();
+      console.log(dynamicValue);
 
-  async mappingForQuestionnaire(form: any) {
+      let hasMemberWithDisease = false;
+
+      for (const key in dynamicValue) {
+        if (key.startsWith("productQuestions") || key.startsWith("chronicQuestions")) {
+          const questionData = dynamicValue[key];
+          console.log(questionData);
+
+          for (const relation in questionData) {
+            if (questionData[relation] === true) {
+              hasMemberWithDisease = true;
+              console.log(`Member ${relation} has a disease, cannot proceed`);
+              break;
+            }
+          }
+
+          if (hasMemberWithDisease) {
+            break;
+          }
+        }
+      }
+
+      if (hasMemberWithDisease) {
+        this.toast.warning({
+          detail: 'Warning',
+          summary: 'Please contact branch, as Health & Lifestyle questions are not applicable for this login.',
+          duration: 5000
+        });
+        return false;
+      }
+    }
+
     // let productQuestionnaire:any=[];
     const reqData = {
       partnerId: this.partnerId.toString(),
@@ -6646,7 +10063,7 @@ export class RenewalDynamicFormComponent {
       const res: any = await this.yatraService.Getform(reqData).toPromise();
       this.questionFormData = JSON.parse(res.data.formData)  // parsed response data
       console.log("form", this.questionFormData);
-      const dynamicValue = this.renewalFormGroup.getRawValue();
+      const dynamicValue = this.dynamicFormGroup.getRawValue();
       // Iterate through each member in the insuredMemberDetails
       await this.questionFormData.insuredMemberDetails.forEach((member: any) => {
         delete member.productQuestionnaire;
@@ -6712,22 +10129,22 @@ export class RenewalDynamicFormComponent {
                           const filteredInnerArray = innerArray;
                           const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
-                            if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
-                              innerArray.parentQuestionCode = questionId;
-                              productQuestionnaire.push(filteredInnerArray);
-                            }
+                          if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
+                            innerArray.parentQuestionCode = questionId;
+                            productQuestionnaire.push(filteredInnerArray);
                           }
-                          else if(innerArray.conditionDetails){
-                            const filteredInnerArray = innerArray;
-                            const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+                        }
+                        else if (innerArray.conditionDetails) {
+                          const filteredInnerArray = innerArray;
+                          const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
-                            if (filteredInnerArray['conditionDetails'] !== "" && !allValuesEmpty) {
-                              innerArray.parentQuestionCode = questionId;
-                              productQuestionnaire.push(filteredInnerArray);
-                            }
+                          if (filteredInnerArray['conditionDetails'] !== "" && !allValuesEmpty) {
+                            innerArray.parentQuestionCode = questionId;
+                            productQuestionnaire.push(filteredInnerArray);
                           }
-                          else {
-                            const allValuesEmpty = Object.values(innerArray).every(value => value === "");
+                        }
+                        else {
+                          const allValuesEmpty = Object.values(innerArray).every(value => value === "");
 
                           if (!allValuesEmpty) {
                             innerArray.harmfulSubstances = true;
@@ -6742,31 +10159,31 @@ export class RenewalDynamicFormComponent {
                 }
               });
 
-                // Assign the populated productQuestionnaire to the member
-                if (member.productQuestionnaire) {
-                  member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
-                }
-                else {
-                  member.productQuestionnaire = productQuestionnaire;
-                }
-                // Log the final productQuestionnaire for debugging
-              });
-            }
-            else if (controls.type == 'chronicquestionnaire') {
-              this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
-                // Initialize the optionsArray for each member
-                const productQuestionnaire: any[] = [];
-                const optionsArray: any[] = [];
-                let questionId: any;
-                let questionName: any
-                // Find the matching control based on member's relation
-                const matchingControl = controls.subControls.find((subControl: any) =>
-                  subControl.name === member.relation
-                );
-                questionId = controls.idProperty;
-                questionName = controls.name;
-                // If a matching control is found
-                // Initialize the productQuestionnaire array for the current member
+              // Assign the populated productQuestionnaire to the member
+              if (member.productQuestionnaire) {
+                member.productQuestionnaire = member.productQuestionnaire.concat(productQuestionnaire);
+              }
+              else {
+                member.productQuestionnaire = productQuestionnaire;
+              }
+              // Log the final productQuestionnaire for debugging
+            });
+          }
+          else if (controls.type == 'chronicquestionnaire') {
+            this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
+              // Initialize the optionsArray for each member
+              const productQuestionnaire: any[] = [];
+              const optionsArray: any[] = [];
+              let questionId: any;
+              let questionName: any
+              // Find the matching control based on member's relation
+              const matchingControl = controls.subControls.find((subControl: any) =>
+                subControl.name === member.relation
+              );
+              questionId = controls.idProperty;
+              questionName = controls.name;
+              // If a matching control is found
+              // Initialize the productQuestionnaire array for the current member
 
               // Iterate through the dynamicValue object
               Object.keys(dynamicValue).forEach((item: any) => {
@@ -6800,11 +10217,11 @@ export class RenewalDynamicFormComponent {
       })
       this.questionFormData.insuredMemberDetails.forEach((member: any, index: any) => {
 
-        if (!this.renewalFormGroup.contains('insuredMemberDetails')) {
-          this.renewalFormGroup.addControl('insuredMemberDetails', new FormArray([]));
+        if (!this.dynamicFormGroup.contains('insuredMemberDetails')) {
+          this.dynamicFormGroup.addControl('insuredMemberDetails', new FormArray([]));
         }
 
-        const dynamicform = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
+        const dynamicform = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
 
         // Ensure the FormArray has enough entries
         while (dynamicform.length <= index) {
@@ -6819,17 +10236,23 @@ export class RenewalDynamicFormComponent {
         dindex.addControl('productQuestionnaire', '');
 
         dindex.get('productQuestionnaire')?.setValue(stringifiedProductQuestionnaire);
-      })
+      });
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     }
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   }
-    // });
   }
 
+  backToleads() {
+    this.router.navigate(['/leads/leadsList'], {
+    });
+  }
+
+  backToProductComparison() {
+    this.router.navigate(['/products/comparison'], {
+    });
+  }
   validationErrorNotification(dynamicControl: any, aindex: any, coreControl: any, innerControl: any, innerSubControl: any) {
     if (dynamicControl instanceof FormArray) {
       dynamicControl.controls.forEach(arrayControl => {
@@ -6864,7 +10287,7 @@ export class RenewalDynamicFormComponent {
     const maritalStatusPatchValue = maritalStatusInfo.options.find((option: any) => option.value === this.quoteLeadInformation.maritalStatus);
     let educationDetails: any = personalDetailsSection.formControls.find((formControl: any) => formControl.name === "educationDetails");
     const educationDetailsPatchValue = educationDetails.options.find((option: any) => option.value === this.quoteLeadInformation.education);
-    this.renewalFormGroup.patchValue({
+    this.dynamicFormGroup.patchValue({
       maritalStatus: JSON.stringify(maritalStatusPatchValue),
       proposerGender: this.quoteLeadInformation.gender,
       educationDetails: JSON.stringify(educationDetailsPatchValue),
@@ -6873,11 +10296,11 @@ export class RenewalDynamicFormComponent {
   }
 
   resetZoneAndLocationFields() {
-    this.renewalFormGroup.get('city')?.setValue('');
-    this.renewalFormGroup.get('state')?.setValue('');
-    this.renewalFormGroup.get('zone')?.setValue('');
-    this.renewalFormGroup.get('zone')?.disable();
-    this.renewalFormGroup.get('zone')?.setValue('');
+    this.dynamicFormGroup.get('city')?.setValue('');
+    this.dynamicFormGroup.get('state')?.setValue('');
+    this.dynamicFormGroup.get('zone')?.setValue('');
+    this.dynamicFormGroup.get('zone')?.disable();
+    this.dynamicFormGroup.get('zone')?.setValue('');
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
         if (control.name === 'zoneValue') {
@@ -6895,13 +10318,12 @@ export class RenewalDynamicFormComponent {
       zoneValue: ''
     };
 
-    let formArray: any = this.renewalFormGroup.get(parentControl.name)?.value;
+    let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
     if (formArray && Array.isArray(formArray)) {
       formArray[index] = { ...formArray[index], ...patchObject };
-      this.renewalFormGroup.get(parentControl.name)?.patchValue(formArray);
+      this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
     }
   }
-
   traverseFormGroup(formGroup: FormGroup | FormArray) {
     if (formGroup instanceof FormGroup) {
       Object.keys(formGroup.controls).forEach((key) => {
@@ -6926,7 +10348,6 @@ export class RenewalDynamicFormComponent {
       });
     }
   };
-
   getDate(dateType: any): string {
     if (dateType === 'currentDate') {
       return this.currentDate;
@@ -6937,9 +10358,8 @@ export class RenewalDynamicFormComponent {
     }
     return '';  // Default return if no valid date type is found
   }
-
   allPreselectMember(control: any) {
-    const PED = (this.renewalFormGroup.get('waitingPED') as FormGroup).get(control.name)?.value
+    const PED = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get(control.name)?.value
     this.pedWaitingPeriod = PED;
     // this.changeOverLayDone();
     this.changeRecalculate(true);
@@ -6956,6 +10376,36 @@ export class RenewalDynamicFormComponent {
       this.changeMainFormDependentControls(control.dependentControls, false);
     }
   }
+
+  // disableFormControl(controlName: string, parentControlName: string | null = null, index: any = null): void {
+  //   let formControl;
+  //   if (parentControlName) {
+  //     const parentControl = this.dynamicFormGroup.get(parentControlName);
+  //     if (parentControl instanceof FormArray) {
+  //       if (index !== null && index >= 0 && index < parentControl.length) {
+  //         const childGroup = parentControl.at(index) as FormGroup;
+  //         formControl = childGroup.get(controlName);
+  //       } else {
+  //         console.error(`Invalid index: ${index} for FormArray ${parentControlName}`);
+  //         return;
+  //       }
+  //     } else if (parentControl instanceof FormGroup) {
+  //       formControl = parentControl.get(controlName);
+  //     } else {
+  //       console.error(`Parent control ${parentControlName} is not a FormArray or FormGroup`);
+  //       return;
+  //     }
+  //   } 
+  //   // else {
+  //   //   formControl = this.dynamicFormGroup.get(controlName);
+  //   // }
+
+  //   if (formControl) {
+  //     formControl.disable();
+  //   } else {
+  //     console.error(`Control ${controlName} not found`);
+  //   }
+  // }
 
   onDrillDown(index: any, caseName: any) {
     const lastPage = this.getFormIndexValue()
@@ -7054,9 +10504,15 @@ export class RenewalDynamicFormComponent {
 
     }
     this.formData.insuredMemberDetails.forEach((member: any) => {
+      let newOptions;
       if (member.relation == parentControl.name) {
-        const sumInsured = member.sumInsured;
-        const newOptions = data[sumInsured];
+        if (this.formData.productName == 'Activ Health Platinum Enhanced') {
+          const sumInsuredForPlan = member.sumInsuredForPlan;
+          newOptions = data[sumInsuredForPlan];
+        } else {
+          const sumInsured = member.sumInsured;
+          newOptions = data[sumInsured];
+        }
         control.options = newOptions;
       }
     })
@@ -7092,9 +10548,15 @@ export class RenewalDynamicFormComponent {
     }
 
     this.formData.insuredMemberDetails.forEach((member: any) => {
+      let newOptions;
       if (member.relation == parentControl.name) {
-        const sumInsured = member.sumInsured;
-        const newOptions = data[sumInsured];
+        if (this.formData.productName == 'Activ Health Platinum Enhanced') {
+          const sumInsuredForPlan = member.sumInsuredForPlan;
+          newOptions = data[sumInsuredForPlan];
+        } else {
+          const sumInsured = member.sumInsured;
+          newOptions = data[sumInsured];
+        }
         control.options = newOptions;
       }
     })
@@ -7124,6 +10586,7 @@ export class RenewalDynamicFormComponent {
     };
   }
 
+
   pennyDrop(control: any, dataObj?: any) {
     if (control.dependentControls.includes("pennyBtn")) {
       this.changeMainFormDependentControls(control.dependentControls, true)
@@ -7132,16 +10595,28 @@ export class RenewalDynamicFormComponent {
 
   onClickPennyBtn() {
     const obj = {
-      "proposalNum": this.renewalFormGroup?.controls['proposalNumber'].value,
-      "proposerName": this.renewalFormGroup?.controls['accountHolderName'].value,
-      "bankAccountNumber": this.renewalFormGroup?.controls['accountNumber'].value,
-      "ifscCode": this.renewalFormGroup?.controls['ifscCode'].value
+      "proposalNum": this.dynamicFormGroup?.controls['proposalNumber'].value,
+      "proposerName": this.dynamicFormGroup?.controls['accountHolderName'].value,
+      "bankAccountNumber": this.dynamicFormGroup?.controls['accountNumber'].value,
+      "ifscCode": this.dynamicFormGroup?.controls['ifscCode'].value
     }
 
     this.yatraService.pennyDropVerfication(obj).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
           this.pennyDropVerficationDetails = response.data;
+          // this.formData["pennyDropVerify"] = this.pennyDropVerficationDetails.pennyDropVerify;
+          // this.formData["pennyDropBankAccountNo"] = this.pennyDropVerficationDetails.pennyDropBankAccountNo;
+          // this.formData["pennyDropIFSCCode"] = this.pennyDropVerficationDetails.pennyDropIFSCCode;
+          // this.formData["pennyDropNameMatch"] = this.pennyDropVerficationDetails.pennyDropNameMatch;
+
+          console.log(this.pennyDropVerficationDetails);
+
+          this.dynamicFormGroup.addControl('pennyDropVerify', new FormControl(this.pennyDropVerficationDetails.pennyDropVerify));
+          this.dynamicFormGroup.addControl('pennyDropBankAccountNo', new FormControl(this.pennyDropVerficationDetails.pennyDropBankAccountNo));
+          this.dynamicFormGroup.addControl('pennyDropIFSCCode', new FormControl(this.pennyDropVerficationDetails.pennyDropIFSCCode));
+          this.dynamicFormGroup.addControl('pennyDropNameMatch', new FormControl(this.pennyDropVerficationDetails.pennyDropNameMatch));
+
           this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
         } else {
           // Handle error, you can show a message if required
@@ -7153,16 +10628,15 @@ export class RenewalDynamicFormComponent {
       }
     });
   }
-
   openPlanSummary() {
     this.isPlanDetailsVisible = !this.isPlanDetailsVisible;
     this.isBBPlanDetailsVisible = !this.isBBPlanDetailsVisible;
   }
-
   shareKycURL(control: any) {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
+      quotationID: this.formData.quoteId || "",
       fullName: this.formData.accountHolderName,
       panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
@@ -7170,7 +10644,7 @@ export class RenewalDynamicFormComponent {
       businessType: "NB",
       emailId: this.formData.emailId,
       agentCode: this.agentCode,
-      MobileNumber: "9642697588",
+      MobileNumber: this.formData.mobileNumber,
       ProductName: this.formData.productName,
       ProductCode: this.formData.productId
     };
@@ -7184,17 +10658,17 @@ export class RenewalDynamicFormComponent {
           });
         }
         this.changeMainFormDependentControls(control.dependentControls, true);
-        this.renewalFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
+        this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(res.data.kycLink);
       },
       (err) => {
         console.log(err);
       }
     );
   }
-
   skipKycURL(control: any) {
     const skipKycRequestBody = {
-      proposalOrPolicyNumber: this.proposalNum,
+      policyNumber: "",
+      proposalNumber: this.proposalNum,
       businessType: "NB"
     };
     this.renewalService.skipKycLinkApi(skipKycRequestBody).subscribe(
@@ -7211,7 +10685,7 @@ export class RenewalDynamicFormComponent {
             "proposalNum": this?.formData?.proposalNumber,
             "partnerId": this.partnerId,
             "agentCode": this.agentCode,
-            "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
             "formName": this.formSequence[this.getFormIndexValue()].formName,
             "formConfig": JSON.stringify(this.formSequence),
             "productId": this.productId.toString(),
@@ -7238,12 +10712,13 @@ export class RenewalDynamicFormComponent {
       }
     );
   }
-
   initiateKycURL() {
     const kycRequestBody = {
       policyNumber: "",
       proposerNumber: this.formData.proposalNumber,
-      fullName: this.formData.accountHolderName,
+      fullName: this.formData.middleName?.trim()
+      ? `${this.formData.firstName} ${this.formData.middleName} ${this.formData.lastName}`
+      : `${this.formData.firstName} ${this.formData.lastName}`,
       panNumber: this.formData.panNo || "",
       dob: this.formatDate(this.formData.memberDobProposer) || "",
       pepCheck: "No",
@@ -7259,7 +10734,6 @@ export class RenewalDynamicFormComponent {
       }
     );
   }
-
   checkKycDetail(control: any): void {
     // const isVisible = !(this.formData.verifyKYC !== "" || this.formData.kycStatus !== "" || this.formData.isKYCComplete);
     const isVisible = !this.verifyKYCStatus;
@@ -7295,49 +10769,64 @@ export class RenewalDynamicFormComponent {
   }
 
   redirectToJustPay(control: any) {
+    const data = this.dynamicFormGroup.value;
+    // if (this.selectedButton === "enach" && (!data.emandateConsent || !data.emandateTerms)) {
+    //   this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+    //   return;
+    // }
+    // if (this.selectedButton === "autoDebit" && (!data.autoDebitConsent || !data.autoDebitTerms)) {
+    //   this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+    //   return;
+    // }
     // Handle the Juspay redirection for buttons other than Offline
-    if (this.selectedButton !== 'offline') {
-      const reqData = {
-        agentcode: this.agentCode,
-        proposalNumber: this.formData.proposalNumber,
-        paymentMethod: this.selectedButton === 'enach' ? 'emandate_payment' : this.selectedButton,
-        source: 'Retail',
-        policyType: 'NB',
-        policyNumber: '',
-        quoteNumber: this.formData.quoteId || "",
-        productName: this.formData.productName,
-        userType: 'Agent'
-      };
-      this.yatraService.justPayRedirection(reqData).subscribe({
-        next: (response: any) => {
-          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            if (this.selectedButton == 'sendLinkButton') {
-              this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-              // res = response.data.paymentURL;
+    console.log(this.dynamicFormGroup);
+    if (this.dynamicFormGroup.valid) {
+      if (this.selectedButton !== 'offline') {
+        const reqData = {
+          agentcode: this.agentCode,
+          proposalNumber: this.formData.proposalNumber,
+          paymentMethod: this.selectedButton === 'enach' ? 'emandate_payment' : this.selectedButton,
+          source: 'Retail',
+          policyType: 'NB',
+          policyNumber: '',
+          quoteNumber: this.formData.quoteId || "",
+          productName: this.formData.productName,
+          userType: 'Agent'
+        };
+        this.yatraService.justPayRedirection(reqData).subscribe({
+          next: (response: any) => {
+            if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+              if (this.selectedButton == 'sendLinkButton') {
+                this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+                // res = response.data.paymentURL;
+              }
+              else {
+                window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+              }
+            } else {
+              this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
+              console.error('Invalid payment link received:', response);
             }
-            else {
-              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-            }
-          } else {
-            this.toast.warning({ detail: "Warning", summary: response.message, duration: 3000 });
-            console.error('Invalid payment link received:', response);
+          },
+          error: (error) => {
+            this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
+            console.error('Error generating payment link:', error);
           }
-        },
-        error: (error) => {
-          this.toast.error({ detail: "Error", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
-        }
-      });
+        });
 
-      // this.router.navigate(['/renewal/paymentstatus'],{
-      //   queryParams: {
-      //     orderid: 'UP_241209_ef1cf656',
-      //     token: 'aa59deee594c4c90abd5737929d0302e'
-      //     // ,
-      //     // agentCode: '500013'
-      //   }
-      // });
+        // this.router.navigate(['/renewal/paymentstatus'],{
+        //   queryParams: {
+        //     orderid: 'UP_241209_ef1cf656',
+        //     token: 'aa59deee594c4c90abd5737929d0302e'
+        //     // ,
+        //     // agentCode: '500013'
+        //   }
+        // });
 
+      }
+    }
+    else {
+      this.toast.error({ detail: "Error", summary: 'Please fill the mandatory fields.', duration: 3000 });
     }
   }
 
@@ -7494,60 +10983,161 @@ export class RenewalDynamicFormComponent {
       'correspondentPincode'
     ];
     if (flag) {
-      this.renewalFormGroup?.controls['proposerAddress1'].setValue(this.renewalFormGroup?.controls['permanentAddress1'].value)
-      this.renewalFormGroup?.controls['proposerAddress2'].setValue(this.renewalFormGroup?.controls['permanentAddress2'].value)
-      this.renewalFormGroup?.controls['proposerAddress3'].setValue(this.renewalFormGroup?.controls['permanentAddress3'].value)
-      this.renewalFormGroup?.controls['correspondentPincode'].setValue(this.renewalFormGroup?.controls['proposerPincode'].value)
-      this.renewalFormGroup?.controls['correspondingCity'].setValue(this.renewalFormGroup?.controls['city'].value);
-      this.renewalFormGroup?.controls['correspondingState'].setValue(this.renewalFormGroup?.controls['state'].value);
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue(this.dynamicFormGroup?.controls['permanentAddress1'].value)
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue(this.dynamicFormGroup?.controls['permanentAddress2'].value)
+      this.dynamicFormGroup?.controls['proposerAddress3'].setValue(this.dynamicFormGroup?.controls['permanentAddress3'].value)
+      this.dynamicFormGroup?.controls['correspondentPincode'].setValue(this.dynamicFormGroup?.controls['proposerPincode'].value)
+      this.dynamicFormGroup?.controls['correspondingCity'].setValue(this.dynamicFormGroup?.controls['city'].value);
+      this.dynamicFormGroup?.controls['correspondingState'].setValue(this.dynamicFormGroup?.controls['state'].value);
 
       controlsToDisable.forEach(controlName => {
-        this.renewalFormGroup?.controls[controlName]?.disable();
+        this.dynamicFormGroup?.controls[controlName]?.disable();
       });
 
     } else {
-      this.renewalFormGroup?.controls['proposerAddress1'].setValue('')
-      this.renewalFormGroup?.controls['proposerAddress2'].setValue('')
-      this.renewalFormGroup?.controls['proposerAddress3'].setValue('')
-      this.renewalFormGroup?.controls['correspondentPincode'].setValue('')
-      this.renewalFormGroup?.controls['correspondingCity'].setValue('')
-      this.renewalFormGroup?.controls['correspondingState'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress1'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress2'].setValue('')
+      this.dynamicFormGroup?.controls['proposerAddress3'].setValue('')
+      this.dynamicFormGroup?.controls['correspondentPincode'].setValue('')
+      this.dynamicFormGroup?.controls['correspondingCity'].setValue('')
+      this.dynamicFormGroup?.controls['correspondingState'].setValue('')
       controlsToDisable.forEach(controlName => {
-        this.renewalFormGroup?.controls[controlName]?.enable();
+        this.dynamicFormGroup?.controls[controlName]?.enable();
       });
     }
 
   }
 
   getCityStateByPin() {
-    const reqData = {
-      "pincode": this.formData.proposerPincode && this.formData.proposerPincode.toString()
-    }
-    this.formData.proposerPincode && this.commonService.getCommonPinCodeByCity(reqData).subscribe(res => {
-      if (res.isSuccess && res.data) {
-        // Update city and state fields
-        this.renewalFormGroup.get('city')?.setValue(res.data.city || '');
-        this.renewalFormGroup.get('state')?.setValue(res.data.state || '');
+    // const reqData = {
+    //   "pincode": this.formData.proposerPincode && this.formData.proposerPincode.toString()
+    // }
+    // this.formData.proposerPincode && this.commonService.getCommonPinCodeByCity(reqData).subscribe(res => {
+    //   if (res.isSuccess && res.data) {
+    //     // Update city and state fields
+    //     this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
+    //     this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
 
+    //   }
+    // });
+    if(this.formData.proposerPincode){
+      const reqData = {
+        "pincode": this.formData.proposerPincode,
+        agentcode: this.agentCode,
+        productId: this.productId.toString()
       }
-    });
+      console.log(reqData);
+  
+      this.commonService.getPinCodeByCity(reqData).subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.data) {
+            this.dynamicFormGroup.get('city')?.setValue(res.data.city || '');
+            this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
+  
+            const zoneControl = this.dynamicFormGroup.get('zone');
+            const zoneControlValue = this.dynamicFormGroup.get('zoneValue');
+
+            if (zoneControl) {
+              zoneControl.setValue(res.data.zone || '');
+            }
+            // zoneControl.enable();
+            if (zoneControlValue) {
+              zoneControlValue.setValue(res.data.zoneValue);
+              const isZoneValueDisabled = this.form.formSections.some((section: any) =>
+                section.formControls.some((control: any) => control.name === 'zoneValue' && control.disabled === true)
+              );
+  
+              if (isZoneValueDisabled) {
+                zoneControlValue.disable();
+              } else {
+                zoneControlValue.enable();
+              }
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name === 'zoneValue') {
+                    control.options = res.data.upgradableZones;
+  
+                  }
+                });
+              });
+            }
+  
+            const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+            let sumInsuredList: { name: string, value: any }[] = [];
+            console.log(sumInsuredControl);
+  
+            if (sumInsuredControl) {
+              sumInsuredList = res.data.sumInsuredList || [];
+              sumInsuredControl.setValue(''); // Reset current value
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name === 'sumInsured') {
+                    control.options = sumInsuredList.map((sumInsured: any) => ({
+                      name: sumInsured.name,
+                      value: sumInsured.value,
+                    }));
+                    control.value=this.formData.sumInsured;
+                    console.log(control.options);
+                  }
+                });
+              });
+            }
+  
+            const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+  
+            if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater' && insuredMemberDetails?.length > 0) {
+              insuredMemberDetails.controls.forEach((memberGroup: any) => {
+                memberGroup.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+                memberGroup.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+                memberGroup.get('city')?.setValue(this.dynamicFormGroup.get('city')?.value);
+                memberGroup.get('state')?.setValue(this.dynamicFormGroup.get('state')?.value);
+                memberGroup.get('proposerPincode')?.setValue(this.dynamicFormGroup.get('proposerPincode')?.value);
+              })
+            }
+          } else {
+            console.error('Failed to fetch zone details.');
+          }
+        },
+        error: (err: any) => {
+          console.error('Error fetching zone details:', err);
+        }
+      });
+    }
   }
 
   getCityStateByPinByCorressponding() {
-    const reqData = {
-      "pincode": this.renewalFormGroup.get('correspondentPincode')?.value.toString()
-    }
-    this.commonService.getPinCodeByCity(reqData).subscribe(res => {
-      if (res.isSuccess && res.data) {
-        // Update city and state fields
-        this.renewalFormGroup.get('correspondingCity')?.setValue(res.data.city || '');
-        this.renewalFormGroup.get('correspondingState')?.setValue(res.data.state || '');
+    const correspondencePincode = this.dynamicFormGroup.get('correspondentPincode')?.value;
 
-      }
-    });
+    if (correspondencePincode && correspondencePincode.toString().length === 6) {
+      const reqData = {
+        "pincode": String(correspondencePincode)
+      };
+
+      console.log(reqData);
+      this.commonService.getCommonPinCodeByCity(reqData).subscribe({
+        next: (res) => {
+          console.log(res)
+          if (res.isSuccess && res.data) {
+            this.dynamicFormGroup.get('correspondingCity')?.setValue(res.data.city || '');
+            this.dynamicFormGroup.get('correspondingState')?.setValue(res.data.state || '');
+          }
+        }
+      });
+    }
   }
 
   halfQuotation() {
+    const reqData1 = {
+      "proposalNum": this.proposalNum,
+      "isGoGreen": this.dynamicFormGroup.get("decl2")?.value
+    }
+    this.yatraService.getIsGoGreen(reqData1).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        console.log(reqData1);
+      }
+    })
+
     const reqData = {
       "proposalNum": this.proposalNum,
       "agentCode": this.agentCode
@@ -7555,10 +11145,15 @@ export class RenewalDynamicFormComponent {
     this.yatraService.getHalfQuote(reqData).subscribe({
       next: (response: any) => {
         if (response.isSuccess && response.data) {
+          if (response.data.halfQuoteTotalPremium) {
+            this.tenureAmount[this.formData.tenure - 1] = response.data.halfQuoteTotalPremium ? Math.round(response.data.halfQuoteTotalPremium) : 0;
+            sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+            this.dynamicFormGroup.get('totalPremium')?.setValue(response.data.halfQuoteTotalPremium);
+          }
           this.toast.success({ detail: "Success", summary: 'Half Quote generated successfully with application number' + response.data.applicationNumber, duration: 3000 });
         }
         else {
-          this.toast.error({ detail: "Error", summary: response.message, duration: 3000 })
+          this.toast.error({ detail: "Error", summary: response.message, duration: 4000 })
           // this.form.formSections.forEach((section: any) => {
           //   section.formControls.forEach((control: any) => {
           //     if (control.name === 'next') {
@@ -7567,7 +11162,13 @@ export class RenewalDynamicFormComponent {
           //   })
           // });
         }
-        this.onSubmit();
+        if (this.formData.productName.startsWith("Activ Fit") && !this.isDeclarartionDiscountVisible && response.data) {
+          // if(this.formData.productName.startsWith("Activ Fit") && response.isSuccess){
+          this.declarationPopUp();
+        }
+        else {
+          this.onSubmit();
+        }
       },
       error: (err) => {
         this.toast.error({ detail: "Error", summary: 'Failed to generate half Quote', duration: 3000 });
@@ -7582,7 +11183,7 @@ export class RenewalDynamicFormComponent {
         agentCode: this.agentCode,
         referenceId: this.agentCode,
         eventName: "Download policy kit request from customers",
-        proposalNumber: this.renewalFormGroup.get('policyNumber')?.value,
+        proposalNumber: this.dynamicFormGroup.get('policyNumber')?.value,
         downloadRequest: [
           {
             omniDocImageIndex: this.retrievedDocuments[0].omniDocImageIndex,
@@ -7633,7 +11234,7 @@ export class RenewalDynamicFormComponent {
           dataClassParam: [
             {
               docSearchParamId: "2",
-              value: this.renewalFormGroup.get('policyNumber')?.value
+              value: this.dynamicFormGroup.get('policyNumber')?.value
             },
             {
               docSearchParamId: "15",
@@ -7653,42 +11254,60 @@ export class RenewalDynamicFormComponent {
           const searchResponse = response.data.searchResponse;
           this.retrievedDocuments = searchResponse;
           if (searchResponse && searchResponse[0]?.error?.length > 0) {
-            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 2000 });
+            this.toast.success({ detail: "Success", summary: "No documents are available to download.", duration: 3000 });
             return;
           }
         } else {
-          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: response.message || "Failed to search document.", duration: 3000 });
         }
       },
       (error: any) => {
         console.error("Search document error", error);
-        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while searching the document.", duration: 3000 });
       }
     );
   }
 
   setDeductibleAmount(control: any, parentControl: any = null, index: any = null) {
-    if (this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      const sumInsuredControl = this.renewalFormGroup.get('sumInsured');
+    if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      const sumInsuredControl = this.dynamicFormGroup.get('sumInsured');
+      const sumInsuredForPlanControl = this.dynamicFormGroup.get('sumInsuredForPlan');
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
           if (control.name == 'deductibleAmount') {
-            if (control.onChangeMethod == 'deductibleOptionsB') {
-              const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
-              this.renewalFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+            let deductibleValue: any;
+            if (this.formData.productName == 'Activ Health Platinum Enhanced') {
+              let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+              if (planName == 'Plan A') {
+                const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredForPlanControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((control: any) => {
+                  control.get('deductibleAmount')?.setValue(deductibleValue);
+                })                
+              } else {
+                const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredForPlanControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+                (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls.forEach((control: any) => {
+                  control.get('deductibleAmount')?.setValue(deductibleValue);
+                })
+              }
             }
             else {
-              const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
-              this.renewalFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              if (control.onChangeMethod == 'deductibleOptionsB') {
+                deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              }
+              else {
+                deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                this.dynamicFormGroup.get('deductibleAmount')?.setValue(deductibleValue);
+              }
             }
           }
         })
-
       })
-
     }
-    else if (this.renewalFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
-      const insuredMemberDetailsControl = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    else if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      const insuredMemberDetailsControl = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       const sumInsuredControl = insuredMemberDetailsControl.controls[index].get(control.name);
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle == 'Insured Member Details') {
@@ -7696,13 +11315,25 @@ export class RenewalDynamicFormComponent {
             if (control.visible == true) {
               control.dynamicControls[0].forEach((dynamicControl: any) => {
                 if (dynamicControl.name == 'deductibleAmount') {
-                  if (dynamicControl.onChangeMethod == 'deductibleOptionsB') {
-                    const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
-                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                  if (this.formData.productName == 'Activ Health Platinum Enhanced') {
+                    let planName = JSON.parse(this.dynamicFormGroup.get('planName')?.value).value
+                    if (planName == 'Plan A') {
+                      const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    } else {
+                      const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
                   }
                   else {
-                    const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
-                    insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    if (dynamicControl.onChangeMethod == 'deductibleOptionsB') {
+                      const deductibleValue = this.deductibleOptionsB(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
+                    else {
+                      const deductibleValue = this.deductibleOptionsA(null, null, sumInsuredControl?.value);
+                      insuredMemberDetailsControl.controls[index].get('deductibleAmount')?.setValue(deductibleValue);
+                    }
                   }
                 }
               })
@@ -7723,20 +11354,19 @@ export class RenewalDynamicFormComponent {
     }
 
     // Update the form control's value to match the truncated value
-    const formControl = this.renewalFormGroup.get(inputElement.name);
+    const formControl = this.dynamicFormGroup.get(inputElement.name);
     if (formControl) {
       formControl.setValue(inputElement.value);
     }
   }
 
   calculateEmployeeDiscount(control: any) {
-    const employeeIdValue = this.renewalFormGroup.get('employeeId')?.value || null;
-    const affiliateEmployeeIdValue = this.renewalFormGroup.get('affiliateEmployeeId')?.value || null;
+    const employeeIdValue = this.dynamicFormGroup.get('employeeId')?.value || null;
 
     this.formData = {
       ...this.formData,
       employeeId: employeeIdValue,
-      affiliateEmployeeId: employeeIdValue ? null : affiliateEmployeeIdValue,
+      affiliateEmployeeId: null,
     };
 
     this.getPremiumAmount();
@@ -7753,10 +11383,130 @@ export class RenewalDynamicFormComponent {
     }));
   }
 
+  updateDesignationBasedOnAnnualincome(control: any, selectedControl: any, parentControl?: any) {
+    let selectedRelation: string = '';
+    if (control.name == 'productMemberOccupation') {
+      selectedRelation = parentControl.dynamicControls[selectedControl][1].value // 1 is the index of relation object
+    }
+    else {
+      selectedRelation = selectedControl.name
+    }
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      if (selectedRelation == member.relation) {
+        if (member.annualIncome != "") {
+          control.options = [{
+            "id": "1",
+            "value": "O464",
+            "name": "Retired"
+          },
+          {
+            "id": "3",
+            "value": "O553",
+            "name": "Salaried"
+          },
+          {
+            "id": "6",
+            "value": "O556",
+            "name": "Self Employed"
+          }]
+        }
+        else {
+          control.options = [{
+            "id": "1",
+            "value": "O464",
+            "name": "Retired"
+          },
+          {
+            "id": "2",
+            "value": "O490",
+            "name": "Student"
+          },
+          {
+            "id": "6",
+            "value": "O554",
+            "name": "Not Employed"
+          },
+          {
+            "id": "3",
+            "value": "O555",
+            "name": "HouseWife/Husband"
+          }]
+        }
+      }
+    });
+    const selectedMember = this.formData.insuredMemberDetails.find(
+      (member: any) => member.relation === selectedRelation
+    );
+    let occupationData = null;
+    if (selectedMember && selectedMember.productMemberOccupation) {
+      occupationData = JSON.parse(selectedMember.productMemberOccupation).name;
+    }
+    this.getNatureOfWorkByOccupation(false, occupationData, selectedControl);
+
+  }
+  setSIValues(parentControl: any, control: any, selectedControl: any, coreControl: any, index: any, event: any = null) {
+    let annualIncome: any;
+    if (parentControl.name == 'temporaryTotalDisablementBenefit' || parentControl.name == 'emiProtect' || parentControl.name == 'loanProtect') {
+      this.formData.insuredMemberDetails.forEach((member: any) => {
+        if (member.relation == selectedControl.name) {
+          if (member.annualIncome != "") {
+            annualIncome = Number(member.annualIncome);
+          }
+        }
+      });
+    }
+    const requestBody = {
+      "coverType": parentControl.name || "",
+      "planType": null,
+      "productId": (this.productId).toString() || "",
+      "agentCode": this.agentCode,
+      "annualIncome": annualIncome || null,
+      "occupation": null,
+      "relation": selectedControl.name,
+      "riskClass": null
+    }
+    this.yatraService.getSumInsuredList(requestBody).subscribe({
+      next: (res: any) => {
+        coreControl.options = res.data.siList;
+        let defaultValue = res.data.siList[0].name;
+        ((((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[control.name] as FormGroup)
+          ?.controls[selectedControl.name] as FormArray)?.controls[1] as FormGroup)?.controls[coreControl.name].setValue(defaultValue);
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  // updatePrefixBasedOnGender(control: any): void {
+  //   if (this.formData?.proposerGender || this.dynamicFormGroup.get('proposerGender')?.value !='') {
+  //     const proposerGender = this.formData.proposerGender || this.dynamicFormGroup.get('proposerGender')?.value;
+  //     console.log(proposerGender)
+  //     const disabledSalutations = this.salutationMapping[proposerGender] || [];
+
+  //     control.options = control.options.map((option: any) => ({
+  //       ...option,
+  //       disabled: disabledSalutations.includes(option.name),
+  //     }));
+
+  //     console.log(control.options)
+
+  //     // Optionally set a default value
+  //     const defaultOption = control.options.find(
+  //       (option: any) => !option.disabled
+  //     );
+  //     control.value = defaultOption ? defaultOption.value : '';
+  //   }
+  // }
+
   updatePrefixBasedOnGender(control: any): void {
-    if (this.formData?.proposerGender) {
-      const proposerGender = this.formData.proposerGender;
-      console.log(proposerGender)
+    const proposerGenderControl = this.dynamicFormGroup.get('proposerGender');
+    const proposerGender = (proposerGenderControl && proposerGenderControl.value !== '')
+      ? proposerGenderControl.value
+      : this.formData?.proposerGender;
+
+    if (proposerGender) {
+      console.log(proposerGender);
       const disabledSalutations = this.salutationMapping[proposerGender] || [];
 
       control.options = control.options.map((option: any) => ({
@@ -7764,15 +11514,15 @@ export class RenewalDynamicFormComponent {
         disabled: disabledSalutations.includes(option.name),
       }));
 
-      console.log(control.options)
+      console.log(control.options);
 
       // Optionally set a default value
-      const defaultOption = control.options.find(
-        (option: any) => !option.disabled
-      );
+      const defaultOption = control.options.find((option: any) => !option.disabled);
       control.value = defaultOption ? defaultOption.value : '';
+      this.dynamicFormGroup.get(control.name)?.setValue(control.value);
     }
   }
+
 
 
   restrictKeyPress(event: KeyboardEvent): void {
@@ -7833,13 +11583,13 @@ export class RenewalDynamicFormComponent {
   async onUploadFile(event: any, control: any) {
     if (event[0]) {
       // Clear previous errors
-      // this.renewalFormGroup?.controls[control.name].setErrors(null);
+      // this.dynamicFormGroup?.controls[control.name].setErrors(null);
       // If no errors, proceed to set the selected file
-      if (this.renewalFormGroup?.get(control.name)) {
+      if (this.dynamicFormGroup?.get(control.name)) {
         this.selectedFile = event[0];
-        this.renewalFormGroup?.get(control.name)?.setValue(event[0].name);
+        this.dynamicFormGroup?.get(control.name)?.setValue(event[0].name);
       } else {
-        this.renewalFormGroup?.get(control.name)?.markAsTouched();
+        this.dynamicFormGroup?.get(control.name)?.markAsTouched();
         this.selectedFile = null;
       }
     }
@@ -7850,11 +11600,18 @@ export class RenewalDynamicFormComponent {
     formData.append("Files", event[0]);
     formData.append("UniqueNumber", policyNum);
 
+    let documentData = {
+      proposalNum: this.proposalNum,
+      documentData: {
+        [event[0].name]: base64File.split(',')[1]
+      }
+    };
+
     let obj: any
     switch (control.name) {
       case 'neftStatementUpload':
         obj = {
-          "name": this.renewalFormGroup?.controls['accountHolderName'].value,
+          "name": this.dynamicFormGroup?.controls['accountHolderName'].value,
           "byteArray": base64File.split(',')[1]
 
         }
@@ -7862,10 +11619,10 @@ export class RenewalDynamicFormComponent {
           async (response: any) => {
             if (response.isSuccess) {
               this.pennyDropVerficationByOCRDetails = response.data;
-              this.renewalFormGroup.get('accountHolderName')?.setValue(response.data.bankAccountVerification.accountName);
-              this.renewalFormGroup.get('accountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
-              this.renewalFormGroup.get('confAccountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
-              this.renewalFormGroup.get('ifscCode')?.setValue(response.data.bankAccountVerification.ifsc);
+              this.dynamicFormGroup.get('accountHolderName')?.setValue(response.data.bankAccountVerification.accountName);
+              this.dynamicFormGroup.get('accountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
+              this.dynamicFormGroup.get('confAccountNumber')?.setValue(response.data.bankAccountVerification.accountNumber);
+              this.dynamicFormGroup.get('ifscCode')?.setValue(response.data.bankAccountVerification.ifsc);
               this.toast.success({ detail: "Success", summary: response.message, duration: 3000 });
             } else {
               this.toast.error({
@@ -7887,10 +11644,10 @@ export class RenewalDynamicFormComponent {
         break;
 
       case 'documentProofUpload':
-        this.commonService.uploadDocument(formData).subscribe(
+        this.commonService.insertProposerDocuments(documentData).subscribe(
           async (res: any) => {
             if (res.isSuccess) {
-              this.fullQuoteDocRelated = res.data.uploadResponse[0].globalId
+              //this.fullQuoteDocRelated = res.data.uploadResponse[0].globalId
               // this.documentId = res.data.uploadResponse[0].globalId;
               // this.uploadInfo.push({
               //   name : control,
@@ -7925,17 +11682,9 @@ export class RenewalDynamicFormComponent {
         break;
 
       default:
-        this.commonService.uploadDocument(formData).subscribe(
+        this.commonService.insertProposerDocuments(documentData).subscribe(
           async (res: any) => {
             if (res.isSuccess) {
-              // this.documentId = res.data.uploadResponse[0].globalId;
-              let arr = [];
-              arr.push({
-                "name": control?.name,
-                "data": res.data.uploadResponse[0].globalId
-              });
-
-              this.insertDocByIdwithProof(arr)
 
               this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
             } else {
@@ -7960,68 +11709,68 @@ export class RenewalDynamicFormComponent {
     }
   }
   async modifyThankYouJson() {
-    if (this.formData.paymentMode === 'offline') {
-      console.log(this.formData);
-    }
-    else {
-      const reqData = {
-        proposalNumber: this.proposalNum
-      };
+    // if (this.formData.paymentMode === 'offline') {
+    //   console.log(this.formData);
+    // }
+    // else {
+    const reqData = {
+      proposalNumber: this.proposalNum
+    };
 
-      // Convert Observable to Promise
-      await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
-        .then((res: any) => {
-          if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
-            this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
-            this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
-            this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
-            this.formData.quoteValidToDate = res.data.fullQuoteResponse.policyEndDate || null;
-            this.formData.ReceiptNumber = res.data.fullQuoteResponse.receiptNumber || null;
-            this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
-            this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
-          }
-          if (res.data.errorMessage) {
-            this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
-          }
-          const data = res.data;
-          const status =
-            (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && data.isFullQuoteSuccess
-              ? [true, false, false]
-              : (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && !data.isFullQuoteSuccess
-                ? [false, false, true]
-                : data.paymentStatus.toUpperCase() === 'PENDING'
-                  ? [false, true, false]
-                  : [false, false, false]; // Default case
+    // Convert Observable to Promise
+    await this.yatraService.getpaymentdetailsbyproposalno(reqData).toPromise()
+      .then((res: any) => {
+        if ((res.data.paymentStatus === 'SUCCESS' || res.data.paymentStatus === 'INITIATED') && res.data.isFullQuoteSuccess) {
+          this.formData.policyNumber = res.data.fullQuoteResponse.policyNumber || null;
+          this.formData.policyStatus = res.data.fullQuoteResponse.policyStatus || null;
+          this.formData.quoteValidFromDate = res.data.fullQuoteResponse.policyStartDate || null;
+          this.formData.quoteValidToDate = res.data.fullQuoteResponse.policyEndDate || null;
+          this.formData.ReceiptNumber = res.data.fullQuoteResponse.receiptNumber || null;
+          this.formData.customerId = res.data.fullQuoteResponse.customerId || null;
+          this.formData.applicationNumber = res.data.fullQuoteResponse.applicationNumber || null;
+        }
+        if (res.data.errorMessage) {
+          this.toast.error({ detail: "Error", summary: res.data.errorMessage, duration: 3000 });
+        }
+        const data = res.data;
+        const status =
+          (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && data.isFullQuoteSuccess
+            ? [true, false, false]
+            : (data.paymentStatus.toUpperCase() === 'SUCCESS' || data.paymentStatus.toUpperCase() === 'INITIATED') && !data.isFullQuoteSuccess
+              ? [false, false, true]
+              : data.paymentStatus.toUpperCase() === 'PENDING'
+                ? [false, true, false]
+                : [false, false, false]; // Default case
 
-          this.form.formSections.forEach((formSection: any, i: any) => {
-            formSection.formControls.forEach((formControl: any) => {
-              if (formControl.idProperty === true || formControl.idProperty === false) {
-                if (formControl.name === 'labelA') {
-                  formControl.visible = status[0];
-                } else if (formControl.name === 'labelB') {
-                  formControl.visible = status[1];
-                  this.form.formSections[i + 1].visible = status[0];
-                  this.form.formSections[i + 2].visible = status[0];
-                  this.form.formSections[i + 3].visible = status[0];
-                  this.form.formSections[i + 4].visible = status[0];
-                } else if (formControl.name === 'labelC') {
-                  formControl.visible = status[2];
-                  if (res.data.errorMessage) {
-                    formControl.label = res.data.errorMessage;
-                  }
-                  this.form.formSections[i + 1].visible = status[0];
-                  this.form.formSections[i + 2].visible = status[0];
-                  this.form.formSections[i + 3].visible = status[0];
-                  this.form.formSections[i + 4].visible = status[0];
+        this.form.formSections.forEach((formSection: any, i: any) => {
+          formSection.formControls.forEach((formControl: any) => {
+            if (formControl.idProperty === true || formControl.idProperty === false) {
+              if (formControl.name === 'labelA') {
+                formControl.visible = status[0];
+              } else if (formControl.name === 'labelB') {
+                formControl.visible = status[1];
+                this.form.formSections[i + 1].visible = status[0];
+                this.form.formSections[i + 2].visible = status[0];
+                this.form.formSections[i + 3].visible = status[0];
+                this.form.formSections[i + 4].visible = status[0];
+              } else if (formControl.name === 'labelC') {
+                formControl.visible = status[2];
+                if (res.data.errorMessage) {
+                  formControl.label = res.data.errorMessage;
                 }
+                this.form.formSections[i + 1].visible = status[0];
+                this.form.formSections[i + 2].visible = status[0];
+                this.form.formSections[i + 3].visible = status[0];
+                this.form.formSections[i + 4].visible = status[0];
               }
-            });
+            }
           });
-        })
-        .catch((err) => {
-          console.log(err);
         });
-    }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // }
   }
 
   setPreviousPolicyYears(control: any, index: any, policyLength: any = 0) {
@@ -8065,124 +11814,190 @@ export class RenewalDynamicFormComponent {
     }
 
     this.form.formSections.forEach((section: any) => {
-      section.formControls.forEach((formControl: any, index: any) => {
-        if (formControl.name == 'insuredMemberDetails') {
-          if (this.formData[formControl.name]) {
+      if (section.sectionTitle == 'Previous Policy Documents') {
+        section.visible = isPortability;
+      }
+      else {
+        section.formControls.forEach((formControl: any, index: any) => {
+          if (formControl.name == 'insuredMemberDetails') {
             if (this.formData[formControl.name]) {
               formControl.value = this.formData[formControl.name].length;
-            }
-            formControl.dynamicControls[0].forEach((dynamicControl: any) => {
-              if (dynamicControl.innerArrayControl) {
-                dynamicControl.visible = isPortability;
-                if (isPortability) {
-                  let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-                  dynamicControl.innerArrayControl.push(tempControl);
-                }
 
-              }
-            })
-            formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
-            this.formData[formControl.name].forEach((member: any, index: number) => {
-              let tempDynamicControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              formControl.dynamicControls.push(tempDynamicControl)
-              formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
-                if (innerControl.name == 'relation') {
-                  innerControl.value = member.relation
-                }
-                if (innerControl.name == 'covers') {
-                  innerControl.value = this.covers[index];
-                }
-                if (innerControl.name == 'zoneValue') {
-                  innerControl.options = member.upgradableZones;
-                }
-
-                if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
-                  innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
-                  console.log(innerControl.innerArrayControl);
-
-                  for (let i = 0; i < member.previousPolicyDetails.length; i++) {
-                    // Create a fresh template copy for each iteration
-                    let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
-
-                    if (i === 0) {
-                      // For the first index, push the full template
-                      innerControl.innerArrayControl.push(freshTemplate);
-                    } else {
-                      // Create a customized version for subsequent indices
-                      let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
-                      customizedInnerArrayControl.forEach((controlElement: any) => {
-                        if (controlElement.name == 'policyIndex') {
-                          controlElement.label = 'Policy ' + (i + 1);
-                        }
-                        if (controlElement.name == 'selectYear') {
-                          controlElement.options = [];
-                          const currentYear = new Date().getFullYear();
-                          const startYear = currentYear - 4; // The starting year for your ranges
-                          const yearOptions = [];
-
-                          // Generate the year ranges
-                          for (let year = startYear; year < currentYear; year++) {
-                            yearOptions.push({
-                              value: `${year}-${year + 1}`,
-                              name: `${year}-${year + 1}`
-                            });
-                          }
-                          controlElement.options = yearOptions;
-                        }
-                      });
-                      console.log(customizedInnerArrayControl);
-
-                      innerControl.innerArrayControl.push(customizedInnerArrayControl);
-                    }
+              formControl.dynamicControls[0].forEach((dynamicControl: any) => {
+                if (dynamicControl.innerArrayControl && dynamicControl.name == 'previousPolicyDetails') {
+                  dynamicControl.visible = isPortability;
+                  if (isPortability) {
+                    let tempControl = dynamicControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                    dynamicControl.innerArrayControl.push(tempControl);
                   }
-                }
 
-                if (
-                  this.formData['ckycNo'] &&
-                  member.relation === 'Self' &&
-                  ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
-                ) {
-                  innerControl.disabled = true; // Disable the control
                 }
               })
-            })
+              formControl.dynamicControls = formControl.dynamicControls.slice(0, 1)
+              this.formData[formControl.name].forEach((member: any, index: number) => {
+                let tempDynamicControl = JSON.parse(JSON.stringify(formControl.dynamicControls[0]));
+                formControl.dynamicControls.push(tempDynamicControl)
+                formControl.dynamicControls[index + 1].forEach((innerControl: any) => {
+                  if (innerControl.name == 'relation') {
+                    innerControl.value = member.relation
+                  }
+                  if (innerControl.name == 'covers') {
+                    innerControl.value = this.covers[index];
+                  }
+                  if (innerControl.name == 'zoneValue') {
+                    innerControl.options = member.upgradableZones;
+                  }
+
+                  if (innerControl.name == 'previousPolicyDetails' && member.previousPolicyDetails?.length > 0) {
+                    innerControl.innerArrayControl = innerControl.innerArrayControl.slice(0, 1); // Keep only the first template
+                    console.log(innerControl.innerArrayControl);
+
+                    for (let i = 0; i < member.previousPolicyDetails.length; i++) {
+                      // Create a fresh template copy for each iteration
+                      let freshTemplate = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+
+                      if (i === 0) {
+                        // For the first index, push the full template
+                        innerControl.innerArrayControl.push(freshTemplate);
+                      } else {
+                        // Create a customized version for subsequent indices
+                        let customizedInnerArrayControl = freshTemplate.slice(3).map((element: any) => ({ ...element }));
+                        customizedInnerArrayControl.forEach((controlElement: any) => {
+                          if (controlElement.name == 'policyIndex') {
+                            controlElement.label = 'Policy ' + (i + 1);
+                          }
+                          if (controlElement.name == 'previousSelectYear') {
+                            controlElement.options = [];
+                            const currentYear = new Date().getFullYear();
+                            const startYear = currentYear - 4; // The starting year for your ranges
+                            const yearOptions = [];
+
+                            // Generate the year ranges
+                            for (let year = startYear; year < currentYear; year++) {
+                              yearOptions.push({
+                                value: `${year}-${year + 1}`,
+                                name: `${year}-${year + 1}`
+                              });
+                            }
+                            controlElement.options = yearOptions;
+                          }
+                        });
+                        console.log(customizedInnerArrayControl);
+
+                        innerControl.innerArrayControl.push(customizedInnerArrayControl);
+                      }
+                    }
+                  }
+
+                  if (innerControl.name == 'previousCurrentPolicyDetails') {
+                    if (member.previousCurrentPolicyDetails && member.previousCurrentPolicyDetails.length > 0) {
+
+                      innerControl.visible = true;
+                      member.previousCurrentPolicyDetails.forEach((previousPolicyDetails: any) => {
+                        const tempInnerArrayControl = JSON.parse(JSON.stringify(innerControl.innerArrayControl[0]));
+                        Object.keys(previousPolicyDetails).forEach((key) => {
+                          if (
+                            (key == 'additionalInfoClaim' || key == 'diseaseName' || key == 'dateOfDiagnosis' ||
+                              key == 'lastConsultationDate' || key == 'nameOfSurgery' || key == 'treatmentDetails' ||
+                              key == 'disability' || key == 'periodOfHospitalisation' || key == 'anyOtherInformation')
+                            && previousPolicyDetails[key] !== ''
+                          ) {
+                            // Find and update the corresponding control to make it visible
+                            const tempInnerControl = tempInnerArrayControl.find((ctrl: any) => ctrl.name === key);
+                            if (tempInnerControl) {
+                              tempInnerControl.visible = true;
+                            }
+                          }
+                        });
+                        innerControl.innerArrayControl.push(tempInnerArrayControl);
+                      });
+                    }
+
+                  }
+
+                  if (
+                    this.formData['ckycNo'] &&
+                    member.relation === 'Self' &&
+                    ['firstName', 'middleName', 'lastName', 'memberdob', 'mobileNumber'].includes(innerControl.name)
+                  ) {
+                    innerControl.disabled = true; // Disable the control
+                  }
+                })
+              })
+            }
           }
-        }
-        // if (formControl.name == 'recalculate' && isPortability) {
-        //   formControl.visible = isPortability;
-        // }
-        // if (formControl.name == 'next' && isPortability) {
-        //   formControl.visible = !isPortability;
-        // }
-      })
+          // if (formControl.name == 'recalculate' && isPortability) {
+          //   formControl.visible = isPortability;
+          // }
+          // if (formControl.name == 'next' && isPortability) {
+          //   formControl.visible = !isPortability;
+          // }
+        })
+      }
     })
   }
 
   duplicateForAllMembers(innerControl: any, control: any, parentControl: any, index: number) {
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
-    const currentGroup = formArray.controls[index] as FormGroup;
 
-    // Get the value of the control in the current group
-    const currentValues = currentGroup.get(control.name)?.value;
+    console.log(innerControl, control, parentControl, index);
 
-    // Traverse all other indices in the FormArray
-    formArray.controls.forEach((group, idx) => {
-      if (idx !== index) {
-        const otherGroup = group as FormGroup;
 
-        // Update each key in the other group
-        Object.keys(currentValues).forEach(key => {
-          if (otherGroup.get(control.name)?.get(key)) {
-            otherGroup.get(control.name)?.get(key)?.setValue(currentValues[key]);
+    parentControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
+      if (dynamicControl.name == 'otherMemberCopyControl') {
+        dynamicControl.visible = true;
+      }
+    })
+
+    this.isOverlayVisible = true;
+  }
+
+  duplicateForSelectedMembers(subControl: any, control: any, index: number) {
+    console.log(subControl, control, index);
+
+
+    const formArray = this.dynamicFormGroup.get(control.name) as FormArray;
+    const currentGroup = formArray.controls[index - 1] as FormGroup;
+
+    const activePolicyArray = currentGroup.get('activePolicyDetails') as FormArray;
+
+    const currentValues = activePolicyArray.at(0).value;
+
+    console.log(currentValues);
+
+
+    const currentControlGroup = currentGroup.get(subControl.name);
+
+    console.log(currentControlGroup?.value);
+
+    Object.keys(currentControlGroup?.value).forEach((key) => {
+
+      if (currentControlGroup?.value[key] == true) {
+        formArray.controls.forEach((group, idx) => {
+          if (group.get('relation')?.value == key.toString()) {
+            const otherGroup = group as FormGroup;
+
+            console.log(otherGroup);
+
+            const otherActivePolicyArray = otherGroup.get('activePolicyDetails') as FormArray;
+            const excludedKeys = ['activePolicyFirstName', 'activePolicyMiddleName', 'activePolicyLastName'];
+            Object.keys(currentValues).forEach(key2 => {
+              if (otherActivePolicyArray.at(0) && !excludedKeys.includes(key2)) {
+                otherActivePolicyArray.at(0)?.get(key2)?.setValue(currentValues[key2]);
+              }
+            });
           }
+          console.log(group.value);
+
         });
       }
-    });
-    // this.onClickReq(parentControl.value[index + 1]);
+    })
+
+    this.closeOverlay(subControl);
+
   }
 
   duplicatePortabilityPolicyForAllMembers(innerControl: any, control: any, parentControl: any, index: number, indexj: number) {
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const currentGroup = formArray.controls[index] as FormGroup;
 
     console.log(currentGroup);
@@ -8198,6 +12013,12 @@ export class RenewalDynamicFormComponent {
       if (idx !== index) {
         const otherGroup = group as FormGroup;
         const otherInnerFormArr = otherGroup.get(control.name) as FormArray;
+        for (let innerIndex = 0; innerIndex <= indexj; innerIndex++) {
+          if (!otherInnerFormArr.controls[innerIndex]) {
+            this.addMorePortabilityPolicies(innerControl, control, parentControl, idx);
+          }
+        }
+
         // Update each key in the other group
         Object.keys(currentValues).forEach(key => {
           // if (otherGroup.get(control.name)?.get(key)) {
@@ -8240,18 +12061,18 @@ export class RenewalDynamicFormComponent {
   }
 
   getKeys(obj: any): string[] {
-    const formGroupValue = (this.renewalFormGroup.get(obj) as FormGroup)?.value;
+    const formGroupValue = (this.dynamicFormGroup.get(obj) as FormGroup)?.value;
     return formGroupValue ? Object.keys(formGroupValue) : [];
   }
   isBooleanTrue(control: any, key: any): boolean {
-    const formGroupValue = (this.renewalFormGroup.get(control) as FormGroup)?.value;
+    const formGroupValue = (this.dynamicFormGroup.get(control) as FormGroup)?.value;
     return typeof formGroupValue?.[key] === 'boolean' && formGroupValue[key] === true;
   }
   formatKey(key: string): string {
     return key.charAt(0).toUpperCase() + key.slice(1); // Capitalize the first letter
   }
   enableABHAConcent(): boolean {
-    const insuredMemberDetailsArray = this.renewalFormGroup?.get('insuredMemberDetails') as FormArray;
+    const insuredMemberDetailsArray = this.dynamicFormGroup?.get('insuredMemberDetails') as FormArray;
     const firstFormGroup = insuredMemberDetailsArray.controls[0] as FormGroup;
     const abhaNumberValid = firstFormGroup.get('abhaNumber')?.valid;
     const abhaMailIdValid = firstFormGroup.get('abhaMailId')?.valid;
@@ -8321,7 +12142,7 @@ export class RenewalDynamicFormComponent {
             "proposalNum": this?.formData?.proposalNumber,
             "partnerId": this.partnerId,
             "agentCode": this.agentCode,
-            "formData": JSON.stringify(this.renewalFormGroup.getRawValue()),
+            "formData": JSON.stringify(this.dynamicFormGroup.getRawValue()),
             "formName": this.formSequence[this.getFormIndexValue()].formName,
             "formConfig": JSON.stringify(this.formSequence),
             "productId": this.productId.toString(),
@@ -8381,14 +12202,14 @@ export class RenewalDynamicFormComponent {
   }
 
   checkPreviousPolicyDetails(parentControl: any) {
-    // const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    // const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
 
     // // Flag to track validation
     // let allValid = true;
 
-    console.log(this.renewalFormGroup.value, this.renewalFormGroup);
+    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup);
 
-    if (this.renewalFormGroup.valid) {
+    if (this.dynamicFormGroup.valid) {
       this.changeRecalculate(false);
       this.getPremiumAmount();
     }
@@ -8425,13 +12246,13 @@ export class RenewalDynamicFormComponent {
 
   addMorePolicies(innerControl: any, control: any, parentControl: any, index: number) {
     console.log(innerControl, control, parentControl, index)
-    console.log(this.renewalFormGroup.get(parentControl.name) as FormArray)
+    console.log(this.dynamicFormGroup.get(parentControl.name) as FormArray)
     let tempControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
     control.innerArrayControl.push(tempControl);
-    let formArr = (((this.renewalFormGroup.get(parentControl.name) as FormArray)
+    let formArr = (((this.dynamicFormGroup.get(parentControl.name) as FormArray)
       .controls[index] as FormGroup).controls[control.name] as FormArray);
     formArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
-    console.log(formArr, 'dfgd', this.renewalFormGroup, 'form', this.form)
+    console.log(formArr, 'dfgd', this.dynamicFormGroup, 'form', this.form)
   }
 
   addMorePortabilityPolicies(innerControl: any, control: any, parentControl: any, index: number) {
@@ -8491,14 +12312,14 @@ export class RenewalDynamicFormComponent {
           }
         })
       })
-      console.log(this.renewalFormGroup);
+      console.log(this.dynamicFormGroup);
 
-      let formArr = this.renewalFormGroup.get(parentControl.name) as FormArray;
+      let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
       // let formArr;
 
 
       if (formArr != null) {
-        formArr = this.renewalFormGroup.get(parentControl.name) as FormArray;
+        formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
         console.log(formArr);
 
         let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
@@ -8510,7 +12331,7 @@ export class RenewalDynamicFormComponent {
         innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control, policyLength));
       }
 
-      console.log(this.form, this.renewalFormGroup);
+      console.log(this.form, this.dynamicFormGroup);
     }
     else {
       this.toast.warning({ detail: "Warning", summary: 'You can add a maximum of 4 policies.', duration: 3000 });
@@ -8518,6 +12339,70 @@ export class RenewalDynamicFormComponent {
 
 
 
+
+  }
+
+  addMoreClaimPolicies(innerControl: any, control: any, parentControl: any, index: number) {
+
+    // console.log(innerControl, control);
+    // let tempArrayControl = control.innerArrayControl[0].map((element: any) => ({ ...element }));
+    // control.innerArrayControl.push(tempArrayControl);
+
+    // let formArr = this.dynamicFormGroup.get(control.name) as FormArray;
+    // // let formArr;
+    // console.log(formArr);
+
+    // if (formArr == null) {
+    //   let tempFormArray = this.fb.array([]);
+    //   this.dynamicFormGroup.addControl(control.name, tempFormArray);
+    //   formArr = this.dynamicFormGroup.get(control.name) as FormArray;
+    // }
+    // formArr.push(this.initializeDynamicFormControls(tempArrayControl, control.innerArrayControl.length - 1, control));
+
+    let tempControl = JSON.parse(JSON.stringify(control.innerArrayControl[0]));
+    console.log(tempControl, this.formData);
+
+    if (this.formData.productName === 'Arogya Sanjeevani') {
+      tempControl.splice(0, 1); // Removes the first element
+      console.log(tempControl);
+
+    }
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == parentControl.name) {
+          let targetDynamicControls = JSON.parse(JSON.stringify(formControl.dynamicControls[index + 1]));
+          targetDynamicControls.forEach((innerControl: any) => {
+            if (innerControl.name == control.name) {
+              console.log(tempControl);
+
+              innerControl.innerArrayControl.push([...tempControl]);
+            }
+          });
+
+
+          formControl.dynamicControls[index + 1] = targetDynamicControls;
+        }
+      })
+    })
+    console.log(this.dynamicFormGroup);
+
+    let formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    // let formArr;
+
+
+    if (formArr != null) {
+      formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+      console.log(formArr);
+
+      let innerFormArr = formArr.controls[index].get(control.name) as FormArray;
+      console.log(control.innerArrayControl.length - 1, control);
+
+      console.log(this.form);
+
+
+      innerFormArr.push(this.initializeDynamicFormControls(tempControl, control.innerArrayControl.length - 1, control));
+    }
 
   }
 
@@ -8554,8 +12439,8 @@ export class RenewalDynamicFormComponent {
       });
     });
 
-    // Update the reactive form (this.renewalFormGroup)
-    const formArr = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    // Update the reactive form (this.dynamicFormGroup)
+    const formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     if (formArr) {
       const innerFormArr = formArr.controls[index].get(subControl.name) as FormArray;
       if (innerFormArr) {
@@ -8564,11 +12449,36 @@ export class RenewalDynamicFormComponent {
     }
 
     console.log('Updated form structure:', this.form);
-    console.log('Updated reactive form:', this.renewalFormGroup);
+    console.log('Updated reactive form:', this.dynamicFormGroup);
   }
 
+  removeClaimPolicy(subControl: any, parentControl: any, index: number, z: number) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name === parentControl.name) {
+          formControl.dynamicControls[index + 1].forEach((dynamicControl: any) => {
+            if (dynamicControl.name === subControl.name) {
+              // Remove the `z`-th element from `innerArrayControl`
+              dynamicControl.innerArrayControl.splice(z + 1, 1);
+            }
+          });
+        }
+      });
+    });
+
+    // Update the reactive form (this.dynamicFormGroup)
+    const formArr = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    if (formArr) {
+      const innerFormArr = formArr.controls[index].get(subControl.name) as FormArray;
+      if (innerFormArr) {
+        innerFormArr.removeAt(z); // Remove the `z`-th FormGroup from FormArray
+      }
+    }
+  }
+
+
   getNestedControl(formArrayName: string, index: number, controlName: string, option: any) {
-    const formArray = this.renewalFormGroup.get(formArrayName) as FormArray;
+    const formArray = this.dynamicFormGroup.get(formArrayName) as FormArray;
     const control = formArray?.controls[index]?.get(controlName) as FormGroup;
     return control;
   }
@@ -8580,7 +12490,7 @@ export class RenewalDynamicFormComponent {
     if (selectedValues) {
       const trueCount = Object.values(selectedValues).filter(value => value === true).length;
 
-      if (checkbox.checked && trueCount > 3) {
+      if (this.formData.productName.includes('VYTL') && checkbox.checked && trueCount > 3) {
         // If already 3 or more values are true and checkbox is being chec"{\"productName\":\"Activ Health Platinum Premiere\",\"proposalNumber\":\"UPP160125173820346\",\"applicableZones\":\"Zone I,Zone II,Zone III\",\"accountHolderName\":\"SOUVIK MITRA\",\"exisitingPolicy\":\"N\",\"isAdityaBirlaPolicy\":\"\",\"getPolicyNumber\":\"\",\"getPolicyDetails\":null,\"getInsurerDetails\":\"\",\"previousDocumentPara\":null,\"policyDocumentUpload\":\"\",\"policyDocumentSubmit\":\"\",\"productNameOfPreviousPolicy\":\"\",\"previousPolicyType\":\"\",\"previousPolicyNumber\":\"\",\"nameOfInsurer\":\"\",\"sumInsuredPorting\":\"\",\"policyStartDate\":\"\",\"policyEndDate\":\"\",\"previousPolicyVariant\":\"\",\"inceptionDate\":\"\",\"breakTime\":\"N\",\"claimPreviousPolicy\":\"N\",\"anyAddOns\":\"N\",\"memberDobProposer\":\"1965-07-22\",\"memberAgeProposer\":\"59\",\"panNo\":\"FVYPM1429K\",\"verifyKYC\":null,\"isPep\":\"N\",\"productVariant\":\"Premiere\",\"ckycNo\":\"\",\"leadNumber\":\"\",\"tenureAmount\":[0,0,0],\"displayTaxList\":[],\"isEmployee\":false,\"typeOfBusiness\":\"NB\",\"memberPlan\":\"Premiere\",\"productType\":\"AH\",\"planCode\":\"6212100002\",\"productId\":\"6212\",\"preFix\":\"Mr\",\"firstName\":\"SOUVIK\",\"middleName\":\"\",\"lastName\":\"MITRA\",\"proposerGender\":\"M\",\"emailId\":\"souvik@gmail.com\",\"alternateEmailId\":\"\",\"mobileNumber\":\"9930519086\",\"whatsAppNumber\":\"\",\"idProof\":\"{\\\"id\\\":\\\"2\\\",\\\"value\\\":\\\"Aadhar Card\\\",\\\"name\\\":\\\"Aadhar Card\\\",\\\"dependentControls\\\":[{\\\"name\\\":\\\"aadharIdNo\\\",\\\"visibility\\\":true},{\\\"name\\\":\\\"passportIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"licenseIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"voterIdNo\\\",\\\"visibility\\\":false},{\\\"name\\\":\\\"marksheetIdNo\\\",\\\"visibility\\\":false}]}\",\"aadharIdNo\":\"6789\",\"passportIdNo\":null,\"licenseIdNo\":null,\"voterIdNo\":null,\"marksheetIdNo\":null,\"annualIncome\":\"500000\",\"occupation\":\"{\\\"id\\\":\\\"10\\\",\\\"value\\\":\\\"O557\\\",\\\"name\\\":\\\"CA\\\"}\",\"maritalStatus\":\"{\\\"id\\\":\\\"M\\\",\\\"value\\\":\\\"Married\\\",\\\"name\\\":\\\"Married\\\"}\",\"gstDetails\":\"Consumers\",\"educationDetails\":\"{\\\"id\\\":\\\"6\\\",\\\"value\\\":\\\"Post Graduate\\\",\\\"name\\\":\\\"Post Graduate\\\"}\",\"nationality\":\"{\\\"id\\\":\\\"1\\\",\\\"value\\\":\\\"Indian\\\",\\\"name\\\":\\\"Indian\\\",\\\"selected\\\":true}\",\"sumInsured\":\"1500000\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"horizontalLine\":null,\"addressTitle\":null,\"permanentAddress1\":\"C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR\",\"permanentAddress2\":\"KARIMGANJ ASSAM\",\"permanentAddress3\":\"nhgfdfghj\",\"proposerPincode\":500013,\"city\":\"Hyderabad\",\"state\":\"TELANGANA\",\"corresaddressTitle\":null,\"addressTitle1\":true,\"proposerAddress1\":\"C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR\",\"proposerAddress2\":\"KARIMGANJ ASSAM\",\"proposerAddress3\":\"nhgfdfghj\",\"correspondentPincode\":500013,\"correspondingCity\":\"Hyderabad\",\"correspondingState\":\"TELANGANA\",\"addMembers\":null,\"insureMem\":null,\"numberOfInsuredMembers\":3,\"plandetails\":\"\",\"totalPremium\":\"\",\"next\":null,\"memberPolicyType\":\"Multi Individual\",\"insuredMembers\":{\"Self\":true,\"Spouse\":true,\"Son1\":true,\"Daughter1\":false,\"Mother\":false,\"Father\":false,\"Mother-In-Law\":false,\"Father-In-Law\":false,\"Brother1\":false,\"Sister1\":false,\"Grand-Father\":false,\"Grand-Mother\":false,\"Grand-Son1\":false,\"Grand-Daughter1\":false,\"Son-In-Law1\":false,\"Daughter-In-Law1\":false,\"Brother-In-Law\":false,\"Sister-In-Law\":false,\"Nephew1\":false,\"Niece1\":false},\"insuredMemberDetails\":[{\"relationshipType\":\"{\\\"id\\\":\\\"R001\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Self\\\",\\\"name\\\":\\\"Self\\\",\\\"memberRelationCode\\\":\\\"24\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Self.png\\\"}\",\"relation\":\"Self\",\"memberRelationCode\":\"24\",\"memberdob\":\"1965-07-22\",\"memberAge\":\"59\",\"firstName\":\"SOUVIK\",\"lastName\":\"MITRA\",\"middleName\":\"\",\"mobileNumber\":\"9930519086\",\"memberRoomCategory\":\"\",\"emailId\":\"souvik@gmail.com\",\"memberGender\":\"M\",\"sumInsured\":\"1500000\",\"pincode\":500013,\"planType\":\"Multi Individual\",\"memberIndex\":0,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"\",\"covers\":[{\"coverId\":\"ADPTD\",\"value\":500000,\"coverName\":\"Personal Accident Cover (AD, PTD)\"}],\"preFix\":\"Mr\",\"productMemberDesignation\":\"{\\\"id\\\":\\\"10\\\",\\\"value\\\":\\\"O557\\\",\\\"name\\\":\\\"CA\\\"}\",\"occupationCode\":\"O014\",\"natureOfDutyCode\":\"ND02\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"},{\"relationshipType\":\"{\\\"id\\\":\\\"R002\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Spouse\\\",\\\"name\\\":\\\"Spouse\\\",\\\"memberRelationCode\\\":\\\"13\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Spouse.png\\\"}\",\"relation\":\"Spouse\",\"memberRelationCode\":\"13\",\"memberdob\":\"1958-12-12\",\"memberAge\":\"66\",\"firstName\":\"\",\"lastName\":\"\",\"middleName\":\"\",\"mobileNumber\":\"\",\"weight\":\"\",\"height\":\"\",\"memberRoomCategory\":\"\",\"heightInches\":\"\",\"emailId\":\"\",\"memberGender\":\"F\",\"sumInsured\":\"1500000\",\"pincode\":\"500013\",\"planType\":\"Multi Individual\",\"memberIndex\":1,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"TELANGANA\",\"covers\":[],\"preFix\":\"\",\"productMemberDesignation\":\"\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"},{\"relationshipType\":\"{\\\"id\\\":\\\"R003\\\",\\\"productId\\\":\\\"15\\\",\\\"value\\\":\\\"Son1\\\",\\\"name\\\":\\\"Son1\\\",\\\"memberRelationCode\\\":\\\"23\\\",\\\"isIncrement\\\":true,\\\"imagePath\\\":\\\"assets/Son.png\\\",\\\"gender\\\":\\\"M\\\"}\",\"relation\":\"Son1\",\"memberRelationCode\":\"23\",\"memberdob\":\"2022-01-01\",\"memberAge\":\"3\",\"firstName\":\"\",\"lastName\":\"\",\"middleName\":\"\",\"mobileNumber\":\"\",\"weight\":\"\",\"height\":\"\",\"memberRoomCategory\":\"\",\"heightInches\":\"\",\"emailId\":\"\",\"memberGender\":\"M\",\"sumInsured\":\"1500000\",\"pincode\":\"500013\",\"planType\":\"Multi Individual\",\"memberIndex\":2,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"upgradableZones\":[{\"name\":\"Zone I\",\"value\":\"Z001\"},{\"name\":\"Zone II\",\"value\":\"Z002\"}],\"state\":\"TELANGANA\",\"covers\":[],\"preFix\":\"\",\"productMemberDesignation\":\"\",\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"pedWaitingPeriod\":\"\"}],\"noOfChildrens\":1,\"familySize\":\"3A\",\"proposerName\":\"SOUVIKMITRA\"}"ked
         checkbox.checked = false; // Revert the checkbox state
         // Show toast message (use your toast service here)
@@ -8598,7 +12508,7 @@ export class RenewalDynamicFormComponent {
 
 
   isOptionSelected(subControl: any, value: string): boolean {
-    const selectedValues = this.renewalFormGroup.get(subControl.name)?.value || [];
+    const selectedValues = this.dynamicFormGroup.get(subControl.name)?.value || [];
     return selectedValues.includes(value);
   }
   toggleOptionsVisibility(index: any, controlName: string) {
@@ -8616,16 +12526,16 @@ export class RenewalDynamicFormComponent {
     console.log(this.showOptions);
   }
   getSelectedDiseases(control: any, index: any, subControl: string): string {
-    const controlName: any = this.renewalFormGroup.get(control)?.get([index, subControl]) as FormGroup;
+    const controlName: any = this.dynamicFormGroup.get(control)?.get([index, subControl]) as FormGroup;
     const selectedKeys = Object.keys(controlName?.value).filter(key => controlName?.value[key] === true);
     // if (controlName) {
     //   controlName.setValidators(this.addCustomValidationForChronicCondition(controlName));
     //   controlName.updateValueAndValidity();
 
     // }
-    const formArray = this.renewalFormGroup.get(control) as FormArray;
+    const formArray = this.dynamicFormGroup.get(control) as FormArray;
 
-    if (formArray) {
+    if (this.formData.productName && this.formData.productName.includes('VYTL') && formArray) {
       const hasAnyTrue: boolean[] = [];
 
       // Build the hasAnyTrue array to track boolean values for each member
@@ -8672,8 +12582,40 @@ export class RenewalDynamicFormComponent {
   }
 
   disableForAllOtherMembers(control: any) {
-    const addOnControlGroup = this.renewalFormGroup.get(control.name);
+    const addOnControlGroup = this.dynamicFormGroup.get(control.name);
     if (addOnControlGroup && this.formData.memberPolicyType == 'Family Floater') {
+      const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+      console.log(addOnDetailsControl);
+      Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+        console.log(Key, index);
+        if (index != 0) {
+          const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+          console.log(memberArray);
+
+          memberArray.controls.forEach((member: any) => {
+            console.log(member);
+
+            const memberControlCheckbox = member.get('memberCheckbox');
+            const memberAddOnSumInsuredControl = member.get('addOnSumInsured');
+            const memberRoomTypeControl = member.get('roomType');
+            console.log(memberControlCheckbox);
+
+            if (memberControlCheckbox) {
+              memberControlCheckbox.disable();
+            }
+
+            if (memberAddOnSumInsuredControl) {
+              memberAddOnSumInsuredControl.disable();
+            }
+
+            if (memberRoomTypeControl) {
+              memberRoomTypeControl.disable();
+            }
+          })
+
+        }
+      })
+    } else if (this.formData.productName == 'Activ Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
       const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
       console.log(addOnDetailsControl);
       Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
@@ -8694,18 +12636,16 @@ export class RenewalDynamicFormComponent {
           })
 
         }
-
       })
     }
   }
-
   selectForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
-    console.log(event.target.checked, coreControl, subControl, parentControl, this.renewalFormGroup);
-    const addOnControlGroup = this.renewalFormGroup.get(parentControl.name);
+    console.log(event.target.checked, coreControl, subControl, parentControl, this.dynamicFormGroup);
+    const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
     console.log(addOnControlGroup, this.formData.memberPolicyType)
     if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
       const addOnDetailsControl = addOnControlGroup.get(subControl.name);
-      Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+      Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
         console.log(Key, index);
         if (index != 0) {
           const memberArray = addOnDetailsControl?.get(Key) as FormArray;
@@ -8742,8 +12682,221 @@ export class RenewalDynamicFormComponent {
 
       })
     }
+    else if (this.formData.productName == 'Activ Secure' && addOnControlGroup && this.formData.memberPolicyType === 'Multi Individual') {
+      const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+      if (parentControl.name == 'medicalExpenses' || parentControl.name == 'brokenBonesBenefit' || parentControl.name == 'burnBenefit') {
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              console.log("membercontrol checkbox", memberControlCheckbox, memberControlCheckbox.status);
+              //MEMBER CHECKBOX STATUS(VALID,DISABLED)
+              if (memberControlCheckbox && memberControlCheckbox.status != 'DISABLED') {
+                memberControlCheckbox.setValue(event.target.checked);
+              }
+            })
+          }
+
+        })
+      } else {
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              if (memberControlCheckbox) {
+                memberControlCheckbox.setValue(event.target.checked);
+              }
+            })
+          }
+
+        })
+      }
+    }
   }
 
+  setForAllOtherMember(event: any, coreControl: any, subControl: any, parentControl: any) {
+    console.log(event.target.value, coreControl, subControl, parentControl);
+    const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+    console.log(addOnControlGroup, this.formData.memberPolicyType)
+    if (addOnControlGroup && this.formData.memberPolicyType === 'Family Floater') {
+      const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+      Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+        console.log(Key, index);
+        if (index != 0) {
+          const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+          console.log(memberArray);
+
+          memberArray.controls.forEach((member: any) => {
+            console.log(member);
+
+            const addOnSumInsuredControl = member.get('addOnSumInsured');
+
+
+            if (addOnSumInsuredControl) {
+              addOnSumInsuredControl.setValue(event.target.value);
+            }
+            const memberRoomTypeControl = member.get('roomType');
+            if (memberRoomTypeControl) {
+              memberRoomTypeControl.setValue(event.target.value);
+            }
+          })
+
+        }
+
+      })
+    }
+  }
+  disableControlForAllOtherMembers(control: any) {
+    if (control.name == 'burnBenefit' || control.name == 'brokenBonesBenefit') {
+      const addOnControlGroup = this.dynamicFormGroup.get(control.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+        Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberDaysControl = member.get('addOnSumInsured');
+              if (memberDaysControl) {
+                memberDaysControl.disable();
+              }
+            })
+          }
+        })
+      }
+    } else if (control.name == 'hospitalCashBenefits') {
+      const addOnControlGroup = this.dynamicFormGroup.get(control.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get('addOnDetails');
+        Object.keys(addOnDetailsControl?.value).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberDaysControl = member.get('noOfDays');
+              if (memberDaysControl) {
+                memberDaysControl.disable();
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+  autoSelectControlValueForAllMembers(event: any, coreControl: any, subControl: any, parentControl: any) {
+    if (parentControl.name == 'burnBenefit' || parentControl.name == 'brokenBonesBenefit') {
+      const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+        console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('addOnSumInsured');
+              if (memberControlCheckbox) {
+                memberControlCheckbox.setValue(event.target.value);
+              }
+            })
+          }
+
+        })
+      }
+    } else if (parentControl.name == 'hospitalCashBenefits') {
+      console.log(event.target.value, coreControl, subControl, parentControl, this.dynamicFormGroup);
+      const addOnControlGroup = this.dynamicFormGroup.get(parentControl.name);
+      if (addOnControlGroup) {
+        const addOnDetailsControl = addOnControlGroup.get(subControl.name);
+        console.log("addOnDetailsControl", addOnDetailsControl?.getRawValue());
+        Object.keys(addOnDetailsControl?.getRawValue()).forEach((Key: any, index: number) => {
+          if (index != 0) {
+            const memberArray = addOnDetailsControl?.get(Key) as FormArray;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('noOfDays');
+              if (memberControlCheckbox) {
+                memberControlCheckbox.setValue(event.target.value);
+              }
+            })
+          }
+
+        })
+      }
+    }
+  }
+  disableMemberCheckBoxUnderAge(control: any) {
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      if (member.memberAge < 18 && (member.annualIncome == '' || member.annualIncome == undefined)) {
+        if (memberControlCheckbox) {
+          memberControlCheckbox.disable();
+        }
+      }
+    })
+  }
+  disableMemberCheckboxForNoIncomeAndNonPASelection(control: any, parentControl: any) {
+    let paMembers = this.formData.insuredMemberDetails
+      .filter((member: any) => member.covers.some((cover: any) => cover.coverId === "ACCD"))
+      .map((member: any) => member.relation);
+    console.log("PA Members:", paMembers);
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const selectedMemberControl = ((this.dynamicFormGroup.get(parentControl.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)?.controls[member.relation] as FormArray;
+      const annualIncome = member.annualIncome;
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      if (control.name == 'temporaryTotalDisablementBenefit') {
+        const occupation = ((selectedMemberControl?.controls[1] as FormGroup)?.controls['occupation'] as FormControl)?.value;
+        const occupationRisk = ((selectedMemberControl?.controls[2] as FormGroup)?.controls['occupationRisk'] as FormControl)?.value;
+        const occupationValue = occupation ? (JSON.parse(occupation)).value : '';
+        const occupationRiskValue = occupationRisk ? (JSON.parse(occupationRisk)).id : '';
+        //If risk class is 3 or no annualincome or occupation is retired that member is not eligible for ttdc      
+        //if a member having annual income,occupation risk is not class 3 and occupation is not retired then that member is eligible to take ttdc
+        const isEligible = (occupationRiskValue != "3" && annualIncome != '' && occupationValue != 'O464');
+        const hasPACover = paMembers.includes(member.relation);
+        // If not eligible(false) or doesn't have PA cover(false), disable checkbox
+        if (!isEligible || !hasPACover) {
+          if (memberControlCheckbox) {
+            memberControlCheckbox.disable();
+          }
+        }
+      } else if (control.name == 'loanProtect' || control.name == 'emiProtect') {
+        const isEligible = (annualIncome !== '');
+        const hasPACover = paMembers.includes(member.relation);
+        // If member Ddoesn't have annual income & doesn't have PA cover(false), disable checkbox
+        if (!isEligible || !hasPACover) {
+          if (memberControlCheckbox) {
+            memberControlCheckbox.disable();
+          }
+        }
+      }
+    });
+  }
+
+  disableMemberCheckboxForNonPASelection(control: any, parentControl: any) {
+    let paMembers = this.formData.insuredMemberDetails
+      .filter((member: any) => member.covers.some((cover: any) => cover.coverId === "ACCD"))
+      .map((member: any) => member.relation);
+    this.formData.insuredMemberDetails.forEach((member: any) => {
+      const memberControlCheckbox = ((((this.dynamicFormGroup.get(control.name) as FormGroup)
+        ?.controls['addOnDetails'] as FormGroup)
+        ?.controls[member.relation] as FormArray)?.controls[0] as FormGroup)
+        ?.controls['memberCheckbox'] as FormControl;
+      //check whether member selected PA or not
+      const hasPACover = paMembers.includes(member.relation);
+      if (!hasPACover) {
+        if (memberControlCheckbox) {
+          memberControlCheckbox.disable();
+        }
+      } else {
+        console.log(`${member.relation} is eligible for ${control.name} cover`);
+      }
+    });
+  }
   markNestedControlsAsTouched(control: AbstractControl): void {
     // If the control is a FormGroup, iterate over its controls
     if (control instanceof FormGroup) {
@@ -8761,177 +12914,8 @@ export class RenewalDynamicFormComponent {
     }
   }
 
-  // defaultAddOn(control: any) {
-  //   const addOnControl = this.renewalFormGroup.get(control.name);
-  //   const addOnCoverControl = addOnControl?.get('addOnCover');
-  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
-  //   const addOnIdControl = addOnControl?.get('addOnId');
-  //   const addOnCoverNameControl = addOnControl?.get('optionalCoverName');
-
-  //   const addOnData = addOnControl?.getRawValue();
-  //   const modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
-
-  //   if (!addOnDetailsControl || !addOnData) {
-  //     console.warn('Add-on details control or data is not found.');
-  //     return;
-  //   }
-
-  //   // Ensure addOnCover and memberCheckbox values are true
-  //   addOnCoverControl?.setValue(true);
-
-  //   if(addOnCoverNameControl?.value.includes('Personal Accident')){
-  //     Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-  //       const memberArray = addOnDetailsControl.get(key) as FormArray;
-
-  //       console.log(memberArray);
-
-  //       memberArray.controls.forEach((member: any) => {
-  //         console.log(member);
-
-  //         const memberControlCheckbox = member.get('memberCheckbox');
-  //         const occupationControl = member.get('occupation');
-  //         const occupationRiskControl = member.get('occupationRisk');
-  //         const addOnSumInsuredControl = member.get('addOnSumInsured')
-
-  //         console.log(memberControlCheckbox, occupationControl, occupationRiskControl);
-
-
-  //         if (memberControlCheckbox) {
-  //           memberControlCheckbox.setValue(true);
-
-  //           if (key === 'Self') {
-  //             // Disable the checkbox for 'Self'
-  //             memberControlCheckbox.disable();
-  //             addOnCoverControl?.disable();
-  //           }
-  //         }
-
-  //         if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-  //           console.log(control.subControls[1].innerSubControls);
-
-  //           // Set default values for occupation and occupationRisk by iterating through coreControls
-  //           const innerControls = control.subControls[1].innerSubControls || [];
-  //           const coreControls = innerControls[0]?.coreControls || [];
-
-  //           if (occupationControl) {
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'occupation' && occupationControl && occupationControl.value === '') {
-  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
-  //                 if (defaultOption) {
-  //                   occupationControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-
-  //           if (occupationRiskControl) {
-  //             console.log(occupationRiskControl);
-
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'occupationRisk' && occupationRiskControl && occupationRiskControl.value === '') {
-  //                 const defaultOption = JSON.stringify(coreControl.options?.[0]);
-  //                 if (defaultOption) {
-  //                   occupationRiskControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-
-  //           if (addOnSumInsuredControl) {
-  //             coreControls.forEach((coreControl: any) => {
-  //               if (coreControl.name === 'addOnSumInsured' && addOnSumInsuredControl && addOnSumInsuredControl.value === '') {
-  //                 const defaultOption = coreControl.options?.[0]?.value;
-  //                 if (defaultOption) {
-  //                   addOnSumInsuredControl.setValue(defaultOption);
-  //                 }
-  //               }
-  //             });
-  //           }
-  //         }
-
-  //         console.log(occupationControl, occupationRiskControl);
-  //         const addOnData = addOnControl?.value;
-  //         console.log(addOnData,addOnControl);
-
-
-  //         // Check if the checkbox is enabled and checked
-  //         // if (memberControlCheckbox.value) {
-  //         modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-  //           if (insuredMember.relation === key) {
-  //             const coverId = addOnIdControl?.value;
-  //             const coverName = addOnCoverNameControl?.value || '';
-
-  //             let addOnSumInsured = 0;
-  //             let coverFound = false;
-
-  //             const addOnDetails = addOnData.addOnDetails[key];
-  //             addOnDetails.forEach((detail: any) => {
-  //               if (detail.addOnSumInsured) {
-  //                 addOnSumInsured = detail.addOnSumInsured;
-  //               } else if (detail.roomType) {
-  //                 addOnSumInsured = detail.roomType;
-  //               }
-
-  //               if (coverName.includes('Personal Accident') && detail.occupation) {
-  //                 insuredMember.occupationCode = JSON.parse(detail.occupation).value;
-  //               }
-
-  //               if (coverName.includes('Personal Accident') && detail.occupationRisk) {
-  //                 insuredMember.natureOfDutyCode = JSON.parse(detail.occupationRisk).value;
-  //               }
-  //             });
-
-  //             if (!insuredMember.covers) {
-  //               insuredMember.covers = [];
-  //             }
-
-  //             insuredMember.covers.forEach((cover: any) => {
-  //               if (cover.coverId === coverId) {
-  //                 cover.value = addOnSumInsured;
-  //                 coverFound = true;
-  //               }
-  //             });
-
-  //             if (!coverFound) {
-  //               insuredMember.covers.push({
-  //                 coverId,
-  //                 value: addOnSumInsured,
-  //                 coverName
-  //               });
-  //             }
-
-  //             if (!this.covers[index]) {
-  //               this.covers[index] = [];
-  //             }
-
-  //             const coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-  //             if (coverInCovers) {
-  //               coverInCovers.value = addOnSumInsured;
-  //             } else {
-  //               this.covers[index].push({
-  //                 coverId,
-  //                 value: addOnSumInsured,
-  //                 coverName
-  //               });
-  //             }
-  //           }
-  //         });
-  //         // }
-
-  //       });
-  //     });
-  //   }
-  //   else{
-  //     if(this.formData['memberPolicyType']== 'Family Floater'){
-
-  //     }
-  //   }
-
-
-  // }
-
   defaultAddOn(control: any) {
-    const addOnControl = this.renewalFormGroup.get(control.name);
+    const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
     const addOnIdControl = addOnControl?.get('addOnId');
@@ -8944,12 +12928,10 @@ export class RenewalDynamicFormComponent {
       console.warn('Add-on details control or data is not found.');
       return;
     }
-
-
-
     if (addOnCoverNameControl?.value.includes('Personal Accident')) {
       let shouldEnableAddOnCover = false; // Track if any member's checkbox is true
       let isSelfPresent = false;
+
       // Check for age validation rules
       const ageValidationRule = control.validationRules?.find((rule: any) => rule.type === 'ageValidation');
       if (ageValidationRule) {
@@ -8963,10 +12945,14 @@ export class RenewalDynamicFormComponent {
 
       console.log("After disabling based on member", this.form);
 
-
       const zoneValidationRule = control.validationRules?.find((rule: any) => rule.type === 'zoneWiseValidation');
+      const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
+      const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] === 'Roll Over';
 
-      // Existing "Personal Accident" logic
+      if (isPortabilityRuleAvailable) {
+        this.setPortabilityValidationRule(portabilityValidationRule, control);
+      }
+
       Object.keys(addOnDetailsControl.value).forEach((key: any) => {
         const memberArray = addOnDetailsControl.get(key) as FormArray;
 
@@ -8976,27 +12962,62 @@ export class RenewalDynamicFormComponent {
           const occupationRiskControl = member.get('occupationRisk');
           const addOnSumInsuredControl = member.get('addOnSumInsured');
 
-          // Skip processing if member control is disabled
           if (memberControlCheckbox?.disabled) {
             console.log(`Skipping disabled member: ${key}`);
             return;
           }
 
-          if (memberControlCheckbox) {
-            memberControlCheckbox.setValue(true);
+          const matchingMember = this.formData.insuredMemberDetails.find(
+            (insuredMember: any) => key === insuredMember.relation
+          );
 
+          if (isPortabilityRuleAvailable && portabilityValidationRule?.policyRules) {
+            const policyRule = portabilityValidationRule.policyRules.find(
+              (rule: any) => rule.policyType === this.formData.memberPolicyType
+            );
+
+            if (policyRule?.ageBasedRules) {
+              const minAgeThreshold = policyRule.ageBasedRules.minAgeThreshold;
+              const maxAgeThreshold = policyRule.ageBasedRules.maxAgeThreshold;
+
+              if (parseInt(matchingMember.memberAge) < minAgeThreshold) {
+                const belowMinThresholdRules = policyRule.ageBasedRules.belowMinThreshold;
+                if (belowMinThresholdRules && memberControlCheckbox) {
+                  memberControlCheckbox.setValue(belowMinThresholdRules.selected);
+                  if (belowMinThresholdRules.disabled) {
+                    memberControlCheckbox.disable();
+                  }
+                }
+              } else if (parseInt(matchingMember.memberAge) > maxAgeThreshold) {
+                const aboveMaxThresholdRules = policyRule.ageBasedRules.aboveMaxThreshold;
+                if (aboveMaxThresholdRules && memberControlCheckbox) {
+                  memberControlCheckbox.setValue(aboveMaxThresholdRules.selected);
+                  if (aboveMaxThresholdRules.disabled) {
+                    memberControlCheckbox.disable();
+                  }
+                }
+              } else {
+                const withinThresholdRules = policyRule.ageBasedRules.withinThreshold;
+                if (withinThresholdRules && memberControlCheckbox) {
+                  memberControlCheckbox.setValue(withinThresholdRules.selected);
+                  // No disable logic for withinThreshold, keeping it enabled
+                  if (withinThresholdRules.disabled) {
+                    memberControlCheckbox.disable();
+                  }
+                }
+              }
+            }
+          }
+          else if (!isPortabilityRuleAvailable && !portabilityValidationRule && memberControlCheckbox) {
+            memberControlCheckbox.setValue(true);
             if (key === 'Self') {
               isSelfPresent = true;
               // Disable the checkbox for 'Self'
               memberControlCheckbox.disable();
             }
-
-            shouldEnableAddOnCover = true; // Set the flag if any checkbox is enabled
           }
 
           if (addOnCoverNameControl?.value.includes('Personal Accident')) {
-            console.log(control.subControls);
-
             const innerControls = control.subControls[1].innerSubControls || [];
             const matchingInnerControl = innerControls.find((innerControl: any) => innerControl.name === key);
             const coreControls = matchingInnerControl?.coreControls || [];
@@ -9035,8 +13056,20 @@ export class RenewalDynamicFormComponent {
             }
           }
 
+        });
+        if (!portabilityValidationRule || isPortabilityRuleAvailable) {
           modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
             if (insuredMember.relation === key) {
+              const matchingMemberControl = memberArray.controls.find(
+                (member: any) => member.get('memberCheckbox')?.value === true
+              );
+
+              // Only proceed if memberCheckbox is checked
+              if (!matchingMemberControl) {
+                console.log(`Skipping member ${key} as memberCheckbox is false`);
+                return;
+              }
+              shouldEnableAddOnCover = true;
               const coverId = addOnIdControl?.value;
               const coverName = addOnCoverNameControl?.value || '';
 
@@ -9095,26 +13128,44 @@ export class RenewalDynamicFormComponent {
               }
             }
           });
-        });
+        }
       });
 
-      // Set addOnCoverControl to true only if shouldEnableAddOnCover is true
       if (shouldEnableAddOnCover) {
+        console.log(shouldEnableAddOnCover);
+
         let zoneValidationRuleApplicable = false;
         if (zoneValidationRule) {
           zoneValidationRuleApplicable = this.formData.insuredMemberDetails.some(
             (insuredMember: any) => insuredMember.zone === 'Zone I'
           );
         }
-        addOnCoverControl?.setValue(true);
 
-        if (isSelfPresent && !zoneValidationRuleApplicable) {
+
+        if (portabilityValidationRule) {
+
+          if (isPortabilityRuleAvailable) {
+            addOnCoverControl?.setValue(true);
+          }
+          else {
+            addOnCoverControl?.setValue(false);
+          }
+        }
+        else {
+          addOnCoverControl?.setValue(true);
+        }
+
+        if ((isSelfPresent && !zoneValidationRuleApplicable && !isPortabilityRuleAvailable) || isPortabilityRuleAvailable) {
           addOnCoverControl?.disable();
         }
-      } else {
+
+      }
+      else {
         addOnCoverControl?.setValue(false);
       }
-    } else {
+    }
+
+    else {
       // New logic for validationRules
       const validationRules = control.validationRules || [];
 
@@ -9124,121 +13175,461 @@ export class RenewalDynamicFormComponent {
         this.checkForAgeValidations(control); // Call the age validation method
       }
 
-      const matchingRule = validationRules.find(
-        (rule: any) => rule.policyType === this.formData['memberPolicyType']
-      );
-
-      console.log(matchingRule);
-
-
-      if (matchingRule) {
-        const { allMemberSelected, allMemberDisabled } = matchingRule;
-
-        if (allMemberSelected) {
-          console.log(addOnCoverControl);
-
-          addOnCoverControl?.setValue(true);
-        }
-        if (allMemberDisabled) {
-          addOnCoverControl?.disable();
-        }
-
-        // Only start iteration if allMemberSelected or allMemberDisabled is true
-        if (allMemberSelected || allMemberDisabled) {
-          Object.keys(addOnDetailsControl.value).forEach((key: any) => {
-            const memberArray = addOnDetailsControl.get(key) as FormArray;
-
-            memberArray.controls.forEach((member: any) => {
-              const memberControlCheckbox = member.get('memberCheckbox');
-              const addOnSumInsuredControl = member.get('addOnSumInsured');
-              let isDisabledByAgeValidation = false;
-              if (ageValidationRule) {
+      validationRules.forEach((rule:any)=>{
+        const matchingRule = rule.policyType === this.formData['memberPolicyType'] ? rule : null ;
+        if (matchingRule) {
+  
+          if (matchingRule.type == 'policy-level') {
+            const { allMemberSelected, allMemberDisabled } = matchingRule;
+  
+            if (allMemberSelected) {
+              console.log(addOnCoverControl);
+  
+              addOnCoverControl?.setValue(true);
+            }
+            if (allMemberDisabled) {
+              addOnCoverControl?.disable();
+            }
+            // Only start iteration if allMemberSelected or allMemberDisabled is true
+            if (allMemberSelected || allMemberDisabled) {
+              Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+                const memberArray = addOnDetailsControl.get(key) as FormArray;
+  
+                memberArray.controls.forEach((member: any) => {
+                  const memberControlCheckbox = member.get('memberCheckbox');
+                  const addOnSumInsuredControl = member.get('addOnSumInsured');
+                  let isDisabledByAgeValidation = false;
+                  if (ageValidationRule) {
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => key === insuredMember.relation
+                    );
+  
+                    if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
+                      isDisabledByAgeValidation = true;
+                    }
+                  }
+  
+                  // Handle allMemberSelected
+                  if (allMemberSelected && memberControlCheckbox && !isDisabledByAgeValidation) {
+                    memberControlCheckbox.setValue(true);
+                  }
+  
+                  // Handle allMemberDisabled
+                  if (allMemberDisabled) {
+                    if (memberControlCheckbox) {
+                      memberControlCheckbox.disable();
+                    }
+                    // if (addOnSumInsuredControl) {
+                    //   addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
+                    // }
+                  }
+  
+                  // Set addOnSumInsured value logic if the control exists
+                  if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
+                    const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
+                    let addOnSumInsured = '';
+  
+                    coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name === 'addOnSumInsured') {
+                        if (coreControl.options?.[0]?.value) {
+                          addOnSumInsured = coreControl.options[0].value;
+                        } else {
+                          const memberDetail = modifiedInsuredMemberDetails.find(
+                            (member: any) => member.relation === key
+                          );
+                          addOnSumInsured = memberDetail?.memberSumInsured || '';
+                        }
+  
+                        if (addOnSumInsuredControl && addOnSumInsured !== '') {
+                          addOnSumInsuredControl.setValue(addOnSumInsured);
+                        }
+                      }
+                    });
+  
+                    // Update insuredMemberDetails logic
+                    modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                      if (insuredMember.relation === key) {
+                        const coverId = addOnIdControl?.value;
+                        const coverName = addOnCoverNameControl?.value || '';
+  
+                        if (!insuredMember.covers) {
+                          insuredMember.covers = [];
+                        }
+  
+                        const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                        if (existingCover) {
+                          existingCover.value = addOnSumInsured;
+                        } else {
+                          insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                        }
+  
+                        if (!this.covers[index]) {
+                          this.covers[index] = [];
+                        }
+  
+                        const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                        if (existingCoverInCovers) {
+                          existingCoverInCovers.value = addOnSumInsured;
+                        } else {
+                          this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                        }
+                      }
+                    });
+                  }
+                });
+              });
+            }
+          }
+          if (matchingRule.type == 'state-level') {
+            // Extract state-level validation rules
+            const { states, sumInsuredThreshold, rules } = matchingRule;
+            let shouldEnableAddOnCover = false;
+            let isSelfPresent = false;
+            Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+              const memberArray = addOnDetailsControl.get(key) as FormArray;
+  
+              memberArray.controls.forEach((member: any) => {
+                const memberControlCheckbox = member.get('memberCheckbox');
+                const addOnSumInsuredControl = member.get('addOnSumInsured');
+                let isDisabledByAgeValidation = false;
+                let isMemberStateApplicable = false;
+                let isMemberSumInsuredApplicable = true;
                 const matchingMember = this.formData.insuredMemberDetails.find(
                   (insuredMember: any) => key === insuredMember.relation
                 );
-
-                if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
-                  isDisabledByAgeValidation = true;
+                if (ageValidationRule) {
+  
+                  if (matchingMember.memberAge > ageValidationRule.maxAge || matchingMember.memberAge < ageValidationRule.minAge) {
+                    isDisabledByAgeValidation = true;
+                  }
                 }
-              }
+  
+                if (states.includes(matchingMember.state)) {
+                  isMemberStateApplicable = true;
+                }
+  
+                if (parseInt(matchingMember.sumInsured) > sumInsuredThreshold) {
+                  isMemberSumInsuredApplicable = false;
+                }
+  
+                if (!isDisabledByAgeValidation && isMemberStateApplicable && isMemberSumInsuredApplicable) {
+  
+                  const isSelf = key === 'Self';
+  
+                  // Fetch rule for the relation type (Self or Others)
+                  const memberRule = rules[isSelf ? 'Self' : 'Others'];
+  
+                  if (isSelf) {
+                    isSelfPresent = true;
+                  }
+  
+                  // Apply selected/disabled logic based on the rule
+                  if (memberRule?.selected) {
+                    memberControlCheckbox?.setValue(memberRule?.selected);
+                    shouldEnableAddOnCover = true;
+                  }
+                  if (memberRule?.disabled) {
+                    memberControlCheckbox?.disable();
+                  }
+  
+                  // Set addOnSumInsured value logic if the control exists
+                  if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
+                    const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
+                    let addOnSumInsured = '';
+  
+                    coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name === 'addOnSumInsured') {
+                        if (coreControl.options?.[0]?.value) {
+                          addOnSumInsured = coreControl.options[0].value;
+                        } else {
+                          const memberDetail = modifiedInsuredMemberDetails.find(
+                            (member: any) => member.relation === key
+                          );
+                          addOnSumInsured = memberDetail?.sumInsured || '';
+                        }
+  
+                        if (addOnSumInsuredControl && addOnSumInsured !== '') {
+                          addOnSumInsuredControl.setValue(addOnSumInsured);
+                        }
+                      }
+                    });
+  
+                    // Update insuredMemberDetails logic
+                    modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                      if (insuredMember.relation === key) {
+                        const coverId = addOnIdControl?.value;
+                        const coverName = addOnCoverNameControl?.value || '';
+  
+                        if (!insuredMember.covers) {
+                          insuredMember.covers = [];
+                        }
+  
+                        const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                        if (existingCover) {
+                          existingCover.value = addOnSumInsured;
+                        } else {
+                          insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                        }
+  
+                        if (!this.covers[index]) {
+                          this.covers[index] = [];
+                        }
+  
+                        const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                        if (existingCoverInCovers) {
+                          existingCoverInCovers.value = addOnSumInsured;
+                        } else {
+                          this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                        }
+                      }
+                    });
+                  }
+                }
+  
+              });
+            });
+            addOnCoverControl?.setValue(shouldEnableAddOnCover);
+            if (isSelfPresent) {
+              addOnCoverControl?.disable();
+            }
+          }
+          if (matchingRule.type == 'sumInsured-level') {
+            if (matchingRule.policyType == 'Family Floater' && parseInt(this.formData['sumInsured']) >= parseInt(matchingRule.sumInsuredThreshold)) {
+              control.visible = matchingRule.visibleAddOn;
+            }
+            else if (matchingRule.policyType == 'Multi Individual') {
+              // const sumInsuredThreshold = matchingRule.sumInsuredThreshold;
+  
+              const { sumInsuredThreshold, rules } = matchingRule;
+              Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+                const memberArray = addOnDetailsControl.get(key) as FormArray;
+  
+                memberArray.controls.forEach((member: any) => {
+                  const memberControlCheckbox = member.get('memberCheckbox');
+                  const addOnSumInsuredControl = member.get('addOnSumInsured');
+                  const matchingMember = this.formData.insuredMemberDetails.find(
+                    (insuredMember: any) => key === insuredMember.relation
+                  );
+  
+  
+                  if (parseInt(matchingMember.sumInsured) >= sumInsuredThreshold) {
+                    const memberRule = rules[key == 'Self' ? 'Self' : 'Others'];
+  
+                    if (memberRule?.selected) {
+                      memberControlCheckbox?.setValue(memberRule?.selected);
+                    }
+                    if (memberRule?.disabled) {
+                      memberControlCheckbox?.disable();
+                    }
+  
+                  }
+  
+                });
+              });
+            }
+          }
+  
+  
+        }
 
-              // Handle allMemberSelected
-              if (allMemberSelected && memberControlCheckbox && !isDisabledByAgeValidation) {
-                memberControlCheckbox.setValue(true);
-              }
+      })
 
-              // Handle allMemberDisabled
-              if (allMemberDisabled) {
+      const genderRule = control.validationRules?.find((rule: any) => rule.type === 'gender-level');
+
+      if (genderRule) {
+        this.genderRuleValidation(genderRule, control);
+      }
+
+      const zoneRule = control.validationRules?.find((rule:any)=> rule.type === 'zone-level-cover');
+
+      if (zoneRule) {
+        this.zoneRuleCoverValidation(zoneRule, control);
+      }
+
+      const portabilityValidationRule = control.validationRules?.find((rule: any) => rule.type === 'portability');
+      const isPortabilityRuleAvailable = portabilityValidationRule && this.formData['typeOfBusiness'] === 'Roll Over';
+
+      if (isPortabilityRuleAvailable) {
+        const policyRule = portabilityValidationRule.policyRules.find(
+          (rule: any) => rule.policyType === this.formData.memberPolicyType
+        );
+
+        if (policyRule?.ageBasedRules) {
+          Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+            const memberArray = addOnDetailsControl.get(key) as FormArray;
+            let isMemberSelected = false;
+            memberArray.controls.forEach((member: any) => {
+              const memberControlCheckbox = member.get('memberCheckbox');
+              const addOnSumInsuredControl = member.get('addOnSumInsured');
+              const matchingMember = this.formData.insuredMemberDetails.find(
+                (insuredMember: any) => key === insuredMember.relation
+              );
+
+              if (!matchingMember || (!memberControlCheckbox && !addOnSumInsuredControl)) return;
+
+              const minAgeThreshold = policyRule.ageBasedRules.minAgeThreshold;
+              const maxAgeThreshold = policyRule.ageBasedRules.maxAgeThreshold;
+
+              // Apply age validation: Disable if outside valid age range (5-65)
+              if (parseInt(matchingMember.memberAge) < minAgeThreshold || parseInt(matchingMember.memberAge) > maxAgeThreshold) {
                 if (memberControlCheckbox) {
+                  memberControlCheckbox.setValue(false);
                   memberControlCheckbox.disable();
                 }
-                // if (addOnSumInsuredControl) {
-                //   addOnSumInsuredControl.disable(); // Add this line to disable addOnSumInsuredControl
-                // }
-              }
+              } else {
 
-              // Set addOnSumInsured value logic if the control exists
-              if (addOnSumInsuredControl && !isDisabledByAgeValidation) {
-                const coreControls = control.subControls[1]?.innerSubControls?.[0]?.coreControls || [];
-                let addOnSumInsured = '';
-
-                coreControls.forEach((coreControl: any) => {
-                  if (coreControl.name === 'addOnSumInsured') {
-                    if (coreControl.options?.[0]?.value) {
-                      addOnSumInsured = coreControl.options[0].value;
-                    } else {
-                      const memberDetail = modifiedInsuredMemberDetails.find(
-                        (member: any) => member.relation === key
-                      );
-                      addOnSumInsured = memberDetail?.memberSumInsured || '';
+                // Logic for Multi Individual (MI)
+                if (this.formData.memberPolicyType === 'Multi Individual') {
+                  if (key === 'Self' && memberControlCheckbox) {
+                    memberControlCheckbox.setValue(policyRule.ageBasedRules.self.selected);
+                    isMemberSelected = policyRule.ageBasedRules.self.selected;
+                    if (policyRule.ageBasedRules.self.disabled) {
+                      memberControlCheckbox.disable();
                     }
-
-                    if (addOnSumInsuredControl && addOnSumInsured !== '') {
-                      addOnSumInsuredControl.setValue(addOnSumInsured);
+                    addOnCoverControl?.setValue(true);
+                    addOnCoverControl?.disable();
+                  } else if (memberControlCheckbox) {
+                    memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                    isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                    if (policyRule.ageBasedRules.otherMembers.disabled) {
+                      memberControlCheckbox.disable();
                     }
                   }
-                });
+                }
 
-                // Update insuredMemberDetails logic
-                modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
-                  if (insuredMember.relation === key) {
-                    const coverId = addOnIdControl?.value;
-                    const coverName = addOnCoverNameControl?.value || '';
+                // Logic for Family Floater (FF)
+                if (this.formData.memberPolicyType === 'Family Floater') {
+                  const isSelfPresent = this.formData.insuredMemberDetails.some(
+                    (insuredMember: any) => insuredMember.relation === 'Self'
+                  );
 
-                    if (!insuredMember.covers) {
-                      insuredMember.covers = [];
+                  if (isSelfPresent) {
+                    if (key === 'Self' && memberControlCheckbox) {
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.self.selected);
+                      isMemberSelected = policyRule.ageBasedRules.self.selected;
+                      memberControlCheckbox.disable();
+                      addOnCoverControl?.disable();
+
+                    } else if (memberControlCheckbox) {
+                      console.log(key, policyRule.ageBasedRules.otherMembers.selected);
+
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                      isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                      memberControlCheckbox.disable();
                     }
+                    addOnCoverControl?.setValue(true);
 
-                    const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
-                    if (existingCover) {
-                      existingCover.value = addOnSumInsured;
-                    } else {
-                      insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                  } else {
+                    // If self is not present, first member is selectable
+                    const firstMember = this.formData.insuredMemberDetails[0]?.relation;
+                    if (firstMember === key && memberControlCheckbox) {
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.ifNoSelf.selected);
+                      isMemberSelected = policyRule.ageBasedRules.ifNoSelf.selected;
+                      if (!policyRule.ageBasedRules.ifNoSelf.disabled) {
+                        memberControlCheckbox.enable();
+                      } else {
+                        memberControlCheckbox.disable();
+                      }
+                    } else if (memberControlCheckbox) {
+                      console.log(key, policyRule.ageBasedRules.otherMembers.selected);
+                      isMemberSelected = policyRule.ageBasedRules.otherMembers.selected;
+                      memberControlCheckbox.setValue(policyRule.ageBasedRules.otherMembers.selected);
+                      memberControlCheckbox.disable();
                     }
-
-                    if (!this.covers[index]) {
-                      this.covers[index] = [];
-                    }
-
-                    const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
-                    if (existingCoverInCovers) {
-                      existingCoverInCovers.value = addOnSumInsured;
-                    } else {
-                      this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
-                    }
+                    addOnCoverControl?.setValue(true);
                   }
-                });
+                }
+
+
+                let addOnSumInsured = addOnSumInsuredControl?.value || '';
+                if (addOnSumInsured == '') {
+                  console.log(matchingMember);
+
+                  addOnSumInsured = matchingMember.sumInsured || '';
+                  if (addOnSumInsuredControl) {
+                    addOnSumInsuredControl.setValue(addOnSumInsured);
+                  }
+                }
+
+                // **Only add members where checkbox is TRUE**
+                if (addOnSumInsuredControl && isMemberSelected) {
+                  modifiedInsuredMemberDetails.forEach((insuredMember: any, index: number) => {
+                    if (insuredMember.relation === key) {
+                      const coverId = addOnIdControl?.value;
+                      const coverName = addOnCoverNameControl?.value || '';
+
+                      if (!insuredMember.covers) {
+                        insuredMember.covers = [];
+                      }
+
+                      const existingCover = insuredMember.covers.find((cover: any) => cover.coverId === coverId);
+                      if (existingCover) {
+                        existingCover.value = addOnSumInsured;
+                      } else {
+                        insuredMember.covers.push({ coverId, value: addOnSumInsured, coverName });
+                      }
+
+                      if (!this.covers[index]) {
+                        this.covers[index] = [];
+                      }
+
+                      const existingCoverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+                      if (existingCoverInCovers) {
+                        existingCoverInCovers.value = addOnSumInsured;
+                      } else {
+                        this.covers[index].push({ coverId, value: addOnSumInsured, coverName });
+                      }
+                    }
+                  });
+                }
               }
             });
           });
         }
       }
+
+
     }
+  }
+  genderRuleValidation(genderRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnCoverControl = addOnControl?.get('addOnCover');
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+    const minAge: number = genderRule.minAgeThreshold;
+
+    if (addOnDetailsControl) {
+      Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+        const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+        const matchingMember = this.formData.insuredMemberDetails.find(
+          (insuredMember: any) => key === insuredMember.relation
+        );
+        console.log(matchingMember);
+        const memberAge = matchingMember?.memberAge ? parseInt(matchingMember.memberAge, 10) : this.calculateAge(matchingMember.memberDob);
+
+        memberArray.controls.forEach((member: any) => {
+          const memberControlCheckbox = member.get('memberCheckbox');
+          const addOnSumInsuredControl = member.get('addOnSumInsured');
+          if (matchingMember && (matchingMember.memberGender != genderRule.applicableGender || Number(memberAge) < minAge)) {
+            if (memberControlCheckbox) {
+              memberControlCheckbox.disable();
+            }
+            if (addOnSumInsuredControl) {
+              addOnSumInsuredControl.disable();
+            }
+          }
+        });
+      });
+    }
+
   }
 
 
+
   checkForAgeValidations(control: any) {
-    const addOnControl = this.renewalFormGroup.get(control.name);
+    console.log(control);
+
+    const addOnControl = this.dynamicFormGroup.get(control.name);
     const addOnCoverControl = addOnControl?.get('addOnCover');
     const addOnDetailsControl = addOnControl?.get('addOnDetails');
 
@@ -9270,7 +13661,7 @@ export class RenewalDynamicFormComponent {
 
     // Ensure maxAge and minAge are defined
     if (maxAge !== null && minAge !== null) {
-      this.formData.insuredMemberDetails.forEach((member: any) => {
+      this.formData.insuredMemberDetails.forEach((member: any, index: any) => {
         console.log(member);
 
         let memberAge: number | null = null;
@@ -9280,10 +13671,12 @@ export class RenewalDynamicFormComponent {
             memberAge = days / 365; // Convert days to approximate years
           }
           else {
-            memberAge = parseInt(member.memberAge);
+            memberAge = Number(this.calculateAge(member.memberDob));
           }
         } else if (typeof member.memberAge === 'number') {
-          memberAge = member.memberAge;
+          memberAge = Number(this.calculateAge(member.memberDob));
+        } else {
+          memberAge = Number(this.calculateAge(member.memberDob)); // Use DOB if age is not provided
         }
 
         console.log(memberAge, maxAge, minAge);
@@ -9293,17 +13686,26 @@ export class RenewalDynamicFormComponent {
           Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
             // Use explicit non-null assertion for maxAge and minAge
             if (member.relation === key && (memberAge! > maxAge! || memberAge! < minAge!)) {
-              const memberArray = addOnDetailsControl?.get(key) as FormArray;
+              const parentFormGroup = addOnDetailsControl as FormGroup; // Ensure it's a FormGroup
 
-              memberArray.controls.forEach((formGroup: AbstractControl) => {
-                if (formGroup instanceof FormGroup) {
-                  Object.keys(formGroup.controls).forEach((controlName) => {
-                    formGroup.get(controlName)?.disable();
-                  });
+              if (parentFormGroup?.get(key) instanceof FormArray) {
+                parentFormGroup.removeControl(key); // Removes the entire FormArray
+                console.log(`FormArray '${key}' removed from the FormGroup.`);
+              }
+
+              control.subControls.forEach((subControl: any) => {
+                if (subControl.innerSubControls) {
+                  let innerIndex = subControl.innerSubControls.findIndex((member: any) => member.name === key);
+
+                  // If found, remove from the array
+                  if (innerIndex !== -1) {
+                    subControl.innerSubControls.splice(innerIndex, 1);
+                  }
+
                 }
-              });
 
-              console.log('All controls in the FormGroup are disabled:', memberArray);
+
+              })
             }
           });
         }
@@ -9423,10 +13825,10 @@ export class RenewalDynamicFormComponent {
 
   alterSumInsuredOptions(event: any, innerControl: any = null, control: any, parentControl: any = null, index: any = null, indexj: any = null, memberControl: any = null) {
     console.log("Inside alter", event, innerControl, control, parentControl, index, indexj, memberControl);
-    console.log(this.renewalFormGroup.get(parentControl.name), this.form);
+    console.log(this.dynamicFormGroup.get(parentControl.name), this.form);
     if (!memberControl.name.includes('Son') && !memberControl.name.includes('Daughter')) {
       if (innerControl.name == 'occupation') {
-        const memberOccupation = (this.renewalFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
+        const memberOccupation = (this.dynamicFormGroup.get(parentControl.name)?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj].get(innerControl.name)?.value;
         console.log(memberOccupation);
         if (JSON.parse(memberOccupation).name.toLowerCase().includes('house') || JSON.parse(memberOccupation).name == 'Retired') {
           memberControl.coreControls.forEach((coreControl: any) => {
@@ -9441,7 +13843,7 @@ export class RenewalDynamicFormComponent {
                 console.log(riskValue);
 
                 // You can now set the selected option or take further actions here
-                const occupationRiskControl = (this.renewalFormGroup.get(parentControl.name)
+                const occupationRiskControl = (this.dynamicFormGroup.get(parentControl.name)
                   ?.get(control.name)?.get(memberControl.name) as FormArray).controls[indexj + 1].get('occupationRisk');
 
                 console.log(occupationRiskControl);
@@ -9578,10 +13980,10 @@ export class RenewalDynamicFormComponent {
   }
 
   calculatePremium() {
-    console.log(this.renewalFormGroup.valid,this.renewalFormGroup);
-    if (!this.renewalFormGroup.valid) {
-      Object.keys(this.renewalFormGroup.controls).forEach(field => {
-        const control = this.renewalFormGroup.get(field);
+    console.log(this.dynamicFormGroup.valid, this.dynamicFormGroup);
+    if (!this.dynamicFormGroup.valid) {
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
         if (control instanceof FormArray) {
           control.controls.forEach(arrayControl => {
             if (arrayControl instanceof FormGroup) {
@@ -9638,18 +14040,24 @@ export class RenewalDynamicFormComponent {
           control?.markAsTouched({ onlySelf: true });
         }
       });
-      if (this.renewalFormGroup.invalid) {
+      if (this.dynamicFormGroup.invalid) {
         this.toast.warning({ detail: "Warning", summary: "Please fill the mandatory fields", duration: 3000 });
-        
+
         this.scrollToFirstInvalidField();
       }
       return;
     }
     else {
       console.log(this.formData.productName);
-      
-      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.renewalFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
-      //   const insuredMemberDetails = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
+      const policyType = this.dynamicFormGroup.get('memberPolicyType')?.value;
+      const insuredMembers = this.dynamicFormGroup.get('numberOfInsuredMembers')?.value;
+      if (insuredMembers < 2 && policyType == 'Family Floater') {
+        this.toast.warning({ detail: "Warning", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+        return;
+      }
+
+      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      //   const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       //   const ageFlag = insuredMemberDetails.controls.every((person: any) => {
       //     return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to number 55, not string '55'
       //   });
@@ -9675,8 +14083,8 @@ export class RenewalDynamicFormComponent {
 
       //   }
       // }
-      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      //   const insuredMemberDetails = this.renewalFormGroup.get('insuredMemberDetails') as FormArray;
+      // if (this.getFormIndexValue() == 0 && this.formData.productName.includes('Activ Care') && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      //   const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       //   const ageFlag = insuredMemberDetails.controls.some((person: any) => {
       //     return parseInt(this.calculateAge(person.get('memberdob').value)) >= 55;  // Compare to the number 55, not the string "55"
       //   });
@@ -9703,22 +14111,33 @@ export class RenewalDynamicFormComponent {
       //     return;
       //   }
       // }
-      this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+      this.clickedRecalculate = true;
+      if (!this.pedWaitingPeriod && this.dynamicFormGroup.get('waitingPED') && (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value) {
+        this.pedWaitingPeriod = (this.dynamicFormGroup.get('waitingPED') as FormGroup).get('waitingPeriodPED')?.value
+      }
+      console.log(this.form);
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == 'Super Top Up Plan') {
+          section.visible = true;
+        }
+      })
+      this.formData = { ...this.formData, ...this.dynamicFormGroup.getRawValue() };
       this.changeRecalculate(false);
       this.getPremiumAmount();
     }
+
 
   }
 
   checkPolicyStartDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
     console.log(event, innerControl, control, parentControl, index, indexj);
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const memberGroup = formArray.at(index) as FormGroup;
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
     console.log(memberGroupInnerControlGroup);
 
-    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+    const selectedYear = memberGroupInnerControlGroup.get('previousSelectYear')?.value;
 
     console.log(selectedYear.length);
     if (selectedYear.length == 0) {
@@ -9776,12 +14195,12 @@ export class RenewalDynamicFormComponent {
   }
 
   checkPolicyEndDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const memberGroup = formArray.at(index) as FormGroup;
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
 
-    const selectedYear = memberGroupInnerControlGroup.get('selectYear')?.value;
+    const selectedYear = memberGroupInnerControlGroup.get('previousSelectYear')?.value;
 
     if (!selectedYear || selectedYear.length === 0) {
       this.toast.warning({ detail: "Warning", summary: "Please select previous policy year", duration: 3000 });
@@ -9865,7 +14284,7 @@ export class RenewalDynamicFormComponent {
   }
 
   setInsurerName(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
-    const formArray = this.renewalFormGroup.get(parentControl.name) as FormArray;
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
     const memberGroup = formArray.at(index) as FormGroup;
     const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
     const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
@@ -9880,277 +14299,1137 @@ export class RenewalDynamicFormComponent {
     }
   }
 
+  addMoreDocument() {
+    const formSections = this.form.formSections; // Assuming `formSections` is the structure of your form
 
-  disableFormControl(controlName: string): void {
-    const formControl = this.renewalFormGroup.get(controlName);
-    if (formControl) {
-      formControl.disable();
+    // Find the section with title "Previous Policy Documents"
+    const previousPolicySection = formSections.find(
+      (section: any) => section.sectionTitle === "Previous Policy Documents"
+    );
+
+    if (!previousPolicySection) {
+      console.error("Previous Policy Documents section not found.");
+      return;
+    }
+
+    // Traverse the formControls in the found section
+    const formControls = previousPolicySection.formControls;
+    if (formControls && Array.isArray(formControls)) {
+      // Count the currently visible "previousPolicyDocument" controls
+      const visibleDocumentsCount = formControls.filter(
+        (control: any) => control.name.startsWith("previousPolicyDocument") && control.visible
+      ).length;
+
+      // Check if the limit of 8 is reached
+      if (visibleDocumentsCount >= 8) {
+        this.toast.warning({
+          detail: "Warning",
+          summary: "You cannot add more than 8 documents.",
+          duration: 5000,
+        });
+        return;
+      }
+
+      // Find the next hidden "previousPolicyDocument" control
+      const nextHiddenControl = formControls.find(
+        (control: any) =>
+          control.name.startsWith("previousPolicyDocument") && !control.visible
+      );
+
+      // If found, set its visibility to true
+      if (nextHiddenControl) {
+        nextHiddenControl.visible = true;
+      } else {
+        console.error("Unexpected state: No hidden control found, but limit not reached.");
+      }
+    } else {
+      console.error("No formControls found in the section.");
     }
   }
 
-  memberSelected(event: Event | null, option: any, controls: any) {
-    // const checkbox = event.target as HTMLInputElement;
-    // console.log(this.kidCount,option);
-    // if (event != null) {
-    //   this.isQuote = false;
-    // }
-    console.log(option, this.existingRelations);
+  calculateAffiliateEmployeeDiscount(control: any) {
+    const affiliateEmployeeIdValue = this.dynamicFormGroup.get('affiliateEmployeeId')?.value || null;
 
-    if (event != null) {
-      if (this.existingRelations.some(relation => relation.includes(option.value))) {
-        const selectedCheckbox = event.target as HTMLInputElement;
-        selectedCheckbox.checked = true;
-        return;
+    this.formData = {
+      ...this.formData,
+      employeeId: null,
+      affiliateEmployeeId: affiliateEmployeeIdValue,
+    };
+
+    this.getPremiumAmount();
+    control.disabled = true;
+  }
+
+
+  //default addOn on portability
+  // setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
+
+  //   const addOnControl = this.dynamicFormGroup.get(control.name);
+  //   // const addOnCoverControl = addOnControl?.get('addOnCover');
+  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+  //   this.form.formSections.forEach((section: any) => {
+  //     if (section.sectionTitle == "Optional Covers") {
+  //       section.formControls.forEach((control: any) => {
+  //         if (control.name == 'accident') {
+  //           control.subControls.forEach((subControl: any) => {
+  //             if (subControl.name == 'addOnDetails') {
+  //               subControl.innerSubControls.forEach((innerSubControl: any) => {
+  //                 if (innerSubControl.name != 'demoType' && innerSubControl.name != 'doneButton') {
+  //                   console.log(portabilityValidationRule, innerSubControl);
+
+  //                   let maxSumInsured = portabilityValidationRule.maxSumInsured;
+  //                   let minSumInsured = portabilityValidationRule.minSumInsured;
+  //                   const matchingMember = this.formData.insuredMemberDetails.find(
+  //                     (insuredMember: any) => innerSubControl.name === insuredMember.relation
+  //                   );
+
+
+  //                   // if (memberRules.proposerSIRule) {
+  //                   //   if (matchingMember.relation === 'Self') {
+
+  //                   //     if (matchingMember.relation === memberRules.proposerSIRule.memberName) {
+  //                   //       maxSumInsured = memberRules.proposerSIRule.maxSumInsured;
+  //                   //       minSumInsured = memberRules.proposerSIRule.minSumInsured;
+  //                   //     }
+
+  //                   //     console.log(matchingMember.relation)
+  //                   //     innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                   //       console.log(coreControl);
+  //                   //       if (coreControl.name == 'addOnSumInsured') {
+  //                   //         coreControl.options = coreControl.options.filter((option: any) => {
+  //                   //           return option.value >= minSumInsured && option.value <= maxSumInsured;
+  //                   //         });
+  //                   //         console.log(coreControl.options)
+  //                   //       }
+  //                   //     });
+  //                   //   } else {
+  //                   //     innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                   //       if (coreControl.name == 'addOnSumInsured') {
+  //                   //         coreControl.options = coreControl.options.filter((option: any) =>
+  //                   //           option.value >= minSumInsured && option.value <= maxSumInsured
+  //                   //         );
+  //                   //         console.log(coreControl.options)
+  //                   //       }
+  //                   //     });
+  //                   //   }
+  //                   // }
+
+  //                   if (portabilityValidationRule.ageBasedRules) {
+  //                     if (parseInt(matchingMember.memberAge) < portabilityValidationRule.ageBasedRules.ageThreshold) {
+  //                       //disable the all the coreControls for that key
+  //                       Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+  //                         // Use explicit non-null assertion for maxAge and minAge
+  //                         if (matchingMember.relation === key) {
+  //                           const memberArray = addOnDetailsControl?.get(key) as FormArray;
+
+  //                           memberArray.controls.forEach((formGroup: AbstractControl) => {
+  //                             if (formGroup instanceof FormGroup) {
+  //                               Object.keys(formGroup.controls).forEach((controlName) => {
+  //                                 formGroup.get(controlName)?.disable();
+  //                               });
+  //                             }
+  //                           });
+
+  //                           console.log('All controls in the FormGroup are disabled:', memberArray);
+  //                         }
+  //                       });
+  //                     }
+  //                   }
+
+  //                   innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                     if (coreControl.name == 'addOnSumInsured') {
+  //                       coreControl.options = coreControl.options.filter((option: any) =>
+  //                         option.value >= minSumInsured && option.value <= maxSumInsured
+  //                       );
+  //                     }
+  //                   })
+  //                   console.log(innerSubControl.coreControls);
+
+  //                 }
+  //               })
+  //             }
+  //           })
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
+
+  //default addOn on portability
+  // setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
+  //   const addOnControl = this.dynamicFormGroup.get(control.name);
+  //   const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+  //   this.form.formSections.forEach((section: any) => {
+  //     if (section.sectionTitle === "Optional Covers") {
+  //       section.formControls.forEach((control: any) => {
+  //         if (control.name === 'accident') {
+  //           control.subControls.forEach((subControl: any) => {
+  //             if (subControl.name === 'addOnDetails') {
+  //               subControl.innerSubControls.forEach((innerSubControl: any) => {
+  //                 if (innerSubControl.name !== 'demoType' && innerSubControl.name !== 'doneButton') {
+
+  //                   const matchingMember = this.formData.insuredMemberDetails.find(
+  //                     (insuredMember: any) => innerSubControl.name === insuredMember.relation
+  //                   );
+
+  //                   let minSumInsured = portabilityValidationRule.minSumInsured;
+  //                   let maxSumInsured = portabilityValidationRule.maxSumInsured;
+
+  //                   // Determine applicable policy rules
+  //                   const policyRule = portabilityValidationRule.policyRules.find(
+  //                     (rule: any) => rule.policyType === this.formData.memberPolicyType
+  //                   );
+
+  //                   if (policyRule && policyRule.ageBasedRules) {
+  //                     const ageThreshold = policyRule.ageBasedRules.ageThreshold;
+
+  //                     if (parseInt(matchingMember.memberAge) < ageThreshold) {
+  //                       // Below age threshold handling
+  //                       const belowThresholdRules = policyRule.ageBasedRules.belowThreshold;
+  //                       if (belowThresholdRules) {
+  //                         minSumInsured = belowThresholdRules.minSumInsured || minSumInsured;
+  //                         maxSumInsured = belowThresholdRules.maxSumInsured || maxSumInsured;
+
+  //                         // Disable or enable controls based on the rules
+  //                         Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+  //                           if (matchingMember.relation === key) {
+  //                             const memberArray = addOnDetailsControl?.get(key) as FormArray;
+
+  //                             memberArray.controls.forEach((formGroup: AbstractControl) => {
+  //                               if (formGroup instanceof FormGroup) {
+  //                                 Object.keys(formGroup.controls).forEach((controlName) => {
+  //                                   if (belowThresholdRules.disabled) {
+  //                                     formGroup.get(controlName)?.disable();
+  //                                   } else {
+  //                                     formGroup.get(controlName)?.enable();
+  //                                   }
+  //                                 });
+  //                               }
+  //                             });
+  //                           }
+  //                         });
+  //                       }
+  //                     } else {
+  //                       // Above age threshold handling
+  //                       const aboveThresholdRules = policyRule.ageBasedRules.aboveThreshold;
+  //                       // if (aboveThresholdRules && aboveThresholdRules.disabled) {
+  //                       //   // Disable controls if applicable
+  //                       //   Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+  //                       //     if (matchingMember.relation === key) {
+  //                       //       const memberArray = addOnDetailsControl?.get(key) as FormArray;
+
+  //                       //       memberArray.controls.forEach((formGroup: AbstractControl) => {
+  //                       //         if (formGroup instanceof FormGroup) {
+  //                       //           Object.keys(formGroup.controls).forEach((controlName) => {
+  //                       //             formGroup.get(controlName)?.disable();
+  //                       //           });
+  //                       //         }
+  //                       //       });
+  //                       //     }
+  //                       //   });
+  //                       // }
+  //                     }
+  //                   }
+
+  //                   // Update addOnSumInsured options based on min/max sum insured
+  //                   innerSubControl.coreControls.forEach((coreControl: any) => {
+  //                     if (coreControl.name === 'addOnSumInsured') {
+  //                       coreControl.options = coreControl.options.filter((option: any) =>
+  //                         option.value >= minSumInsured && option.value <= maxSumInsured
+  //                       );
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+
+  //updated default addOn for portability
+  setPortabilityValidationRule(portabilityValidationRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+    this.form.formSections.forEach((section: any) => {
+      if (section.sectionTitle === "Optional Covers") {
+        section.formControls.forEach((control: any) => {
+          if (control.name === 'accident') {
+            control.subControls.forEach((subControl: any) => {
+              if (subControl.name === 'addOnDetails') {
+                subControl.innerSubControls.forEach((innerSubControl: any) => {
+                  if (innerSubControl.name !== 'demoType' && innerSubControl.name !== 'doneButton') {
+
+                    const matchingMember = this.formData.insuredMemberDetails.find(
+                      (insuredMember: any) => innerSubControl.name === insuredMember.relation
+                    );
+
+                    let minSumInsured = portabilityValidationRule.minSumInsured;
+                    let maxSumInsured = portabilityValidationRule.maxSumInsured;
+
+                    // Determine applicable policy rules
+                    const policyRule = portabilityValidationRule.policyRules.find(
+                      (rule: any) => rule.policyType === this.formData.memberPolicyType
+                    );
+
+                    if (policyRule && policyRule.ageBasedRules) {
+                      const minAgeThreshold = policyRule.ageBasedRules.minAgeThreshold;
+                      const maxAgeThreshold = policyRule.ageBasedRules.maxAgeThreshold;
+
+                      if (parseInt(matchingMember.memberAge) < minAgeThreshold) {
+                        // Below min age threshold handling
+                        const belowThresholdRules = policyRule.ageBasedRules.belowMinThreshold;
+                        if (belowThresholdRules) {
+                          minSumInsured = belowThresholdRules.minSumInsured || minSumInsured;
+                          maxSumInsured = belowThresholdRules.maxSumInsured || maxSumInsured;
+
+                          this.toggleControlState(addOnDetailsControl, matchingMember, belowThresholdRules.disabled);
+                        }
+                      } else if (parseInt(matchingMember.memberAge) > maxAgeThreshold) {
+                        // Above max age threshold handling
+                        const aboveThresholdRules = policyRule.ageBasedRules.aboveMaxThreshold;
+                        if (aboveThresholdRules) {
+                          this.toggleControlState(addOnDetailsControl, matchingMember, aboveThresholdRules.disabled);
+                        }
+                      }
+                    }
+
+                    // Update addOnSumInsured options based on min/max sum insured
+                    innerSubControl.coreControls.forEach((coreControl: any) => {
+                      if (coreControl.name === 'addOnSumInsured') {
+                        coreControl.options = coreControl.options.filter((option: any) =>
+                          option.value >= minSumInsured && option.value <= maxSumInsured
+                        );
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
       }
+      // else if(section.sectionTitle === "Health Add On"){
+      //   section.formControls.forEach((control: any) => {
+
+      //   })
+      // }
+    });
+  }
+
+  private toggleControlState(addOnDetailsControl: any, matchingMember: any, disable: boolean) {
+    Object.keys(addOnDetailsControl?.value || {}).forEach((key: any) => {
+      if (matchingMember.relation === key) {
+        const memberArray = addOnDetailsControl?.get(key) as FormArray;
+        memberArray.controls.forEach((formGroup: AbstractControl) => {
+          if (formGroup instanceof FormGroup) {
+            Object.keys(formGroup.controls).forEach((controlName) => {
+              if (disable) {
+                formGroup.get(controlName)?.disable();
+              } else {
+                formGroup.get(controlName)?.enable();
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+
+
+  getFlsCodeViaAgentCode(control: any) {
+    const reqData = {
+      agentCode: this.agentCode
     }
+    console.log(reqData);
+    this.yatraService.getFlsCodeViaAgentCode(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.data && Object.keys(res.data).length === 0) {
+          this.toast.warning({
+            detail: "Warning",
+            summary: "No agentCode Found",
+            duration: 5000,
+          });
+          return;
+        }
+        control.options = res.data;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
 
-    const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
-    // console.log(checkbox);
-    // this.kidCount >= 4 &&
-    if (checkbox.checked && this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Cannot select more than 4 childrens", duration: 3000 });
-      checkbox.checked = false;
-      return;
-    }
-    else {
-      this.form.formSections.forEach(formsection => {
-        formsection.formControls.forEach(formControl => {
-          if (checkbox.checked == true) {
-            // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
-            //   formControl.value = "";
-            //   this.renewalFormGroup.get("totalPremium")?.setValue("");
-            // }
+  //Previous Claims Information
+  changePreviousCurrentPolicyDetails(dependentControl: any, visibility: any, controlName: string,
+    parentControlName: string,
+    controlIndex: number | null = null) {
+    console.log("Changes inside current policy details", dependentControl, visibility, controlName, parentControlName, controlIndex);
+    dependentControl.forEach((control: any) => {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == parentControlName && controlIndex) {
+            let targetDynamicControl = JSON.parse(JSON.stringify(formControl.dynamicControls[controlIndex]));
+            targetDynamicControl.forEach((innerControl: any) => {
+              if (innerControl.name == control.name) {
+                innerControl.visible = visibility;
+                if (visibility) {
+                  // let tempArrayControl = innerControl.innerArrayControl[0].map((element: any) => ({ ...element }));
+                  let tempArrayControl = JSON.parse(JSON.stringify(innerControl.innerArrayControl[0]));
+                  innerControl.innerArrayControl.push(tempArrayControl);
 
-            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-              console.log(option);
+                  let formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                  // let formArr;
+                  // console.log(formArr);
 
-              // if (option.value.includes('Son') || option.value.includes('Daughter')) {
-              //   this.kidCount++;
-              // }
-              formsection.visible = true;
-              // if (this.isQuote == true && this.isPolicyDetailsFetch) {
-              //   formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
-              //   console.log(this.form, this.renewalFormGroup.value);
-              //   this.isQuote = false;
-              // }
-              let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+                  const memberGroup = formArray.at(controlIndex - 1) as FormGroup;
+                  let memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+                  // const memberGroupInnerControlGroup = memberGroupControlArray.at(innerSubControlIndex) as FormGroup;
+                  // myFormControl = memberGroupInnerControlGroup.get(innerControl.name);
+                  if (!memberGroupControlArray) {
+                    let tempFormArray = this.fb.array([]);
+                    memberGroup.addControl(innerControl.name, tempFormArray);
+                    memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+                  }
+                  memberGroupControlArray.push(this.initializeDynamicFormControls(tempArrayControl, 1, innerControl));
+                  // if (formArr == null) {
+                  //   let tempFormArray = this.fb.array([]);
+                  //   this.dynamicFormGroup.addControl(formControl.name, tempFormArray);
+                  //   formArr = this.dynamicFormGroup.get(formControl.name) as FormArray;
+                  // }
+                  // formArr.push(this.initializeDynamicFormControls(tempArrayControl, 1, formControl));
+                }
+                else {
 
-              tempControl[1].value = option.value;
-              tempControl[0].value = option;
-              console.log(tempControl);
-              // if (this.isQuote) {
-              //   tempControl.forEach((temp) => {
-              //     if (temp.name == 'zoneValue') {
-              //       temp.options = this.formData['upgradableZones'];
-              //     }
-              //   })
-              // }
-              formControl.dynamicControls?.push(tempControl);
-              console.log(this.form);
+                  while (innerControl.innerArrayControl.length > 1) {
+                    innerControl.innerArrayControl.pop();
+                  }
 
-              let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-              // let formArr;
-              console.log(formArr, formControl.dynamicControls);
+                  let formArray = this.dynamicFormGroup.get(parentControlName) as FormArray;
+                  // let formArr;
+                  // console.log(formArr);
 
+                  const memberGroup = formArray.at(controlIndex - 1) as FormGroup;
+                  memberGroup.removeControl(innerControl.name);
 
-              if (formArr != null) {
-                formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
+                  // Remove the entire FormArray from dynamicFormGroup
+                  // if (this.dynamicFormGroup.contains(formControl.name)) {
+                  //   this.dynamicFormGroup.removeControl(formControl.name);
+                  // }
+                }
               }
-              else {
-                formArr = this.fb.array([]);
-                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
-                this.renewalFormGroup.addControl(controls.idProperty, formArr);
-              }
+            })
+
+            formControl.dynamicControls[controlIndex] = targetDynamicControl;
 
 
-
-              // if (checkbox.checked == true && option.value == 'Self') {
-              //   // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
-              //   let index = -1;
-              //   let memberupgradableZones: IOptions[] = [];
-              //   console.log(formControl.dynamicControls);
-
-              //   if (formControl.dynamicControls) {
-              //     for (let i = 0; i < formControl.dynamicControls.length; i++) {
-              //       let element = formControl.dynamicControls[i];
-              //       console.log(element);
-
-              //       try {
-              //         console.log(element[0]);
-
-              //         let parsedValue = JSON.parse(element[0].value);
-              //         if (parsedValue.value === option.value) {
-              //           element.forEach((control: any) => {
-              //             if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
-              //               control.disabled = true
-              //             }
-              //             if (control.name == 'zoneValue') {
-              //               this.form.formSections.forEach(formSection => {
-              //                 formSection.formControls.forEach(formcontrol => {
-              //                   if (formcontrol.name == control.name) {
-              //                     control.options = formcontrol.options;
-              //                     memberupgradableZones = formcontrol.options || [];
-              //                   }
-              //                 });
-              //               });
-              //             }
-              //           })
-              //           index = i;
-              //           break;
-              //         }
-              //       } catch (e) {
-              //         console.error('Error parsing JSON:', e);
-              //       }
-              //     }
-              //   }
-
-              //   console.log(this.renewalFormGroup.value, this, this.renewalFormGroup);
-
-              //   // if ((this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1]) {
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.renewalFormGroup.get('memberDobProposer')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.renewalFormGroup.get('memberAgeProposer')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.renewalFormGroup.get('proposerGender')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('pincode')?.setValue(this.renewalFormGroup.get('proposerPincode')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zone')?.setValue(this.renewalFormGroup.get('zone')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('zoneValue')?.setValue(this.renewalFormGroup.get('zoneValue')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.renewalFormGroup.get('emailId')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.renewalFormGroup.get('firstName')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.renewalFormGroup.get('middleName')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.renewalFormGroup.get('lastName')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.renewalFormGroup.get('mobileNumber')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.renewalFormGroup.get('preFix')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.renewalFormGroup.get('height')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.renewalFormGroup.get('weight')?.value);
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.renewalFormGroup.get('heightInches')?.value);
-              //     console.log(memberupgradableZones);
-
-              //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('upgradableZones')?.setValue(memberupgradableZones);
-
-              //     console.log(this.renewalFormGroup.value);
-              //   // }
-
-
-              // }
-              console.log(this.renewalFormGroup.get('memberPolicyType')?.value);
-
-              if (this.renewalFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-                console.log((this.renewalFormGroup.get(controls.idProperty) as FormArray));
-
-                (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
-                  control.get('sumInsured')?.setValue(this.renewalFormGroup.get('sumInsured')?.value);
-                })
-              }
-              console.log(typeof this.renewalFormGroup.get('numberOfInsuredMembers')?.value, this.renewalFormGroup.get('numberOfInsuredMembers')?.value);
-
-              this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(this.renewalFormGroup.get('numberOfInsuredMembers')?.value + 1);
-            }
 
           }
-          // else if (checkbox.checked == false) {
+        })
+      })
+    })
+    console.log(this.form);
 
-          //   if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-          //     if (option.value.includes('Son') || option.value.includes('Daughter')) {
-          //       this.kidCount--;
-          //     }
-          //     let index = formControl.dynamicControls?.findIndex((element: any) =>
-          //       element[1].value == option.value);
-          //     if (index !== undefined && index !== -1) {
-          //       formControl.dynamicControls?.splice(index, 1);
-          //       let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-          //       formArr.removeAt(index - 1);
-          //       if (formArr.length == 0) {
-          //         formsection.visible = false;
-          //       }
-          //       Object.keys(this.formData).forEach(key => {
-          //         if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-          //           delete this.formData[key];
-          //         }
-          //         if (key.includes(option.value)) {
-          //           delete this.formData[key]
-          //         }
-          //       });
-          //     }
-          //     console.log(this.formData);
-          //     this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(this.renewalFormGroup.get('numberOfInsuredMembers')?.value - 1);
-          //   }
-          //   // else if(formControl){
-          //   //   Object.keys(this.formData).forEach(key => {
-          //   //     if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-          //   //       delete this.formData[key];
-          //   //     }
-          //   //   });
-          //   // }
+  }
 
-          // }
-          else if (checkbox.checked == false) {
-            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-              // if (option.value.includes('Son') || option.value.includes('Daughter')) {
-              //   this.kidCount--;
-              // }
+  changeChronicCondition(control: any, eventValue: any) {
+    console.log(eventValue);
 
-              // Find the index of the dynamic control to be removed
-              let index = formControl.dynamicControls?.findIndex((element: any) => element[1].value == option.value);
+    eventValue = this.dynamicFormGroup.get('typeOfBusiness')?.value || control.value;
 
-              if (index !== undefined && index !== -1) {
-                // Remove the dynamic control from formControl.dynamicControls
-                formControl.dynamicControls?.splice(index, 1);
+    if (eventValue == 'Roll Over') {
+      this.dynamicFormGroup.get(control.otherControlName)?.setValue('N');
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (control.otherControlName && formControl.name == control.otherControlName) {
+            formControl.visible = false;
+          }
+        })
+      })
+    }
+    else {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (control.otherControlName && formControl.name == control.otherControlName) {
+            formControl.visible = true;
+          }
+        })
+      })
+    }
 
-                // Remove the corresponding FormArray element
-                let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
-                formArr.removeAt(index - 1);
+    this.checkPortabilityApplicable(eventValue, control);
+  }
 
-                // Hide the form section if no elements are left in the FormArray
-                if (formArr.length == 0) {
-                  formsection.visible = false;
-                }
+  checkPortabilityApplicable(eventValue: any, control: any) {
 
-                // Remove entries from formData that match the deselected member's index or value
-                Object.keys(this.formData).forEach(key => {
-                  if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-                    delete this.formData[key];
+    if (eventValue == 'Roll Over') {
+      const today = new Date();
+
+      this.formData.insuredMemberDetails.forEach((member: any) => {
+        if (member.previousPolicyDetails && member.previousPolicyDetails.length > 0) {
+          member.previousPolicyDetails.forEach((policy: any) => {
+            if (policy.previousPolicyEndDate) {
+              const policyEndDate = new Date(policy.previousPolicyEndDate);
+
+              // Check if policy end date is valid
+              if (isNaN(policyEndDate.getTime())) {
+                console.warn(`Invalid policy end date for ${member.relation}`);
+                return;
+              }
+
+              // Check if policy has expired
+              if (policyEndDate < today) {
+                this.toast.warning({
+                  detail: "Error",
+                  summary: "Portabily is not applicable for the uploaded policy.",
+                  duration: 3000
+                });
+                this.dynamicFormGroup.get(control.name)?.setValue('NB');
+              } else {
+                console.log(`Policy for ${member.relation} is still active until ${policy.previousPolicyEndDate}`);
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  setForSelfMember(control: any, eventValue: any) {
+
+    console.log(control, eventValue);
+
+    const insuredMemberDetails = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+    // Ensure insuredMemberDetails is a FormArray before proceeding
+    if (insuredMemberDetails && insuredMemberDetails.controls) {
+      insuredMemberDetails.controls.forEach((group: AbstractControl) => {
+        const relation = group.get('relation')?.value ?? JSON.parse(group.get('relationshipType')?.value || '{}').value;
+
+        if (relation === 'Self') {
+          if (control.name == 'memberDobProposer') {
+            group.get('memberdob')?.setValue(eventValue);
+            group.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+          }
+          else if (control.name == 'proposerPincode') {
+            group.get('pincode')?.setValue(eventValue);
+            group.get('zoneValue')?.setValue(this.dynamicFormGroup.get('zoneValue')?.value);
+            group.get('zone')?.setValue(this.dynamicFormGroup.get('zone')?.value);
+          }
+          else {
+            group.get(control.otherControlName)?.setValue(eventValue);
+            if (control.name == 'proposerGender') {
+              this.changeRecalculate(true);
+            }
+          }
+        }
+        else if (relation === 'Spouse') {
+          if (control.name == 'proposerGender') {
+            group.get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value === 'M' ? 'F' : 'M');
+            this.changeRecalculate(true);
+          }
+        }
+
+      });
+    }
+
+
+  }
+
+  checkGHSPolicyEndDate(event: any, innerControl: any, control: any, parentControl: any, index: any, indexj: any) {
+    console.log(event, innerControl, control, parentControl, index, indexj);
+
+    const formArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
+    const memberGroup = formArray.at(index) as FormGroup;
+    const memberGroupControlArray = memberGroup.get(control.name) as FormArray;
+    const memberGroupInnerControlGroup = memberGroupControlArray.at(indexj) as FormGroup;
+    const memberControl = memberGroupInnerControlGroup?.get(innerControl.name);
+
+    if (event.target.value) {
+      console.log("Entered Date:", event.target.value);
+
+      // Extract year from the date string
+      const enteredDate = event.target.value;
+      const dateParts = enteredDate.split("-");
+      if (dateParts.length !== 3) {
+        console.warn("Invalid date format:", enteredDate);
+        return;
+      }
+
+      let year = Number(dateParts[0]); // Convert the year string to a number
+
+      // Ensure year is a reasonable, complete 4-digit year
+      const currentYear = new Date().getFullYear();
+      if (year < 1900 || year > 9999) {
+        console.warn("Invalid year:", year);
+        return;
+      }
+
+      // Convert string to a valid date object
+      const policyEndDate = new Date(enteredDate);
+      const currentDate = new Date();
+
+      // Check if policy end date is in the future
+      if (policyEndDate <= currentDate) {
+        this.toast.warning({
+          detail: "Error",
+          summary: "Policy end date should be greater than the current date.",
+          duration: 3000
+        });
+
+        // Reset the form control value
+        memberControl?.setValue(null);
+      }
+    }
+  }
+  modifyDeclarationForm() {
+    const vTure = ['sendLink', 'sendOTPBtn', 'skipOTP'];
+    const vFalse = ['verifyLink', 'verifyOTP', 'otpField'];
+
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((control: any) => {
+        if (vTure.includes(control.name)) {
+          control.visible = true;
+        } else if (vFalse.includes(control.name)) {
+          control.visible = false;
+        } else if (control.name === 'next') {
+          control.disabled = true;
+        }
+      });
+    });
+  }
+
+  checkForSelf(control: any, index: number, parentIndex: any) {
+
+    const selfIndex = this.formData.insuredMemberDetails.findIndex((member: any) => member.relation === 'Self');
+    const selfMember = this.formData.insuredMemberDetails[selfIndex];
+
+    console.log(control, parentIndex, selfIndex, selfMember);
+
+    if (selfIndex == parentIndex - 1) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'insuredMemberDetails' && formControl.dynamicControls) {
+            console.log(formControl.innerArrayControl);
+
+            formControl.dynamicControls[parentIndex].forEach((subControl: any) => {
+
+
+              if (subControl.name == 'activePolicyDetails' && subControl.innerArrayControl) {
+                console.log(subControl);
+
+                subControl.innerArrayControl[1].forEach((innerSubControl: any) => {
+                  if (innerSubControl.name == 'activePolicyFirstName') {
+                    innerSubControl.value = selfMember.firstName;
+                    console.log(innerSubControl);
+
                   }
-                  if (key.includes(option.value)) {
-                    delete this.formData[key];
+                  if (innerSubControl.name == 'activePolicyMiddleName') {
+                    innerSubControl.value = selfMember.middleName;
+                  }
+                  if (innerSubControl.name == 'activePolicyLastName') {
+                    innerSubControl.value = selfMember.lastName;
+                  }
+                })
+              }
+            })
+          }
+        })
+      })
+
+    }
+  }
+
+  setActivePolicyField(subControl: any, eventValue: any, control: any, index: any) {
+
+    console.log(subControl, eventValue, control, index);
+
+    const formGroup = this.dynamicFormGroup.get(control.name) as FormArray;
+    console.log('FormGroup:', formGroup);
+
+    const formArrayAtIndex = formGroup.at(index - 1) as FormGroup;
+    console.log('FormArray at index - 1:', formArrayAtIndex);
+
+    const activePolicyDetails = formArrayAtIndex.get('activePolicyDetails') as FormArray;
+    console.log('Active Policy Details:', activePolicyDetails);
+
+    const firstPolicyDetail = activePolicyDetails.at(0) as FormGroup;
+    console.log('First Policy Detail:', firstPolicyDetail);
+
+    const targetControl = firstPolicyDetail.get(subControl.otherControlName);
+    console.log(`Target Control (${control.otherControlName}):`, targetControl);
+
+    if (targetControl) {
+      targetControl.setValue(eventValue);
+      console.log(`Set value to:`, eventValue);
+    } else {
+      console.warn(`Control ${control.otherControlName} not found.`);
+    }
+
+  }
+  declarationPopUp(): Promise<void> {
+    return Promise.resolve().then(() => {
+      this.isDeclarartionDiscountVisible = true;
+      console.log(this.isDeclarartionDiscountVisible);
+      console.log(this.formData);
+    });
+  }
+  declarationSendLink(item: any) {
+    if (item === 'NULL') {
+      this.isLinkAndSendButton = true; // Assign NULL
+    } else {
+      if (item == "true") {
+        const reqData = {
+          proposalNumber: this.proposalNum,
+          agentCode: this.agentCode
+        };
+        this.yatraService.customertesturl(reqData).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.customerUrl = res.data;
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        })
+      }
+      this.isPopupLink = item as boolean; // Convert string to boolean
+      this.isLinkAndSendButton = false;
+    }
+  }
+
+  verifyDiscountTest() {
+    const reqData = {
+      proposalNumber: this.proposalNum,
+    }
+    this.customerService.getproposaltest(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          if (res.data) {
+            this.isGoodHealthDiscount = res.data.isSubmit
+          }
+          this.halfQuotation();
+        }
+        else {
+          this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+      }
+    })
+  }
+
+  onChangeLeadCreationPopUp() {
+    this.isLeadCreatedSuccessfully = false;
+  }
+
+  verifyCustomerOTP(control: any) {
+    const index = this.getFormIndexValue();
+    const reqData = {
+      "customerID": this.dynamicFormGroup.get('customerId')?.value.toString(),
+      "otpKey": this.customerOtpKey,
+      "otpValue": this.dynamicFormGroup.get(control.nameProperty)?.value.toString()
+    }
+    this.yatraService.setValidateOTP(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          console.log(res.data);
+          if (index != 0) {
+            this.toast.success({ detail: "Success", summary: res.message, duration: 3000 });
+          }
+          else {
+            this.allAccountDetails = JSON.parse(res.data);
+            this.isCustomerAccountDetails = true;
+            this.isAccountList = true;
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'CustomerOTP') {
+                  controls.value = ""
+                  this.dynamicFormGroup.get(controls.name)?.reset();
+                  this.formData[controls.name] = null;
+                  controls.visible = false
+                }
+                else if (controls.name == 'resetCustomerOTP' || controls.name == 'countDown' || controls.name == 'verifyCustomerOTP') {
+                  controls.visible = false;
+                }
+              })
+            })
+          }
+        }
+        else {
+          this.toast.error({ detail: "Error", summary: res.message, duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        // this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+      }
+    })
+  }
+  getCustomerrequestOtp(control: any) {
+    const index = this.getFormIndexValue();
+    const reqData = {
+      "customerID": this.dynamicFormGroup.get(control.name)?.value ? this.dynamicFormGroup.get(control.name)?.value.toString() : this.formData.customerId.toString(),
+      "requestType": index === 0 ? "leadStage" : "paymentStage"
+    }
+    this.yatraService.getRequestOtp(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          console.log(res.data);
+          if (index != 0) {
+            this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'CustomerOTP') {
+                  controls.value = ""
+                  this.dynamicFormGroup.get(controls.name)?.reset();
+                  this.formData[controls.name] = null;
+                }
+              })
+            })
+          }
+          else {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'countDown') {
+                  this.startTimer(controls);
+                }
+              })
+            })
+          }
+          this.customerOtpKey = res.data;
+        }
+        else {
+          this.toast.error({ detail: "Error", summary: res.message, duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        // this.toast.error({ detail: "Error", summary: 'Test is not submitted.', duration: 3000 });
+      }
+    })
+  }
+  toggleSelection(accountNumber: string, event: any) {
+    if (event.target.checked) {
+      this.selectedAccounts = accountNumber; // Add selected account
+    } else {
+      this.selectedAccounts = ""; // Remove if unchecked
+    }
+  }
+  submitSelectedAccounts(item: any) {
+    const resBody = this.allAccountDetails.GetCustomerDetails_OtpCKYCResponse.ResBody;
+    const resHdr = this.allAccountDetails.GetCustomerDetails_OtpCKYCResponse.ResHdr.ServiceContext;
+    if (item == 'AccountList') {
+      this.isAccountList = false;
+
+      this.customerDetailsList = [
+        { label: 'Customer ID', name: 'customerId', value: resBody.CustomerID },
+        { label: 'Prefix', name: 'preFix', value: resBody.Title.replace('.', '') },
+        { label: 'Req Ref Num', name: 'reqRedNum', value: resHdr.ReqRefNum },
+        { label: 'First Name', name: 'firstName', value: resBody.CustomerFirstName },
+        { label: 'Middle Name', name: 'middleName', value: resBody.CustomerMiddleName },
+        { label: 'Last Name', name: 'lastName', value: resBody.CustomerLastName },
+        { label: 'Email ID', name: 'emailId', value: resBody.EmailID },
+        { label: 'Mobile Number', name: 'mobileNumber', value: resBody.MobileNumber },
+        { label: 'Proposer Pincode', name: 'proposerPincode', value: resBody.Ppincode },
+        { label: 'CKYC Number', name: 'ckycNo', value: resBody['CKYC Number'] },
+        { label: 'City', name: 'city', value: resBody.Pcity },
+        { label: 'State', name: 'state', value: resBody.Pstate },
+        { label: 'Gender', name: 'proposerGender', value: resBody.Gender },
+        { label: 'Date of Birth', name: 'memberDobProposer', value: resBody.DateofBirth.split(' ')[0] },
+        { label: 'Age', name: 'memberAgeProposer', value: this.calculateAge(resBody.DateofBirth.split(' ')[0]) },
+        { label: 'Account Numbers', name: 'accountNumber', value: this.selectedAccounts },
+        { label: 'PAN Number', name: 'panNo', value: resBody.PANCardNumber },
+        { label: 'Bank Branch', name: 'bankBranch', value: resBody.BranchName },
+        { label: 'Permanent Address 1', name: 'permanentAddress1', value: resBody.PAddressLine1 },
+        { label: 'Permanent Address 2', name: 'permanentAddress2', value: resBody.PAddressLine2 },
+        { label: 'Permanent Address 3', name: 'permanentAddress3', value: resBody.PAddressLine3 }
+      ];
+
+    }
+    else if (item == 'Final') {
+      this.customerDetailsList.forEach((item: any) => {
+        if (item.name) {
+          this.dynamicFormGroup.get(item.name)?.setValue(item.value);
+          this.dynamicFormGroup.get(item.name)?.disable();
+        }
+      });
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if (control.name == 'proposerPincode') {
+            const event = { target: { value: resBody.Ppincode } };
+            this.onInputChange(event, control);
+          }
+        });
+      })
+      console.log(this.dynamicFormGroup.value);
+      this.isCustomerAccountDetails = false;
+    }
+  }
+  getBankDetailsByAccountNo(control: any) {
+    console.log(control);
+    const reqData = {
+      "AccountNo": control.value
+    };
+    this.yatraService.getBankDetailsByAccountNo(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res); // Create a new array to trigger change detection
+        const data = JSON.parse(res.data);
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle == 'Enter Bank Account Details') {
+            section.formControls.forEach((scontrol: any) => {
+              if (scontrol.name == 'confAccountNumber') {
+                // scontrol.value = control.value;
+                this.dynamicFormGroup.get('confAccountNumber')?.setValue(control.value.replace(/\D/g, ''));
+                console.log(scontrol);
+              }
+              else if (scontrol.name == 'bankName') {
+                scontrol.value = this.stringifyObject(scontrol.options.find((option: IOptions) => data.GetBankDetailsResponse.ResBody.BankName === option.id) || scontrol.value);
+                this.dynamicFormGroup.get('bankName')?.setValue(scontrol.value);
+                console.log(scontrol);
+                let bankDetails: any[] = [];
+
+                bankDetails = scontrol.options || [];
+                const reqData = { ifscCode: data.GetBankDetailsResponse.ResBody.IFSCCode };
+                this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
+                  next: (response: any) => {
+                    if (response.isSuccess && response.data) {
+                      const matchingBank = bankDetails.find((bank) => bank.name === response.data.bankName);
+                      const nobj = {
+                        id: matchingBank ? matchingBank.id : "Unknown",
+                        value: response.data.bankName,
+                        name: response.data.bankName
+                      };
+                      this.form.formSections.forEach((section: any) => {
+                        section.formControls.forEach((formControl: any) => {
+                          if (formControl.name == "bankName" && formControl.onChangeMethod) {
+                            this.dynamicFormGroup.get('bankName')?.setValue(JSON.stringify(nobj) || '');
+                          } else if (formControl.name == "bankName") {
+                            this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+                          }
+                        });
+                      });
+                      this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+
+                      if (response.data.bankName) {
+                        const cityReqData = { cityName: "", bankName: response.data.bankName };
+                        this.yatraService.getBankCity(cityReqData).subscribe({
+                          next: (cityRes: any) => {
+                            const cityDetails = cityRes.data || [];
+                            const matchingCity = cityDetails.find((city: any) => city.name === response.data.bankCity);
+                            const cobj = {
+                              id: matchingCity ? matchingCity.id : "Unknown",
+                              value: response.data.bankCity,
+                              name: response.data.bankCity
+                            };
+
+                            if (scontrol.onChangeMethod != null && "bankCity" != null) {
+                              this.form.formSections.forEach((section: any) => {
+                                section.formControls.forEach((formControl: any) => {
+                                  if (formControl.name == "bankCity") {
+                                    const event = {
+                                      target: {
+                                        value: JSON.stringify(nobj)
+                                      }
+                                    };
+                                    this.getBankCity(event, formControl);
+                                  }
+                                });
+                              });
+                            }
+                            this.dynamicFormGroup.get('bankCity')?.setValue(JSON.stringify(cobj) || '');
+                            const branchReqData = {
+                              bankName: response.data.bankName,
+                              cityName: response.data.cityName
+                            };
+                            this.yatraService.getBranchDetails(branchReqData).subscribe({
+                              next: (branchRes: any) => {
+                                const branchDetails = branchRes.data || [];
+                                const matchingBranch = branchDetails.find(
+                                  (branch: any) => branch.name === response.data.bankBranch
+                                );
+                                const branchObj = {
+                                  id: matchingBranch ? matchingBranch.id : "Unknown",
+                                  value: matchingBranch.value,
+                                  name: matchingBranch.name
+                                };
+                                if (scontrol.onChangeMethod != null && "bankBranch" != null) {
+                                  this.form.formSections.forEach((section: any) => {
+                                    section.formControls.forEach((formControl: any) => {
+                                      if (formControl.name == "bankBranch") {
+                                        const event = {
+                                          target: {
+                                            value: JSON.stringify(cobj)
+                                          }
+                                        };
+                                        this.getBranchDetails(event, formControl);
+                                      }
+                                    });
+                                  });
+                                }
+                                this.dynamicFormGroup.get('bankBranch')?.setValue(JSON.stringify(branchObj) || '');
+                              },
+                              error: (err) => {
+                                console.error('Error fetching branch details', err);
+                              }
+                            });
+                          },
+                          error: (err) => {
+                            console.error('Error fetching city details', err);
+                          }
+                        });
+                      }
+                    } else {
+                      this.toast.warning({
+                        detail: "Warning",
+                        summary: 'Failed to Fetch Bank Details',
+                        duration: 3000
+                      });
+                    }
+                  },
+                  error: (err) => {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: 'Failed to Fetch Bank Details',
+                      duration: 3000
+                    });
                   }
                 });
 
-                // Update this.covers to remove the cover for the deselected member
-                if (this.covers[index - 1]) {
-                  this.covers.splice(index - 1, 1);
-                }
-
-                console.log(this.formData);
-
-                // Update the number of insured members
-                this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(
-                  this.renewalFormGroup.get('numberOfInsuredMembers')?.value - 1
-                );
               }
-            }
+              // else if(scontrol.name == 'bankName'){
+              //   scontrol.options.forEach((option: IOptions) => {
+              //     scontrol.value = data.GetBankDetailsResponse.ResBody.BankName == option.id ? this.stringifyObject(option) : option.value;
+              //   });
+              // }
+              else if (scontrol.name == 'ifscCode') {
+                this.dynamicFormGroup.get('ifscCode')?.setValue(data.GetBankDetailsResponse.ResBody.IFSCCode);
+              }
+              // else if(scontrol.name == 'micrCode'){
+              //   this.dynamicFormGroup.get('micrCode')?.setValue(data.GetBankDetailsResponse.ResBody.MICRCode);
+              // }
+            });
           }
-
-        });
-      })
-      // const numberOfInsuredMembersControl = this.renewalFormGroup.get('numberOfInsuredMembers');
-      // if (numberOfInsuredMembersControl) {
-      //   const numberOfInsuredMembers = numberOfInsuredMembersControl.value;
-
-      const insuredMembersFormGroup = this.renewalFormGroup.get('insuredMembers') as FormGroup;
-      if (insuredMembersFormGroup) {
-        insuredMembersFormGroup.setValidators(this.addCustomValidation());
-        // console.log(this.addCustomValidation());
-
-        insuredMembersFormGroup.updateValueAndValidity();
-        console.log(this.renewalFormGroup.get('insuredMembers'));
-
+        })
+        console.log(this.dynamicFormGroup.value);
+        // this.dynamicFormGroup.get('bankName')?.setValue(data.GetBankDetailsResponse.ResBody.BankName);
+        // // this.dynamicFormGroup.get('bankCity')?.setValue(res.GetBankDetailsResponse.ResBody.);
+        // // this.dynamicFormGroup.get('bankBranch')?.setValue(item.value);
+        // this.dynamicFormGroup.get('ifscCode')?.setValue(data.GetBankDetailsdataponse.ResBody.IFSCCode);
+        // this.dynamicFormGroup.get('micrCode')?.setValue(data.GetBankDetailsResponse.ResBody.MICRCode);
+      },
+      error: (err) => {
+        console.error(err);
       }
-      // }
+    });
+  }
+  resetTimer(control: any) {
+    console.log(control);
+  }
+  startTimer(control: any) {
+    if (control.visible == true) {
+      control.value = 30;
+      if (this.isTimerRunning) return; // Prevent multiple timers from starting
+      this.isTimerRunning = true;
 
-      // this.updateValueAndGroupError(this.renewalFormGroup.get(controls.name) as FormGroup);
+      const timer$ = interval(1000).pipe(take(control.value));
+
+      timer$.subscribe({
+        next: () => {
+          control.value--;
+          if (control.value === 0 && control.visible == true) {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((controls: any) => {
+                if (controls.name == 'verifyCustomerOTP') {
+                  controls.visible = false;
+                }
+                else if (controls.name == 'resetCustomerOTP') {
+                  controls.visible = true;
+                }
+                else if (controls.name == control.name) {
+                  controls.visible = false;
+                }
+              })
+            })
+          }
+        },
+        complete: () => {
+          this.isTimerRunning = false;
+        }
+      });
     }
   }
+  resetOtp(control: any) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.name == 'verifyCustomerOTP') {
+          controls.visible = true;
+        }
+        else if (controls.name == 'countDown') {
+          controls.visible = true;
+        }
+        else if (controls.name == 'resetCustomerOTP') {
+          controls.visible = false;
+        }
+        else if (controls.name == 'customerId') {
+          this.getCustomerrequestOtp(controls);
+        }
+      })
+    })
+  }
 
- 
+  zoneRuleCoverValidation(zoneRule: any, control: any) {
+    const addOnControl = this.dynamicFormGroup.get(control.name);
+    const addOnDetailsControl = addOnControl?.get('addOnDetails');
+
+    if (!addOnDetailsControl) return;
+
+    Object.keys(addOnDetailsControl.value).forEach((key: any) => {
+      const memberArray = addOnDetailsControl.get(key) as FormArray;
+
+      const matchingMember = this.formData.insuredMemberDetails.find(
+        (insuredMember: any) => key === insuredMember.relation
+      );
+
+      if (!matchingMember) return;
+
+      const selectedZone = matchingMember.zone;
+      const selectedSumInsured = parseInt(matchingMember.sumInsured, 10);
+      // Get Zone Configuration (min and max sum insured)
+      const zoneConfig = zoneRule.zones[selectedZone];
+      console.log(selectedZone,selectedSumInsured,zoneConfig)
+
+      if (!zoneConfig) return;
+
+      const minSumInsured = zoneConfig.minSumInsured;
+      const maxSumInsured = zoneConfig.maxSumInsured;
+      console.log(minSumInsured, maxSumInsured)
+
+      memberArray.controls.forEach((member: any) => {
+        const memberControlCheckbox = member.get('memberCheckbox');
+
+        if (selectedSumInsured < minSumInsured || selectedSumInsured > maxSumInsured) {
+          memberControlCheckbox?.disable();
+        } else {
+          memberControlCheckbox?.enable();
+        }
+      });
+    });
+    this.disableForAllOtherMembers(control);
+
+  }
 
 }

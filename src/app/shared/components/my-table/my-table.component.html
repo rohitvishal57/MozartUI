@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-12">
+         <table class="table table-bordered table-hover">
+             <thead>
+                 <tr>
+                     <th *ngFor="let head of HeadArray">{{head.Head}} </th>  
+                 </tr>
+             </thead>
+             <tbody>
+                 <tr *ngFor="let item of tableContent;let sr=index">
+                    <td  *ngFor="let head of HeadArray">
+                        <div *ngIf="head.FieldName != ''">
+                            {{item[head.FieldName]}}
+                        </div>
+                    </td>
+                 </tr> 
+             </tbody>
+         </table>
+    </div>
+</div>

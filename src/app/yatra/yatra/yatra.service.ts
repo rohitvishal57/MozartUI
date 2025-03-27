@@ -13,6 +13,7 @@ export class YatraService {
     private httpService: HttpService, private http:HttpClient) { }
 
   Getform(reqData: any) {
+    // const getform = "https://localhost:7070/getform"
     const getform = this.configService.config.baseUrl + this.configService.config.getForm
     return this.httpService.post(getform, reqData)
   }
@@ -37,9 +38,10 @@ export class YatraService {
     const getId = this.configService.config.baseUrl + this.configService.config.getId;
     return this.httpService.get(getId);
   }
-  getProposerOccupation() {
+  getProposerOccupation(reqData:any) {
+    // const getProposerOccupation = "https://localhost:7070/getproposeroccupation";
     const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
-    return this.httpService.get(getProposerOccupation);
+    return this.httpService.post(getProposerOccupation,reqData);
   }
   getNationality() {
     const getNationality = this.configService.config.baseUrl + this.configService.config.getNationality;
@@ -89,22 +91,23 @@ export class YatraService {
     return this.httpService.post(CalculateAddonValue, reqData);
   }
   getHalfQuote(reqData: any) {
-    const GetHalfQuote = this.configService.config.baseUrl1 + this.configService.config.getHalfQuote;
+    const GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
     // const  GetHalfQuote = 'https://localhost:7070/gethalfquote';
     return this.httpService.post(GetHalfQuote, reqData);
   }
   getFullQuote(reqData: any) {
-    const GetFullQuote = this.configService.config.baseUrl1 + this.configService.config.getFullQuote;
+    const GetFullQuote = this.configService.config.baseUrl + this.configService.config.getFullQuote;
     // const getFullQuoteUrl='https://localhost:7070/api/getfullquote';
     return this.httpService.post(GetFullQuote, reqData);
   }
   GetKycDetails(reqData: any) {
-    const getKycDetails = this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
+    const getKycDetails = this.configService.config.baseUrl + this.configService.config.getKycDetails;
     // const getKycDetails='https://localhost:7188/getkycdetails';
     return this.httpService.post<any>(getKycDetails, reqData);
   }
   GetCustomerDetailsViaPolicyNumber(reqData: any) {
     const policyNumber = this.configService.config.baseUrl + this.configService.config.getPolicyNumberDetails;
+    //const policyNumber ='https://localhost:7070/getcustomerpolicydetailsviapolicynum'
     return this.httpService.post(policyNumber, reqData);
   }
   getBankCity(reqData: any) {
@@ -118,6 +121,7 @@ export class YatraService {
 
   fetchPolicyDetailsFromFile(reqData: FormData) {
     const fetchPolicyDetailsFromFile = this.configService.config.baseUrl + this.configService.config.fetchPolicyDetailsFromFile;
+    // const fetchPolicyDetailsFromFile= 'https://localhost:7070/getcustomerpolicydetailsfrompolicydocument'
     return this.httpService.post(fetchPolicyDetailsFromFile, reqData);
   }
 
@@ -147,7 +151,7 @@ export class YatraService {
     return this.httpService.post(suminsuredDetails, reqData);
   }
   getd2cPolicyInfoByLeadId(reqData: any) {
-    const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getd2cPolicyInfoByLeadId;
+    const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getd2cPolicyInfoByLeadId;
     return this.httpService.post(suminsuredDetails, reqData);
   }
   getPremiumData(reqData: any) {
@@ -159,15 +163,15 @@ export class YatraService {
     return this.httpService.post(familyConstructData, reqData);
   }
   saveBBCommonDraft(reqData: any) {
-    const saveCommonDraftData = this.configService.config.baseUrl1 + this.configService.config.saveBBCommonDraft;
+    const saveCommonDraftData = this.configService.config.baseUrl + this.configService.config.saveBBCommonDraft;
     return this.httpService.post(saveCommonDraftData, reqData);
   }
   getBbOtp(reqData: any) {
-    const getBbOtp = this.configService.config.baseUrl1 + this.configService.config.getBBOTP;
+    const getBbOtp = this.configService.config.baseUrl + this.configService.config.getBBOTP;
     return this.httpService.post(getBbOtp, reqData);
   }
   validateBBOTP(reqData: any) {
-    const validateBbOtp = this.configService.config.baseUrl1 + this.configService.config.getValidateBbOtp;
+    const validateBbOtp = this.configService.config.baseUrl + this.configService.config.getValidateBbOtp;
     return this.httpService.post(validateBbOtp, reqData);
   }
   saveD2CCommonDraft(reqData: any) {
@@ -183,8 +187,9 @@ export class YatraService {
     return this.httpService.post(insertfullquotejson, reqData);
   }
   getFullQuoteViaOfflinePayment(reqData: any) {
-    const getfullquoteviaofflinepayment = this.configService.config.baseUrl1 + this.configService.config.getfullquoteviaofflinepayment;
+    const getfullquoteviaofflinepayment = this.configService.config.baseUrl + this.configService.config.getfullquoteviaofflinepayment;
     // const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
+    //  const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
     return this.httpService.post(getfullquoteviaofflinepayment, reqData);
   }
 
@@ -202,12 +207,12 @@ export class YatraService {
   }
   
   pennyDropVerficationByOCR(reqData: any) {
-    const Pennydropverification = this.configService.config.baseUrl1 + this.configService.config.fetchPennyVerificationByOCR;
+    const Pennydropverification = this.configService.config.baseUrl + this.configService.config.fetchPennyVerificationByOCR;
     return this.httpService.post(Pennydropverification, reqData);
   }
 
   insertproposerDocumentById(reqData: any) {
-    const Pennydropverification = this.configService.config.baseUrl1 + this.configService.config.getInsertproposerdocumentid;
+    const Pennydropverification = this.configService.config.baseUrl + this.configService.config.getInsertproposerdocumentid;
     return this.httpService.post(Pennydropverification, reqData);
   }
 
@@ -265,5 +270,41 @@ export class YatraService {
     const flsCode = this.configService.config.baseUrl + this.configService.config.getParentCodeViaAgentId;
     // const flsCode =`https://upuat.monocept.ai/api/yatra/getflsagents`
     return this.httpService.post(flsCode,reqData);
+  }
+  customertesturl(reqData:any){
+    const customertesturl = this.configService.config.baseUrl + this.configService.config.customertesturl;
+    // const customertesturl = 'https://localhost:7070/customertesturl';
+    return this.httpService.post(customertesturl,reqData);
+  }
+  getIsGoGreen(reqData:any){
+    const goGreenUrl= this.configService.config.baseUrl + this.configService.config.isGoGreen;
+    return this.httpService.post(goGreenUrl,reqData);
+  }
+  getformsequencebyproposalnum(reqData: any)
+  {
+    const getformsequencebyproposalnum = this.configService.config.baseUrl + this.configService.config.getformsequencebyproposalnum;
+    // const getformsequencebyproposalnum = 'https://usp.monocept.ai/' + this.configService.config.getformsequencebyproposalnum;
+    return this.httpService.post(getformsequencebyproposalnum, reqData);
+  }
+
+  getRequestOtp(reqData:any){
+    const getRequestOtp= this.configService.config.baseUrl + this.configService.config.getRequestOtp;
+    return this.httpService.post(getRequestOtp,reqData);
+  }
+  setValidateOTP(reqData:any){
+    const setValidateOTP= this.configService.config.baseUrl + this.configService.config.setValidateOTP;
+    return this.httpService.post(setValidateOTP,reqData);
+  }
+  getBankDetailsByAccountNo(reqData:any){
+    const getBankDetails= this.configService.config.baseUrl + this.configService.config.getBankDetails;
+    return this.httpService.post(getBankDetails,reqData);
+  }
+  getDirectDebit(reqData:any){
+    const getDirectDebit= this.configService.config.baseUrl + this.configService.config.getDirectDebit;
+    return this.httpService.post(getDirectDebit,reqData);
+  }
+  getBaseCallerDetails(reqData:any){
+    const baseCallerDetails= this.configService.config.baseUrl + this.configService.config.baseCallerDetails;
+    return this.httpService.post(baseCallerDetails,reqData);
   }
 }

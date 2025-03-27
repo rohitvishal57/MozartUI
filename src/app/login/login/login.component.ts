@@ -1,7 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { interval } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
 import { Item, MenuItem } from 'src/app/interface/modal-popup.interface';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toast: NgToastService,
     public common: CommonService,
-    private route: ActivatedRoute,
+    private sessionService: SessionService,
     public dialog: MatDialog,
     private languageService: LanguageService,
     private translateService: TranslateService,
@@ -78,8 +79,6 @@ export class LoginComponent implements OnInit {
     });
 
     this.backgroundImageUrl = "assets/logo/Backgroundimage_ABHI.jpg";
-    localStorage.clear();
-    sessionStorage.clear();
   }
 
   generateCaptcha(): string {
@@ -220,6 +219,7 @@ export class LoginComponent implements OnInit {
           this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
           localStorage.setItem('agentCode', res.data.agentId);
           localStorage.setItem('parentCode', res.data.agentId);
+          localStorage.setItem('isPortabilityRestricted', res.data.isPortabilityRestricted);
           this.openModal(this.contactInfoData);
         } else {
           this.userErrorMsg = res.message;
@@ -280,17 +280,16 @@ export class LoginComponent implements OnInit {
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody).subscribe({
         next: (res: any) => {
           if (res.data && res.isSuccess && res.statusCode == '200' && res.token !== null) {
+            this.sessionService.startSessionTimer();
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.items = this.authService.getUserInfo()?.repotingMembers;
             this.updatePreferredLanguage();
             this.menuItems=this.authService.getUserInfo()?.moduleAccessList;
+            this.authService.setChannel(res?.data?.channel);
+            this.authService.isFLSLoginExists(res.data?.teamList?.length > 0);
             if(this.menuItems.length>0){
               this.currentRoute=this.menuItems[0].routePath;
             }
-            if (res.data.channel === 'agency' || res.data.channel === 'AGENCY') {
-              localStorage.setItem('channel', 'AGENCY');
-            }
-        
             // if(res.data.agentCode === "467896"){
             //   this.router.navigate(['products'])
             // }else if(res.data.agentCode === "467897"){

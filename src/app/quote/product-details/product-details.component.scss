@@ -251,6 +251,7 @@
       &.p-highlight .p-tabview-nav-link {
         background-color: #C7222A;
         color: #fff;
+        transition: none;
       }
       a {
         position: relative;
@@ -281,6 +282,11 @@
       font-size: 16px;
       color: #000;
       margin: 0;
+      transition: none;
+      @media (max-width:767px) {
+        padding: 8px 8px;
+        font-size: 14px;
+      }
     }
     
   }
@@ -309,6 +315,103 @@
             }
           }
         }
+      }
+    }
+  }
+}
+.field_searchMain {
+  .filterSearch{
+    border-radius: 8px;
+    border: 1px solid #D5D7DE;
+    background: #FAFAFA;
+    font-size: 12px;
+    font-weight: 400;
+    color: #979CAE;
+  }
+}
+.faq_section {
+  .accordion {
+    .accordion-item {
+      border-width: 0;
+      border-bottom:1px solid rgba(213, 215, 222, 0.24);
+      padding-bottom: 8px;
+      padding-top: 8px;
+      &:last-child {
+        border-width: 0;
+      }
+      .accordion-header{
+        font-size: 17px;
+        font-weight: 400;
+        color: #797979;
+        position: relative;
+        z-index: 1;
+        line-height: normal;
+        .accordion-button{
+          font-size: 17px;
+          color: #797979;
+          padding-left: 42px;
+          box-shadow: none;
+          display: initial;
+          line-height: normal;
+        }
+        .accordion-button::after {
+          width: 14px;
+          height: 14px;
+          background-position: center;
+          top: 15px;
+          left: 15px;
+          position: absolute;
+          margin-left: 0;
+          background-image: url(/assets/Img/icon_faq_plus.svg);
+        }
+        .accordion-button:not(.collapsed)::after{
+          background-image: url(/assets/Img/icon_faq_minus.svg);
+        }
+        .accordion-button:not(.collapsed){
+          background: transparent;
+          color: #C7222A;
+          font-weight: 700;
+        }
+      }
+      .accordion-header + .accordion-collapse {
+        .accordion-body{
+          padding:0 20px 20px 42px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #4c4c4c;
+        }
+      }
+      .accordion-header + .accordion-collapse.show {
+        background: #FFFFFF;
+        border: 1px solid #F2F6FE;
+        box-shadow: 0px 4px 40px -16px #0000002E;
+        border-radius: 16px;
+        position: relative;
+        padding-top: 44px;
+        margin-top: -46px;
+        @media (max-width:767px) {
+          padding-top: 52px;
+          margin-top: -55px;
+        }
+      }
+      .accordion-body {
+        font-size: 13px;
+          sup {
+            top: auto;
+          }
+          h6 {
+            font-size: 16px;
+            font-weight: 500;
+          }
+          .tick_round {
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #4c4c4c;
+          }
+          .tick_round li img {
+            width: 12px;
+            height: 12px;
+          }
       }
     }
   }

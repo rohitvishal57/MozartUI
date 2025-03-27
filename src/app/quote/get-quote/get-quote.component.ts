@@ -32,6 +32,7 @@ export class GetQuoteComponent implements AfterViewChecked {
   upgradedZone: string = '';
   currentZone: string = '';
   showErrors: any;
+  portabilityRestricted = false;
   relationCountMap: Map<string, number> = new Map([
     ["R003", 0],
     ["R004", 0]
@@ -99,7 +100,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     state: ""
   }
 
-
+  chronicDiseaseSelected= false
   value: number = 5;
   currentDate = new Date().toISOString().split('T')[0];
   addHide: boolean = false;
@@ -212,10 +213,15 @@ export class GetQuoteComponent implements AfterViewChecked {
       this.upgradableZones = this.formData.upgradableZones;
       this.selectedPlan = this.formData.memberPolicyType;
     }
+    console.log(localStorage.getItem('isPortabilityRestricted'),typeof sessionStorage.getItem('isPortabilityRestricted'));
+    
+    if(localStorage.getItem('isPortabilityRestricted') == 'true'){
+      this.portabilityRestricted = true;
+    }
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
-      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
-      mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
+      proposerName: [null, [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
+      mobileNumber: [null, [Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       proposerGender: [null, [Validators.required]],
       typeOfBusiness: ["NB"],
       zoneValue: [this.proposerZoneValue],
@@ -230,9 +236,10 @@ export class GetQuoteComponent implements AfterViewChecked {
       memberDobProposer: [''],
       memberAgeProposer: [''],
       isPortability: [null],
-      isChronicCare: ["N"],
+      isChronicCare: [''],
       insuredMembers: this.fb.group({}),
-      insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
+      insuredMemberDetails: this.fb.array([]),
+      imagePath: [null]
     });
     if (this.route.url.includes('dashboard')) {
       this.onPlanTypeChange(this.selectedPlan)
@@ -380,14 +387,18 @@ export class GetQuoteComponent implements AfterViewChecked {
             zone: [this.formData.insuredMemberDetails[0].zone || this.proposerZone],
             upgradableZones: [this.upgradableZones || this.formData.insuredMemberDetails[0].upgradableZones],
             memberGender: [relation.gender, [Validators.required]],
-            memberdob: [relation.dob, [Validators.required]],
+            memberdob: [relation.dob],
             memberRelationCode: [relation.relationCode, [Validators.required]],
             pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
             city: [this.formData.insuredMemberDetails[0].city || this.proposerCity],
             zoneValue: [this.formData.insuredMemberDetails[0].zoneValue || this.proposerZone],
-            state: [this.formData.insuredMemberDetails[0].state || this.proposerState]
+            state: [this.formData.insuredMemberDetails[0].state || this.proposerState],
+            imagePath: [relation.imagePath]
           });
           console.log(memberGroup);
+          if (!this.quoteFormGroup.get('imagePath')?.value) {
+            this.quoteFormGroup.patchValue({ imagePath: relation.imagePath });
+          }
           insuredMemberDetailsArray.push(memberGroup);
         });
         console.log(insuredMemberDetailsArray);
@@ -488,9 +499,18 @@ export class GetQuoteComponent implements AfterViewChecked {
     console.log(this.selectedRelationships, selectedValue, isChecked, this.numberOfChild);
     console.log(this.selectedRelationships, this.relations, this.relationCountMap);
     // this.saveDataToStorage();
+
+    if(this.selectedRelationships.length>0){
+      this.isClassAddedMembers = false;
+    this.viewAllToggleText = 'Show less';
+    }
+    else{
+      this.isClassAddedMembers = true;
+      this.viewAllToggleText = 'Show more';
+    }
   }
 
-  onAgeChange(event: any, relation: any) {
+  onDOBChange(event: any, relation: any) {
     const dob = event.target.value;
     const dobArray = dob.split('-'); // Capture the entered age
     const year = parseInt(dobArray[0]);
@@ -606,6 +626,80 @@ export class GetQuoteComponent implements AfterViewChecked {
     // this.saveDataToStorage(); // Save after updating the age
   }
 
+  onAgeChange(event: any, relation: any){
+
+    console.log(event.target.value);
+    
+    this.selectedRelationships.forEach((selectedRelation: any) => {
+      if (selectedRelation.name == relation.name) {
+        let age: any = event.target.value;
+
+            let isValid = true;
+            selectedRelation.dob = '';
+            if (selectedRelation.value.includes('Son') || selectedRelation.value.includes('Daughter')) {
+              let days: any = age ? age.toString().includes("days") ? (parseInt(age) === 0 ? "0" : "1") : null : null;
+
+
+              switch (this.selectedPlan) {
+
+                case 'Family Floater':
+
+
+                  // Check if age is greater than 25 years or if days are less than 91
+                  if (age > 25 || (days != null && days < 91)) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 91 days",
+                      duration: 3000
+                    });
+                    event.target.value = '';
+                    selectedRelation.age = '';
+                    isValid = false;
+                  }
+
+                  break;
+
+                case 'Multi Individual':
+
+                  if (age < 4 || age > 25) {
+                    this.toast.error({
+                      detail: "Error",
+                      summary: "Member should be less than 25 years and Greater than 4 years",
+                      duration: 3000
+                    });
+                    event.target.value = '';
+                    selectedRelation.age = '';
+                    isValid = false;
+                  }
+
+                  break;
+                default:
+                  break;
+              }
+            }
+            else {
+                age = age ? age.toString().includes("days") ? "1" : age : age;
+                if (age < 18 || age > 120) {
+                  this.toast.error({
+                    detail: "Error",
+                    summary: "Member should be less than 120 years and Greater than 18 years",
+                    duration: 3000
+                  });
+                  event.target.value = '';
+                  selectedRelation.age = '';
+                  isValid = false;
+                }
+              
+            }
+            if (isValid) {
+              selectedRelation.age = age;
+              console.log("Age set successfully:", selectedRelation.age);
+            }
+
+      }});
+    
+  }
+
   calculateAge(dob: Date): number | string {
     const today = new Date();
     const birthDate = new Date(dob);
@@ -688,6 +782,14 @@ export class GetQuoteComponent implements AfterViewChecked {
     this.activeDropdown = null;
   }
 
+  //disease-overlay
+  closeOverlay(){
+    console.log(this.diseaseNames);
+    
+    this.quoteFormGroup.get('isChronicCare')?.setValue(this.diseaseNames != "" && this.diseaseNames != null ? "Y" : "N");
+    this.chronicDiseaseSelected = false;
+  }
+
   formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
       return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
@@ -713,7 +815,7 @@ export class GetQuoteComponent implements AfterViewChecked {
       options: []
     },
     {
-      label: 'Diseases',
+      label: 'Chronic',
       options: []
     },
     {
@@ -896,7 +998,7 @@ export class GetQuoteComponent implements AfterViewChecked {
     if (this.selectedDiseases.length > 0) {
       this.diseaseNames = this.selectedDiseases.join(', ');  // Join selected diseases as a string
     } else {
-      this.diseaseNames = 'No Diseases Selected';  // Default message when no diseases are selected
+      this.diseaseNames = null;  // Default message when no diseases are selected
     }
   }
   saveSelectedDiseases() {
@@ -910,10 +1012,11 @@ export class GetQuoteComponent implements AfterViewChecked {
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
       memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
-      memberGroup.get('isChronic')?.setValue(this.diseaseNames !== "" ? "Yes" : "No");
+      memberGroup.get('isChronic')?.setValue(this.diseaseNames != null &&  this.diseaseNames != "" ? "Yes" : "No");
     });
 
     this.activeDropdown = null;
+    this.chronicDiseaseSelected = false;
   }
 
 
@@ -1024,10 +1127,10 @@ export class GetQuoteComponent implements AfterViewChecked {
     let isValid = false;
     this.selectedRelationships.forEach((member: any) => {
       console.log(member);
-      if (member.dob == null || member.age == null || member.dob === '' || member.age === '') {
+      if ((member.dob == null && member.age == null) || (member.dob === '' && member.age === '')) {
         this.toast.error({
           detail: 'Error',
-          summary: 'Please fill valid Date.',
+          summary: 'Please fill valid Date/Age.',
           duration: 3000,
         });
         isValid = true;
@@ -1053,6 +1156,18 @@ export class GetQuoteComponent implements AfterViewChecked {
       });
       return;
     }
+    console.log(this.quoteFormGroup.valid,this.quoteFormGroup,this.quoteFormGroup.value);
+    
+    if (this.selectedRelationships.length < 1 && this.selectedPlan === 'Multi Individual') {
+      this.toast.error({
+        detail: "Error",
+        summary: "At least 1 members must be selected.",
+        duration: 3000
+      });
+      return; // Prevent proceeding if fewer than 2 members are selected
+    }
+
+
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid && !isValid) {
       // const insured:any=[];
@@ -1077,18 +1192,23 @@ export class GetQuoteComponent implements AfterViewChecked {
           roomCategory: [""],
           memberAge: [relation.age, [Validators.required]],
           sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
-          isChronic: ["No"],
+          isChronic: [this.quoteFormGroup.get('isChronicCare')?.value == 'Y' ? 'Yes' : 'No'],
           chronicDiseases: [this.diseaseNames],
           zone: [this.upgradedZone || this.formData.insuredMemberDetails[0].zone],
           upgradableZones: [this.upgradableZones || this.formData.insuredMemberDetails[0].upgradableZones],
           memberGender: [relation.gender, [Validators.required]],
-          memberdob: [relation.dob, [Validators.required]],
+          memberdob: [relation.dob],
           memberRelationCode: [relation.relationCode, [Validators.required]],
           pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
           city: [this.proposerCity || this.formData.insuredMemberDetails[0].city],
           zoneValue: [this.proposerZoneValue],
-          state: [this.proposerState || this.formData.insuredMemberDetails[0].state]
+          state: [this.proposerState || this.formData.insuredMemberDetails[0].state],
+          imagePath: [relation.imagePath]
         });
+
+        if (!this.quoteFormGroup.get('imagePath')?.value) {
+          this.quoteFormGroup.patchValue({ imagePath: relation.imagePath });
+        }
 
         console.log(memberGroup.value);
 
@@ -1122,11 +1242,9 @@ export class GetQuoteComponent implements AfterViewChecked {
     return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
   }
 
-  enforceMaxLength(event: any, maxLength: number) {
-    const input = event.target;
-    if (input.value.length > maxLength) {
-      input.value = input.value.slice(0, maxLength);  // Truncate the input to maxLength
-    }
+  enforceMaxLength(event: Event, maxLength: number) {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.value = inputElement.value.replace(/[^0-9]/g, '').slice(0, maxLength);
   }
 
   onZoneChange(event: any) {
@@ -1177,7 +1295,11 @@ export class GetQuoteComponent implements AfterViewChecked {
           const upgradableZones = res.data.upgradableZones as any[];
           // this.availableZones = upgradableZones.map(zone => zone.zone);
           this.upgradableZones = upgradableZones
+          console.log(this.upgradableZones)
           this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
+          this.quoteFormGroup.get('zone')?.setValue(this.proposerZone);
+          this.quoteFormGroup.get('upgradableZones')?.setValue(this.upgradableZones);
+          console.log(this.quoteFormGroup.get('upgradableZones'),this.quoteFormGroup);
 
           console.log("City and State updated in service:", this.proposerCity, this.proposerState);
         } else {
@@ -1292,6 +1414,34 @@ export class GetQuoteComponent implements AfterViewChecked {
     }
     this.closeCustomDiv()
   }
+
+  onChronicChange(value:string){
+    this.quoteFormGroup.get('isChronicCare')?.setValue(value);
+
+    const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
+      insuredMembersArray.controls.forEach((control: AbstractControl) => {
+        const memberGroup = control as FormGroup;
+        memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
+        memberGroup.get('isChronic')?.setValue(value == 'Y' ? "Yes" : "No");
+      });
+
+    this.closeCustomDiv();
+    // if(value=='Y')
+    // this.chronicDiseaseSelected = true;
+    // else{
+    //   this.selectedDiseases = [];
+    //   this.saveSelectedDiseases();
+    //   this.updateDiseaseNames();
+    //   const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
+    //   insuredMembersArray.controls.forEach((control: AbstractControl) => {
+    //     const memberGroup = control as FormGroup;
+    //     memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames !== "" ? this.diseaseNames : null);
+    //     memberGroup.get('isChronic')?.setValue(this.diseaseNames != null &&  this.diseaseNames != "" ? "Yes" : "No");
+    //   });
+    // }
+
+
+  }
   @HostListener('window:resize', ['$event'])
   //Screen View check
   checkView() {
@@ -1313,6 +1463,6 @@ export class GetQuoteComponent implements AfterViewChecked {
   viewAllToggleText: string = 'Show more'; 
   viewAllToggleClass() {
     this.isClassAddedMembers = !this.isClassAddedMembers;
-    this.viewAllToggleText = this.viewAllToggleText === 'Show more' ? 'Show more' : 'Show more';
+    this.viewAllToggleText = this.viewAllToggleText === 'Show more' ? 'Show less' : 'Show more';
   }
 }

@@ -3,7 +3,7 @@ import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -95,6 +95,11 @@ export class CustomerJourneyComponent {
   verifyKYCStatus: any;
   retrievedDocuments: any;
   isFullQuote:boolean=true;
+  memberDetail: any[] = [];
+  ghdFlag:boolean = false;
+  healthDeclarationForm: FormGroup = this.fb.group({});
+  isHealthDeclarationVisible = false;
+
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, 
     @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, 
@@ -188,9 +193,18 @@ export class CustomerJourneyComponent {
           const renewalInfoRequestBody = {
             policy_Number: decryptedFormData.policyNumber
           };
-          const response:any = await firstValueFrom(this.renewalService.getRenewalInfoApi(renewalInfoRequestBody));
+          const response:any = await firstValueFrom(this.renewalService.getbasequoteApi(renewalInfoRequestBody));
 
           this.formData = { ...this.formData, ...response.data, ...this.rowData };
+          if(this.formData.insuredMemberDetails){
+            this.memberDetail=this.formData.insuredMemberDetails;
+          }
+          if(this.formData.hrDeductedAmount){
+            this.formData.totalPremium = this.formData.hrDeductedAmount ? this.formData.hrDeductedAmount : this.formData.totalPremium || "";
+          } else if(this.formData.updatedPremium){
+            this.formData.totalPremium = this.formData.updatedPremium ? this.formData.updatedPremium : this.formData.totalPremium || "";
+          }
+              // this.formData.isGHDApplicable=true;
         }
       }
       if (stateData.formSequence) {
@@ -200,7 +214,7 @@ export class CustomerJourneyComponent {
       }
       try{
         if (stateData.formIndex) {
-          localStorage.setItem('formIndex', stateData.formIndex);        
+          sessionStorage.setItem('formIndex', stateData.formIndex);        
         }
       }catch (error){
         console.error(error);
@@ -631,7 +645,11 @@ export class CustomerJourneyComponent {
     if (this.formSequence[this.getFormIndexValue()].formTitle === 'thankYou') {
       this.isFeedBackModalVisible = true;
     }
-    
+    this.memberDetail.forEach((member, index) => {
+      this.healthDeclarationForm.addControl('healthStatus' + index, new FormControl('no', Validators.required));
+      this.healthDeclarationForm.addControl('GHDApplicable' + index, new FormControl('no', Validators.required)); 
+      this.healthDeclarationForm.addControl('GHDRemarks' + index, new FormControl('')); 
+    });
   }
 
   initializeDynamicFormControls(dynamicFormControls: any, index: any = null) {
@@ -1058,8 +1076,11 @@ export class CustomerJourneyComponent {
     }
   }
 
-  getAllProposerOccupation(control: any) {
-    this.yatraService.getProposerOccupation().subscribe({
+  getAllProposerOccupation(control: any, otherControl: any) {
+    const reqData = {
+       "agentCode":localStorage.getItem('agentCode')
+       }; 
+    this.yatraService.getProposerOccupation(reqData).subscribe({
       next: (res: any) => {
         console.log(res);
         control.options = res.data;
@@ -2420,7 +2441,7 @@ export class CustomerJourneyComponent {
     if (this.selectedButton !== 'offline') {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
-          if (controls.name === 'offline' && controls.dependentControls) {
+          if (controls.name === 'autoDebit' && controls.dependentControls) {
             controls.dependentControls.forEach((item: any) => {
               const controlToHide = this.form.formSections
                 .flatMap((sec: any) => sec.formControls)
@@ -2442,6 +2463,38 @@ export class CustomerJourneyComponent {
                 .find((ctrl: any) => ctrl.name === item);
               if (controlToHide) {
                 controlToHide.visible = false; // Hide dependent controls for other buttons
+              }
+            });
+          }
+        });
+      });
+    }
+    if (this.selectedButton !== 'autoDebit') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'autoDebit' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false; // Hide dependent controls for offline
+              }
+            });
+          }
+        });
+      });
+    }
+    if (this.selectedButton !== 'emandate_payment') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'emandate_payment' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false; // Hide dependent controls for offline
               }
             });
           }
@@ -2508,7 +2561,7 @@ export class CustomerJourneyComponent {
   }
 
   getFormIndexValue() {
-    const formIndex = localStorage.getItem("formIndex") as string;
+    const formIndex = sessionStorage.getItem("formIndex") as string;
     console.log("getFormIndexValue()", formIndex ? parseInt(formIndex, 10) : 0);
     this.formIndex = formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
@@ -2586,13 +2639,26 @@ export class CustomerJourneyComponent {
     return value[extract];
   }
 
-  redirectToJustPay(control: any) {
+  redirectToJustPay(control?: any) {
+    const data = this.renewalFormGroup.value;
+    if (this.selectedButton === "emandate_payment" && (!data.emandateConsent || !data.emandateTerms)) {
+      this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+      return;
+    }
+    if (this.selectedButton === "autoDebit" && (!data.autoDebitConsent || !data.autoDebitTerms)) {
+      this.toast.warning({ detail: "WARNING", summary: "Checkbox selection is mandatory", duration: 3000 });
+      return;
+    }
     console.log(control, "redirectToJustPay");
     // if ( this.rowData != null && !this.rowData.isFullQuoteSuccess) {
     //   this.toast.warning({detail: "Warning",summary: "Payment was successful, but policy issuance failed. Please wait some time.",duration: 5000});
     //   return;
     // }
     // Handle the Juspay redirection for buttons other than Offline
+    if (this.formSequence[this.getFormIndexValue()]?.formTitle === 'Payment' && !this.ghdFlag && this.formData.isGHDApplicable) {
+      this.isHealthDeclarationVisible = true;
+      return;
+    }
     if (this.selectedButton !== 'offline') {
       const reqData = {
         agentcode: this.agentCode,
@@ -2866,6 +2932,70 @@ export class CustomerJourneyComponent {
       });
    }
   }
+
+  toggleInputField(index: number, value: string) {
+      this.memberDetail[index].showInputField = value === 'yes';
+      const ghdApplicableControl = this.healthDeclarationForm.get('GHDApplicable' + index);
+      const ghdRemarksControl = this.healthDeclarationForm.get('GHDRemarks' + index);
+      ghdApplicableControl?.setValue(value);
+      if (value === 'yes') {
+        ghdRemarksControl?.setValidators([Validators.required]);
+      } else {
+        ghdRemarksControl?.clearValidators();
+        ghdRemarksControl?.setValue('');
+      }
+      ghdRemarksControl?.updateValueAndValidity();
+    }
+    
+    
+    
+    closeModal() {
+      this.isHealthDeclarationVisible = false;
+      // if (this.selectedButton !== 'offline') {
+        // this.ghdFlag=true;
+        // this.redirectToJustPay();
+      // } else if (this.selectedButton == 'offline') {
+      //   this.ghdFlag=true;
+      //   this.getFullQuoteViaOfflinePayment();
+      // }
+    }
+    
+    async confirmHealthDeclaration() {
+      if (this.healthDeclarationForm.valid) {
+        this.isHealthDeclarationVisible = false;
+      }
+      const data = this.healthDeclarationForm.value;
+      const transformedData = this.memberDetail.map((member, index) => {
+        const ghdApplicableKey = `GHDApplicable${index}`;
+        const ghdRemarksKey = `GHDRemarks${index}`;
+        return {
+          memberId: member.memberId || "",
+          GHDFlag: data[ghdApplicableKey] === 'yes' ? 'Y' : (data[ghdApplicableKey] === 'no' ? 'N' : ''), 
+          remarks: data[ghdRemarksKey] || "" 
+        };
+      });
+      const ghdDetail = {
+        policyNumber: this.formData.policyNumber,
+        GHDdetails: transformedData
+      };
+      try {
+        const res: any = await lastValueFrom(this.renewalService.updateghddetailsApi(ghdDetail));
+        if (res.data.isUpdated) {
+          this.toast.success({ detail: "Success", summary: "GHD Updated Successfully.", duration: 3000 });  
+          this.ghdFlag = true;
+          // if (this.selectedButton !== 'offline') {
+            // this.redirectToJustPay();
+          // } else {
+          //   this.getFullQuoteViaOfflinePayment();
+          // }
+        } else {
+          this.toast.error({ detail: "Error", summary: "Failed to update GHD Details", duration: 3000 });
+        }
+      } catch (err) {
+        console.log(err);
+        this.toast.error({ detail: "Error", summary: "Something went wrong!", duration: 3000 });
+      }
+    }
   
 }
 

@@ -5,10 +5,10 @@ import { CommonService } from 'src/app/services/common.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { NotificationService } from 'src/app/notifications/notification.service';
-import { error } from 'jquery';
 import HeaderInformation from '../headerInfo';
-import { ConfigService } from 'src/app/services/config.service';
 import { RugService } from 'src/app/rug/rug.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-header',
@@ -17,10 +17,7 @@ import { RugService } from 'src/app/rug/rug.service';
   providers:[HeaderInformation]
 })
 export class HeaderComponent implements OnInit ,OnDestroy {
-  
   currentLanguage: string = 'en';
-  isSidenavOpen: boolean = false;
-  isDesktopView: boolean = window.innerWidth >= 768;
   notificationCount : number = 0;
   notifications :any[]=[];
   unReadNotificaitons : any[]=[];
@@ -28,13 +25,24 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   agentCode : any;
   showD2cHeader:any = false;
   @Input() isLoggedIn: any;
+  @Input() showTimer: any;
+  channel: string | null = null;
+  countdown = 0; // Remaining session time in seconds
+  formattedCountdown = '45:00'; // Initial formatted time
+  isFLSLogin: boolean | undefined;
 
-
-  
   constructor(private router: Router,
-    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
-    ,public headerInformation : HeaderInformation,private configService: ConfigService, private rugService: RugService
-  ) {
+    private sessionService: SessionService,
+    private loginService: CommonService,
+    private toast: NgToastService,
+    private el: ElementRef,
+    private languageService:LanguageService,
+    private translateService: TranslateService,
+    private notificationService : NotificationService,
+    public headerInformation : HeaderInformation,
+    private authService: AuthService,
+    private rugService: RugService,
+    ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
       });
@@ -53,9 +61,17 @@ export class HeaderComponent implements OnInit ,OnDestroy {
       });
     });
     this.currentLanguage = this.getLanguage();
+    this.authService.channel$.subscribe((channel) => {
+      this.channel = channel;
+    });
+
+    this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
+      this.isFLSLogin = isLoggedIn;
+    });
+
+    this.handleSessionTimer();
   }
 
-  
   ngOnDestroy() {
     //this.openNotifications();
     this.showNotifications = false;
@@ -67,13 +83,6 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.router.navigate(['']);
   }
 
-  // setLanguage(event: any) {
-  //   console.log(event);
-  //   let language = event.target.value;
-  //   localStorage.setItem('preferredLanguage', language);
-  //   this.currentLanguage = language;
-  // }
-
   setLanguage(event: any) {
     const selectedLanguage = event.target.value;
     this.languageService.setLanguage(selectedLanguage); 
@@ -81,27 +90,11 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   getLanguage(): string {
-    // localStorage.setItem('preferredLanguage',  navigator.language.split('-')[0] || 'en');
-    // return localStorage.getItem('preferredLanguage') ||'';
     const preferredLanguage = localStorage.getItem('preferredLanguage') || navigator.language.split('-')[0] || 'en';
     localStorage.setItem('preferredLanguage', preferredLanguage);
     return preferredLanguage;
   }
 
-  toggleSidenav() {
-    this.isSidenavOpen = !this.isSidenavOpen;
-    console.log('a', this.isSidenavOpen, this.isDesktopView);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isDesktopView = window.innerWidth >= 768;
-    if (this.isDesktopView) {
-      this.isSidenavOpen = false;
-    } else {
-      this.isSidenavOpen = true;
-    }
-  }
   redirect(value: any) {
     this.router.navigate([value]);
   }
@@ -201,12 +194,34 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.notificationService.serviceRequest(requestBody).subscribe(
       (response) => {
         if (response.isSuccess) {
-          window.location.href = response?.data?.ssoUrl;
+          window.open(response?.data?.ssoUrl, '_blank');
         }
       },
       (error) => {
         console.log('Failed to Raise request', error);
       });
   }
-}
 
+  handleSessionTimer() {
+    this.authService.isLoggedIn() && this.sessionService.startSessionTimer();
+
+    this.sessionService.countdown$.subscribe(time => {
+      this.countdown = time;
+      this.formattedCountdown = this.formatTime(time);
+    });
+
+    this.sessionService.sessionExpired$.subscribe((sessionExpired) => {
+      sessionExpired && this.logoutUser();
+    }); 
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  logoutUser() {
+    this.loginService.signOut();
+  }
+}

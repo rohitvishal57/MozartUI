@@ -11,12 +11,12 @@
         }
       },
       "i18n": {
-        "sourceLocale":"en",
+        "sourceLocale": "en",
         "locales": {
-          "hi":"src/assets/i18n/hi.json",
-          "te":"src/assets/i18n/te.json"
-      }
-      }, 
+          "hi": "src/assets/i18n/hi.json",
+          "te": "src/assets/i18n/te.json"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -42,7 +42,7 @@
               "node_modules/slick-carousel/slick/slick-theme.scss"
             ],
             "scripts": [
-               "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/slick-carousel/slick/slick.min.js"
             ],
             "allowedCommonJsDependencies": [
@@ -71,6 +71,18 @@
               ],
               "outputHashing": "all"
             },
+            "uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
+                }
+              ],
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true,
+              "outputHashing": "all"
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -80,13 +92,16 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "angular-dev:build:production"
+            },
+            "uat": {
+              "browserTarget": "angular-dev:build:uat"
             },
             "development": {
               "browserTarget": "angular-dev:build:development"
@@ -119,13 +134,11 @@
               "node_modules/flatpickr/dist/flatpickr.css",
               "node_modules/slick-carousel/slick/slick.css",
               "node_modules/slick-carousel/slick/slick-theme.css"
-             
-                      
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/slick-carousel/slick/slick.min.js",
-               "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js"
             ]
           }
         }

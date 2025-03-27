@@ -25,8 +25,10 @@
                     </div> -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
                         <div class="sample_uploadDocument">
-                            <a href="assets/lms-assets/UploadSample.xlsx">{{"Click to download sample template file." | translate}}</a>
-                        </div>
+                            <a id="downloadSample" href="javascript:void(0);" (click)="downloadSampleFile()">
+                                {{ "Click to download sample template file." | translate }}
+                            </a>
+                        </div>                        
                         <div class="uploadDocument_main">
                             <div class="uploadDocument_area" (click)="file.click()">
                                 <div class="ud_area_left">

@@ -78,11 +78,14 @@ export class ClaimsViewService {
     return this.httpService.post(getClaimTracker, claimsReqBody)
   }
 
-  getUploadedFiles(claimsFilesReqBody:any){
-    const getUploadedFiles = this.configService.config.baseUrl + this.configService.config.getUploadedFiles
-    return this.httpService.post(getUploadedFiles, claimsFilesReqBody)
+  searchClaimsDocument(claimsFilesReqBody:any){
+    const searchClaimsDocument = this.configService.config.baseUrl + this.configService.config.searchClaimsDocument
+    return this.httpService.post(searchClaimsDocument, claimsFilesReqBody)
   }
-
+  downloadDocument(downloadDocReq:any){
+    const downloadClaimsDocument = this.configService.config.baseUrl + this.configService.config.downloadClaimsDocument
+    return this.httpService.post(downloadClaimsDocument, downloadDocReq)
+  }
   updateClaim(UpdateClaimReqBody:any){
     const updateClaim = this.configService.config.baseUrl + this.configService.config.updateClaim
     return this.httpService.post(updateClaim, UpdateClaimReqBody)

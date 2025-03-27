@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToJourneySelection()"
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToLeadPage()"
                         title="Back To List"></a>
                     Create Leads
                 </h2>
@@ -115,13 +115,7 @@
                                     <option *ngFor="let opt of bbcustometype" [value]="opt.value">{{ opt.name }}
                                     </option>
                                 </select>
-                                <label for="bbCustomerType">BB Customer Type *</label>
-                                <span class="invalid-feedback" *ngIf="createBataLeads.get('bbCustomerType')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="createBataLeads.get('bbCustomerType')?.errors?.['required']">
-                                        Please select a Center.
-                                    </span>
-                                </span>
+                                <label for="bbCustomerType">BB Customer Type</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -132,7 +126,7 @@
                                     <option value="" disabled>Select Language</option>
                                     <option *ngFor="let opt of language" [value]="opt.value">{{ opt.name }}</option>
                                 </select>
-                                <label for="languagePreference">Language Preference *</label>
+                                <label for="languagePreference">Language Preference</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -215,9 +209,9 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="comment" name="comment"
-                                    placeholder="Comment *" formControlName="comment" type="text"
+                                    placeholder="Comment " formControlName="comment" type="text"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('comment')?.invalid && (createBataLeads.get('comment')?.touched || submitted) }">
-                                <label for="comment">Comment *</label>
+                                <label for="comment">Comment</label>
                             </div>
                         </div>
 
@@ -254,10 +248,10 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="productType" name="productType"
-                                    formControlName="productType" (change)="onProductSelect($event)"
+                                    formControlName="productType" (change)="onRetailProductChange($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('productType')?.invalid && (createBataLeads.get('productType')?.touched || submitted) }">
                                     <option value="" disabled>Select Type</option>
-                                    <option *ngFor="let opt of productType" [value]="opt.productCode">{{ opt.productCode }}</option>
+                                    <option *ngFor="let opt of retailProducts" [value]="opt.productCode">{{ opt.productName }}</option>
                                 </select>
                                 <label for="productType">Product Type *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('productType')?.errors">
@@ -274,7 +268,7 @@
                                     formControlName="sumInsured"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('sumInsured')?.invalid && (createBataLeads.get('sumInsured')?.touched || submitted) }">
                                     <option value="" disabled>Select</option>
-                                    <option *ngFor="let opt of SumInsured" [value]="opt.siPlanValue">{{ opt.siPlanText }}</option>
+                                    <option *ngFor="let opt of SumInsured" [value]="opt">{{ opt }}</option>
                                 </select>
                                 <label for="sumInsured">Sum Insured *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('sumInsured')?.errors">
@@ -307,7 +301,7 @@
                                 <input class="form-control input-textBox" id="campaignIMDCode" name="campaignIMDCode" readonly
                                     placeholder="Campaign IMD Code *" formControlName="campaignIMDCode" type="text" [value]="selectedCampaignCode"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignIMDCode')?.invalid && (createBataLeads.get('campaignIMDCode')?.touched || submitted) }">
-                                <label for="campaignIMDCode">Campaign IMD Code *</label>
+                                <label for="campaignIMDCode">Campaign IMD Code</label>
                             </div>
                         </div>
                     </div>
@@ -323,7 +317,7 @@
                                     formControlName="productType" (change)="onProductSelect($event)"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('productType')?.invalid && (createBataLeads.get('productType')?.touched || submitted) }">
                                     <option value="" disabled>Select Type</option>
-                                    <option *ngFor="let opt of productType" [value]="opt.productCode">{{ opt.productCode }}</option>
+                                    <option *ngFor="let opt of groupProducts" [value]="opt.productCode">{{ opt.productName  }}</option>
                                 </select>
                                 <label for="productType">Product Type *</label>
                                 <span class="invalid-feedback" *ngIf="createBataLeads.get('productType')?.errors">
@@ -373,7 +367,7 @@
                                 <input class="form-control input-textBox" id="campaignIMDCode" name="campaignIMDCode" readonly
                                     placeholder="Campaign IMD Code *" formControlName="campaignIMDCode" type="text" [value]="selectedCampaignCode"
                                     [ngClass]="{ 'is-invalid': createBataLeads.get('campaignIMDCode')?.invalid && (createBataLeads.get('campaignIMDCode')?.touched || submitted) }">
-                                <label for="campaignIMDCode">Campaign IMD Code *</label>
+                                <label for="campaignIMDCode">Campaign IMD Code</label>
                             </div>
                         </div>
                     </div>
@@ -385,3 +379,5 @@
         </div>
     </div>
 </main>
+
+

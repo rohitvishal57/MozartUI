@@ -368,7 +368,7 @@ h6 {
 	}
 }
 .btn_iconText{
-	font-size: 12px;
+	font-size: 10px;
 }
 .data-item.userInfoItem {
 	.info_status {
@@ -388,6 +388,10 @@ h6 {
 // .quickFilterMain .quickFilter {
 //     gap: 17px;
 // }
+.memberPoliySummary .data-item {
+    margin-bottom: 16px;
+    word-wrap: break-word;
+}
 .block_bg_lightGrey, .block_bg_lightgreen {
     border: 1px solid rgb(231, 222, 222);
 	background: #F7F7F7; 
@@ -411,6 +415,9 @@ header h3 {
 	display: block;
 	line-height: normal;
   }
+.icon_withHeading {
+	margin: 0 0 16px !important;
+}
 @media (max-width:767px) {
 	.filterWraperForm{
 		padding: 0px;

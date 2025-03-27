@@ -205,6 +205,53 @@
     right: 0;
     width: auto;
 }
+.modal-customerFeedback .modal-dialog {
+    transform: translate(0, 5px) !important;
+}
+.modal-customerFeedback .textarea-wrapper .input-textBox.input-textBoxfd {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.btn-skip.btn-submit {
+ border:1px solid transparent;
+}
+.popupModalMain .modal-header h5, .popupModalMain .modal-header .modal-title {
+    line-height: normal;
+}
+.modal-customerFeedback .para-rate-lable.para-rate-lable2 {
+    font-weight: 400;
+    font-size: 13px !important;
+}
+.modal-body.modal-body-gap-5 {
+    gap:5px;
+}
+::ng-deep {
+    .tooltip-text .table {
+      margin: 5px 0 !important;
+          font-size: 12px !important;
+          }
+      .tooltip-text .table th {
+          background-color: #c72229 !important;
+          font-weight: 600 !important;
+          color: #fff !important;
+      }
+      .tooltip-text .table th, 
+      .tooltip-text .table td {
+          padding: 4px 5px !important;
+          border: 1px solid #333333 !important;
+      }
+      .tooltip-text .table td {
+          font-weight: 500 !important;
+          line-height: normal !important;
+          background: #fff !important;
+      }
+      .tooltip-text .table > tbody {
+          background: #b5b5b5 !important;
+      }
+      .tooltip-text .table tbody tr:nth-child(even) {
+          background-color: transparent !important;
+      }
+    }
 @media (max-width:767px) {
     .health-lifestyle-selct-btn #select{
         left: 0;

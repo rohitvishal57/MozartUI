@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from '../login/login.service';
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 
 
 @Component({
@@ -15,17 +16,17 @@ export class SendOtpViaComponent implements OnInit{
   isSkipEnabled = true;
 
   filteredContacts: any[] = []; 
-  constructor( public dialogRef: MatDialogRef<SendOtpViaComponent>, private loginService: LoginService, private router: Router, private toast: NgToastService,
+  constructor( public dialogRef: MatDialogRef<SendOtpViaComponent>, private loginService: LoginService, private router: Router, private toast: NgToastService, private sessionService: SessionService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any){
 
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.filteredContacts = this.fitlerCommunicationValue(this.data.data);
   }
 
   fitlerCommunicationValue(arr: any) {
-    return arr.filter((str : any) => str !== '' && str !== null);
+    return arr.filter((str : any) => str !== '' && str !== null && str !== undefined);
   }
 
   maskUserCode(input: string): string {
@@ -62,23 +63,22 @@ export class SendOtpViaComponent implements OnInit{
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
 
-    this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
-        .subscribe({  
-          next: (res:any) => {
-            if(res.data && res?.data?.requestId !== null && res.statusCode == '200' && res.isSuccess) {
-              localStorage.setItem("requestId", res?.data?.requestId);
-              this.dialogRef.close({data:data, status:'Success'});
-            } else {
-              this.dialogRef.close({data: res.message, status:'Failure'});
-              this.isSkipEnabled = true;
-            }
-          },
-          error: (err => {
-            console.log(err);
-            this.dialogRef.close({data: err, status:'Failure'});
-            this.toast.error({ detail: "Error", summary:err, duration:5000 });
-          })
-        })
+    this.loginService.sendOtpRequestApi(this.sendOtpReqBody).subscribe({  
+      next: (res:any) => {
+        if(res.data && res?.data?.requestId !== null && res.statusCode == '200' && res.isSuccess) {
+          localStorage.setItem("requestId", res?.data?.requestId);
+          this.dialogRef.close({data:data, status:'Success'});
+        } else {
+          this.dialogRef.close({data: res.message, status:'Failure'});
+          this.isSkipEnabled = true;
+        }
+      },
+      error: (err => {
+        console.log(err);
+        this.dialogRef.close({data: err, status:'Failure'});
+        this.toast.error({ detail: "Error", summary:err, duration:5000 });
+      })
+    })
   }
   close(){
     this.dialogRef.close();
@@ -86,6 +86,7 @@ export class SendOtpViaComponent implements OnInit{
 
   onSkip() {
     this.dialogRef.close({ data: null, status: 'Skipped' });
+    this.sessionService.startSessionTimer();
     this.router.navigate(["dashboard"]);
   }
 }

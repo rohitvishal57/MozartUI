@@ -299,7 +299,7 @@ DispositionOption=['Link Triggered','Policy Renewed','Renewed From Other Mode']
             console.log(res);
             this.formSequence = JSON.parse(res.data.formSequence);
             console.log(this.formSequence);
-            localStorage.setItem("formIndex", "0");
+            sessionStorage.setItem("formIndex", "0");
           } catch (err) {
             console.error(err);
           }

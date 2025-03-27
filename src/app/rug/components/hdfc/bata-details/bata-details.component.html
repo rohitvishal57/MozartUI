@@ -1,0 +1,236 @@
+<p>bata-details works!</p>
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToLeadPage()"
+                        title="Back To List"></a>
+                    BATA Summary
+                </h2>
+            </div>
+            <form [formGroup]="BATADetails">
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">BATA Details</h6>
+                        </div>
+                        
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="caseStatus" readonly name="caseStatus"
+                                    placeholder="Case Status" formControlName="caseStatus" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('caseStatus')?.invalid && (BATADetails.get('caseStatus')?.touched || submitted) }">
+                                <label for="caseStatus">Case Status </label>
+                                
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="employeeCode" name="employeeCode"
+                                    placeholder="Employee Code*" readonly
+                                    formControlName="employeeCode" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('employeeCode')?.invalid && (BATADetails.get('employeeCode')?.touched || submitted) }">
+                                <label for="employeeCode">Employee Code </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="employeeName" name="employeeName" readonly
+                                    placeholder="Employee Name" formControlName="employeeName" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('employeeName')?.invalid && (BATADetails.get('employeeName')?.touched || submitted) }">
+                                <label for="employeeName">Employee Name</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="certifacateNo" name="certifacateNo"
+                                    readonly placeholder="Certificate No" formControlName="certifacateNo" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('certifacateNo')?.invalid && (BATADetails.get('certifacateNo')?.touched || submitted) }">
+                                <label for="certifacateNo">Certificate No</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="branchName" name="branchName" readonly
+                                    placeholder="Branch Name" formControlName="branchName" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('branchName')?.invalid && (BATADetails.get('certifacateNo')?.touched || submitted) }">
+                                <label for="branchName">Branch Name</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="branch_code" name="branch_code" readonly
+                                    placeholder="Branch Code" formControlName="branch_code" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('branch_code')?.invalid && (BATADetails.get('branch_code')?.touched || submitted) }">
+                                <label for="branch_code">Branch Code</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="rmContactNo" name="rmContactNo" readonly
+                                    (keypress)="isNumber($event)" maxlength="10" placeholder="RM’s contact no*"
+                                    formControlName="rmContactNo" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('rmContactNo')?.invalid && (BATADetails.get('rmContactNo')?.touched || submitted) }">
+                                <label for="rmContactNo">RM’s contact no </label>
+                                
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="bbCustomerType" name="bbCustomerType" readonly
+                                     maxlength="10" placeholder="bbCustomerType"
+                                    formControlName="bbCustomerType" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('bbCustomerType')?.invalid && (BATADetails.get('bbCustomerType')?.touched || submitted) }">
+                                <label for="bbCustomerType">BB Customer Type</label>
+                                
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="languagePreference" name="languagePreference" readonly
+                                     maxlength="10" placeholder="languagePreference"
+                                    formControlName="languagePreference" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('languagePreference')?.invalid && (BATADetails.get('languagePreference')?.touched || submitted) }">
+                                <label for="languagePreference">Language Preference</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="customer_name" name="customer_name" readonly
+                                    placeholder="Customer Name" formControlName="customer_name" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('customer_name')?.invalid && (BATADetails.get('customer_name')?.touched || submitted) }">
+                                <label for="customer_name">Customer Name </label>
+                                <span class="invalid-feedback" *ngIf="BATADetails.get('customer_name')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="BATADetails.get('customer_name')?.errors?.['required']">
+                                        Customer Name is required field.
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="dob" name="dob" readonly
+                                    placeholder="Customer DOB *" formControlName="dob" type="text" [max]="today"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('dob')?.invalid && (BATADetails.get('dob')?.touched || submitted) }">
+                                <label for="lefdate">Customer DOB </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="customer_mob_no" name="customer_mob_no" readonly
+                                    (keypress)="isNumber($event)" maxlength="10" placeholder="Customer Mob No*"
+                                    formControlName="customer_mob_no" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('customer_mob_no')?.invalid && (BATADetails.get('customer_mob_no')?.touched || submitted) }">
+                                <label for="rmContactNo">Customer Mob No *</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="emailId" name="emailId" readonly
+                                    placeholder="Customer E-Mail*" formControlName="emailId" type="email"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('emailId')?.invalid && (BATADetails.get('emailId')?.touched || submitted) }">
+                                <label for="emailId">Customer E-Mail </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="productType" name="productType" readonly
+                                     maxlength="10" placeholder="productType"
+                                    formControlName="productType" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('productType')?.invalid && (BATADetails.get('productType')?.touched || submitted) }">
+                                <label for="productType">Product Type</label>
+                                
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="sumInsured" name="sumInsured" readonly
+                                     maxlength="10" placeholder="sumInsured"
+                                    formControlName="sumInsured" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('sumInsured')?.invalid && (BATADetails.get('sumInsured')?.touched || submitted) }">
+                                <label for="sumInsured">Sum Insured</label>  
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="comment" name="comment" readonly
+                                    placeholder="Comment " formControlName="comment" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('comment')?.invalid && (BATADetails.get('comment')?.touched || submitted) }">
+                                <label for="comment">Comment</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="campaignName" name="campaignName" readonly
+                                    placeholder="campaignName" formControlName="campaignName" type="text" 
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('campaignName')?.invalid && (BATADetails.get('campaignName')?.touched || submitted) }">
+                                <label for="campaignName">Campaign Name</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="premium" name="premium" readonly
+                                    placeholder="Premium" formControlName="premium" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('premium')?.invalid && (BATADetails.get('premium')?.touched || submitted) }">
+                                <label for="premium">Premium</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="av_userName" name="av_userName" readonly
+                                    placeholder="av_userName" formControlName="av_userName" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('av_userName')?.invalid && (BATADetails.get('av_userName')?.touched || submitted) }">
+                                <label for="av_userName">AV User Name</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="av_userName" name="av_userId" readonly
+                                    placeholder="av_userId" formControlName="av_userId" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('av_userId')?.invalid && (BATADetails.get('av_userId')?.touched || submitted) }">
+                                <label for="av_userId">AV User Id</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="smName" name="smName" readonly
+                                    placeholder="SM Name *" formControlName="smName" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('smName')?.invalid && (BATADetails.get('smName')?.touched || submitted) }">
+                                <label for="smName">SM Name </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="smMobileNo" name="smMobileNo" readonly
+                                    maxlength="10" placeholder="SM Mobile No*"
+                                    formControlName="smMobileNo" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('smMobileNo')?.invalid && (BATADetails.get('smMobileNo')?.touched || submitted) }">
+                                <label for="smMobileNo">SM Mobile No </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="campaignIMDCode" name="campaignIMDCode" readonly
+                                    placeholder="Campaign IMD Code *" formControlName="campaignIMDCode" type="text" 
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('campaignIMDCode')?.invalid && (BATADetails.get('campaignIMDCode')?.touched || submitted) }">
+                                <label for="campaignIMDCode">Campaign IMD Code </label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="region" name="region" readonly
+                                    placeholder="region " formControlName="region" type="text"
+                                    [ngClass]="{ 'is-invalid': BATADetails.get('remark')?.invalid && (BATADetails.get('region')?.touched || submitted) }">
+                                <label for="region">Region</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- <div class="col-12 mt-4">
+                    <button type="submit" id="save" name="save" class="btn_red">Save</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</main>

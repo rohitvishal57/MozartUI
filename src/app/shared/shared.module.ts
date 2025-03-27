@@ -8,10 +8,11 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { BankbranchModalComponent } from './components/bankbranch-modal/bankbranch-modal.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SuccessErrorModalComponent } from './components/success-error-modal/success-error-modal.component';
+import { MyTableComponent } from './components/my-table/my-table.component';
 
 @NgModule({
   declarations: [
-    SharedModalComponent, ConfirmModalComponent, BankbranchModalComponent, FileUploadComponent, SuccessErrorModalComponent],
+    SharedModalComponent, ConfirmModalComponent, BankbranchModalComponent, FileUploadComponent, SuccessErrorModalComponent, MyTableComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -27,6 +28,7 @@ import { SuccessErrorModalComponent } from './components/success-error-modal/suc
     SharedModalComponent,
     ConfirmModalComponent,
     FileUploadComponent,
+    MyTableComponent,
     MyMaterialModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
