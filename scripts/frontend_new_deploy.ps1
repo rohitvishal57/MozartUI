@@ -53,43 +53,43 @@ function Update-IISWebsite {
 }
 
 # Function to Configure HTTPS Binding
-function Set-HTTPSBinding {
-    param ([string]$SiteName, [string]$BindingHost, [string]$PfxPath, [SecureString]$SecurePassword)
-    try {
-        # Import SSL Certificate
-        Write-Output "Importing SSL certificate from PFX file: $PfxPath"
-        $cert = Import-PfxCertificate -FilePath $PfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $SecurePassword
-        $certThumbprint = $cert.Thumbprint
-        Write-Output "Certificate imported successfully with Thumbprint: $certThumbprint"
+# function Set-HTTPSBinding {
+#     param ([string]$SiteName, [string]$BindingHost, [string]$PfxPath, [SecureString]$SecurePassword)
+#     try {
+#         # Import SSL Certificate
+#         Write-Output "Importing SSL certificate from PFX file: $PfxPath"
+#         $cert = Import-PfxCertificate -FilePath $PfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $SecurePassword
+#         $certThumbprint = $cert.Thumbprint
+#         Write-Output "Certificate imported successfully with Thumbprint: $certThumbprint"
 
-        # Remove HTTP Binding
-        $httpBinding = Get-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost -ErrorAction SilentlyContinue
-        if ($httpBinding) {
-            Write-Output "Removing default HTTP binding."
-            Remove-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost
-        }
-        else {
-            Write-Output "No HTTP binding found for removal."
-        }
+#         # Remove HTTP Binding
+#         $httpBinding = Get-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost -ErrorAction SilentlyContinue
+#         if ($httpBinding) {
+#             Write-Output "Removing default HTTP binding."
+#             Remove-WebBinding -Name $SiteName -Protocol "http" -Port 80 -HostHeader $BindingHost
+#         }
+#         else {
+#             Write-Output "No HTTP binding found for removal."
+#         }
 
-        # Add HTTPS Binding
-        $httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -ErrorAction SilentlyContinue
-        if (-not $httpsBinding) {
-            Write-Output "Adding HTTPS binding for '$SiteName'."
-            New-WebBinding -Name $SiteName -Protocol "https" -Port 8443 -HostHeader $BindingHost
-            $bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https"
-            $bindingInfo.AddSslCertificate($certThumbprint, "My")
-        } else {
-            Write-Output "HTTPS binding already exists for '$SiteName'."
-        }
-        Write-Output "Successfully configured HTTPS binding for: $SiteName"
-    }
-    catch {
-        Write-Output "Error configuring HTTPS binding for: $SiteName"
-        Write-Output $_.Exception.Message
-        exit 1
-    }
-}
+#         # Add HTTPS Binding
+#         $httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -ErrorAction SilentlyContinue
+#         if (-not $httpsBinding) {
+#             Write-Output "Adding HTTPS binding for '$SiteName'."
+#             New-WebBinding -Name $SiteName -Protocol "https" -Port 8443 -HostHeader $BindingHost
+#             $bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https"
+#             $bindingInfo.AddSslCertificate($certThumbprint, "My")
+#         } else {
+#             Write-Output "HTTPS binding already exists for '$SiteName'."
+#         }
+#         Write-Output "Successfully configured HTTPS binding for: $SiteName"
+#     }
+#     catch {
+#         Write-Output "Error configuring HTTPS binding for: $SiteName"
+#         Write-Output $_.Exception.Message
+#         exit 1
+#     }
+# }
 
 # Ensure App Pool Exists
 Test-AppPoolName -AppPoolName $AppPoolName
@@ -149,9 +149,9 @@ catch {
 Update-IISWebsite -SiteName $SiteName -WebRoot $WebRoot -BindingHost $BindingHost -AppPoolName $AppPoolName
 
 # Configure HTTPS Binding
-$pfxPath = "C:\Users\ABHI\Desktop\monolensssl2024.pfx"
-$securePassword = ConvertTo-SecureString -String $PfxPass -AsPlainText -Force
-Set-HTTPSBinding -SiteName $SiteName -BindingHost $BindingHost -PfxPath $pfxPath -SecurePassword $securePassword
+#$pfxPath = "C:\Users\ABHI\Desktop\monolensssl2024.pfx"
+#$securePassword = ConvertTo-SecureString -String $PfxPass -AsPlainText -Force
+#Set-HTTPSBinding -SiteName $SiteName -BindingHost $BindingHost -PfxPath $pfxPath -SecurePassword $securePassword
 
 # Start IIS Website
 try {
