@@ -1,8 +1,9 @@
 name: Build and Deploy Angular App to Azure VM (Rolling Deployment)
 
 on:
-  push:
-     - RV_abhi_frontend_deploy
+  #push:
+   # branches:
+    #   - RV_abhi_frontend_deploy
   workflow_dispatch:
     
 env:
