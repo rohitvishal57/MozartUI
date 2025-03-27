@@ -23,7 +23,7 @@ env:
   DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
   WEB_ROOT: "C:/USP/ABHI_DEPLOY"
   APP_POOL_NAME: "ABHIDEPLOY"
-  SITE_NAME: "ABHIUSP"
+  SITE_NAME: "ABHIUSPTest"
   BINDING_HOST: "usp.monocept.ai"
   PORT: 8443
 
