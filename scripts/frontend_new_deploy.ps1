@@ -76,7 +76,7 @@ function Set-HTTPSBinding {
         $httpsBinding = Get-WebBinding -Name $SiteName -Protocol "https" -ErrorAction SilentlyContinue
         if (-not $httpsBinding) {
             Write-Output "Adding HTTPS binding for '$SiteName'."
-            New-WebBinding -Name $SiteName -Protocol "https" -Port 443 -HostHeader $BindingHost
+            New-WebBinding -Name $SiteName -Protocol "https" -Port 8443 -HostHeader $BindingHost
             $bindingInfo = Get-WebBinding -Name $SiteName -Protocol "https"
             $bindingInfo.AddSslCertificate($certThumbprint, "My")
         } else {
